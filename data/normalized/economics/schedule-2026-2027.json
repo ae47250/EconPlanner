@@ -1,0 +1,105 @@
+{
+  "academicYear": "2026-2027",
+  "verifiedOn": "2026-07-28",
+  "source": {
+    "type": "user_provided_schedule_screenshots",
+    "files": [
+      "data/raw/economics/schedule-2026-2027-fall.png",
+      "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    ],
+    "sectionCodeSMeans": "May"
+  },
+  "terms": {
+    "Fall": [
+      {
+        "course": "ECO 113",
+        "section": "A",
+        "title": "Principles of Microeconomics"
+      },
+      {
+        "course": "ECO 114",
+        "section": "A",
+        "title": "Principles of Macroeconomics"
+      },
+      {
+        "course": "ECO 114",
+        "section": "B",
+        "title": "Principles of Macroeconomics"
+      },
+      {
+        "course": "ECO 114",
+        "section": "C",
+        "title": "Principles of Macroeconomics"
+      },
+      {
+        "course": "ECO 213",
+        "section": "A",
+        "title": "Intermediate Microeconomics"
+      },
+      {
+        "course": "ECO 234",
+        "section": "A",
+        "title": "Rational Choices"
+      },
+      {
+        "course": "ECO 333",
+        "section": "A",
+        "title": "International Trade & Finance"
+      }
+    ],
+    "Winter": [
+      {
+        "course": "ECO 113",
+        "section": "J",
+        "title": "Principles of Microeconomics"
+      },
+      {
+        "course": "ECO 113",
+        "section": "K",
+        "title": "Principles of Microeconomics"
+      },
+      {
+        "course": "ECO 114",
+        "section": "J",
+        "title": "Principles of Macroeconomics"
+      },
+      {
+        "course": "ECO 161",
+        "section": "J",
+        "title": "Foundations of Economics"
+      },
+      {
+        "course": "ECO 214",
+        "section": "J",
+        "title": "Intermediate Macroeconomics"
+      },
+      {
+        "course": "ECO 221",
+        "section": "J",
+        "title": "Environmental Economics"
+      },
+      {
+        "course": "ECO 321",
+        "section": "J",
+        "title": "Money & Financial Markets"
+      },
+      {
+        "course": "ECO 461",
+        "section": "J",
+        "title": "Senior Seminar - Econometrics"
+      }
+    ],
+    "May": [
+      {
+        "course": "ECO 222",
+        "section": "S",
+        "title": "Economics of the European Union"
+      },
+      {
+        "course": "ECO 260",
+        "section": "S",
+        "title": "Special Topics"
+      }
+    ]
+  }
+}

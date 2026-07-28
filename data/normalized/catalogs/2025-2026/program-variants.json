@@ -1,0 +1,372 @@
+[
+  {
+    "id": "anthropology-base",
+    "programId": "anthropology",
+    "label": "Anthropology",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/anthropology.php"
+  },
+  {
+    "id": "arthistory-base",
+    "programId": "arthistory",
+    "label": "Art History",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/arthistory.php"
+  },
+  {
+    "id": "artanddesign-base",
+    "programId": "artanddesign",
+    "label": "Art and Design",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/artanddesign.php"
+  },
+  {
+    "id": "biochemistry-base",
+    "programId": "biochemistry",
+    "label": "Biochemistry",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/biochemistry.php"
+  },
+  {
+    "id": "biology-base",
+    "programId": "biology",
+    "label": "Biology",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/biology.php"
+  },
+  {
+    "id": "business-base",
+    "programId": "business",
+    "label": "Business",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/business.php"
+  },
+  {
+    "id": "chemistry-base",
+    "programId": "chemistry",
+    "label": "Chemistry",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/chemistry.php"
+  },
+  {
+    "id": "classicalstudies-base",
+    "programId": "classicalstudies",
+    "label": "Classical Studies",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/classicalstudies.php"
+  },
+  {
+    "id": "communication-base",
+    "programId": "communication",
+    "label": "Communication",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/communication.php"
+  },
+  {
+    "id": "computerscience-base",
+    "programId": "computerscience",
+    "label": "Computer Science",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/computerscience.php"
+  },
+  {
+    "id": "datascience-base",
+    "programId": "datascience",
+    "label": "Data Science",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/datascience.php"
+  },
+  {
+    "id": "economics-base",
+    "programId": "economics",
+    "label": "Economics",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/economics.php"
+  },
+  {
+    "id": "education-base",
+    "programId": "education",
+    "label": "Education",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/education.php"
+  },
+  {
+    "id": "engineering-base",
+    "programId": "engineering",
+    "label": "Engineering",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/engineering.php"
+  },
+  {
+    "id": "english-base",
+    "programId": "english",
+    "label": "English",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/english.php"
+  },
+  {
+    "id": "french-base",
+    "programId": "french",
+    "label": "French",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/french.php"
+  },
+  {
+    "id": "genderstudies-base",
+    "programId": "genderstudies",
+    "label": "Gender Studies",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/genderstudies.php"
+  },
+  {
+    "id": "geology-base",
+    "programId": "geology",
+    "label": "Geology",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/geology.php"
+  },
+  {
+    "id": "german-base",
+    "programId": "german",
+    "label": "German",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/german.php"
+  },
+  {
+    "id": "healthandmovementstudies-base",
+    "programId": "healthandmovementstudies",
+    "label": "Health and Movement Studies",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/healthandmovementstudies.php"
+  },
+  {
+    "id": "history-base",
+    "programId": "history",
+    "label": "History",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/history.php"
+  },
+  {
+    "id": "internationalstudies-base",
+    "programId": "internationalstudies",
+    "label": "International Studies",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/internationalstudies.php"
+  },
+  {
+    "id": "kinesiologyandintegrativephysiology-base",
+    "programId": "kinesiologyandintegrativephysiology",
+    "label": "Kinesiology and Integrative Physiology",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/kinesiologyandintegrativephysiology.php"
+  },
+  {
+    "id": "latin-base",
+    "programId": "latin",
+    "label": "Latin",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/latin.php"
+  },
+  {
+    "id": "mathematics-base",
+    "programId": "mathematics",
+    "label": "Mathematics",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/mathematics.php"
+  },
+  {
+    "id": "medievalandrenaissancestudies-base",
+    "programId": "medievalandrenaissancestudies",
+    "label": "Medieval and Renaissance Studies",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/medievalandrenaissancestudies.php"
+  },
+  {
+    "id": "music-base",
+    "programId": "music",
+    "label": "Music",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/music.php"
+  },
+  {
+    "id": "nursing-base",
+    "programId": "nursing",
+    "label": "Nursing",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/nursing.php"
+  },
+  {
+    "id": "philosophy-base",
+    "programId": "philosophy",
+    "label": "Philosophy",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/philosophy.php"
+  },
+  {
+    "id": "physicsandastronomy-base",
+    "programId": "physicsandastronomy",
+    "label": "Physics and Astronomy",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/physicsandastronomy.php"
+  },
+  {
+    "id": "politicalscience-base",
+    "programId": "politicalscience",
+    "label": "Political Science",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/politicalscience.php"
+  },
+  {
+    "id": "psychology-base",
+    "programId": "psychology",
+    "label": "Psychology",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/psychology.php"
+  },
+  {
+    "id": "sociology-base",
+    "programId": "sociology",
+    "label": "Sociology",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/sociology.php"
+  },
+  {
+    "id": "spanish-base",
+    "programId": "spanish",
+    "label": "Spanish",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/spanish.php"
+  },
+  {
+    "id": "sportsmanagement-base",
+    "programId": "sportsmanagement",
+    "label": "Sports Management",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/sportsmanagement.php"
+  },
+  {
+    "id": "theatre-base",
+    "programId": "theatre",
+    "label": "Theatre",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/theatre.php"
+  },
+  {
+    "id": "theologicalstudies-base",
+    "programId": "theologicalstudies",
+    "label": "Theological Studies",
+    "degree": null,
+    "concentration": null,
+    "track": null,
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceUrl": "https://catalog.hanover.edu/programs/theologicalstudies.php"
+  }
+]

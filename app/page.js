@@ -2,53 +2,203 @@
 
 import { useState } from "react";
 
+const CATALOG_YEAR = "2025-2026";
+
+const blankCourse = id => ({
+  id,
+  code: "",
+  title: "",
+  status: "completed",
+  units: "1",
+  grade: "",
+  source: "manual_code",
+  notes: ""
+});
+
 const initialForm = {
-  studentYear: "freshman",
-  mathCognate: "not completed",
-  completedCourses: "",
-  currentCourses: "",
-  statsOption: "not completed",
-  financeOption: "not completed",
-  additionalNotes: ""
+  displayName: "",
+  entryCatalogYear: CATALOG_YEAR,
+  majorDeclarationCatalogYear: "",
+  academicStanding: "freshman",
+  expectedGraduationTerm: "",
+  courses: [blankCourse("course-1")],
+  advisorApprovals: ""
 };
 
-function renderCell(items) {
-  if (!Array.isArray(items) || items.length === 0) return ["-"];
-  return items.map(item => String(item).replace(/\bOR\b/g, "or"));
+function formatRemaining(value) {
+  return value == null ? "Not available" : `${value} unit${value === 1 ? "" : "s"}`;
+}
+
+function assignmentFor(result, slotId, scenario = "strict") {
+  return result?.[scenario]?.assignments?.find(item => item.slotId === slotId) || null;
+}
+
+function statusLabel(status) {
+  return String(status || "").replaceAll("_", " ").toLowerCase();
+}
+
+function riskClass(result) {
+  return String(result?.risk?.class || "UNKNOWN").toLowerCase().replaceAll("_", "-");
+}
+
+function Schedule({ schedule, plan }) {
+  if (!schedule) return null;
+  return (
+    <div className="schedule-card">
+      <h4>Economics 2026/2027 offerings</h4>
+      <p className="muted">The registrar’s <code>S</code> section is normalized and displayed as May Term.</p>
+      <div className="schedule-grid">
+        {Object.entries(schedule.terms || {}).map(([term, courses]) => (
+          <section key={term}>
+            <strong>{term}</strong>
+            <ul>
+              {[...new Map(courses.map(course => [course.course, course])).values()].map(course => (
+                <li key={course.course}>{course.course} — {course.title}</li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+      {plan?.terms?.some(term => term.courses.length > 0) && (
+        <>
+          <h4 className="plan-heading">Suggested verified placements</h4>
+          <div className="schedule-grid">
+            {plan.terms.map(term => (
+              <section key={`plan-${term.term}`}><strong>{term.term}</strong><ul>
+                {term.courses.length ? term.courses.map(course => <li key={`${term.term}-${course.course}`}>{course.course} — {course.title}</li>) : <li>None placed</li>}
+              </ul></section>
+            ))}
+          </div>
+        </>
+      )}
+      {plan?.unscheduled?.length > 0 && <p className="warning"><strong>Economics term advisor checks:</strong> {plan.unscheduled.map(item => `${item.label}: ${item.reason}`).join("; ")}</p>}
+    </div>
+  );
+}
+
+function ProgramCard({ result }) {
+  const slots = result.requirements || [];
+  const strict = result.strict || {};
+  const optimistic = result.optimistic || {};
+
+  return (
+    <article className="program-card">
+      <div className="program-heading">
+        <div>
+          <h3>{result.program?.name || result.program?.label}</h3>
+          <p className="muted">
+            {result.program?.degree || "Degree variant pending review"} · {result.program?.catalogYear} · {result.sourceStatus}
+          </p>
+        </div>
+        <span className={`risk risk-${riskClass(result)}`}>{statusLabel(result.risk?.class)}</span>
+      </div>
+
+      <div className="metric-grid">
+        <div><span>Strict remaining</span><strong>{formatRemaining(strict.remainingUnits)}</strong></div>
+        <div><span>Optimistic remaining</span><strong>{formatRemaining(optimistic.remainingUnits)}</strong></div>
+        <div><span>After in-progress</span><strong>{formatRemaining(result.projectedAfterInProgress?.optimistic?.remainingUnits)}</strong></div>
+        <div><span>Minimum regular terms</span><strong>{result.minimumRegularTerms ?? "Not available"}</strong></div>
+      </div>
+
+      {result.risk?.reasons?.length > 0 && (
+        <p className="warning"><strong>Advisor checks:</strong> {result.risk.reasons.join("; ")}</p>
+      )}
+
+      <details>
+        <summary>View assignment details</summary>
+        {slots.length > 0 ? (
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Requirement</th><th>Strict</th><th>Optimistic</th><th>Evidence</th></tr></thead>
+              <tbody>
+                {slots.map(slot => {
+                  const strictAssignment = assignmentFor(result, slot.id, "strict");
+                  const optimisticAssignment = assignmentFor(result, slot.id, "optimistic");
+                  const assignment = strictAssignment || optimisticAssignment;
+                  return (
+                    <tr key={slot.id}>
+                      <td>{slot.label}</td>
+                      <td>{strictAssignment?.code || "Remaining"}</td>
+                      <td>{optimisticAssignment?.code || "Remaining"}</td>
+                      <td>{assignment?.evidenceStatus || "—"}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="warning">The official catalog source is captured, but this program’s requirement tree has not been approved for runtime mapping.</p>
+        )}
+
+        {result.missingPrerequisites?.length > 0 && (
+          <div className="detail-block">
+            <strong>Missing prerequisites</strong>
+            <ul>{result.missingPrerequisites.map(item => <li key={`${item.course}-${item.missing}`}>{item.course}: {item.missing}</li>)}</ul>
+          </div>
+        )}
+        {result.unusedCourses?.length > 0 && (
+          <div className="detail-block"><strong>Unused or duplicate courses</strong><p>{result.unusedCourses.map(course => course.code || course.title).join(", ")}</p></div>
+        )}
+        <p className="muted">Source confidence: {result.sourceStatus}. Catalog source: <a href={result.program?.sourceUrl} target="_blank" rel="noreferrer">official Hanover page</a>.</p>
+      </details>
+
+      <Schedule schedule={result.annualSchedule} plan={result.economicsPlan} />
+    </article>
+  );
 }
 
 export default function Page() {
   const [formData, setFormData] = useState(initialForm);
   const [status, setStatus] = useState("");
-  const [plan, setPlan] = useState(null);
+  const [report, setReport] = useState(null);
 
   function updateField(event) {
     const { name, value } = event.target;
     setFormData(current => ({ ...current, [name]: value }));
   }
 
-  async function submitPlan(event) {
+  function updateCourse(id, field, value) {
+    setFormData(current => ({
+      ...current,
+      courses: current.courses.map(course => course.id === id ? { ...course, [field]: value } : course)
+    }));
+  }
+
+  function addCourse() {
+    setFormData(current => ({
+      ...current,
+      courses: [...current.courses, blankCourse(`course-${Date.now()}`)]
+    }));
+  }
+
+  function removeCourse(id) {
+    setFormData(current => ({
+      ...current,
+      courses: current.courses.length === 1 ? current.courses : current.courses.filter(course => course.id !== id)
+    }));
+  }
+
+  async function mapMajors(event) {
     event.preventDefault();
-    setStatus("Building plan...");
-    setPlan(null);
+    setStatus("Mapping course history to every cataloged major variant...");
+    setReport(null);
+
+    const student = {
+      ...formData,
+      courses: formData.courses.filter(course => course.code || course.title || course.notes)
+    };
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/api/majors/map", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ student })
       });
-
       const data = await response.json();
-      if (!response.ok) {
-        const validationExplanations = Array.isArray(data.validation?.explanations)
-          ? data.validation.explanations.join(" ")
-          : "";
-        throw new Error([data.error, validationExplanations].filter(Boolean).join(" "));
-      }
-
+      if (!response.ok) throw new Error(data.error || "The major mapper could not complete.");
+      setReport(data);
       setStatus("");
-      setPlan(data.plan);
     } catch (error) {
       setStatus(error.message);
     }
@@ -57,361 +207,114 @@ export default function Page() {
   return (
     <main className="container">
       <style jsx global>{`
-        :root {
-          --planner-max-width: 880px;
-          --planner-border: #d7d7d7;
-          --planner-muted: #666;
-          --planner-bg: #eef8ee;
-        }
-
-        body {
-          background: var(--planner-bg);
-        }
-
-        main.container {
-          max-width: var(--planner-max-width);
-          padding-top: 2rem;
-          padding-bottom: 3rem;
-        }
-
-        .hero {
-          text-align: center;
-          margin-bottom: 1.25rem;
-        }
-
-        .hero p {
-          max-width: 680px;
-          margin-inline: auto;
-          color: var(--planner-muted);
-        }
-
-        .planner-card,
-        .result-card,
-        .year-card,
-        .note-card {
-          border: 1px solid var(--planner-border);
-          border-radius: 1rem;
-          background: #fff;
-          box-shadow: none;
-        }
-
-        .planner-card {
-          padding: 1.4rem;
-        }
-
-        .form-grid {
-          display: grid;
-          gap: 1rem;
-        }
-
-        .two-col {
-          display: grid;
-          gap: 1rem;
-          grid-template-columns: 1fr;
-        }
-
-        @media (min-width: 720px) {
-          .two-col {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-
-        textarea {
-          min-height: 9rem;
-          resize: vertical;
-        }
-
-        .submit-row {
-          margin-top: 1.25rem;
-        }
-
-        .submit-row button {
-          width: 100%;
-        }
-
-        .status {
-          margin-top: 1rem;
-          color: var(--planner-muted);
-          min-height: 1.5rem;
-        }
-
-        .results {
-          margin-top: 1.5rem;
-        }
-
-        .result-card {
-          padding: 1.25rem;
-        }
-
-        .summary-card {
-          border: 1px solid var(--planner-border);
-          border-radius: 0.9rem;
-          padding: 1rem;
-          background: #fff;
-          margin-bottom: 1rem;
-        }
-
-        .summary-card p {
-          margin-bottom: 0.45rem;
-        }
-
-        .summary-card p:last-child {
-          margin-bottom: 0;
-        }
-
-        .year-card {
-          padding: 1rem;
-          margin-top: 1rem;
-        }
-
-        .year-card h3 {
-          margin-bottom: 0.75rem;
-          text-align: center;
-        }
-
-        table {
-          margin-bottom: 0;
-        }
-
-        th,
-        td {
-          text-align: center;
-          vertical-align: top;
-        }
-
-        .note-card {
-          padding: 0.85rem 1rem;
-          margin-top: 0.75rem;
-          font-size: 0.95rem;
-          color: #333;
-        }
-
-        .note-card p:last-child {
-          margin-bottom: 0;
-        }
-
-        .small-muted {
-          color: var(--planner-muted);
-          font-size: 0.92rem;
-        }
+        :root { --planner-bg: #eef8ee; --planner-border: #c9d8cc; --planner-muted: #536257; --planner-green: #1f6b45; }
+        body { background: var(--planner-bg); }
+        main.container { max-width: 1180px; padding-top: 2rem; padding-bottom: 4rem; }
+        .hero { text-align: center; margin-bottom: 1.25rem; }
+        .hero p { max-width: 760px; margin-inline: auto; color: var(--planner-muted); }
+        .planner-card, .program-card, .summary-card, .schedule-card { border: 1px solid var(--planner-border); border-radius: 1rem; background: #fff; box-shadow: none; }
+        .planner-card { padding: 1.4rem; }
+        .form-grid, .course-row { display: grid; gap: .8rem; }
+        .two-col { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+        @media (min-width: 760px) { .two-col { grid-template-columns: 1fr 1fr; } .course-row { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+        .course-entry { border: 1px solid var(--planner-border); border-radius: .75rem; padding: .9rem; margin-top: .75rem; }
+        .course-entry .wide { grid-column: 1 / -1; }
+        .course-actions { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .75rem; }
+        .course-actions button { width: auto; margin: 0; }
+        .submit-row { margin-top: 1.25rem; }
+        .submit-row button { width: 100%; }
+        .status { margin-top: 1rem; color: var(--planner-muted); min-height: 1.5rem; }
+        .results { margin-top: 1.5rem; }
+        .summary-card { padding: 1rem; margin-bottom: 1rem; }
+        .summary-grid, .metric-grid, .schedule-grid { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+        .summary-grid div, .metric-grid div { border: 1px solid var(--planner-border); border-radius: .7rem; padding: .75rem; }
+        .summary-grid span, .metric-grid span { display: block; color: var(--planner-muted); font-size: .85rem; }
+        .summary-grid strong, .metric-grid strong { display: block; margin-top: .25rem; }
+        .program-card { padding: 1.15rem; margin-top: 1rem; }
+        .program-heading { display: flex; gap: 1rem; justify-content: space-between; align-items: flex-start; }
+        .program-heading h3 { margin-bottom: .2rem; }
+        .muted { color: var(--planner-muted); font-size: .92rem; }
+        .risk { border-radius: 999px; padding: .35rem .65rem; font-size: .8rem; white-space: nowrap; background: #e8f0ea; color: var(--planner-green); }
+        .risk-insufficient-information { background: #fff3d6; color: #795b00; }
+        .risk-feasible-with-assumptions { background: #fff3d6; color: #795b00; }
+        .risk-not-currently-feasible, .risk-high-risk { background: #ffe0df; color: #8c241e; }
+        .metric-grid { margin: 1rem 0; }
+        .warning { border-left: 4px solid #d59b00; padding: .65rem .8rem; background: #fff9e8; }
+        details { margin-top: 1rem; }
+        summary { cursor: pointer; color: var(--planner-green); font-weight: 700; }
+        .table-wrap { overflow-x: auto; margin-top: .75rem; }
+        table { min-width: 680px; margin-bottom: .75rem; }
+        th, td { vertical-align: top; }
+        .detail-block { border-top: 1px solid var(--planner-border); padding-top: .75rem; margin-top: .75rem; }
+        .detail-block p:last-child, .detail-block ul:last-child { margin-bottom: 0; }
+        .schedule-card { margin-top: 1rem; padding: 1rem; background: #f8fcf8; }
+        .schedule-card h4 { margin-bottom: .4rem; }
+        .schedule-grid section { border: 1px solid var(--planner-border); border-radius: .65rem; padding: .65rem; }
+        .schedule-grid ul { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .9rem; }
+        .catalog-note { margin-top: 1rem; font-size: .9rem; color: var(--planner-muted); }
       `}</style>
 
       <header className="hero">
-        <h1>EconMapper</h1>
-        <p>
-          Build a possible economics major course plan. This tool is not a
-          replacement for advisor confirmation.
-        </p>
+        <h1>Hanover EconMapper</h1>
+        <p>Map a student’s course history against every Hanover undergraduate major and program variant. Economics includes the first exact Fall/Winter/May planning layer.</p>
       </header>
 
       <article className="planner-card">
-        <form onSubmit={submitPlan}>
+        <form onSubmit={mapMajors}>
           <div className="form-grid">
             <div className="two-col">
-              <label>
-                What year are you?
-                <select
-                  name="studentYear"
-                  required
-                  value={formData.studentYear}
-                  onChange={updateField}
-                >
-                  <option value="freshman">Freshman</option>
-                  <option value="sophomore">Sophomore</option>
-                  <option value="junior">Junior</option>
-                  <option value="senior">Senior</option>
-                </select>
-              </label>
-
-              <label>
-                MAT 113 / MAT 121
-                <select
-                  name="mathCognate"
-                  value={formData.mathCognate}
-                  onChange={updateField}
-                >
-                  <option value="not completed">Not completed</option>
-                  <option value="completed MAT 113 / MAT 121">
-                    Completed MAT 113 / MAT 121
-                  </option>
-                  <option value="currently taking MAT 113 / MAT 121">
-                    Currently taking MAT 113 / MAT 121
-                  </option>
-                  <option value="unsure">Unsure</option>
-                </select>
-              </label>
+              <label>Display name<input name="displayName" value={formData.displayName} onChange={updateField} placeholder="Optional" /></label>
+              <label>Academic standing<select name="academicStanding" value={formData.academicStanding} onChange={updateField}>
+                <option value="freshman">Freshman</option><option value="sophomore">Sophomore</option><option value="junior">Junior</option><option value="senior">Senior</option>
+              </select></label>
             </div>
-
             <div className="two-col">
-              <label>
-                Completed ECO courses
-                <input
-                  name="completedCourses"
-                  type="text"
-                  placeholder="Example: ECO 113, ECO 114"
-                  value={formData.completedCourses}
-                  onChange={updateField}
-                />
-              </label>
-
-              <label>
-                Current ECO courses
-                <input
-                  name="currentCourses"
-                  type="text"
-                  placeholder="Example: ECO 213"
-                  value={formData.currentCourses}
-                  onChange={updateField}
-                />
-              </label>
+              <label>Entry catalog year<select name="entryCatalogYear" value={formData.entryCatalogYear} onChange={updateField} required><option value="2025-2026">2025–2026</option></select></label>
+              <label>Major-declaration catalog year<input name="majorDeclarationCatalogYear" value={formData.majorDeclarationCatalogYear} onChange={updateField} placeholder="Leave blank if unknown" /></label>
             </div>
-
             <div className="two-col">
-              <label>
-                Statistics option
-                <select
-                  name="statsOption"
-                  value={formData.statsOption}
-                  onChange={updateField}
-                >
-                  <option value="not completed">Not completed</option>
-                  <option value="completed MAT 217 / ECO 257 / PSY 217">
-                    Completed MAT 217 / ECO 257 / PSY 217
-                  </option>
-                  <option value="currently taking MAT 217 / ECO 257 / PSY 217">
-                    Currently taking MAT 217 / ECO 257 / PSY 217
-                  </option>
-                  <option value="unsure">Unsure</option>
-                </select>
-              </label>
-
-              <label>
-                Money/finance requirement
-                <select
-                  name="financeOption"
-                  value={formData.financeOption}
-                  onChange={updateField}
-                >
-                  <option value="not completed">Not completed</option>
-                  <option value="completed ECO 321 / BUSN 323">
-                    Completed ECO 321 / BUSN 323
-                  </option>
-                  <option value="currently taking ECO 321 / BUSN 323">
-                    Currently taking ECO 321 / BUSN 323
-                  </option>
-                  <option value="unsure">Unsure</option>
-                </select>
-              </label>
+              <label>Expected graduation term<input name="expectedGraduationTerm" value={formData.expectedGraduationTerm} onChange={updateField} placeholder="Example: Spring 2029" /></label>
+              <label>Advisor approvals or substitutions<textarea name="advisorApprovals" value={formData.advisorApprovals} onChange={updateField} placeholder="Optional notes; these remain advisor checks until verified." /></label>
             </div>
-
-            <label>
-              Additional notes
-              <textarea
-                name="additionalNotes"
-                maxLength="8000"
-                placeholder="Optional: add transfer/AP credit, schedule concerns, or anything else the planner should know."
-                value={formData.additionalNotes}
-                onChange={updateField}
-              />
-              <small className="small-muted">
-                Long notes are summarized before they are displayed back to you.
-              </small>
-            </label>
           </div>
 
-          <div className="submit-row">
-            <button type="submit">Build My EconMap</button>
-          </div>
+          <h3>Course history</h3>
+          <p className="muted">Enter codes when known. Transfer, uncertain, repeated, failed, and withdrawn records are retained for review and are not silently counted.</p>
+          {formData.courses.map(course => (
+            <div className="course-entry" key={course.id}>
+              <div className="course-row">
+                <label>Course code<input value={course.code} onChange={event => updateCourse(course.id, "code", event.target.value)} placeholder="ECO 113" /></label>
+                <label>Course title<input value={course.title} onChange={event => updateCourse(course.id, "title", event.target.value)} placeholder="Optional" /></label>
+                <label>Status<select value={course.status} onChange={event => updateCourse(course.id, "status", event.target.value)}>
+                  <option value="completed">Completed</option><option value="in_progress">In progress</option><option value="transfer">Transfer/AP/IB</option><option value="uncertain">Uncertain equivalency</option><option value="repeated">Repeated</option><option value="failed">Failed</option><option value="withdrawn">Withdrawn</option>
+                </select></label>
+                <label>Units<input value={course.units} onChange={event => updateCourse(course.id, "units", event.target.value)} placeholder="1" /></label>
+                <label>Grade<input value={course.grade} onChange={event => updateCourse(course.id, "grade", event.target.value)} placeholder="A" /></label>
+              </div>
+              <div className="course-actions"><button type="button" className="secondary" onClick={() => removeCourse(course.id)}>Remove course</button></div>
+            </div>
+          ))}
+          <div className="course-actions"><button type="button" className="secondary" onClick={addCourse}>Add course</button></div>
+          <div className="submit-row"><button type="submit">Map all Hanover majors</button></div>
         </form>
-
-        <div className="status" aria-live="polite">
-          {status}
-        </div>
+        <p className="catalog-note">Catalog source currently captured locally: Hanover 2025–2026. Requirement maps that have not passed human source review are shown as “Insufficient information,” never guessed.</p>
       </article>
 
-      <section className="results" aria-live="polite">
-        {plan ? <PlanResult plan={plan} /> : null}
-      </section>
+      {status && <p className="status" role="status">{status}</p>}
+      {report && (
+        <section className="results" aria-live="polite">
+          <div className="summary-card">
+            <h2>Major comparison</h2>
+            <p className="muted">Catalog basis: {report.catalog.basis.replaceAll("_", " ")} · {report.catalog.selectedCatalogYear}</p>
+            <div className="summary-grid">
+              <div><span>Program variants</span><strong>{report.summary.programCount}</strong></div>
+              <div><span>Approved mappings</span><strong>{report.summary.mappedProgramCount}</strong></div>
+              <div><span>Advisor review required</span><strong>{report.summary.reviewRequiredProgramCount}</strong></div>
+            </div>
+          </div>
+          {report.programs.map(result => <ProgramCard key={result.program?.id || result.program?.label} result={result} />)}
+        </section>
+      )}
     </main>
-  );
-}
-
-function PlanResult({ plan }) {
-  const years = Array.isArray(plan.years) ? plan.years : [];
-  const advisorChecks = Array.isArray(plan.advisorChecks) ? plan.advisorChecks : [];
-  const globalNotes = Array.isArray(plan.globalNotes) ? plan.globalNotes : [];
-
-  return (
-    <article className="result-card">
-      <div className="summary-card">
-        <p>
-          <strong>Student Summary</strong>
-        </p>
-        <p>{plan.assumptions || "Assumptions not provided."}</p>
-        {plan.studentSummary ? <p>{plan.studentSummary}</p> : null}
-      </div>
-
-      {years.map((year, index) => {
-        const terms = year.terms || {};
-        const notes = Array.isArray(year.notes) ? year.notes : [];
-
-        return (
-          <section className="year-card" key={`${year.label || "year"}-${index}`}>
-            <h3>
-              {year.label} - {year.academicYear}
-            </h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Fall</th>
-                  <th>Winter</th>
-                  <th>May</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    {renderCell(terms.Fall).map((item, itemIndex) => (
-                      <div key={`${item}-${itemIndex}`}>{item}</div>
-                    ))}
-                  </td>
-                  <td>
-                    {renderCell(terms.Winter).map((item, itemIndex) => (
-                      <div key={`${item}-${itemIndex}`}>{item}</div>
-                    ))}
-                  </td>
-                  <td>
-                    {renderCell(terms.May).map((item, itemIndex) => (
-                      <div key={`${item}-${itemIndex}`}>{item}</div>
-                    ))}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            {notes.map((note, noteIndex) => (
-              <div className="note-card" key={`${note}-${noteIndex}`}>
-                <p>{note}</p>
-              </div>
-            ))}
-          </section>
-        );
-      })}
-
-      {advisorChecks.length ? (
-        <div className="note-card">
-          <strong>Advisor check:</strong>
-          <br />
-          {advisorChecks.map((check, index) => (
-            <div key={`${check}-${index}`}>{check}</div>
-          ))}
-        </div>
-      ) : null}
-
-      {globalNotes.map((note, index) => (
-        <div className="note-card" key={`${note}-${index}`}>
-          <p>{note}</p>
-        </div>
-      ))}
-    </article>
   );
 }

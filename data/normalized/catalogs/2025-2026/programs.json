@@ -1,0 +1,446 @@
+[
+  {
+    "id": "anthropology",
+    "name": "Anthropology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/anthropology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "anthropology-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "arthistory",
+    "name": "Art History",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/arthistory.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "arthistory-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "artanddesign",
+    "name": "Art and Design",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/artanddesign.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "artanddesign-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "biochemistry",
+    "name": "Biochemistry",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/biochemistry.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "biochemistry-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "biology",
+    "name": "Biology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/biology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "biology-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "business",
+    "name": "Business",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/business.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "business-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "chemistry",
+    "name": "Chemistry",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/chemistry.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "chemistry-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "classicalstudies",
+    "name": "Classical Studies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/classicalstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "classicalstudies-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "communication",
+    "name": "Communication",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/communication.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "communication-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "computerscience",
+    "name": "Computer Science",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/computerscience.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "computerscience-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "datascience",
+    "name": "Data Science",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/datascience.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "datascience-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "economics",
+    "name": "Economics",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/economics.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "economics-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "education",
+    "name": "Education",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/education.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "education-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "engineering",
+    "name": "Engineering",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/engineering.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "engineering-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "english",
+    "name": "English",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/english.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "english-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "french",
+    "name": "French",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/french.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "french-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "genderstudies",
+    "name": "Gender Studies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/genderstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "genderstudies-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "geology",
+    "name": "Geology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/geology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "geology-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "german",
+    "name": "German",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/german.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "german-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "healthandmovementstudies",
+    "name": "Health and Movement Studies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/healthandmovementstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "healthandmovementstudies-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "history",
+    "name": "History",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/history.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "history-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "internationalstudies",
+    "name": "International Studies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/internationalstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "internationalstudies-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "kinesiologyandintegrativephysiology",
+    "name": "Kinesiology and Integrative Physiology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/kinesiologyandintegrativephysiology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "kinesiologyandintegrativephysiology-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "latin",
+    "name": "Latin",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/latin.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "latin-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "mathematics",
+    "name": "Mathematics",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/mathematics.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "mathematics-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "medievalandrenaissancestudies",
+    "name": "Medieval and Renaissance Studies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/medievalandrenaissancestudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "medievalandrenaissancestudies-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "music",
+    "name": "Music",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/music.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "music-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "nursing",
+    "name": "Nursing",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/nursing.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "nursing-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "philosophy",
+    "name": "Philosophy",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/philosophy.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "philosophy-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "physicsandastronomy",
+    "name": "Physics and Astronomy",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/physicsandastronomy.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "physicsandastronomy-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "politicalscience",
+    "name": "Political Science",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/politicalscience.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "politicalscience-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "psychology",
+    "name": "Psychology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/psychology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "psychology-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "sociology",
+    "name": "Sociology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/sociology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "sociology-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "spanish",
+    "name": "Spanish",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/spanish.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "spanish-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "sportsmanagement",
+    "name": "Sports Management",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/sportsmanagement.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "sportsmanagement-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "theatre",
+    "name": "Theatre",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/theatre.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "theatre-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  },
+  {
+    "id": "theologicalstudies",
+    "name": "Theological Studies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/theologicalstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "programType": "undergraduate_major",
+    "variants": [
+      "theologicalstudies-base"
+    ],
+    "requirementMapping": "not_published_until_review"
+  }
+]

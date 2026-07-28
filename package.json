@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "ingest:sources": "node scripts/ingest-economics-sources.mjs",
+    "ingest:catalog": "node scripts/ingest-hanover-catalog.mjs",
+    "test": "node --test"
   },
   "dependencies": {
     "next": "latest",

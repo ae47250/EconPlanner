@@ -1,0 +1,22 @@
+{
+  "terms": {
+    "Fall": {
+      "maxTotalCourses": 4,
+      "maxEconomicsCourses": 2
+    },
+    "Winter": {
+      "maxTotalCourses": 4,
+      "maxEconomicsCourses": 2
+    },
+    "May": {
+      "maxTotalCourses": 1,
+      "maxEconomicsCourses": 1
+    }
+  },
+  "hardRules": [
+    "ECO 213 and ECO 214 cannot share a term",
+    "ECO 213 and ECO 214 cannot be scheduled in May",
+    "ECO 461 is senior Winter only"
+  ],
+  "futureSchedulePolicy": "Use ECO elective when no exact annual schedule is verified."
+}

@@ -1,0 +1,13 @@
+{
+  "catalogYear": "2025-2026",
+  "sourceUrl": "https://catalog.hanover.edu/",
+  "sourceStatus": "VERIFIED_SOURCE_CAPTURE",
+  "rules": [
+    "General degree requirements use the student's entry catalog year.",
+    "Major requirements use the catalog in place when the student declares the major.",
+    "At least 50 percent of courses in a major area of study must be taken at Hanover College.",
+    "A major requires a minimum 2.0 GPA in major and cognate courses.",
+    "No more than two D-range courses may count toward a major.",
+    "All majors require a senior culminating experience."
+  ]
+}

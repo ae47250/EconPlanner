@@ -1,0 +1,298 @@
+[
+  {
+    "programId": "anthropology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/anthropology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "arthistory",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/arthistory.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "artanddesign",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/artanddesign.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "biochemistry",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/biochemistry.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "biology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/biology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "business",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/business.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "chemistry",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/chemistry.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "classicalstudies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/classicalstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "communication",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/communication.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "computerscience",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/computerscience.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "datascience",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/datascience.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "economics",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/economics.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "education",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/education.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "engineering",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/engineering.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "english",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/english.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "french",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/french.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "genderstudies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/genderstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "geology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/geology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "german",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/german.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "healthandmovementstudies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/healthandmovementstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "history",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/history.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "internationalstudies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/internationalstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "kinesiologyandintegrativephysiology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/kinesiologyandintegrativephysiology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "latin",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/latin.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "mathematics",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/mathematics.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "medievalandrenaissancestudies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/medievalandrenaissancestudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "music",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/music.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "nursing",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/nursing.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "philosophy",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/philosophy.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "physicsandastronomy",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/physicsandastronomy.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "politicalscience",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/politicalscience.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "psychology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/psychology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "sociology",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/sociology.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "spanish",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/spanish.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "sportsmanagement",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/sportsmanagement.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "theatre",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/theatre.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  },
+  {
+    "programId": "theologicalstudies",
+    "catalogYear": "2025-2026",
+    "sourceUrl": "https://catalog.hanover.edu/programs/theologicalstudies.php",
+    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "requirementTree": null,
+    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+  }
+]

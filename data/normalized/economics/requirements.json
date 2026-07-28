@@ -1,0 +1,168 @@
+{
+  "id": "economics-major",
+  "catalogYear": "2025-2026",
+  "sourceStatus": "APPROVED_LOCAL_SOURCE",
+  "sourceRefs": [
+    "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+    "data/raw/economics/Econ_Course_Offerings.md",
+    "data/raw/economics/Term_Structure.md"
+  ],
+  "requirementSlots": [
+    {
+      "id": "eco-113",
+      "label": "ECO 113",
+      "kind": "exact",
+      "options": [
+        "ECO 113"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-114",
+      "label": "ECO 114",
+      "kind": "exact",
+      "options": [
+        "ECO 114"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-213",
+      "label": "ECO 213",
+      "kind": "exact",
+      "options": [
+        "ECO 213"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-214",
+      "label": "ECO 214",
+      "kind": "exact",
+      "options": [
+        "ECO 214"
+      ],
+      "units": 1
+    },
+    {
+      "id": "statistics",
+      "label": "MAT 217 / ECO 257 / PSY 217",
+      "kind": "choice",
+      "options": [
+        "MAT 217",
+        "ECO 257",
+        "PSY 217"
+      ],
+      "units": 1,
+      "provisionalOptions": [
+        "PSY 217"
+      ]
+    },
+    {
+      "id": "finance",
+      "label": "ECO 321 / BUSN 323",
+      "kind": "choice",
+      "options": [
+        "ECO 321",
+        "BUSN 323"
+      ],
+      "units": 1,
+      "provisionalOptions": [
+        "BUSN 323"
+      ]
+    },
+    {
+      "id": "eco-461",
+      "label": "ECO 461",
+      "kind": "exact",
+      "options": [
+        "ECO 461"
+      ],
+      "units": 1
+    },
+    {
+      "id": "cognate",
+      "label": "MAT 113 / MAT 121",
+      "kind": "choice",
+      "options": [
+        "MAT 113",
+        "MAT 121"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-elective-1",
+      "label": "ECO elective 1",
+      "kind": "elective",
+      "subject": "ECO",
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 321",
+        "ECO 461"
+      ],
+      "maxLevel100": 1,
+      "units": 1
+    },
+    {
+      "id": "eco-elective-2",
+      "label": "ECO elective 2",
+      "kind": "elective",
+      "subject": "ECO",
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 321",
+        "ECO 461"
+      ],
+      "maxLevel100": 1,
+      "units": 1
+    },
+    {
+      "id": "eco-elective-3",
+      "label": "ECO elective 3",
+      "kind": "elective",
+      "subject": "ECO",
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 321",
+        "ECO 461"
+      ],
+      "maxLevel100": 1,
+      "units": 1
+    },
+    {
+      "id": "eco-elective-4",
+      "label": "ECO elective 4",
+      "kind": "elective",
+      "subject": "ECO",
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 321",
+        "ECO 461"
+      ],
+      "maxLevel100": 1,
+      "units": 1
+    }
+  ],
+  "rules": {
+    "totalMajorCourses": 11,
+    "totalCognateCourses": 1,
+    "max100LevelElectives": 1,
+    "noDoubleCountUnlessExplicit": true
+  }
+}
