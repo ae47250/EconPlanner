@@ -61,7 +61,7 @@ export default function Page() {
           --planner-max-width: 880px;
           --planner-border: #d7d7d7;
           --planner-muted: #666;
-          --planner-bg: #fafafa;
+          --planner-bg: #eef8ee;
         }
 
         body {
