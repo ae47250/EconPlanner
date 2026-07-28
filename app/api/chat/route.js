@@ -17,6 +17,10 @@ const KNOWLEDGE_FILES = [
 const INITIAL_MODEL = process.env.OPENAI_INITIAL_MODEL || "gpt-5.5-mini";
 const REPAIR_MODEL = process.env.OPENAI_REPAIR_MODEL || "gpt-5.5";
 
+function getOpenAiApiKey() {
+  return process.env.OPENAI_API_KEY || process.env.EconMapper_OpenAI_KEY || "";
+}
+
 const RECOGNIZED_COURSES = new Set([
   "ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 213", "ECO 214",
   "ECO 221", "ECO 222", "ECO 223", "ECO 224", "ECO 234", "ECO 257",
@@ -430,8 +434,9 @@ function normalizeOrText(value) {
 }
 
 export async function POST(request) {
-  if (!process.env.OPENAI_API_KEY) {
-    return jsonResponse({ error: "Missing OPENAI_API_KEY." }, 500);
+  const openAiApiKey = getOpenAiApiKey();
+  if (!openAiApiKey) {
+    return jsonResponse({ error: "Missing OpenAI API key. Set OPENAI_API_KEY or EconMapper_OpenAI_KEY." }, 500);
   }
 
   try {
@@ -451,7 +456,7 @@ export async function POST(request) {
     }
 
     const knowledgeBundle = await loadKnowledgeBundle();
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const client = new OpenAI({ apiKey: openAiApiKey });
 
     const systemPrompt = buildSystemPrompt(knowledgeBundle);
     const userPrompt = buildUserPrompt(studentInput);
