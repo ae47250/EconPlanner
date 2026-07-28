@@ -7,9 +7,14 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "anthropology-base"
+      "anthropology-base",
+      "anthropology-in-cultural-anthropology",
+      "anthropology-cultural-anthropology"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "anthropology",
+    "catalogBlockFound": true,
+    "variantCount": 3
   },
   {
     "id": "arthistory",
@@ -21,7 +26,10 @@
     "variants": [
       "arthistory-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "arthistory",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "artanddesign",
@@ -33,7 +41,10 @@
     "variants": [
       "artanddesign-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "artanddesign",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "biochemistry",
@@ -45,7 +56,10 @@
     "variants": [
       "biochemistry-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "biochemistry",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "biology",
@@ -55,9 +69,14 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "biology-base"
+      "biology-base",
+      "biology-bachelor-of-arts",
+      "biology-bachelor-of-science"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "biology",
+    "catalogBlockFound": true,
+    "variantCount": 3
   },
   {
     "id": "business",
@@ -67,9 +86,19 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "business-base"
+      "business-base",
+      "business-business-major",
+      "business-analytics-concentration",
+      "business-entrepreneurship-concentration",
+      "business-finance-concentration",
+      "business-international-business-concentration",
+      "business-management-concentration",
+      "business-marketing-concentration"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "business",
+    "catalogBlockFound": true,
+    "variantCount": 8
   },
   {
     "id": "chemistry",
@@ -79,9 +108,14 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "chemistry-base"
+      "chemistry-base",
+      "chemistry-bachelor-of-arts",
+      "chemistry-bachelor-of-science"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "chemistry",
+    "catalogBlockFound": true,
+    "variantCount": 3
   },
   {
     "id": "classicalstudies",
@@ -93,7 +127,10 @@
     "variants": [
       "classicalstudies-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "classicalstudies",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "communication",
@@ -103,9 +140,13 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "communication-base"
+      "communication-base",
+      "communication-tracks"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "communication",
+    "catalogBlockFound": true,
+    "variantCount": 2
   },
   {
     "id": "computerscience",
@@ -115,9 +156,14 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "computerscience-base"
+      "computerscience-base",
+      "computerscience-bachelor-of-arts",
+      "computerscience-bachelor-of-science"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "Creative Writing",
+    "catalogBlockFound": true,
+    "variantCount": 3
   },
   {
     "id": "datascience",
@@ -129,7 +175,10 @@
     "variants": [
       "datascience-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "datascience",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "economics",
@@ -141,7 +190,10 @@
     "variants": [
       "economics-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "approved_local_economics_map",
+    "sourceCatalogBlockId": "economics",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "education",
@@ -151,9 +203,17 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "education-base"
+      "education-base",
+      "education-elementary-education-major-with-certification",
+      "education-the-secondary-education-major-with-certification",
+      "education-teaching-diverse-learners-program",
+      "education-elementary-education-major",
+      "education-secondary-education-major"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "education",
+    "catalogBlockFound": true,
+    "variantCount": 6
   },
   {
     "id": "engineering",
@@ -163,9 +223,14 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "engineering-base"
+      "engineering-base",
+      "engineering-bachelor-of-arts-engineering-science-engs",
+      "engineering-bachelor-of-science-engineering"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "engineering",
+    "catalogBlockFound": true,
+    "variantCount": 3
   },
   {
     "id": "english",
@@ -175,9 +240,14 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "english-base"
+      "english-base",
+      "english-literary-studies-track",
+      "english-creative-writing-track"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "english",
+    "catalogBlockFound": true,
+    "variantCount": 3
   },
   {
     "id": "french",
@@ -189,7 +259,10 @@
     "variants": [
       "french-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "french",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "genderstudies",
@@ -199,9 +272,13 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "genderstudies-base"
+      "genderstudies-base",
+      "genderstudies-bachelor-of-arts"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "generstudies",
+    "catalogBlockFound": true,
+    "variantCount": 2
   },
   {
     "id": "geology",
@@ -213,7 +290,10 @@
     "variants": [
       "geology-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "geology",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "german",
@@ -223,9 +303,13 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "german-base"
+      "german-base",
+      "german-german-major"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "german",
+    "catalogBlockFound": true,
+    "variantCount": 2
   },
   {
     "id": "healthandmovementstudies",
@@ -237,7 +321,10 @@
     "variants": [
       "healthandmovementstudies-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "healthandmovementstudies",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "history",
@@ -249,7 +336,10 @@
     "variants": [
       "history-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "history",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "internationalstudies",
@@ -261,7 +351,10 @@
     "variants": [
       "internationalstudies-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "internationalstudies",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "kinesiologyandintegrativephysiology",
@@ -271,9 +364,14 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "kinesiologyandintegrativephysiology-base"
+      "kinesiologyandintegrativephysiology-base",
+      "kinesiologyandintegrativephysiology-bachelor-of-arts",
+      "kinesiologyandintegrativephysiology-bachelor-of-science"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "kinesiologyandintegrativephysiology",
+    "catalogBlockFound": true,
+    "variantCount": 3
   },
   {
     "id": "latin",
@@ -285,7 +383,10 @@
     "variants": [
       "latin-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "latin",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "mathematics",
@@ -297,7 +398,10 @@
     "variants": [
       "mathematics-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "mathamatics",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "medievalandrenaissancestudies",
@@ -309,7 +413,10 @@
     "variants": [
       "medievalandrenaissancestudies-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "medievalrenaissancestudies",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "music",
@@ -321,7 +428,10 @@
     "variants": [
       "music-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "music",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "nursing",
@@ -333,7 +443,10 @@
     "variants": [
       "nursing-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "nursing",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "philosophy",
@@ -345,7 +458,10 @@
     "variants": [
       "philosophy-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "philosophy",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "physicsandastronomy",
@@ -357,7 +473,10 @@
     "variants": [
       "physicsandastronomy-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": null,
+    "catalogBlockFound": false,
+    "variantCount": 1
   },
   {
     "id": "politicalscience",
@@ -369,7 +488,10 @@
     "variants": [
       "politicalscience-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "politicalscience",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "psychology",
@@ -381,7 +503,10 @@
     "variants": [
       "psychology-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "psychology",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "sociology",
@@ -393,7 +518,10 @@
     "variants": [
       "sociology-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "sociology",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "spanish",
@@ -405,7 +533,10 @@
     "variants": [
       "spanish-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "spanish",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "sportsmanagement",
@@ -415,9 +546,13 @@
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
     "programType": "undergraduate_major",
     "variants": [
-      "sportsmanagement-base"
+      "sportsmanagement-base",
+      "sportsmanagement-sports-management-major"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "sportsmanagement",
+    "catalogBlockFound": true,
+    "variantCount": 2
   },
   {
     "id": "theatre",
@@ -429,7 +564,10 @@
     "variants": [
       "theatre-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "theatre",
+    "catalogBlockFound": true,
+    "variantCount": 1
   },
   {
     "id": "theologicalstudies",
@@ -441,6 +579,9 @@
     "variants": [
       "theologicalstudies-base"
     ],
-    "requirementMapping": "not_published_until_review"
+    "requirementMapping": "not_published_until_review",
+    "sourceCatalogBlockId": "theologicalstudies",
+    "catalogBlockFound": true,
+    "variantCount": 1
   }
 ]

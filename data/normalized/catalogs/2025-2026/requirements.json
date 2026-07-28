@@ -3,296 +3,2091 @@
     "programId": "anthropology",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/anthropology.php",
+    "sourceCatalogBlockId": "anthropology",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "anthropology-base",
+      "anthropology-in-cultural-anthropology",
+      "anthropology-cultural-anthropology"
+    ],
+    "requirementText": "Major in Cultural Anthropology:: Major in Cultural Anthropology: Anthropology courses – 162; 325; 424; 461 or 471\r\n(culminating experience); six others, including at least two geographical area courses (223, 233,\r\n238, 242, 243) and at least two comparative topics courses (259, 311, 316, 332, 333, 334, 336).\r\nTotal of 10 major courses.\n\nMajor : Cultural Anthropology: Major : Cultural Anthropology",
+    "requirementSections": [
+      {
+        "label": "Major in Cultural Anthropology:",
+        "text": "Major in Cultural Anthropology: Anthropology courses – 162; 325; 424; 461 or 471\r\n(culminating experience); six others, including at least two geographical area courses (223, 233,\r\n238, 242, 243) and at least two comparative topics courses (259, 311, 316, 332, 333, 334, 336).\r\nTotal of 10 major courses.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major : Cultural Anthropology",
+        "text": "Major : Cultural Anthropology",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [
+      {
+        "caption": "Required Anthropology Courses:",
+        "rows": [
+          {
+            "code": "ANTH XX",
+            "name": "Ecology and Evolution",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "ANTH XX",
+            "name": "Cell and Molecular Biology",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "",
+            "name": "Genetics",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "",
+            "name": "Research Methods in Biology",
+            "units": "1",
+            "note": "Culminating experience"
+          }
+        ]
+      }
+    ],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "arthistory",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/arthistory.php",
+    "sourceCatalogBlockId": "arthistory",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "arthistory-base"
+    ],
+    "requirementText": "Major:: Major: Eight Art History courses: 111, 112 and 362; four additional Art History electives\r\n(171, 210, 212, 213, 214, 223, 225, 328, 335, 339, 343, 344, 345 or 348); and either 457 or\r\n471 (culminating experience). One Art and Design course.\r\nTotal of 9 major courses.\r\nRecommended: two courses in both French and German.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Eight Art History courses: 111, 112 and 362; four additional Art History electives\r\n(171, 210, 212, 213, 214, 223, 225, 328, 335, 339, 343, 344, 345 or 348); and either 457 or\r\n471 (culminating experience). One Art and Design course.\r\nTotal of 9 major courses.\r\nRecommended: two courses in both French and German.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "artanddesign",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/artanddesign.php",
+    "sourceCatalogBlockId": "artanddesign",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "artanddesign-base"
+    ],
+    "requirementText": "Major:: Major: 126; 171; 172; a 3-course sequence in one of – ceramics, graphic design, illustration, painting, photography, printmaking, drawing, or sculpture; 402; 471 (culminating experience); 3 additional art electives.\r\nTwo Art History courses: a Western Art History course (ARTH 112, 328, 339, 343, 344, or 345) and an Eastern Art History course (ARTH 111, 210 or 212) or others by petition.\r\nTotal of 12.5 major courses.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: 126; 171; 172; a 3-course sequence in one of – ceramics, graphic design, illustration, painting, photography, printmaking, drawing, or sculpture; 402; 471 (culminating experience); 3 additional art electives.\r\nTwo Art History courses: a Western Art History course (ARTH 112, 328, 339, 343, 344, or 345) and an Eastern Art History course (ARTH 111, 210 or 212) or others by petition.\r\nTotal of 12.5 major courses.",
+        "courseReferences": [
+          "ARTH 112",
+          "ARTH 111"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "biochemistry",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/biochemistry.php",
+    "sourceCatalogBlockId": "biochemistry",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "biochemistry-base"
+    ],
+    "requirementText": "Major:: Major: Chemistry courses: CHE 161; 185; 221; 222; 341; 342; one elective from: 225, 311, or 324; and one additional elective at the 300 level, excluding 308, 309, and 372. Biology courses: BIO 161; 185; 221; one elective from: 336 or 314; and an additional elective from 223, 235, 313, 314, 326, 332, 333, 334, 335, or 336. Culminating Experience: BCH 412. Cognate courses: MAT 121; PHY 161 or 162; PHY 185 or 186. Total of 14 major courses, plus 3 cognates = 17. Students majoring or minoring in Chemistry or Biology may not also major in Biochemistry.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Chemistry courses: CHE 161; 185; 221; 222; 341; 342; one elective from: 225, 311, or 324; and one additional elective at the 300 level, excluding 308, 309, and 372. Biology courses: BIO 161; 185; 221; one elective from: 336 or 314; and an additional elective from 223, 235, 313, 314, 326, 332, 333, 334, 335, or 336. Culminating Experience: BCH 412. Cognate courses: MAT 121; PHY 161 or 162; PHY 185 or 186. Total of 14 major courses, plus 3 cognates = 17. Students majoring or minoring in Chemistry or Biology may not also major in Biochemistry.",
+        "courseReferences": [
+          "CHE 161",
+          "BIO 161",
+          "BCH 412",
+          "MAT 121",
+          "PHY 161",
+          "PHY 185"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Chemistry courses: CHE 161; 185; 221; 222; 341; 342; one elective from: 225, 311, or 324; and one additional elective at the 300 level, excluding 308, 309, and 372. Biology courses: BIO 161; 185; 221; one elective from: 336 or 314; and an additional elective from 223, 235, 313, 314, 326, 332, 333, 334, 335, or 336. Culminating Experience: BCH 412. Cognate courses: MAT 121; PHY 161 or 162; PHY 185 or 186. Total of 14 major courses, plus 3 cognates = 17. Students majoring or minoring in Chemistry or Biology may not also major in Biochemistry.",
+        "courseReferences": [
+          "CHE 161",
+          "BIO 161",
+          "BCH 412",
+          "MAT 121",
+          "PHY 161",
+          "PHY 185"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "biology",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/biology.php",
+    "sourceCatalogBlockId": "biology",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "biology-base",
+      "biology-bachelor-of-arts",
+      "biology-bachelor-of-science"
+    ],
+    "requirementText": "Major: Bachelor of Arts:: Major: Bachelor of Arts: Biology courses – 161; 185; 221; 462 (Culminating experience); five\r\nothers, two of which must be at the 300 level, but not include 301, 307, 308, 309, 357, 370 or 380.\r\nCognate courses: Chemistry 161 or equivalent; CHE 185.\r\nTotal of 9 major course credits, plus 2 cognates = 11 units.\r\nNo more than 1 credit of any combination of BIO 308, 309 and 380 can count towards\r\ngraduation.\n\nMajor: Bachelor of Science:: Major: Bachelor of Science: Biology courses – 161; 185; 221; 231; 462 (Culminating\r\nexperience); six others, two of which must be at the 300 level, but not include 301, 307, 308,\r\n309, 357, 370 or 380.\r\nCognate courses: CHE 161 or equivalent, 185, 221 and 222; MAT 121; and one pair from\r\nthe following:\r\nCHE 341 and 342\r\nCS 220 and either 223 or 229\r\nGEO 16x and either a 200- or 300-level GEO course\r\nKIP 215 and 230\r\nPHY 161 and 185\r\nPSY 162 and 164\r\nTotal of 11 major courses, plus 7 cognates = 18 units.\r\nNo more than 1 credit of any combination of BIO 308, 309 and 380 can count towards\r\ngraduation.\r\nStudents earning a Bachelor of Science degree in Biology with the CHE 341 and CHE 342\r\ncognate may not also minor in Chemistry.\n\nMajor : Bachelor of Arts: Major : Bachelor of Arts\n\nMajor : Bachelor of Science: Major : Bachelor of Science",
+    "requirementSections": [
+      {
+        "label": "Major: Bachelor of Arts:",
+        "text": "Major: Bachelor of Arts: Biology courses – 161; 185; 221; 462 (Culminating experience); five\r\nothers, two of which must be at the 300 level, but not include 301, 307, 308, 309, 357, 370 or 380.\r\nCognate courses: Chemistry 161 or equivalent; CHE 185.\r\nTotal of 9 major course credits, plus 2 cognates = 11 units.\r\nNo more than 1 credit of any combination of BIO 308, 309 and 380 can count towards\r\ngraduation.",
+        "courseReferences": [
+          "CHE 185",
+          "BIO 308"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major: Bachelor of Science:",
+        "text": "Major: Bachelor of Science: Biology courses – 161; 185; 221; 231; 462 (Culminating\r\nexperience); six others, two of which must be at the 300 level, but not include 301, 307, 308,\r\n309, 357, 370 or 380.\r\nCognate courses: CHE 161 or equivalent, 185, 221 and 222; MAT 121; and one pair from\r\nthe following:\r\nCHE 341 and 342\r\nCS 220 and either 223 or 229\r\nGEO 16x and either a 200- or 300-level GEO course\r\nKIP 215 and 230\r\nPHY 161 and 185\r\nPSY 162 and 164\r\nTotal of 11 major courses, plus 7 cognates = 18 units.\r\nNo more than 1 credit of any combination of BIO 308, 309 and 380 can count towards\r\ngraduation.\r\nStudents earning a Bachelor of Science degree in Biology with the CHE 341 and CHE 342\r\ncognate may not also minor in Chemistry.",
+        "courseReferences": [
+          "CHE 161",
+          "MAT 121",
+          "CHE 341",
+          "CS 220",
+          "KIP 215",
+          "PHY 161",
+          "PSY 162",
+          "BIO 308",
+          "CHE 342"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major : Bachelor of Arts",
+        "text": "Major : Bachelor of Arts",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major : Bachelor of Science",
+        "text": "Major : Bachelor of Science",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [
+      {
+        "caption": "Required Biology Courses:",
+        "rows": [
+          {
+            "code": "BIO 161",
+            "name": "Ecology and Evolution",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 185",
+            "name": "Cell and Molecular Biology",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 221",
+            "name": "Genetics",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 462",
+            "name": "Research Methods in Biology",
+            "units": "1",
+            "note": "Culminating experience"
+          }
+        ]
+      },
+      {
+        "caption": "Cognate Courses:",
+        "rows": [
+          {
+            "code": "CHE 161",
+            "name": "Principles of Chemistry I",
+            "units": "1",
+            "note": "Or equivalent"
+          },
+          {
+            "code": "CHE 185",
+            "name": "Principles of Chemistry II",
+            "units": "1",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "caption": "Required Biology Courses:",
+        "rows": [
+          {
+            "code": "BIO 161",
+            "name": "Ecology and Evolution",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 185",
+            "name": "Cell and Molecular Biology",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 221",
+            "name": "Genetics",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 231",
+            "name": "Biodiversity",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 462",
+            "name": "Research Methods in Biology",
+            "units": "1",
+            "note": "Culminating experience"
+          }
+        ]
+      },
+      {
+        "caption": "Cognate Courses:",
+        "rows": [
+          {
+            "code": "CHE 161",
+            "name": "Principles of Chemistry I",
+            "units": "1",
+            "note": "Or equivalent"
+          },
+          {
+            "code": "CHE 185",
+            "name": "Principles of Chemistry II",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "CHE 221",
+            "name": "Organic Chemistry I",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "CHE 231",
+            "name": "Organic Chemistry II",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "MAT 121",
+            "name": "Calculus I",
+            "units": "1",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "caption": "Required Biology Courses:",
+        "rows": [
+          {
+            "code": "BIO 161",
+            "name": "Ecology and Evolution",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "BIO 185",
+            "name": "Cell and Molecular Biology",
+            "units": "1",
+            "note": ""
+          }
+        ]
+      }
+    ],
+    "cognateSections": [
+      {
+        "label": "Major: Bachelor of Arts:",
+        "text": "Major: Bachelor of Arts: Biology courses – 161; 185; 221; 462 (Culminating experience); five\r\nothers, two of which must be at the 300 level, but not include 301, 307, 308, 309, 357, 370 or 380.\r\nCognate courses: Chemistry 161 or equivalent; CHE 185.\r\nTotal of 9 major course credits, plus 2 cognates = 11 units.\r\nNo more than 1 credit of any combination of BIO 308, 309 and 380 can count towards\r\ngraduation.",
+        "courseReferences": [
+          "CHE 185",
+          "BIO 308"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major: Bachelor of Science:",
+        "text": "Major: Bachelor of Science: Biology courses – 161; 185; 221; 231; 462 (Culminating\r\nexperience); six others, two of which must be at the 300 level, but not include 301, 307, 308,\r\n309, 357, 370 or 380.\r\nCognate courses: CHE 161 or equivalent, 185, 221 and 222; MAT 121; and one pair from\r\nthe following:\r\nCHE 341 and 342\r\nCS 220 and either 223 or 229\r\nGEO 16x and either a 200- or 300-level GEO course\r\nKIP 215 and 230\r\nPHY 161 and 185\r\nPSY 162 and 164\r\nTotal of 11 major courses, plus 7 cognates = 18 units.\r\nNo more than 1 credit of any combination of BIO 308, 309 and 380 can count towards\r\ngraduation.\r\nStudents earning a Bachelor of Science degree in Biology with the CHE 341 and CHE 342\r\ncognate may not also minor in Chemistry.",
+        "courseReferences": [
+          "CHE 161",
+          "MAT 121",
+          "CHE 341",
+          "CS 220",
+          "KIP 215",
+          "PHY 161",
+          "PSY 162",
+          "BIO 308",
+          "CHE 342"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "business",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/business.php",
+    "sourceCatalogBlockId": "business",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "business-base",
+      "business-business-major",
+      "business-analytics-concentration",
+      "business-entrepreneurship-concentration",
+      "business-finance-concentration",
+      "business-international-business-concentration",
+      "business-management-concentration",
+      "business-marketing-concentration"
+    ],
+    "requirementText": "Business Major:: Business Major: Business Program courses – 211; 215; 335 or 352; 325; 327; 357 or one of\r\n323, 326, 329, or 351; 411 (culminating experience); and one additional Business Program\r\nelective.\r\nCognate courses: One course in statistics: MAT 217, 327, ECO 257, or PSY 217; two courses\r\nin Economics: ECO 113 and 114.\r\nWorkshops: 6 BUSN workshops are required for the major but carry no grade or credit.\r\nTotal of 8 units in the major plus 3 cognate units = 11 units.\n\nAnalytics Concentration:: Analytics Concentration: Three courses from the Business Program, Mathematics or Computer\r\nScience: BUSN 351, MAT 224, MAT 327, MAT 437, CS 229.\n\nEntrepreneurship Concentration:: Entrepreneurship Concentration: BUSN 225; BUSN 326; BUSN 333; ART 224.\n\nFinance Concentration:: Finance Concentration: Three courses from Economics or the Business Program: ECO 234,\r\nECO 321, ECO 333, BUSN 323, BUSN 351.\n\nInternational Business Concentration:: International Business Concentration: Three courses from Anthropology, Economics, History,\r\nInternational Studies, or Political Science: ANTH 222, ANTH 334, ECO 333, HIS 264,\r\nINS 161, PLS 217, PLS 218, PLS 231, or PLS 335). A modern languages major or minor is\r\nrecommended.\n\nManagement Concentration:: Management Concentration: Three courses from Communication, Economics, Psychology, or\r\nthe Business Program: COM 319, ECO 331, ECO 335, PSY 231, BUSN 328, BUSN 331,\r\nBUSN 332, or BUSN 351.\n\nMarketing Concentration:: Marketing Concentration: BUSN 321, BUSN 335 and one course from Communication,\r\nPsychology, or the Business Program: COM 242, COM 246, PSY 344, BUSN 321, BUSN\r\n332, or BUSN 351.",
+    "requirementSections": [
+      {
+        "label": "Business Major:",
+        "text": "Business Major: Business Program courses – 211; 215; 335 or 352; 325; 327; 357 or one of\r\n323, 326, 329, or 351; 411 (culminating experience); and one additional Business Program\r\nelective.\r\nCognate courses: One course in statistics: MAT 217, 327, ECO 257, or PSY 217; two courses\r\nin Economics: ECO 113 and 114.\r\nWorkshops: 6 BUSN workshops are required for the major but carry no grade or credit.\r\nTotal of 8 units in the major plus 3 cognate units = 11 units.",
+        "courseReferences": [
+          "MAT 217",
+          "ECO 257",
+          "PSY 217",
+          "ECO 113"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Analytics Concentration:",
+        "text": "Analytics Concentration: Three courses from the Business Program, Mathematics or Computer\r\nScience: BUSN 351, MAT 224, MAT 327, MAT 437, CS 229.",
+        "courseReferences": [
+          "BUSN 351",
+          "MAT 224",
+          "MAT 327",
+          "MAT 437",
+          "CS 229"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Entrepreneurship Concentration:",
+        "text": "Entrepreneurship Concentration: BUSN 225; BUSN 326; BUSN 333; ART 224.",
+        "courseReferences": [
+          "BUSN 225",
+          "BUSN 326",
+          "BUSN 333",
+          "ART 224"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Finance Concentration:",
+        "text": "Finance Concentration: Three courses from Economics or the Business Program: ECO 234,\r\nECO 321, ECO 333, BUSN 323, BUSN 351.",
+        "courseReferences": [
+          "ECO 234",
+          "ECO 321",
+          "ECO 333",
+          "BUSN 323",
+          "BUSN 351"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "International Business Concentration:",
+        "text": "International Business Concentration: Three courses from Anthropology, Economics, History,\r\nInternational Studies, or Political Science: ANTH 222, ANTH 334, ECO 333, HIS 264,\r\nINS 161, PLS 217, PLS 218, PLS 231, or PLS 335). A modern languages major or minor is\r\nrecommended.",
+        "courseReferences": [
+          "ANTH 222",
+          "ANTH 334",
+          "ECO 333",
+          "HIS 264",
+          "INS 161",
+          "PLS 217",
+          "PLS 218",
+          "PLS 231",
+          "PLS 335"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Management Concentration:",
+        "text": "Management Concentration: Three courses from Communication, Economics, Psychology, or\r\nthe Business Program: COM 319, ECO 331, ECO 335, PSY 231, BUSN 328, BUSN 331,\r\nBUSN 332, or BUSN 351.",
+        "courseReferences": [
+          "COM 319",
+          "ECO 331",
+          "ECO 335",
+          "PSY 231",
+          "BUSN 328",
+          "BUSN 331",
+          "BUSN 332",
+          "BUSN 351"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Marketing Concentration:",
+        "text": "Marketing Concentration: BUSN 321, BUSN 335 and one course from Communication,\r\nPsychology, or the Business Program: COM 242, COM 246, PSY 344, BUSN 321, BUSN\r\n332, or BUSN 351.",
+        "courseReferences": [
+          "BUSN 321",
+          "BUSN 335",
+          "COM 242",
+          "COM 246",
+          "PSY 344",
+          "BUSN 332",
+          "BUSN 351"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [
+      {
+        "label": "Business Major:",
+        "text": "Business Major: Business Program courses – 211; 215; 335 or 352; 325; 327; 357 or one of\r\n323, 326, 329, or 351; 411 (culminating experience); and one additional Business Program\r\nelective.\r\nCognate courses: One course in statistics: MAT 217, 327, ECO 257, or PSY 217; two courses\r\nin Economics: ECO 113 and 114.\r\nWorkshops: 6 BUSN workshops are required for the major but carry no grade or credit.\r\nTotal of 8 units in the major plus 3 cognate units = 11 units.",
+        "courseReferences": [
+          "MAT 217",
+          "ECO 257",
+          "PSY 217",
+          "ECO 113"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "chemistry",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/chemistry.php",
+    "sourceCatalogBlockId": "chemistry",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "chemistry-base",
+      "chemistry-bachelor-of-arts",
+      "chemistry-bachelor-of-science"
+    ],
+    "requirementText": "Major – Bachelor of Arts:: Major – Bachelor of Arts: Chemistry courses – 161; 185; 221; 222; 225; 311 or 312; 372;\r\nand two electives from the following: 324, 325, 341, 351; 471 or 472 (with permission of\r\ninstructor).\r\nCognate courses – MAT 121; PHY 161 or 162; PHY 185 or 186.\r\nTotal of 10 major courses, plus 3 cognates = 13.\n\nMajor - Bachelor of Science:: Major - Bachelor of Science: Chemistry courses – 161; 185; 221; 222; 225; two semesters of\r\n308 or one semester of 309; 351; 372; four electives from the following: 311, 312, 324, 325,\r\n341; 409; 472.\r\nCognate courses: MAT 121; MAT 122; PHY 161 or 162; PHY 185 or 186.\r\nTotal of 12.5 major courses, plus 4 cognates = 16.5.\r\nNo more than 1 credit of any combination of 308 and 309 can count towards graduation.\r\nBoth B.S. and B.A. students should work with their advisors to devise a course of study best suited\r\nto prepare them for graduate study or professional opportunities in their area of interest.",
+    "requirementSections": [
+      {
+        "label": "Major – Bachelor of Arts:",
+        "text": "Major – Bachelor of Arts: Chemistry courses – 161; 185; 221; 222; 225; 311 or 312; 372;\r\nand two electives from the following: 324, 325, 341, 351; 471 or 472 (with permission of\r\ninstructor).\r\nCognate courses – MAT 121; PHY 161 or 162; PHY 185 or 186.\r\nTotal of 10 major courses, plus 3 cognates = 13.",
+        "courseReferences": [
+          "MAT 121",
+          "PHY 161",
+          "PHY 185"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major - Bachelor of Science:",
+        "text": "Major - Bachelor of Science: Chemistry courses – 161; 185; 221; 222; 225; two semesters of\r\n308 or one semester of 309; 351; 372; four electives from the following: 311, 312, 324, 325,\r\n341; 409; 472.\r\nCognate courses: MAT 121; MAT 122; PHY 161 or 162; PHY 185 or 186.\r\nTotal of 12.5 major courses, plus 4 cognates = 16.5.\r\nNo more than 1 credit of any combination of 308 and 309 can count towards graduation.\r\nBoth B.S. and B.A. students should work with their advisors to devise a course of study best suited\r\nto prepare them for graduate study or professional opportunities in their area of interest.",
+        "courseReferences": [
+          "MAT 121",
+          "MAT 122",
+          "PHY 161",
+          "PHY 185"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [
+      {
+        "label": "Major – Bachelor of Arts:",
+        "text": "Major – Bachelor of Arts: Chemistry courses – 161; 185; 221; 222; 225; 311 or 312; 372;\r\nand two electives from the following: 324, 325, 341, 351; 471 or 472 (with permission of\r\ninstructor).\r\nCognate courses – MAT 121; PHY 161 or 162; PHY 185 or 186.\r\nTotal of 10 major courses, plus 3 cognates = 13.",
+        "courseReferences": [
+          "MAT 121",
+          "PHY 161",
+          "PHY 185"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major - Bachelor of Science:",
+        "text": "Major - Bachelor of Science: Chemistry courses – 161; 185; 221; 222; 225; two semesters of\r\n308 or one semester of 309; 351; 372; four electives from the following: 311, 312, 324, 325,\r\n341; 409; 472.\r\nCognate courses: MAT 121; MAT 122; PHY 161 or 162; PHY 185 or 186.\r\nTotal of 12.5 major courses, plus 4 cognates = 16.5.\r\nNo more than 1 credit of any combination of 308 and 309 can count towards graduation.\r\nBoth B.S. and B.A. students should work with their advisors to devise a course of study best suited\r\nto prepare them for graduate study or professional opportunities in their area of interest.",
+        "courseReferences": [
+          "MAT 121",
+          "MAT 122",
+          "PHY 161",
+          "PHY 185"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "classicalstudies",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/classicalstudies.php",
+    "sourceCatalogBlockId": "classicalstudies",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "classicalstudies-base"
+    ],
+    "requirementText": "Major:: Major: GRE 218 or LAT 218; CLA 225 or CLA 228; CLA 251 or CLA 252; two 300-level\r\ncourses in ancient art and/or archeology or in history; three other appropriate courses as determined\r\nby the Classical Studies Department; CLA 401; CLA 471 (culminating experience) ; CLA 499 with\r\npassing grade.\r\nTotal of 11.5 major courses.\n\nMajor:: Major: Two 300-level courses in Greek and/or Latin; CLA 251 or 252; CLA 401; CLA 471\r\n(culminating experience); four other appropriate courses as determined by the Classical Studies\r\nDepartment. Comprehensive evaluation (CLA 499) with passing grade.\r\nTotal of 9.5 major courses.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: GRE 218 or LAT 218; CLA 225 or CLA 228; CLA 251 or CLA 252; two 300-level\r\ncourses in ancient art and/or archeology or in history; three other appropriate courses as determined\r\nby the Classical Studies Department; CLA 401; CLA 471 (culminating experience) ; CLA 499 with\r\npassing grade.\r\nTotal of 11.5 major courses.",
+        "courseReferences": [
+          "GRE 218",
+          "LAT 218",
+          "CLA 225",
+          "CLA 228",
+          "CLA 251",
+          "CLA 252",
+          "CLA 401",
+          "CLA 471",
+          "CLA 499"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major:",
+        "text": "Major: Two 300-level courses in Greek and/or Latin; CLA 251 or 252; CLA 401; CLA 471\r\n(culminating experience); four other appropriate courses as determined by the Classical Studies\r\nDepartment. Comprehensive evaluation (CLA 499) with passing grade.\r\nTotal of 9.5 major courses.",
+        "courseReferences": [
+          "CLA 251",
+          "CLA 401",
+          "CLA 471",
+          "CLA 499"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "communication",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/communication.php",
+    "sourceCatalogBlockId": "communication",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "communication-base",
+      "communication-tracks"
+    ],
+    "requirementText": "Major Tracks:: Major Tracks:\n\nCommunication.: Communication. 212; 324; 330; one applied media course - 242, 243, 246, 251, 345, 351;\r\none citizenship course - 323, 325, 328, 342, 350; one core discipline course – 318, 319, 320,\r\n327, 346; culminating experience, one from 461 or 462; and any three electives. Total of 10 units.\n\nCommunication: Media.: Communication: Media. 212; 242; 240 or 318; 330; 342 or 350; one of 164, 240, 250, 318, 320, 321, 325, 350, ARTD 224, ENG 181 or THR 115; four additional units from among the following, at least two of which are 300/400-level (COM 357 Internship is recommended): 049, 101, 210, 243, 246 , 251, 342, 345, 351, 357, ARTD 213, ARTD 237, ARTD 310, ARTD 313, ARTD 337, ARTD 410, ARTD 437, ENG 184, ENG 252, ENG 253, ENG 343, ENG 355, ENG 358,THR 125 and THR 343; one additional 300-level Communication elective; culminating experience – COM 462. Total of 12 units.\n\nCommunication: Sports and Media.: Communication: Sports and Media. 2212; 240; 251; 330; 351; 319 or 346; 328 or 342; 357 (Internship must be in sports media or industry); and three additional units from: 049, 101, 210, 243, 246, 318, 319, 327, 342, 345, 346, 352, SOC 318, SOC 334, BUSN 216 and BUSN 320; culminating experience - 462 (must be sports media project). Total of 12 units.\n\nCommunication: Public Relations.: Communication: Public Relations. 212; 246; 251; 320; 324; 330; 328 or 350; three additional courses from: 211, 242, 240, 243, 251, 318, 319, 323, 325, 327, 328, 342, 350, 351, 352, and 357; one additional 300-level communication elective (COM 357 recommended); culminating experience – one from 461 or 462. Total of 12 units..\n\nCommunication: Law and Leadership.: Communication: Law and Leadership. 212; 319; 320; 324; 325; 330; 350; 251 or 345; and two additional courses from: 163, 211, 319, 323, 325, 327, 328, 346, any Political Science or Sociology course, ANTH 259, ANTH 334, BUSN 215, BUSN 225, BUSN 333, ECO 221, ECO 224, ECO 234, ECO 331, ENV 265, PHI 237, PHI 234, HIS 223, HIS 230, HIS 330, HIS 334, HIS 337, and THS 111; one additional COM elective; culminating experience –461. Total of 12 units.",
+    "requirementSections": [
+      {
+        "label": "Major Tracks:",
+        "text": "Major Tracks:",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Communication.",
+        "text": "Communication. 212; 324; 330; one applied media course - 242, 243, 246, 251, 345, 351;\r\none citizenship course - 323, 325, 328, 342, 350; one core discipline course – 318, 319, 320,\r\n327, 346; culminating experience, one from 461 or 462; and any three electives. Total of 10 units.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Communication: Media.",
+        "text": "Communication: Media. 212; 242; 240 or 318; 330; 342 or 350; one of 164, 240, 250, 318, 320, 321, 325, 350, ARTD 224, ENG 181 or THR 115; four additional units from among the following, at least two of which are 300/400-level (COM 357 Internship is recommended): 049, 101, 210, 243, 246 , 251, 342, 345, 351, 357, ARTD 213, ARTD 237, ARTD 310, ARTD 313, ARTD 337, ARTD 410, ARTD 437, ENG 184, ENG 252, ENG 253, ENG 343, ENG 355, ENG 358,THR 125 and THR 343; one additional 300-level Communication elective; culminating experience – COM 462. Total of 12 units.",
+        "courseReferences": [
+          "ARTD 224",
+          "ENG 181",
+          "THR 115",
+          "ARE 300",
+          "COM 357",
+          "ARTD 213",
+          "ARTD 237",
+          "ARTD 310",
+          "ARTD 313",
+          "ARTD 337",
+          "ARTD 410",
+          "ARTD 437",
+          "ENG 184",
+          "ENG 252",
+          "ENG 253",
+          "ENG 343",
+          "ENG 355",
+          "ENG 358",
+          "THR 125",
+          "THR 343",
+          "COM 462"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Communication: Sports and Media.",
+        "text": "Communication: Sports and Media. 2212; 240; 251; 330; 351; 319 or 346; 328 or 342; 357 (Internship must be in sports media or industry); and three additional units from: 049, 101, 210, 243, 246, 318, 319, 327, 342, 345, 346, 352, SOC 318, SOC 334, BUSN 216 and BUSN 320; culminating experience - 462 (must be sports media project). Total of 12 units.",
+        "courseReferences": [
+          "SOC 318",
+          "SOC 334",
+          "BUSN 216",
+          "BUSN 320"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Communication: Public Relations.",
+        "text": "Communication: Public Relations. 212; 246; 251; 320; 324; 330; 328 or 350; three additional courses from: 211, 242, 240, 243, 251, 318, 319, 323, 325, 327, 328, 342, 350, 351, 352, and 357; one additional 300-level communication elective (COM 357 recommended); culminating experience – one from 461 or 462. Total of 12 units..",
+        "courseReferences": [
+          "COM 357"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Communication: Law and Leadership.",
+        "text": "Communication: Law and Leadership. 212; 319; 320; 324; 325; 330; 350; 251 or 345; and two additional courses from: 163, 211, 319, 323, 325, 327, 328, 346, any Political Science or Sociology course, ANTH 259, ANTH 334, BUSN 215, BUSN 225, BUSN 333, ECO 221, ECO 224, ECO 234, ECO 331, ENV 265, PHI 237, PHI 234, HIS 223, HIS 230, HIS 330, HIS 334, HIS 337, and THS 111; one additional COM elective; culminating experience –461. Total of 12 units.",
+        "courseReferences": [
+          "ANTH 259",
+          "ANTH 334",
+          "BUSN 215",
+          "BUSN 225",
+          "BUSN 333",
+          "ECO 221",
+          "ECO 224",
+          "ECO 234",
+          "ECO 331",
+          "ENV 265",
+          "PHI 237",
+          "PHI 234",
+          "HIS 223",
+          "HIS 230",
+          "HIS 330",
+          "HIS 334",
+          "HIS 337",
+          "THS 111"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "computerscience",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/computerscience.php",
+    "sourceCatalogBlockId": "Creative Writing",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "computerscience-base",
+      "computerscience-bachelor-of-arts",
+      "computerscience-bachelor-of-science"
+    ],
+    "requirementText": "Major - Bachelor of Arts:: Major - Bachelor of Arts: Computer Science courses – 220; 223; 231; 315; 321; 327 or 335;\r\n340 or 345; 461; three additional computer science credits at or above the 200 level, with at\r\nleast two at or above the 300 level.\r\nCognate course: MAT 243.\r\nComprehensive evaluation (CS 497), with passing grade. Total of 11.5 major courses plus 1\r\ncognate = 12.5 units.\n\nMajor - Bachelor of Science:: Major - Bachelor of Science: Computer Science courses – 220; 223; 229 or 328; 231; 315; 321; 323 or 325; 327; 340; 345; 461; one additional computer science credit at or above the 200 level.\r\nCognate courses: MAT 121; MAT 122; MAT 243; two of MAT 224, MAT 320, MAT 327, MAT 343; and one pair from the following:\r\nBIO 161 and 185;\r\nCHE 161 and 185;\r\nOne of GEO 161, 162, 163; and one of GEO 224, 323, 327, 328, 334;\r\nOne of BIO 165, 185, KIP 161; and KIP 215;\r\nPHY 162 and 186;\r\nPSY 162 and 164.\r\nComprehensive evaluation (CS 497), with passing grade. Total of 12.5 major courses plus 7 cognates = 19.5 units..",
+    "requirementSections": [
+      {
+        "label": "Major - Bachelor of Arts:",
+        "text": "Major - Bachelor of Arts: Computer Science courses – 220; 223; 231; 315; 321; 327 or 335;\r\n340 or 345; 461; three additional computer science credits at or above the 200 level, with at\r\nleast two at or above the 300 level.\r\nCognate course: MAT 243.\r\nComprehensive evaluation (CS 497), with passing grade. Total of 11.5 major courses plus 1\r\ncognate = 12.5 units.",
+        "courseReferences": [
+          "MAT 243",
+          "CS 497"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major - Bachelor of Science:",
+        "text": "Major - Bachelor of Science: Computer Science courses – 220; 223; 229 or 328; 231; 315; 321; 323 or 325; 327; 340; 345; 461; one additional computer science credit at or above the 200 level.\r\nCognate courses: MAT 121; MAT 122; MAT 243; two of MAT 224, MAT 320, MAT 327, MAT 343; and one pair from the following:\r\nBIO 161 and 185;\r\nCHE 161 and 185;\r\nOne of GEO 161, 162, 163; and one of GEO 224, 323, 327, 328, 334;\r\nOne of BIO 165, 185, KIP 161; and KIP 215;\r\nPHY 162 and 186;\r\nPSY 162 and 164.\r\nComprehensive evaluation (CS 497), with passing grade. Total of 12.5 major courses plus 7 cognates = 19.5 units..",
+        "courseReferences": [
+          "MAT 121",
+          "MAT 122",
+          "MAT 243",
+          "MAT 224",
+          "MAT 320",
+          "MAT 327",
+          "MAT 343",
+          "BIO 161",
+          "CHE 161",
+          "GEO 161",
+          "GEO 224",
+          "BIO 165",
+          "KIP 161",
+          "KIP 215",
+          "PHY 162",
+          "PSY 162",
+          "CS 497"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [
+      {
+        "label": "Major - Bachelor of Arts:",
+        "text": "Major - Bachelor of Arts: Computer Science courses – 220; 223; 231; 315; 321; 327 or 335;\r\n340 or 345; 461; three additional computer science credits at or above the 200 level, with at\r\nleast two at or above the 300 level.\r\nCognate course: MAT 243.\r\nComprehensive evaluation (CS 497), with passing grade. Total of 11.5 major courses plus 1\r\ncognate = 12.5 units.",
+        "courseReferences": [
+          "MAT 243",
+          "CS 497"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major - Bachelor of Science:",
+        "text": "Major - Bachelor of Science: Computer Science courses – 220; 223; 229 or 328; 231; 315; 321; 323 or 325; 327; 340; 345; 461; one additional computer science credit at or above the 200 level.\r\nCognate courses: MAT 121; MAT 122; MAT 243; two of MAT 224, MAT 320, MAT 327, MAT 343; and one pair from the following:\r\nBIO 161 and 185;\r\nCHE 161 and 185;\r\nOne of GEO 161, 162, 163; and one of GEO 224, 323, 327, 328, 334;\r\nOne of BIO 165, 185, KIP 161; and KIP 215;\r\nPHY 162 and 186;\r\nPSY 162 and 164.\r\nComprehensive evaluation (CS 497), with passing grade. Total of 12.5 major courses plus 7 cognates = 19.5 units..",
+        "courseReferences": [
+          "MAT 121",
+          "MAT 122",
+          "MAT 243",
+          "MAT 224",
+          "MAT 320",
+          "MAT 327",
+          "MAT 343",
+          "BIO 161",
+          "CHE 161",
+          "GEO 161",
+          "GEO 224",
+          "BIO 165",
+          "KIP 161",
+          "KIP 215",
+          "PHY 162",
+          "PSY 162",
+          "CS 497"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "datascience",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/datascience.php",
+    "sourceCatalogBlockId": "datascience",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "datascience-base"
+    ],
+    "requirementText": "Major:: Major: Data Science courses: 110; 471. Computer Science courses: 220; 223; 229 or 328; 263;\r\n362. Mathematics courses: 121; 122; 217; 224; 327; 337\r\nTotal of 13 courses.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Data Science courses: 110; 471. Computer Science courses: 220; 223; 229 or 328; 263;\r\n362. Mathematics courses: 121; 122; 217; 224; 327; 337\r\nTotal of 13 courses.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "economics",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/economics.php",
-    "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "sourceCatalogBlockId": "economics",
+    "sourceStatus": "APPROVED_LOCAL_SOURCE",
+    "reviewStatus": "ADVISOR_APPROVED_LOCAL_SOURCE",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "economics-base"
+    ],
+    "requirementText": "Major:: Major: Economics courses – 113 and 114 (highly recommended by the end of sophomore year;\r\n213; 214; 257 or MAT 217 or PSY 217; 321 or BUSN 323; 461 (culminating experience); any four others,\r\nonly one of which can be at the 100-level.\r\nCognate courses: MAT 113 or MAT 121.\r\nTotal of 11 major courses, plus 1 cognate = 12.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Economics courses – 113 and 114 (highly recommended by the end of sophomore year;\r\n213; 214; 257 or MAT 217 or PSY 217; 321 or BUSN 323; 461 (culminating experience); any four others,\r\nonly one of which can be at the 100-level.\r\nCognate courses: MAT 113 or MAT 121.\r\nTotal of 11 major courses, plus 1 cognate = 12.",
+        "courseReferences": [
+          "MAT 217",
+          "PSY 217",
+          "BUSN 323",
+          "MAT 113",
+          "MAT 121"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Economics courses – 113 and 114 (highly recommended by the end of sophomore year;\r\n213; 214; 257 or MAT 217 or PSY 217; 321 or BUSN 323; 461 (culminating experience); any four others,\r\nonly one of which can be at the 100-level.\r\nCognate courses: MAT 113 or MAT 121.\r\nTotal of 11 major courses, plus 1 cognate = 12.",
+        "courseReferences": [
+          "MAT 217",
+          "PSY 217",
+          "BUSN 323",
+          "MAT 113",
+          "MAT 121"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "education",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/education.php",
+    "sourceCatalogBlockId": "education",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "education-base",
+      "education-elementary-education-major-with-certification",
+      "education-the-secondary-education-major-with-certification",
+      "education-teaching-diverse-learners-program",
+      "education-elementary-education-major",
+      "education-secondary-education-major"
+    ],
+    "requirementText": "Elementary Education Major with certification:: Elementary Education Major with certification: The elementary education major focuses on the\r\nlearner in grades K-6 and requires admission to the Educator Preparation Program before the\r\nmajor can be declared. This major integrates liberal arts coursework with educational theory,\r\npedagogy, and methodology. As early as the freshman year, students will be engaged in the\r\nelementary classroom; this continues throughout the entire education curriculum with over 400\r\nhours spent in the classroom before graduation. Elementary education candidates must complete\r\neither an approved content area minor or complete the mild interventions coursework through\r\nthe Teaching Diverse Learners Program. This contributes to teacher candidates having a strong\r\ncontent area focus and a firm foundation in the liberal arts, which stresses critical thinking,\r\nproblem-solving, communication skills, and lifelong learning. Licensure certification provides\r\nthe necessary credentials to be eligible for teacher licensing in grades K-6. Students wishing\r\nto pursue this option must complete the requirements for the Elementary Education major\r\nand students will take the electives EDU 310 Elementary Urban Teaching, EDU 456 Student\r\nTeaching in the Elementary School and MAT 212 Mathematics for Elementary School Teachers.\n\nThe Secondary Education Major with certification:: The Secondary Education Major with certification: The Secondary Education major focuses on the learner in grades\r\n5-12 and requires admission to the Educator Preparation Program prior to declaring the major.\r\nStudents majoring in secondary education will have the depth of knowledge important to work\r\nwith adolescents and beyond, including important differences targeting middle school versus\r\nhigh school student needs. This major includes additional coursework that provides the teacher\r\ncandidate with additional advanced knowledge in key areas educational technology, special\r\neducation policy, and classroom management.\n\nTeaching Diverse Learners Program:: Teaching Diverse Learners Program: This is a dual certification program that leads to special\r\neducation licensure certification for P-12 Special Needs – Mild Interventions that is to be paired\r\nwith either Elementary Education (K-6) or Secondary Education (5-12) or All Grade Education\r\n(p-12). More specifically, this program includes advanced concepts designed to prepare you\r\nto teach students with a variety of special education needs. Because of the high demand for\r\nteachers who are qualified to work with diverse learners, you can expect a wide range of career\r\nopportunities. Five courses are required in addition to an Elementary or a Secondary base\r\npreparation: EDU 206, 207, 252, 254, 255 and 256. Integrated student\r\nteaching (EDU 458) will include both regular and special education requirements contained\r\nwithin one placement and replaces EDU 455, 456, and 459 for the Mild Interventions\r\ncandidate. Secondary candidates seeking mild interventions licensure must complete the science\r\nof reading courses and achieve a literacy endorsement beginning July 1, 2025.\n\nElementary Education Major:: Elementary Education Major: Admission to the Educator Preparation Program required.\r\nEducation courses: 203; 221; 231; 240; 241; 302; 304; 305; 308; 341; 403; 461; PSY 111; PSY\r\n244 or PSY 247; HF 101; HF 105; EDU 172 or EDU 216; BIO 165 or BIO 161.\r\nCognate courses: One course from the following: HIS 225, HIS 226, HIS 227, HIS 229, HIS\r\n230, HIS 231, HIS 234, HIS 330, HIS 333, HIS 334, HIS 335, HIS 336, or HIS 337, or other\r\nU.S. history courses by petition.\r\nTotal of 15 units in major plus 1 cognate courses = 16.5 units for the major.\n\nSecondary Education Major:: Secondary Education Major: Admission to the Educator Preparation Program required.\r\nEducation courses: 203; 221; 226; 231; 241; 252; 255; 314; 315; 33X; 341; 403; 461.\r\nCognate courses: PSY 111; PSY 244 or PSY 247.\r\nTotal of 12 units in major plus 2 cognate courses = 14 units for the major.\n\nDecision Point 2:: Decision Point 2: Minimum GPA of 3.0 in the major, completion of 300 level (methods)\r\ncourses with level two (80% effectiveness scoring) Final evaluation, successful Decision Point Two Interview by\r\nClinical Educators to assess dispositions and portfolio quality resulting in approval for a student\r\nteaching assignment EDU 455, 456, 458, or 459. Passing of all needed Praxis content area licensure exams\r\nis required to pass Decision Point 2.\n\nDecision Point 3:: Decision Point 3: Successful completion of a student teaching assignment with level three\r\ndispositions, successful Decision Point 3 Interview by Clinical Educators, completion of major\r\nresulting in a degree and teacher certification for licensing. Passing scores on the appropriate ETS praxis pedagogy\r\nexam “principles of learning and teaching” is required.\n\nTeaching License Requirements:: Teaching License Requirements: Licensing exams in both the appropriate Pedagogy grade\r\nlevels (K-6, 5-12, P-12) and teaching content area(s) are required for candidates seeking a State\r\nof Indiana teaching license. Teaching licenses are requested through the License Verification\r\nan Information System (LVIS) for the state of Indiana and these licensing applications\r\nmust be coded and approved by a Hanover College Licensing Advisor following graduation\r\nwith the appropriate degree and completion of all licensing requirements including CPR\r\ncertification, Suicide Prevention Training certification, and other requirements as set forth by the Indiana Department of Education. Information on licensure exams and\r\nother requirements is available on the Education Preparation Program’s website, in the EPP\r\nHandbook, as well as through the Education\r\nDepartment faculty. Hanover College prepares students for Indiana teacher licensure\r\nrequirements. Indiana shares license reciprocity with most states but students from outside\r\nIndiana should discuss what this means for licensure in their state with our licensing advisors\r\nearly in their time at Hanover College.\n\nEducation Studies.: Education Studies. The Education Studies Major is an interdisciplinary major designed for\r\nthose who would like to apply educational theory in a manner outside the K-12 classroom\r\nsetting. This major provides a background in education paired with concentrated coursework\r\nin social justice, learning or policy. A minor in educational studies is also available consisting\r\nof a cluster of Education coursework that could provide a background in educational theory to\r\nsupport major coursework.\n\nMajor:: Major: Education courses: 221; 231; 252; 330; 461.\r\nMust Select one of the Three Themes:\n\nCognate courses:: Cognate courses: PSY 11; PSY 244 or PSY 247.\r\nTotal of 11 units.",
+    "requirementSections": [
+      {
+        "label": "Elementary Education Major with certification:",
+        "text": "Elementary Education Major with certification: The elementary education major focuses on the\r\nlearner in grades K-6 and requires admission to the Educator Preparation Program before the\r\nmajor can be declared. This major integrates liberal arts coursework with educational theory,\r\npedagogy, and methodology. As early as the freshman year, students will be engaged in the\r\nelementary classroom; this continues throughout the entire education curriculum with over 400\r\nhours spent in the classroom before graduation. Elementary education candidates must complete\r\neither an approved content area minor or complete the mild interventions coursework through\r\nthe Teaching Diverse Learners Program. This contributes to teacher candidates having a strong\r\ncontent area focus and a firm foundation in the liberal arts, which stresses critical thinking,\r\nproblem-solving, communication skills, and lifelong learning. Licensure certification provides\r\nthe necessary credentials to be eligible for teacher licensing in grades K-6. Students wishing\r\nto pursue this option must complete the requirements for the Elementary Education major\r\nand students will take the electives EDU 310 Elementary Urban Teaching, EDU 456 Student\r\nTeaching in the Elementary School and MAT 212 Mathematics for Elementary School Teachers.",
+        "courseReferences": [
+          "OVER 400",
+          "EDU 310",
+          "EDU 456",
+          "MAT 212"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "The Secondary Education Major with certification:",
+        "text": "The Secondary Education Major with certification: The Secondary Education major focuses on the learner in grades\r\n5-12 and requires admission to the Educator Preparation Program prior to declaring the major.\r\nStudents majoring in secondary education will have the depth of knowledge important to work\r\nwith adolescents and beyond, including important differences targeting middle school versus\r\nhigh school student needs. This major includes additional coursework that provides the teacher\r\ncandidate with additional advanced knowledge in key areas educational technology, special\r\neducation policy, and classroom management.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Teaching Diverse Learners Program:",
+        "text": "Teaching Diverse Learners Program: This is a dual certification program that leads to special\r\neducation licensure certification for P-12 Special Needs – Mild Interventions that is to be paired\r\nwith either Elementary Education (K-6) or Secondary Education (5-12) or All Grade Education\r\n(p-12). More specifically, this program includes advanced concepts designed to prepare you\r\nto teach students with a variety of special education needs. Because of the high demand for\r\nteachers who are qualified to work with diverse learners, you can expect a wide range of career\r\nopportunities. Five courses are required in addition to an Elementary or a Secondary base\r\npreparation: EDU 206, 207, 252, 254, 255 and 256. Integrated student\r\nteaching (EDU 458) will include both regular and special education requirements contained\r\nwithin one placement and replaces EDU 455, 456, and 459 for the Mild Interventions\r\ncandidate. Secondary candidates seeking mild interventions licensure must complete the science\r\nof reading courses and achieve a literacy endorsement beginning July 1, 2025.",
+        "courseReferences": [
+          "EDU 206",
+          "EDU 458",
+          "EDU 455"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Elementary Education Major:",
+        "text": "Elementary Education Major: Admission to the Educator Preparation Program required.\r\nEducation courses: 203; 221; 231; 240; 241; 302; 304; 305; 308; 341; 403; 461; PSY 111; PSY\r\n244 or PSY 247; HF 101; HF 105; EDU 172 or EDU 216; BIO 165 or BIO 161.\r\nCognate courses: One course from the following: HIS 225, HIS 226, HIS 227, HIS 229, HIS\r\n230, HIS 231, HIS 234, HIS 330, HIS 333, HIS 334, HIS 335, HIS 336, or HIS 337, or other\r\nU.S. history courses by petition.\r\nTotal of 15 units in major plus 1 cognate courses = 16.5 units for the major.",
+        "courseReferences": [
+          "PSY 111",
+          "PSY 244",
+          "PSY 247",
+          "HF 101",
+          "HF 105",
+          "EDU 172",
+          "EDU 216",
+          "BIO 165",
+          "BIO 161",
+          "HIS 225",
+          "HIS 226",
+          "HIS 227",
+          "HIS 229",
+          "HIS 230",
+          "HIS 231",
+          "HIS 234",
+          "HIS 330",
+          "HIS 333",
+          "HIS 334",
+          "HIS 335",
+          "HIS 336",
+          "HIS 337"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Secondary Education Major:",
+        "text": "Secondary Education Major: Admission to the Educator Preparation Program required.\r\nEducation courses: 203; 221; 226; 231; 241; 252; 255; 314; 315; 33X; 341; 403; 461.\r\nCognate courses: PSY 111; PSY 244 or PSY 247.\r\nTotal of 12 units in major plus 2 cognate courses = 14 units for the major.",
+        "courseReferences": [
+          "PSY 111",
+          "PSY 244",
+          "PSY 247"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Decision Point 2:",
+        "text": "Decision Point 2: Minimum GPA of 3.0 in the major, completion of 300 level (methods)\r\ncourses with level two (80% effectiveness scoring) Final evaluation, successful Decision Point Two Interview by\r\nClinical Educators to assess dispositions and portfolio quality resulting in approval for a student\r\nteaching assignment EDU 455, 456, 458, or 459. Passing of all needed Praxis content area licensure exams\r\nis required to pass Decision Point 2.",
+        "courseReferences": [
+          "EDU 455"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Decision Point 3:",
+        "text": "Decision Point 3: Successful completion of a student teaching assignment with level three\r\ndispositions, successful Decision Point 3 Interview by Clinical Educators, completion of major\r\nresulting in a degree and teacher certification for licensing. Passing scores on the appropriate ETS praxis pedagogy\r\nexam “principles of learning and teaching” is required.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Teaching License Requirements:",
+        "text": "Teaching License Requirements: Licensing exams in both the appropriate Pedagogy grade\r\nlevels (K-6, 5-12, P-12) and teaching content area(s) are required for candidates seeking a State\r\nof Indiana teaching license. Teaching licenses are requested through the License Verification\r\nan Information System (LVIS) for the state of Indiana and these licensing applications\r\nmust be coded and approved by a Hanover College Licensing Advisor following graduation\r\nwith the appropriate degree and completion of all licensing requirements including CPR\r\ncertification, Suicide Prevention Training certification, and other requirements as set forth by the Indiana Department of Education. Information on licensure exams and\r\nother requirements is available on the Education Preparation Program’s website, in the EPP\r\nHandbook, as well as through the Education\r\nDepartment faculty. Hanover College prepares students for Indiana teacher licensure\r\nrequirements. Indiana shares license reciprocity with most states but students from outside\r\nIndiana should discuss what this means for licensure in their state with our licensing advisors\r\nearly in their time at Hanover College.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Education Studies.",
+        "text": "Education Studies. The Education Studies Major is an interdisciplinary major designed for\r\nthose who would like to apply educational theory in a manner outside the K-12 classroom\r\nsetting. This major provides a background in education paired with concentrated coursework\r\nin social justice, learning or policy. A minor in educational studies is also available consisting\r\nof a cluster of Education coursework that could provide a background in educational theory to\r\nsupport major coursework.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major:",
+        "text": "Major: Education courses: 221; 231; 252; 330; 461.\r\nMust Select one of the Three Themes:",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Cognate courses:",
+        "text": "Cognate courses: PSY 11; PSY 244 or PSY 247.\r\nTotal of 11 units.",
+        "courseReferences": [
+          "PSY 244",
+          "PSY 247"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [
+      {
+        "label": "Elementary Education Major:",
+        "text": "Elementary Education Major: Admission to the Educator Preparation Program required.\r\nEducation courses: 203; 221; 231; 240; 241; 302; 304; 305; 308; 341; 403; 461; PSY 111; PSY\r\n244 or PSY 247; HF 101; HF 105; EDU 172 or EDU 216; BIO 165 or BIO 161.\r\nCognate courses: One course from the following: HIS 225, HIS 226, HIS 227, HIS 229, HIS\r\n230, HIS 231, HIS 234, HIS 330, HIS 333, HIS 334, HIS 335, HIS 336, or HIS 337, or other\r\nU.S. history courses by petition.\r\nTotal of 15 units in major plus 1 cognate courses = 16.5 units for the major.",
+        "courseReferences": [
+          "PSY 111",
+          "PSY 244",
+          "PSY 247",
+          "HF 101",
+          "HF 105",
+          "EDU 172",
+          "EDU 216",
+          "BIO 165",
+          "BIO 161",
+          "HIS 225",
+          "HIS 226",
+          "HIS 227",
+          "HIS 229",
+          "HIS 230",
+          "HIS 231",
+          "HIS 234",
+          "HIS 330",
+          "HIS 333",
+          "HIS 334",
+          "HIS 335",
+          "HIS 336",
+          "HIS 337"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Secondary Education Major:",
+        "text": "Secondary Education Major: Admission to the Educator Preparation Program required.\r\nEducation courses: 203; 221; 226; 231; 241; 252; 255; 314; 315; 33X; 341; 403; 461.\r\nCognate courses: PSY 111; PSY 244 or PSY 247.\r\nTotal of 12 units in major plus 2 cognate courses = 14 units for the major.",
+        "courseReferences": [
+          "PSY 111",
+          "PSY 244",
+          "PSY 247"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Cognate courses:",
+        "text": "Cognate courses: PSY 11; PSY 244 or PSY 247.\r\nTotal of 11 units.",
+        "courseReferences": [
+          "PSY 244",
+          "PSY 247"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "engineering",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/engineering.php",
+    "sourceCatalogBlockId": "engineering",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "engineering-base",
+      "engineering-bachelor-of-arts-engineering-science-engs",
+      "engineering-bachelor-of-science-engineering"
+    ],
+    "requirementText": "Core Engineering Requirements: Core Engineering Requirements \r\nScience – CHE 161; CS 220; MAT 121; MAT 122; PHY 162; PHY 186; PHY 245\r\nEngineering – 190; 250; 408-409 or 471 (culminating experience).\r\nTotal of 10 units.\n\nMajor: Bachelor of Arts - Engineering Science (ENGS):: Major: Bachelor of Arts - Engineering Science (ENGS): completion of Engineering Core\r\n(10 units); one unit from the Math & Basic Science electives listed below; and five additional\r\nengineering units. A total of four of the six elective units must be at the 300 level or above.\r\nTotal of 16 units.\n\nMajor: Bachelor of Science - Engineering:: Major: Bachelor of Science - Engineering: completion of the Engineering Core (10 units);\r\nENGR 311; 401; one unit from ENGR 315, 321, 347, 414, 418 or 422; two units from the Math &\r\nBasic Science Electives listed below; and eleven additional units from Engineering courses or\r\nCS 223, CS 231, CS 315, CS 340, CS 345. Up to four of those twelve additional units can be\r\nreplaced with additional Math and Basic Science electives listed below.\r\nTotal of 25.5 units.",
+    "requirementSections": [
+      {
+        "label": "Core Engineering Requirements",
+        "text": "Core Engineering Requirements \r\nScience – CHE 161; CS 220; MAT 121; MAT 122; PHY 162; PHY 186; PHY 245\r\nEngineering – 190; 250; 408-409 or 471 (culminating experience).\r\nTotal of 10 units.",
+        "courseReferences": [
+          "CHE 161",
+          "CS 220",
+          "MAT 121",
+          "MAT 122",
+          "PHY 162",
+          "PHY 186",
+          "PHY 245"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major: Bachelor of Arts - Engineering Science (ENGS):",
+        "text": "Major: Bachelor of Arts - Engineering Science (ENGS): completion of Engineering Core\r\n(10 units); one unit from the Math & Basic Science electives listed below; and five additional\r\nengineering units. A total of four of the six elective units must be at the 300 level or above.\r\nTotal of 16 units.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major: Bachelor of Science - Engineering:",
+        "text": "Major: Bachelor of Science - Engineering: completion of the Engineering Core (10 units);\r\nENGR 311; 401; one unit from ENGR 315, 321, 347, 414, 418 or 422; two units from the Math &\r\nBasic Science Electives listed below; and eleven additional units from Engineering courses or\r\nCS 223, CS 231, CS 315, CS 340, CS 345. Up to four of those twelve additional units can be\r\nreplaced with additional Math and Basic Science electives listed below.\r\nTotal of 25.5 units.",
+        "courseReferences": [
+          "ENGR 311",
+          "ENGR 315",
+          "CS 223",
+          "CS 231",
+          "CS 315",
+          "CS 340",
+          "CS 345"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "english",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/english.php",
+    "sourceCatalogBlockId": "english",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "english-base",
+      "english-literary-studies-track",
+      "english-creative-writing-track"
+    ],
+    "requirementText": "Major:: Major: Students must select either the Literary Studies or Creative Writing track. No more\r\nthan one 100-level course may count toward the major.\n\nLiterary Studies Track:: Literary Studies Track: Ten English courses, including—240; not less than three or more than\r\nfour of the following: 243, 244, 245, 246 and 247; one from 353, 354, and 356; either 461 or\r\n471. Total of 10 English courses.\n\nCreative Writing Track:: Creative Writing Track: Ten courses, including—252 and 355; two from the following: 243,\r\n244, 245, 246, 247; two from the following: COM 246, ENG/COM 251, ENG 253, ENG/\r\nTHR 343, ENG 358, THR 345, THR 346; one from 321, 322, and 336; 471; two other\r\nEnglish courses. Total of 10 courses.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Students must select either the Literary Studies or Creative Writing track. No more\r\nthan one 100-level course may count toward the major.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Literary Studies Track:",
+        "text": "Literary Studies Track: Ten English courses, including—240; not less than three or more than\r\nfour of the following: 243, 244, 245, 246 and 247; one from 353, 354, and 356; either 461 or\r\n471. Total of 10 English courses.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Creative Writing Track:",
+        "text": "Creative Writing Track: Ten courses, including—252 and 355; two from the following: 243,\r\n244, 245, 246, 247; two from the following: COM 246, ENG/COM 251, ENG 253, ENG/\r\nTHR 343, ENG 358, THR 345, THR 346; one from 321, 322, and 336; 471; two other\r\nEnglish courses. Total of 10 courses.",
+        "courseReferences": [
+          "COM 246",
+          "COM 251",
+          "ENG 253",
+          "THR 343",
+          "ENG 358",
+          "THR 345",
+          "THR 346"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "french",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/french.php",
+    "sourceCatalogBlockId": "french",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "french-base"
+    ],
+    "requirementText": "Major:: Major: 8 French courses, not including 115, 116, or 222, at least 3 of which must be at or\r\nabove the 300 level; 457 or 471 (culminating experience).\r\nTotal of 9 major courses.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: 8 French courses, not including 115, 116, or 222, at least 3 of which must be at or\r\nabove the 300 level; 457 or 471 (culminating experience).\r\nTotal of 9 major courses.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "genderstudies",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/genderstudies.php",
+    "sourceCatalogBlockId": "generstudies",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "genderstudies-base",
+      "genderstudies-bachelor-of-arts"
+    ],
+    "requirementText": "Major:: Major: GNDS 111; at least two courses from PHI 211, PSY 233 or SOC 228; GNDS 471;\r\nand any six others from the list below, at least four of which must be 200-level or above;\r\nGNDR 499 with C- or better.\r\nTotal of 11 major courses.\n\nMajor : Bachelor of Arts: Major : Bachelor of Arts",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: GNDS 111; at least two courses from PHI 211, PSY 233 or SOC 228; GNDS 471;\r\nand any six others from the list below, at least four of which must be 200-level or above;\r\nGNDR 499 with C- or better.\r\nTotal of 11 major courses.",
+        "courseReferences": [
+          "GNDS 111",
+          "PHI 211",
+          "PSY 233",
+          "SOC 228",
+          "GNDS 471",
+          "GNDR 499"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major : Bachelor of Arts",
+        "text": "Major : Bachelor of Arts",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [
+      {
+        "caption": "Required Gender Studies Courses:",
+        "rows": [
+          {
+            "code": "GNDS 111",
+            "name": "Introduction to Gender Studies",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "GNDS 471",
+            "name": "Senior Thesis",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "GNDR 499",
+            "name": "Comprehensive Evaluation",
+            "units": "1",
+            "note": "With C- or better"
+          }
+        ]
+      },
+      {
+        "caption": "Choose Two Courses:",
+        "rows": [
+          {
+            "code": "PHI 211",
+            "name": "Classic Texts of Feminism",
+            "units": "1",
+            "note": "Or equivalent"
+          },
+          {
+            "code": "PSY 233",
+            "name": "Psychology of Gender",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "SOC 228",
+            "name": "Sociology of Gender",
+            "units": "1",
+            "note": ""
+          }
+        ]
+      },
+      {
+        "caption": "Course Electives from other Departments:",
+        "rows": [
+          {
+            "code": "ANTH 336",
+            "name": "Gender in Cross-Cultural Perspective",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "COM 323",
+            "name": "Gender and Communication",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "ENG 326",
+            "name": "Women in Fiction",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "ENG 332",
+            "name": "Literary Genderquests",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "GNDS 111",
+            "name": "Introduction to Gender Studies",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "HIS 229",
+            "name": "American Women’s History",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "HIS 255",
+            "name": "History of Modern Gender",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "PHI 211",
+            "name": "Classic Texts of Feminism",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "PLS 225",
+            "name": "Women in the Developing World",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "PSY 233",
+            "name": "Psychology of Gender",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "SPA 329",
+            "name": "Women and Gender in Spain",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "SPA 429",
+            "name": "Advanced Women and Gender in Spain",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "SOC 225",
+            "name": "Sociology of Families",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "SOC 228",
+            "name": "Sociology of Gender",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "SOC 348",
+            "name": "Race, Gender and Sexuality",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "THS 227",
+            "name": "Feminist Theologies",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "THS 321",
+            "name": "Gender, Sex, and Family in Judio-Christian Tradition",
+            "units": "1",
+            "note": ""
+          },
+          {
+            "code": "THS 326",
+            "name": "Sexual Ethics",
+            "units": "1",
+            "note": ""
+          }
+        ]
+      }
+    ],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "geology",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/geology.php",
+    "sourceCatalogBlockId": "geology",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "geology-base"
+    ],
+    "requirementText": "Major:: Major: Geology courses: one of a 16X; 224; 236; 471 (culminating experience); any four additional courses. Students must complete at least one field course (237 or 239).\r\nCognate courses; three courses, including CHE 161; either AST 165, AST 166, PHY 161 or\r\nPHY 162, or any college-level, laboratory-based biology course; and either MAT 121, MAT\r\n217, or PSY 217.\r\nComprehensive evaluation (GEO 496) with grade C- or higher. Total of 8.25 major courses, plus 3\r\ncognates = 11.25.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Geology courses: one of a 16X; 224; 236; 471 (culminating experience); any four additional courses. Students must complete at least one field course (237 or 239).\r\nCognate courses; three courses, including CHE 161; either AST 165, AST 166, PHY 161 or\r\nPHY 162, or any college-level, laboratory-based biology course; and either MAT 121, MAT\r\n217, or PSY 217.\r\nComprehensive evaluation (GEO 496) with grade C- or higher. Total of 8.25 major courses, plus 3\r\ncognates = 11.25.",
+        "courseReferences": [
+          "CHE 161",
+          "AST 165",
+          "AST 166",
+          "PHY 161",
+          "PHY 162",
+          "MAT 121",
+          "MAT 217",
+          "PSY 217",
+          "GEO 496"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Geology courses: one of a 16X; 224; 236; 471 (culminating experience); any four additional courses. Students must complete at least one field course (237 or 239).\r\nCognate courses; three courses, including CHE 161; either AST 165, AST 166, PHY 161 or\r\nPHY 162, or any college-level, laboratory-based biology course; and either MAT 121, MAT\r\n217, or PSY 217.\r\nComprehensive evaluation (GEO 496) with grade C- or higher. Total of 8.25 major courses, plus 3\r\ncognates = 11.25.",
+        "courseReferences": [
+          "CHE 161",
+          "AST 165",
+          "AST 166",
+          "PHY 161",
+          "PHY 162",
+          "MAT 121",
+          "MAT 217",
+          "PSY 217",
+          "GEO 496"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "german",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/german.php",
+    "sourceCatalogBlockId": "german",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "german-base",
+      "german-german-major"
+    ],
+    "requirementText": "German Major:: German Major: 8 courses, a minimum of 7 in German, not including 115 and 116, at least 3\r\nat the 300-level; GER 457 or 471 (culminating experience). 1 course may be taken in English\r\nfrom the following: GER 222, GER 243, HIS 327, HIS 349, HIS 354, HIS 355, MUS 232,\r\nPHI 163, PHI 224, PHI 246, PHI 325, and other courses by petition.\r\nTotal of 9 major courses.",
+    "requirementSections": [
+      {
+        "label": "German Major:",
+        "text": "German Major: 8 courses, a minimum of 7 in German, not including 115 and 116, at least 3\r\nat the 300-level; GER 457 or 471 (culminating experience). 1 course may be taken in English\r\nfrom the following: GER 222, GER 243, HIS 327, HIS 349, HIS 354, HIS 355, MUS 232,\r\nPHI 163, PHI 224, PHI 246, PHI 325, and other courses by petition.\r\nTotal of 9 major courses.",
+        "courseReferences": [
+          "GER 457",
+          "GER 222",
+          "GER 243",
+          "HIS 327",
+          "HIS 349",
+          "HIS 354",
+          "HIS 355",
+          "MUS 232",
+          "PHI 163",
+          "PHI 224",
+          "PHI 246",
+          "PHI 325"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "healthandmovementstudies",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/healthandmovementstudies.php",
+    "sourceCatalogBlockId": "healthandmovementstudies",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "healthandmovementstudies-base"
+    ],
+    "requirementText": "Major:: Major: KIP 161 or KIP 327; either KIP 162 and 186 or KIP 215 and 230; KIP 225; KIP 345;\r\nHMS 231; HMS 324; 457, 461 or 471 (culminating experience*); PSY 111; PSY 244 or 247;\r\nand any two of the following: PSY 231, 300-level KIP course, 300-level HMS course.\r\nTotal of 12 major courses.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: KIP 161 or KIP 327; either KIP 162 and 186 or KIP 215 and 230; KIP 225; KIP 345;\r\nHMS 231; HMS 324; 457, 461 or 471 (culminating experience*); PSY 111; PSY 244 or 247;\r\nand any two of the following: PSY 231, 300-level KIP course, 300-level HMS course.\r\nTotal of 12 major courses.",
+        "courseReferences": [
+          "KIP 161",
+          "KIP 327",
+          "KIP 162",
+          "KIP 215",
+          "KIP 225",
+          "KIP 345",
+          "HMS 231",
+          "HMS 324",
+          "PSY 111",
+          "PSY 244",
+          "PSY 231"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "history",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/history.php",
+    "sourceCatalogBlockId": "history",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "history-base"
+    ],
+    "requirementText": "Major:: Major: History courses – Nine, including 372 and 471 (culminating experience), but not\r\nincluding 100 level courses.\r\nRecommended: 215, 216, 217.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: History courses – Nine, including 372 and 471 (culminating experience), but not\r\nincluding 100 level courses.\r\nRecommended: 215, 216, 217.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "internationalstudies",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/internationalstudies.php",
+    "sourceCatalogBlockId": "internationalstudies",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "internationalstudies-base"
+    ],
+    "requirementText": "Major:: Major: (1) PLS 231; (2) a two-course sequence in economics, including ECO 114 followed by a course with an emphasis in international economics; (3) a two-course sequence in Anthropology including 162 followed by an area studies course; (4) HIS 264; (5) a research methods course (ANTH 325, ECO 257, HIS 372, PLS 239, or SOC 320); (6) INS 461 (culminating experience); (7) four other courses, chosen from appropriate fields and approved by the Department to form a specific regional or topical focus, and including at least two courses at or above the 300 level.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: (1) PLS 231; (2) a two-course sequence in economics, including ECO 114 followed by a course with an emphasis in international economics; (3) a two-course sequence in Anthropology including 162 followed by an area studies course; (4) HIS 264; (5) a research methods course (ANTH 325, ECO 257, HIS 372, PLS 239, or SOC 320); (6) INS 461 (culminating experience); (7) four other courses, chosen from appropriate fields and approved by the Department to form a specific regional or topical focus, and including at least two courses at or above the 300 level.",
+        "courseReferences": [
+          "PLS 231",
+          "ECO 114",
+          "HIS 264",
+          "ANTH 325",
+          "ECO 257",
+          "HIS 372",
+          "PLS 239",
+          "SOC 320",
+          "INS 461"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "kinesiologyandintegrativephysiology",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/kinesiologyandintegrativephysiology.php",
+    "sourceCatalogBlockId": "kinesiologyandintegrativephysiology",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "kinesiologyandintegrativephysiology-base",
+      "kinesiologyandintegrativephysiology-bachelor-of-arts",
+      "kinesiologyandintegrativephysiology-bachelor-of-science"
+    ],
+    "requirementText": "Major - Bachelor of Arts:: Major - Bachelor of Arts: A gateway course*; KIP 215; 225; 230; 326; 327; 341; 461 or 471; and two additional units at or above the 300-level.\n\nMajor - Bachelor of Science:: Major - Bachelor of Science: KIP 215; 225; 230; 326; 327; 341; 471; and three additional units at or above the 300-level",
+    "requirementSections": [
+      {
+        "label": "Major - Bachelor of Arts:",
+        "text": "Major - Bachelor of Arts: A gateway course*; KIP 215; 225; 230; 326; 327; 341; 461 or 471; and two additional units at or above the 300-level.",
+        "courseReferences": [
+          "KIP 215"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      },
+      {
+        "label": "Major - Bachelor of Science:",
+        "text": "Major - Bachelor of Science: KIP 215; 225; 230; 326; 327; 341; 471; and three additional units at or above the 300-level",
+        "courseReferences": [
+          "KIP 215"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "latin",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/latin.php",
+    "sourceCatalogBlockId": "latin",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "latin-base"
+    ],
+    "requirementText": "Major:: Major: Four 300-level LAT courses, CLA 100, 225, 252, 401, LAT 471 (culminating experience); LAT 499 with passing grade.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Four 300-level LAT courses, CLA 100, 225, 252, 401, LAT 471 (culminating experience); LAT 499 with passing grade.",
+        "courseReferences": [
+          "FOUR 300",
+          "CLA 100",
+          "LAT 471",
+          "LAT 499"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "mathematics",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/mathematics.php",
+    "sourceCatalogBlockId": "mathamatics",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "mathematics-base"
+    ],
+    "requirementText": "Major:: Major: Mathematics courses – 121 or equivalent; 122; 220; 221; 224; 324; 327; 337; 461 or 471 (culminating experience); 496; two others, not including 101, 113, 210, 212, 217, or 243 and including at least one at the 300 level or higher.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Mathematics courses – 121 or equivalent; 122; 220; 221; 224; 324; 327; 337; 461 or 471 (culminating experience); 496; two others, not including 101, 113, 210, 212, 217, or 243 and including at least one at the 300 level or higher.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "medievalandrenaissancestudies",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/medievalandrenaissancestudies.php",
+    "sourceCatalogBlockId": "medievalrenaissancestudies",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "medievalandrenaissancestudies-base"
+    ],
+    "requirementText": "Major:: Major: PHI 225 or 226; HIS 215, plus another from HIS 243, HIS 244, HIS 254, HIS 256, HIS 326, HIS 327, HIS 359, or CLA/HIS 252; any two of the following, in two different languages, ENG 327, ENG 334, ENG 347, ENG/THR 348, FRE 423, LAT 320, SPA 336, or SPA 436 ; 471 (culminating experience); five other courses drawn from the list below.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: PHI 225 or 226; HIS 215, plus another from HIS 243, HIS 244, HIS 254, HIS 256, HIS 326, HIS 327, HIS 359, or CLA/HIS 252; any two of the following, in two different languages, ENG 327, ENG 334, ENG 347, ENG/THR 348, FRE 423, LAT 320, SPA 336, or SPA 436 ; 471 (culminating experience); five other courses drawn from the list below.",
+        "courseReferences": [
+          "PHI 225",
+          "HIS 215",
+          "HIS 243",
+          "HIS 244",
+          "HIS 254",
+          "HIS 256",
+          "HIS 326",
+          "HIS 327",
+          "HIS 359",
+          "HIS 252",
+          "ENG 327",
+          "ENG 334",
+          "ENG 347",
+          "THR 348",
+          "FRE 423",
+          "LAT 320",
+          "SPA 336",
+          "SPA 436"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "music",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/music.php",
+    "sourceCatalogBlockId": "music",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "music-base"
+    ],
+    "requirementText": "Major:: Major: Music courses – 121; 122; 221; 231; 232; 233; 471 (culminating experience); three others from 218, 325, one course credit in major applied area, or one course credit in ensembles. Total of 11 major course; MUS: 499 (oral, aural, and written) with a grade of C or better.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Music courses – 121; 122; 221; 231; 232; 233; 471 (culminating experience); three others from 218, 325, one course credit in major applied area, or one course credit in ensembles. Total of 11 major course; MUS: 499 (oral, aural, and written) with a grade of C or better.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "nursing",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/nursing.php",
+    "sourceCatalogBlockId": "nursing",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "nursing-base"
+    ],
+    "requirementText": "Major:: Major: NUR 111, 310, 311, 312, 313, 314, 315, 316, and 462",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: NUR 111, 310, 311, 312, 313, 314, 315, 316, and 462",
+        "courseReferences": [
+          "NUR 111"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "philosophy",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/philosophy.php",
+    "sourceCatalogBlockId": "philosophy",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "philosophy-base"
+    ],
+    "requirementText": "Major:: Major: Philosophy courses– 224; 225; 351; 457 or 471 (culminating experience); any 5 other philosophy courses with no more than one at the 100 level.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Philosophy courses– 224; 225; 351; 457 or 471 (culminating experience); any 5 other philosophy courses with no more than one at the 100 level.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "physicsandastronomy",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/physicsandastronomy.php",
+    "sourceCatalogBlockId": null,
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "physicsandastronomy-base"
+    ],
+    "requirementText": "",
+    "requirementSections": [],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "No matching official program block was found in the captured catalog home.",
+    "catalogBlockFound": false
   },
   {
     "programId": "politicalscience",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/politicalscience.php",
+    "sourceCatalogBlockId": "politicalscience",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "politicalscience-base"
+    ],
+    "requirementText": "Major:: Major: A 100-Level Political Science course except PLS 160; 212 or 231; 235; 239; 461 (culminating experience); five others with at least three courses at the 300 level.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: A 100-Level Political Science course except PLS 160; 212 or 231; 235; 239; 461 (culminating experience); five others with at least three courses at the 300 level.",
+        "courseReferences": [
+          "PLS 160"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "psychology",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/psychology.php",
+    "sourceCatalogBlockId": "psychology",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "psychology-base"
+    ],
+    "requirementText": "Major:: Major: Psychology courses – 111; 162 or 164; 217 or MAT 217; 220 before the end of the junior year; 231, 233, 244, or 247 before the end of junior year; 333, 334 or 337; 344 or 346; any other two courses; 401; 462 (culminating experience).",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Psychology courses – 111; 162 or 164; 217 or MAT 217; 220 before the end of the junior year; 231, 233, 244, or 247 before the end of junior year; 333, 334 or 337; 344 or 346; any other two courses; 401; 462 (culminating experience).",
+        "courseReferences": [
+          "MAT 217"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "sociology",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/sociology.php",
+    "sourceCatalogBlockId": "sociology",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "sociology-base"
+    ],
+    "requirementText": "Major:: Major: Sociology courses – 164; one social inequality course (228, 318, 338, or 348); 320 or PLS 239; 330; 461 or 471 (culminating experience); five others with two at the 200-level and three at the 300-level or above.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Sociology courses – 164; one social inequality course (228, 318, 338, or 348); 320 or PLS 239; 330; 461 or 471 (culminating experience); five others with two at the 200-level and three at the 300-level or above.",
+        "courseReferences": [
+          "PLS 239"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "spanish",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/spanish.php",
+    "sourceCatalogBlockId": "spanish",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "spanish-base"
+    ],
+    "requirementText": "Major:: Major: Spanish courses – 227 or 228; 230 or 231; 319; 320; 457, 471, EDU 455*, or EDU 456* (culminating experience); one course above 320; one course at the 400 level; two others, not including 115 or 116. Total of 9 major courses.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Spanish courses – 227 or 228; 230 or 231; 319; 320; 457, 471, EDU 455*, or EDU 456* (culminating experience); one course above 320; one course at the 400 level; two others, not including 115 or 116. Total of 9 major courses.",
+        "courseReferences": [
+          "EDU 455",
+          "EDU 456",
+          "ABOVE 320"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "sportsmanagement",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/sportsmanagement.php",
+    "sourceCatalogBlockId": "sportsmanagement",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "sportsmanagement-base",
+      "sportsmanagement-sports-management-major"
+    ],
+    "requirementText": "Sports Management Major:: Sports Management Major: BUSN 211; BUSN 215; BUSN 325; SMGT 216; 320; 332; 357; 412; COM 319; KIP 330; one course in statistics: MAT 217, MAT 327, ECO 257, or PSY 217; and any one of the following: BUSN 328, SOC 334, COM 246, COM 342, COM 351, or KIP 324.",
+    "requirementSections": [
+      {
+        "label": "Sports Management Major:",
+        "text": "Sports Management Major: BUSN 211; BUSN 215; BUSN 325; SMGT 216; 320; 332; 357; 412; COM 319; KIP 330; one course in statistics: MAT 217, MAT 327, ECO 257, or PSY 217; and any one of the following: BUSN 328, SOC 334, COM 246, COM 342, COM 351, or KIP 324.",
+        "courseReferences": [
+          "BUSN 211",
+          "BUSN 215",
+          "BUSN 325",
+          "SMGT 216",
+          "COM 319",
+          "KIP 330",
+          "MAT 217",
+          "MAT 327",
+          "ECO 257",
+          "PSY 217",
+          "BUSN 328",
+          "SOC 334",
+          "COM 246",
+          "COM 342",
+          "COM 351",
+          "KIP 324"
+        ],
+        "parserConfidence": "MEDIUM",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "theatre",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/theatre.php",
+    "sourceCatalogBlockId": "theatre",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "theatre-base"
+    ],
+    "requirementText": "Major:: Major: 051 (.25; must take four times for a total of 1.0 unit); 114; 121; choice of 122 or 222; 125; 305 (0.5 unit); four other Theatre courses with at least three at the 200-level or above; 471 (Culminating Experience).",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: 051 (.25; must take four times for a total of 1.0 unit); 114; 121; choice of 122 or 222; 125; 305 (0.5 unit); four other Theatre courses with at least three at the 200-level or above; 471 (Culminating Experience).",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   },
   {
     "programId": "theologicalstudies",
     "catalogYear": "2025-2026",
     "sourceUrl": "https://catalog.hanover.edu/programs/theologicalstudies.php",
+    "sourceCatalogBlockId": "theologicalstudies",
     "sourceStatus": "DRAFT_REVIEW_REQUIRED",
+    "reviewStatus": "PENDING_ADVISOR_APPROVAL",
     "requirementTree": null,
-    "sourceNote": "Catalog source captured; requirement tree requires human review before runtime use."
+    "variantIds": [
+      "theologicalstudies-base"
+    ],
+    "requirementText": "Major:: Major: Theological Studies courses — 9, including one in biblical studies; one in contemporary theology; one in ethics; one in historical theology; 412 (culminating experience), any four others, no more than two of which may be at the 100 level.",
+    "requirementSections": [
+      {
+        "label": "Major:",
+        "text": "Major: Theological Studies courses — 9, including one in biblical studies; one in contemporary theology; one in ethics; one in historical theology; 412 (culminating experience), any four others, no more than two of which may be at the 100 level.",
+        "courseReferences": [],
+        "parserConfidence": "LOW",
+        "reviewerStatus": "DRAFT_REVIEW_REQUIRED"
+      }
+    ],
+    "courseTables": [],
+    "cognateSections": [],
+    "sourceNote": "Official catalog requirement text normalized into reviewable sections; ambiguous choices remain draft until advisor approval.",
+    "catalogBlockFound": true
   }
 ]

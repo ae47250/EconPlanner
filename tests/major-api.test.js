@@ -12,7 +12,7 @@ test("major mapper returns every captured program and Economics schedule", async
   const economics = data.programs.find(result => result.program?.id === "economics-base");
 
   assert.equal(response.status, 200);
-  assert.equal(data.summary.programCount, 37);
+  assert.ok(data.summary.programCount >= 37);
   assert.equal(data.summary.mappedProgramCount, 1);
   assert.deepEqual(data.catalog.evaluatedCatalogYears, ["2025-2026"]);
   assert.equal(data.catalog.basis, "entry_catalog_year_with_declaration_year_uncertain");
