@@ -14,7 +14,7 @@ const KNOWLEDGE_FILES = [
   "knowledge/course-schedule-2026-2027.md"
 ];
 
-const INITIAL_MODEL = process.env.OPENAI_INITIAL_MODEL || "gpt-5.5-mini";
+const INITIAL_MODEL = process.env.OPENAI_INITIAL_MODEL || "gpt-5.4-mini";
 const REPAIR_MODEL = process.env.OPENAI_REPAIR_MODEL || "gpt-5.5";
 
 function getOpenAiApiKey() {
@@ -352,6 +352,14 @@ function modelFailurePayload(error) {
       status: 503,
       error: "EconMapper (me) cannot connect because the API key or model access needs attention.",
       explanation: "The OpenAI API rejected the request."
+    };
+  }
+
+  if (status === 404 || /model/i.test(message)) {
+    return {
+      status: 503,
+      error: "EconMapper (me) cannot connect because the selected planning model is not available.",
+      explanation: "The OpenAI API could not use the configured model."
     };
   }
 
