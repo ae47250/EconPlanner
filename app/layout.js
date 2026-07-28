@@ -1,0 +1,18 @@
+export const metadata = {
+  title: "EconMapper",
+  description: "Economics advising course mapper"
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+        />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
