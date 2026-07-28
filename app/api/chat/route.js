@@ -14,8 +14,8 @@ const KNOWLEDGE_FILES = [
   "knowledge/course-schedule-2026-2027.md"
 ];
 
-const INITIAL_MODEL = process.env.OPENAI_INITIAL_MODEL || "gpt-5.4-mini";
-const REPAIR_MODEL = process.env.OPENAI_REPAIR_MODEL || "gpt-5.5";
+const INITIAL_MODEL = process.env.OPENAI_INITIAL_MODEL || "gpt-5.4-nano";
+const REPAIR_MODEL = process.env.OPENAI_REPAIR_MODEL || "gpt-5.4-mini";
 
 function getOpenAiApiKey() {
   return process.env.OPENAI_API_KEY || process.env.EconMapper_OpenAI_KEY || "";
