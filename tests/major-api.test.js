@@ -20,3 +20,47 @@ test("major mapper returns every captured program and Economics schedule", async
   assert.equal(economics.annualSchedule.academicYear, "2026-2027");
   assert.ok(economics.annualSchedule.terms.May.some(course => course.section === "S"));
 });
+
+test("major mapper asks for summer standing clarification instead of guessing", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        entryCatalogYear: "2025-2026",
+        academicStanding: "freshman",
+        planCreationDate: "2026-07-26",
+        courses: []
+      }
+    })
+  }));
+  const data = await response.json();
+
+  assert.equal(response.status, 409);
+  assert.equal(data.requiresSummerClarification, true);
+  assert.equal(
+    data.error,
+    "Do you mean you will be a freshman in Fall 2026, or that you were a freshman during the 2025\u201326 academic year?"
+  );
+});
+
+test("major mapper returns three dated Economics plans", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        entryCatalogYear: "2025-2026",
+        academicStanding: "freshman",
+        planCreationDate: "2026-09-01",
+        courses: []
+      }
+    })
+  }));
+  const data = await response.json();
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
+
+  assert.equal(response.status, 200);
+  assert.equal(economics.economicsPlans.length, 3);
+  assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
+});

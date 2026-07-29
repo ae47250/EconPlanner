@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { buildEconomicsTermPlan } from "../lib/planning/economics.js";
+import { buildEconomicsTermPlan, buildEconomicsTermPlans } from "../lib/planning/economics.js";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 
 const schedule = JSON.parse(await readFile(new URL("../data/normalized/economics/schedule-2026-2027.json", import.meta.url), "utf8"));
@@ -31,4 +31,58 @@ test("Economics term planner keeps prerequisite courses in earlier terms", () =>
   assert.ok(!fall.includes("ECO 214"));
   assert.ok(!fall.includes("ECO 461") && !winter.includes("ECO 461"));
   assert.ok(plan.unscheduled.some(item => item.course === "ECO elective"));
+});
+
+test("dated Economics planning returns three differently weighted plans", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-09-01",
+    courses: []
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+
+  assert.equal(result.plans.length, 3);
+  assert.deepEqual(result.plans.map(plan => plan.label), ["Plan 1", "Plan 2", "Plan 3"]);
+  assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
+  assert.ok(result.plans.every(plan => plan.terms.some(term => term.term === "Spring/May 2030")));
+  assert.ok(result.plans.every(plan => plan.terms.every(term => !term.isSummer)));
+  assert.ok(result.plans.every(plan => plan.terms.every(term => term.courses.length <= (term.term.startsWith("Spring/May") ? 1 : 4))));
+
+  const electiveCountInYear = (plan, year) => plan.terms
+    .filter(term => term.term.endsWith(String(year)))
+    .reduce((count, term) => count + term.courses.filter(course => course.course === "ECO elective").length, 0);
+  const plan2 = result.plans.find(plan => plan.id === "plan-2");
+  const plan3 = result.plans.find(plan => plan.id === "plan-3");
+
+  assert.ok(electiveCountInYear(plan2, 2028) >= electiveCountInYear(plan2, 2029));
+  assert.ok(electiveCountInYear(plan3, 2029) > electiveCountInYear(plan3, 2028));
+});
+
+test("ECO 113 uses the verified online Summer offering only as a last resort", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-09-01",
+    courses: []
+  };
+  const noRegularECO113Schedule = structuredClone(schedule);
+  noRegularECO113Schedule.terms.Fall = noRegularECO113Schedule.terms.Fall.filter(course => course.course !== "ECO 113");
+  noRegularECO113Schedule.terms.Winter = noRegularECO113Schedule.terms.Winter.filter(course => course.course !== "ECO 113");
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({
+    student,
+    mapping,
+    schedule: noRegularECO113Schedule,
+    prerequisites
+  });
+  const summerTerm = result.plans[0].terms.find(term => term.isSummer);
+
+  assert.equal(summerTerm.term, "Summer 2027");
+  assert.equal(summerTerm.courses[0].course, "ECO 113");
+  assert.equal(summerTerm.courses[0].source, "summer-last-resort");
+  assert.deepEqual(result.plans[0].summerFallbacks, [{
+    course: "ECO 113",
+    term: "Summer 2027",
+    reason: "Regular-term placement was not sufficient under the current prerequisites, schedule, and planning horizon."
+  }]);
 });

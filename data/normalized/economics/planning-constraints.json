@@ -11,6 +11,11 @@
     "May": {
       "maxTotalCourses": 1,
       "maxEconomicsCourses": 1
+    },
+    "Summer": {
+      "maxTotalCourses": 1,
+      "maxEconomicsCourses": 1,
+      "planningNote": "Use only as a last resort; ECO 113 is the verified summer option and is online."
     }
   },
   "hardRules": [

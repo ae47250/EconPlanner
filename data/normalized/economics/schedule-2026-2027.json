@@ -7,7 +7,8 @@
       "data/raw/economics/schedule-2026-2027-fall.png",
       "data/raw/economics/schedule-2026-2027-winter-spring.png"
     ],
-    "sectionCodeSMeans": "May"
+    "sectionCodeSMeans": "May",
+    "summerOfferingNote": "ECO 113 is available online in Summer as a last-resort option when the regular academic-year schedule cannot fit the student."
   },
   "terms": {
     "Fall": [
@@ -99,6 +100,15 @@
         "course": "ECO 260",
         "section": "S",
         "title": "Special Topics"
+      }
+    ],
+    "Summer": [
+      {
+        "course": "ECO 113",
+        "section": "Online",
+        "title": "Principles of Microeconomics",
+        "delivery": "online",
+        "planningNote": "Last-resort summer option"
       }
     ]
   }

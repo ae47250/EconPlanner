@@ -1,7 +1,8 @@
 import { availableCatalogYears, loadCatalog } from "../../../../lib/catalog/load.js";
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
-import { buildEconomicsTermPlan } from "../../../../lib/planning/economics.js";
+import { buildEconomicsTermPlans } from "../../../../lib/planning/economics.js";
+import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 
 export const runtime = "nodejs";
 
@@ -44,6 +45,15 @@ function mapCatalogPrograms(catalog, student) {
       prerequisites: catalog.prerequisitesByProgram.get(program.id)
     });
     const riskReasons = [...new Set([...mapping.risk.reasons, ...feasibility.riskReasons])];
+    const economicsPlanBundle = variant.programId === "economics"
+      ? buildEconomicsTermPlans({
+          student,
+          mapping,
+          schedule: catalog.economicsSchedule,
+          prerequisites: catalog.prerequisitesByProgram.get(program.id)
+        })
+      : null;
+
     return {
       ...mapping,
       annualSchedule: (program.id === "economics" || variant.programId === "economics") && catalog.economicsSchedule?.academicYear === "2026-2027"
@@ -55,14 +65,9 @@ function mapCatalogPrograms(catalog, student) {
         class: riskReasons.length ? "FEASIBLE_WITH_ASSUMPTIONS" : mapping.risk.class,
         reasons: riskReasons
       },
-      economicsPlan: variant.programId === "economics"
-        ? buildEconomicsTermPlan({
-            student,
-            mapping,
-            schedule: catalog.economicsSchedule,
-            prerequisites: catalog.prerequisitesByProgram.get(program.id)
-          })
-        : null
+      economicsPlan: economicsPlanBundle?.plans?.[0] || null,
+      economicsPlans: economicsPlanBundle?.plans || [],
+      planningContext: economicsPlanBundle?.context || null
     };
   });
 }
@@ -71,6 +76,14 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const student = body?.student || {};
+    const planningContext = resolvePlanningContext(student);
+    if (student.planCreationDate && planningContext.requiresSummerClarification) {
+      return jsonResponse({
+        error: planningContext.question,
+        requiresSummerClarification: true,
+        planningContext
+      }, 409);
+    }
     const catalogYears = await availableCatalogYears();
     const requestedCatalogYear = String(student.majorDeclarationCatalogYear || student.entryCatalogYear || "").trim();
 

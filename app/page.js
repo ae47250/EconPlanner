@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { resolvePlanningContext } from "../lib/planning/horizon.js";
 
 const CATALOG_YEAR = "2025-2026";
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
@@ -133,6 +134,8 @@ const initialForm = {
   entryCatalogYear: CATALOG_YEAR,
   majorDeclarationCatalogYear: "",
   academicStanding: "freshman",
+  planCreationDate: "",
+  summerStandingConfirmed: "",
   expectedGraduationTerm: "",
   courses: COURSE_CATALOG.map(blankCourse),
   advisorApprovals: ""
@@ -158,33 +161,54 @@ function planCourseCount(plan) {
   return plan?.terms?.reduce((count, term) => count + term.courses.length, 0) || 0;
 }
 
-function PlanTimeline({ plan }) {
-  if (!plan) return null;
+function localToday() {
+  const date = new Date();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function PlanTimeline({ plans = [] }) {
+  const [activePlanId, setActivePlanId] = useState(plans[0]?.id || "plan-1");
+
+  useEffect(() => {
+    if (plans.length && !plans.some(plan => plan.id === activePlanId)) {
+      setActivePlanId(plans[0].id);
+    }
+  }, [activePlanId, plans]);
+
+  if (!plans.length) return null;
+
+  const activePlan = plans.find(plan => plan.id === activePlanId) || plans[0];
 
   return (
     <section className="plan-section" aria-live="polite">
       <div className="plan-tabs" role="tablist" aria-label="Generated plans">
-        <button
-          type="button"
-          className="plan-tab is-active"
-          id="plan-1-tab"
-          role="tab"
-          aria-selected="true"
-          aria-controls="plan-1"
-        >
-          Plan 1
-        </button>
+        {plans.map(plan => (
+          <button
+            type="button"
+            className={`plan-tab${plan.id === activePlan.id ? " is-active" : ""}`}
+            id={`${plan.id}-tab`}
+            role="tab"
+            aria-selected={plan.id === activePlan.id}
+            aria-controls={plan.id}
+            key={plan.id}
+            onClick={() => setActivePlanId(plan.id)}
+          >
+            {plan.label}
+          </button>
+        ))}
       </div>
-      <div id="plan-1" role="tabpanel" aria-labelledby="plan-1-tab">
+      <div id={activePlan.id} role="tabpanel" aria-labelledby={`${activePlan.id}-tab`}>
         <div className="section-heading">
           <span className="step-number">3.</span>
           <div>
             <h2>Your Plan</h2>
-            <p>Suggested placements based on the courses you selected.</p>
+            <p>{activePlan.description}</p>
           </div>
         </div>
         <div className="plan-grid">
-          {(plan.terms || []).map(term => (
+          {(activePlan.terms || []).map(term => (
             <article className="term-card" key={term.term}>
               <h3>{term.term}</h3>
               {term.courses.length > 0 ? (
@@ -199,9 +223,34 @@ function PlanTimeline({ plan }) {
               ) : (
                 <p className="empty-term">No courses placed</p>
               )}
+              {term.isSummer && (
+                <p className="summer-term-note">Summer, online, last-resort option.</p>
+              )}
             </article>
           ))}
         </div>
+        {activePlan.unscheduled?.length > 0 && (
+          <div className="plan-notes">
+            <strong>Needs advisor follow-up</strong>
+            <ul>
+              {activePlan.unscheduled.map(item => (
+                <li key={`${activePlan.id}-${item.requirementId}`}>{item.course}: {item.reason}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {activePlan.summerFallbacks?.length > 0 && (
+          <div className="plan-notes summer-fallback-note">
+            <strong>Summer fallback used</strong>
+            <ul>
+              {activePlan.summerFallbacks.map(item => (
+                <li key={`${activePlan.id}-summer-${item.course}-${item.term}`}>
+                  {item.course} in {item.term}: Summer, online, last-resort option. {item.reason}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -209,7 +258,8 @@ function PlanTimeline({ plan }) {
 
 function PlannerSummary({ report, courses }) {
   const result = economicsResult(report);
-  const plan = result?.economicsPlan;
+  const plan = result?.economicsPlans?.[0] || result?.economicsPlan;
+  const planningContext = result?.planningContext;
   const chosen = selectedCourses(courses);
   const completedCount = chosen.filter(course => isTaken(course)).length;
   const inProgressCount = chosen.filter(course => course.status === "in_progress").length;
@@ -232,6 +282,9 @@ function PlannerSummary({ report, courses }) {
             <div><span>Remaining</span><strong>{remainingUnits ?? "-"}</strong></div>
             <div><span>Courses in plan</span><strong>{planCourseCount(plan)}</strong></div>
           </div>
+          {planningContext?.expectedGraduationTerm && (
+            <p className="summary-footnote">{planningContext.effectiveStandingLabel || planningContext.standingLabel} plan, {planningContext.remainingYears} years remaining; expected graduation {planningContext.expectedGraduationTerm}.</p>
+          )}
           <p className="summary-footnote">The plan uses the selected course status and verified economics scheduling rules.</p>
         </>
       ) : (
@@ -251,6 +304,7 @@ export default function Page() {
   const [isHydrated, setIsHydrated] = useState(false);
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
+  const planningContext = resolvePlanningContext(formData);
 
   useEffect(() => {
     try {
@@ -258,7 +312,11 @@ export default function Page() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.formData && Array.isArray(parsed.formData.courses)) {
-          setFormData(current => ({ ...current, ...parsed.formData }));
+          setFormData(current => ({
+            ...current,
+            ...parsed.formData,
+            planCreationDate: parsed.formData.planCreationDate || localToday()
+          }));
         }
         if (parsed.requirementModes && typeof parsed.requirementModes === "object") {
           setRequirementModes(parsed.requirementModes);
@@ -270,6 +328,10 @@ export default function Page() {
     } catch {
       window.localStorage.removeItem(PLANNER_STORAGE_KEY);
     }
+
+    setFormData(current => current.planCreationDate
+      ? current
+      : { ...current, planCreationDate: localToday() });
 
     window.history.scrollRestoration = "manual";
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -391,6 +453,17 @@ export default function Page() {
 
   async function mapMajors(event) {
     event.preventDefault();
+
+    if (!formData.planCreationDate) {
+      setStatus("Enter the plan creation date before generating a plan.");
+      return;
+    }
+
+    if (planningContext.requiresSummerClarification) {
+      setStatus("Answer the summer class-standing question before generating a plan.");
+      return;
+    }
+
     setStatus("Building your economics plan...");
     setReport(null);
 
@@ -548,6 +621,17 @@ export default function Page() {
         .section-heading h2 { margin: 0; }
         .section-heading p { margin: .2rem 0 0; color: var(--planner-muted); font-size: 12px; }
         .step-number { font-weight: 700; line-height: 1.1; }
+        .planning-details { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--planner-border); }
+        .planning-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-top: .85rem; max-width: 38rem; }
+        .planning-field { display: grid; gap: .25rem; }
+        .planning-field label { color: var(--planner-muted); }
+        .planning-field input, .planning-field select { width: 100%; box-sizing: border-box; }
+        .clarification-card { max-width: 38rem; margin-top: .85rem; padding: .8rem; border: 1px solid #6db784; background: #effaf1; }
+        .clarification-card strong { display: block; }
+        .clarification-card p { margin: .35rem 0 .65rem; color: var(--planner-muted); }
+        .radio-choices { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .radio-choice { display: flex; align-items: center; gap: .35rem; cursor: pointer; }
+        .radio-choice input { margin: 0; }
         .search-label { display: block; width: 33.333%; margin: 1rem 0 .7rem; }
         .search-label input { width: 100%; box-sizing: border-box; margin: 0; }
         .course-columns { display: grid; grid-template-columns: max-content max-content; gap: .45rem; align-items: start; justify-content: start; }
@@ -581,6 +665,7 @@ export default function Page() {
         .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
         .generate-button { width: auto; margin: 0; border: 1px solid var(--planner-strong-border); background: #fff; color: #171a1c; font-weight: 700; }
         .generate-button:hover { background: #edf0f1; }
+        .generate-button:disabled { cursor: not-allowed; opacity: .6; }
         .summary-card { min-height: 100%; margin-bottom: 1rem; }
         .summary-grid { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
         .summary-grid div { border: 1px solid var(--planner-border); padding: .8rem; min-height: 4.6rem; }
@@ -601,6 +686,9 @@ export default function Page() {
         .term-card li strong, .term-card li span { display: block; }
         .term-card li span { color: var(--planner-muted); margin-top: .1rem; }
         .empty-term { margin: 0; color: var(--planner-muted); }
+        .summer-term-note { margin: .65rem 0 0; color: #2f8f4e; font-weight: 700; }
+        .plan-notes { margin-top: 1rem; padding: .75rem; border: 1px solid #d5b36a; background: #fff9e8; }
+        .plan-notes ul { margin: .45rem 0 0; padding-left: 1.25rem; }
         @media (max-width: 900px) { .intake-layout { grid-template-columns: 1fr; } }
         @media (max-width: 680px) {
           .course-columns { grid-template-columns: 1fr; }
@@ -608,6 +696,7 @@ export default function Page() {
           .course-row { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
           .course-name { width: auto; }
           .search-label { width: 100%; }
+          .planning-fields { grid-template-columns: 1fr; }
           .course-name { white-space: normal; }
           .course-name span { white-space: normal; }
           .course-toggles { flex-wrap: wrap; }
@@ -633,8 +722,77 @@ export default function Page() {
 
         <div className="intake-layout">
           <section className="intake-card">
+            <div className="planning-details">
+              <div className="section-heading">
+                <span className="step-number">1.</span>
+                <div>
+                  <h2>Plan Details</h2>
+                  <p>These two answers set the number of years and terms in your plan.</p>
+                </div>
+              </div>
+              <div className="planning-fields">
+                <div className="planning-field">
+                  <label htmlFor="plan-creation-date">Plan creation date</label>
+                  <input
+                    id="plan-creation-date"
+                    type="date"
+                    value={formData.planCreationDate}
+                    onChange={event => setFormData(current => ({
+                      ...current,
+                      planCreationDate: event.target.value,
+                      summerStandingConfirmed: ""
+                    }))}
+                  />
+                </div>
+                <div className="planning-field">
+                  <label htmlFor="academic-standing">Class standing</label>
+                  <select
+                    id="academic-standing"
+                    value={formData.academicStanding}
+                    onChange={event => setFormData(current => ({
+                      ...current,
+                      academicStanding: event.target.value,
+                      summerStandingConfirmed: ""
+                    }))}
+                  >
+                    <option value="freshman">Freshman</option>
+                    <option value="sophomore">Sophomore</option>
+                    <option value="junior">Junior</option>
+                    <option value="senior">Senior</option>
+                  </select>
+                </div>
+              </div>
+              {planningContext.requiresSummerClarification && (
+                <div className="clarification-card" role="group" aria-labelledby="summer-standing-question">
+                  <strong id="summer-standing-question">{planningContext.question}</strong>
+                  <p>Summer class standing can refer to the upcoming Fall or the academic year that ended in Spring/May. Choose one so the planner does not guess.</p>
+                  <div className="radio-choices">
+                    <label className="radio-choice">
+                      <input
+                        type="radio"
+                        name="summer-standing-confirmed"
+                        value="yes"
+                        checked={formData.summerStandingConfirmed === "yes"}
+                        onChange={event => setFormData(current => ({ ...current, summerStandingConfirmed: event.target.value }))}
+                      />
+                      Yes, I will be this standing in the upcoming Fall.
+                    </label>
+                    <label className="radio-choice">
+                      <input
+                        type="radio"
+                        name="summer-standing-confirmed"
+                        value="no"
+                        checked={formData.summerStandingConfirmed === "no"}
+                        onChange={event => setFormData(current => ({ ...current, summerStandingConfirmed: event.target.value }))}
+                      />
+                      No, I was this standing during the year that ended in Spring/May.
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="section-heading">
-              <span className="step-number">1.</span>
+              <span className="step-number">2.</span>
               <div>
                 <h2>Your Courses</h2>
                 <p>Choose a status for each course. Click a selected button again to clear it.</p>
@@ -674,14 +832,20 @@ export default function Page() {
             {visibleGroups.length === 0 && <p className="status">No courses match your search.</p>}
 
             <div className="generate-row">
-              <button type="submit" className="generate-button">Generate My Plan</button>
+              <button
+                type="submit"
+                className="generate-button"
+                disabled={!formData.planCreationDate || planningContext.requiresSummerClarification}
+              >
+                Generate My Plan
+              </button>
             </div>
           </section>
         </div>
       </form>
 
       {status && <p className="status" role="status">{status}</p>}
-      <PlanTimeline plan={economicsResult(report)?.economicsPlan} />
+      <PlanTimeline plans={economicsResult(report)?.economicsPlans || []} />
     </main>
   );
 }
