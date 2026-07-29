@@ -707,29 +707,52 @@ export default function Page() {
           --planner-strong-border: #202427;
           --planner-muted: #5c656b;
           --planner-green: #bde9c9;
+          --planner-dark-green: #006400;
+          --planner-generate-bg: #fff1b8;
+          --planner-generate-bg-hover: #ffe58a;
+          --planner-purple: #850085;
+          --planner-dropdown-bg: #fff;
           --planner-blue: #cfe9fb;
           --planner-blue-border: #8dbddb;
+          --planner-font-family: Arial, sans-serif;
+          --planner-body-size: 11px;
+          --planner-heading-size: 14px;
+          --planner-page-title-size: 43.2px;
+          --planner-intro-title-size: 20px;
+          --planner-intro-text-size: 18px;
+          --planner-action-size: var(--planner-intro-text-size);
           --urveska-orange: #ff9d5c;
           --urveska-gold: #ffd166;
           --urveska-aqua: #8ef7d3;
+          --urveska-lead-orange: #c94b00;
+          --urveska-lead-gold: #c46a00;
+          --urveska-lead-aqua: #006f8f;
         }
-        body, button, input, select, textarea { font-family: Arial, sans-serif !important; font-size: 11px !important; }
+        body { font-family: var(--planner-font-family); font-size: var(--planner-body-size); }
+        button, input, select, textarea { font-family: var(--planner-font-family); font-size: var(--planner-body-size); font-weight: inherit; }
         body { background: var(--planner-bg); color: #171a1c; }
-        h1, h2, h3, h4, h5, h6 { color: #1d4ed8 !important; font-size: 14px !important; font-weight: 700 !important; }
+        h1, h2, h3, h4, h5, h6 { color: #1d4ed8; font-family: inherit; font-size: var(--planner-heading-size); font-weight: 700; }
         main.container { max-width: 1240px; padding: 1.25rem 1rem 4rem; }
         .summary-card, .plan-section { border: 1px solid var(--planner-strong-border); background: var(--planner-panel); }
         .intake-card { border: 1px solid var(--planner-strong-border); background: #f1faff; }
-        .instruction-card { margin-bottom: 1rem; padding: 1.1rem; border: 1px solid var(--planner-strong-border); background: #f1faff; font-size: 18px !important; }
-        .instruction-card h2, .instruction-card p, .instruction-card .planner-instructions p { font-size: 18px !important; }
+        .generate-card { border: 1px solid var(--planner-strong-border); background: #f1faff; padding: 1.1rem; }
+        .instruction-card { margin-bottom: 1rem; padding: 1.1rem; border: 1px solid var(--planner-strong-border); background: #f1faff; font-size: var(--planner-intro-text-size); }
+        .instruction-card h2 { font-size: var(--planner-intro-title-size); }
+        .instruction-card p { font-size: inherit; }
+        .instruction-card .instruction-lead { margin: .85rem 0 0; font-size: var(--planner-intro-title-size); font-weight: 700; }
+        .instruction-lead .lead-aqua { color: var(--urveska-lead-aqua); }
+        .instruction-lead .lead-gold { color: var(--urveska-lead-gold); }
+        .instruction-lead .lead-orange { color: var(--urveska-lead-orange); }
         .instruction-card h2 { margin: 0; }
         .app-header { display: flex; align-items: center; justify-content: center; text-align: center; gap: 1rem; padding: .85rem 1.1rem; margin-bottom: 1rem; }
-        .app-header h1 { margin: 0; color: #06182e !important; font-size: 36px !important; line-height: 1.05; }
-        .app-header h1 .headline-econ { color: var(--urveska-aqua) !important; }
-        .app-header h1 .headline-planner { color: var(--urveska-orange) !important; }
+        .app-header h1 { margin: 0; color: #06182e; font-size: var(--planner-page-title-size); line-height: 1.05; }
+        .app-header h1 .headline-econ { color: var(--urveska-aqua); }
+        .app-header h1 .headline-planner { color: var(--urveska-orange); }
         .intake-layout { display: grid; gap: 1rem; grid-template-columns: 1fr; align-items: start; }
         .intake-card, .summary-card, .plan-section { padding: 1.1rem; }
         .section-heading { display: flex; gap: .65rem; align-items: flex-start; }
         .section-heading h2 { margin: 0; }
+        .course-heading h2 { color: var(--planner-purple); font-size: var(--planner-intro-text-size); }
         .section-heading p { margin: .2rem 0 0; color: var(--planner-muted); font-size: 12px; }
         .step-number { font-weight: 700; line-height: 1.1; }
         .planning-details { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--planner-border); }
@@ -739,11 +762,11 @@ export default function Page() {
         .planning-field input, .planning-field select { width: 100%; box-sizing: border-box; }
         .summer-standing-selection { display: flex; align-items: center; gap: .35rem; margin-top: .35rem; color: var(--planner-muted); }
         .summer-standing-selection strong { color: #171a1c; font-weight: 700; }
-        button.summer-standing-change { width: auto; min-height: 0 !important; margin: 0; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; font-size: 11px !important; text-decoration: underline; }
+        button.summer-standing-change { width: auto; min-height: 0 !important; margin: 0; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; font-family: var(--planner-font-family); font-size: var(--planner-body-size); text-decoration: underline; }
         button.summer-standing-change:hover { color: #163ea9; }
         .date-display { display: flex; align-items: baseline; gap: .4rem; min-height: 1.5rem; }
         .date-display strong { font-weight: 400; }
-        button.date-edit-button { width: auto; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; text-decoration: underline; }
+        button.date-edit-button { width: auto; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; font-family: var(--planner-font-family); font-size: var(--planner-body-size); text-decoration: underline; }
         button.date-edit-button:hover { color: #163ea9; }
         #plan-creation-date::-webkit-calendar-picker-indicator { display: none; }
         .clarification-card { display: block; max-width: 38rem; margin-top: .85rem; padding: .8rem; border: 1px solid #6db784; background: #effaf1; }
@@ -764,7 +787,7 @@ export default function Page() {
         .course-name strong { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
         .course-name span { min-width: 0; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: break-word; line-height: 1.25; }
         .course-toggles { display: flex; gap: .25rem; align-items: center; flex-wrap: nowrap; }
-        button.course-toggle { width: auto; min-height: 0 !important; height: auto; margin: 0; padding: 0 .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; line-height: 1.25; white-space: nowrap; }
+        button.course-toggle { width: auto; min-height: 0 !important; height: auto; margin: 0; padding: 0 .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; font-family: var(--planner-font-family); font-size: var(--planner-body-size); line-height: 1.25; white-space: nowrap; }
         button.course-toggle:hover { border-color: var(--planner-strong-border); }
         button.taken-toggle.is-selected { background: var(--planner-green); border-color: #6db784; }
         button.progress-toggle.is-selected { background: var(--planner-blue); border-color: var(--planner-blue-border); }
@@ -776,10 +799,10 @@ export default function Page() {
         .course-accordion-title { color: #171a1c; }
         .course-accordion-count { margin-left: auto; color: var(--planner-muted); font-weight: 400; }
         .course-accordion .course-columns { margin-top: .7rem; }
-        .requirement-choice-card { position: absolute; z-index: 30; top: calc(100% + .35rem); left: 0; width: max-content; max-width: calc(100vw - 2rem); scroll-margin: 1rem; padding: .35rem; border: 1px solid #cfd3d5; border-radius: .9rem; background: #fff; box-shadow: 0 .5rem 1.4rem rgba(32, 36, 39, .14); }
+        .requirement-choice-card { position: absolute; z-index: 30; top: calc(100% + .35rem); left: 0; width: max-content; max-width: calc(100vw - 2rem); scroll-margin: 1rem; padding: .35rem; border: 1px solid #cfd3d5; border-radius: .9rem; background: var(--planner-dropdown-bg); box-shadow: 0 .5rem 1.4rem rgba(32, 36, 39, .14); }
         .requirement-choice-card > strong { display: block; padding: .4rem .55rem .3rem; color: var(--planner-muted); font-weight: 400; }
         .choice-options { display: grid; gap: .1rem; width: max-content; min-width: 100%; margin: 0; }
-        .choice-option { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; width: max-content; min-width: 100%; box-sizing: border-box; gap: .8rem; padding: .55rem .8rem .55rem .6rem; border: 0; border-radius: .65rem; background: #fff; cursor: pointer; white-space: nowrap; }
+        .choice-option { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; width: max-content; min-width: 100%; box-sizing: border-box; gap: .8rem; padding: .55rem .8rem .55rem .6rem; border: 0; border-radius: .65rem; background: var(--planner-dropdown-bg); cursor: pointer; white-space: nowrap; }
         .choice-option.is-selected { background: #f3fff5; }
         .choice-option:hover { background: #f4f5f6; }
         .choice-option input { position: absolute; opacity: 0; pointer-events: none; }
@@ -788,12 +811,14 @@ export default function Page() {
         .choice-check { width: 1rem; color: #2f8f4e; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; }
         .choice-option small { color: var(--planner-muted); }
         .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
-        .generate-button { width: auto; margin: 0; border: 1px solid #73b98a; background: var(--planner-green); color: #171a1c; font-weight: 700; }
-        .generate-button:hover { background: #a6dfb6; }
+        .generate-button { width: auto; margin: 0; border: 1px solid #73b98a; background: var(--planner-generate-bg); color: var(--planner-dark-green); font-family: var(--planner-font-family); font-size: var(--planner-action-size); font-weight: 700; }
+        .generate-button:hover { background: var(--planner-generate-bg-hover); }
         .generate-button:disabled { cursor: not-allowed; opacity: .6; }
         .summary-card { min-height: 100%; margin-bottom: 1rem; }
-        .planner-instructions { margin: .85rem 0 0; font-size: 16px !important; font-weight: 700; }
-        .planner-instructions p { margin: .25rem 0; font-size: 16px !important; font-weight: 700; }
+        .planner-instructions { margin: .85rem 0 0; padding-left: 3ch; font-size: inherit; font-weight: 700; }
+        .planner-instructions p { margin: .25rem 0; font-size: inherit; font-weight: 700; }
+        .planner-instructions p:nth-child(2) { color: var(--planner-purple); }
+        .planner-instructions p:nth-child(3) { color: var(--planner-dark-green); font-size: var(--planner-action-size); }
         .summary-grid { display: grid; gap: .45rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
         .summary-grid div { display: flex; align-items: baseline; gap: .35rem; border: 1px solid var(--planner-border); padding: .45rem .6rem; min-height: 0; }
         .summary-grid span { color: var(--planner-muted); }
@@ -804,13 +829,13 @@ export default function Page() {
         .plan-section { margin-top: 1rem; }
         .plan-source-note { margin: .35rem 0 0; color: var(--planner-muted); }
         .plan-tabs { display: flex; gap: .35rem; border-bottom: 1px solid var(--planner-border); margin-bottom: .85rem; }
-        button.plan-tab { width: auto; min-height: 0 !important; margin: 0; padding: .35rem .75rem; border: 1px solid var(--planner-border); border-bottom: 0; background: #fff; color: #171a1c; font-weight: 700; }
+        button.plan-tab { width: auto; min-height: 0 !important; margin: 0; padding: .35rem .75rem; border: 1px solid var(--planner-border); border-bottom: 0; background: #fff; color: #171a1c; font-family: var(--planner-font-family); font-size: var(--planner-body-size); font-weight: 700; }
         button.plan-tab.is-active { background: var(--planner-blue); border-color: var(--planner-blue-border); }
         .academic-year-group { margin-top: 1rem; }
-        .academic-year-label { margin: 0 0 .55rem; color: #1d4ed8 !important; font-size: 14px !important; font-weight: 700 !important; }
+        .academic-year-label { margin: 0 0 .55rem; color: #1d4ed8; font-size: var(--planner-heading-size); font-weight: 700; }
         .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
         .term-card { border: 1px solid var(--planner-border); padding: .8rem; min-height: 8rem; }
-        .term-card h4 { margin: 0 0 .65rem; color: #1d4ed8; font-size: 14px; font-weight: 700; }
+        .term-card h4 { margin: 0 0 .65rem; color: #1d4ed8; font-size: var(--planner-heading-size); font-weight: 700; }
         .term-card ul { display: grid; gap: .45rem; list-style: none; margin: 0; padding: 0; }
         .term-card li { border: 1px solid #d1d6d9; padding: .45rem; }
         .term-card li strong, .term-card li span { display: block; }
@@ -852,11 +877,13 @@ export default function Page() {
 
       <form onSubmit={mapMajors}>
         <section className="instruction-card">
-          <h2>The EconPlanner combines your year in college, completed courses, current courses, major requirements, and course timing to show what you still need and help build a manageable semester-by-semester path through the rest of your time at Hanover College so you can plan ahead easily.</h2>
+          <h2>The EconPlanner combines your completed and current courses, major requirements, and course timing to show what you still need and help build a manageable semester-by-semester path through the rest of your time at Hanover College so you can plan ahead easily.</h2>
+          <p className="instruction-lead"><span className="lead-aqua">This</span> <span className="lead-gold">is</span> <span className="lead-orange">what</span> <span className="lead-gold">you</span> <span className="lead-aqua">do</span></p>
           <div className="planner-instructions">
             <p>1. Choose class standing</p>
-            <p>2. Select Econ courses taken or in progress</p>
+            <p>2. Select Econ and cognate courses taken or in progress</p>
             <p>3. Click on Generate My Plan below course selection list.</p>
+            <p>4. EconPlanner will generate a course plan.</p>
           </div>
         </section>
 
@@ -960,10 +987,9 @@ export default function Page() {
           </section>
 
           <section className="intake-card">
-            <div className="section-heading">
-              <span className="step-number">2.</span>
+            <div className="section-heading course-heading">
               <div>
-                <h2>Your Courses</h2>
+                <h2>2. Select Econ and cognate courses you have taken or are taking (in-progress).</h2>
                 <p>Select completed and in-progress courses. We will map out your remaining plan.</p>
                 <p>Choose a status for each course. Click a selected button again to clear it.</p>
               </div>
@@ -991,13 +1017,16 @@ export default function Page() {
 
             {visibleGroups.length === 0 && <p className="status">No courses match your search.</p>}
 
+          </section>
+
+          <section className="generate-card">
             <div className="generate-row">
               <button
                 type="submit"
                 className="generate-button"
                 disabled={!formData.planCreationDate || planningContext.requiresSummerClarification}
               >
-                Generate My Plan
+                3. Generate My Plan
               </button>
             </div>
           </section>
