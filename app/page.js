@@ -10,7 +10,6 @@ const COURSE_CATALOG = [
   { code: "ECO 114", title: "Principles of Macroeconomics" },
   { code: "ECO 160", title: "Special Topics" },
   { code: "ECO 161", title: "Foundations of Economics" },
-  { code: "MAT 112", title: "Mathematics prerequisite" },
   { code: "MAT 113", title: "Mathematics cognate" },
   { code: "MAT 121", title: "Calculus I" },
   { code: "ECO 213", title: "Intermediate Microeconomics" },
@@ -58,9 +57,22 @@ const COURSE_DISPLAY_GROUPS = [
     courseCodes: ["ECO 114"]
   },
   {
+    id: "ECO 213",
+    code: "ECO 213",
+    title: "Intermediate Microeconomics",
+    courseCodes: ["ECO 213"]
+  },
+  {
+    id: "ECO 214",
+    code: "ECO 214",
+    title: "Intermediate Macroeconomics",
+    courseCodes: ["ECO 214"]
+  },
+  {
     id: "math-requirement",
     code: "MAT 113 / MAT 121",
     title: "Mathematics cognate",
+    displayLevel: 200,
     courseCodes: ["MAT 113", "MAT 121"],
     options: [
       { code: "MAT 113", title: "Mathematics cognate" },
@@ -77,18 +89,6 @@ const COURSE_DISPLAY_GROUPS = [
       { code: "MAT 217", title: "Applied Statistics" },
       { code: "PSY 217", title: "Statistical Analysis" }
     ]
-  },
-  {
-    id: "ECO 213",
-    code: "ECO 213",
-    title: "Intermediate Microeconomics",
-    courseCodes: ["ECO 213"]
-  },
-  {
-    id: "ECO 214",
-    code: "ECO 214",
-    title: "Intermediate Macroeconomics",
-    courseCodes: ["ECO 214"]
   },
   ...COURSE_CATALOG
     .filter(course => !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 213", "ECO 214"].includes(course.code))
@@ -146,31 +146,45 @@ function PlanTimeline({ plan }) {
 
   return (
     <section className="plan-section" aria-live="polite">
-      <div className="section-heading">
-        <span className="step-number">3.</span>
-        <div>
-          <h2>Your Plan</h2>
-          <p>Suggested placements based on the courses you selected.</p>
-        </div>
+      <div className="plan-tabs" role="tablist" aria-label="Generated plans">
+        <button
+          type="button"
+          className="plan-tab is-active"
+          id="plan-1-tab"
+          role="tab"
+          aria-selected="true"
+          aria-controls="plan-1"
+        >
+          Plan 1
+        </button>
       </div>
-      <div className="plan-grid">
-        {(plan.terms || []).map(term => (
-          <article className="term-card" key={term.term}>
-            <h3>{term.term}</h3>
-            {term.courses.length > 0 ? (
-              <ul>
-                {term.courses.map(course => (
-                  <li key={`${term.term}-${course.course}`}>
-                    <strong>{course.course}</strong>
-                    <span>{course.title}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="empty-term">No courses placed</p>
-            )}
-          </article>
-        ))}
+      <div id="plan-1" role="tabpanel" aria-labelledby="plan-1-tab">
+        <div className="section-heading">
+          <span className="step-number">3.</span>
+          <div>
+            <h2>Your Plan</h2>
+            <p>Suggested placements based on the courses you selected.</p>
+          </div>
+        </div>
+        <div className="plan-grid">
+          {(plan.terms || []).map(term => (
+            <article className="term-card" key={term.term}>
+              <h3>{term.term}</h3>
+              {term.courses.length > 0 ? (
+                <ul>
+                  {term.courses.map(course => (
+                    <li key={`${term.term}-${course.course}`}>
+                      <strong>{course.course}</strong>
+                      <span>{course.title}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="empty-term">No courses placed</p>
+              )}
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -386,9 +400,10 @@ export default function Page() {
     !query || `${group.code} ${group.title} ${(group.options || []).map(option => `${option.code} ${option.title}`).join(" ")}`.toLowerCase().includes(query)
   );
   const regularGroups = visibleGroups.filter(group => courseLevel(group.code) < 300);
-  const foundationGroups = regularGroups.filter(group => courseLevel(group.code) < 200);
-  const twoHundredGroups = regularGroups.filter(group => courseLevel(group.code) >= 200);
-  const advancedGroups = visibleGroups.filter(group => courseLevel(group.code) >= 300);
+  const groupLevel = group => group.displayLevel || courseLevel(group.code);
+  const foundationGroups = regularGroups.filter(group => groupLevel(group) < 200);
+  const twoHundredGroups = regularGroups.filter(group => groupLevel(group) >= 200);
+  const advancedGroups = visibleGroups.filter(group => groupLevel(group) >= 300);
 
   function renderCourseGroup(group) {
     const groupCourses = formData.courses.filter(course => group.courseCodes.includes(course.code));
@@ -544,6 +559,9 @@ export default function Page() {
         .summary-footnote { margin: 1rem 0 0; color: var(--planner-muted); }
         .status { margin: .8rem 0 0; color: var(--planner-muted); min-height: 1.4rem; }
         .plan-section { margin-top: 1rem; }
+        .plan-tabs { display: flex; gap: .35rem; border-bottom: 1px solid var(--planner-border); margin-bottom: .85rem; }
+        button.plan-tab { width: auto; min-height: 0 !important; margin: 0; padding: .35rem .75rem; border: 1px solid var(--planner-border); border-bottom: 0; background: #fff; color: #171a1c; font-weight: 700; }
+        button.plan-tab.is-active { background: var(--planner-blue); border-color: var(--planner-blue-border); }
         .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1rem; }
         .term-card { border: 1px solid var(--planner-border); padding: .8rem; min-height: 8rem; }
         .term-card h3 { margin: 0 0 .65rem; }
