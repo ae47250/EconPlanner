@@ -265,12 +265,38 @@ export default function Page() {
     const frame = window.requestAnimationFrame(() => {
       requirementCardRefs.current[requirementScrollTarget]?.scrollIntoView({
         behavior: "smooth",
-        block: "center"
+        block: "nearest"
       });
     });
 
     return () => window.cancelAnimationFrame(frame);
   }, [requirementScrollTarget]);
+
+  function closeRequirementPopover(groupId) {
+    setRequirementModes(current => current[groupId]
+      ? { ...current, [groupId]: "" }
+      : current);
+    setRequirementScrollTarget(current => current === groupId ? "" : current);
+    setRequirementPopoverPosition(current => current?.groupId === groupId ? null : current);
+  }
+
+  useEffect(() => {
+    if (!Object.values(requirementModes).some(Boolean)) return undefined;
+
+    function handleOutsidePointer(event) {
+      const openCards = document.querySelectorAll(".requirement-choice-card");
+      if ([...openCards].some(card => card.contains(event.target))) return;
+
+      setRequirementModes(current => Object.fromEntries(
+        Object.keys(current).map(id => [id, ""])
+      ));
+      setRequirementScrollTarget("");
+      setRequirementPopoverPosition(null);
+    }
+
+    document.addEventListener("pointerdown", handleOutsidePointer);
+    return () => document.removeEventListener("pointerdown", handleOutsidePointer);
+  }, [requirementModes]);
 
   function toggleCourseGroup(group, nextStatus, event) {
     if (group.options) {
@@ -370,7 +396,13 @@ export default function Page() {
     const taken = group.options ? requirementMode === "completed" : groupCourses.some(isTaken);
     const inProgress = group.options ? requirementMode === "in_progress" : groupCourses.some(course => course.status === "in_progress");
     return (
-      <div className={`course-row${group.options && requirementMode ? " has-requirement" : ""}`} key={group.id}>
+      <div
+        className={`course-row${group.options && requirementMode ? " has-requirement" : ""}`}
+        key={group.id}
+        onMouseLeave={() => {
+          if (group.options && requirementMode) closeRequirementPopover(group.id);
+        }}
+      >
         <div className="course-name">
           <strong>{group.code}</strong>
           <span>{group.title}</span>
@@ -400,6 +432,7 @@ export default function Page() {
               left: `${requirementPopoverPosition.left}px`,
               top: `${requirementPopoverPosition.top}px`
             } : undefined}
+            onMouseLeave={() => closeRequirementPopover(group.id)}
             ref={node => {
               requirementCardRefs.current[group.id] = node;
             }}
@@ -417,7 +450,8 @@ export default function Page() {
                       onChange={() => toggleGroupOption(group, option.code)}
                     />
                     <span className="choice-radio" aria-hidden="true" />
-                    <span><strong>{option.code}</strong><small>{option.title}</small></span>
+                    <span className="choice-check" aria-hidden="true">{checked ? "\u2713" : ""}</span>
+                    <span className="choice-label"><strong>{option.code}</strong><small>{option.title}</small></span>
                   </label>
                 );
               })}
@@ -442,7 +476,7 @@ export default function Page() {
     <main className="container">
       <style jsx global>{`
         :root {
-          --planner-bg: #f3e8ff;
+          --planner-bg: #7c3aed;
           --planner-panel: #ffffff;
           --planner-border: #a9b0b5;
           --planner-strong-border: #202427;
@@ -473,13 +507,13 @@ export default function Page() {
         .course-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; align-items: start; }
         .course-column { display: grid; gap: .45rem; min-width: 0; }
         .two-hundred-section { margin-top: .9rem; padding-top: .85rem; border-top: 2px solid var(--planner-strong-border); }
-        .course-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: center; min-width: 0; border: 1px solid var(--planner-border); padding: .4rem .5rem; background: #fff; }
+        .course-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: baseline; min-width: 0; border: 1px solid var(--planner-border); padding: .4rem .5rem; background: #fff; }
         .course-row.has-requirement { z-index: 20; }
         .course-name { display: flex; gap: .65rem; align-items: baseline; min-width: 0; white-space: nowrap; }
         .course-name strong { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
-        .course-name span { overflow: visible; text-overflow: clip; white-space: nowrap; line-height: 1.25; }
-        .course-toggles { display: flex; gap: .25rem; align-items: center; flex-wrap: nowrap; }
-        button.course-toggle { width: auto; min-height: 1.8rem; margin: 0; padding: .25rem .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; white-space: nowrap; }
+        .course-name span { min-width: 0; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: break-word; line-height: 1.25; }
+        .course-toggles { display: flex; gap: .25rem; align-items: baseline; flex-wrap: nowrap; }
+        button.course-toggle { width: auto; min-height: 0 !important; height: auto; margin: 0; padding: 0 .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; line-height: 1.25; white-space: nowrap; }
         button.course-toggle:hover { border-color: var(--planner-strong-border); }
         button.taken-toggle.is-selected { background: var(--planner-green); border-color: #6db784; }
         button.progress-toggle.is-selected { background: var(--planner-blue); border-color: var(--planner-blue-border); }
@@ -490,12 +524,13 @@ export default function Page() {
         .requirement-choice-card { position: absolute; z-index: 30; top: calc(100% + .35rem); left: 0; width: max-content; max-width: calc(100vw - 2rem); scroll-margin: 1rem; padding: .35rem; border: 1px solid #cfd3d5; border-radius: .9rem; background: #fff; box-shadow: 0 .5rem 1.4rem rgba(32, 36, 39, .14); }
         .requirement-choice-card > strong { display: block; padding: .4rem .55rem .3rem; color: var(--planner-muted); font-weight: 400; }
         .choice-options { display: grid; gap: .1rem; width: max-content; min-width: 100%; margin: 0; }
-        .choice-option { display: grid; grid-template-columns: max-content auto; align-items: center; width: max-content; min-width: 100%; box-sizing: border-box; gap: .6rem; padding: .55rem .6rem; border: 0; border-radius: .65rem; background: #fff; cursor: pointer; white-space: nowrap; }
+        .choice-option { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; width: max-content; min-width: 100%; box-sizing: border-box; gap: .8rem; padding: .55rem .8rem .55rem .6rem; border: 0; border-radius: .65rem; background: #fff; cursor: pointer; white-space: nowrap; }
+        .choice-option.is-selected { background: #f3fff5; }
         .choice-option:hover { background: #f4f5f6; }
         .choice-option input { position: absolute; opacity: 0; pointer-events: none; }
         .choice-radio { display: none; }
-        .choice-option.is-selected::after { content: "\\2713"; color: #171a1c; font-size: 15px; line-height: 1; }
-        .choice-option > span:last-child { display: grid; gap: .1rem; min-width: 0; }
+        .choice-label { display: grid; gap: .1rem; min-width: 0; }
+        .choice-check { width: 1rem; color: #2f8f4e; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; }
         .choice-option small { color: var(--planner-muted); }
         .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
         .generate-button { width: auto; margin: 0; border: 1px solid var(--planner-strong-border); background: #fff; color: #171a1c; font-weight: 700; }
