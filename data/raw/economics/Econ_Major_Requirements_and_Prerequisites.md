@@ -98,7 +98,7 @@ Advisor-confirmation flags:
 - ECO 321 — ECO 113 and ECO 114
 - ECO 331 — ECO 213
 - ECO 333 — ECO 114
-- ECO 335 — ECO 213, ECO 257, and MAT 112 or MAT 121 or equivalent
+- ECO 335 — ECO 213, ECO 257, and MAT 121 or equivalent
 - ECO 337 — ECO 113 or ECO 114
 - ECO 357 — ECO 213, ECO 214, and department permission
 - ECO 360 — no prerequisite listed in source material; topic varies
@@ -131,7 +131,7 @@ Use this section to match course titles to course numbers. When the user names a
 | ECO 321 | Money & Financial Markets | ECO 113 and ECO 114 | Required for the major unless replaced by BUSN 323. |
 | ECO 331 | Labor Economics | ECO 213 | ECO elective candidate. Labor Economics must be treated as ECO 331. |
 | ECO 333 | International Trade & Finance | ECO 114 | ECO elective candidate. |
-| ECO 335 | Managerial Economics | ECO 213, ECO 257, and MAT 112 or MAT 121 or equivalent | ECO elective candidate. Has multiple prerequisites. |
+| ECO 335 | Managerial Economics | ECO 213, ECO 257, and MAT 121 or equivalent | ECO elective candidate. Has multiple prerequisites. |
 | ECO 337 | Economic Development | ECO 113 or ECO 114 | ECO elective candidate. |
 | ECO 357 | Internship | ECO 213, ECO 214, and department permission | Confirm department permission before scheduling. |
 | ECO 360 | Special Topics | None listed | Topic varies. Confirm topic and whether it counts toward the major/elective requirement. |
@@ -171,7 +171,7 @@ If naming a specific elective, check its prerequisite first. Examples:
 - Labor Economics is ECO 331 and requires ECO 213 first.
 - Economics of the European Union is ECO 222 and requires ECO 114 first.
 - International Trade & Finance is ECO 333 and requires ECO 114 first.
-- Managerial Economics is ECO 335 and requires ECO 213, ECO 257, and MAT 112 or MAT 121 or equivalent first.
+- Managerial Economics is ECO 335 and requires ECO 213, ECO 257, and MAT 121 or equivalent first.
 
 Special Topics, Directed Study, Internship, and cross-listed courses require extra caution:
 

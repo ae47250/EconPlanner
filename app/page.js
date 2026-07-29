@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { resolvePlanningContext } from "../lib/planning/horizon.js";
 
-const CATALOG_YEAR = "2025-2026";
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 
 const COURSE_CATALOG = [
@@ -24,7 +23,7 @@ const COURSE_CATALOG = [
   { code: "ECO 260", title: "Special Topics" },
   { code: "MAT 217", title: "Applied Statistics" },
   { code: "PSY 217", title: "Statistical Analysis" },
-  { code: "ECO 307", title: "Directed Study" },
+  { code: "ECO 307", title: "Directed Study", units: 0.5 },
   { code: "ECO 315", title: "U.S. Economic History" },
   { code: "ECO 316", title: "History of Economic Thought" },
   { code: "ECO 321", title: "Money & Financial Markets" },
@@ -123,7 +122,7 @@ const blankCourse = course => ({
   code: course.code,
   title: course.title,
   status: "not_started",
-  units: "1",
+  units: String(course.units ?? 1),
   grade: "",
   source: "manual_code",
   notes: ""
@@ -131,8 +130,6 @@ const blankCourse = course => ({
 
 const initialForm = {
   displayName: "",
-  entryCatalogYear: CATALOG_YEAR,
-  majorDeclarationCatalogYear: "",
   academicStanding: "freshman",
   planCreationDate: "",
   summerStandingConfirmed: "",
@@ -168,6 +165,10 @@ function localToday() {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
+function formatAcademicYear(value) {
+  return value ? String(value).replace("-", "/") : "Academic year";
+}
+
 function PlanTimeline({ plans = [] }) {
   const [activePlanId, setActivePlanId] = useState(plans[0]?.id || "plan-1");
 
@@ -180,6 +181,16 @@ function PlanTimeline({ plans = [] }) {
   if (!plans.length) return null;
 
   const activePlan = plans.find(plan => plan.id === activePlanId) || plans[0];
+  const academicYearGroups = (activePlan.terms || []).reduce((groups, term) => {
+    const label = term.academicYear || formatAcademicYear(activePlan.academicYear);
+    const group = groups.find(item => item.label === label);
+    if (group) {
+      group.terms.push(term);
+    } else {
+      groups.push({ label, terms: [term] });
+    }
+    return groups;
+  }, []);
 
   return (
     <section className="plan-section" aria-live="polite">
@@ -205,33 +216,41 @@ function PlanTimeline({ plans = [] }) {
           <div>
             <h2>Your Plan</h2>
             <p>{activePlan.description}</p>
+            <p className="plan-source-note">Verified course schedule: {formatAcademicYear(activePlan.academicYear)}. Later-year offerings remain unverified until published.</p>
           </div>
         </div>
-        <div className="plan-grid">
-          {(activePlan.terms || []).map(term => (
-            <article className="term-card" key={term.term}>
-              <h3>{term.term}</h3>
-              {term.courses.length > 0 ? (
-                <ul>
-                  {term.courses.map(course => (
-                    <li key={`${term.term}-${course.course}`}>
-                      <strong>{course.course}</strong>
-                      <span>{course.title}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="empty-term">No courses placed</p>
-              )}
-              {term.isSummer && (
-                <p className="summer-term-note">Summer, online, last-resort option.</p>
-              )}
-            </article>
+        <div className="academic-year-groups">
+          {academicYearGroups.map(group => (
+            <section className="academic-year-group" key={group.label}>
+              <h3 className="academic-year-label">{group.label}</h3>
+              <div className="plan-grid">
+                {group.terms.map(term => (
+                  <article className="term-card" key={term.term}>
+                    <h4>{term.displayTerm || term.term}</h4>
+                    {term.courses.length > 0 ? (
+                      <ul>
+                        {term.courses.map(course => (
+                          <li key={`${term.term}-${course.course}`}>
+                            <strong>{course.course}</strong>
+                            <span>{course.title}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="empty-term">No courses placed</p>
+                    )}
+                    {term.isSummer && (
+                      <p className="summer-term-note">Summer, online, last-resort option.</p>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
         {activePlan.unscheduled?.length > 0 && (
           <div className="plan-notes">
-            <strong>Needs advisor follow-up</strong>
+            <strong>Future course offerings to verify</strong>
             <ul>
               {activePlan.unscheduled.map(item => (
                 <li key={`${activePlan.id}-${item.requirementId}`}>{item.course}: {item.reason}</li>
@@ -265,6 +284,28 @@ function PlannerSummary({ report, courses }) {
   const inProgressCount = chosen.filter(course => course.status === "in_progress").length;
   const remainingUnits = result?.projectedAfterInProgress?.optimistic?.remainingUnits
     ?? result?.optimistic?.remainingUnits;
+  const catalog = report?.catalog;
+  const comparisonFindings = catalog?.comparisonFindings || [];
+  const comparisonStatus = catalog?.comparisonStatus;
+  const comparisonNotice = comparisonStatus === "more_flexible"
+    ? {
+        className: "catalog-notice catalog-notice-positive",
+        title: "Newer catalog available for review",
+        message: `Your entry catalog is ${formatAcademicYear(catalog.selectedCatalogYear)}. The ${formatAcademicYear(catalog.comparisonCatalogYear)} Economics catalog appears more flexible. This plan still uses your entry catalog; review the newer requirements with the department or advisor before changing the governing catalog.`
+      }
+    : comparisonStatus === "changed_review"
+      ? {
+          className: "catalog-notice catalog-notice-warning",
+          title: "Catalog requirements changed",
+          message: `The ${formatAcademicYear(catalog.comparisonCatalogYear)} Economics catalog contains changes compared with your entry catalog, including changes that may not all be more flexible. This plan uses ${formatAcademicYear(catalog.selectedCatalogYear)}; advisor review is recommended.`
+        }
+      : comparisonStatus === "unavailable"
+        ? {
+            className: "catalog-notice catalog-notice-warning",
+            title: "Newer catalog could not be checked",
+            message: `This plan uses your entry catalog, ${formatAcademicYear(catalog.selectedCatalogYear)}. The newer ${formatAcademicYear(catalog.comparisonCatalogYear)} catalog is not captured locally yet.`
+          }
+        : null;
 
   return (
     <aside className="summary-card">
@@ -276,6 +317,17 @@ function PlannerSummary({ report, courses }) {
       </div>
       {report ? (
         <>
+          {comparisonNotice && (
+            <div className={comparisonNotice.className} role="status">
+              <strong>{comparisonNotice.title}</strong>
+              <p>{comparisonNotice.message}</p>
+              {comparisonFindings.length > 0 && (
+                <ul>
+                  {comparisonFindings.map(finding => <li key={`${finding.code}-${finding.message}`}>{finding.message}</li>)}
+                </ul>
+              )}
+            </div>
+          )}
           <div className="summary-grid">
             <div><span>Taken or AP credit</span><strong>{completedCount}</strong></div>
             <div><span>In Progress</span><strong>{inProgressCount}</strong></div>
@@ -285,7 +337,7 @@ function PlannerSummary({ report, courses }) {
           {planningContext?.expectedGraduationTerm && (
             <p className="summary-footnote">{planningContext.effectiveStandingLabel || planningContext.standingLabel} plan, {planningContext.remainingYears} years remaining; expected graduation {planningContext.expectedGraduationTerm}.</p>
           )}
-          <p className="summary-footnote">The plan uses the selected course status and verified economics scheduling rules.</p>
+          <p className="summary-footnote">Applied catalog: {formatAcademicYear(catalog?.selectedCatalogYear)}. The plan uses the selected course status and verified economics scheduling rules.</p>
         </>
       ) : (
         <div className="summary-empty">Select your courses, then choose <strong>Generate My Plan</strong>.</div>
@@ -312,10 +364,11 @@ export default function Page() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.formData && Array.isArray(parsed.formData.courses)) {
+          const { entryCatalogYear, majorDeclarationCatalogYear, ...savedFormData } = parsed.formData;
           setFormData(current => ({
             ...current,
-            ...parsed.formData,
-            planCreationDate: parsed.formData.planCreationDate || localToday()
+            ...savedFormData,
+            planCreationDate: savedFormData.planCreationDate || localToday()
           }));
         }
         if (parsed.requirementModes && typeof parsed.requirementModes === "object") {
@@ -675,12 +728,15 @@ export default function Page() {
         .summary-footnote { margin: 1rem 0 0; color: var(--planner-muted); }
         .status { margin: .8rem 0 0; color: var(--planner-muted); min-height: 1.4rem; }
         .plan-section { margin-top: 1rem; }
+        .plan-source-note { margin: .35rem 0 0; color: var(--planner-muted); }
         .plan-tabs { display: flex; gap: .35rem; border-bottom: 1px solid var(--planner-border); margin-bottom: .85rem; }
         button.plan-tab { width: auto; min-height: 0 !important; margin: 0; padding: .35rem .75rem; border: 1px solid var(--planner-border); border-bottom: 0; background: #fff; color: #171a1c; font-weight: 700; }
         button.plan-tab.is-active { background: var(--planner-blue); border-color: var(--planner-blue-border); }
-        .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1rem; }
+        .academic-year-group { margin-top: 1rem; }
+        .academic-year-label { margin: 0 0 .55rem; color: #1d4ed8 !important; font-size: 14px !important; font-weight: 700 !important; }
+        .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
         .term-card { border: 1px solid var(--planner-border); padding: .8rem; min-height: 8rem; }
-        .term-card h3 { margin: 0 0 .65rem; }
+        .term-card h4 { margin: 0 0 .65rem; color: #1d4ed8; font-size: 14px; font-weight: 700; }
         .term-card ul { display: grid; gap: .45rem; list-style: none; margin: 0; padding: 0; }
         .term-card li { border: 1px solid #d1d6d9; padding: .45rem; }
         .term-card li strong, .term-card li span { display: block; }
@@ -689,6 +745,11 @@ export default function Page() {
         .summer-term-note { margin: .65rem 0 0; color: #2f8f4e; font-weight: 700; }
         .plan-notes { margin-top: 1rem; padding: .75rem; border: 1px solid #d5b36a; background: #fff9e8; }
         .plan-notes ul { margin: .45rem 0 0; padding-left: 1.25rem; }
+        .catalog-notice { margin: 0 0 1rem; padding: .75rem; border: 1px solid #d5b36a; background: #fff9e8; }
+        .catalog-notice-positive { border-color: #73b98a; background: #effaf1; }
+        .catalog-notice strong { color: #1d4ed8; }
+        .catalog-notice p { margin: .35rem 0 0; }
+        .catalog-notice ul { margin: .45rem 0 0; padding-left: 1.25rem; }
         @media (max-width: 900px) { .intake-layout { grid-template-columns: 1fr; } }
         @media (max-width: 680px) {
           .course-columns { grid-template-columns: 1fr; }

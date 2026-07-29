@@ -46,6 +46,8 @@ test("dated Economics planning returns three differently weighted plans", () => 
   assert.deepEqual(result.plans.map(plan => plan.label), ["Plan 1", "Plan 2", "Plan 3"]);
   assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(result.plans.every(plan => plan.terms.some(term => term.term === "Spring/May 2030")));
+  assert.equal(result.plans[0].terms[0].displayTerm, "Fall");
+  assert.equal(result.plans[0].terms[0].academicYear, "2026/2027");
   assert.ok(result.plans.every(plan => plan.terms.every(term => !term.isSummer)));
   assert.ok(result.plans.every(plan => plan.terms.every(term => term.courses.length <= (term.term.startsWith("Spring/May") ? 1 : 4))));
 
@@ -85,4 +87,15 @@ test("ECO 113 uses the verified online Summer offering only as a last resort", (
     term: "Summer 2027",
     reason: "Regular-term placement was not sufficient under the current prerequisites, schedule, and planning horizon."
   }]);
+});
+
+test("ECO 307 does not satisfy one of the four full-unit elective slots", () => {
+  const mapping = mapStudentToProgram(
+    { id: "economics", name: "Economics" },
+    requirements,
+    { courses: [{ code: "ECO 307", status: "completed", units: 0.5 }] }
+  );
+
+  assert.equal(mapping.strict.assignments.some(item => item.code === "ECO 307"), false);
+  assert.equal(mapping.strict.remainingUnits, 12);
 });

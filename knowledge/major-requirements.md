@@ -96,7 +96,7 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 - `ECO 321` — `ECO 113` and `ECO 114`
 - `ECO 331` — `ECO 213`
 - `ECO 333` — `ECO 114`
-- `ECO 335` — `ECO 213`, `ECO 257`, and `MAT 112` or `MAT 121` or equivalent
+- `ECO 335` — `ECO 213`, `ECO 257`, and `MAT 121` or equivalent
 - `ECO 337` — `ECO 113` or `ECO 114`
 - `ECO 357` — `ECO 213`, `ECO 214`, and department permission
 - `ECO 360` — no prerequisite listed in source material; topic varies

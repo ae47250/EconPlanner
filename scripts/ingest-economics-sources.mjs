@@ -6,6 +6,7 @@ const root = process.cwd();
 const sourceRoot = process.env.ECON_SOURCE_DIR || "C:/Users/eiriksson/Downloads";
 const rawDir = path.join(root, "data/raw/economics");
 const normalizedDir = path.join(root, "data/normalized/economics");
+const versionedNormalizedDir = path.join(root, "data/normalized/catalogs", "2025-2026");
 const manifestPath = path.join(root, "data/manifests/source-manifest.json");
 const templateDir = path.join(root, "templates");
 
@@ -70,7 +71,7 @@ const economicsRequirements = {
       label: `ECO elective ${index + 1}`,
       kind: "elective",
       subject: "ECO",
-      excludedCourses: ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "ECO 321", "ECO 461"],
+      excludedCourses: ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "ECO 321", "ECO 461", "ECO 307"],
       maxLevel100: 1,
       units: 1
     }))
@@ -95,7 +96,7 @@ const economicsPrerequisites = {
   "ECO 321": { all: ["ECO 113", "ECO 114"], any: [] },
   "ECO 331": { all: ["ECO 213"], any: [] },
   "ECO 333": { all: ["ECO 114"], any: [] },
-  "ECO 335": { all: ["ECO 213", "ECO 257"], any: [["MAT 112", "MAT 121"]] },
+  "ECO 335": { all: ["ECO 213", "ECO 257"], any: [["MAT 121"]] },
   "ECO 337": { all: [], any: [["ECO 113", "ECO 114"]] },
   "ECO 357": { all: ["ECO 213", "ECO 214"], any: [], permission: "department" },
   "ECO 461": { all: ["ECO 213", "ECO 214"], any: [["ECO 257", "MAT 217", "PSY 217"]] },
@@ -144,6 +145,7 @@ async function ensureDirectories() {
   await Promise.all([
     mkdir(rawDir, { recursive: true }),
     mkdir(normalizedDir, { recursive: true }),
+    mkdir(versionedNormalizedDir, { recursive: true }),
     mkdir(path.dirname(manifestPath), { recursive: true }),
     mkdir(templateDir, { recursive: true })
   ]);
@@ -197,6 +199,8 @@ for (const [sourcePath, targetName] of scheduleImages) {
 
 await writeFile(path.join(normalizedDir, "requirements.json"), `${JSON.stringify(economicsRequirements, null, 2)}\n`, "utf8");
 await writeFile(path.join(normalizedDir, "prerequisites.json"), `${JSON.stringify(economicsPrerequisites, null, 2)}\n`, "utf8");
+await writeFile(path.join(versionedNormalizedDir, "economics-requirements.json"), `${JSON.stringify(economicsRequirements, null, 2)}\n`, "utf8");
+await writeFile(path.join(versionedNormalizedDir, "economics-prerequisites.json"), `${JSON.stringify(economicsPrerequisites, null, 2)}\n`, "utf8");
 await writeFile(path.join(normalizedDir, "schedule-2026-2027.json"), `${JSON.stringify(schedule2026, null, 2)}\n`, "utf8");
 await writeFile(
   path.join(normalizedDir, "planning-constraints.json"),
