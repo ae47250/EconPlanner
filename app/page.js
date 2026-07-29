@@ -57,6 +57,18 @@ const COURSE_DISPLAY_GROUPS = [
     courseCodes: ["ECO 114"]
   },
   {
+    id: "ECO 160",
+    code: "ECO 160",
+    title: "Special Topics",
+    courseCodes: ["ECO 160"]
+  },
+  {
+    id: "ECO 161",
+    code: "ECO 161",
+    title: "Foundations of Economics",
+    courseCodes: ["ECO 161"]
+  },
+  {
     id: "ECO 213",
     code: "ECO 213",
     title: "Intermediate Microeconomics",
@@ -72,7 +84,6 @@ const COURSE_DISPLAY_GROUPS = [
     id: "math-requirement",
     code: "MAT 113 / MAT 121",
     title: "Mathematics cognate",
-    displayLevel: 200,
     courseCodes: ["MAT 113", "MAT 121"],
     options: [
       { code: "MAT 113", title: "Mathematics cognate" },
@@ -91,7 +102,7 @@ const COURSE_DISPLAY_GROUPS = [
     ]
   },
   ...COURSE_CATALOG
-    .filter(course => !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 213", "ECO 214"].includes(course.code))
+    .filter(course => !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 213", "ECO 214"].includes(course.code))
     .map(course => ({
       id: course.code,
       code: course.code,
@@ -99,6 +110,12 @@ const COURSE_DISPLAY_GROUPS = [
       courseCodes: [course.code]
     }))
 ];
+
+const DECLARATION_COURSE_IDS = ["ECO 113", "ECO 114", "ECO 213", "ECO 214"];
+const DECLARATION_REQUIREMENT_IDS = ["math-requirement", "statistics-requirement"];
+const DECLARATION_GROUP_IDS = new Set([...DECLARATION_COURSE_IDS, ...DECLARATION_REQUIREMENT_IDS]);
+const MAX_COURSE_NAME_CHARS = Math.max(...COURSE_DISPLAY_GROUPS.map(group => `${group.code} ${group.title}`.length));
+const COURSE_COLUMNS_STYLE = { "--course-name-width": `calc(${MAX_COURSE_NAME_CHARS}ch + .4rem)` };
 
 const blankCourse = course => ({
   id: course.code,
@@ -300,6 +317,8 @@ export default function Page() {
     function handleOutsidePointer(event) {
       const openCards = document.querySelectorAll(".requirement-choice-card");
       if ([...openCards].some(card => card.contains(event.target))) return;
+      const clickedRow = event.target.closest?.(".course-row");
+      if (clickedRow && [...document.querySelectorAll(".course-row.has-requirement")].includes(clickedRow)) return;
 
       setRequirementModes(current => Object.fromEntries(
         Object.keys(current).map(id => [id, ""])
@@ -399,11 +418,12 @@ export default function Page() {
   const visibleGroups = COURSE_DISPLAY_GROUPS.filter(group =>
     !query || `${group.code} ${group.title} ${(group.options || []).map(option => `${option.code} ${option.title}`).join(" ")}`.toLowerCase().includes(query)
   );
-  const regularGroups = visibleGroups.filter(group => courseLevel(group.code) < 300);
-  const groupLevel = group => group.displayLevel || courseLevel(group.code);
-  const foundationGroups = regularGroups.filter(group => groupLevel(group) < 200);
-  const twoHundredGroups = regularGroups.filter(group => groupLevel(group) >= 200);
-  const advancedGroups = visibleGroups.filter(group => groupLevel(group) >= 300);
+  const declarationCourseGroups = visibleGroups.filter(group => DECLARATION_COURSE_IDS.includes(group.id));
+  const declarationRequirementGroups = visibleGroups.filter(group => DECLARATION_REQUIREMENT_IDS.includes(group.id));
+  const declarationGroups = [...declarationCourseGroups, ...declarationRequirementGroups];
+  const remainingGroups = visibleGroups.filter(group => !DECLARATION_GROUP_IDS.has(group.id));
+  const regularGroups = remainingGroups.filter(group => courseLevel(group.code) < 300);
+  const advancedGroups = remainingGroups.filter(group => courseLevel(group.code) >= 300);
 
   function renderCourseGroup(group) {
     const groupCourses = formData.courses.filter(course => group.courseCodes.includes(course.code));
@@ -477,12 +497,23 @@ export default function Page() {
     );
   }
 
-  function renderCourseColumns(groups) {
-    const midpoint = Math.ceil(groups.length / 2);
+  function renderCourseColumns(groups, stackInFirstColumn = false) {
+    const midpoint = stackInFirstColumn ? groups.length : Math.ceil(groups.length / 2);
+    const leftGroups = groups.slice(0, midpoint);
+    const rightGroups = groups.slice(midpoint);
     return (
-      <div className="course-columns">
-        <div className="course-column">{groups.slice(0, midpoint).map(renderCourseGroup)}</div>
-        <div className="course-column">{groups.slice(midpoint).map(renderCourseGroup)}</div>
+      <div className="course-columns" style={COURSE_COLUMNS_STYLE}>
+        <div className="course-column">{leftGroups.map(renderCourseGroup)}</div>
+        <div className="course-column">{rightGroups.map(renderCourseGroup)}</div>
+      </div>
+    );
+  }
+
+  function renderDeclarationColumns(courseGroups, requirementGroups) {
+    return (
+      <div className="course-columns" style={COURSE_COLUMNS_STYLE}>
+        <div className="course-column">{courseGroups.map(renderCourseGroup)}</div>
+        <div className="course-column">{requirementGroups.map(renderCourseGroup)}</div>
       </div>
     );
   }
@@ -519,15 +550,15 @@ export default function Page() {
         .step-number { font-weight: 700; line-height: 1.1; }
         .search-label { display: block; width: 33.333%; margin: 1rem 0 .7rem; }
         .search-label input { width: 100%; box-sizing: border-box; margin: 0; }
-        .course-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; align-items: start; }
-        .course-column { display: grid; gap: .45rem; min-width: 0; }
+        .course-columns { display: grid; grid-template-columns: max-content max-content; gap: .45rem; align-items: start; justify-content: start; }
+        .course-column { display: flex; flex-direction: column; gap: .45rem; width: max-content; max-width: 100%; min-width: 0; }
         .two-hundred-section { margin-top: .9rem; padding-top: .85rem; border-top: 2px solid var(--planner-strong-border); }
-        .course-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: baseline; min-width: 0; border: 1px solid var(--planner-border); padding: .4rem .5rem; background: #fff; }
+        .course-row { position: relative; display: grid; grid-template-columns: var(--course-name-width) auto; grid-template-rows: 16.5px; width: max-content; max-width: 100%; height: max-content; gap: .5rem; align-items: center; min-width: 0; border: 1px solid var(--planner-border); padding: .4rem .5rem; background: #fff; }
         .course-row.has-requirement { z-index: 20; }
-        .course-name { display: flex; gap: .65rem; align-items: baseline; min-width: 0; white-space: nowrap; }
+        .course-name { display: flex; width: var(--course-name-width); gap: .65rem; align-items: center; min-width: 0; white-space: nowrap; }
         .course-name strong { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
         .course-name span { min-width: 0; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: break-word; line-height: 1.25; }
-        .course-toggles { display: flex; gap: .25rem; align-items: baseline; flex-wrap: nowrap; }
+        .course-toggles { display: flex; gap: .25rem; align-items: center; flex-wrap: nowrap; }
         button.course-toggle { width: auto; min-height: 0 !important; height: auto; margin: 0; padding: 0 .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; line-height: 1.25; white-space: nowrap; }
         button.course-toggle:hover { border-color: var(--planner-strong-border); }
         button.taken-toggle.is-selected { background: var(--planner-green); border-color: #6db784; }
@@ -573,7 +604,9 @@ export default function Page() {
         @media (max-width: 900px) { .intake-layout { grid-template-columns: 1fr; } }
         @media (max-width: 680px) {
           .course-columns { grid-template-columns: 1fr; }
-          .course-row { grid-template-columns: 1fr; }
+          .course-column, .course-row { width: 100%; max-width: 100%; }
+          .course-row { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+          .course-name { width: auto; }
           .search-label { width: 100%; }
           .course-name { white-space: normal; }
           .course-name span { white-space: normal; }
@@ -618,13 +651,15 @@ export default function Page() {
               />
             </label>
 
-            <div className="course-level-section">
-              {foundationGroups.length > 0 && renderCourseColumns(foundationGroups)}
-            </div>
+            {declarationGroups.length > 0 && (
+              <div className="course-level-section declaration-section">
+                {renderDeclarationColumns(declarationCourseGroups, declarationRequirementGroups)}
+              </div>
+            )}
 
-            {twoHundredGroups.length > 0 && (
+            {regularGroups.length > 0 && (
               <div className="course-level-section two-hundred-section">
-                {renderCourseColumns(twoHundredGroups)}
+                {renderCourseColumns(regularGroups)}
               </div>
             )}
 
