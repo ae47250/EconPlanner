@@ -1,14 +1,110 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const CATALOG_YEAR = "2025-2026";
+const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 
-const blankCourse = id => ({
-  id,
-  code: "",
-  title: "",
-  status: "completed",
+const COURSE_CATALOG = [
+  { code: "ECO 113", title: "Principles of Microeconomics" },
+  { code: "ECO 114", title: "Principles of Macroeconomics" },
+  { code: "ECO 160", title: "Special Topics" },
+  { code: "ECO 161", title: "Foundations of Economics" },
+  { code: "MAT 112", title: "Mathematics prerequisite" },
+  { code: "MAT 113", title: "Mathematics cognate" },
+  { code: "MAT 121", title: "Calculus I" },
+  { code: "ECO 213", title: "Intermediate Microeconomics" },
+  { code: "ECO 214", title: "Intermediate Macroeconomics" },
+  { code: "ECO 221", title: "Environmental Economics" },
+  { code: "ECO 222", title: "Economics of the European Union" },
+  { code: "ECO 223", title: "Economics: Poverty & Discrimination" },
+  { code: "ECO 224", title: "Introduction to Sustainability" },
+  { code: "ECO 234", title: "Rational Choices" },
+  { code: "ECO 257", title: "Quantitative Methods for Business/Economics" },
+  { code: "ECO 260", title: "Special Topics" },
+  { code: "MAT 217", title: "Applied Statistics" },
+  { code: "PSY 217", title: "Statistical Analysis" },
+  { code: "ECO 307", title: "Directed Study" },
+  { code: "ECO 315", title: "U.S. Economic History" },
+  { code: "ECO 316", title: "History of Economic Thought" },
+  { code: "ECO 321", title: "Money & Financial Markets" },
+  { code: "BUSN 323", title: "Business finance option" },
+  { code: "ECO 331", title: "Labor Economics" },
+  { code: "ECO 333", title: "International Trade & Finance" },
+  { code: "ECO 335", title: "Managerial Economics" },
+  { code: "ECO 337", title: "Economic Development" },
+  { code: "ECO 357", title: "Internship" },
+  { code: "ECO 360", title: "Special Topics" },
+  { code: "ECO 370", title: "Directed Study" },
+  { code: "ECO 461", title: "Senior Seminar: Econometrics" },
+  { code: "ECO 471", title: "Senior Thesis" }
+];
+
+const GROUPED_COURSE_CODES = new Set([
+  "MAT 113", "MAT 121", "ECO 257", "MAT 217", "PSY 217"
+]);
+
+const COURSE_DISPLAY_GROUPS = [
+  {
+    id: "ECO 113",
+    code: "ECO 113",
+    title: "Principles of Microeconomics",
+    courseCodes: ["ECO 113"]
+  },
+  {
+    id: "ECO 114",
+    code: "ECO 114",
+    title: "Principles of Macroeconomics",
+    courseCodes: ["ECO 114"]
+  },
+  {
+    id: "math-requirement",
+    code: "MAT 113 / MAT 121",
+    title: "Mathematics cognate",
+    courseCodes: ["MAT 113", "MAT 121"],
+    options: [
+      { code: "MAT 113", title: "Mathematics cognate" },
+      { code: "MAT 121", title: "Calculus I" }
+    ]
+  },
+  {
+    id: "statistics-requirement",
+    code: "ECO 257 / MAT 217 / PSY 217",
+    title: "Statistics requirement",
+    courseCodes: ["ECO 257", "MAT 217", "PSY 217"],
+    options: [
+      { code: "ECO 257", title: "Quantitative Methods for Business/Economics" },
+      { code: "MAT 217", title: "Applied Statistics" },
+      { code: "PSY 217", title: "Statistical Analysis" }
+    ]
+  },
+  {
+    id: "ECO 213",
+    code: "ECO 213",
+    title: "Intermediate Microeconomics",
+    courseCodes: ["ECO 213"]
+  },
+  {
+    id: "ECO 214",
+    code: "ECO 214",
+    title: "Intermediate Macroeconomics",
+    courseCodes: ["ECO 214"]
+  },
+  ...COURSE_CATALOG
+    .filter(course => !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 213", "ECO 214"].includes(course.code))
+    .map(course => ({
+      id: course.code,
+      code: course.code,
+      title: course.title,
+      courseCodes: [course.code]
+    }))
+];
+
+const blankCourse = course => ({
+  id: course.code,
+  code: course.code,
+  title: course.title,
+  status: "not_started",
   units: "1",
   grade: "",
   source: "manual_code",
@@ -21,172 +117,227 @@ const initialForm = {
   majorDeclarationCatalogYear: "",
   academicStanding: "freshman",
   expectedGraduationTerm: "",
-  courses: [blankCourse("course-1")],
+  courses: COURSE_CATALOG.map(blankCourse),
   advisorApprovals: ""
 };
 
-function formatRemaining(value) {
-  return value == null ? "Not available" : `${value} unit${value === 1 ? "" : "s"}`;
+function courseLevel(code) {
+  return Number(String(code).match(/\d+$/)?.[0] || 0);
 }
 
-function assignmentFor(result, slotId, scenario = "strict") {
-  return result?.[scenario]?.assignments?.find(item => item.slotId === slotId) || null;
+function isTaken(course) {
+  return course.status === "completed" || course.status === "transfer";
 }
 
-function statusLabel(status) {
-  return String(status || "").replaceAll("_", " ").toLowerCase();
+function selectedCourses(courses) {
+  return courses.filter(course => ["completed", "transfer", "in_progress"].includes(course.status));
 }
 
-function riskClass(result) {
-  return String(result?.risk?.class || "UNKNOWN").toLowerCase().replaceAll("_", "-");
+function economicsResult(report) {
+  return report?.programs?.find(result => result.economicsPlan || result.program?.name === "Economics") || null;
 }
 
-function Schedule({ schedule, plan }) {
-  if (!schedule) return null;
+function planCourseCount(plan) {
+  return plan?.terms?.reduce((count, term) => count + term.courses.length, 0) || 0;
+}
+
+function PlanTimeline({ plan }) {
+  if (!plan) return null;
+
   return (
-    <div className="schedule-card">
-      <h4>Economics 2026/2027 offerings</h4>
-      <p className="muted">The registrar’s <code>S</code> section is normalized and displayed as May Term.</p>
-      <div className="schedule-grid">
-        {Object.entries(schedule.terms || {}).map(([term, courses]) => (
-          <section key={term}>
-            <strong>{term}</strong>
-            <ul>
-              {[...new Map(courses.map(course => [course.course, course])).values()].map(course => (
-                <li key={course.course}>{course.course} — {course.title}</li>
-              ))}
-            </ul>
-          </section>
+    <section className="plan-section" aria-live="polite">
+      <div className="section-heading">
+        <span className="step-number">3.</span>
+        <div>
+          <h2>Your Plan</h2>
+          <p>Suggested placements based on the courses you selected.</p>
+        </div>
+      </div>
+      <div className="plan-grid">
+        {(plan.terms || []).map(term => (
+          <article className="term-card" key={term.term}>
+            <h3>{term.term}</h3>
+            {term.courses.length > 0 ? (
+              <ul>
+                {term.courses.map(course => (
+                  <li key={`${term.term}-${course.course}`}>
+                    <strong>{course.course}</strong>
+                    <span>{course.title}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="empty-term">No courses placed</p>
+            )}
+          </article>
         ))}
       </div>
-      {plan?.terms?.some(term => term.courses.length > 0) && (
-        <>
-          <h4 className="plan-heading">Suggested verified placements</h4>
-          <div className="schedule-grid">
-            {plan.terms.map(term => (
-              <section key={`plan-${term.term}`}><strong>{term.term}</strong><ul>
-                {term.courses.length ? term.courses.map(course => <li key={`${term.term}-${course.course}`}>{course.course} — {course.title}</li>) : <li>None placed</li>}
-              </ul></section>
-            ))}
-          </div>
-        </>
-      )}
-      {plan?.unscheduled?.length > 0 && <p className="warning"><strong>Economics term advisor checks:</strong> {plan.unscheduled.map(item => `${item.label}: ${item.reason}`).join("; ")}</p>}
-    </div>
+    </section>
   );
 }
 
-function ProgramCard({ result }) {
-  const slots = result.requirements || [];
-  const strict = result.strict || {};
-  const optimistic = result.optimistic || {};
+function PlannerSummary({ report, courses }) {
+  const result = economicsResult(report);
+  const plan = result?.economicsPlan;
+  const chosen = selectedCourses(courses);
+  const completedCount = chosen.filter(course => isTaken(course)).length;
+  const inProgressCount = chosen.filter(course => course.status === "in_progress").length;
+  const remainingUnits = result?.projectedAfterInProgress?.optimistic?.remainingUnits
+    ?? result?.optimistic?.remainingUnits;
 
   return (
-    <article className="program-card">
-      <div className="program-heading">
+    <aside className="summary-card">
+      <div className="section-heading">
         <div>
-          <h3>{result.program?.name || result.program?.label}</h3>
-          <p className="muted">
-            {result.program?.degree || "Degree variant pending review"} · {result.program?.catalogYear} · {result.sourceStatus}
-          </p>
+          <h2>Planner Summary</h2>
+          <p>{report ? "Your selected courses and generated plan at a glance." : "Your summary will appear after you generate your plan."}</p>
         </div>
-        <span className={`risk risk-${riskClass(result)}`}>{statusLabel(result.risk?.class)}</span>
       </div>
-
-      <div className="metric-grid">
-        <div><span>Strict remaining</span><strong>{formatRemaining(strict.remainingUnits)}</strong></div>
-        <div><span>Optimistic remaining</span><strong>{formatRemaining(optimistic.remainingUnits)}</strong></div>
-        <div><span>After in-progress</span><strong>{formatRemaining(result.projectedAfterInProgress?.optimistic?.remainingUnits)}</strong></div>
-        <div><span>Minimum regular terms</span><strong>{result.minimumRegularTerms ?? "Not available"}</strong></div>
-      </div>
-
-      {result.risk?.reasons?.length > 0 && (
-        <p className="warning"><strong>Advisor checks:</strong> {result.risk.reasons.join("; ")}</p>
+      {report ? (
+        <>
+          <div className="summary-grid">
+            <div><span>Taken or AP credit</span><strong>{completedCount}</strong></div>
+            <div><span>In Progress</span><strong>{inProgressCount}</strong></div>
+            <div><span>Remaining</span><strong>{remainingUnits ?? "-"}</strong></div>
+            <div><span>Courses in plan</span><strong>{planCourseCount(plan)}</strong></div>
+          </div>
+          <p className="summary-footnote">The plan uses the selected course status and verified economics scheduling rules.</p>
+        </>
+      ) : (
+        <div className="summary-empty">Select your courses, then choose <strong>Generate My Plan</strong>.</div>
       )}
-
-      <details>
-        <summary>View assignment details</summary>
-        {slots.length > 0 ? (
-          <div className="table-wrap">
-            <table>
-              <thead><tr><th>Requirement</th><th>Strict</th><th>Optimistic</th><th>Evidence</th></tr></thead>
-              <tbody>
-                {slots.map(slot => {
-                  const strictAssignment = assignmentFor(result, slot.id, "strict");
-                  const optimisticAssignment = assignmentFor(result, slot.id, "optimistic");
-                  const assignment = strictAssignment || optimisticAssignment;
-                  return (
-                    <tr key={slot.id}>
-                      <td>{slot.label}</td>
-                      <td>{strictAssignment?.code || "Remaining"}</td>
-                      <td>{optimisticAssignment?.code || "Remaining"}</td>
-                      <td>{assignment?.evidenceStatus || "—"}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="warning">The official catalog source is captured, but this program’s requirement tree has not been approved for runtime mapping.</p>
-        )}
-
-        {result.missingPrerequisites?.length > 0 && (
-          <div className="detail-block">
-            <strong>Missing prerequisites</strong>
-            <ul>{result.missingPrerequisites.map(item => <li key={`${item.course}-${item.missing}`}>{item.course}: {item.missing}</li>)}</ul>
-          </div>
-        )}
-        {result.unusedCourses?.length > 0 && (
-          <div className="detail-block"><strong>Unused or duplicate courses</strong><p>{result.unusedCourses.map(course => course.code || course.title).join(", ")}</p></div>
-        )}
-        <p className="muted">Source confidence: {result.sourceStatus}. Catalog source: <a href={result.program?.sourceUrl} target="_blank" rel="noreferrer">official Hanover page</a>.</p>
-      </details>
-
-      <Schedule schedule={result.annualSchedule} plan={result.economicsPlan} />
-    </article>
+    </aside>
   );
 }
 
 export default function Page() {
   const [formData, setFormData] = useState(initialForm);
+  const [requirementModes, setRequirementModes] = useState({});
+  const [requirementScrollTarget, setRequirementScrollTarget] = useState("");
+  const [requirementPopoverPosition, setRequirementPopoverPosition] = useState(null);
+  const requirementCardRefs = useRef({});
+  const [courseSearch, setCourseSearch] = useState("");
+  const [isHydrated, setIsHydrated] = useState(false);
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
 
-  function updateField(event) {
-    const { name, value } = event.target;
-    setFormData(current => ({ ...current, [name]: value }));
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(PLANNER_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.formData && Array.isArray(parsed.formData.courses)) {
+          setFormData(current => ({ ...current, ...parsed.formData }));
+        }
+        if (parsed.requirementModes && typeof parsed.requirementModes === "object") {
+          setRequirementModes(parsed.requirementModes);
+        }
+        if (typeof parsed.courseSearch === "string") {
+          setCourseSearch(parsed.courseSearch);
+        }
+      }
+    } catch {
+      window.localStorage.removeItem(PLANNER_STORAGE_KEY);
+    }
+
+    window.history.scrollRestoration = "manual";
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    try {
+      window.localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify({
+        formData,
+        requirementModes,
+        courseSearch
+      }));
+    } catch {
+      // Local storage may be unavailable in restricted browser sessions.
+    }
+  }, [courseSearch, formData, isHydrated, requirementModes]);
+
+  useEffect(() => {
+    if (!requirementScrollTarget) return undefined;
+
+    const frame = window.requestAnimationFrame(() => {
+      requirementCardRefs.current[requirementScrollTarget]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [requirementScrollTarget]);
+
+  function toggleCourseGroup(group, nextStatus, event) {
+    if (group.options) {
+      const currentMode = requirementModes[group.id] || "";
+      const nextMode = currentMode === nextStatus ? "" : nextStatus;
+      setRequirementModes(current => ({ ...current, [group.id]: nextMode }));
+      setRequirementScrollTarget(nextMode ? group.id : "");
+      if (nextMode && event?.currentTarget) {
+        const row = event.currentTarget.closest(".course-row");
+        const rowRect = row?.getBoundingClientRect();
+        const buttonRect = event.currentTarget.getBoundingClientRect();
+        if (rowRect) {
+          setRequirementPopoverPosition({
+            groupId: group.id,
+            left: buttonRect.left - rowRect.left,
+            top: buttonRect.bottom - rowRect.top + 6
+          });
+        }
+      } else {
+        setRequirementPopoverPosition(null);
+      }
+      setFormData(current => ({
+        ...current,
+        courses: current.courses.map(course => group.courseCodes.includes(course.code)
+          ? { ...course, status: "not_started" }
+          : course)
+      }));
+      return;
+    }
+
+    setFormData(current => {
+      const course = current.courses.find(item => item.code === group.courseCodes[0]);
+      const currentlySelected = nextStatus === "completed" ? isTaken(course || {}) : course?.status === nextStatus;
+
+      return {
+        ...current,
+        courses: current.courses.map(course => {
+          if (!group.courseCodes.includes(course.code)) return course;
+          return { ...course, status: currentlySelected ? "not_started" : nextStatus };
+        })
+      };
+    });
   }
 
-  function updateCourse(id, field, value) {
-    setFormData(current => ({
-      ...current,
-      courses: current.courses.map(course => course.id === id ? { ...course, [field]: value } : course)
-    }));
-  }
-
-  function addCourse() {
-    setFormData(current => ({
-      ...current,
-      courses: [...current.courses, blankCourse(`course-${Date.now()}`)]
-    }));
-  }
-
-  function removeCourse(id) {
-    setFormData(current => ({
-      ...current,
-      courses: current.courses.length === 1 ? current.courses : current.courses.filter(course => course.id !== id)
-    }));
+  function toggleGroupOption(group, code) {
+    const mode = requirementModes[group.id];
+    if (!mode) return;
+    setFormData(current => {
+      return {
+        ...current,
+        courses: current.courses.map(course => {
+          if (course.code !== code) return course;
+          const selected = mode === "completed" ? isTaken(course) : course.status === mode;
+          return { ...course, status: selected ? "not_started" : mode };
+        })
+      };
+    });
   }
 
   async function mapMajors(event) {
     event.preventDefault();
-    setStatus("Mapping course history to every cataloged major variant...");
+    setStatus("Building your economics plan...");
     setReport(null);
 
     const student = {
       ...formData,
-      courses: formData.courses.filter(course => course.code || course.title || course.notes)
+      courses: selectedCourses(formData.courses)
     };
 
     try {
@@ -196,7 +347,7 @@ export default function Page() {
         body: JSON.stringify({ student })
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "The major mapper could not complete.");
+      if (!response.ok) throw new Error(data.error || "The planner could not complete.");
       setReport(data);
       setStatus("");
     } catch (error) {
@@ -204,117 +355,245 @@ export default function Page() {
     }
   }
 
+  const query = courseSearch.trim().toLowerCase();
+  const visibleGroups = COURSE_DISPLAY_GROUPS.filter(group =>
+    !query || `${group.code} ${group.title} ${(group.options || []).map(option => `${option.code} ${option.title}`).join(" ")}`.toLowerCase().includes(query)
+  );
+  const regularGroups = visibleGroups.filter(group => courseLevel(group.code) < 300);
+  const foundationGroups = regularGroups.filter(group => courseLevel(group.code) < 200);
+  const twoHundredGroups = regularGroups.filter(group => courseLevel(group.code) >= 200);
+  const advancedGroups = visibleGroups.filter(group => courseLevel(group.code) >= 300);
+
+  function renderCourseGroup(group) {
+    const groupCourses = formData.courses.filter(course => group.courseCodes.includes(course.code));
+    const requirementMode = requirementModes[group.id] || "";
+    const taken = group.options ? requirementMode === "completed" : groupCourses.some(isTaken);
+    const inProgress = group.options ? requirementMode === "in_progress" : groupCourses.some(course => course.status === "in_progress");
+    return (
+      <div className={`course-row${group.options && requirementMode ? " has-requirement" : ""}`} key={group.id}>
+        <div className="course-name">
+          <strong>{group.code}</strong>
+          <span>{group.title}</span>
+        </div>
+        <div className="course-toggles" role="group" aria-label={`Status for ${group.code}`}>
+          <button
+            type="button"
+            className={`course-toggle taken-toggle${taken ? " is-selected" : ""}`}
+            aria-pressed={taken}
+            onClick={event => toggleCourseGroup(group, "completed", event)}
+          >
+            Taken or AP credit
+          </button>
+          <button
+            type="button"
+            className={`course-toggle progress-toggle${inProgress ? " is-selected" : ""}`}
+            aria-pressed={inProgress}
+            onClick={event => toggleCourseGroup(group, "in_progress", event)}
+          >
+            In Progress
+          </button>
+        </div>
+        {group.options && requirementMode && (
+          <div
+            className="requirement-choice-card"
+            style={requirementPopoverPosition?.groupId === group.id ? {
+              left: `${requirementPopoverPosition.left}px`,
+              top: `${requirementPopoverPosition.top}px`
+            } : undefined}
+            ref={node => {
+              requirementCardRefs.current[group.id] = node;
+            }}
+          >
+            <strong>Which course(s) satisfy this requirement?</strong>
+            <div className="choice-options">
+              {group.options.map(option => {
+                const course = formData.courses.find(item => item.code === option.code);
+                const checked = requirementMode === "completed" ? isTaken(course || {}) : course?.status === requirementMode;
+                return (
+                  <label className={`choice-option${checked ? " is-selected" : ""}`} key={option.code}>
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleGroupOption(group, option.code)}
+                    />
+                    <span className="choice-radio" aria-hidden="true" />
+                    <span><strong>{option.code}</strong><small>{option.title}</small></span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function renderCourseColumns(groups) {
+    const midpoint = Math.ceil(groups.length / 2);
+    return (
+      <div className="course-columns">
+        <div className="course-column">{groups.slice(0, midpoint).map(renderCourseGroup)}</div>
+        <div className="course-column">{groups.slice(midpoint).map(renderCourseGroup)}</div>
+      </div>
+    );
+  }
+
   return (
     <main className="container">
       <style jsx global>{`
-        :root { --planner-bg: #eef8ee; --planner-border: #c9d8cc; --planner-muted: #536257; --planner-green: #1f6b45; }
-        body { background: var(--planner-bg); }
-        main.container { max-width: 1180px; padding-top: 2rem; padding-bottom: 4rem; }
-        .hero { text-align: center; margin-bottom: 1.25rem; }
-        .hero p { max-width: 760px; margin-inline: auto; color: var(--planner-muted); }
-        .planner-card, .program-card, .summary-card, .schedule-card { border: 1px solid var(--planner-border); border-radius: 1rem; background: #fff; box-shadow: none; }
-        .planner-card { padding: 1.4rem; }
-        .form-grid, .course-row { display: grid; gap: .8rem; }
-        .two-col { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-        @media (min-width: 760px) { .two-col { grid-template-columns: 1fr 1fr; } .course-row { grid-template-columns: 1fr 1fr 1fr 1fr; } }
-        .course-entry { border: 1px solid var(--planner-border); border-radius: .75rem; padding: .9rem; margin-top: .75rem; }
-        .course-entry .wide { grid-column: 1 / -1; }
-        .course-actions { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .75rem; }
-        .course-actions button { width: auto; margin: 0; }
-        .submit-row { margin-top: 1.25rem; }
-        .submit-row button { width: 100%; }
-        .status { margin-top: 1rem; color: var(--planner-muted); min-height: 1.5rem; }
-        .results { margin-top: 1.5rem; }
-        .summary-card { padding: 1rem; margin-bottom: 1rem; }
-        .summary-grid, .metric-grid, .schedule-grid { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-        .summary-grid div, .metric-grid div { border: 1px solid var(--planner-border); border-radius: .7rem; padding: .75rem; }
-        .summary-grid span, .metric-grid span { display: block; color: var(--planner-muted); font-size: .85rem; }
-        .summary-grid strong, .metric-grid strong { display: block; margin-top: .25rem; }
-        .program-card { padding: 1.15rem; margin-top: 1rem; }
-        .program-heading { display: flex; gap: 1rem; justify-content: space-between; align-items: flex-start; }
-        .program-heading h3 { margin-bottom: .2rem; }
-        .muted { color: var(--planner-muted); font-size: .92rem; }
-        .risk { border-radius: 999px; padding: .35rem .65rem; font-size: .8rem; white-space: nowrap; background: #e8f0ea; color: var(--planner-green); }
-        .risk-insufficient-information { background: #fff3d6; color: #795b00; }
-        .risk-feasible-with-assumptions { background: #fff3d6; color: #795b00; }
-        .risk-not-currently-feasible, .risk-high-risk { background: #ffe0df; color: #8c241e; }
-        .metric-grid { margin: 1rem 0; }
-        .warning { border-left: 4px solid #d59b00; padding: .65rem .8rem; background: #fff9e8; }
-        details { margin-top: 1rem; }
-        summary { cursor: pointer; color: var(--planner-green); font-weight: 700; }
-        .table-wrap { overflow-x: auto; margin-top: .75rem; }
-        table { min-width: 680px; margin-bottom: .75rem; }
-        th, td { vertical-align: top; }
-        .detail-block { border-top: 1px solid var(--planner-border); padding-top: .75rem; margin-top: .75rem; }
-        .detail-block p:last-child, .detail-block ul:last-child { margin-bottom: 0; }
-        .schedule-card { margin-top: 1rem; padding: 1rem; background: #f8fcf8; }
-        .schedule-card h4 { margin-bottom: .4rem; }
-        .schedule-grid section { border: 1px solid var(--planner-border); border-radius: .65rem; padding: .65rem; }
-        .schedule-grid ul { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .9rem; }
-        .catalog-note { margin-top: 1rem; font-size: .9rem; color: var(--planner-muted); }
+        :root {
+          --planner-bg: #f3e8ff;
+          --planner-panel: #ffffff;
+          --planner-border: #a9b0b5;
+          --planner-strong-border: #202427;
+          --planner-muted: #5c656b;
+          --planner-green: #bde9c9;
+          --planner-blue: #cfe9fb;
+          --planner-blue-border: #8dbddb;
+        }
+        body, button, input, select, textarea { font-family: Arial, sans-serif !important; font-size: 11px !important; }
+        body { background: var(--planner-bg); color: #171a1c; }
+        h1, h2, h3, h4, h5, h6 { color: #1d4ed8 !important; font-size: 14px !important; font-weight: 700 !important; }
+        main.container { max-width: 1240px; padding: 1.25rem 1rem 4rem; }
+        .app-header, .summary-card, .plan-section { border: 1px solid var(--planner-strong-border); background: var(--planner-panel); }
+        .intake-card { border: 1px solid var(--planner-strong-border); background: #f1faff; }
+        .app-header { display: flex; align-items: center; gap: 1rem; padding: .85rem 1.1rem; margin-bottom: 1rem; }
+        .app-header h1 { margin: 0; }
+        .app-header p { margin: .1rem 0 0; color: var(--planner-muted); font-size: 12px; }
+        .menu-button { position: relative; width: 2.4rem; height: 2.4rem; padding: 0; border: 1px solid var(--planner-strong-border); background: #fff; color: transparent !important; font-size: 0; }
+        .menu-button::before { content: ""; position: absolute; top: 50%; left: 50%; width: 1.1rem; height: 2px; background: #171a1c; transform: translate(-50%, -50%); box-shadow: 0 -5px #171a1c, 0 5px #171a1c; }
+        .intake-layout { display: grid; gap: 1rem; grid-template-columns: 1fr; align-items: start; }
+        .intake-card, .summary-card, .plan-section { padding: 1.1rem; }
+        .section-heading { display: flex; gap: .65rem; align-items: flex-start; }
+        .section-heading h2 { margin: 0; }
+        .section-heading p { margin: .2rem 0 0; color: var(--planner-muted); font-size: 12px; }
+        .step-number { font-weight: 700; line-height: 1.1; }
+        .search-label { display: block; width: 33.333%; margin: 1rem 0 .7rem; }
+        .search-label input { width: 100%; box-sizing: border-box; margin: 0; }
+        .course-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; align-items: start; }
+        .course-column { display: grid; gap: .45rem; min-width: 0; }
+        .two-hundred-section { margin-top: .9rem; padding-top: .85rem; border-top: 2px solid var(--planner-strong-border); }
+        .course-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: center; min-width: 0; border: 1px solid var(--planner-border); padding: .4rem .5rem; background: #fff; }
+        .course-row.has-requirement { z-index: 20; }
+        .course-name { display: flex; gap: .65rem; align-items: baseline; min-width: 0; white-space: nowrap; }
+        .course-name strong { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
+        .course-name span { overflow: visible; text-overflow: clip; white-space: nowrap; line-height: 1.25; }
+        .course-toggles { display: flex; gap: .25rem; align-items: center; flex-wrap: nowrap; }
+        button.course-toggle { width: auto; min-height: 1.8rem; margin: 0; padding: .25rem .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; white-space: nowrap; }
+        button.course-toggle:hover { border-color: var(--planner-strong-border); }
+        button.taken-toggle.is-selected { background: var(--planner-green); border-color: #6db784; }
+        button.progress-toggle.is-selected { background: var(--planner-blue); border-color: var(--planner-blue-border); }
+        .course-accordion { margin-top: .85rem; border-top: 1px solid var(--planner-border); padding-top: .75rem; }
+        .course-accordion summary { display: flex; justify-content: space-between; cursor: pointer; color: #171a1c; font-weight: 700; }
+        .course-accordion summary span { color: var(--planner-muted); font-weight: 400; }
+        .course-accordion .course-columns { margin-top: .7rem; }
+        .requirement-choice-card { position: absolute; z-index: 30; top: calc(100% + .35rem); left: 0; width: max-content; max-width: calc(100vw - 2rem); scroll-margin: 1rem; padding: .35rem; border: 1px solid #cfd3d5; border-radius: .9rem; background: #fff; box-shadow: 0 .5rem 1.4rem rgba(32, 36, 39, .14); }
+        .requirement-choice-card > strong { display: block; padding: .4rem .55rem .3rem; color: var(--planner-muted); font-weight: 400; }
+        .choice-options { display: grid; gap: .1rem; width: max-content; min-width: 100%; margin: 0; }
+        .choice-option { display: grid; grid-template-columns: max-content auto; align-items: center; width: max-content; min-width: 100%; box-sizing: border-box; gap: .6rem; padding: .55rem .6rem; border: 0; border-radius: .65rem; background: #fff; cursor: pointer; white-space: nowrap; }
+        .choice-option:hover { background: #f4f5f6; }
+        .choice-option input { position: absolute; opacity: 0; pointer-events: none; }
+        .choice-radio { display: none; }
+        .choice-option.is-selected::after { content: "\\2713"; color: #171a1c; font-size: 15px; line-height: 1; }
+        .choice-option > span:last-child { display: grid; gap: .1rem; min-width: 0; }
+        .choice-option small { color: var(--planner-muted); }
+        .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
+        .generate-button { width: auto; margin: 0; border: 1px solid var(--planner-strong-border); background: #fff; color: #171a1c; font-weight: 700; }
+        .generate-button:hover { background: #edf0f1; }
+        .summary-card { min-height: 100%; margin-bottom: 1rem; }
+        .summary-grid { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
+        .summary-grid div { border: 1px solid var(--planner-border); padding: .8rem; min-height: 4.6rem; }
+        .summary-grid span { display: block; color: var(--planner-muted); }
+        .summary-grid strong { display: block; margin-top: .3rem; }
+        .summary-empty { margin-top: 1rem; padding: 1rem; border: 1px dashed var(--planner-border); color: var(--planner-muted); }
+        .summary-footnote { margin: 1rem 0 0; color: var(--planner-muted); }
+        .status { margin: .8rem 0 0; color: var(--planner-muted); min-height: 1.4rem; }
+        .plan-section { margin-top: 1rem; }
+        .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-top: 1rem; }
+        .term-card { border: 1px solid var(--planner-border); padding: .8rem; min-height: 8rem; }
+        .term-card h3 { margin: 0 0 .65rem; }
+        .term-card ul { display: grid; gap: .45rem; list-style: none; margin: 0; padding: 0; }
+        .term-card li { border: 1px solid #d1d6d9; padding: .45rem; }
+        .term-card li strong, .term-card li span { display: block; }
+        .term-card li span { color: var(--planner-muted); margin-top: .1rem; }
+        .empty-term { margin: 0; color: var(--planner-muted); }
+        @media (max-width: 900px) { .intake-layout { grid-template-columns: 1fr; } }
+        @media (max-width: 680px) {
+          .course-columns { grid-template-columns: 1fr; }
+          .course-row { grid-template-columns: 1fr; }
+          .search-label { width: 100%; }
+          .course-name { white-space: normal; }
+          .course-name span { white-space: normal; }
+          .course-toggles { flex-wrap: wrap; }
+          .requirement-choice-card { right: 0; width: auto; max-width: none; }
+          .choice-options, .choice-option { width: 100%; min-width: 0; }
+          .choice-option { white-space: normal; }
+          .generate-row { justify-content: stretch; }
+          .generate-button { width: 100%; }
+          .plan-grid { grid-template-columns: 1fr; }
+        }
       `}</style>
 
-      <header className="hero">
-        <h1>Hanover EconMapper</h1>
-        <p>Map a student’s course history against every Hanover undergraduate major and program variant. Economics includes the first exact Fall/Winter/May planning layer.</p>
+      <header className="app-header">
+        <button type="button" className="menu-button" aria-label="Open menu">=</button>
+        <div>
+          <h1>Econ Planner</h1>
+          <p>Select completed and in-progress courses. We will map out your remaining plan.</p>
+        </div>
       </header>
 
-      <article className="planner-card">
-        <form onSubmit={mapMajors}>
-          <div className="form-grid">
-            <div className="two-col">
-              <label>Display name<input name="displayName" value={formData.displayName} onChange={updateField} placeholder="Optional" /></label>
-              <label>Academic standing<select name="academicStanding" value={formData.academicStanding} onChange={updateField}>
-                <option value="freshman">Freshman</option><option value="sophomore">Sophomore</option><option value="junior">Junior</option><option value="senior">Senior</option>
-              </select></label>
-            </div>
-            <div className="two-col">
-              <label>Entry catalog year<select name="entryCatalogYear" value={formData.entryCatalogYear} onChange={updateField} required><option value="2025-2026">2025–2026</option></select></label>
-              <label>Major-declaration catalog year<input name="majorDeclarationCatalogYear" value={formData.majorDeclarationCatalogYear} onChange={updateField} placeholder="Leave blank if unknown" /></label>
-            </div>
-            <div className="two-col">
-              <label>Expected graduation term<input name="expectedGraduationTerm" value={formData.expectedGraduationTerm} onChange={updateField} placeholder="Example: Spring 2029" /></label>
-              <label>Advisor approvals or substitutions<textarea name="advisorApprovals" value={formData.advisorApprovals} onChange={updateField} placeholder="Optional notes; these remain advisor checks until verified." /></label>
-            </div>
-          </div>
+      <form onSubmit={mapMajors}>
+        <PlannerSummary report={report} courses={formData.courses} />
 
-          <h3>Course history</h3>
-          <p className="muted">Enter codes when known. Transfer, uncertain, repeated, failed, and withdrawn records are retained for review and are not silently counted.</p>
-          {formData.courses.map(course => (
-            <div className="course-entry" key={course.id}>
-              <div className="course-row">
-                <label>Course code<input value={course.code} onChange={event => updateCourse(course.id, "code", event.target.value)} placeholder="ECO 113" /></label>
-                <label>Course title<input value={course.title} onChange={event => updateCourse(course.id, "title", event.target.value)} placeholder="Optional" /></label>
-                <label>Status<select value={course.status} onChange={event => updateCourse(course.id, "status", event.target.value)}>
-                  <option value="completed">Completed</option><option value="in_progress">In progress</option><option value="transfer">Transfer/AP/IB</option><option value="uncertain">Uncertain equivalency</option><option value="repeated">Repeated</option><option value="failed">Failed</option><option value="withdrawn">Withdrawn</option>
-                </select></label>
-                <label>Units<input value={course.units} onChange={event => updateCourse(course.id, "units", event.target.value)} placeholder="1" /></label>
-                <label>Grade<input value={course.grade} onChange={event => updateCourse(course.id, "grade", event.target.value)} placeholder="A" /></label>
+        <div className="intake-layout">
+          <section className="intake-card">
+            <div className="section-heading">
+              <span className="step-number">1.</span>
+              <div>
+                <h2>Your Courses</h2>
+                <p>Choose a status for each course. Click a selected button again to clear it.</p>
               </div>
-              <div className="course-actions"><button type="button" className="secondary" onClick={() => removeCourse(course.id)}>Remove course</button></div>
             </div>
-          ))}
-          <div className="course-actions"><button type="button" className="secondary" onClick={addCourse}>Add course</button></div>
-          <div className="submit-row"><button type="submit">Map all Hanover majors</button></div>
-        </form>
-        <p className="catalog-note">Catalog source currently captured locally: Hanover 2025–2026. Requirement maps that have not passed human source review are shown as “Insufficient information,” never guessed.</p>
-      </article>
+
+            <label className="search-label">
+              <span className="sr-only">Search courses</span>
+              <input
+                type="search"
+                value={courseSearch}
+                onChange={event => setCourseSearch(event.target.value)}
+                placeholder="Search courses..."
+              />
+            </label>
+
+            <div className="course-level-section">
+              {foundationGroups.length > 0 && renderCourseColumns(foundationGroups)}
+            </div>
+
+            {twoHundredGroups.length > 0 && (
+              <div className="course-level-section two-hundred-section">
+                {renderCourseColumns(twoHundredGroups)}
+              </div>
+            )}
+
+            <details className="course-accordion">
+              <summary>
+                <span>300-level and above</span>
+                <span>{advancedGroups.length} courses</span>
+              </summary>
+              {renderCourseColumns(advancedGroups)}
+            </details>
+
+            {visibleGroups.length === 0 && <p className="status">No courses match your search.</p>}
+
+            <div className="generate-row">
+              <button type="submit" className="generate-button">Generate My Plan</button>
+            </div>
+          </section>
+        </div>
+      </form>
 
       {status && <p className="status" role="status">{status}</p>}
-      {report && (
-        <section className="results" aria-live="polite">
-          <div className="summary-card">
-            <h2>Major comparison</h2>
-            <p className="muted">Catalog basis: {report.catalog.basis.replaceAll("_", " ")} · {report.catalog.selectedCatalogYear}</p>
-            <div className="summary-grid">
-              <div><span>Program variants</span><strong>{report.summary.programCount}</strong></div>
-              <div><span>Approved mappings</span><strong>{report.summary.mappedProgramCount}</strong></div>
-              <div><span>Advisor review required</span><strong>{report.summary.reviewRequiredProgramCount}</strong></div>
-            </div>
-          </div>
-          {report.programs.map(result => <ProgramCard key={result.program?.id || result.program?.label} result={result} />)}
-        </section>
-      )}
+      <PlanTimeline plan={economicsResult(report)?.economicsPlan} />
     </main>
   );
 }
