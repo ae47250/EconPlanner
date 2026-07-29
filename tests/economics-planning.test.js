@@ -99,3 +99,27 @@ test("ECO 307 does not satisfy one of the four full-unit elective slots", () => 
   assert.equal(mapping.strict.assignments.some(item => item.code === "ECO 307"), false);
   assert.equal(mapping.strict.remainingUnits, 12);
 });
+
+test("ECO 461 remains required and Hanover-only in the normalized requirements", () => {
+  const capstone = requirements.requirementSlots.find(slot => slot.id === "eco-461");
+
+  assert.equal(capstone.options[0], "ECO 461");
+  assert.equal(capstone.residency, "hanover");
+});
+
+test("a legacy non-Hanover ECO 461 record does not suppress the required senior-Winter placement", () => {
+  const student = {
+    academicStanding: "senior",
+    courses: [
+      { code: "ECO 213", status: "completed" },
+      { code: "ECO 214", status: "completed" },
+      { code: "ECO 257", status: "completed" },
+      { code: "ECO 461", status: "transfer", source: "transfer" }
+    ]
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const plan = buildEconomicsTermPlan({ student, mapping, schedule, prerequisites });
+  const winter = plan.terms.find(term => term.term === "Winter");
+
+  assert.ok(winter.courses.some(course => course.course === "ECO 461"));
+});

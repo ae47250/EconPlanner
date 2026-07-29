@@ -63,6 +63,7 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 ## Timing Rules
 
 - `ECO 461` requires senior standing and may only be scheduled in senior Winter.
+- Senior-seminar and capstone requirements must be completed at Hanover; transfer, AP, and equivalency credit do not satisfy the requirement. In Economics, `ECO 461` is the culminating senior seminar and normally has one Winter offering per academic year.
 - The statistics option must be completed no later than Fall of senior year because it is needed before Winter senior-year `ECO 461`.
 - It is recommended to complete the statistics option by the end of junior year.
 - It is recommended, when feasible, to complete both `ECO 213` and `ECO 214` by the end of junior year.

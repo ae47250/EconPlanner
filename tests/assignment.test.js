@@ -60,3 +60,28 @@ test("in-progress courses only count in projected results", () => {
   assert.equal(result.strict.remainingUnits, 4);
   assert.equal(result.projectedAfterInProgress.strict.remainingUnits, 3);
 });
+
+test("Hanover-only capstone ignores transfer, AP, and uncertain evidence", () => {
+  const capstone = {
+    sourceStatus: "APPROVED_LOCAL_SOURCE",
+    requirementSlots: [
+      { id: "capstone", label: "ECO 461", kind: "exact", options: ["ECO 461"], residency: "hanover", units: 1 }
+    ]
+  };
+
+  for (const course of [
+    { code: "ECO 461", status: "transfer", source: "manual_code" },
+    { code: "ECO 461", status: "completed", source: "ap_credit" },
+    { code: "ECO 461", status: "uncertain", source: "title_only" }
+  ]) {
+    const result = mapStudentToProgram(economics, capstone, { courses: [course] });
+    assert.equal(result.strict.assignments.length, 0);
+    assert.equal(result.strict.remainingUnits, 1);
+  }
+
+  const HanoverResult = mapStudentToProgram(economics, capstone, {
+    courses: [{ code: "ECO 461", status: "completed", source: "manual_code" }]
+  });
+  assert.equal(HanoverResult.strict.assignments[0].code, "ECO 461");
+  assert.equal(HanoverResult.strict.remainingUnits, 0);
+});

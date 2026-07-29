@@ -38,6 +38,7 @@ Before placing any course, check:
 5. Whether the plan violates Fall/Winter economics load limits.
 6. Whether the course satisfies a required course, substitute group, or elective requirement.
 7. Whether the plan keeps the student on track for `ECO 461` in senior Winter.
+8. Whether senior-seminar and capstone requirements are completed at Hanover. Do not count transfer, AP, or equivalency credit toward `ECO 461`; treat its normal single Winter offering per academic year as an important scheduling constraint.
 
 Do not build the plan first and check rules afterward.
 

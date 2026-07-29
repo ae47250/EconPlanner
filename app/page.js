@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { resolvePlanningContext } from "../lib/planning/horizon.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
+const NON_SELECTABLE_COURSE_CODES = new Set(["ECO 461"]);
 
 const COURSE_CATALOG = [
   { code: "ECO 113", title: "Principles of Microeconomics" },
@@ -35,9 +36,11 @@ const COURSE_CATALOG = [
   { code: "ECO 357", title: "Internship" },
   { code: "ECO 360", title: "Special Topics" },
   { code: "ECO 370", title: "Directed Study" },
-  { code: "ECO 461", title: "Senior Seminar: Econometrics" },
+  { code: "ECO 461", title: "Senior Seminar: Econometrics", studentSelectable: false },
   { code: "ECO 471", title: "Senior Thesis" }
 ];
+
+const SELECTABLE_COURSE_CATALOG = COURSE_CATALOG.filter(course => course.studentSelectable !== false);
 
 const GROUPED_COURSE_CODES = new Set([
   "MAT 113", "MAT 121", "ECO 257", "MAT 217", "PSY 217"
@@ -102,7 +105,7 @@ const COURSE_DISPLAY_GROUPS = [
     ]
   },
   ...COURSE_CATALOG
-    .filter(course => !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 213", "ECO 214"].includes(course.code))
+    .filter(course => course.studentSelectable !== false && !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 213", "ECO 214"].includes(course.code))
     .map(course => ({
       id: course.code,
       code: course.code,
@@ -134,7 +137,7 @@ const initialForm = {
   planCreationDate: "",
   summerStandingConfirmed: "",
   expectedGraduationTerm: "",
-  courses: COURSE_CATALOG.map(blankCourse),
+  courses: SELECTABLE_COURSE_CATALOG.map(blankCourse),
   advisorApprovals: ""
 };
 
@@ -147,7 +150,7 @@ function isTaken(course) {
 }
 
 function selectedCourses(courses) {
-  return courses.filter(course => ["completed", "transfer", "in_progress"].includes(course.status));
+  return courses.filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code) && ["completed", "transfer", "in_progress"].includes(course.status));
 }
 
 function economicsResult(report) {
@@ -163,6 +166,16 @@ function localToday() {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function formatPlanCreationDate(value) {
+  const [year, month, day] = String(value || "").split("-").map(Number);
+  if (!year || !month || !day) return "Not set";
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  }).format(new Date(year, month - 1, day));
 }
 
 function formatAcademicYear(value) {
@@ -229,8 +242,8 @@ function PlanTimeline({ plans = [] }) {
                     <h4>{term.displayTerm || term.term}</h4>
                     {term.courses.length > 0 ? (
                       <ul>
-                        {term.courses.map(course => (
-                          <li key={`${term.term}-${course.course}`}>
+                        {term.courses.map((course, courseIndex) => (
+                          <li key={`${term.term}-${course.course}-${course.requirementId || "course"}-${courseIndex}`}>
                             <strong>{course.course}</strong>
                             <span>{course.title}</span>
                           </li>
@@ -352,7 +365,9 @@ export default function Page() {
   const [requirementScrollTarget, setRequirementScrollTarget] = useState("");
   const [requirementPopoverPosition, setRequirementPopoverPosition] = useState(null);
   const requirementCardRefs = useRef({});
+  const courseAccordionRefs = useRef({});
   const [courseSearch, setCourseSearch] = useState("");
+  const [isEditingPlanDate, setIsEditingPlanDate] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
@@ -368,6 +383,7 @@ export default function Page() {
           setFormData(current => ({
             ...current,
             ...savedFormData,
+            courses: savedFormData.courses.filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code)),
             planCreationDate: savedFormData.planCreationDate || localToday()
           }));
         }
@@ -447,6 +463,8 @@ export default function Page() {
   }, [requirementModes]);
 
   function toggleCourseGroup(group, nextStatus, event) {
+    if (group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code))) return;
+
     if (group.options) {
       const currentMode = requirementModes[group.id] || "";
       const nextMode = currentMode === nextStatus ? "" : nextStatus;
@@ -548,8 +566,38 @@ export default function Page() {
   const declarationRequirementGroups = visibleGroups.filter(group => DECLARATION_REQUIREMENT_IDS.includes(group.id));
   const declarationGroups = [...declarationCourseGroups, ...declarationRequirementGroups];
   const remainingGroups = visibleGroups.filter(group => !DECLARATION_GROUP_IDS.has(group.id));
-  const regularGroups = remainingGroups.filter(group => courseLevel(group.code) < 300);
-  const advancedGroups = remainingGroups.filter(group => courseLevel(group.code) >= 300);
+  const sortCourseGroups = groups => [...groups].sort((a, b) => courseLevel(a.code) - courseLevel(b.code) || a.code.localeCompare(b.code));
+  const oneHundredGroups = sortCourseGroups(remainingGroups.filter(group => courseLevel(group.code) >= 100 && courseLevel(group.code) < 200));
+  const twoHundredGroups = sortCourseGroups(remainingGroups.filter(group => courseLevel(group.code) >= 200 && courseLevel(group.code) < 300));
+  const advancedGroups = sortCourseGroups(remainingGroups.filter(group => courseLevel(group.code) >= 300));
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      Object.values(courseAccordionRefs.current).forEach(node => {
+        if (node) node.open = Boolean(query);
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [query]);
+
+  function renderCourseAccordion(id, label, groups) {
+    if (!groups.length) return null;
+    return (
+      <details
+        className="course-accordion"
+        key={`${id}-${query}`}
+        ref={node => {
+          courseAccordionRefs.current[id] = node;
+        }}
+      >
+        <summary>
+          <span className="course-accordion-title">{label}</span>
+          <span className="course-accordion-count">{groups.length} courses</span>
+        </summary>
+        {renderCourseColumns(groups)}
+      </details>
+    );
+  }
 
   function renderCourseGroup(group) {
     const groupCourses = formData.courses.filter(course => group.courseCodes.includes(course.code));
@@ -677,8 +725,13 @@ export default function Page() {
         .planning-details { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--planner-border); }
         .planning-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-top: .85rem; max-width: 38rem; }
         .planning-field { display: grid; gap: .25rem; }
-        .planning-field label { color: var(--planner-muted); }
+        .planning-field label, .planning-label { color: var(--planner-muted); }
         .planning-field input, .planning-field select { width: 100%; box-sizing: border-box; }
+        .date-display { display: flex; align-items: baseline; gap: .4rem; min-height: 1.5rem; }
+        .date-display strong { font-weight: 400; }
+        button.date-edit-button { width: auto; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; text-decoration: underline; }
+        button.date-edit-button:hover { color: #163ea9; }
+        #plan-creation-date::-webkit-calendar-picker-indicator { display: none; }
         .clarification-card { max-width: 38rem; margin-top: .85rem; padding: .8rem; border: 1px solid #6db784; background: #effaf1; }
         .clarification-card strong { display: block; }
         .clarification-card p { margin: .35rem 0 .65rem; color: var(--planner-muted); }
@@ -701,8 +754,12 @@ export default function Page() {
         button.taken-toggle.is-selected { background: var(--planner-green); border-color: #6db784; }
         button.progress-toggle.is-selected { background: var(--planner-blue); border-color: var(--planner-blue-border); }
         .course-accordion { margin-top: .85rem; border-top: 1px solid var(--planner-border); padding-top: .75rem; }
-        .course-accordion summary { display: flex; justify-content: space-between; cursor: pointer; color: #171a1c; font-weight: 700; }
-        .course-accordion summary span { color: var(--planner-muted); font-weight: 400; }
+        .course-accordion summary { display: flex; align-items: center; gap: .5rem; cursor: pointer; list-style: none; color: #171a1c; font-weight: 700; }
+        .course-accordion summary::-webkit-details-marker { display: none; }
+        .course-accordion summary::after { content: "▶"; margin-left: .1rem; color: #ff7a00; font-size: 14px; line-height: 1; }
+        .course-accordion[open] summary::after { content: "▼"; }
+        .course-accordion-title { color: #171a1c; }
+        .course-accordion-count { margin-left: auto; color: var(--planner-muted); font-weight: 400; }
         .course-accordion .course-columns { margin-top: .7rem; }
         .requirement-choice-card { position: absolute; z-index: 30; top: calc(100% + .35rem); left: 0; width: max-content; max-width: calc(100vw - 2rem); scroll-margin: 1rem; padding: .35rem; border: 1px solid #cfd3d5; border-radius: .9rem; background: #fff; box-shadow: 0 .5rem 1.4rem rgba(32, 36, 39, .14); }
         .requirement-choice-card > strong { display: block; padding: .4rem .55rem .3rem; color: var(--planner-muted); font-weight: 400; }
@@ -720,10 +777,10 @@ export default function Page() {
         .generate-button:hover { background: #edf0f1; }
         .generate-button:disabled { cursor: not-allowed; opacity: .6; }
         .summary-card { min-height: 100%; margin-bottom: 1rem; }
-        .summary-grid { display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
-        .summary-grid div { border: 1px solid var(--planner-border); padding: .8rem; min-height: 4.6rem; }
-        .summary-grid span { display: block; color: var(--planner-muted); }
-        .summary-grid strong { display: block; margin-top: .3rem; }
+        .summary-grid { display: grid; gap: .45rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
+        .summary-grid div { display: flex; align-items: baseline; gap: .35rem; border: 1px solid var(--planner-border); padding: .45rem .6rem; min-height: 0; }
+        .summary-grid span { color: var(--planner-muted); }
+        .summary-grid strong { margin: 0; }
         .summary-empty { margin-top: 1rem; padding: 1rem; border: 1px dashed var(--planner-border); color: var(--planner-muted); }
         .summary-footnote { margin: 1rem 0 0; color: var(--planner-muted); }
         .status { margin: .8rem 0 0; color: var(--planner-muted); min-height: 1.4rem; }
@@ -793,19 +850,6 @@ export default function Page() {
               </div>
               <div className="planning-fields">
                 <div className="planning-field">
-                  <label htmlFor="plan-creation-date">Plan creation date</label>
-                  <input
-                    id="plan-creation-date"
-                    type="date"
-                    value={formData.planCreationDate}
-                    onChange={event => setFormData(current => ({
-                      ...current,
-                      planCreationDate: event.target.value,
-                      summerStandingConfirmed: ""
-                    }))}
-                  />
-                </div>
-                <div className="planning-field">
                   <label htmlFor="academic-standing">Class standing</label>
                   <select
                     id="academic-standing"
@@ -821,6 +865,34 @@ export default function Page() {
                     <option value="junior">Junior</option>
                     <option value="senior">Senior</option>
                   </select>
+                </div>
+                <div className="planning-field">
+                  <div className="date-display" aria-labelledby="plan-creation-date-label">
+                    <span id="plan-creation-date-label" className="planning-label">Plan creation date:</span>
+                    <strong>{formatPlanCreationDate(formData.planCreationDate)}</strong>
+                    <button
+                      type="button"
+                      className="date-edit-button"
+                      aria-expanded={isEditingPlanDate}
+                      aria-controls="plan-creation-date"
+                      onClick={() => setIsEditingPlanDate(current => !current)}
+                    >
+                      {isEditingPlanDate ? "Done" : "Change"}
+                    </button>
+                  </div>
+                  {isEditingPlanDate && (
+                    <input
+                      id="plan-creation-date"
+                      type="date"
+                      aria-labelledby="plan-creation-date-label"
+                      value={formData.planCreationDate}
+                      onChange={event => setFormData(current => ({
+                        ...current,
+                        planCreationDate: event.target.value,
+                        summerStandingConfirmed: ""
+                      }))}
+                    />
+                  )}
                 </div>
               </div>
               {planningContext.requiresSummerClarification && (
@@ -876,19 +948,9 @@ export default function Page() {
               </div>
             )}
 
-            {regularGroups.length > 0 && (
-              <div className="course-level-section two-hundred-section">
-                {renderCourseColumns(regularGroups)}
-              </div>
-            )}
-
-            <details className="course-accordion">
-              <summary>
-                <span>300-level and above</span>
-                <span>{advancedGroups.length} courses</span>
-              </summary>
-              {renderCourseColumns(advancedGroups)}
-            </details>
+            {renderCourseAccordion("one-hundred-level", "100 level courses", oneHundredGroups)}
+            {renderCourseAccordion("two-hundred-level", "200 level courses", twoHundredGroups)}
+            {renderCourseAccordion("three-hundred-level", "300 level and above", advancedGroups)}
 
             {visibleGroups.length === 0 && <p className="status">No courses match your search.</p>}
 

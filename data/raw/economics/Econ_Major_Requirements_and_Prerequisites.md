@@ -136,7 +136,7 @@ Use this section to match course titles to course numbers. When the user names a
 | ECO 357 | Internship | ECO 213, ECO 214, and department permission | Confirm department permission before scheduling. |
 | ECO 360 | Special Topics | None listed | Topic varies. Confirm topic and whether it counts toward the major/elective requirement. |
 | ECO 370 | Directed Study | None listed | Confirm whether and how it counts toward the major. |
-| ECO 461 | Senior Seminar: Econometrics | ECO 213, ECO 214, and ECO 257 or MAT 217 | Required culminating course for the major. |
+| ECO 461 | Senior Seminar: Econometrics | ECO 213, ECO 214, and ECO 257 or MAT 217 | Required culminating course for the major; must be completed at Hanover in senior Winter. |
 | ECO 471 | Senior Thesis | ECO 213, ECO 214, and ECO 321 | Recommended for students intending to pursue graduate study. |
 
 ## Course Title Matching Rules

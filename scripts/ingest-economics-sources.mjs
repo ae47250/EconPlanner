@@ -58,7 +58,7 @@ const economicsRequirements = {
       units: 1,
       provisionalOptions: ["BUSN 323"]
     },
-    { id: "eco-461", label: "ECO 461", kind: "exact", options: ["ECO 461"], units: 1 },
+    { id: "eco-461", label: "ECO 461", kind: "exact", options: ["ECO 461"], residency: "hanover", units: 1 },
     {
       id: "cognate",
       label: "MAT 113 / MAT 121",
@@ -113,6 +113,9 @@ const schedule2026 = {
       "data/raw/economics/schedule-2026-2027-winter-spring.png"
     ],
     sectionCodeSMeans: "May"
+  },
+  courseOfferingNotes: {
+    "ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."
   },
   terms: {
     Fall: [
