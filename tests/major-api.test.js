@@ -40,7 +40,7 @@ test("major mapper asks for summer standing clarification instead of guessing", 
   assert.equal(data.requiresSummerClarification, true);
   assert.equal(
     data.error,
-    "Do you mean you will be a freshman in Fall 2026, or that you were a freshman during the 2025\u201326 academic year?"
+    "Will you be a freshman in Fall 2026, or were you a freshman during last May term?"
   );
 });
 

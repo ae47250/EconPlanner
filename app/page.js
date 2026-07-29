@@ -372,6 +372,11 @@ export default function Page() {
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
   const planningContext = resolvePlanningContext(formData);
+  const summerStandingSelection = planningContext.isSummer && ["yes", "no"].includes(formData.summerStandingConfirmed)
+    ? formData.summerStandingConfirmed === "yes"
+      ? `${planningContext.standingLabel} in Fall ${planningContext.startYear}`
+      : `${planningContext.standingLabel} during ${planningContext.startYear - 1}\u2013${String(planningContext.startYear).slice(-2)} academic year`
+    : "";
 
   useEffect(() => {
     try {
@@ -704,18 +709,20 @@ export default function Page() {
           --planner-green: #bde9c9;
           --planner-blue: #cfe9fb;
           --planner-blue-border: #8dbddb;
+          --urveska-orange: #ff9d5c;
+          --urveska-gold: #ffd166;
+          --urveska-aqua: #8ef7d3;
         }
         body, button, input, select, textarea { font-family: Arial, sans-serif !important; font-size: 11px !important; }
         body { background: var(--planner-bg); color: #171a1c; }
         h1, h2, h3, h4, h5, h6 { color: #1d4ed8 !important; font-size: 14px !important; font-weight: 700 !important; }
         main.container { max-width: 1240px; padding: 1.25rem 1rem 4rem; }
-        .app-header, .summary-card, .plan-section { border: 1px solid var(--planner-strong-border); background: var(--planner-panel); }
+        .summary-card, .plan-section { border: 1px solid var(--planner-strong-border); background: var(--planner-panel); }
         .intake-card { border: 1px solid var(--planner-strong-border); background: #f1faff; }
-        .app-header { display: flex; align-items: center; gap: 1rem; padding: .85rem 1.1rem; margin-bottom: 1rem; }
-        .app-header h1 { margin: 0; }
-        .app-header p { margin: .1rem 0 0; color: var(--planner-muted); font-size: 12px; }
-        .menu-button { position: relative; width: 2.4rem; height: 2.4rem; padding: 0; border: 1px solid var(--planner-strong-border); background: #fff; color: transparent !important; font-size: 0; }
-        .menu-button::before { content: ""; position: absolute; top: 50%; left: 50%; width: 1.1rem; height: 2px; background: #171a1c; transform: translate(-50%, -50%); box-shadow: 0 -5px #171a1c, 0 5px #171a1c; }
+        .app-header { display: flex; align-items: center; justify-content: center; text-align: center; gap: 1rem; padding: .85rem 1.1rem; margin-bottom: 1rem; }
+        .app-header h1 { margin: 0; color: #06182e !important; font-size: 36px !important; line-height: 1.05; }
+        .app-header h1 .headline-econ { color: var(--urveska-aqua) !important; }
+        .app-header h1 .headline-planner { color: var(--urveska-orange) !important; }
         .intake-layout { display: grid; gap: 1rem; grid-template-columns: 1fr; align-items: start; }
         .intake-card, .summary-card, .plan-section { padding: 1.1rem; }
         .section-heading { display: flex; gap: .65rem; align-items: flex-start; }
@@ -727,15 +734,20 @@ export default function Page() {
         .planning-field { display: grid; gap: .25rem; }
         .planning-field label, .planning-label { color: var(--planner-muted); }
         .planning-field input, .planning-field select { width: 100%; box-sizing: border-box; }
+        .summer-standing-selection { display: flex; align-items: center; gap: .35rem; margin-top: .35rem; color: var(--planner-muted); }
+        .summer-standing-selection strong { color: #171a1c; font-weight: 700; }
+        button.summer-standing-change { width: auto; min-height: 0 !important; margin: 0; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; font-size: 11px !important; text-decoration: underline; }
+        button.summer-standing-change:hover { color: #163ea9; }
         .date-display { display: flex; align-items: baseline; gap: .4rem; min-height: 1.5rem; }
         .date-display strong { font-weight: 400; }
         button.date-edit-button { width: auto; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; text-decoration: underline; }
         button.date-edit-button:hover { color: #163ea9; }
         #plan-creation-date::-webkit-calendar-picker-indicator { display: none; }
-        .clarification-card { max-width: 38rem; margin-top: .85rem; padding: .8rem; border: 1px solid #6db784; background: #effaf1; }
+        .clarification-card { display: block; max-width: 38rem; margin-top: .85rem; padding: .8rem; border: 1px solid #6db784; background: #effaf1; }
         .clarification-card strong { display: block; }
         .clarification-card p { margin: .35rem 0 .65rem; color: var(--planner-muted); }
-        .radio-choices { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .clarification-card > p, .clarification-card > .radio-choices { width: 100%; box-sizing: border-box; }
+        .radio-choices { display: grid; grid-template-columns: 1fr; gap: .35rem; margin-top: .65rem; padding-left: 3ch; }
         .radio-choice { display: flex; align-items: center; gap: .35rem; cursor: pointer; }
         .radio-choice input { margin: 0; }
         .search-label { display: block; width: 33.333%; margin: 1rem 0 .7rem; }
@@ -773,10 +785,12 @@ export default function Page() {
         .choice-check { width: 1rem; color: #2f8f4e; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; }
         .choice-option small { color: var(--planner-muted); }
         .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
-        .generate-button { width: auto; margin: 0; border: 1px solid var(--planner-strong-border); background: #fff; color: #171a1c; font-weight: 700; }
-        .generate-button:hover { background: #edf0f1; }
+        .generate-button { width: auto; margin: 0; border: 1px solid #73b98a; background: var(--planner-green); color: #171a1c; font-weight: 700; }
+        .generate-button:hover { background: #a6dfb6; }
         .generate-button:disabled { cursor: not-allowed; opacity: .6; }
         .summary-card { min-height: 100%; margin-bottom: 1rem; }
+        .planner-instructions { margin: .85rem 0 0; font-size: 16px !important; font-weight: 700; }
+        .planner-instructions p { margin: .25rem 0; font-size: 16px !important; font-weight: 700; }
         .summary-grid { display: grid; gap: .45rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
         .summary-grid div { display: flex; align-items: baseline; gap: .35rem; border: 1px solid var(--planner-border); padding: .45rem .6rem; min-height: 0; }
         .summary-grid span { color: var(--planner-muted); }
@@ -828,23 +842,23 @@ export default function Page() {
       `}</style>
 
       <header className="app-header">
-        <button type="button" className="menu-button" aria-label="Open menu">=</button>
         <div>
-          <h1>Econ Planner</h1>
-          <p>Select completed and in-progress courses. We will map out your remaining plan.</p>
+          <h1><span className="headline-econ">Econ</span> <span className="headline-planner">Planner</span></h1>
         </div>
       </header>
 
       <form onSubmit={mapMajors}>
-        <PlannerSummary report={report} courses={formData.courses} />
-
         <div className="intake-layout">
           <section className="intake-card">
+            <div className="planner-instructions">
+              <p>1. Choose class standing</p>
+              <p>2. Select Econ courses taken or in progress</p>
+              <p>3. Click on Generate My Plan below course selection list.</p>
+            </div>
             <div className="planning-details">
               <div className="section-heading">
-                <span className="step-number">1.</span>
                 <div>
-                  <h2>Plan Details</h2>
+                  <h2>1. Choose class standing and courses taken or in progress</h2>
                   <p>These two answers set the number of years and terms in your plan.</p>
                 </div>
               </div>
@@ -865,6 +879,18 @@ export default function Page() {
                     <option value="junior">Junior</option>
                     <option value="senior">Senior</option>
                   </select>
+                  {summerStandingSelection && (
+                    <div className="summer-standing-selection" role="status">
+                      <span>Selected: <strong>{summerStandingSelection}</strong></span>
+                      <button
+                        type="button"
+                        className="summer-standing-change"
+                        onClick={() => setFormData(current => ({ ...current, summerStandingConfirmed: "" }))}
+                      >
+                        Change
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="planning-field">
                   <div className="date-display" aria-labelledby="plan-creation-date-label">
@@ -898,7 +924,7 @@ export default function Page() {
               {planningContext.requiresSummerClarification && (
                 <div className="clarification-card" role="group" aria-labelledby="summer-standing-question">
                   <strong id="summer-standing-question">{planningContext.question}</strong>
-                  <p>Summer class standing can refer to the upcoming Fall or the academic year that ended in Spring/May. Choose one so the planner does not guess.</p>
+                  <p>Summer class standing can refer to the upcoming Fall or the academic year that ended in Spring/May.<br />Choose one so the planner does not guess.</p>
                   <div className="radio-choices">
                     <label className="radio-choice">
                       <input
@@ -924,10 +950,14 @@ export default function Page() {
                 </div>
               )}
             </div>
+          </section>
+
+          <section className="intake-card">
             <div className="section-heading">
               <span className="step-number">2.</span>
               <div>
                 <h2>Your Courses</h2>
+                <p>Select completed and in-progress courses. We will map out your remaining plan.</p>
                 <p>Choose a status for each course. Click a selected button again to clear it.</p>
               </div>
             </div>
@@ -965,6 +995,7 @@ export default function Page() {
             </div>
           </section>
         </div>
+        <PlannerSummary report={report} courses={formData.courses} />
       </form>
 
       {status && <p className="status" role="status">{status}</p>}

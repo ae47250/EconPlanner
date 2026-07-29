@@ -28,8 +28,20 @@ test("summer freshman standing requires an explicit upcoming-Fall answer", () =>
   assert.equal(context.requiresSummerClarification, true);
   assert.equal(
     context.question,
-    "Do you mean you will be a freshman in Fall 2026, or that you were a freshman during the 2025\u201326 academic year?"
+    "Will you be a freshman in Fall 2026, or were you a freshman during last May term?"
   );
+});
+
+test("summer planning requires clarification for every class standing", () => {
+  for (const academicStanding of ["freshman", "sophomore", "junior", "senior"]) {
+    const context = resolvePlanningContext({
+      academicStanding,
+      planCreationDate: "2026-07-26"
+    });
+
+    assert.equal(context.requiresSummerClarification, true);
+    assert.match(context.question, new RegExp(academicStanding));
+  }
 });
 
 test("summer answer yes keeps the standing and answer no advances it", () => {
