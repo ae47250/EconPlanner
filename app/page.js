@@ -719,6 +719,9 @@ export default function Page() {
         main.container { max-width: 1240px; padding: 1.25rem 1rem 4rem; }
         .summary-card, .plan-section { border: 1px solid var(--planner-strong-border); background: var(--planner-panel); }
         .intake-card { border: 1px solid var(--planner-strong-border); background: #f1faff; }
+        .instruction-card { margin-bottom: 1rem; padding: 1.1rem; border: 1px solid var(--planner-strong-border); background: #f1faff; font-size: 18px !important; }
+        .instruction-card h2, .instruction-card p, .instruction-card .planner-instructions p { font-size: 18px !important; }
+        .instruction-card h2 { margin: 0; }
         .app-header { display: flex; align-items: center; justify-content: center; text-align: center; gap: 1rem; padding: .85rem 1.1rem; margin-bottom: 1rem; }
         .app-header h1 { margin: 0; color: #06182e !important; font-size: 36px !important; line-height: 1.05; }
         .app-header h1 .headline-econ { color: var(--urveska-aqua) !important; }
@@ -848,13 +851,17 @@ export default function Page() {
       </header>
 
       <form onSubmit={mapMajors}>
+        <section className="instruction-card">
+          <h2>The EconPlanner combines your year in college, completed courses, current courses, major requirements, and course timing to show what you still need and help build a manageable semester-by-semester path through the rest of your time at Hanover College so you can plan ahead easily.</h2>
+          <div className="planner-instructions">
+            <p>1. Choose class standing</p>
+            <p>2. Select Econ courses taken or in progress</p>
+            <p>3. Click on Generate My Plan below course selection list.</p>
+          </div>
+        </section>
+
         <div className="intake-layout">
           <section className="intake-card">
-            <div className="planner-instructions">
-              <p>1. Choose class standing</p>
-              <p>2. Select Econ courses taken or in progress</p>
-              <p>3. Click on Generate My Plan below course selection list.</p>
-            </div>
             <div className="planning-details">
               <div className="section-heading">
                 <div>
