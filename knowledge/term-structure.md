@@ -2,7 +2,7 @@
 
 This college uses three academic terms each year: Fall, Winter, and May.
 
-There is no summer academic term for planning in this app. If the app is used during summer, begin planning with the upcoming Fall term.
+Summer is not part of the regular Fall/Winter/May planning sequence. ECO 113 may appear in Summer only as the verified online last-resort exception.
 
 ## Fall Term
 
@@ -30,6 +30,8 @@ There is no summer academic term for planning in this app. If the app is used du
 ## Date and Academic-Year Logic
 
 - Use the college academic cycle, not the student browser location, for term logic.
+- Use Hanover's official academic calendar at `https://www.hanover.edu/academics/calendar/` for exact boundaries when captured.
+- For Summer 2026, clarification is required from May 23 through August 23. Fall 2026 classes begin August 24.
 - Fall/Winter/May belong to one academic year, labeled like `2026/2027`.
 - If current date is in summer, begin with the upcoming Fall.
 - If current date is in Fall and the student is still choosing or changing Fall courses, include Fall; otherwise begin with Winter.

@@ -42,10 +42,16 @@ Any ECO course may count as an economics elective except required ECO courses:
 - `ECO 213`
 - `ECO 214`
 - `ECO 257`
-- `ECO 321`
 - `ECO 461`
 
 `BUSN 323`, `MAT 217`, and `PSY 217` do not count as ECO electives.
+
+Finance assignment is deterministic:
+
+- Either `ECO 321` or `BUSN 323` satisfies the Finance requirement.
+- If both are completed or in progress, assign `BUSN 323` to Finance and allow `ECO 321` to count as an ECO elective.
+- Never count `ECO 321` as both Finance and an elective.
+- `BUSN 323` never counts as an ECO elective and does not require advisor approval merely to satisfy Finance.
 
 If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257` as an elective by default. Flag advisor confirmation if the student wants to use `ECO 257` that way.
 

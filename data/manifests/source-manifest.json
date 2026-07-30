@@ -276,39 +276,57 @@
     },
     {
       "role": "economics_source",
-      "source": "C:\\Users\\eiriksson\\Downloads\\Econ_Major_Requirements_and_Prerequisites (1).md",
+      "source": "department-provided:Econ_Major_Requirements_and_Prerequisites (1).md",
       "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
       "sha256": "a1c3de2e1aef0eca2d31b2772080b6da2a14d0473b557dde63db93d2c7d3a2a6"
     },
     {
       "role": "economics_source",
-      "source": "C:\\Users\\eiriksson\\Downloads\\Econ_Course_Offerings.md",
+      "source": "department-provided:Econ_Course_Offerings.md",
       "path": "data/raw/economics/Econ_Course_Offerings.md",
       "sha256": "91e52f0c2460ed01a2caf28fcd167c57542f40f67ad0ba5e02f5714f6acf5620"
     },
     {
       "role": "economics_source",
-      "source": "C:\\Users\\eiriksson\\Downloads\\Term_Structure.md",
+      "source": "department-provided:Term_Structure.md",
       "path": "data/raw/economics/Term_Structure.md",
       "sha256": "2ef08b86aa2c4fa0f58fb213db21e3a99027bb833d0d4f52e23f51962f80acc3"
     },
     {
       "role": "economics_source",
-      "source": "C:\\Users\\eiriksson\\Downloads\\07_spiffy_dashboard_template.html",
+      "source": "department-provided:07_spiffy_dashboard_template.html",
       "path": "data/raw/economics/07_spiffy_dashboard_template.html",
       "sha256": "a1f4c17d84be1116d8ca640d45df9ef1007191221ffb82e69c28dd533a029455"
     },
     {
       "role": "economics_schedule_evidence",
-      "source": "C:/Users/EIRIKS~1/AppData/Local/Temp/codex-clipboard-0e39dce4-98b3-4a83-9a5a-f2d8777c3985.png",
+      "source": "user-provided-schedule-screenshot",
       "path": "data/raw/economics/schedule-2026-2027-fall.png",
       "sha256": "39b78e794d9ac5bf263163b6172943875aa37487f5adfbcb599b1413798cc42b"
     },
     {
       "role": "economics_schedule_evidence",
-      "source": "C:/Users/EIRIKS~1/AppData/Local/Temp/codex-clipboard-6a4aa25c-7f4c-4954-8ba6-3109ab84686a.png",
+      "source": "user-provided-schedule-screenshot",
       "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
       "sha256": "fa240dd52020b3c23fd70c4133bec1f21dcaf276bde967568758db23c5e86570"
+    },
+    {
+      "role": "economics_canonical_courses",
+      "source": "https://catalog.hanover.edu/programs/economics.php",
+      "catalogYear": "2025-2026",
+      "retrievedOn": "2026-07-29",
+      "approvalStatus": "APPROVED_LOCAL_SOURCE",
+      "path": "data/normalized/economics/courses.json",
+      "sha256": "94f8d21aa370b134a6f01d1686358fdeb155a4a70c5efb22ff2f858fb3ecae79"
+    },
+    {
+      "role": "academic_calendar",
+      "source": "https://www.hanover.edu/academics/calendar/",
+      "academicYear": "2026-2027",
+      "retrievedOn": "2026-07-29",
+      "approvalStatus": "OFFICIAL_HANOVER_SOURCE",
+      "path": "data/normalized/academic-calendars.json",
+      "sha256": "dbb5eb7ac4638f953a7f576b40a776f4f66a102e5a3d8c2ce7792228cd3cc4f9"
     }
   ]
 }

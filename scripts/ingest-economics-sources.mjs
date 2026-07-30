@@ -9,6 +9,8 @@ const normalizedDir = path.join(root, "data/normalized/economics");
 const versionedNormalizedDir = path.join(root, "data/normalized/catalogs", "2025-2026");
 const manifestPath = path.join(root, "data/manifests/source-manifest.json");
 const templateDir = path.join(root, "templates");
+const canonicalCoursesPath = path.join(normalizedDir, "courses.json");
+const academicCalendarPath = path.join(root, "data/normalized/academic-calendars.json");
 
 const sourceFiles = [
   ["Econ_Major_Requirements_and_Prerequisites (1).md", "Econ_Major_Requirements_and_Prerequisites.md"],
@@ -55,8 +57,8 @@ const economicsRequirements = {
       label: "ECO 321 / BUSN 323",
       kind: "choice",
       options: ["ECO 321", "BUSN 323"],
-      units: 1,
-      provisionalOptions: ["BUSN 323"]
+      preferredOptions: ["BUSN 323", "ECO 321"],
+      units: 1
     },
     { id: "eco-461", label: "ECO 461", kind: "exact", options: ["ECO 461"], residency: "hanover", units: 1 },
     {
@@ -71,7 +73,13 @@ const economicsRequirements = {
       label: `ECO elective ${index + 1}`,
       kind: "elective",
       subject: "ECO",
-      excludedCourses: ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "ECO 321", "ECO 461", "ECO 307"],
+      excludedCourses: ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "ECO 461", "ECO 307"],
+      conditionalCourses: {
+        "ECO 321": {
+          slotId: "finance",
+          assignedCode: "BUSN 323"
+        }
+      },
       maxLevel100: 1,
       units: 1
     }))
@@ -112,7 +120,8 @@ const schedule2026 = {
       "data/raw/economics/schedule-2026-2027-fall.png",
       "data/raw/economics/schedule-2026-2027-winter-spring.png"
     ],
-    sectionCodeSMeans: "May"
+    sectionCodeSMeans: "May",
+    summerOfferingNote: "ECO 113 is available online in Summer as a last-resort option when the regular academic-year schedule cannot fit the student."
   },
   courseOfferingNotes: {
     "ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."
@@ -140,9 +149,36 @@ const schedule2026 = {
     May: [
       { course: "ECO 222", section: "S", title: "Economics of the European Union" },
       { course: "ECO 260", section: "S", title: "Special Topics" }
+    ],
+    Summer: [
+      {
+        course: "ECO 113",
+        section: "Online",
+        title: "Principles of Microeconomics",
+        delivery: "online",
+        planningNote: "Last-resort summer option"
+      }
     ]
   }
 };
+
+async function validateApprovedData() {
+  const canonical = JSON.parse(await readFile(canonicalCoursesPath, "utf8"));
+  const calendars = JSON.parse(await readFile(academicCalendarPath, "utf8"));
+  const courses = canonical.courses || [];
+  const codes = courses.map(course => course.code);
+  const aliases = courses.flatMap(course => course.aliases || []);
+
+  if (!courses.length || new Set(codes).size !== codes.length) {
+    throw new Error("Canonical Economics courses are missing or contain duplicate codes.");
+  }
+  if (aliases.some(alias => codes.includes(alias))) {
+    throw new Error("A canonical Economics alias duplicates a canonical course code.");
+  }
+  if (!calendars.summerClarificationWindows?.length) {
+    throw new Error("The approved academic-calendar boundaries are missing.");
+  }
+}
 
 async function ensureDirectories() {
   await Promise.all([
@@ -165,6 +201,7 @@ async function copySource(sourcePath, targetPath) {
 }
 
 await ensureDirectories();
+await validateApprovedData();
 
 const manifestEntries = [];
 for (const [sourceName, targetName] of sourceFiles) {
@@ -172,7 +209,7 @@ for (const [sourceName, targetName] of sourceFiles) {
   const targetPath = path.join(rawDir, targetName);
   manifestEntries.push({
     role: "economics_source",
-    source: sourcePath,
+    source: `department-provided:${sourceName}`,
     ...(await copySource(sourcePath, targetPath))
   });
 }
@@ -195,10 +232,31 @@ for (const [sourcePath, targetName] of scheduleImages) {
   const targetPath = path.join(rawDir, targetName);
   manifestEntries.push({
     role: "economics_schedule_evidence",
-    source: sourcePath,
+    source: "user-provided-schedule-screenshot",
     ...(await copySource(sourcePath, targetPath))
   });
 }
+
+manifestEntries.push(
+  {
+    role: "economics_canonical_courses",
+    source: "https://catalog.hanover.edu/programs/economics.php",
+    catalogYear: "2025-2026",
+    retrievedOn: "2026-07-29",
+    approvalStatus: "APPROVED_LOCAL_SOURCE",
+    path: path.relative(root, canonicalCoursesPath).replaceAll("\\", "/"),
+    sha256: await sha256(canonicalCoursesPath)
+  },
+  {
+    role: "academic_calendar",
+    source: "https://www.hanover.edu/academics/calendar/",
+    academicYear: "2026-2027",
+    retrievedOn: "2026-07-29",
+    approvalStatus: "OFFICIAL_HANOVER_SOURCE",
+    path: path.relative(root, academicCalendarPath).replaceAll("\\", "/"),
+    sha256: await sha256(academicCalendarPath)
+  }
+);
 
 await writeFile(path.join(normalizedDir, "requirements.json"), `${JSON.stringify(economicsRequirements, null, 2)}\n`, "utf8");
 await writeFile(path.join(normalizedDir, "prerequisites.json"), `${JSON.stringify(economicsPrerequisites, null, 2)}\n`, "utf8");
@@ -208,9 +266,18 @@ await writeFile(path.join(normalizedDir, "schedule-2026-2027.json"), `${JSON.str
 await writeFile(
   path.join(normalizedDir, "planning-constraints.json"),
   `${JSON.stringify({
-    terms: { Fall: { maxTotalCourses: 4, maxEconomicsCourses: 2 }, Winter: { maxTotalCourses: 4, maxEconomicsCourses: 2 }, May: { maxTotalCourses: 1, maxEconomicsCourses: 1 } },
+    terms: {
+      Fall: { maxTotalCourses: 4, maxEconomicsCourses: 2 },
+      Winter: { maxTotalCourses: 4, maxEconomicsCourses: 2 },
+      May: { maxTotalCourses: 1, maxEconomicsCourses: 1 },
+      Summer: {
+        maxTotalCourses: 1,
+        maxEconomicsCourses: 1,
+        planningNote: "Use only as a last resort; ECO 113 is the verified summer option and is online."
+      }
+    },
     hardRules: ["ECO 213 and ECO 214 cannot share a term", "ECO 213 and ECO 214 cannot be scheduled in May", "ECO 461 is senior Winter only"],
-    futureSchedulePolicy: "Use ECO elective when no exact annual schedule is verified."
+    futureSchedulePolicy: "Use a Term to be confirmed placeholder when an exact annual offering is not verified."
   }, null, 2)}\n`,
   "utf8"
 );
@@ -223,7 +290,12 @@ const existingManifest = await (async () => {
   }
 })();
 
-const nonEconomicsEntries = existingManifest.entries.filter(entry => entry.role !== "economics_source" && entry.role !== "economics_schedule_evidence");
+const nonEconomicsEntries = existingManifest.entries.filter(entry => ![
+  "economics_source",
+  "economics_schedule_evidence",
+  "economics_canonical_courses",
+  "academic_calendar"
+].includes(entry.role));
 await writeFile(
   manifestPath,
   `${JSON.stringify({

@@ -38,3 +38,31 @@ test("normalized catalog preserves requirement text and explicit variants for re
   assert.ok(Object.values(prerequisites).every(item => item.reviewStatus));
   assert.match(conflicts, /Physics and Astronomy/);
 });
+
+test("canonical Economics data has unique courses, aliases, units, and source metadata", async () => {
+  const canonical = JSON.parse(await readFile(new URL("data/normalized/economics/courses.json", root), "utf8"));
+  const requirements = JSON.parse(await readFile(new URL("data/normalized/economics/requirements.json", root), "utf8"));
+  const calendars = JSON.parse(await readFile(new URL("data/normalized/academic-calendars.json", root), "utf8"));
+  const manifest = JSON.parse(await readFile(new URL("data/manifests/source-manifest.json", root), "utf8"));
+  const codes = canonical.courses.map(course => course.code);
+  const aliases = canonical.courses.flatMap(course => course.aliases || []);
+  const finance = requirements.requirementSlots.find(slot => slot.id === "finance");
+  const elective = requirements.requirementSlots.find(slot => slot.id === "eco-elective-1");
+  const rationalChoices = canonical.courses.find(course => course.code === "ECO 234");
+  const capstone = canonical.courses.find(course => course.code === "ECO 461");
+
+  assert.equal(new Set(codes).size, codes.length);
+  assert.equal(aliases.some(alias => codes.includes(alias)), false);
+  assert.ok(canonical.courses.every(course => Number(course.units) > 0));
+  assert.deepEqual(rationalChoices.aliases, ["PHI 234"]);
+  assert.equal(capstone.residency, "hanover");
+  assert.equal(capstone.studentSelectable, false);
+  assert.deepEqual(finance.preferredOptions, ["BUSN 323", "ECO 321"]);
+  assert.deepEqual(elective.conditionalCourses["ECO 321"], {
+    slotId: "finance",
+    assignedCode: "BUSN 323"
+  });
+  assert.equal(calendars.source, "https://www.hanover.edu/academics/calendar/");
+  assert.ok(manifest.entries.some(entry => entry.role === "academic_calendar" && entry.approvalStatus === "OFFICIAL_HANOVER_SOURCE"));
+  assert.ok(manifest.entries.some(entry => entry.role === "economics_canonical_courses"));
+});

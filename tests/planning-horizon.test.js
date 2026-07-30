@@ -32,6 +32,33 @@ test("summer freshman standing requires an explicit upcoming-Fall answer", () =>
   );
 });
 
+test("Summer 2026 uses the official Spring-end and Fall-start boundaries", () => {
+  const springEnd = resolvePlanningContext({
+    academicStanding: "freshman",
+    planCreationDate: "2026-05-22"
+  });
+  const summerStart = resolvePlanningContext({
+    academicStanding: "freshman",
+    planCreationDate: "2026-05-23"
+  });
+  const summerEnd = resolvePlanningContext({
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-23"
+  });
+  const fallStart = resolvePlanningContext({
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-24"
+  });
+
+  assert.equal(springEnd.requiresSummerClarification, false);
+  assert.equal(springEnd.startTerm, "Spring");
+  assert.equal(summerStart.requiresSummerClarification, true);
+  assert.equal(summerEnd.requiresSummerClarification, true);
+  assert.equal(fallStart.requiresSummerClarification, false);
+  assert.equal(fallStart.startTerm, "Fall");
+  assert.equal(fallStart.startYear, 2026);
+});
+
 test("summer planning requires clarification for every class standing", () => {
   for (const academicStanding of ["freshman", "sophomore", "junior", "senior"]) {
     const context = resolvePlanningContext({

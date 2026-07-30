@@ -2,50 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import { resolvePlanningContext } from "../lib/planning/horizon.js";
+import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
-const NON_SELECTABLE_COURSE_CODES = new Set(["ECO 461"]);
-const AP_CREDIT_ALLOWED_GROUP_IDS = new Set(["math-requirement", "statistics-requirement"]);
-const AP_CREDIT_ALLOWED_COURSE_CODES = new Set(["ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 260", "ECO 360"]);
-
-const COURSE_CATALOG = [
-  { code: "ECO 113", title: "Principles of Microeconomics" },
-  { code: "ECO 114", title: "Principles of Macroeconomics" },
-  { code: "ECO 160", title: "Special Topics" },
-  { code: "ECO 161", title: "Foundations of Economics" },
-  { code: "MAT 113", title: "Mathematics cognate" },
-  { code: "MAT 121", title: "Calculus I" },
-  { code: "ECO 213", title: "Intermediate Microeconomics" },
-  { code: "ECO 214", title: "Intermediate Macroeconomics" },
-  { code: "ECO 221", title: "Environmental Economics" },
-  { code: "ECO 222", title: "Economics of the European Union" },
-  { code: "ECO 223", title: "Economics: Poverty & Discrimination" },
-  { code: "ECO 224", title: "Introduction to Sustainability" },
-  { code: "ECO 234", title: "Rational Choices" },
-  { code: "ECO 257", title: "Quantitative Methods for Business/Economics" },
-  { code: "ECO 260", title: "Special Topics" },
-  { code: "MAT 217", title: "Applied Statistics" },
-  { code: "PSY 217", title: "Statistical Analysis" },
-  { code: "ECO 307", title: "Directed Study", units: 0.5 },
-  { code: "ECO 315", title: "U.S. Economic History" },
-  { code: "ECO 316", title: "History of Economic Thought" },
-  { code: "ECO 321", title: "Money & Financial Markets" },
-  { code: "BUSN 323", title: "Business finance option" },
-  { code: "ECO 331", title: "Labor Economics" },
-  { code: "ECO 333", title: "International Trade & Finance" },
-  { code: "ECO 335", title: "Managerial Economics" },
-  { code: "ECO 337", title: "Economic Development" },
-  { code: "ECO 357", title: "Internship" },
-  { code: "ECO 360", title: "Special Topics" },
-  { code: "ECO 370", title: "Directed Study" },
-  { code: "ECO 461", title: "Senior Seminar: Econometrics", studentSelectable: false },
-  { code: "ECO 471", title: "Senior Thesis" }
-];
+const PLANNER_STORAGE_VERSION = 2;
+const COURSE_CATALOG = economicsCourseData.courses || [];
+const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
+  (course.aliases || []).map(alias => [alias, course.code])
+)));
+const NON_SELECTABLE_COURSE_CODES = new Set(COURSE_CATALOG
+  .filter(course => course.studentSelectable === false)
+  .map(course => course.code));
+const AP_CREDIT_ALLOWED_COURSE_CODES = new Set(COURSE_CATALOG
+  .filter(course => course.apEligible)
+  .map(course => course.code));
 
 const SELECTABLE_COURSE_CATALOG = COURSE_CATALOG.filter(course => course.studentSelectable !== false);
 
 const GROUPED_COURSE_CODES = new Set([
-  "MAT 113", "MAT 121", "ECO 257", "MAT 217", "PSY 217"
+  "MAT 113", "MAT 121", "ECO 257", "MAT 217", "PSY 217", "ECO 321", "BUSN 323"
 ]);
 
 const COURSE_DISPLAY_GROUPS = [
@@ -112,6 +87,16 @@ const COURSE_DISPLAY_GROUPS = [
       { code: "PSY 217", title: "Statistical Analysis" }
     ]
   },
+  {
+    id: "finance-requirement",
+    code: "ECO 321 / BUSN 323",
+    title: "Finance requirement",
+    courseCodes: ["ECO 321", "BUSN 323"],
+    options: [
+      { code: "ECO 321", title: "Money & Financial Markets" },
+      { code: "BUSN 323", title: "Business finance option" }
+    ]
+  },
   ...COURSE_CATALOG
     .filter(course => course.studentSelectable !== false && !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 213", "ECO 214"].includes(course.code))
     .map(course => ({
@@ -125,7 +110,7 @@ const COURSE_DISPLAY_GROUPS = [
 const DECLARATION_COURSE_IDS = ["ECO 113", "ECO 114", "ECO 213", "ECO 214"];
 const DECLARATION_REQUIREMENT_IDS = ["math-requirement", "statistics-requirement"];
 const DECLARATION_RIGHT_COURSE_IDS = ["ECO 160", "ECO 161"];
-const RELATIVELY_FREQUENT_COURSE_IDS = new Set(["ECO 321", "BUSN 323", "ECO 331", "ECO 333"]);
+const RELATIVELY_FREQUENT_COURSE_IDS = new Set(["finance-requirement", "ECO 331", "ECO 333"]);
 const DECLARATION_GROUP_IDS = new Set([...DECLARATION_COURSE_IDS, ...DECLARATION_REQUIREMENT_IDS, ...DECLARATION_RIGHT_COURSE_IDS]);
 const MAX_COURSE_NAME_CHARS = Math.max(...COURSE_DISPLAY_GROUPS.map(group => `${group.code} ${group.title}`.length));
 const COURSE_COLUMNS_STYLE = { "--course-name-width": `calc(${MAX_COURSE_NAME_CHARS}ch + .4rem)` };
@@ -140,6 +125,56 @@ const blankCourse = course => ({
   source: "manual_code",
   notes: ""
 });
+
+const SAVED_STATUS_PRIORITY = {
+  completed: 5,
+  transfer: 4,
+  in_progress: 3,
+  not_started: 2,
+  uncertain: 1
+};
+
+function canonicalSavedCode(value) {
+  const normalized = String(value || "").toUpperCase().replace(/^([A-Z]{2,5})\s*-?\s*(\d{3})$/, "$1 $2");
+  return COURSE_ALIASES.get(normalized) || normalized;
+}
+
+function migrateSavedCourses(savedCourses = []) {
+  const byCode = new Map();
+  for (const savedCourse of savedCourses) {
+    const code = canonicalSavedCode(savedCourse.code);
+    if (!code || NON_SELECTABLE_COURSE_CODES.has(code) || !COURSE_CATALOG.some(course => course.code === code)) continue;
+    const existing = byCode.get(code);
+    if (!existing || (SAVED_STATUS_PRIORITY[savedCourse.status] || 0) > (SAVED_STATUS_PRIORITY[existing.status] || 0)) {
+      byCode.set(code, { ...savedCourse, code });
+    }
+  }
+
+  return SELECTABLE_COURSE_CATALOG.map(course => {
+    const saved = byCode.get(course.code);
+    return saved
+      ? {
+          ...blankCourse(course),
+          ...saved,
+          id: course.code,
+          code: course.code,
+          title: course.title,
+          units: String(course.units ?? 1)
+        }
+      : blankCourse(course);
+  });
+}
+
+function plannerInputSignature(formData) {
+  return JSON.stringify({
+    academicStanding: formData.academicStanding,
+    planCreationDate: formData.planCreationDate,
+    summerStandingConfirmed: formData.summerStandingConfirmed,
+    courses: selectedCourses(formData.courses)
+      .map(course => [canonicalSavedCode(course.code), course.status, course.units, course.source])
+      .sort((left, right) => left[0].localeCompare(right[0]))
+  });
+}
 
 const initialForm = {
   displayName: "",
@@ -192,7 +227,44 @@ function formatAcademicYear(value) {
   return value ? String(value).replace("-", "/") : "Academic year";
 }
 
-function PlanTimeline({ plans = [] }) {
+function PlanningGaps({ items = [] }) {
+  if (!items.length) return null;
+  return (
+    <div className="plan-notes planning-gaps" role="status">
+      <strong>Planning Gaps</strong>
+      <ul>
+        {items.map((item, index) => (
+          <li key={`${item.requirementId || item.code || "gap"}-${index}`}>
+            {item.course ? `${item.course}: ` : ""}{item.reason || item.message}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function AdvisorAttention({ catalog }) {
+  const notices = catalog?.advisorAttention || [];
+  if (!notices.length) return null;
+  return (
+    <section className="advisor-attention" aria-live="polite">
+      <h2>Advisor Attention</h2>
+      {notices.map(notice => (
+        <div className={`advisor-attention-item is-${notice.severity || "warning"}`} key={notice.code}>
+          {notice.title && notice.title !== "Advisor Attention" && <strong>{notice.title}</strong>}
+          <p>{notice.message}</p>
+          {notice.findings?.length > 0 && (
+            <ul>
+              {notice.findings.map(finding => <li key={`${finding.code}-${finding.message}`}>{finding.message}</li>)}
+            </ul>
+          )}
+        </div>
+      ))}
+    </section>
+  );
+}
+
+function PlanTimeline({ plans = [], planningGaps = [] }) {
   const [activePlanId, setActivePlanId] = useState(plans[0]?.id || "plan-1");
 
   useEffect(() => {
@@ -201,7 +273,13 @@ function PlanTimeline({ plans = [] }) {
     }
   }, [activePlanId, plans]);
 
-  if (!plans.length) return null;
+  if (!plans.length) {
+    return planningGaps.length ? (
+      <section className="plan-section" aria-live="polite">
+        <PlanningGaps items={planningGaps} />
+      </section>
+    ) : null;
+  }
 
   const activePlan = plans.find(plan => plan.id === activePlanId) || plans[0];
   const academicYearGroups = (activePlan.terms || []).reduce((groups, term) => {
@@ -239,7 +317,7 @@ function PlanTimeline({ plans = [] }) {
           <div>
             <h2>Your Plan</h2>
             <p>{activePlan.description}</p>
-            <p className="plan-source-note">Verified course schedule: {formatAcademicYear(activePlan.academicYear)}. Later-year offerings remain unverified until published.</p>
+            <p className="plan-source-note">Verified course schedule: {formatAcademicYear(activePlan.academicYear)}. “Term to be confirmed” means the academic year is planned but the exact future offering has not been published.</p>
           </div>
         </div>
         <div className="academic-year-groups">
@@ -248,7 +326,7 @@ function PlanTimeline({ plans = [] }) {
               <h3 className="academic-year-label">{group.label}</h3>
               <div className="plan-grid">
                 {group.terms.map(term => (
-                  <article className="term-card" key={term.term}>
+                  <article className={`term-card${term.isPlaceholder ? " is-placeholder" : ""}`} key={term.slotId || term.term}>
                     <h4>{term.displayTerm || term.term}</h4>
                     {term.courses.length > 0 ? (
                       <ul>
@@ -265,22 +343,16 @@ function PlanTimeline({ plans = [] }) {
                     {term.isSummer && (
                       <p className="summer-term-note">Summer, online, last-resort option.</p>
                     )}
+                    {term.isPlaceholder && (
+                      <p className="placeholder-term-note">Exact course offerings and terms must be confirmed after the schedule is published.</p>
+                    )}
                   </article>
                 ))}
               </div>
             </section>
           ))}
         </div>
-        {activePlan.unscheduled?.length > 0 && (
-          <div className="plan-notes">
-            <strong>Future course offerings to verify</strong>
-            <ul>
-              {activePlan.unscheduled.map(item => (
-                <li key={`${activePlan.id}-${item.requirementId}`}>{item.course}: {item.reason}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <PlanningGaps items={[...(activePlan.unscheduled || []), ...planningGaps]} />
         {activePlan.summerFallbacks?.length > 0 && (
           <div className="plan-notes summer-fallback-note">
             <strong>Summer fallback used</strong>
@@ -308,27 +380,6 @@ function PlannerSummary({ report, courses }) {
   const remainingUnits = result?.projectedAfterInProgress?.optimistic?.remainingUnits
     ?? result?.optimistic?.remainingUnits;
   const catalog = report?.catalog;
-  const comparisonFindings = catalog?.comparisonFindings || [];
-  const comparisonStatus = catalog?.comparisonStatus;
-  const comparisonNotice = comparisonStatus === "more_flexible"
-    ? {
-        className: "catalog-notice catalog-notice-positive",
-        title: "Newer catalog available for review",
-        message: `Your entry catalog is ${formatAcademicYear(catalog.selectedCatalogYear)}. The ${formatAcademicYear(catalog.comparisonCatalogYear)} Economics catalog appears more flexible. This plan still uses your entry catalog; review the newer requirements with the department or advisor before changing the governing catalog.`
-      }
-    : comparisonStatus === "changed_review"
-      ? {
-          className: "catalog-notice catalog-notice-warning",
-          title: "Catalog requirements changed",
-          message: `The ${formatAcademicYear(catalog.comparisonCatalogYear)} Economics catalog contains changes compared with your entry catalog, including changes that may not all be more flexible. This plan uses ${formatAcademicYear(catalog.selectedCatalogYear)}; advisor review is recommended.`
-        }
-      : comparisonStatus === "unavailable"
-        ? {
-            className: "catalog-notice catalog-notice-warning",
-            title: "Newer catalog could not be checked",
-            message: `This plan uses your entry catalog, ${formatAcademicYear(catalog.selectedCatalogYear)}. The newer ${formatAcademicYear(catalog.comparisonCatalogYear)} catalog is not captured locally yet.`
-          }
-        : null;
 
   return (
     <aside className="summary-card">
@@ -340,17 +391,6 @@ function PlannerSummary({ report, courses }) {
       </div>
       {report ? (
         <>
-          {comparisonNotice && (
-            <div className={comparisonNotice.className} role="status">
-              <strong>{comparisonNotice.title}</strong>
-              <p>{comparisonNotice.message}</p>
-              {comparisonFindings.length > 0 && (
-                <ul>
-                  {comparisonFindings.map(finding => <li key={`${finding.code}-${finding.message}`}>{finding.message}</li>)}
-                </ul>
-              )}
-            </div>
-          )}
           <div className="summary-grid">
             <div><span>Taken or AP credit</span><strong>{completedCount}</strong></div>
             <div><span>In Progress</span><strong>{inProgressCount}</strong></div>
@@ -376,6 +416,7 @@ export default function Page() {
   const [requirementPopoverPosition, setRequirementPopoverPosition] = useState(null);
   const requirementCardRefs = useRef({});
   const courseAccordionRefs = useRef({});
+  const generatedInputSignatureRef = useRef("");
   const [courseSearch, setCourseSearch] = useState("");
   const [isEditingPlanDate, setIsEditingPlanDate] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -398,7 +439,7 @@ export default function Page() {
           setFormData(current => ({
             ...current,
             ...savedFormData,
-            courses: savedFormData.courses.filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code)),
+            courses: migrateSavedCourses(savedFormData.courses),
             planCreationDate: savedFormData.planCreationDate || localToday()
           }));
         }
@@ -427,6 +468,7 @@ export default function Page() {
 
     try {
       window.localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify({
+        schemaVersion: PLANNER_STORAGE_VERSION,
         formData,
         requirementModes,
         courseSearch
@@ -435,6 +477,14 @@ export default function Page() {
       // Local storage may be unavailable in restricted browser sessions.
     }
   }, [courseSearch, formData, isHydrated, requirementModes]);
+
+  useEffect(() => {
+    if (!report || !generatedInputSignatureRef.current) return;
+    if (plannerInputSignature(formData) === generatedInputSignatureRef.current) return;
+    generatedInputSignatureRef.current = "";
+    setReport(null);
+    setStatus("");
+  }, [formData, report]);
 
   useEffect(() => {
     if (!requirementScrollTarget) return undefined;
@@ -566,6 +616,7 @@ export default function Page() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "The planner could not complete.");
+      generatedInputSignatureRef.current = plannerInputSignature(formData);
       setReport(data);
       setStatus("");
     } catch (error) {
@@ -624,7 +675,7 @@ export default function Page() {
     const taken = group.options ? requirementMode === "completed" : groupCourses.some(isTaken);
     const inProgress = group.options ? requirementMode === "in_progress" : groupCourses.some(course => course.status === "in_progress");
     const isHanoverOnly = group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code));
-    const allowsApCredit = AP_CREDIT_ALLOWED_GROUP_IDS.has(group.id) || group.courseCodes.some(code => AP_CREDIT_ALLOWED_COURSE_CODES.has(code));
+    const allowsApCredit = group.courseCodes.some(code => AP_CREDIT_ALLOWED_COURSE_CODES.has(code));
     const takenButtonLabel = allowsApCredit ? "Taken or AP credit" : "Taken";
     return (
       <div
@@ -864,15 +915,20 @@ export default function Page() {
         .term-card li { border: 1px solid #d1d6d9; padding: .45rem; }
         .term-card li strong, .term-card li span { display: block; }
         .term-card li span { color: var(--planner-muted); margin-top: .1rem; }
+        .term-card.is-placeholder { border-style: dashed; background: #f7fbff; }
+        .placeholder-term-note { margin: .65rem 0 0; color: var(--planner-muted); }
         .empty-term { margin: 0; color: var(--planner-muted); }
         .summer-term-note { margin: .65rem 0 0; color: #2f8f4e; font-weight: 700; }
         .plan-notes { margin-top: 1rem; padding: .75rem; border: 1px solid #d5b36a; background: #fff9e8; }
         .plan-notes ul { margin: .45rem 0 0; padding-left: 1.25rem; }
-        .catalog-notice { margin: 0 0 1rem; padding: .75rem; border: 1px solid #d5b36a; background: #fff9e8; }
-        .catalog-notice-positive { border-color: #73b98a; background: #effaf1; }
-        .catalog-notice strong { color: #1d4ed8; }
-        .catalog-notice p { margin: .35rem 0 0; }
-        .catalog-notice ul { margin: .45rem 0 0; padding-left: 1.25rem; }
+        .planning-gaps { border-color: #bd6a5d; background: #fff3ef; }
+        .advisor-attention { margin-top: 1rem; padding: 1rem; border: 2px solid #d5a233; background: #fff9e8; }
+        .advisor-attention h2 { margin: 0 0 .65rem; }
+        .advisor-attention-item + .advisor-attention-item { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid #d5b36a; }
+        .advisor-attention-item strong { color: #1d4ed8; }
+        .advisor-attention-item p { margin: .35rem 0 0; }
+        .advisor-attention-item ul { margin: .45rem 0 0; padding-left: 1.25rem; }
+        .advisor-attention-item.is-info { border-left: 3px solid #2f8f4e; padding-left: .65rem; }
         @media (max-width: 900px) { .intake-layout { grid-template-columns: 1fr; } }
         @media (max-width: 680px) {
           .course-columns { grid-template-columns: 1fr; }
@@ -1058,7 +1114,11 @@ export default function Page() {
       </form>
 
       {status && <p className="status" role="status">{status}</p>}
-      <PlanTimeline plans={economicsResult(report)?.economicsPlans || []} />
+      <AdvisorAttention catalog={report?.catalog} />
+      <PlanTimeline
+        plans={economicsResult(report)?.economicsPlans || []}
+        planningGaps={economicsResult(report)?.economicsPlanningGaps || []}
+      />
     </main>
   );
 }

@@ -30,7 +30,7 @@ test("Economics term planner keeps prerequisite courses in earlier terms", () =>
   assert.ok(winter.includes("ECO 214"));
   assert.ok(!fall.includes("ECO 214"));
   assert.ok(!fall.includes("ECO 461") && !winter.includes("ECO 461"));
-  assert.ok(plan.unscheduled.some(item => item.course === "ECO elective"));
+  assert.ok(plan.terms.some(term => term.isPlaceholder && term.courses.some(course => course.course === "ECO elective")));
 });
 
 test("dated Economics planning returns three differently weighted plans", () => {
@@ -66,7 +66,59 @@ test("dated Economics planning returns three differently weighted plans", () => 
   assert.deepEqual(plan3.distribution.targetYearCounts, [2, 2, 4, 4]);
 });
 
-test("Plan A and Plan C use the requested standing-specific distributions", () => {
+test("validated plans cover every required course, choice group, cognate, and elective slot", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-09-01",
+    courses: []
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const requiredIds = new Set(requirements.requirementSlots.map(slot => slot.id));
+
+  assert.equal(requiredIds.size, 12);
+  for (const plan of result.plans) {
+    const coveredIds = new Set([
+      ...mapping.assignments.map(assignment => assignment.slotId),
+      ...plan.terms.flatMap(term => term.courses.map(course => course.requirementId))
+    ]);
+    assert.deepEqual(coveredIds, requiredIds);
+    assert.equal(plan.validation.valid, true);
+  }
+});
+
+test("a used 100-level elective restricts every remaining elective to level 200 or above", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-09-01",
+    courses: [{ code: "ECO 161", status: "in_progress" }]
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+
+  assert.ok(mapping.assignments.some(assignment => assignment.slotId.startsWith("eco-elective") && assignment.code === "ECO 161"));
+  assert.ok(result.plans.every(plan => plan.terms.every(term => term.courses.every(course => (
+    course.course !== "ECO elective"
+      || course.minimumLevel === 200
+  )))));
+  assert.ok(result.plans.every(plan => plan.validation.valid));
+
+  const invalidPlan = structuredClone(result.plans[0]);
+  const placeholder = invalidPlan.terms.flatMap(term => term.courses).find(course => course.course === "ECO elective");
+  delete placeholder.minimumLevel;
+  const validation = validateGeneratedPlan(invalidPlan, {
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    context: result.context
+  });
+
+  assert.equal(validation.valid, false);
+  assert.ok(validation.errors.some(error => error.includes("200 level or above")));
+});
+
+test("standing-specific distributions remain visible only when the resulting plans are valid", () => {
   const sophomore = {
     academicStanding: "sophomore",
     planCreationDate: "2026-09-01",
@@ -84,8 +136,9 @@ test("Plan A and Plan C use the requested standing-specific distributions", () =
   };
   const juniorMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, junior);
   const juniorPlans = buildEconomicsTermPlans({ student: junior, mapping: juniorMapping, schedule, prerequisites });
-  assert.deepEqual(juniorPlans.plans[0].distribution.targetYearCounts, [6, 6]);
-  assert.deepEqual(juniorPlans.plans[2].distribution.targetYearCounts, [6, 6]);
+  assert.equal(juniorPlans.plans.length, 0);
+  assert.ok(juniorPlans.planningGaps.some(item => item.requirementId === "eco-461"));
+  assert.ok(juniorPlans.planningGaps.some(item => item.code === "FEWER_THAN_THREE_VALID_PLANS"));
 });
 
 test("named courses are not placed from a different academic year's schedule", () => {
@@ -97,10 +150,12 @@ test("named courses are not placed from a different academic year's schedule", (
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
 
-  assert.ok(result.plans.every(plan => plan.terms.every(term => term.courses
-    .filter(course => course.course !== "ECO elective")
-    .every(course => course.source === "verified-offering" || course.source === "summer-last-resort"))));
-  assert.ok(result.plans.every(plan => plan.unscheduled.some(item => item.course.includes("ECO 113") || item.course.includes("ECO 114"))));
+  assert.ok(result.plans.every(plan => plan.terms.every(term => term.courses.every(course => {
+    if (course.source === "future-placeholder") return term.isPlaceholder === true;
+    if (course.source === "recurring-rule-unconfirmed") return course.course === "ECO 461" && term.termKey === "Winter";
+    return course.source === "summer-last-resort";
+  }))));
+  assert.ok(result.plans.every(plan => plan.terms.some(term => term.isPlaceholder)));
 });
 
 test("generated-plan validation rejects a fabricated course", () => {

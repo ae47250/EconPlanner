@@ -1,7 +1,7 @@
-import { availableCatalogYears, loadCatalog } from "../../../../lib/catalog/load.js";
+import { availableCatalogYears, loadCatalog, resolveCatalogYear } from "../../../../lib/catalog/load.js";
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
-import { buildEconomicsTermPlans } from "../../../../lib/planning/economics.js";
+import { assigned100LevelElectives, buildEconomicsTermPlans } from "../../../../lib/planning/economics.js";
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { compareRequirementSnapshots } from "../../../../lib/catalog/compare.js";
 
@@ -30,6 +30,59 @@ function sortResults(results) {
   });
 }
 
+function catalogAdvisorAttention(resolution, catalogReview, planningContext) {
+  const notices = [];
+  if (resolution.catalogResolutionStatus === "previous_year_fallback") {
+    notices.push({
+      code: "CATALOG_PREVIOUS_YEAR_FALLBACK",
+      title: "Advisor Attention",
+      severity: "warning",
+      message: `The ${resolution.requestedCatalogYear.replace("-", "/")} Economics catalog was unavailable, so EconMapper used the approved ${resolution.selectedCatalogYear.replace("-", "/")} requirements as a temporary fallback. Confirm the applicable requirements with the Economics Department before relying on this plan.`
+    });
+  }
+
+  if (catalogReview.comparisonStatus === "unavailable" && planningContext.catalogComparisonApplicable) {
+    notices.push({
+      code: "COMPARISON_CATALOG_UNAVAILABLE",
+      title: "Newer catalog could not be checked",
+      severity: "warning",
+      message: `The ${planningContext.declarationCatalogYear.replace("-", "/")} Economics catalog is not available locally for comparison. This plan continues to use ${resolution.selectedCatalogYear.replace("-", "/")}.`
+    });
+  }
+  if (catalogReview.comparisonStatus === "more_flexible") {
+    notices.push({
+      code: "COMPARISON_CATALOG_MORE_FLEXIBLE",
+      title: "Newer catalog available for review",
+      severity: "info",
+      message: `The ${planningContext.declarationCatalogYear.replace("-", "/")} Economics catalog appears more flexible. This plan still uses ${resolution.selectedCatalogYear.replace("-", "/")}; review the newer requirements with the department before changing the governing catalog.`,
+      findings: catalogReview.comparisonFindings
+    });
+  }
+  if (catalogReview.comparisonStatus === "changed_review") {
+    notices.push({
+      code: "COMPARISON_CATALOG_CHANGED",
+      title: "Catalog requirements changed",
+      severity: "warning",
+      message: `The ${planningContext.declarationCatalogYear.replace("-", "/")} Economics catalog contains both favorable and unfavorable changes. This plan uses ${resolution.selectedCatalogYear.replace("-", "/")}; advisor review is recommended.`,
+      findings: catalogReview.comparisonFindings
+    });
+  }
+  return notices;
+}
+
+function electiveAdvisorAttention(results) {
+  const economics = results.find(result => result.program?.id === "economics-base");
+  const assignedCourses = assigned100LevelElectives(economics);
+  if (!assignedCourses.length) return [];
+
+  return [{
+    code: "ONE_HUNDRED_LEVEL_ELECTIVE_USED",
+    title: "100-level elective limit",
+    severity: "info",
+    message: `${assignedCourses[0]} is being used as the one permitted 100-level Economics elective. The other three Economics electives must be at the 200 level or above.`
+  }];
+}
+
 function mapCatalogPrograms(catalog, student, catalogReview) {
   return catalog.variants.map(variant => {
     const program = catalog.programs.find(item => item.id === variant.programId) || {
@@ -51,9 +104,20 @@ function mapCatalogPrograms(catalog, student, catalogReview) {
           student,
           mapping,
           schedule: catalog.economicsSchedule,
-          prerequisites: catalog.prerequisitesByProgram.get(program.id)
+          prerequisites: catalog.prerequisitesByProgram.get(program.id),
+          courseCatalog: catalog.economicsCourses
         })
       : null;
+    const economicsPlanningGaps = economicsPlanBundle?.planningGaps || [];
+    const combinedRiskReasons = [
+      ...riskReasons,
+      ...economicsPlanningGaps.map(gap => gap.message || gap.reason).filter(Boolean)
+    ];
+    const riskClass = economicsPlanBundle && !economicsPlanBundle.plans.length
+      ? "NOT_CURRENTLY_FEASIBLE"
+      : combinedRiskReasons.length
+        ? "FEASIBLE_WITH_ASSUMPTIONS"
+        : mapping.risk.class;
 
     return {
       ...mapping,
@@ -63,11 +127,12 @@ function mapCatalogPrograms(catalog, student, catalogReview) {
       missingPrerequisites: feasibility.missingPrerequisites,
       minimumRegularTerms: feasibility.minimumRegularTerms,
       risk: {
-        class: riskReasons.length ? "FEASIBLE_WITH_ASSUMPTIONS" : mapping.risk.class,
-        reasons: riskReasons
+        class: riskClass,
+        reasons: [...new Set(combinedRiskReasons)]
       },
       economicsPlan: economicsPlanBundle?.plans?.[0] || null,
       economicsPlans: economicsPlanBundle?.plans || [],
+      economicsPlanningGaps,
       economicsPlanValidation: economicsPlanBundle?.planSetValidation || null,
       planningContext: economicsPlanBundle?.context || null,
       catalogReview: variant.programId === "economics" ? catalogReview : null
@@ -96,17 +161,31 @@ export async function POST(request) {
     if (!requestedCatalogYear) {
       return jsonResponse({ error: "The entry catalog year could not be inferred from the student standing and plan date.", availableCatalogYears: catalogYears }, 400);
     }
-    if (!catalogYears.includes(requestedCatalogYear)) {
+    const catalogResolution = resolveCatalogYear(requestedCatalogYear, catalogYears);
+    if (catalogResolution.catalogResolutionStatus === "unavailable") {
       return jsonResponse({
-        error: `Entry catalog year ${requestedCatalogYear} is not available in the approved local data.`,
-        entryCatalogYear: requestedCatalogYear,
+        error: `Entry catalog year ${requestedCatalogYear} is unavailable, and no earlier approved Economics snapshot can be used.`,
+        requestedCatalogYear,
+        selectedCatalogYear: null,
+        catalogResolutionStatus: "unavailable",
         availableCatalogYears: catalogYears
       }, 422);
     }
 
-    const catalog = await loadCatalog(requestedCatalogYear);
+    let catalog;
+    try {
+      catalog = await loadCatalog(catalogResolution.selectedCatalogYear);
+    } catch (error) {
+      return jsonResponse({
+        error: error.message,
+        requestedCatalogYear,
+        selectedCatalogYear: catalogResolution.selectedCatalogYear,
+        catalogResolutionStatus: "unavailable",
+        availableCatalogYears: catalogYears
+      }, 422);
+    }
     let catalogReview = {
-      selectedCatalogYear: requestedCatalogYear,
+      selectedCatalogYear: catalogResolution.selectedCatalogYear,
       comparisonCatalogYear: planningContext.declarationCatalogYear,
       comparisonStatus: planningContext.catalogComparisonApplicable ? "unavailable" : "not_applicable",
       comparisonFindings: []
@@ -130,16 +209,25 @@ export async function POST(request) {
     }
 
     const results = mapCatalogPrograms(catalog, student, catalogReview);
+    const advisorAttention = [
+      ...catalogAdvisorAttention(catalogResolution, catalogReview, planningContext),
+      ...electiveAdvisorAttention(results)
+    ];
 
     return jsonResponse({
       catalog: {
-        selectedCatalogYear: requestedCatalogYear,
+        requestedCatalogYear,
+        selectedCatalogYear: catalogResolution.selectedCatalogYear,
+        catalogResolutionStatus: catalogResolution.catalogResolutionStatus,
         comparisonCatalogYear: planningContext.declarationCatalogYear,
         comparisonStatus: catalogReview.comparisonStatus,
         comparisonFindings: catalogReview.comparisonFindings,
-        evaluatedCatalogYears: [requestedCatalogYear],
-        basis: "entry_catalog_year_inferred_from_standing_and_plan_date",
-        uncertainty: catalogReview.comparisonStatus === "unavailable" ? "The declaration/current catalog is not available locally for comparison; the plan uses the entry catalog." : null,
+        advisorAttention,
+        evaluatedCatalogYears: [catalogResolution.selectedCatalogYear],
+        basis: catalogResolution.catalogResolutionStatus === "exact"
+          ? "entry_catalog_year_inferred_from_standing_and_plan_date"
+          : "previous_approved_catalog_fallback",
+        uncertainty: advisorAttention.length ? advisorAttention.map(notice => notice.message).join(" ") : null,
         availableCatalogYears: catalogYears
       },
       summary: {

@@ -48,6 +48,69 @@ test("PHI 234 cross-listing counts as ECO 234 without approval", () => {
   assert.equal(result.unusedCourses.length, 0);
 });
 
+test("ECO 234 and PHI 234 are one canonical course and cannot count twice", () => {
+  const result = mapStudentToProgram(economics, requirements, {
+    courses: [
+      { code: "ECO 113", status: "completed", units: 1 },
+      { code: "ECO 114", status: "completed", units: 1 },
+      { code: "ECO 234", status: "completed", units: 1 },
+      { code: "PHI 234", status: "completed", units: 1 }
+    ]
+  });
+
+  assert.equal(result.strict.assignments.filter(item => item.code === "ECO 234").length, 1);
+  assert.equal(result.strict.appliedUnits, 3);
+});
+
+test("Finance assigns BUSN 323 first and frees ECO 321 for an elective", () => {
+  const financeRequirements = {
+    sourceStatus: "APPROVED_LOCAL_SOURCE",
+    requirementSlots: [
+      {
+        id: "finance",
+        label: "Finance",
+        kind: "choice",
+        options: ["ECO 321", "BUSN 323"],
+        preferredOptions: ["BUSN 323", "ECO 321"],
+        units: 1
+      },
+      {
+        id: "elective",
+        label: "Elective",
+        kind: "elective",
+        subject: "ECO",
+        excludedCourses: [],
+        conditionalCourses: {
+          "ECO 321": {
+            slotId: "finance",
+            assignedCode: "BUSN 323"
+          }
+        },
+        units: 1
+      }
+    ]
+  };
+
+  const scenarios = [
+    { courses: [], remaining: 2, finance: null, elective: null },
+    { courses: [{ code: "ECO 321", status: "completed" }], remaining: 1, finance: "ECO 321", elective: null },
+    { courses: [{ code: "BUSN 323", status: "completed" }], remaining: 1, finance: "BUSN 323", elective: null },
+    {
+      courses: [{ code: "ECO 321", status: "completed" }, { code: "BUSN 323", status: "completed" }],
+      remaining: 0,
+      finance: "BUSN 323",
+      elective: "ECO 321"
+    }
+  ];
+
+  for (const scenario of scenarios) {
+    const result = mapStudentToProgram(economics, financeRequirements, { courses: scenario.courses });
+    assert.equal(result.strict.remainingUnits, scenario.remaining);
+    assert.equal(result.strict.assignments.find(item => item.slotId === "finance")?.code || null, scenario.finance);
+    assert.equal(result.strict.assignments.find(item => item.slotId === "elective")?.code || null, scenario.elective);
+  }
+});
+
 test("provisional transfer evidence separates strict and optimistic results", () => {
   const result = mapStudentToProgram(economics, requirements, {
     courses: [

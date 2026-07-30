@@ -23,8 +23,9 @@ These rules are always injected into planning requests and are also backed by va
 - Money/finance option: `ECO 321 / BUSN 323`.
 - Four additional ECO electives are required.
 - Only one of the four ECO electives may be at the 100 level.
-- Any ECO course may count as an ECO elective except required ECO courses: `ECO 113`, `ECO 114`, `ECO 213`, `ECO 214`, `ECO 257`, `ECO 321`, `ECO 461`.
+- Any ECO course may count as an ECO elective except required ECO courses: `ECO 113`, `ECO 114`, `ECO 213`, `ECO 214`, `ECO 257`, `ECO 461`.
 - `BUSN 323`, `MAT 217`, and `PSY 217` are not ECO electives.
+- If both Finance options are completed or in progress, assign `BUSN 323` to Finance and allow `ECO 321` to count as an ECO elective. Never double count `ECO 321`.
 - `ECO 234` is cross-listed with `PHI 234`; count either course code as the same course and do not require advisor approval for that cross-listing.
 - If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257` as an elective by default; flag advisor confirmation if the student wants to use it that way.
 - Because `ECO 257` has not been offered reliably, do not suggest it by itself. Use the group `MAT 217 / ECO 257 / PSY 217`.
@@ -64,15 +65,22 @@ These rules are always injected into planning requests and are also backed by va
 - For years after 2026/2027, use cautious general rules when no schedule is available.
 - For years after 2026/2027, write `ECO elective` instead of naming specific ECO electives unless the student provides updated offering information.
 - `ECO 213` and `ECO 214` are Fall/Winter only, are not offered in May, and are not offered in the same term.
-- For future unscheduled years, never display only `ECO 213` or only `ECO 214`. Write `ECO 213 or ECO 214` and later `ECO 214 or ECO 213` when exact term placement is unknown.
-- Add a brief note below any year using those alternatives: `ECO 213 and ECO 214 are offered only in Fall or Winter, once per year each, so the exact future term is not known yet.`
-- `MAT 113`, `MAT 121`, `MAT 217`, `PSY 217`, and `BUSN 323` are treated as Fall/Winter only, not May.
+- For years without a published schedule, place named requirements and generic electives under `Term to be confirmed` for the planned academic year.
+- Do not convert an academic-year placeholder into a Fall, Winter, or May claim until that schedule is verified.
+- Without a published non-Economics schedule, place `MAT 113`, `MAT 121`, `MAT 217`, `PSY 217`, and `BUSN 323` under `Term to be confirmed`.
 
 ## Complete Plan Rules
 
 - A returned plan must show every remaining major requirement, including four ECO electives, the math cognate, statistics option, money/finance option, `ECO 213`, `ECO 214`, and `ECO 461`.
 - Fewer than four completed or planned ECO electives is invalid for a complete major plan.
 - If the remaining requirements cannot fit under these rules, make the safest valid partial plan and explain the constraint briefly in notes; do not invent offerings or place courses in invalid terms.
+- Withhold invalid plan tabs and return the unresolved constraints as `Planning Gaps`.
+
+## Catalog Resolution
+
+- Infer the requested entry catalog from standing, creation date, and the summer clarification answer.
+- If the requested approved Economics snapshot is unavailable, use the nearest earlier approved snapshot and add an `Advisor Attention` warning.
+- If no earlier approved snapshot exists, do not generate a plan.
 
 ## Advisor-Confirmation Cases
 

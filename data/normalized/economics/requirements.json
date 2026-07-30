@@ -66,10 +66,11 @@
         "ECO 321",
         "BUSN 323"
       ],
-      "units": 1,
-      "provisionalOptions": [
-        "BUSN 323"
-      ]
+      "preferredOptions": [
+        "BUSN 323",
+        "ECO 321"
+      ],
+      "units": 1
     },
     {
       "id": "eco-461",
@@ -102,10 +103,15 @@
         "ECO 213",
         "ECO 214",
         "ECO 257",
-        "ECO 321",
         "ECO 461",
         "ECO 307"
       ],
+      "conditionalCourses": {
+        "ECO 321": {
+          "slotId": "finance",
+          "assignedCode": "BUSN 323"
+        }
+      },
       "maxLevel100": 1,
       "units": 1
     },
@@ -120,10 +126,15 @@
         "ECO 213",
         "ECO 214",
         "ECO 257",
-        "ECO 321",
         "ECO 461",
         "ECO 307"
       ],
+      "conditionalCourses": {
+        "ECO 321": {
+          "slotId": "finance",
+          "assignedCode": "BUSN 323"
+        }
+      },
       "maxLevel100": 1,
       "units": 1
     },
@@ -138,10 +149,15 @@
         "ECO 213",
         "ECO 214",
         "ECO 257",
-        "ECO 321",
         "ECO 461",
         "ECO 307"
       ],
+      "conditionalCourses": {
+        "ECO 321": {
+          "slotId": "finance",
+          "assignedCode": "BUSN 323"
+        }
+      },
       "maxLevel100": 1,
       "units": 1
     },
@@ -156,10 +172,15 @@
         "ECO 213",
         "ECO 214",
         "ECO 257",
-        "ECO 321",
         "ECO 461",
         "ECO 307"
       ],
+      "conditionalCourses": {
+        "ECO 321": {
+          "slotId": "finance",
+          "assignedCode": "BUSN 323"
+        }
+      },
       "maxLevel100": 1,
       "units": 1
     }

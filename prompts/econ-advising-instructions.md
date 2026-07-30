@@ -39,8 +39,12 @@ Before placing any course, check:
 6. Whether the course satisfies a required course, substitute group, or elective requirement.
 7. Whether the plan keeps the student on track for `ECO 461` in senior Winter.
 8. Whether senior-seminar and capstone requirements are completed at Hanover. Do not count transfer, AP, or equivalency credit toward `ECO 461`; treat its normal single Winter offering per academic year as an important scheduling constraint.
+9. Whether `BUSN 323` should satisfy Finance so that a separately completed `ECO 321` can count as an elective; never double count either course.
+10. Whether a named placement is supported by a published schedule. Otherwise use `Term to be confirmed` for the academic year.
 
 Do not build the plan first and check rules afterward.
+
+The deterministic map response is authoritative. Do not invent or override catalog resolution, requirement assignment, prerequisites, or offering evidence.
 
 ## Output Object
 

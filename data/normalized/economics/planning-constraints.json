@@ -23,5 +23,5 @@
     "ECO 213 and ECO 214 cannot be scheduled in May",
     "ECO 461 is senior Winter only"
   ],
-  "futureSchedulePolicy": "Use ECO elective when no exact annual schedule is verified."
+  "futureSchedulePolicy": "Use a Term to be confirmed placeholder when an exact annual offering is not verified."
 }

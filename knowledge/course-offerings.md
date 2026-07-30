@@ -11,8 +11,8 @@ These are planning rules, not a replacement for checking the official schedule.
 - `ECO 213` and `ECO 214` are Fall/Winter courses only.
 - `ECO 213` and `ECO 214` are never offered in the same term.
 - `ECO 213` and `ECO 214` are each offered once per academic year, but without a future schedule the exact term is unknown.
-- For future unscheduled years, never display only `ECO 213` or only `ECO 214`. Use `ECO 213 or ECO 214` and later `ECO 214 or ECO 213` when the exact term is unknown.
-- Below any year using those alternatives, add a note: `ECO 213 and ECO 214 are offered only in Fall or Winter, once per year each, so the exact future term is not known yet.`
+- For an academic year without a published schedule, place each needed course under `Term to be confirmed`; do not claim an exact Fall or Winter placement.
+- `ECO 213` and `ECO 214` may share an academic-year placeholder because it does not claim that they share a term.
 - Do not place `ECO 213` or `ECO 214` in May Term.
 - Schedule `ECO 213` and `ECO 214` as soon as feasible after `MAT 113` or `MAT 121` and the appropriate introductory courses are complete.
 
@@ -67,8 +67,10 @@ Never place these courses in May Term:
 ### `ECO 321 / BUSN 323`
 
 - `BUSN 323` can be taken instead of `ECO 321`.
+- If both are completed or in progress, assign `BUSN 323` to Finance and allow `ECO 321` to count as an ECO elective.
+- Never count `ECO 321` as both Finance and an elective, and never count `BUSN 323` as an ECO elective.
 - When suggesting this requirement, write it as: `ECO 321 / BUSN 323`.
-- `BUSN 323` is usually offered in Fall/Winter only for planning purposes.
+- Without a published Business schedule, place `BUSN 323` under `Term to be confirmed`.
 - `ECO 321` is offered in Winter in the known 2026/2027 schedule.
 - Do not place `ECO 321` or `BUSN 323` in May Term.
 - Do not schedule or mention `ECO 471` in standard plans. Include `ECO 471` only if the student explicitly asks for Senior Thesis.
