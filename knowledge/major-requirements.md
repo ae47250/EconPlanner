@@ -119,7 +119,7 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 | `ECO 222` | Economics of the European Union | ECO elective candidate; requires `ECO 114`. |
 | `ECO 223` | Economics: Poverty & Discrimination | ECO elective candidate. |
 | `ECO 224` | Introduction to Sustainability | ECO elective candidate if listed as ECO credit. |
-| `ECO 234` | Rational Choices | Identical to `PHI 234`; confirm ECO credit if taken under another subject code. |
+| `ECO 234` | Rational Choices | Cross-listed with `PHI 234`; count either course code as the same course without advisor approval. |
 | `ECO 257` | Quantitative Methods for Business/Economics | Required statistics option unless replaced by `MAT 217` or `PSY 217`. |
 | `ECO 260` | Special Topics | Topic varies; counts as ECO elective when offered as ECO credit. |
 | `ECO 307` | Directed Study | Confirm whether and how it counts. |

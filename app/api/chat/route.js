@@ -26,7 +26,7 @@ const RECOGNIZED_COURSES = new Set([
   "ECO 221", "ECO 222", "ECO 223", "ECO 224", "ECO 234", "ECO 257",
   "ECO 260", "ECO 307", "ECO 315", "ECO 316", "ECO 321", "ECO 331",
   "ECO 333", "ECO 335", "ECO 337", "ECO 357", "ECO 360", "ECO 370",
-  "ECO 461", "ECO 471", "MAT 113", "MAT 121", "MAT 217",
+  "ECO 461", "ECO 471", "MAT 113", "MAT 121", "MAT 217", "PHI 234",
   "PSY 217", "BUSN 323"
 ]);
 
@@ -100,10 +100,12 @@ const ECO_TITLE_ALIASES = [
 function extractEcoCodes(value) {
   const text = String(value || "");
   const codes = new Set();
-  const matches = text.toUpperCase().matchAll(/\bECO\s*-?\s*(\d{3})\b/g);
+  const matches = text.toUpperCase().matchAll(/\b(ECO|PHI)\s*-?\s*(\d{3})\b/g);
 
   for (const match of matches) {
-    codes.add(`ECO ${match[1]}`);
+    const code = `${match[1]} ${match[2]}`;
+    if (code === "PHI 234") codes.add("ECO 234");
+    else if (code.startsWith("ECO ")) codes.add(code);
   }
 
   const lowered = text.toLowerCase();
@@ -175,7 +177,7 @@ function preflightStudentInput(studentInput) {
     studentInput.currentCourses,
     studentInput.additionalNotes
   ].join(" ");
-  const unknown = [...new Set([...courseText.toUpperCase().matchAll(/\b(ECO|MAT|PSY|BUSN)\s*-?\s*(\d{3})\b/g)]
+  const unknown = [...new Set([...courseText.toUpperCase().matchAll(/\b(ECO|MAT|PSY|BUSN|PHI)\s*-?\s*(\d{3})\b/g)]
     .map(match => `${match[1]} ${match[2]}`)
     .filter(code => !RECOGNIZED_COURSES.has(code)))];
 

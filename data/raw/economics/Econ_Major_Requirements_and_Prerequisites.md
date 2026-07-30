@@ -122,7 +122,7 @@ Use this section to match course titles to course numbers. When the user names a
 | ECO 222 | Economics of the European Union | ECO 114 | ECO elective candidate. Catalog note: offered during Spring Term with a two-week field trip to Brussels, Belgium. Do not assume current-year availability without schedule confirmation. |
 | ECO 223 | Economics: Poverty & Discrimination | ECO 113 or ECO 114 or ECO 161 | ECO elective candidate. Catalog note: offered during Spring Term and includes service learning. Do not assume current-year availability without schedule confirmation. |
 | ECO 224 | Introduction to Sustainability | None listed | ECO elective candidate if listed as ECO credit. |
-| ECO 234 | Rational Choices | None listed | Identical to PHI 234. Confirm ECO credit if taken under another subject code. |
+| ECO 234 | Rational Choices | None listed | Cross-listed with PHI 234. Count either course code as the same course; advisor approval is not required. |
 | ECO 257 | Quantitative Methods for Business/Economics | ECO 113 or ECO 114 | Required for the major unless replaced by MAT 217 or PSY 217. |
 | ECO 260 | Special Topics | None listed | Topic varies. Confirm topic and whether it counts toward the major/elective requirement. |
 | ECO 307 | Directed Study | None listed | 0.50 unit. Confirm whether and how it counts toward the major. |
@@ -178,7 +178,7 @@ Special Topics, Directed Study, Internship, and cross-listed courses require ext
 - ECO 160, ECO 260, and ECO 360 are Special Topics. The topic may change.
 - ECO 307 and ECO 370 are Directed Study courses. Confirm whether they count and how many units they carry.
 - ECO 357 is Internship and requires department permission.
-- ECO 234 is identical to PHI 234. Confirm the subject code and whether it counts as ECO credit.
+- ECO 234 is cross-listed with PHI 234. Count either course code as the same course; advisor approval is not required.
 
 ## Avoid These Planning Errors
 

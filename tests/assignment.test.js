@@ -35,6 +35,19 @@ test("global assignment prevents double counting", () => {
   assert.equal(result.unusedCourses.length, 0);
 });
 
+test("PHI 234 cross-listing counts as ECO 234 without approval", () => {
+  const result = mapStudentToProgram(economics, requirements, {
+    courses: [
+      { code: "ECO 113", status: "completed", units: 1 },
+      { code: "ECO 114", status: "completed", units: 1 },
+      { code: "PHI 234", status: "completed", units: 1 }
+    ]
+  });
+
+  assert.ok(result.strict.assignments.some(item => item.code === "ECO 234"));
+  assert.equal(result.unusedCourses.length, 0);
+});
+
 test("provisional transfer evidence separates strict and optimistic results", () => {
   const result = mapStudentToProgram(economics, requirements, {
     courses: [

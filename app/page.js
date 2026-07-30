@@ -5,6 +5,8 @@ import { resolvePlanningContext } from "../lib/planning/horizon.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const NON_SELECTABLE_COURSE_CODES = new Set(["ECO 461"]);
+const AP_CREDIT_ALLOWED_GROUP_IDS = new Set(["math-requirement", "statistics-requirement"]);
+const AP_CREDIT_ALLOWED_COURSE_CODES = new Set(["ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 260", "ECO 360"]);
 
 const COURSE_CATALOG = [
   { code: "ECO 113", title: "Principles of Microeconomics" },
@@ -84,6 +86,12 @@ const COURSE_DISPLAY_GROUPS = [
     courseCodes: ["ECO 214"]
   },
   {
+    id: "ECO 461",
+    code: "ECO 461",
+    title: "Senior Seminar: Econometrics",
+    courseCodes: ["ECO 461"]
+  },
+  {
     id: "math-requirement",
     code: "MAT 113 / MAT 121",
     title: "Mathematics cognate",
@@ -116,7 +124,9 @@ const COURSE_DISPLAY_GROUPS = [
 
 const DECLARATION_COURSE_IDS = ["ECO 113", "ECO 114", "ECO 213", "ECO 214"];
 const DECLARATION_REQUIREMENT_IDS = ["math-requirement", "statistics-requirement"];
-const DECLARATION_GROUP_IDS = new Set([...DECLARATION_COURSE_IDS, ...DECLARATION_REQUIREMENT_IDS]);
+const DECLARATION_RIGHT_COURSE_IDS = ["ECO 160", "ECO 161"];
+const RELATIVELY_FREQUENT_COURSE_IDS = new Set(["ECO 321", "BUSN 323", "ECO 331", "ECO 333"]);
+const DECLARATION_GROUP_IDS = new Set([...DECLARATION_COURSE_IDS, ...DECLARATION_REQUIREMENT_IDS, ...DECLARATION_RIGHT_COURSE_IDS]);
 const MAX_COURSE_NAME_CHARS = Math.max(...COURSE_DISPLAY_GROUPS.map(group => `${group.code} ${group.title}`.length));
 const COURSE_COLUMNS_STYLE = { "--course-name-width": `calc(${MAX_COURSE_NAME_CHARS}ch + .4rem)` };
 
@@ -569,12 +579,16 @@ export default function Page() {
   );
   const declarationCourseGroups = visibleGroups.filter(group => DECLARATION_COURSE_IDS.includes(group.id));
   const declarationRequirementGroups = visibleGroups.filter(group => DECLARATION_REQUIREMENT_IDS.includes(group.id));
-  const declarationGroups = [...declarationCourseGroups, ...declarationRequirementGroups];
+  const declarationRightCourseGroups = visibleGroups.filter(group => DECLARATION_RIGHT_COURSE_IDS.includes(group.id));
+  const declarationGroups = [...declarationCourseGroups, ...declarationRequirementGroups, ...declarationRightCourseGroups];
   const remainingGroups = visibleGroups.filter(group => !DECLARATION_GROUP_IDS.has(group.id));
   const sortCourseGroups = groups => [...groups].sort((a, b) => courseLevel(a.code) - courseLevel(b.code) || a.code.localeCompare(b.code));
-  const oneHundredGroups = sortCourseGroups(remainingGroups.filter(group => courseLevel(group.code) >= 100 && courseLevel(group.code) < 200));
-  const twoHundredGroups = sortCourseGroups(remainingGroups.filter(group => courseLevel(group.code) >= 200 && courseLevel(group.code) < 300));
-  const advancedGroups = sortCourseGroups(remainingGroups.filter(group => courseLevel(group.code) >= 300));
+  const relativelyFrequentGroups = sortCourseGroups(remainingGroups.filter(group =>
+    (courseLevel(group.code) >= 200 && courseLevel(group.code) < 300) || RELATIVELY_FREQUENT_COURSE_IDS.has(group.id)
+  ));
+  const advancedGroups = sortCourseGroups(remainingGroups.filter(group =>
+    courseLevel(group.code) >= 300 && !RELATIVELY_FREQUENT_COURSE_IDS.has(group.id)
+  ));
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -609,6 +623,9 @@ export default function Page() {
     const requirementMode = requirementModes[group.id] || "";
     const taken = group.options ? requirementMode === "completed" : groupCourses.some(isTaken);
     const inProgress = group.options ? requirementMode === "in_progress" : groupCourses.some(course => course.status === "in_progress");
+    const isHanoverOnly = group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code));
+    const allowsApCredit = AP_CREDIT_ALLOWED_GROUP_IDS.has(group.id) || group.courseCodes.some(code => AP_CREDIT_ALLOWED_COURSE_CODES.has(code));
+    const takenButtonLabel = allowsApCredit ? "Taken or AP credit" : "Taken";
     return (
       <div
         className={`course-row${group.options && requirementMode ? " has-requirement" : ""}`}
@@ -621,24 +638,28 @@ export default function Page() {
           <strong>{group.code}</strong>
           <span>{group.title}</span>
         </div>
-        <div className="course-toggles" role="group" aria-label={`Status for ${group.code}`}>
-          <button
-            type="button"
-            className={`course-toggle taken-toggle${taken ? " is-selected" : ""}`}
-            aria-pressed={taken}
-            onClick={event => toggleCourseGroup(group, "completed", event)}
-          >
-            Taken or AP credit
-          </button>
-          <button
-            type="button"
-            className={`course-toggle progress-toggle${inProgress ? " is-selected" : ""}`}
-            aria-pressed={inProgress}
-            onClick={event => toggleCourseGroup(group, "in_progress", event)}
-          >
-            In Progress
-          </button>
-        </div>
+        {isHanoverOnly ? (
+          <span className="course-status-note">Must be taken at Hanover College</span>
+        ) : (
+          <div className="course-toggles" role="group" aria-label={`Status for ${group.code}`}>
+            <button
+              type="button"
+              className={`course-toggle taken-toggle${taken ? " is-selected" : ""}`}
+              aria-pressed={taken}
+              onClick={event => toggleCourseGroup(group, "completed", event)}
+            >
+              {takenButtonLabel}
+            </button>
+            <button
+              type="button"
+              className={`course-toggle progress-toggle${inProgress ? " is-selected" : ""}`}
+              aria-pressed={inProgress}
+              onClick={event => toggleCourseGroup(group, "in_progress", event)}
+            >
+              In Progress
+            </button>
+          </div>
+        )}
         {group.options && requirementMode && (
           <div
             className="requirement-choice-card"
@@ -755,6 +776,7 @@ export default function Page() {
         .course-heading h2 { color: var(--planner-purple); font-size: var(--planner-intro-text-size); }
         .section-heading p { margin: .2rem 0 0; color: var(--planner-muted); font-size: 12px; }
         .step-number { font-weight: 700; line-height: 1.1; }
+        .planning-details .section-heading h2 { color: var(--urveska-lead-orange); font-size: var(--planner-intro-text-size); }
         .planning-details { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--planner-border); }
         .planning-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-top: .85rem; max-width: 38rem; }
         .planning-field { display: grid; gap: .25rem; }
@@ -787,6 +809,7 @@ export default function Page() {
         .course-name strong { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
         .course-name span { min-width: 0; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: break-word; line-height: 1.25; }
         .course-toggles { display: flex; gap: .25rem; align-items: center; flex-wrap: nowrap; }
+        .course-status-note { color: var(--planner-dark-green); font-weight: 700; white-space: nowrap; }
         button.course-toggle { width: auto; min-height: 0 !important; height: auto; margin: 0; padding: 0 .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; font-family: var(--planner-font-family); font-size: var(--planner-body-size); line-height: 1.25; white-space: nowrap; }
         button.course-toggle:hover { border-color: var(--planner-strong-border); }
         button.taken-toggle.is-selected { background: var(--planner-green); border-color: #6db784; }
@@ -794,8 +817,8 @@ export default function Page() {
         .course-accordion { margin-top: .85rem; border-top: 1px solid var(--planner-border); padding-top: .75rem; }
         .course-accordion summary { display: flex; align-items: center; gap: .5rem; cursor: pointer; list-style: none; color: #171a1c; font-weight: 700; }
         .course-accordion summary::-webkit-details-marker { display: none; }
-        .course-accordion summary::after { content: "▶"; margin-left: .1rem; color: #ff7a00; font-size: 14px; line-height: 1; }
-        .course-accordion[open] summary::after { content: "▼"; }
+        .course-accordion summary::before { content: "▶"; color: #ff7a00; font-size: 14px; line-height: 1; }
+        .course-accordion[open] summary::before { content: "▼"; }
         .course-accordion-title { color: #171a1c; }
         .course-accordion-count { margin-left: auto; color: var(--planner-muted); font-weight: 400; }
         .course-accordion .course-columns { margin-top: .7rem; }
@@ -811,12 +834,13 @@ export default function Page() {
         .choice-check { width: 1rem; color: #2f8f4e; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; }
         .choice-option small { color: var(--planner-muted); }
         .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
-        .generate-button { width: auto; margin: 0; border: 1px solid #73b98a; background: var(--planner-generate-bg); color: var(--planner-dark-green); font-family: var(--planner-font-family); font-size: var(--planner-action-size); font-weight: 700; }
+        .generate-button { width: auto; margin: 0; border: 1px solid #73b98a; background: var(--planner-generate-bg); color: var(--planner-dark-green); font-family: var(--planner-font-family); font-size: var(--planner-intro-text-size); font-weight: 700; }
         .generate-button:hover { background: var(--planner-generate-bg-hover); }
         .generate-button:disabled { cursor: not-allowed; opacity: .6; }
         .summary-card { min-height: 100%; margin-bottom: 1rem; }
         .planner-instructions { margin: .85rem 0 0; padding-left: 3ch; font-size: inherit; font-weight: 700; }
         .planner-instructions p { margin: .25rem 0; font-size: inherit; font-weight: 700; }
+        .planner-instructions p:first-child { color: var(--urveska-lead-orange); }
         .planner-instructions p:nth-child(2) { color: var(--planner-purple); }
         .planner-instructions p:nth-child(3) { color: var(--planner-dark-green); font-size: var(--planner-action-size); }
         .summary-grid { display: grid; gap: .45rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
@@ -1007,13 +1031,12 @@ export default function Page() {
 
             {declarationGroups.length > 0 && (
               <div className="course-level-section declaration-section">
-                {renderDeclarationColumns(declarationCourseGroups, declarationRequirementGroups)}
+                {renderDeclarationColumns(declarationCourseGroups, [...declarationRequirementGroups, ...declarationRightCourseGroups])}
               </div>
             )}
 
-            {renderCourseAccordion("one-hundred-level", "100 level courses", oneHundredGroups)}
-            {renderCourseAccordion("two-hundred-level", "200 level courses", twoHundredGroups)}
-            {renderCourseAccordion("three-hundred-level", "300 level and above", advancedGroups)}
+            {renderCourseAccordion("two-hundred-level", "Courses offered relatively frequent", relativelyFrequentGroups)}
+            {renderCourseAccordion("three-hundred-level", "Econ courses offered infrequently", advancedGroups)}
 
             {visibleGroups.length === 0 && <p className="status">No courses match your search.</p>}
 

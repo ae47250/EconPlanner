@@ -25,6 +25,7 @@ These rules are always injected into planning requests and are also backed by va
 - Only one of the four ECO electives may be at the 100 level.
 - Any ECO course may count as an ECO elective except required ECO courses: `ECO 113`, `ECO 114`, `ECO 213`, `ECO 214`, `ECO 257`, `ECO 321`, `ECO 461`.
 - `BUSN 323`, `MAT 217`, and `PSY 217` are not ECO electives.
+- `ECO 234` is cross-listed with `PHI 234`; count either course code as the same course and do not require advisor approval for that cross-listing.
 - If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257` as an elective by default; flag advisor confirmation if the student wants to use it that way.
 - Because `ECO 257` has not been offered reliably, do not suggest it by itself. Use the group `MAT 217 / ECO 257 / PSY 217`.
 
