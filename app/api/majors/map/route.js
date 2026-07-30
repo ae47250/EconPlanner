@@ -68,6 +68,7 @@ function mapCatalogPrograms(catalog, student, catalogReview) {
       },
       economicsPlan: economicsPlanBundle?.plans?.[0] || null,
       economicsPlans: economicsPlanBundle?.plans || [],
+      economicsPlanValidation: economicsPlanBundle?.planSetValidation || null,
       planningContext: economicsPlanBundle?.context || null,
       catalogReview: variant.programId === "economics" ? catalogReview : null
     };
