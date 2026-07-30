@@ -2,6 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { resolvePlanningContext } from "../lib/planning/horizon.js";
+import {
+  selectedStatus,
+  validateCoursePrerequisites,
+  validateStudentPrerequisites
+} from "../lib/planning/prerequisiteValidation.js";
 import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
@@ -16,6 +21,12 @@ const NON_SELECTABLE_COURSE_CODES = new Set(COURSE_CATALOG
 const AP_CREDIT_ALLOWED_COURSE_CODES = new Set(COURSE_CATALOG
   .filter(course => course.apEligible)
   .map(course => course.code));
+const COURSE_PREREQUISITES = Object.fromEntries(COURSE_CATALOG
+  .filter(course => (
+    (course.prerequisites?.all || []).length
+    || (course.prerequisites?.any || []).length
+  ))
+  .map(course => [course.code, course.prerequisites]));
 
 const SELECTABLE_COURSE_CATALOG = COURSE_CATALOG.filter(course => course.studentSelectable !== false);
 
@@ -198,6 +209,33 @@ function selectedCourses(courses) {
   return courses.filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code) && ["completed", "transfer", "in_progress"].includes(course.status));
 }
 
+function courseTitle(code) {
+  return COURSE_CATALOG.find(course => course.code === code)?.title || code;
+}
+
+function clearInvalidDependents(courses, changedCode) {
+  const nextCourses = courses.map(course => ({ ...course }));
+  const affectedCodes = new Set([changedCode]);
+  const clearedCodes = [];
+
+  while (true) {
+    const validation = validateStudentPrerequisites(nextCourses, COURSE_PREREQUISITES);
+    const invalidDependent = validation.issues.find(issue => (
+      !clearedCodes.includes(issue.course)
+      && [issue.prerequisite, ...(issue.options || [])].some(code => affectedCodes.has(code))
+    ));
+    if (!invalidDependent) break;
+
+    const dependent = nextCourses.find(course => course.code === invalidDependent.course);
+    if (!dependent || dependent.status === "not_started") break;
+    dependent.status = "not_started";
+    affectedCodes.add(dependent.code);
+    clearedCodes.push(dependent.code);
+  }
+
+  return { courses: nextCourses, clearedCodes };
+}
+
 function economicsResult(report) {
   return report?.programs?.find(result => result.economicsPlan || result.program?.name === "Economics") || null;
 }
@@ -370,6 +408,482 @@ function PlanTimeline({ plans = [], planningGaps = [] }) {
   );
 }
 
+function compactPlanCourse(course) {
+  if (course.course === "ECO elective" && course.minimumLevel === 200) {
+    return "ECO elective (200+)";
+  }
+  return course.course;
+}
+
+function comparisonScheduleRows(plan) {
+  return (plan?.terms || [])
+    .filter(term => term.courses.length > 0)
+    .map(term => ({
+      key: `${term.academicYear || ""}-${term.isPlaceholder ? "TBC" : term.displayTerm || term.term}`,
+      academicYear: formatAcademicYear(term.academicYear),
+      term: term.isPlaceholder ? "Term to be confirmed" : term.displayTerm || term.term,
+      courses: term.courses.map(compactPlanCourse)
+    }));
+}
+
+function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
+  const result = economicsResult(report);
+  const plans = result?.economicsPlans || [];
+  const planningGaps = result?.economicsPlanningGaps || [];
+  const planningContext = result?.planningContext;
+  const [selectedPlanId, setSelectedPlanId] = useState(plans[0]?.id || "");
+  const [showDifferencesOnly, setShowDifferencesOnly] = useState(false);
+
+  useEffect(() => {
+    if (plans.length && !plans.some(plan => plan.id === selectedPlanId)) {
+      setSelectedPlanId(plans[0].id);
+    }
+  }, [plans, selectedPlanId]);
+
+  const rowsByPlan = new Map(plans.map(plan => [plan.id, comparisonScheduleRows(plan)]));
+  const allRowKeys = new Set([...rowsByPlan.values()].flatMap(rows => rows.map(row => row.key)));
+  const identicalRowKeys = new Set([...allRowKeys].filter(key => {
+    const signatures = plans.map(plan => {
+      const row = rowsByPlan.get(plan.id)?.find(item => item.key === key);
+      return row ? row.courses.join("|") : "";
+    });
+    return signatures.length > 1 && signatures.every(signature => signature === signatures[0]);
+  }));
+  const standing = planningContext?.effectiveStandingLabel
+    || planningContext?.standingLabel
+    || "Student";
+  const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
+  const completedCodes = courses.filter(isTaken).map(course => course.code);
+  const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
+  const planBadges = {
+    "plan-1": "Even load",
+    "plan-2": "More later",
+    "plan-3": "Standing-aware"
+  };
+
+  return (
+    <main className={`comparison-page${isExiting ? " is-exiting" : ""}`}>
+      <style jsx global>{`
+        body {
+          margin: 0;
+          background:
+            radial-gradient(circle at 8% 10%, rgba(23, 151, 210, .12), transparent 24rem),
+            linear-gradient(145deg, #f8fbff 0%, #eef4fa 58%, #fff8ed 100%);
+          color: #101f45;
+          font-family: Arial, sans-serif;
+        }
+        button, input { font-family: Arial, sans-serif; }
+        .comparison-page {
+          min-height: 100vh;
+          animation: comparison-enter .28s ease-out both;
+        }
+        .comparison-page.is-exiting { animation: comparison-exit .24s ease-in both; }
+        @keyframes comparison-enter {
+          from { opacity: 0; transform: translateX(4rem); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes comparison-exit {
+          from { opacity: 1; transform: translateX(0); }
+          to { opacity: 0; transform: translateX(4rem); }
+        }
+        .comparison-topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          padding: 1rem 2rem;
+          border-bottom: 1px solid #cbd5e1;
+          background: rgba(255, 255, 255, .92);
+          box-shadow: 0 1px 8px rgba(15, 35, 75, .06);
+        }
+        .comparison-brand {
+          color: #071956;
+          font-size: 25px;
+          font-weight: 700;
+          letter-spacing: -.03em;
+        }
+        .comparison-student {
+          display: flex;
+          align-items: center;
+          gap: .45rem;
+          margin-left: auto;
+          color: #071956;
+          font-size: 15px;
+        }
+        .comparison-student strong { font-weight: 700; }
+        .edit-courses-button {
+          width: auto;
+          min-height: 0;
+          margin: 0 0 0 1.25rem;
+          padding: .65rem 1rem;
+          border: 1px solid #102a83;
+          border-radius: .45rem;
+          background: #fff;
+          color: #071956;
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+        .edit-courses-button:hover { background: #edf4ff; }
+        .comparison-content {
+          width: min(1460px, calc(100% - 3rem));
+          margin: 0 auto;
+          padding: 1.15rem 0 3rem;
+        }
+        .comparison-back {
+          width: auto;
+          min-height: 0;
+          margin: 0;
+          padding: .25rem 0;
+          border: 0;
+          background: transparent;
+          color: #155eef;
+          font-size: 14px;
+          cursor: pointer;
+        }
+        .comparison-back:hover { text-decoration: underline; }
+        .comparison-course-status {
+          display: grid;
+          gap: .25rem;
+          margin: .65rem 0 .9rem;
+          padding: .65rem .8rem;
+          border: 1px solid #cbd5e1;
+          border-radius: .5rem;
+          background: rgba(255, 255, 255, .82);
+          color: #33425d;
+          font-size: 12px;
+        }
+        .comparison-course-status p { margin: 0; }
+        .comparison-course-status strong { color: #071956; }
+        .comparison-heading-row {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 1.5rem;
+          margin: .55rem 0 1rem;
+        }
+        .comparison-heading-row h1 {
+          margin: 0;
+          color: #071956;
+          font-size: clamp(29px, 3vw, 42px);
+          line-height: 1.05;
+          letter-spacing: -.035em;
+        }
+        .comparison-heading-row p {
+          margin: .45rem 0 0;
+          color: #53627a;
+          font-size: 15px;
+        }
+        .difference-toggle {
+          display: flex;
+          align-items: center;
+          gap: .6rem;
+          flex: 0 0 auto;
+          color: #071956;
+          font-size: 14px;
+          cursor: pointer;
+        }
+        .difference-toggle input {
+          width: 2.7rem;
+          height: 1.45rem;
+          accent-color: #155eef;
+          cursor: pointer;
+        }
+        .comparison-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 1rem;
+          align-items: stretch;
+        }
+        .comparison-plan-card {
+          display: flex;
+          min-width: 0;
+          flex-direction: column;
+          overflow: hidden;
+          border: 1px solid #bdc9da;
+          border-radius: .7rem;
+          background: rgba(255, 255, 255, .96);
+          box-shadow: 0 .45rem 1.2rem rgba(20, 44, 92, .06);
+        }
+        .comparison-plan-card.is-selected {
+          border: 2px solid #155eef;
+          box-shadow: 0 .65rem 1.5rem rgba(21, 94, 239, .14);
+        }
+        .comparison-plan-summary {
+          min-height: 8rem;
+          padding: 1.15rem 1.15rem .9rem;
+          text-align: center;
+        }
+        .plan-title-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: .6rem;
+          flex-wrap: wrap;
+        }
+        .comparison-plan-summary h2 {
+          margin: 0;
+          color: #071956;
+          font-size: 25px;
+          line-height: 1.1;
+        }
+        .comparison-plan-summary p {
+          max-width: 26rem;
+          margin: .65rem auto 0;
+          color: #41506a;
+          font-size: 13px;
+          line-height: 1.45;
+        }
+        .plan-strategy-badge {
+          padding: .35rem .55rem;
+          border: 1px solid #9dc7ff;
+          border-radius: .4rem;
+          background: #f3f8ff;
+          color: #155eef;
+          font-size: 12px;
+        }
+        .comparison-plan-card:nth-child(3) .plan-strategy-badge {
+          border-color: #94cfbd;
+          background: #f1fbf7;
+          color: #087257;
+        }
+        .compact-schedule {
+          width: calc(100% - 1.4rem);
+          margin: 0 .7rem .85rem;
+          border-collapse: collapse;
+          table-layout: fixed;
+          font-size: 11px;
+        }
+        .compact-schedule th,
+        .compact-schedule td {
+          padding: .38rem .42rem;
+          border: 1px solid #d2dbe6;
+          text-align: left;
+          vertical-align: top;
+        }
+        .compact-schedule th {
+          background: #eef7fc;
+          color: #17345b;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: .035em;
+        }
+        .compact-schedule th:first-child,
+        .compact-schedule td:first-child { width: 25%; }
+        .compact-schedule th:nth-child(2),
+        .compact-schedule td:nth-child(2) { width: 18%; }
+        .compact-schedule td:last-child {
+          color: #111d36;
+          font-weight: 700;
+          line-height: 1.35;
+          overflow-wrap: anywhere;
+        }
+        .no-differences {
+          margin: 1rem;
+          padding: 1rem;
+          border: 1px dashed #aebdd0;
+          color: #53627a;
+          text-align: center;
+        }
+        .plan-validation {
+          margin: auto .9rem .7rem;
+          color: #087257;
+          font-size: 11px;
+          font-weight: 700;
+          text-align: center;
+        }
+        .choose-plan-button {
+          width: calc(100% - 2rem);
+          min-height: 0;
+          margin: 0 1rem 1rem;
+          padding: .72rem 1rem;
+          border: 1px solid #0c3eaf;
+          border-radius: .42rem;
+          background: #fff;
+          color: #071956;
+          font-size: 16px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+        .choose-plan-button:hover { background: #edf4ff; }
+        .comparison-plan-card.is-selected .choose-plan-button {
+          background: linear-gradient(135deg, #0b47c8, #07399e);
+          color: #fff;
+        }
+        .comparison-plan-card.is-selected .choose-plan-button:hover {
+          background: linear-gradient(135deg, #083ca9, #062f83);
+        }
+        .comparison-empty {
+          padding: 1.25rem;
+          border: 1px solid #bdc9da;
+          border-radius: .7rem;
+          background: #fff;
+          color: #41506a;
+        }
+        .comparison-page .advisor-attention,
+        .comparison-page .plan-notes {
+          margin: 0 0 1rem;
+          padding: .8rem 1rem;
+          border: 1px solid #d7a633;
+          border-radius: .55rem;
+          background: #fff8e3;
+          color: #2b3445;
+          font-size: 12px;
+        }
+        .comparison-page .advisor-attention h2 {
+          margin: 0 0 .4rem;
+          color: #8b5500;
+          font-size: 14px;
+        }
+        .comparison-page .advisor-attention-item + .advisor-attention-item {
+          margin-top: .5rem;
+          padding-top: .5rem;
+          border-top: 1px solid #e4c679;
+        }
+        .comparison-page .advisor-attention-item p { margin: .25rem 0 0; }
+        .comparison-page .planning-gaps {
+          margin-top: 1rem;
+          border-color: #d17a65;
+          background: #fff2ed;
+        }
+        .comparison-page .plan-notes ul {
+          margin: .45rem 0 0;
+          padding-left: 1.1rem;
+        }
+        @media (max-width: 760px) {
+          .comparison-grid { grid-template-columns: 1fr; }
+          .comparison-plan-summary { min-height: 0; }
+        }
+        @media (max-width: 700px) {
+          .comparison-topbar {
+            align-items: flex-start;
+            flex-wrap: wrap;
+            padding: .8rem 1rem;
+          }
+          .comparison-student {
+            width: 100%;
+            order: 3;
+            margin: 0;
+          }
+          .edit-courses-button { margin-left: auto; }
+          .comparison-content { width: min(100% - 1.25rem, 1460px); }
+          .comparison-heading-row {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+          .compact-schedule { font-size: 10px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .comparison-page,
+          .comparison-page.is-exiting { animation: none; }
+        }
+      `}</style>
+
+      <header className="comparison-topbar">
+        <div className="comparison-brand">EconPlanner</div>
+        <div className="comparison-student">
+          <strong>{standing}</strong>
+          <span aria-hidden="true">·</span>
+          <span>Graduation target: {graduationTarget}</span>
+        </div>
+        <button type="button" className="edit-courses-button" onClick={onEditCourses}>
+          Edit completed courses
+        </button>
+      </header>
+
+      <div className="comparison-content">
+        <button type="button" className="comparison-back" onClick={onEditCourses}>
+          ← Back to course selection
+        </button>
+        <section className="comparison-course-status" aria-label="Selected course status">
+          <p><strong>Completed:</strong> {completedCodes.join(", ") || "None"}</p>
+          <p><strong>In Progress:</strong> {inProgressCodes.join(", ") || "None"}</p>
+        </section>
+        <div className="comparison-heading-row">
+          <div>
+            <h1>Compare your plans</h1>
+            <p>Same degree requirements and graduation target, different pacing.</p>
+          </div>
+          {plans.length > 1 && (
+            <label className="difference-toggle">
+              <span>Show differences only</span>
+              <input
+                type="checkbox"
+                checked={showDifferencesOnly}
+                onChange={event => setShowDifferencesOnly(event.target.checked)}
+              />
+            </label>
+          )}
+        </div>
+
+        <AdvisorAttention catalog={report?.catalog} />
+
+        {plans.length > 0 ? (
+          <div className="comparison-grid">
+            {plans.map(plan => {
+              const rows = rowsByPlan.get(plan.id) || [];
+              const visibleRows = showDifferencesOnly
+                ? rows.filter(row => !identicalRowKeys.has(row.key))
+                : rows;
+              const selected = selectedPlanId === plan.id;
+              return (
+                <article className={`comparison-plan-card${selected ? " is-selected" : ""}`} key={plan.id}>
+                  <div className="comparison-plan-summary">
+                    <div className="plan-title-row">
+                      <h2>{plan.label}</h2>
+                      <span className="plan-strategy-badge">{planBadges[plan.id] || "Validated"}</span>
+                    </div>
+                    <p>{plan.description}</p>
+                  </div>
+
+                  {visibleRows.length > 0 ? (
+                    <table className="compact-schedule">
+                      <thead>
+                        <tr>
+                          <th>Year</th>
+                          <th>Term</th>
+                          <th>Courses</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {visibleRows.map(row => (
+                          <tr key={`${plan.id}-${row.key}`}>
+                            <td>{row.academicYear}</td>
+                            <td>{row.term}</td>
+                            <td>{row.courses.join(", ")}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p className="no-differences">No schedule differences in this plan.</p>
+                  )}
+
+                  <p className="plan-validation">Validated against all 12 requirement slots</p>
+                  <button
+                    type="button"
+                    className="choose-plan-button"
+                    aria-pressed={selected}
+                    onClick={() => setSelectedPlanId(plan.id)}
+                  >
+                    {selected ? `${plan.label} selected` : `Choose ${plan.label}`}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="comparison-empty">
+            No validated plan can be displayed for this profile.
+          </div>
+        )}
+
+        <PlanningGaps items={planningGaps} />
+      </div>
+    </main>
+  );
+}
+
 function PlannerSummary({ report, courses }) {
   const result = economicsResult(report);
   const plan = result?.economicsPlans?.[0] || result?.economicsPlan;
@@ -414,6 +928,7 @@ export default function Page() {
   const [requirementModes, setRequirementModes] = useState({});
   const [requirementScrollTarget, setRequirementScrollTarget] = useState("");
   const [requirementPopoverPosition, setRequirementPopoverPosition] = useState(null);
+  const [pendingPrerequisiteSelection, setPendingPrerequisiteSelection] = useState(null);
   const requirementCardRefs = useRef({});
   const courseAccordionRefs = useRef({});
   const generatedInputSignatureRef = useRef("");
@@ -422,7 +937,9 @@ export default function Page() {
   const [isHydrated, setIsHydrated] = useState(false);
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
+  const [isComparisonExiting, setIsComparisonExiting] = useState(false);
   const planningContext = resolvePlanningContext(formData);
+  const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
   const summerStandingSelection = planningContext.isSummer && ["yes", "no"].includes(formData.summerStandingConfirmed)
     ? formData.summerStandingConfirmed === "yes"
       ? `${planningContext.standingLabel} in Fall ${planningContext.startYear}`
@@ -505,10 +1022,11 @@ export default function Page() {
       : current);
     setRequirementScrollTarget(current => current === groupId ? "" : current);
     setRequirementPopoverPosition(current => current?.groupId === groupId ? null : current);
+    setPendingPrerequisiteSelection(current => current?.groupId === groupId ? null : current);
   }
 
   useEffect(() => {
-    if (!Object.values(requirementModes).some(Boolean)) return undefined;
+    if (!Object.values(requirementModes).some(Boolean) && !pendingPrerequisiteSelection) return undefined;
 
     function handleOutsidePointer(event) {
       const openCards = document.querySelectorAll(".requirement-choice-card");
@@ -521,70 +1039,112 @@ export default function Page() {
       ));
       setRequirementScrollTarget("");
       setRequirementPopoverPosition(null);
+      setPendingPrerequisiteSelection(null);
     }
 
     document.addEventListener("pointerdown", handleOutsidePointer);
     return () => document.removeEventListener("pointerdown", handleOutsidePointer);
-  }, [requirementModes]);
+  }, [pendingPrerequisiteSelection, requirementModes]);
+
+  function applyCourseChanges(changes) {
+    let nextCourses = formData.courses.map(course => ({ ...course }));
+    const clearedDependents = new Set();
+
+    for (const [code, nextStatus] of changes) {
+      nextCourses = nextCourses.map(course => course.code === code
+        ? { ...course, status: nextStatus }
+        : course);
+      const result = clearInvalidDependents(nextCourses, code);
+      nextCourses = result.courses;
+      result.clearedCodes.forEach(item => clearedDependents.add(item));
+    }
+
+    setFormData(current => ({ ...current, courses: nextCourses }));
+    if (clearedDependents.size) {
+      setStatus(`${[...clearedDependents].join(", ")} was cleared because a required prerequisite is no longer satisfied.`);
+    }
+  }
+
+  function setPopoverPosition(group, event) {
+    if (!event?.currentTarget) return;
+    const row = event.currentTarget.closest(".course-row");
+    const rowRect = row?.getBoundingClientRect();
+    const buttonRect = event.currentTarget.getBoundingClientRect();
+    if (!rowRect) return;
+    setRequirementPopoverPosition({
+      groupId: group.id,
+      left: buttonRect.left - rowRect.left,
+      top: buttonRect.bottom - rowRect.top + 6
+    });
+  }
+
+  function beginCourseSelection(group, code, targetStatus, event) {
+    const course = formData.courses.find(item => item.code === code);
+    const alreadySelected = targetStatus === "completed"
+      ? isTaken(course || {})
+      : course?.status === targetStatus;
+    if (alreadySelected) {
+      applyCourseChanges([[code, "not_started"]]);
+      if (!group.options) closeRequirementPopover(group.id);
+      return;
+    }
+
+    if (COURSE_PREREQUISITES[code]) {
+      setPendingPrerequisiteSelection({
+        groupId: group.id,
+        courseCode: code,
+        targetStatus
+      });
+      setRequirementScrollTarget(group.id);
+      if (event) setPopoverPosition(group, event);
+      return;
+    }
+
+    applyCourseChanges([[code, targetStatus]]);
+  }
 
   function toggleCourseGroup(group, nextStatus, event) {
     if (group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code))) return;
 
     if (group.options) {
-      const currentMode = requirementModes[group.id] || "";
-      const nextMode = currentMode === nextStatus ? "" : nextStatus;
-      setRequirementModes(current => ({ ...current, [group.id]: nextMode }));
-      setRequirementScrollTarget(nextMode ? group.id : "");
-      if (nextMode && event?.currentTarget) {
-        const row = event.currentTarget.closest(".course-row");
-        const rowRect = row?.getBoundingClientRect();
-        const buttonRect = event.currentTarget.getBoundingClientRect();
-        if (rowRect) {
-          setRequirementPopoverPosition({
-            groupId: group.id,
-            left: buttonRect.left - rowRect.left,
-            top: buttonRect.bottom - rowRect.top + 6
-          });
-        }
-      } else {
-        setRequirementPopoverPosition(null);
+      const selectedCodes = group.courseCodes.filter(code => {
+        const course = formData.courses.find(item => item.code === code);
+        return nextStatus === "completed" ? isTaken(course || {}) : course?.status === nextStatus;
+      });
+      if (selectedCodes.length) {
+        applyCourseChanges(selectedCodes.map(code => [code, "not_started"]));
+        closeRequirementPopover(group.id);
+        return;
       }
-      setFormData(current => ({
-        ...current,
-        courses: current.courses.map(course => group.courseCodes.includes(course.code)
-          ? { ...course, status: "not_started" }
-          : course)
-      }));
+
+      setRequirementModes(current => ({ ...current, [group.id]: nextStatus }));
+      setPendingPrerequisiteSelection(null);
+      setRequirementScrollTarget(group.id);
+      setPopoverPosition(group, event);
       return;
     }
 
-    setFormData(current => {
-      const course = current.courses.find(item => item.code === group.courseCodes[0]);
-      const currentlySelected = nextStatus === "completed" ? isTaken(course || {}) : course?.status === nextStatus;
-
-      return {
-        ...current,
-        courses: current.courses.map(course => {
-          if (!group.courseCodes.includes(course.code)) return course;
-          return { ...course, status: currentlySelected ? "not_started" : nextStatus };
-        })
-      };
-    });
+    beginCourseSelection(group, group.courseCodes[0], nextStatus, event);
   }
 
   function toggleGroupOption(group, code) {
     const mode = requirementModes[group.id];
     if (!mode) return;
-    setFormData(current => {
-      return {
-        ...current,
-        courses: current.courses.map(course => {
-          if (course.code !== code) return course;
-          const selected = mode === "completed" ? isTaken(course) : course.status === mode;
-          return { ...course, status: selected ? "not_started" : mode };
-        })
-      };
-    });
+    beginCourseSelection(group, code, mode);
+  }
+
+  function setPrerequisiteStatus(code, nextStatus) {
+    applyCourseChanges([[code, nextStatus]]);
+  }
+
+  function confirmPrerequisiteSelection(validation) {
+    if (!pendingPrerequisiteSelection || !validation.valid) return;
+    const { groupId, courseCode, targetStatus } = pendingPrerequisiteSelection;
+    applyCourseChanges([[courseCode, targetStatus]]);
+    if (validation.conditionalApprovals.length) {
+      setStatus(validation.conditionalApprovals[0].message);
+    }
+    closeRequirementPopover(groupId);
   }
 
   async function mapMajors(event) {
@@ -597,6 +1157,11 @@ export default function Page() {
 
     if (planningContext.requiresSummerClarification) {
       setStatus("Answer the summer class-standing question before generating a plan.");
+      return;
+    }
+
+    if (!inputPrerequisiteValidation.valid) {
+      setStatus("Correct the highlighted prerequisite issues before generating a plan.");
       return;
     }
 
@@ -617,8 +1182,12 @@ export default function Page() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "The planner could not complete.");
       generatedInputSignatureRef.current = plannerInputSignature(formData);
+      setIsComparisonExiting(false);
       setReport(data);
       setStatus("");
+      window.requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
     } catch (error) {
       setStatus(error.message);
     }
@@ -669,20 +1238,115 @@ export default function Page() {
     );
   }
 
+  function prerequisitePopoverStyle(groupId) {
+    return requirementPopoverPosition?.groupId === groupId ? {
+      left: `${requirementPopoverPosition.left}px`,
+      top: `${requirementPopoverPosition.top}px`
+    } : undefined;
+  }
+
+  function renderPrerequisiteChoiceCard(group) {
+    const pending = pendingPrerequisiteSelection;
+    if (!pending || pending.groupId !== group.id) return null;
+    const rule = COURSE_PREREQUISITES[pending.courseCode];
+    const validation = validateCoursePrerequisites({
+      course: pending.courseCode,
+      targetStatus: pending.targetStatus,
+      courses: formData.courses,
+      prerequisites: COURSE_PREREQUISITES
+    });
+    const requirementSections = [
+      ...(rule.all || []).map(code => ({ label: "Required course", options: [code] })),
+      ...(rule.any || []).map(options => ({ label: "Choose one or more", options }))
+    ];
+    const targetStatusLabel = pending.targetStatus === "completed" ? "Taken" : "In Progress";
+
+    return (
+      <div
+        className="requirement-choice-card prerequisite-choice-card"
+        style={prerequisitePopoverStyle(group.id)}
+        onMouseLeave={() => closeRequirementPopover(group.id)}
+        ref={node => {
+          requirementCardRefs.current[group.id] = node;
+        }}
+      >
+        <strong>Confirm prerequisites for {pending.courseCode}</strong>
+        <p className="prerequisite-help">Set each prerequisite status, then confirm {targetStatusLabel.toLowerCase()}.</p>
+        <div className="prerequisite-sections">
+          {requirementSections.map((section, sectionIndex) => (
+            <section className="prerequisite-section" key={`${section.label}-${sectionIndex}`}>
+              <span className="prerequisite-section-label">{section.label}</span>
+              {section.options.map(code => {
+                const statusValue = selectedStatus(formData.courses, code);
+                return (
+                  <div className="prerequisite-option" key={code}>
+                    <div className="prerequisite-name">
+                      <strong>{code}</strong>
+                      <small>{courseTitle(code)}</small>
+                    </div>
+                    <div className="prerequisite-statuses" role="group" aria-label={`Status for prerequisite ${code}`}>
+                      {[
+                        ["completed", "Taken"],
+                        ["in_progress", "In Progress"],
+                        ["not_started", "Not taken"]
+                      ].map(([value, label]) => (
+                        <button
+                          type="button"
+                          className={`prerequisite-status is-${value}${statusValue === value ? " is-selected" : ""}`}
+                          aria-pressed={statusValue === value}
+                          key={value}
+                          onClick={() => setPrerequisiteStatus(code, value)}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </section>
+          ))}
+        </div>
+        {!validation.valid && (
+          <ul className="prerequisite-issues">
+            {validation.issues.map(issue => <li key={`${issue.code}-${issue.course}-${issue.message}`}>{issue.message}</li>)}
+          </ul>
+        )}
+        {validation.conditionalApprovals.map(item => (
+          <p className="prerequisite-approval" key={`${item.course}-${item.prerequisite}`}>{item.message}</p>
+        ))}
+        <div className="prerequisite-actions">
+          <button type="button" className="prerequisite-cancel" onClick={() => closeRequirementPopover(group.id)}>
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="prerequisite-confirm"
+            disabled={!validation.valid}
+            onClick={() => confirmPrerequisiteSelection(validation)}
+          >
+            Confirm {targetStatusLabel}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   function renderCourseGroup(group) {
     const groupCourses = formData.courses.filter(course => group.courseCodes.includes(course.code));
     const requirementMode = requirementModes[group.id] || "";
-    const taken = group.options ? requirementMode === "completed" : groupCourses.some(isTaken);
-    const inProgress = group.options ? requirementMode === "in_progress" : groupCourses.some(course => course.status === "in_progress");
+    const hasPendingPrerequisite = pendingPrerequisiteSelection?.groupId === group.id;
+    const taken = groupCourses.some(isTaken);
+    const inProgress = groupCourses.some(course => course.status === "in_progress");
     const isHanoverOnly = group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code));
     const allowsApCredit = group.courseCodes.some(code => AP_CREDIT_ALLOWED_COURSE_CODES.has(code));
     const takenButtonLabel = allowsApCredit ? "Taken or AP credit" : "Taken";
     return (
       <div
-        className={`course-row${group.options && requirementMode ? " has-requirement" : ""}`}
+        className={`course-row${(group.options && requirementMode) || hasPendingPrerequisite ? " has-requirement" : ""}`}
         key={group.id}
         onMouseLeave={() => {
-          if (group.options && requirementMode) closeRequirementPopover(group.id);
+          if ((group.options && requirementMode) || hasPendingPrerequisite) closeRequirementPopover(group.id);
         }}
       >
         <div className="course-name">
@@ -711,13 +1375,11 @@ export default function Page() {
             </button>
           </div>
         )}
-        {group.options && requirementMode && (
+        {hasPendingPrerequisite && renderPrerequisiteChoiceCard(group)}
+        {group.options && requirementMode && !hasPendingPrerequisite && (
           <div
             className="requirement-choice-card"
-            style={requirementPopoverPosition?.groupId === group.id ? {
-              left: `${requirementPopoverPosition.left}px`,
-              top: `${requirementPopoverPosition.top}px`
-            } : undefined}
+            style={prerequisitePopoverStyle(group.id)}
             onMouseLeave={() => closeRequirementPopover(group.id)}
             ref={node => {
               requirementCardRefs.current[group.id] = node;
@@ -766,6 +1428,37 @@ export default function Page() {
         <div className="course-column">{courseGroups.map(renderCourseGroup)}</div>
         <div className="course-column">{requirementGroups.map(renderCourseGroup)}</div>
       </div>
+    );
+  }
+
+  function returnToCourseSelection() {
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const finish = () => {
+      generatedInputSignatureRef.current = "";
+      setReport(null);
+      setStatus("");
+      setIsComparisonExiting(false);
+      window.requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      });
+    };
+
+    if (reducedMotion) {
+      finish();
+      return;
+    }
+    setIsComparisonExiting(true);
+    window.setTimeout(finish, 240);
+  }
+
+  if (report) {
+    return (
+      <PlanComparisonScreen
+        report={report}
+        courses={formData.courses}
+        isExiting={isComparisonExiting}
+        onEditCourses={returnToCourseSelection}
+      />
     );
   }
 
@@ -884,6 +1577,38 @@ export default function Page() {
         .choice-label { display: grid; gap: .1rem; min-width: 0; }
         .choice-check { width: 1rem; color: #2f8f4e; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; }
         .choice-option small { color: var(--planner-muted); }
+        .prerequisite-choice-card { width: min(34rem, calc(100vw - 2rem)); padding: .55rem; }
+        .prerequisite-help { margin: 0; padding: 0 .55rem .45rem; color: var(--planner-muted); }
+        .prerequisite-sections { display: grid; gap: .45rem; }
+        .prerequisite-section { display: grid; gap: .35rem; padding: .45rem .55rem; border-top: 1px solid #d9dddf; }
+        .prerequisite-section-label { color: var(--planner-muted); font-weight: 700; }
+        .prerequisite-option { display: grid; grid-template-columns: minmax(9rem, 1fr) auto; gap: .65rem; align-items: center; }
+        .prerequisite-name { display: grid; gap: .1rem; }
+        .prerequisite-name small { color: var(--planner-muted); }
+        .prerequisite-statuses { display: flex; gap: .25rem; }
+        button.prerequisite-status,
+        button.prerequisite-cancel,
+        button.prerequisite-confirm {
+          width: auto;
+          min-height: 0 !important;
+          margin: 0;
+          padding: .3rem .45rem;
+          border: 1px solid var(--planner-border);
+          border-radius: .35rem;
+          background: #fff;
+          color: #171a1c;
+        }
+        button.prerequisite-status.is-completed.is-selected { border-color: #6db784; background: var(--planner-green); }
+        button.prerequisite-status.is-in_progress.is-selected { border-color: var(--planner-blue-border); background: var(--planner-blue); }
+        button.prerequisite-status.is-not_started.is-selected { border-color: #9da4a8; background: #eceff1; }
+        .prerequisite-issues { margin: .45rem .55rem; padding-left: 1.1rem; color: #9b2f1f; }
+        .prerequisite-approval { margin: .45rem .55rem; padding: .45rem; border: 1px solid #d5a233; background: #fff9e8; color: #704600; }
+        .prerequisite-actions { display: flex; justify-content: flex-end; gap: .35rem; padding: .45rem .55rem .1rem; }
+        button.prerequisite-confirm { border-color: #5a9a6e; background: #d9f4e1; color: #064f20; font-weight: 700; }
+        button.prerequisite-confirm:disabled { cursor: not-allowed; opacity: .5; }
+        .prerequisite-error-summary { margin: .8rem 0 0; padding: .65rem .75rem; border: 1px solid #bd6a5d; background: #fff3ef; color: #7e281c; }
+        .prerequisite-error-summary strong { display: block; margin-bottom: .25rem; }
+        .prerequisite-error-summary ul { margin: 0; padding-left: 1.1rem; }
         .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
         .generate-button { width: auto; margin: 0; border: 1px solid #73b98a; background: var(--planner-generate-bg); color: var(--planner-dark-green); font-family: var(--planner-font-family); font-size: var(--planner-intro-text-size); font-weight: 700; }
         .generate-button:hover { background: var(--planner-generate-bg-hover); }
@@ -943,6 +1668,9 @@ export default function Page() {
           .requirement-choice-card { right: 0; width: auto; max-width: none; }
           .choice-options, .choice-option { width: 100%; min-width: 0; }
           .choice-option { white-space: normal; }
+          .prerequisite-choice-card { width: auto; }
+          .prerequisite-option { grid-template-columns: 1fr; }
+          .prerequisite-statuses { flex-wrap: wrap; }
           .generate-row { justify-content: stretch; }
           .generate-button { width: 100%; }
           .plan-grid { grid-template-columns: 1fr; }
@@ -1099,11 +1827,21 @@ export default function Page() {
           </section>
 
           <section className="generate-card">
+            {!inputPrerequisiteValidation.valid && (
+              <div className="prerequisite-error-summary" role="alert">
+                <strong>Correct these course selections before generating a plan:</strong>
+                <ul>
+                  {inputPrerequisiteValidation.issues.map(issue => (
+                    <li key={`${issue.code}-${issue.course}-${issue.message}`}>{issue.message}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div className="generate-row">
               <button
                 type="submit"
                 className="generate-button"
-                disabled={!formData.planCreationDate || planningContext.requiresSummerClarification}
+                disabled={!formData.planCreationDate || planningContext.requiresSummerClarification || !inputPrerequisiteValidation.valid}
               >
                 3. Generate My Plan
               </button>

@@ -4,6 +4,7 @@ import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
 import { assigned100LevelElectives, buildEconomicsTermPlans } from "../../../../lib/planning/economics.js";
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { compareRequirementSnapshots } from "../../../../lib/catalog/compare.js";
+import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
 
 export const runtime = "nodejs";
 
@@ -81,6 +82,29 @@ function electiveAdvisorAttention(results) {
     severity: "info",
     message: `${assignedCourses[0]} is being used as the one permitted 100-level Economics elective. The other three Economics electives must be at the 200 level or above.`
   }];
+}
+
+function prerequisiteAdvisorAttention(validation) {
+  return validation.conditionalApprovals.map(item => ({
+    code: `${item.code}_${item.course.replace(/\s/g, "_")}_${item.prerequisite.replace(/\s/g, "_")}`,
+    title: "Concurrent enrollment approval",
+    severity: "warning",
+    message: item.message
+  }));
+}
+
+function planAdvisorAttention(results) {
+  const economics = results.find(result => result.program?.id === "economics-base");
+  return (economics?.economicsPlans || []).flatMap(plan => (
+    (plan.advisorChecks || [])
+      .filter(check => /Concurrent enrollment requires approval/i.test(check.reason || ""))
+      .map(check => ({
+        code: `PLAN_CONCURRENT_MATH_${plan.id}_${check.course.replace(/\s/g, "_")}`,
+        title: `${plan.label} requires instructor approval`,
+        severity: "warning",
+        message: `${plan.label}: ${check.reason}`
+      }))
+  ));
 }
 
 function mapCatalogPrograms(catalog, student, catalogReview) {
@@ -184,6 +208,17 @@ export async function POST(request) {
         availableCatalogYears: catalogYears
       }, 422);
     }
+    const prerequisiteValidation = validateStudentPrerequisites(
+      student.courses || [],
+      catalog.economicsPrerequisites
+    );
+    if (!prerequisiteValidation.valid) {
+      return jsonResponse({
+        error: "Correct the selected course prerequisites before generating a plan.",
+        code: "INVALID_STUDENT_PREREQUISITES",
+        prerequisiteIssues: prerequisiteValidation.issues
+      }, 422);
+    }
     let catalogReview = {
       selectedCatalogYear: catalogResolution.selectedCatalogYear,
       comparisonCatalogYear: planningContext.declarationCatalogYear,
@@ -211,7 +246,9 @@ export async function POST(request) {
     const results = mapCatalogPrograms(catalog, student, catalogReview);
     const advisorAttention = [
       ...catalogAdvisorAttention(catalogResolution, catalogReview, planningContext),
-      ...electiveAdvisorAttention(results)
+      ...electiveAdvisorAttention(results),
+      ...prerequisiteAdvisorAttention(prerequisiteValidation),
+      ...planAdvisorAttention(results)
     ];
 
     return jsonResponse({

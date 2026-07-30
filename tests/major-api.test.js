@@ -138,6 +138,8 @@ test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async 
         academicStanding: "freshman",
         planCreationDate: "2025-09-01",
         courses: [
+          { code: "ECO 113", status: "completed" },
+          { code: "ECO 114", status: "completed" },
           { code: "ECO 321", status: "completed" },
           { code: "BUSN 323", status: "completed" }
         ]
@@ -170,4 +172,51 @@ test("a completed or current 100-level elective produces Advisor Attention", asy
   assert.equal(response.status, 200);
   assert.match(notice.message, /ECO 161 is being used/);
   assert.match(notice.message, /other three Economics electives must be at the 200 level or above/);
+});
+
+test("major mapper rejects an in-progress course with missing prerequisites", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "sophomore",
+        planCreationDate: "2027-02-01",
+        courses: [{ code: "ECO 213", status: "in_progress" }]
+      }
+    })
+  }));
+  const data = await response.json();
+
+  assert.equal(response.status, 422);
+  assert.equal(data.code, "INVALID_STUDENT_PREREQUISITES");
+  assert.ok(data.prerequisiteIssues.some(issue => issue.course === "ECO 213"));
+});
+
+test("major mapper reports instructor approval for current concurrent math", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "sophomore",
+        planCreationDate: "2027-02-01",
+        courses: [
+          { code: "ECO 113", status: "completed" },
+          { code: "MAT 113", status: "in_progress" },
+          { code: "ECO 213", status: "in_progress" }
+        ]
+      }
+    })
+  }));
+  const data = await response.json();
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
+  const notice = data.catalog.advisorAttention.find(item => item.title === "Concurrent enrollment approval");
+
+  assert.equal(response.status, 200);
+  assert.match(notice.message, /MAT 113/);
+  assert.match(notice.message, /ECO 213 instructor/);
+  assert.equal(economics.economicsPlans.length, 3);
+  assert.ok(economics.economicsPlans.every(plan => plan.terms[0].term === "Spring/May 2027"));
+  assert.ok(economics.economicsPlans.every(plan => !plan.terms.some(term => term.term === "Winter 2027")));
 });

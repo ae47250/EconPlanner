@@ -66,8 +66,12 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 7. `ECO 461` requires `ECO 213`, `ECO 214`, and `ECO 257`, `MAT 217`, or `PSY 217`.
 8. `ECO 471` requires `ECO 213`, `ECO 214`, and `ECO 321`.
 
+The public catalog course descriptions are the formal prerequisite source. Separate department-approved local policy allows `MAT 113` or `MAT 121` to be taken concurrently with `ECO 213` or `ECO 214` only with approval from that ECO course's instructor. This exception does not allow concurrent `ECO 113`/`ECO 213` or `ECO 114`/`ECO 214`, and it is used only when no prerequisite-first plan fits the student's remaining horizon.
+
 ## Timing Rules
 
+- A generated plan never adds courses to the regular term containing the plan-creation date. Courses being taken in that term must be recorded as `In Progress`.
+- A prerequisite marked `In Progress` becomes available for a dependent course only after the current term.
 - `ECO 461` requires senior standing and may only be scheduled in senior Winter.
 - Senior-seminar and capstone requirements must be completed at Hanover; transfer, AP, and equivalency credit do not satisfy the requirement. In Economics, `ECO 461` is the culminating senior seminar and normally has one Winter offering per academic year.
 - The statistics option must be completed no later than Fall of senior year because it is needed before Winter senior-year `ECO 461`.
@@ -90,6 +94,7 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 - `ECO 161` — no prerequisite listed in source material; counts as an ECO elective, subject to the one-100-level-elective rule
 - `ECO 213` — `ECO 113`; `MAT 113` or `MAT 121`
 - `ECO 214` — `ECO 114`; `MAT 113` or `MAT 121`
+- `ECO 213` / `ECO 214` concurrent-math exception — `MAT 113` or `MAT 121` may be concurrent only with the ECO course instructor's approval; all other prerequisites must be completed first
 - `ECO 221` — `ECO 113`
 - `ECO 222` — `ECO 114`
 - `ECO 223` — `ECO 113` or `ECO 114` or `ECO 161`

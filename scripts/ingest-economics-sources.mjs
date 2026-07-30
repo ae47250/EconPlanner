@@ -93,8 +93,26 @@ const economicsRequirements = {
 };
 
 const economicsPrerequisites = {
-  "ECO 213": { all: ["ECO 113"], any: [["MAT 113", "MAT 121"]] },
-  "ECO 214": { all: ["ECO 114"], any: [["MAT 113", "MAT 121"]] },
+  "ECO 213": {
+    all: ["ECO 113"],
+    any: [["MAT 113", "MAT 121"]],
+    concurrentWithApproval: [{
+      options: ["MAT 113", "MAT 121"],
+      approval: "instructor",
+      policySource: "department-approved",
+      lastResortOnly: true
+    }]
+  },
+  "ECO 214": {
+    all: ["ECO 114"],
+    any: [["MAT 113", "MAT 121"]],
+    concurrentWithApproval: [{
+      options: ["MAT 113", "MAT 121"],
+      approval: "instructor",
+      policySource: "department-approved",
+      lastResortOnly: true
+    }]
+  },
   "ECO 221": { all: ["ECO 113"], any: [] },
   "ECO 222": { all: ["ECO 114"], any: [] },
   "ECO 223": { all: [], any: [["ECO 113", "ECO 114", "ECO 161"]] },
@@ -276,7 +294,14 @@ await writeFile(
         planningNote: "Use only as a last resort; ECO 113 is the verified summer option and is online."
       }
     },
-    hardRules: ["ECO 213 and ECO 214 cannot share a term", "ECO 213 and ECO 214 cannot be scheduled in May", "ECO 461 is senior Winter only"],
+    hardRules: [
+      "ECO 213 and ECO 214 cannot share a term",
+      "ECO 213 and ECO 214 cannot be scheduled in May",
+      "ECO 461 is senior Winter only",
+      "MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only as a last resort with the ECO course instructor's approval; every other prerequisite must be completed first",
+      "A generated plan never adds courses to the regular term containing the plan-creation date; current-term courses must be recorded as In Progress",
+      "A prerequisite currently In Progress becomes available for a dependent course only after the current term"
+    ],
     futureSchedulePolicy: "Use a Term to be confirmed placeholder when an exact annual offering is not verified."
   }, null, 2)}\n`,
   "utf8"

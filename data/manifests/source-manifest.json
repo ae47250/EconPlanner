@@ -278,7 +278,8 @@
       "role": "economics_source",
       "source": "department-provided:Econ_Major_Requirements_and_Prerequisites (1).md",
       "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
-      "sha256": "a1c3de2e1aef0eca2d31b2772080b6da2a14d0473b557dde63db93d2c7d3a2a6"
+      "sha256": "1ea74417ec7d1f83b1e01fe53369ab9a6f5d89243095e49bef189816bd0a918b",
+      "notes": "Includes the department-approved local concurrent-math policy confirmed by the project owner on 2026-07-30; the public catalog remains the formal prerequisite source."
     },
     {
       "role": "economics_source",
@@ -317,7 +318,7 @@
       "retrievedOn": "2026-07-29",
       "approvalStatus": "APPROVED_LOCAL_SOURCE",
       "path": "data/normalized/economics/courses.json",
-      "sha256": "94f8d21aa370b134a6f01d1686358fdeb155a4a70c5efb22ff2f858fb3ecae79"
+      "sha256": "d50dd80eba46d7becd48781242029311e58e50e4a85ef748033c2387d820916d"
     },
     {
       "role": "academic_calendar",

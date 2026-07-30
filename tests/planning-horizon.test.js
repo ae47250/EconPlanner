@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPlanningSlots, resolvePlanningContext } from "../lib/planning/horizon.js";
 
-test("Fall freshman planning maps four academic years through Spring/May 2030", () => {
+test("Fall freshman planning excludes the running Fall and maps through Spring/May 2030", () => {
   const context = resolvePlanningContext({
     academicStanding: "freshman",
     planCreationDate: "2026-09-01"
@@ -11,12 +11,24 @@ test("Fall freshman planning maps four academic years through Spring/May 2030", 
 
   assert.equal(context.remainingYears, 4);
   assert.equal(context.expectedGraduationTerm, "Spring/May 2030");
-  assert.equal(slots[0].label, "Fall 2026");
-  assert.equal(slots[0].displayTerm, "Fall");
+  assert.equal(slots[0].label, "Winter 2027");
+  assert.equal(slots[0].displayTerm, "Winter");
   assert.equal(slots[0].academicYear, "2026/2027");
   assert.equal(context.entryCatalogYear, "2026-2027");
   assert.equal(context.declarationCatalogYear, null);
   assert.equal(slots.at(-1).label, "Spring/May 2030");
+});
+
+test("a February 1 plan excludes Winter and starts with Spring/May", () => {
+  const context = resolvePlanningContext({
+    academicStanding: "sophomore",
+    planCreationDate: "2027-02-01"
+  });
+  const slots = buildPlanningSlots(context);
+
+  assert.equal(context.startTerm, "Winter");
+  assert.equal(slots[0].label, "Spring/May 2027");
+  assert.ok(!slots.some(slot => slot.label === "Winter 2027"));
 });
 
 test("summer freshman standing requires an explicit upcoming-Fall answer", () => {
@@ -86,6 +98,7 @@ test("summer answer yes keeps the standing and answer no advances it", () => {
   assert.equal(upcomingFall.effectiveStanding, "junior");
   assert.equal(upcomingFall.remainingYears, 2);
   assert.equal(upcomingFall.expectedGraduationTerm, "Spring/May 2028");
+  assert.equal(buildPlanningSlots(upcomingFall)[0].label, "Fall 2026");
   assert.equal(afterSpring.effectiveStanding, "senior");
   assert.equal(afterSpring.remainingYears, 1);
   assert.equal(afterSpring.expectedGraduationTerm, "Spring/May 2027");

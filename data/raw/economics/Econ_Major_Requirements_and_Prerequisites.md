@@ -10,9 +10,13 @@ This file is for course-planning support. It is not a replacement for the offici
 
 Never place a course before any of its prerequisites.
 
-A course may be scheduled only after all prerequisites have been completed in a prior term.
+A course may be scheduled only after all prerequisites have been completed in a prior term, except for the department-approved concurrent-math policy below.
 
-If a prerequisite is planned, it must appear in an earlier term, never in the same or a later term.
+If a prerequisite is planned, it must appear in an earlier term, never in the same or a later term, unless it is MAT 113 or MAT 121 placed concurrently with ECO 213 or ECO 214 under the documented exception.
+
+Department-approved local policy: MAT 113 or MAT 121 may be taken concurrently with ECO 213 or ECO 214 only with approval from the ECO 213 or ECO 214 instructor. ECO 113 must still be completed before ECO 213, and ECO 114 must still be completed before ECO 214. The public catalog course descriptions remain the formal prerequisite source; use concurrent math only as a last resort when a prerequisite-first plan cannot fit the remaining horizon.
+
+A generated plan never adds courses to the regular term containing the plan-creation date. Courses already being taken in that term must be recorded as In Progress. A prerequisite marked In Progress may satisfy a dependent course only after the current term ends.
 
 Do not assume that a course is offered in a specific term unless the user provides the current schedule or the planning instructions explicitly say to use a known offering pattern.
 
@@ -85,6 +89,7 @@ Advisor-confirmation flags:
 - ECO 161 — no prerequisite listed in source material
 - ECO 213 — ECO 113; MAT 113 or MAT 121
 - ECO 214 — ECO 114; MAT 113 or MAT 121
+- ECO 213 / ECO 214 concurrent-math exception — MAT 113 or MAT 121 may be concurrent only with course-instructor approval; ECO 113 / ECO 114 must be completed first
 - ECO 221 — ECO 113
 - ECO 222 — ECO 114
 - ECO 223 — ECO 113 or ECO 114 or ECO 161
@@ -184,9 +189,9 @@ Special Topics, Directed Study, Internship, and cross-listed courses require ext
 
 Do not call Labor Economics ECO 222, ECO 333, or a generic elective. Labor Economics is ECO 331.
 
-Do not place ECO 213 before ECO 113 and MAT 113 or MAT 121.
+Do not place ECO 213 before ECO 113. Place MAT 113 or MAT 121 first unless the last-resort concurrent-math exception is explicitly marked with ECO 213 instructor approval.
 
-Do not place ECO 214 before ECO 114 and MAT 113 or MAT 121.
+Do not place ECO 214 before ECO 114. Place MAT 113 or MAT 121 first unless the last-resort concurrent-math exception is explicitly marked with ECO 214 instructor approval.
 
 Do not place ECO 461 before ECO 213, ECO 214, and ECO 257 or MAT 217.
 

@@ -8,6 +8,17 @@
         "MAT 113",
         "MAT 121"
       ]
+    ],
+    "concurrentWithApproval": [
+      {
+        "options": [
+          "MAT 113",
+          "MAT 121"
+        ],
+        "approval": "instructor",
+        "policySource": "department-approved",
+        "lastResortOnly": true
+      }
     ]
   },
   "ECO 214": {
@@ -19,6 +30,17 @@
         "MAT 113",
         "MAT 121"
       ]
+    ],
+    "concurrentWithApproval": [
+      {
+        "options": [
+          "MAT 113",
+          "MAT 121"
+        ],
+        "approval": "instructor",
+        "policySource": "department-approved",
+        "lastResortOnly": true
+      }
     ]
   },
   "ECO 221": {
