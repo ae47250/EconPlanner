@@ -894,10 +894,10 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
   );
 }
 
-function PlannerSummary({ report, courses }) {
+function PlannerSummary({ report, courses, planningContext: initialPlanningContext }) {
   const result = economicsResult(report);
   const plan = result?.economicsPlans?.[0] || result?.economicsPlan;
-  const planningContext = result?.planningContext;
+  const planningContext = result?.planningContext || initialPlanningContext;
   const chosen = selectedCourses(courses);
   const completedCount = chosen.filter(course => isTaken(course)).length;
   const inProgressCount = chosen.filter(course => course.status === "in_progress").length;
@@ -909,7 +909,7 @@ function PlannerSummary({ report, courses }) {
     <aside className="summary-card">
       <div className="section-heading">
         <div>
-          <h2>Planner Summary</h2>
+          <h2>{report ? "Planner Summary" : "Plan setup"}</h2>
           <p>{report ? "Your selected courses and generated plan at a glance." : "Your summary will appear after you generate your plan."}</p>
         </div>
       </div>
@@ -927,7 +927,16 @@ function PlannerSummary({ report, courses }) {
           <p className="summary-footnote">Applied catalog: {formatAcademicYear(catalog?.selectedCatalogYear)}. The plan uses the selected course status and verified economics scheduling rules.</p>
         </>
       ) : (
-        <div className="summary-empty">Select your courses, then choose <strong>Generate My Plan</strong>.</div>
+        <>
+          <div className="apple-summary-preview">
+            <div className="apple-summary-line"><span>Class standing</span><strong>{planningContext?.standingLabel || "Choose standing"}</strong></div>
+            <div className="apple-summary-line"><span>Planning horizon</span><strong>{planningContext?.remainingYears ? `${planningContext.remainingYears} years` : "To be confirmed"}</strong></div>
+            <div className="apple-summary-line"><span>Completed</span><strong>{completedCount}</strong></div>
+            <div className="apple-summary-line"><span>In progress</span><strong>{inProgressCount}</strong></div>
+            <p>The plan will use the published 2026/2027 schedule where available and mark later terms for confirmation.</p>
+          </div>
+          <div className="summary-empty">Select your courses, then choose <strong>Generate My Plan</strong>.</div>
+        </>
       )}
     </aside>
   );
@@ -958,7 +967,7 @@ export default function Page() {
     : "";
 
   useEffect(() => {
-    setAppleLayoutPreview(new URLSearchParams(window.location.search).get("layout") === "apple");
+    setAppleLayoutPreview(new URLSearchParams(window.location.search).get("layout") !== "classic");
   }, []);
 
   useEffect(() => {
@@ -1224,6 +1233,9 @@ export default function Page() {
   const advancedGroups = sortCourseGroups(remainingGroups.filter(group =>
     courseLevel(group.code) >= 300 && !RELATIVELY_FREQUENT_COURSE_IDS.has(group.id)
   ));
+  const appleAdvancedGroups = appleLayoutPreview
+    ? sortCourseGroups([...advancedGroups, ...declarationRightCourseGroups])
+    : advancedGroups;
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -1377,7 +1389,8 @@ export default function Page() {
               aria-pressed={taken}
               onClick={event => toggleCourseGroup(group, "completed", event)}
             >
-              {takenButtonLabel}
+              <span className="default-course-label">{takenButtonLabel}</span>
+              <span className="apple-course-label">Completed</span>
             </button>
             <button
               type="button"
@@ -1385,7 +1398,8 @@ export default function Page() {
               aria-pressed={inProgress}
               onClick={event => toggleCourseGroup(group, "in_progress", event)}
             >
-              In Progress
+              <span className="default-course-label">In Progress</span>
+              <span className="apple-course-label">In progress</span>
             </button>
           </div>
         )}
@@ -1507,6 +1521,17 @@ export default function Page() {
           --urveska-lead-gold: #c46a00;
           --urveska-lead-aqua: #006f8f;
         }
+        .apple-brand,
+        .apple-progress,
+        .apple-heading-row,
+        .apple-planning-heading,
+        .apple-standing-segmented,
+        .apple-mini-fields,
+        .apple-course-heading,
+        .apple-course-toolbar,
+        .apple-course-label,
+        .apple-generate-label,
+        .apple-summary-preview { display: none; }
         body { font-family: var(--planner-font-family); font-size: var(--planner-body-size); }
         button, input, select, textarea { font-family: var(--planner-font-family); font-size: var(--planner-body-size); font-weight: inherit; }
         body { background: var(--planner-bg); color: #171a1c; }
@@ -1528,6 +1553,7 @@ export default function Page() {
         .app-header h1 .headline-econ { color: var(--urveska-aqua); }
         .app-header h1 .headline-planner { color: var(--urveska-orange); }
         .intake-layout { display: grid; gap: 1rem; grid-template-columns: 1fr; align-items: start; }
+        .apple-left-column, .apple-right-column { display: contents; }
         .intake-card, .summary-card, .plan-section { padding: 1.1rem; }
         .section-heading { display: flex; gap: .65rem; align-items: flex-start; }
         .section-heading h2 { margin: 0; }
@@ -1690,42 +1716,274 @@ export default function Page() {
           .plan-grid { grid-template-columns: 1fr; }
         }
         main.apple-layout-preview {
-          max-width: 1180px;
-          padding: 0 1rem 4rem;
-          color: #102a5c;
+          max-width: 1580px;
+          padding: 0 .5rem 2rem;
+          color: #101010;
         }
-        body:has(main.apple-layout-preview) { background: #eef6fc; }
+        html:has(main.apple-layout-preview) { font-size: 16px; }
+        body:has(main.apple-layout-preview) {
+          background: #fff;
+          color: #101010;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        main.apple-layout-preview .app-header {
+          min-height: 3.1rem;
+          margin: 0 0 1rem;
+          padding: .55rem 0;
+          border-bottom: 1px solid #eef0f2;
+          background: #fff;
+          color: #101010;
+        }
+        main.apple-layout-preview .app-title { display: none; }
+        main.apple-layout-preview .apple-brand,
+        main.apple-layout-preview .apple-progress { display: flex; }
+        main.apple-layout-preview .apple-brand {
+          align-items: center;
+          gap: .45rem;
+          color: #111;
+          font-size: 12px;
+          font-weight: 500;
+        }
+        main.apple-layout-preview .apple-brand-mark {
+          display: grid;
+          width: 1.55rem;
+          height: 1.55rem;
+          place-items: center;
+          border-radius: 50%;
+          background: #3699ef;
+          color: #fff;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .apple-progress {
+          align-items: center;
+          gap: .9rem;
+          color: #b4b4b8;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .apple-progress-step {
+          display: inline-flex;
+          align-items: center;
+          gap: .3rem;
+        }
+        main.apple-layout-preview .apple-progress-step span {
+          width: .42rem;
+          height: .42rem;
+          border-radius: 50%;
+          background: #e1e2e5;
+        }
+        main.apple-layout-preview .apple-progress-step.is-current { color: #111; }
+        main.apple-layout-preview .apple-progress-step.is-current span { background: #3699ef; }
+        main.apple-layout-preview .apple-heading-row {
+          display: flex;
+          align-items: end;
+          justify-content: space-between;
+          gap: 1rem;
+          margin: 0 0 .6rem;
+        }
+        main.apple-layout-preview .apple-heading-row h2 {
+          margin: 0;
+          color: #101010;
+          font-size: 16px;
+          line-height: 1.2;
+        }
+        main.apple-layout-preview .apple-heading-row p {
+          margin: .3rem 0 0;
+          color: #7e8791;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .apple-help-button {
+          width: auto;
+          min-height: 0 !important;
+          margin: 0;
+          padding: .2rem 0;
+          border: 0;
+          background: transparent;
+          color: #7e8791;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .apple-help-button span { margin-left: .2rem; }
         main.apple-layout-preview .app-header {
           justify-content: space-between;
-          margin: 0 -1rem 2rem;
-          padding: 1.25rem 5%;
-          border-bottom: 1px solid #c8d9ed;
-          background: #fff;
           text-align: left;
         }
-        main.apple-layout-preview .app-header h1 {
-          color: #102a5c;
-          font-size: clamp(1.8rem, 3vw, 2.35rem);
-        }
-        main.apple-layout-preview .app-header h1 .headline-econ,
-        main.apple-layout-preview .app-header h1 .headline-planner { color: #102a5c; }
         main.apple-layout-preview .instruction-card { display: none; }
-        main.apple-layout-preview .intake-layout { gap: 1.25rem; }
+        main.apple-layout-preview .intake-layout {
+          grid-template-columns: minmax(0, 1.35fr) minmax(16rem, .65fr);
+          gap: 1.25rem;
+        }
+        main.apple-layout-preview .apple-left-column,
+        main.apple-layout-preview .apple-right-column {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          align-content: start;
+          gap: .65rem;
+          min-width: 0;
+        }
+        main.apple-layout-preview .apple-left-column { grid-column: 1; grid-row: 1; }
+        main.apple-layout-preview .apple-right-column { grid-column: 2; grid-row: 1; }
         main.apple-layout-preview .intake-card {
-          border: 1px solid #a9c8ed;
-          border-radius: .7rem;
-          background: rgba(255, 255, 255, .96);
-          box-shadow: 0 .45rem 1.2rem rgba(20, 44, 92, .06);
+          border: 0;
+          border-radius: .75rem;
+          background: #f3f3f4;
+          box-shadow: none;
+          padding: .55rem .65rem;
+        }
+        main.apple-layout-preview .planning-intake-card,
+        main.apple-layout-preview .course-intake-card {
+          margin: 0;
+        }
+        main.apple-layout-preview .planning-intake-card,
+        main.apple-layout-preview .course-intake-card,
+        main.apple-layout-preview .summary-card,
+        main.apple-layout-preview .generate-card {
+          grid-column: 1;
+          grid-row: auto;
+        }
+        main.apple-layout-preview .summary-card {
+          grid-column: 2;
+          grid-row: 1;
+          min-height: 0;
+          margin: 0;
+          padding: .55rem .65rem;
+          border: 0;
+          border-radius: .75rem;
+          background: #f3f3f4;
+          box-shadow: none;
+        }
+        main.apple-layout-preview .generate-card {
+          grid-column: 2;
+          grid-row: 2;
+          align-self: start;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background: transparent;
         }
         main.apple-layout-preview .planning-details { margin: 0; padding: 0; border: 0; }
-        main.apple-layout-preview .planning-details .section-heading h2,
-        main.apple-layout-preview .course-heading h2 {
-          color: #102a5c;
-          font-size: clamp(1.45rem, 3vw, 2rem);
+        main.apple-layout-preview .planning-details .section-heading,
+        main.apple-layout-preview .course-heading { display: none; }
+        main.apple-layout-preview .apple-planning-heading { display: block; margin-bottom: .45rem; }
+        main.apple-layout-preview .apple-planning-heading h2 {
+          margin: 0;
+          color: #111;
+          font-size: 14px;
+          line-height: 1.2;
         }
-        main.apple-layout-preview .planning-fields { max-width: none; margin-top: 1.1rem; }
-        main.apple-layout-preview .planning-field select { min-height: 2.5rem; border-color: #a9c8ed; }
-        main.apple-layout-preview .course-heading { margin-bottom: 1.1rem; }
+        main.apple-layout-preview .apple-planning-heading p {
+          margin: .25rem 0 0;
+          color: #7e8791;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .section-heading h2,
+        main.apple-layout-preview .apple-course-heading h2,
+        main.apple-layout-preview .summary-card h2 {
+          color: #111;
+          font-size: 14px;
+          line-height: 1.2;
+        }
+        main.apple-layout-preview .planning-fields { display: none; }
+        main.apple-layout-preview .apple-standing-segmented {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: .35rem;
+          margin: 0;
+        }
+        main.apple-layout-preview .apple-standing-segmented button {
+          width: 100%;
+          min-height: 0 !important;
+          margin: 0;
+          padding: .1rem .35rem;
+          border: 1px solid #d9dadd;
+          border-radius: .4rem;
+          background: #fff;
+          color: #111;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .apple-standing-segmented button.is-selected {
+          border-color: #3699ef;
+          background: #3699ef;
+          color: #fff;
+        }
+        main.apple-layout-preview .apple-mini-fields {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: .65rem;
+          margin-top: .35rem;
+        }
+        main.apple-layout-preview .apple-mini-fields {
+          grid-auto-rows: max-content;
+        }
+        main.apple-layout-preview .apple-mini-fields label {
+          display: grid;
+          align-self: start;
+          gap: .2rem;
+          height: auto;
+          margin: 0 !important;
+        }
+        main.apple-layout-preview .apple-mini-fields label > span {
+          color: #333;
+          font-size: 10px;
+        }
+        main.apple-layout-preview .apple-mini-fields input {
+          width: 100%;
+          height: 1.35rem !important;
+          min-height: 0 !important;
+          box-sizing: border-box;
+          margin: 0 !important;
+          padding: .1rem .35rem !important;
+          border: 1px solid #d9dadd;
+          border-radius: .4rem;
+          background: #fff;
+          color: #111;
+          font-size: 11px;
+          line-height: 1.1 !important;
+        }
+        main.apple-layout-preview .apple-course-heading {
+          display: flex;
+          align-items: start;
+          justify-content: space-between;
+          gap: .75rem;
+        }
+        main.apple-layout-preview .apple-course-heading p {
+          margin: .25rem 0 0;
+          color: #7e8791;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .apple-course-heading > span {
+          flex: 0 0 auto;
+          padding-top: .1rem;
+          color: #3699ef;
+          font-size: 10px;
+        }
+        main.apple-layout-preview .apple-course-toolbar {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: .65rem;
+          align-items: center;
+          margin-top: .4rem;
+        }
+        main.apple-layout-preview .search-label { width: 100%; margin: 0; }
+        main.apple-layout-preview .search-label input {
+          height: 1.35rem !important;
+          min-height: 0 !important;
+          padding: .1rem .35rem !important;
+          border: 1px solid #d9dadd;
+          border-radius: .4rem;
+          background: #fff;
+          font-size: 11px;
+          line-height: 1.1 !important;
+        }
+        main.apple-layout-preview .apple-course-toolbar .sr-only { display: none; }
+        main.apple-layout-preview .apple-clear-button {
+          width: auto;
+          min-height: 0 !important;
+          margin: 0;
+          padding: .2rem 0;
+          border: 0;
+          background: transparent;
+          color: #7e8791;
+          font-size: 10px;
+        }
         main.apple-layout-preview .course-columns { display: block; width: 100%; }
         main.apple-layout-preview .course-column { display: block; width: 100%; max-width: none; }
         main.apple-layout-preview .course-row {
@@ -1733,16 +1991,51 @@ export default function Page() {
           grid-template-columns: minmax(0, 1fr) auto;
           width: 100%;
           max-width: none;
-          padding: .65rem 0;
+          padding: .5rem 0;
           border: 0;
-          border-bottom: 1px solid #d7e1ec;
+          border-bottom: 1px solid #dedee0;
           background: transparent;
         }
-        main.apple-layout-preview .course-name { width: auto; gap: .75rem; }
-        main.apple-layout-preview .course-name span { color: #53627a; }
-        main.apple-layout-preview .course-toggles { gap: .3rem; }
-        main.apple-layout-preview button.course-toggle { padding: .3rem .45rem; border-color: #a9c8ed; }
-        main.apple-layout-preview .course-accordion { border-color: #d7e1ec; }
+        main.apple-layout-preview .course-name { width: auto; gap: .6rem; }
+        main.apple-layout-preview .course-name strong { color: #111; font-weight: 500; }
+        main.apple-layout-preview .course-name span { color: #7e8791; }
+        main.apple-layout-preview .course-toggles { gap: .45rem; }
+        main.apple-layout-preview button.course-toggle {
+          min-width: 5.4rem;
+          padding: .25rem .4rem;
+          border-color: #d9dadd;
+          border-radius: .45rem;
+          font-size: 11px;
+        }
+        main.apple-layout-preview button.course-toggle.is-selected { background: #e6f3ff; border-color: #b9dcfa; }
+        main.apple-layout-preview button.taken-toggle.is-selected { background: #e8f7ed; border-color: #b5dfc1; }
+        main.apple-layout-preview .default-course-label { display: none; }
+        main.apple-layout-preview .apple-course-label { display: inline; }
+        main.apple-layout-preview .course-accordion { margin-top: 0; border-color: #dedee0; padding: .45rem 0 0; }
+        main.apple-layout-preview .course-accordion summary { font-size: 11px; font-weight: 500; }
+        main.apple-layout-preview .course-accordion summary::before { color: #111; font-size: 10px; }
+        main.apple-layout-preview .course-accordion-count { display: none; }
+        main.apple-layout-preview .apple-summary-preview { display: block; }
+        main.apple-layout-preview .summary-card > .section-heading { margin-bottom: .3rem; }
+        main.apple-layout-preview .summary-card > .section-heading p { display: none; }
+        main.apple-layout-preview .apple-summary-line {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 1rem;
+          padding: .45rem 0;
+          border-bottom: 1px solid #dedee0;
+          font-size: 11px;
+        }
+        main.apple-layout-preview .apple-summary-line strong { font-weight: 500; }
+        main.apple-layout-preview .apple-summary-preview > p {
+          margin: .45rem 0 0;
+          color: #7e8791;
+          font-size: 10px;
+          line-height: 1.35;
+        }
+        main.apple-layout-preview .summary-empty { display: none; }
+        main.apple-layout-preview .generate-row { margin: .75rem 0 0; }
         main.apple-layout-preview .prerequisite-choice-card {
           width: min(34rem, calc(100vw - 2rem));
           padding: 0;
@@ -1751,6 +2044,10 @@ export default function Page() {
           background: #fff;
           box-shadow: 0 .45rem 1.2rem rgba(20, 44, 92, .12);
           color: #102a5c;
+        }
+        main.apple-layout-preview .requirement-choice-card {
+          left: auto !important;
+          right: 0;
         }
         main.apple-layout-preview .prerequisite-choice-card > strong {
           padding: .8rem .9rem .35rem;
@@ -1814,17 +2111,60 @@ export default function Page() {
         main.apple-layout-preview .generate-button {
           width: 100%;
           border: 0;
-          border-radius: .55rem;
-          background: linear-gradient(135deg, #0b47c8, #07399e);
+          min-height: 0 !important;
+          padding: .3rem .5rem;
+          border-radius: .35rem;
+          background: #1b1c1e;
           color: #fff;
+          font-size: 11px;
+          line-height: 1.1;
+        }
+        main.apple-layout-preview .default-generate-label { display: none; }
+        main.apple-layout-preview .apple-generate-label { display: inline; }
+        @media (max-width: 900px) {
+          main.apple-layout-preview .intake-layout { grid-template-columns: 1fr; }
+          main.apple-layout-preview .apple-left-column,
+          main.apple-layout-preview .apple-right-column {
+            grid-column: 1;
+            grid-row: auto;
+          }
+        }
+        @media (max-width: 560px) {
+          main.apple-layout-preview .apple-progress { gap: .35rem; font-size: 0; }
+          main.apple-layout-preview .apple-progress-step span { width: .5rem; height: .5rem; }
+          main.apple-layout-preview .apple-heading-row { align-items: flex-start; }
+          main.apple-layout-preview .apple-help-button span { display: none; }
+          main.apple-layout-preview .apple-mini-fields { grid-template-columns: 1fr; }
+          main.apple-layout-preview .apple-course-toolbar { grid-template-columns: 1fr; gap: .2rem; }
+          main.apple-layout-preview .apple-clear-button { justify-self: start; }
+          main.apple-layout-preview .course-row { grid-template-columns: 1fr; gap: .35rem; }
+          main.apple-layout-preview .course-toggles { justify-content: stretch; }
+          main.apple-layout-preview button.course-toggle { flex: 1; }
         }
       `}</style>
 
       <header className="app-header">
-        <div>
+        <div className="apple-brand" aria-label="EconPlanner">
+          <span className="apple-brand-mark" aria-hidden="true">E</span>
+          <span>EconPlanner</span>
+        </div>
+        <div className="apple-progress" aria-label="Planner progress">
+          <span className="apple-progress-step is-current"><span />About you</span>
+          <span className="apple-progress-step"><span />Your courses</span>
+          <span className="apple-progress-step"><span />Your plan</span>
+        </div>
+        <div className="app-title">
           <h1><span className="headline-econ">Econ</span> <span className="headline-planner">Planner</span></h1>
         </div>
       </header>
+
+      <div className="apple-heading-row">
+        <div>
+          <h2>Build your economics course plan</h2>
+          <p>Tell us where you are and which courses you have completed or are taking.</p>
+        </div>
+        <button type="button" className="apple-help-button">? <span>How this works</span></button>
+      </div>
 
       <form onSubmit={mapMajors}>
         <section className="instruction-card">
@@ -1839,7 +2179,8 @@ export default function Page() {
         </section>
 
         <div className="intake-layout">
-          <section className="intake-card">
+          <div className="apple-left-column">
+          <section className="intake-card planning-intake-card">
             <div className="planning-details">
               <div className="section-heading">
                 <div>
@@ -1906,6 +2247,45 @@ export default function Page() {
                   )}
                 </div>
               </div>
+              <div className="apple-planning-heading">
+                <h2>Where are you in your degree?</h2>
+                <p>Choose the standing you will have in the upcoming Fall.</p>
+              </div>
+              <div className="apple-standing-segmented" role="group" aria-label="Class standing">
+                {[
+                  ["freshman", "Freshman"],
+                  ["sophomore", "Sophomore"],
+                  ["junior", "Junior"],
+                  ["senior", "Senior"]
+                ].map(([value, label]) => (
+                  <button
+                    type="button"
+                    className={formData.academicStanding === value ? "is-selected" : ""}
+                    key={value}
+                    onClick={() => setFormData(current => ({ ...current, academicStanding: value, summerStandingConfirmed: "" }))}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="apple-mini-fields">
+                <label>
+                  <span>Plan creation date</span>
+                  <input
+                    type="date"
+                    value={formData.planCreationDate}
+                    onChange={event => setFormData(current => ({
+                      ...current,
+                      planCreationDate: event.target.value,
+                      summerStandingConfirmed: ""
+                    }))}
+                  />
+                </label>
+                <label>
+                  <span>Expected graduation</span>
+                  <input type="text" value={planningContext.expectedGraduationTerm || "To be confirmed"} readOnly />
+                </label>
+              </div>
               {planningContext.requiresSummerClarification && (
                 <div className="clarification-card" role="group" aria-labelledby="summer-standing-question">
                   <strong id="summer-standing-question">{planningContext.question}</strong>
@@ -1937,7 +2317,7 @@ export default function Page() {
             </div>
           </section>
 
-          <section className="intake-card">
+          <section className="intake-card course-intake-card">
             <div className="section-heading course-heading">
               <div>
                 <h2>2. Select Econ and cognate courses you have taken or are taking (in-progress).</h2>
@@ -1945,29 +2325,63 @@ export default function Page() {
                 <p>Choose a status for each course. Click a selected button again to clear it.</p>
               </div>
             </div>
+            <div className="apple-course-heading">
+              <div>
+                <h2>Which courses have you taken?</h2>
+                <p>Select Completed or In progress. Tap a selected status again to clear it.</p>
+              </div>
+              <span>{selectedCourses(formData.courses).length} selected</span>
+            </div>
 
-            <label className="search-label">
-              <span className="sr-only">Search courses</span>
-              <input
-                type="search"
-                value={courseSearch}
-                onChange={event => setCourseSearch(event.target.value)}
-                placeholder="Search courses..."
-              />
-            </label>
+            <div className="apple-course-toolbar">
+              <label className="search-label">
+                <span className="sr-only">Search courses</span>
+                <input
+                  type="search"
+                  value={courseSearch}
+                  onChange={event => setCourseSearch(event.target.value)}
+                  placeholder="Search by course or title"
+                />
+              </label>
+              <button
+                type="button"
+                className="apple-clear-button"
+                onClick={() => setFormData(current => ({
+                  ...current,
+                  courses: current.courses.map(course => ({ ...course, status: "not_started" }))
+                }))}
+              >
+                Clear selections
+              </button>
+            </div>
 
             {declarationGroups.length > 0 && (
               <div className="course-level-section declaration-section">
-                {renderDeclarationColumns(declarationCourseGroups, [...declarationRequirementGroups, ...declarationRightCourseGroups])}
+                {renderDeclarationColumns(
+                  declarationCourseGroups,
+                  appleLayoutPreview ? declarationRequirementGroups : [...declarationRequirementGroups, ...declarationRightCourseGroups]
+                )}
               </div>
             )}
 
-            {renderCourseAccordion("two-hundred-level", "Courses offered relatively frequent", relativelyFrequentGroups)}
-            {renderCourseAccordion("three-hundred-level", "Econ courses offered infrequently", advancedGroups)}
+            {renderCourseAccordion(
+              "two-hundred-level",
+              appleLayoutPreview ? "Courses offered relatively frequently" : "Courses offered relatively frequent",
+              relativelyFrequentGroups
+            )}
+            {renderCourseAccordion(
+              "three-hundred-level",
+              appleLayoutPreview ? "Additional and less-frequent economics courses" : "Econ courses offered infrequently",
+              appleAdvancedGroups
+            )}
 
             {visibleGroups.length === 0 && <p className="status">No courses match your search.</p>}
 
           </section>
+          </div>
+
+          <div className="apple-right-column">
+          <PlannerSummary report={report} courses={formData.courses} planningContext={planningContext} />
 
           <section className="generate-card">
             {!inputPrerequisiteValidation.valid && (
@@ -1986,12 +2400,13 @@ export default function Page() {
                 className="generate-button"
                 disabled={!formData.planCreationDate || planningContext.requiresSummerClarification || !inputPrerequisiteValidation.valid}
               >
-                3. Generate My Plan
+                <span className="default-generate-label">3. Generate My Plan</span>
+                <span className="apple-generate-label">Generate my three plans &#8594;</span>
               </button>
             </div>
           </section>
+          </div>
         </div>
-        <PlannerSummary report={report} courses={formData.courses} />
       </form>
 
       {status && <p className="status" role="status">{status}</p>}
