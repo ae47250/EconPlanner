@@ -416,7 +416,7 @@ function compactPlanCourse(course) {
 }
 
 function comparisonScheduleRows(plan) {
-  return (plan?.terms || [])
+  const rows = (plan?.terms || [])
     .filter(term => term.courses.length > 0)
     .map(term => ({
       key: `${term.academicYear || ""}-${term.isPlaceholder ? "TBC" : term.displayTerm || term.term}`,
@@ -424,6 +424,15 @@ function comparisonScheduleRows(plan) {
       term: term.isPlaceholder ? "Term to be confirmed" : term.displayTerm || term.term,
       courses: term.courses.map(compactPlanCourse)
     }));
+
+  return rows.map((row, index) => {
+    if (index > 0 && rows[index - 1].academicYear === row.academicYear) {
+      return row;
+    }
+
+    const yearRowSpan = rows.slice(index).findIndex(item => item.academicYear !== row.academicYear);
+    return { ...row, yearRowSpan: yearRowSpan === -1 ? rows.length - index : yearRowSpan };
+  });
 }
 
 function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
@@ -669,14 +678,15 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
           letter-spacing: .035em;
         }
         .compact-schedule th:first-child,
-        .compact-schedule td:first-child { width: 25%; }
+        .compact-schedule td:first-child { width: 30%; white-space: nowrap; }
         .compact-schedule th:nth-child(2),
-        .compact-schedule td:nth-child(2) { width: 18%; }
+        .compact-schedule td:nth-child(2) { width: 24%; }
         .compact-schedule td:last-child {
           color: #111d36;
           font-weight: 700;
           line-height: 1.35;
-          overflow-wrap: anywhere;
+          overflow-wrap: normal;
+          word-break: normal;
         }
         .no-differences {
           margin: 1rem;
@@ -848,7 +858,7 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
                       <tbody>
                         {visibleRows.map(row => (
                           <tr key={`${plan.id}-${row.key}`}>
-                            <td>{row.academicYear}</td>
+                            {row.yearRowSpan && <td rowSpan={row.yearRowSpan}>{row.academicYear}</td>}
                             <td>{row.term}</td>
                             <td>{row.courses.join(", ")}</td>
                           </tr>
