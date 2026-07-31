@@ -933,6 +933,21 @@ function PlannerSummary({ report, courses, planningContext: initialPlanningConte
             <div className="apple-summary-line"><span>Planning horizon</span><strong>{planningContext?.remainingYears ? `${planningContext.remainingYears} years` : "To be confirmed"}</strong></div>
             <div className="apple-summary-line"><span>Completed</span><strong>{completedCount}</strong></div>
             <div className="apple-summary-line"><span>In progress</span><strong>{inProgressCount}</strong></div>
+            <div className="apple-summary-courses" aria-label="Selected courses">
+              <div className="apple-summary-courses-heading"><span>Selected courses</span><strong>{chosen.length}</strong></div>
+              {chosen.length ? (
+                <ul>
+                  {chosen.map(course => (
+                    <li key={course.code}>
+                      <strong>{course.code}</strong>
+                      <span>{isTaken(course) ? "Completed" : "In progress"}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="apple-summary-no-courses">None selected</p>
+              )}
+            </div>
             <p>The plan will use the published 2026/2027 schedule where available and mark later terms for confirmation.</p>
           </div>
           <div className="summary-empty">Select your courses, then choose <strong>Generate My Plan</strong>.</div>
@@ -2025,9 +2040,10 @@ export default function Page() {
         }
         main.apple-layout-preview button.course-toggle.is-selected,
         main.apple-layout-preview button.taken-toggle.is-selected {
-          background: #fff;
-          border-color: #d9dadd;
-          color: #111;
+          background: #dff4e4;
+          border-color: #6db784;
+          color: #064f20;
+          font-weight: 600;
         }
         main.apple-layout-preview button.course-toggle:focus {
           outline: none;
@@ -2052,6 +2068,45 @@ export default function Page() {
           font-size: 11px;
         }
         main.apple-layout-preview .apple-summary-line strong { font-weight: 500; }
+        main.apple-layout-preview .apple-summary-courses {
+          padding: .45rem 0 0;
+        }
+        main.apple-layout-preview .apple-summary-courses-heading {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 1rem;
+          color: #333;
+          font-size: 10px;
+          font-weight: 600;
+        }
+        main.apple-layout-preview .apple-summary-courses-heading strong {
+          color: #111;
+          font-weight: 500;
+        }
+        main.apple-layout-preview .apple-summary-courses ul {
+          display: grid;
+          gap: .2rem;
+          margin: .3rem 0 0;
+          padding: 0;
+          list-style: none;
+        }
+        main.apple-layout-preview .apple-summary-courses li {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: .6rem;
+          color: #102a5c;
+          font-size: 10px;
+        }
+        main.apple-layout-preview .apple-summary-courses li span,
+        main.apple-layout-preview .apple-summary-no-courses {
+          color: #7e8791;
+        }
+        main.apple-layout-preview .apple-summary-no-courses {
+          margin: .3rem 0 0;
+          font-size: 10px;
+        }
         main.apple-layout-preview .apple-summary-preview > p {
           margin: .45rem 0 0;
           color: #7e8791;
