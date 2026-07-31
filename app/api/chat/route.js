@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { validateCoursePlan } from "../../../lib/validateCoursePlan.js";
+import { renderScheduleKnowledge } from "../../../lib/schedule/annual.js";
 
 export const runtime = "nodejs";
 
@@ -11,7 +12,7 @@ const KNOWLEDGE_FILES = [
   "knowledge/major-requirements.md",
   "knowledge/course-offerings.md",
   "knowledge/term-structure.md",
-  "knowledge/course-schedule-2026-2027.md"
+  "data/normalized/economics/schedule-2026-2027.json"
 ];
 
 const INITIAL_MODEL = process.env.OPENAI_INITIAL_MODEL || "gpt-5.4-nano";
@@ -67,7 +68,7 @@ async function loadKnowledgeBundle() {
       return `\n\n--- FILE: ${file} ---\n${content}`;
     })
   );
-  return files.join("\n");
+  return `${files.join("\n")}\n\n--- CANONICAL SCHEDULE ---\n${renderScheduleKnowledge()}`;
 }
 
 function capWords(text, limit = 220) {
@@ -216,7 +217,7 @@ Critical reminders:
 - In completed/current ECO fields, course names such as Intermediate Microeconomics, Intermediate Macroeconomics, Money & Financial Markets, and Quantitative Methods should be interpreted as their matching course codes.
 - Treat "not completed" as not done. Treat "currently taking" as in progress and do not schedule that requirement again.
 - If ECO 213 is completed/current, do not schedule ECO 113. If ECO 214 is completed/current, do not schedule ECO 114.
-- 2026/2027 ECO placement must follow the current schedule file exactly.
+- 2026/2027 ECO placement must follow the canonical schedule data exactly.
 - For academic years after 2026/2027, do not name specific ECO electives such as ECO 221 or ECO 333 unless the student provides current offering information. Use ECO elective instead.
 - For academic years after 2026/2027, do not display only ECO 213 or only ECO 214. Use "ECO 213 or ECO 214" and later "ECO 214 or ECO 213" because the exact future schedule is unknown.
 - Schedule ECO 213 and ECO 214 as soon as feasible after MAT 113 or MAT 121 and the appropriate introductory courses are complete.

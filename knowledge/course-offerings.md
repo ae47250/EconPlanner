@@ -1,6 +1,6 @@
 # Economics Course Offerings Rules
 
-Use this file for general offering patterns. Use `knowledge/course-schedule-2026-2027.md` for known 2026/2027 offerings. The current schedule file overrides general patterns for that academic year.
+Use this file for general offering patterns. Use `data/normalized/economics/schedule-2026-2027.json` for known 2026/2027 offerings. The canonical schedule data overrides general patterns for that academic year; `knowledge/course-schedule-2026-2027.md` is its human-readable view.
 
 These are planning rules, not a replacement for checking the official schedule.
 
