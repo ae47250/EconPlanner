@@ -1114,6 +1114,16 @@ export default function Page() {
     }
 
     if (COURSE_PREREQUISITES[code]) {
+      const prerequisiteValidation = validateCoursePrerequisites({
+        course: code,
+        targetStatus,
+        courses: formData.courses,
+        prerequisites: COURSE_PREREQUISITES
+      });
+      if (prerequisiteValidation.valid && !prerequisiteValidation.conditionalApprovals.length) {
+        applyCourseChanges([[code, targetStatus]]);
+        return;
+      }
       setPendingPrerequisiteSelection({
         groupId: group.id,
         courseCode: code,
@@ -1978,11 +1988,17 @@ export default function Page() {
           width: auto;
           min-height: 0 !important;
           margin: 0;
-          padding: .2rem 0;
-          border: 0;
-          background: transparent;
-          color: #7e8791;
+          padding: .2rem .45rem;
+          border: 1px solid #a9c8ed;
+          border-radius: .35rem;
+          background: #eaf4ff;
+          color: #0b47c8;
           font-size: 10px;
+          font-weight: 600;
+        }
+        main.apple-layout-preview .apple-clear-button:hover {
+          border-color: #0b47c8;
+          background: #dceeff;
         }
         main.apple-layout-preview .course-columns { display: block; width: 100%; }
         main.apple-layout-preview .course-column { display: block; width: 100%; max-width: none; }
@@ -2007,8 +2023,16 @@ export default function Page() {
           border-radius: .45rem;
           font-size: 11px;
         }
-        main.apple-layout-preview button.course-toggle.is-selected { background: #e6f3ff; border-color: #b9dcfa; }
-        main.apple-layout-preview button.taken-toggle.is-selected { background: #e8f7ed; border-color: #b5dfc1; }
+        main.apple-layout-preview button.course-toggle.is-selected,
+        main.apple-layout-preview button.taken-toggle.is-selected {
+          background: #fff;
+          border-color: #d9dadd;
+          color: #111;
+        }
+        main.apple-layout-preview button.course-toggle:focus {
+          outline: none;
+          box-shadow: none;
+        }
         main.apple-layout-preview .default-course-label { display: none; }
         main.apple-layout-preview .apple-course-label { display: inline; }
         main.apple-layout-preview .course-accordion { margin-top: 0; border-color: #dedee0; padding: .45rem 0 0; }
