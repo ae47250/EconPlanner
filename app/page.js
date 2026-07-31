@@ -943,7 +943,7 @@ function PlannerSummary({ report, courses, planningContext: initialPlanningConte
 }
 
 export default function Page() {
-  const [appleLayoutPreview, setAppleLayoutPreview] = useState(false);
+  const [appleLayoutPreview, setAppleLayoutPreview] = useState(true);
   const [formData, setFormData] = useState(initialForm);
   const [requirementModes, setRequirementModes] = useState({});
   const [requirementScrollTarget, setRequirementScrollTarget] = useState("");
