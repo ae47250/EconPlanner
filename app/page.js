@@ -934,6 +934,7 @@ function PlannerSummary({ report, courses }) {
 }
 
 export default function Page() {
+  const [appleLayoutPreview, setAppleLayoutPreview] = useState(false);
   const [formData, setFormData] = useState(initialForm);
   const [requirementModes, setRequirementModes] = useState({});
   const [requirementScrollTarget, setRequirementScrollTarget] = useState("");
@@ -955,6 +956,10 @@ export default function Page() {
       ? `${planningContext.standingLabel} in Fall ${planningContext.startYear}`
       : `${planningContext.standingLabel} during ${planningContext.startYear - 1}\u2013${String(planningContext.startYear).slice(-2)} academic year`
     : "";
+
+  useEffect(() => {
+    setAppleLayoutPreview(new URLSearchParams(window.location.search).get("layout") === "apple");
+  }, []);
 
   useEffect(() => {
     try {
@@ -1275,7 +1280,6 @@ export default function Page() {
       <div
         className="requirement-choice-card prerequisite-choice-card"
         style={prerequisitePopoverStyle(group.id)}
-        onMouseLeave={() => closeRequirementPopover(group.id)}
         ref={node => {
           requirementCardRefs.current[group.id] = node;
         }}
@@ -1356,7 +1360,7 @@ export default function Page() {
         className={`course-row${(group.options && requirementMode) || hasPendingPrerequisite ? " has-requirement" : ""}`}
         key={group.id}
         onMouseLeave={() => {
-          if ((group.options && requirementMode) || hasPendingPrerequisite) closeRequirementPopover(group.id);
+          if (group.options && requirementMode) closeRequirementPopover(group.id);
         }}
       >
         <div className="course-name">
@@ -1473,7 +1477,7 @@ export default function Page() {
   }
 
   return (
-    <main className="container">
+    <main className={`container${appleLayoutPreview ? " apple-layout-preview" : ""}`}>
       <style jsx global>{`
         :root {
           --planner-bg: #7c3aed;
@@ -1684,6 +1688,135 @@ export default function Page() {
           .generate-row { justify-content: stretch; }
           .generate-button { width: 100%; }
           .plan-grid { grid-template-columns: 1fr; }
+        }
+        main.apple-layout-preview {
+          max-width: 1180px;
+          padding: 0 1rem 4rem;
+          color: #102a5c;
+        }
+        body:has(main.apple-layout-preview) { background: #eef6fc; }
+        main.apple-layout-preview .app-header {
+          justify-content: space-between;
+          margin: 0 -1rem 2rem;
+          padding: 1.25rem 5%;
+          border-bottom: 1px solid #c8d9ed;
+          background: #fff;
+          text-align: left;
+        }
+        main.apple-layout-preview .app-header h1 {
+          color: #102a5c;
+          font-size: clamp(1.8rem, 3vw, 2.35rem);
+        }
+        main.apple-layout-preview .app-header h1 .headline-econ,
+        main.apple-layout-preview .app-header h1 .headline-planner { color: #102a5c; }
+        main.apple-layout-preview .instruction-card { display: none; }
+        main.apple-layout-preview .intake-layout { gap: 1.25rem; }
+        main.apple-layout-preview .intake-card {
+          border: 1px solid #a9c8ed;
+          border-radius: .7rem;
+          background: rgba(255, 255, 255, .96);
+          box-shadow: 0 .45rem 1.2rem rgba(20, 44, 92, .06);
+        }
+        main.apple-layout-preview .planning-details { margin: 0; padding: 0; border: 0; }
+        main.apple-layout-preview .planning-details .section-heading h2,
+        main.apple-layout-preview .course-heading h2 {
+          color: #102a5c;
+          font-size: clamp(1.45rem, 3vw, 2rem);
+        }
+        main.apple-layout-preview .planning-fields { max-width: none; margin-top: 1.1rem; }
+        main.apple-layout-preview .planning-field select { min-height: 2.5rem; border-color: #a9c8ed; }
+        main.apple-layout-preview .course-heading { margin-bottom: 1.1rem; }
+        main.apple-layout-preview .course-columns { display: block; width: 100%; }
+        main.apple-layout-preview .course-column { display: block; width: 100%; max-width: none; }
+        main.apple-layout-preview .course-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          width: 100%;
+          max-width: none;
+          padding: .65rem 0;
+          border: 0;
+          border-bottom: 1px solid #d7e1ec;
+          background: transparent;
+        }
+        main.apple-layout-preview .course-name { width: auto; gap: .75rem; }
+        main.apple-layout-preview .course-name span { color: #53627a; }
+        main.apple-layout-preview .course-toggles { gap: .3rem; }
+        main.apple-layout-preview button.course-toggle { padding: .3rem .45rem; border-color: #a9c8ed; }
+        main.apple-layout-preview .course-accordion { border-color: #d7e1ec; }
+        main.apple-layout-preview .prerequisite-choice-card {
+          width: min(34rem, calc(100vw - 2rem));
+          padding: 0;
+          border-color: #a9c8ed;
+          border-radius: .7rem;
+          background: #fff;
+          box-shadow: 0 .45rem 1.2rem rgba(20, 44, 92, .12);
+          color: #102a5c;
+        }
+        main.apple-layout-preview .prerequisite-choice-card > strong {
+          padding: .8rem .9rem .35rem;
+          color: #102a5c;
+          font-size: var(--planner-body-size);
+          font-weight: 700;
+        }
+        main.apple-layout-preview .prerequisite-help {
+          padding: 0 .9rem .65rem;
+          color: #53627a;
+          font-size: var(--planner-body-size);
+        }
+        main.apple-layout-preview .prerequisite-sections { gap: 0; }
+        main.apple-layout-preview .prerequisite-section {
+          gap: .45rem;
+          padding: .7rem .9rem;
+          border-color: #d7e1ec;
+        }
+        main.apple-layout-preview .prerequisite-section-label {
+          color: #53627a;
+          font-size: var(--planner-body-size);
+        }
+        main.apple-layout-preview .prerequisite-option {
+          grid-template-columns: minmax(8rem, 1fr) auto;
+          gap: .75rem;
+        }
+        main.apple-layout-preview .prerequisite-name { gap: .1rem; }
+        main.apple-layout-preview .prerequisite-name strong { color: #102a5c; font-size: var(--planner-body-size); }
+        main.apple-layout-preview .prerequisite-name small { color: #53627a; font-size: .7rem; }
+        main.apple-layout-preview .prerequisite-statuses { gap: .3rem; }
+        main.apple-layout-preview button.prerequisite-status,
+        main.apple-layout-preview button.prerequisite-cancel,
+        main.apple-layout-preview button.prerequisite-confirm {
+          min-height: 0 !important;
+          padding: .3rem .45rem;
+          border-color: #a9c8ed;
+          border-radius: .35rem;
+          font-size: var(--planner-body-size);
+          line-height: 1.25;
+        }
+        main.apple-layout-preview button.prerequisite-status.is-completed.is-selected { border-color: #6db784; background: #dff4e4; }
+        main.apple-layout-preview button.prerequisite-status.is-in_progress.is-selected { border-color: #8bb7e8; background: #e6f1ff; }
+        main.apple-layout-preview button.prerequisite-status.is-not_started.is-selected { border-color: #b8c8d8; background: #eef3f8; }
+        main.apple-layout-preview .prerequisite-issues { margin: .55rem .9rem; font-size: var(--planner-body-size); }
+        main.apple-layout-preview .prerequisite-actions {
+          gap: .45rem;
+          padding: .7rem .9rem .85rem;
+        }
+        main.apple-layout-preview button.prerequisite-cancel { color: #102a5c; }
+        main.apple-layout-preview button.prerequisite-confirm {
+          border-color: #0b47c8;
+          background: #0b47c8;
+          color: #fff;
+        }
+        main.apple-layout-preview button.prerequisite-confirm:disabled {
+          border-color: #b8c8d8;
+          background: #eef3f8;
+          color: #7690aa;
+        }
+        main.apple-layout-preview .generate-card { border: 0; padding: 0; background: transparent; }
+        main.apple-layout-preview .generate-button {
+          width: 100%;
+          border: 0;
+          border-radius: .55rem;
+          background: linear-gradient(135deg, #0b47c8, #07399e);
+          color: #fff;
         }
       `}</style>
 
