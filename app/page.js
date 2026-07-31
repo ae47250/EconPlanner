@@ -10,7 +10,7 @@ import {
 import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
-const PLANNER_STORAGE_VERSION = 2;
+const PLANNER_STORAGE_VERSION = 3;
 const COURSE_CATALOG = economicsCourseData.courses || [];
 const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
   (course.aliases || []).map(alias => [alias, course.code])
@@ -191,6 +191,7 @@ const initialForm = {
   displayName: "",
   academicStanding: "freshman",
   planCreationDate: "",
+  planCreationDateEdited: false,
   summerStandingConfirmed: "",
   expectedGraduationTerm: "",
   courses: SELECTABLE_COURSE_CATALOG.map(blankCourse),
@@ -249,6 +250,15 @@ function localToday() {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function CalendarIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <rect x="2" y="3.5" width="12" height="10" rx="1.5" />
+      <path d="M5 2v3M11 2v3M2 7h12" />
+    </svg>
+  );
 }
 
 function formatPlanCreationDate(value) {
@@ -992,11 +1002,15 @@ export default function Page() {
         const parsed = JSON.parse(saved);
         if (parsed.formData && Array.isArray(parsed.formData.courses)) {
           const { entryCatalogYear, majorDeclarationCatalogYear, ...savedFormData } = parsed.formData;
+          const savedPlanCreationDateEdited = savedFormData.planCreationDateEdited === true;
           setFormData(current => ({
             ...current,
             ...savedFormData,
             courses: migrateSavedCourses(savedFormData.courses),
-            planCreationDate: savedFormData.planCreationDate || localToday()
+            planCreationDate: savedPlanCreationDateEdited && savedFormData.planCreationDate
+              ? savedFormData.planCreationDate
+              : localToday(),
+            planCreationDateEdited: savedPlanCreationDateEdited
           }));
         }
         if (parsed.requirementModes && typeof parsed.requirementModes === "object") {
@@ -1597,8 +1611,10 @@ export default function Page() {
         button.summer-standing-change:hover { color: #163ea9; }
         .date-display { display: flex; align-items: baseline; gap: .4rem; min-height: 1.5rem; }
         .date-display strong { font-weight: 400; }
-        button.date-edit-button { width: auto; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; font-family: var(--planner-font-family); font-size: var(--planner-body-size); text-decoration: underline; }
+        button.date-edit-button { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0; border: 0; border-radius: .3rem; background: transparent; color: #1d4ed8; }
+        button.date-edit-button svg { width: .85rem; height: .85rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; }
         button.date-edit-button:hover { color: #163ea9; }
+        button.date-edit-button:focus-visible { outline: 2px solid #93c5fd; outline-offset: 1px; }
         #plan-creation-date::-webkit-calendar-picker-indicator { display: none; }
         .clarification-card { display: block; max-width: 38rem; margin-top: .85rem; padding: .8rem; border: 1px solid #6db784; background: #effaf1; }
         .clarification-card strong { display: block; }
@@ -1985,7 +2001,7 @@ export default function Page() {
           grid-template-columns: minmax(0, 1fr) auto;
           gap: .65rem;
           align-items: center;
-          margin-top: .4rem;
+          margin: .4rem 0 .35rem;
         }
         main.apple-layout-preview .search-label { width: 100%; margin: 0; }
         main.apple-layout-preview .search-label input {
@@ -2001,25 +2017,34 @@ export default function Page() {
         main.apple-layout-preview .apple-course-toolbar .sr-only { display: none; }
         main.apple-layout-preview .apple-clear-button {
           width: auto;
-          min-height: 0 !important;
+          min-height: 1.65rem !important;
           margin: 0;
-          padding: .2rem .45rem;
-          border: 1px solid #a9c8ed;
-          border-radius: .35rem;
-          background: #eaf4ff;
+          padding: .35rem .7rem;
+          border: 1px solid #7fb1e8;
+          border-radius: .45rem;
+          background: #e4f1ff;
           color: #0b47c8;
-          font-size: 10px;
+          font-size: 11px;
           font-weight: 600;
+          line-height: 1.1;
         }
         main.apple-layout-preview .apple-clear-button:hover {
           border-color: #0b47c8;
           background: #dceeff;
+        }
+        main.apple-layout-preview .apple-clear-button:focus-visible {
+          outline: 2px solid #93c5fd;
+          outline-offset: 1px;
+        }
+        main.apple-layout-preview .apple-clear-button:active {
+          background: #cbe4ff;
         }
         main.apple-layout-preview .course-columns { display: block; width: 100%; }
         main.apple-layout-preview .course-column { display: block; width: 100%; max-width: none; }
         main.apple-layout-preview .course-row {
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
+          grid-template-rows: auto;
           width: 100%;
           max-width: none;
           padding: .5rem 0;
@@ -2304,11 +2329,12 @@ export default function Page() {
                     <button
                       type="button"
                       className="date-edit-button"
+                      aria-label={isEditingPlanDate ? "Close plan creation date editor" : "Change plan creation date"}
                       aria-expanded={isEditingPlanDate}
                       aria-controls="plan-creation-date"
                       onClick={() => setIsEditingPlanDate(current => !current)}
                     >
-                      {isEditingPlanDate ? "Done" : "Change"}
+                      <CalendarIcon />
                     </button>
                   </div>
                   {isEditingPlanDate && (
@@ -2320,6 +2346,7 @@ export default function Page() {
                       onChange={event => setFormData(current => ({
                         ...current,
                         planCreationDate: event.target.value,
+                        planCreationDateEdited: true,
                         summerStandingConfirmed: ""
                       }))}
                     />
@@ -2356,6 +2383,7 @@ export default function Page() {
                     onChange={event => setFormData(current => ({
                       ...current,
                       planCreationDate: event.target.value,
+                      planCreationDateEdited: true,
                       summerStandingConfirmed: ""
                     }))}
                   />
