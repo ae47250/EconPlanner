@@ -1,0 +1,250 @@
+import { expect, test } from "@playwright/test";
+
+async function resetPlanner(page) {
+  await page.goto("/?layout=apple");
+  await page.evaluate(() => {
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+  });
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
+}
+
+async function setStanding(page, label) {
+  const group = page.getByRole("group", { name: "Class standing" });
+  const button = group.getByRole("button", { name: label });
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+}
+
+async function setPlanDate(page, date, summerAnswer = "yes") {
+  await page.getByLabel("Plan creation date", { exact: true }).fill(date);
+  const summerQuestion = page.getByText(/Summer class standing can refer/);
+  if (await summerQuestion.isVisible().catch(() => false)) {
+    const answer = summerAnswer === "yes"
+      ? /Yes, I will be this standing in the upcoming Fall/
+      : /No, I was this standing during the year that ended/;
+    await page.getByLabel(answer).click();
+  }
+}
+
+function courseStatus(page, code, status) {
+  return page
+    .getByRole("group", { name: `Status for ${code}` })
+    .getByRole("button", { name: status, exact: true });
+}
+
+async function generatePlans(page) {
+  await page.getByRole("button", { name: /Generate my three plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
+}
+
+test.beforeEach(async ({ page }) => {
+  await resetPlanner(page);
+});
+
+test("standing, term, graduation, course status, and prerequisite controls stay coherent", async ({ page }) => {
+  await page.getByRole("textbox", { name: "Student name (optional)" }).fill("Alex Student");
+
+  const expectedByStanding = new Map([
+    ["Freshman", "Spring/May 2030"],
+    ["Sophomore", "Spring/May 2029"],
+    ["Junior", "Spring/May 2028"],
+    ["Senior", "Spring/May 2027"]
+  ]);
+  for (const [standing, expectedGraduation] of expectedByStanding) {
+    await setStanding(page, standing);
+    await setPlanDate(page, "2026-07-31", "yes");
+    await expect(page.getByLabel("Expected graduation")).toHaveValue(expectedGraduation);
+    await expect(page.getByLabel("Planning starts")).toHaveValue("Fall 2026");
+  }
+
+  await setStanding(page, "Freshman");
+  await setPlanDate(page, "2026-09-01");
+  await expect(page.getByLabel("Planning starts")).toHaveValue("Winter 2027");
+  await setPlanDate(page, "2027-02-01");
+  await expect(page.getByLabel("Planning starts")).toHaveValue("Spring/May 2027");
+  await setPlanDate(page, "2027-04-15");
+  await expect(page.getByLabel("Planning starts")).toHaveValue("Fall 2027");
+
+  const completed113 = courseStatus(page, "ECO 113", "Completed");
+  const progress113 = courseStatus(page, "ECO 113", "In progress");
+  await completed113.click();
+  await expect(completed113).toHaveAttribute("aria-pressed", "true");
+  await progress113.click();
+  await expect(completed113).toHaveAttribute("aria-pressed", "false");
+  await expect(progress113).toHaveAttribute("aria-pressed", "true");
+  await progress113.click();
+  await expect(progress113).toHaveAttribute("aria-pressed", "false");
+
+  const completed213 = courseStatus(page, "ECO 213", "Completed");
+  await completed213.click();
+  const prerequisiteDialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
+  await expect(prerequisiteDialog).toBeFocused();
+  await expect(page.getByRole("button", { name: "Confirm Taken" })).toBeDisabled();
+  await page.getByRole("button", { name: "Cancel" }).click();
+  await expect(completed213).toBeFocused();
+
+  await completed213.click();
+  await page.getByRole("group", { name: "Status for prerequisite ECO 113" })
+    .getByRole("button", { name: "Taken", exact: true }).click();
+  await page.getByRole("group", { name: "Status for prerequisite MAT 121" })
+    .getByRole("button", { name: "Taken", exact: true }).click();
+  await page.getByRole("button", { name: "Confirm Taken" }).click();
+  await expect(completed213).toHaveAttribute("aria-pressed", "true");
+  await completed113.click();
+  await expect(completed213).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByRole("status")).toContainText("ECO 213 was cleared");
+
+  await page.getByRole("button", { name: "Clear selections" }).click();
+  await expect(page.getByRole("textbox", { name: "Student name (optional)" })).toHaveValue("Alex Student");
+  await expect(page.getByLabel("Plan creation date", { exact: true })).toHaveValue("2027-04-15");
+  await expect(page.getByText("0 selected", { exact: true })).toBeVisible();
+  await page.getByRole("searchbox").fill("ECO 333");
+  await page.getByRole("searchbox").press("Enter");
+  await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
+});
+
+test("generation is single-flight and three plans support compare, history, refresh, isolated edit, and undo", async ({ page }) => {
+  await page.getByRole("textbox", { name: "Student name (optional)" }).fill("Alex Student");
+  await setPlanDate(page, "2026-07-31");
+  await courseStatus(page, "ECO 113", "Completed").click();
+
+  let generationRequests = 0;
+  await page.route("**/api/majors/map", async route => {
+    const body = route.request().postDataJSON();
+    if (body?.action !== "validate-plan") {
+      generationRequests += 1;
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+    await route.continue();
+  });
+
+  const generateButton = page.getByRole("button", { name: /Generate my three plans/ });
+  await generateButton.dblclick();
+  await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
+  expect(generationRequests).toBe(1);
+
+  const cards = page.locator("article[data-plan-id]");
+  await expect(cards).toHaveCount(3);
+  await expect(cards.nth(0)).toHaveAttribute("data-plan-id", "plan-1");
+  await expect(cards.nth(1)).toHaveAttribute("data-plan-id", "plan-2");
+  await expect(cards.nth(2)).toHaveAttribute("data-plan-id", "plan-3");
+  const originalSchedules = await cards.locator("tbody").allInnerTexts();
+  expect(new Set(originalSchedules).size).toBe(3);
+
+  for (const card of await cards.all()) {
+    const exactRows = card.locator("tbody tr").filter({ hasNotText: "Term to be confirmed" });
+    for (const row of await exactRows.allInnerTexts()) {
+      expect(row.includes("ECO 213") && row.includes("ECO 214")).toBe(false);
+    }
+    await expect(card.getByText("ECO 461").first()).toBeVisible();
+    await expect(card.getByRole("cell", { name: "Winter", exact: true }).last()).toBeVisible();
+  }
+
+  await page.getByRole("checkbox", { name: "Show differences only" }).check();
+  await expect(page.getByRole("checkbox", { name: "Show differences only" })).toBeChecked();
+  await page.getByRole("button", { name: "Choose Plan B" }).click();
+  await expect(page.getByRole("heading", { name: "Review Plan B" })).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Plan B" })).toHaveAttribute("aria-selected", "true");
+
+  await page.goBack();
+  await expect(page.getByRole("button", { name: "Review selected Plan B" })).toBeVisible();
+  await page.goForward();
+  await expect(page.getByRole("heading", { name: "Review Plan B" })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Review Plan B" })).toBeVisible();
+  await expect(page.getByText("Alex Student", { exact: true })).toBeVisible();
+
+  await page.getByRole("button", { name: "Remove ECO 114" }).click();
+  await expect(page.getByRole("status")).toContainText("updated as a draft");
+  await expect(page.locator(".plan-validation-errors")).toContainText("Requirement eco-114 remains unscheduled");
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toBeVisible();
+  await page.getByRole("button", { name: "Compare plans" }).click();
+
+  const editedCards = page.locator("article[data-plan-id]");
+  const editedSchedules = await editedCards.locator("tbody").allInnerTexts();
+  expect(editedSchedules[0]).toBe(originalSchedules[0]);
+  expect(editedSchedules[1]).not.toBe(originalSchedules[1]);
+  expect(editedSchedules[2]).toBe(originalSchedules[2]);
+  await expect(editedCards.nth(1).locator(".plan-validation")).toContainText("Needs attention");
+
+  await page.getByRole("button", { name: "Review Plan B issues" }).click();
+  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+  await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
+  await expect(page.getByRole("status")).toContainText("Plan B was restored");
+
+  await page.getByRole("combobox", { name: "Move ECO 114 to another term" })
+    .selectOption({ label: "2026/2027 Winter" });
+  await expect(page.getByRole("status")).toContainText("updated as a draft");
+  await expect(page.locator(".plan-validation-errors")).toContainText("missing prerequisites");
+  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+
+  await page.getByRole("combobox", { name: "Move ECO 321 to another term" })
+    .selectOption({ label: "2026/2027 Spring/May" });
+  await expect(page.locator(".plan-validation-errors")).toContainText("not verified");
+  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+
+  await page.getByRole("button", { name: "Regenerate all three plans" }).click();
+  await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
+  expect(generationRequests).toBe(2);
+
+  await page.getByRole("button", { name: "Back to course selection" }).click();
+  await expect(page.getByRole("textbox", { name: "Student name (optional)" })).toHaveValue("Alex Student");
+  await expect(courseStatus(page, "ECO 113", "Completed")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "Return to generated plans" })).toBeVisible();
+  await page.getByRole("button", { name: "Return to generated plans" }).click();
+  await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible();
+  await page.getByRole("button", { name: "Back to course selection" }).click();
+  await setStanding(page, "Sophomore");
+  await expect(page.getByRole("button", { name: "Return to generated plans" })).toHaveCount(0);
+});
+
+test("missing information and generation failures stay visible without losing inputs", async ({ page }) => {
+  await page.goto("/?layout=apple&view=plan&plan=plan-2");
+  await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
+  await expect(page.getByRole("status")).toContainText("no longer available");
+  await expect(page).not.toHaveURL(/view=plan/);
+
+  const generateButton = page.getByRole("button", { name: /Generate my three plans/ });
+  await page.getByLabel("Plan creation date", { exact: true }).fill("");
+  await expect(generateButton).toBeDisabled();
+
+  await setPlanDate(page, "2026-07-31");
+  await expect(generateButton).toBeEnabled();
+  await setPlanDate(page, "2025-09-01");
+  await courseStatus(page, "ECO 113", "Completed").click();
+  await page.route("**/api/majors/map", route => route.fulfill({
+    status: 503,
+    contentType: "application/json",
+    body: JSON.stringify({ error: "Planner service is temporarily unavailable." })
+  }));
+
+  await generateButton.click();
+  await expect(page.getByRole("status")).toContainText("Planner service is temporarily unavailable.");
+  await expect(generateButton).toBeEnabled();
+  await expect(courseStatus(page, "ECO 113", "Completed")).toHaveAttribute("aria-pressed", "true");
+});
+
+test("mobile principal workflow keeps controls and prerequisite dialog inside the viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await setPlanDate(page, "2026-07-31");
+  const completed213 = courseStatus(page, "ECO 213", "Completed");
+  await completed213.click();
+  const dialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
+  await expect(dialog).toBeVisible();
+  const dialogBox = await dialog.boundingBox();
+  expect(dialogBox.x).toBeGreaterThanOrEqual(0);
+  expect(dialogBox.x + dialogBox.width).toBeLessThanOrEqual(390);
+  await page.getByRole("button", { name: "Cancel" }).click();
+
+  await courseStatus(page, "ECO 113", "Completed").click();
+  await generatePlans(page);
+  await expect(page.locator("article[data-plan-id]")).toHaveCount(3);
+  await page.waitForTimeout(350);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+  await page.getByRole("button", { name: "Choose Plan C" }).click();
+  await expect(page.getByRole("heading", { name: "Review Plan C" })).toBeVisible();
+});

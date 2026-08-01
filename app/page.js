@@ -1,15 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { resolvePlanningContext } from "../lib/planning/horizon.js";
+import { buildPlanningSlots, resolvePlanningContext } from "../lib/planning/horizon.js";
 import {
   selectedStatus,
   validateCoursePrerequisites,
   validateStudentPrerequisites
 } from "../lib/planning/prerequisiteValidation.js";
+import {
+  createGeneratedPlannerSession,
+  economicsResultFromReport,
+  PLANNER_VIEWS,
+  plannerViewFromSearch,
+  replaceEconomicsPlan,
+  restoreGeneratedPlannerSession
+} from "../lib/planning/uiState.js";
 import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
+const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
 const PLANNER_STORAGE_VERSION = 3;
 const COURSE_CATALOG = economicsCourseData.courses || [];
 const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
@@ -238,11 +247,19 @@ function clearInvalidDependents(courses, changedCode) {
 }
 
 function economicsResult(report) {
-  return report?.programs?.find(result => result.economicsPlan || result.program?.name === "Economics") || null;
+  return economicsResultFromReport(report);
 }
 
 function planCourseCount(plan) {
   return plan?.terms?.reduce((count, term) => count + term.courses.length, 0) || 0;
+}
+
+function planCourseIdentity(course) {
+  return course.requirementId || `${course.course}-${course.source || "course"}`;
+}
+
+function domId(value) {
+  return String(value || "item").toLowerCase().replace(/[^a-z0-9_-]+/g, "-");
 }
 
 function localToday() {
@@ -312,15 +329,14 @@ function AdvisorAttention({ catalog }) {
   );
 }
 
-function PlanTimeline({ plans = [], planningGaps = [] }) {
-  const [activePlanId, setActivePlanId] = useState(plans[0]?.id || "plan-1");
-
-  useEffect(() => {
-    if (plans.length && !plans.some(plan => plan.id === activePlanId)) {
-      setActivePlanId(plans[0].id);
-    }
-  }, [activePlanId, plans]);
-
+function PlanTimeline({
+  plans = [],
+  planningGaps = [],
+  activePlanId,
+  onSelectPlan,
+  onEditPlanCourse,
+  editingPlanCourseKey
+}) {
   if (!plans.length) {
     return planningGaps.length ? (
       <section className="plan-section" aria-live="polite">
@@ -343,22 +359,24 @@ function PlanTimeline({ plans = [], planningGaps = [] }) {
 
   return (
     <section className="plan-section" aria-live="polite">
-      <div className="plan-tabs" role="tablist" aria-label="Generated plans">
-        {plans.map(plan => (
-          <button
-            type="button"
-            className={`plan-tab${plan.id === activePlan.id ? " is-active" : ""}`}
-            id={`${plan.id}-tab`}
-            role="tab"
-            aria-selected={plan.id === activePlan.id}
-            aria-controls={plan.id}
-            key={plan.id}
-            onClick={() => setActivePlanId(plan.id)}
-          >
-            {plan.label}
-          </button>
-        ))}
-      </div>
+      {plans.length > 1 && (
+        <div className="plan-tabs" role="tablist" aria-label="Generated plans">
+          {plans.map(plan => (
+            <button
+              type="button"
+              className={`plan-tab${plan.id === activePlan.id ? " is-active" : ""}`}
+              id={`${plan.id}-tab`}
+              role="tab"
+              aria-selected={plan.id === activePlan.id}
+              aria-controls={plan.id}
+              key={plan.id}
+              onClick={() => onSelectPlan?.(plan.id)}
+            >
+              {plan.label}
+            </button>
+          ))}
+        </div>
+      )}
       <div id={activePlan.id} role="tabpanel" aria-labelledby={`${activePlan.id}-tab`}>
         <div className="section-heading">
           <span className="step-number">3.</span>
@@ -374,16 +392,69 @@ function PlanTimeline({ plans = [], planningGaps = [] }) {
               <h3 className="academic-year-label">{group.label}</h3>
               <div className="plan-grid">
                 {group.terms.map(term => (
-                  <article className={`term-card${term.isPlaceholder ? " is-placeholder" : ""}`} key={term.slotId || term.term}>
+                  <article
+                    className={`term-card${term.isPlaceholder ? " is-placeholder" : ""}`}
+                    data-academic-year={term.academicYear || ""}
+                    data-placeholder={term.isPlaceholder ? "true" : "false"}
+                    data-term-key={term.termKey || ""}
+                    key={term.slotId || term.term}
+                  >
                     <h4>{term.displayTerm || term.term}</h4>
                     {term.courses.length > 0 ? (
                       <ul>
-                        {term.courses.map((course, courseIndex) => (
-                          <li key={`${term.term}-${course.course}-${course.requirementId || "course"}-${courseIndex}`}>
-                            <strong>{course.course}</strong>
-                            <span>{course.title}</span>
-                          </li>
-                        ))}
+                        {term.courses.map(course => {
+                          const termId = term.slotId || term.term;
+                          const courseId = planCourseIdentity(course);
+                          const editKey = `${activePlan.id}:${termId}:${courseId}`;
+                          return (
+                            <li key={`${termId}-${courseId}`}>
+                              <div className="plan-course-summary">
+                                <strong>{course.course}</strong>
+                                <span>{course.title}</span>
+                              </div>
+                              {onEditPlanCourse && (
+                                <div className="plan-course-actions">
+                                  <label>
+                                    <span className="sr-only">Move {course.course} to another term</span>
+                                    <select
+                                      aria-label={`Move ${course.course} to another term`}
+                                      disabled={Boolean(editingPlanCourseKey)}
+                                      value={termId}
+                                      onChange={event => onEditPlanCourse({
+                                        type: "move",
+                                        planId: activePlan.id,
+                                        fromTermId: termId,
+                                        toTermId: event.target.value,
+                                        courseId
+                                      })}
+                                    >
+                                      {(activePlan.terms || []).map(optionTerm => {
+                                        const optionTermId = optionTerm.slotId || optionTerm.term;
+                                        return (
+                                          <option value={optionTermId} key={optionTermId}>
+                                            {optionTerm.academicYear} {optionTerm.displayTerm || optionTerm.term}
+                                          </option>
+                                        );
+                                      })}
+                                    </select>
+                                  </label>
+                                  <button
+                                    type="button"
+                                    disabled={Boolean(editingPlanCourseKey)}
+                                    onClick={() => onEditPlanCourse({
+                                      type: "remove",
+                                      planId: activePlan.id,
+                                      fromTermId: termId,
+                                      courseId
+                                    })}
+                                  >
+                                    {editingPlanCourseKey === editKey ? "Checking..." : `Remove ${course.course}`}
+                                  </button>
+                                </div>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     ) : (
                       <p className="empty-term">No courses placed</p>
@@ -400,6 +471,14 @@ function PlanTimeline({ plans = [], planningGaps = [] }) {
             </section>
           ))}
         </div>
+        {activePlan.validation?.valid === false && (
+          <div className="plan-validation-errors" role="alert">
+            <strong>This edited plan needs attention.</strong>
+            <ul>
+              {activePlan.validation.errors.map(error => <li key={error}>{error}</li>)}
+            </ul>
+          </div>
+        )}
         <PlanningGaps items={[...(activePlan.unscheduled || []), ...planningGaps]} />
         {activePlan.summerFallbacks?.length > 0 && (
           <div className="plan-notes summer-fallback-note">
@@ -425,6 +504,17 @@ function compactPlanCourse(course) {
   return course.course;
 }
 
+function planValidationLabel(plan) {
+  if (plan?.validation?.valid === false) {
+    const count = plan.validation.errors?.length || 1;
+    return `Needs attention: ${count} blocking validation ${count === 1 ? "issue" : "issues"}`;
+  }
+  const requirementCount = plan?.validation?.checkedRequirementCount;
+  return requirementCount
+    ? `Validated against all ${requirementCount} requirement slots`
+    : "Validated by the Economics planning rules";
+}
+
 function comparisonScheduleRows(plan) {
   const rows = (plan?.terms || [])
     .filter(term => term.courses.length > 0)
@@ -445,19 +535,32 @@ function comparisonScheduleRows(plan) {
   });
 }
 
-function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
+function PlanComparisonScreen({
+  report,
+  courses,
+  displayName,
+  view,
+  selectedPlanId,
+  isExiting,
+  isGenerating,
+  editingPlanCourseKey,
+  planEditStatus,
+  canUndoPlanEdit,
+  onEditCourses,
+  onBackToCompare,
+  onChoosePlan,
+  onSelectPlan,
+  onRegenerate,
+  onEditPlanCourse,
+  onUndoPlanEdit
+}) {
   const result = economicsResult(report);
   const plans = result?.economicsPlans || [];
   const planningGaps = result?.economicsPlanningGaps || [];
   const planningContext = result?.planningContext;
-  const [selectedPlanId, setSelectedPlanId] = useState(plans[0]?.id || "");
   const [showDifferencesOnly, setShowDifferencesOnly] = useState(false);
-
-  useEffect(() => {
-    if (plans.length && !plans.some(plan => plan.id === selectedPlanId)) {
-      setSelectedPlanId(plans[0].id);
-    }
-  }, [plans, selectedPlanId]);
+  const isPlanView = view === PLANNER_VIEWS.PLAN;
+  const selectedPlan = plans.find(plan => plan.id === selectedPlanId) || plans[0];
 
   const rowsByPlan = new Map(plans.map(plan => [plan.id, comparisonScheduleRows(plan)]));
   const allRowKeys = new Set([...rowsByPlan.values()].flatMap(rows => rows.map(row => row.key)));
@@ -468,7 +571,7 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
     });
     return signatures.length > 1 && signatures.every(signature => signature === signatures[0]);
   }));
-  const standing = planningContext?.effectiveStandingLabel
+  const standing = displayName?.trim() || planningContext?.effectiveStandingLabel
     || planningContext?.standingLabel
     || "Student";
   const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
@@ -493,9 +596,11 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
         }
         button, input { font-family: Arial, sans-serif; }
         .comparison-page {
+          box-sizing: border-box;
           min-height: 100vh;
           animation: comparison-enter .28s ease-out both;
         }
+        .comparison-page * { box-sizing: border-box; }
         .comparison-page.is-exiting { animation: comparison-exit .24s ease-in both; }
         @keyframes comparison-enter {
           from { opacity: 0; transform: translateX(4rem); }
@@ -530,10 +635,19 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
           font-size: 15px;
         }
         .comparison-student strong { font-weight: 700; }
-        .edit-courses-button {
+        .comparison-actions {
+          display: flex;
+          align-items: center;
+          gap: .65rem;
+          margin-left: 1.25rem;
+        }
+        .edit-courses-button,
+        .regenerate-plans-button,
+        .compare-plans-button,
+        .undo-plan-edit-button {
           width: auto;
           min-height: 0;
-          margin: 0 0 0 1.25rem;
+          margin: 0;
           padding: .65rem 1rem;
           border: 1px solid #102a83;
           border-radius: .45rem;
@@ -543,7 +657,12 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
           font-weight: 700;
           cursor: pointer;
         }
-        .edit-courses-button:hover { background: #edf4ff; }
+        .edit-courses-button:hover,
+        .regenerate-plans-button:hover,
+        .compare-plans-button:hover,
+        .undo-plan-edit-button:hover { background: #edf4ff; }
+        .regenerate-plans-button:disabled,
+        .undo-plan-edit-button:disabled { cursor: wait; opacity: .65; }
         .comparison-content {
           width: min(1460px, calc(100% - 3rem));
           margin: 0 auto;
@@ -712,6 +831,53 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
           font-weight: 700;
           text-align: center;
         }
+        .plan-validation.is-invalid { color: #a52a1f; }
+        .comparison-page .plan-section {
+          margin-top: 1rem;
+          padding: 1rem;
+          border: 1px solid #bdc9da;
+          border-radius: .7rem;
+          background: rgba(255, 255, 255, .96);
+        }
+        .comparison-page .plan-tabs {
+          display: flex;
+          gap: .4rem;
+          margin-bottom: 1rem;
+          border-bottom: 1px solid #cbd5e1;
+        }
+        .comparison-page .plan-tab {
+          width: auto;
+          margin: 0;
+          padding: .65rem .9rem;
+          border: 0;
+          border-bottom: 3px solid transparent;
+          background: transparent;
+          color: #41506a;
+          cursor: pointer;
+        }
+        .comparison-page .plan-tab.is-active {
+          border-bottom-color: #155eef;
+          color: #071956;
+          font-weight: 700;
+        }
+        .comparison-page .academic-year-group { margin-top: 1rem; }
+        .comparison-page .academic-year-label { margin: 0 0 .55rem; color: #155eef; font-size: 17px; }
+        .comparison-page .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
+        .comparison-page .term-card { min-width: 0; min-height: 8rem; padding: .8rem; border: 1px solid #cbd5e1; border-radius: .5rem; }
+        .comparison-page .term-card.is-placeholder { border-style: dashed; background: #f7fbff; }
+        .comparison-page .term-card h4 { margin: 0 0 .65rem; color: #17345b; }
+        .comparison-page .term-card ul { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
+        .comparison-page .term-card li { padding: .55rem; border: 1px solid #d2dbe6; border-radius: .35rem; }
+        .comparison-page .plan-course-summary strong,
+        .comparison-page .plan-course-summary span { display: block; }
+        .comparison-page .plan-course-summary span { margin-top: .15rem; color: #53627a; font-size: 12px; }
+        .comparison-page .plan-course-actions { display: grid; gap: .35rem; margin-top: .5rem; }
+        .comparison-page .plan-course-actions select,
+        .comparison-page .plan-course-actions button { width: 100%; min-height: 2rem; font-size: 12px; }
+        .comparison-page .plan-course-actions button { border: 1px solid #b64235; background: #fff; color: #8d251b; }
+        .comparison-page .plan-validation-errors { margin-top: 1rem; padding: .8rem; border: 1px solid #c85a4c; background: #fff2ef; color: #6f2119; }
+        .comparison-page .plan-validation-errors ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+        .plan-edit-status { margin: .75rem 0; color: #33425d; }
         .choose-plan-button {
           width: calc(100% - 2rem);
           min-height: 0;
@@ -773,6 +939,7 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
         @media (max-width: 760px) {
           .comparison-grid { grid-template-columns: 1fr; }
           .comparison-plan-summary { min-height: 0; }
+          .comparison-page .plan-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 700px) {
           .comparison-topbar {
@@ -782,16 +949,34 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
           }
           .comparison-student {
             width: 100%;
+            min-width: 0;
             order: 3;
             margin: 0;
           }
-          .edit-courses-button { margin-left: auto; }
+          .comparison-actions {
+            width: 100%;
+            min-width: 0;
+            margin: 0;
+            flex-wrap: wrap;
+          }
+          .comparison-actions > button {
+            min-width: 0;
+            flex: 1 1 9rem;
+            white-space: normal;
+          }
           .comparison-content { width: min(100% - 1.25rem, 1460px); }
           .comparison-heading-row {
             align-items: flex-start;
             flex-direction: column;
           }
+          .comparison-grid,
+          .comparison-plan-card { max-width: 100%; min-width: 0; }
           .compact-schedule { font-size: 10px; }
+          .compact-schedule th,
+          .compact-schedule td {
+            white-space: normal !important;
+            overflow-wrap: anywhere;
+          }
         }
         @media (prefers-reduced-motion: reduce) {
           .comparison-page,
@@ -806,14 +991,33 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
           <span aria-hidden="true">·</span>
           <span>Graduation target: {graduationTarget}</span>
         </div>
-        <button type="button" className="edit-courses-button" onClick={onEditCourses}>
-          Edit completed courses
-        </button>
+        <div className="comparison-actions">
+          {isPlanView && (
+            <button type="button" className="compare-plans-button" onClick={onBackToCompare}>
+              Compare plans
+            </button>
+          )}
+          <button
+            type="button"
+            className="regenerate-plans-button"
+            disabled={isGenerating || Boolean(editingPlanCourseKey)}
+            onClick={onRegenerate}
+          >
+            {isGenerating ? "Regenerating..." : "Regenerate all three plans"}
+          </button>
+          <button type="button" className="edit-courses-button" onClick={onEditCourses}>
+            Edit completed courses
+          </button>
+        </div>
       </header>
 
       <div className="comparison-content">
-        <button type="button" className="comparison-back" onClick={onEditCourses}>
-          ← Back to course selection
+        <button
+          type="button"
+          className="comparison-back"
+          onClick={isPlanView ? onBackToCompare : onEditCourses}
+        >
+          {isPlanView ? "← Back to plan comparison" : "← Back to course selection"}
         </button>
         <section className="comparison-course-status" aria-label="Selected course status">
           <p><strong>Completed:</strong> {completedCodes.join(", ") || "None"}</p>
@@ -821,10 +1025,12 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
         </section>
         <div className="comparison-heading-row">
           <div>
-            <h1>Compare your plans</h1>
-            <p>Same degree requirements and graduation target, different pacing.</p>
+            <h1>{isPlanView ? `Review ${selectedPlan?.label || "your plan"}` : "Compare your plans"}</h1>
+            <p>{isPlanView
+              ? "Switch plans, adjust one plan, or return to the side-by-side comparison."
+              : "Same degree requirements and graduation target, different pacing."}</p>
           </div>
-          {plans.length > 1 && (
+          {!isPlanView && plans.length > 1 && (
             <label className="difference-toggle">
               <span>Show differences only</span>
               <input
@@ -838,7 +1044,28 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
 
         <AdvisorAttention catalog={report?.catalog} />
 
-        {plans.length > 0 ? (
+        {planEditStatus && <p className="plan-edit-status" role="status">{planEditStatus}</p>}
+        {isPlanView && canUndoPlanEdit && (
+          <button
+            type="button"
+            className="undo-plan-edit-button"
+            disabled={Boolean(editingPlanCourseKey)}
+            onClick={onUndoPlanEdit}
+          >
+            Undo last plan edit
+          </button>
+        )}
+
+        {isPlanView ? (
+          <PlanTimeline
+            plans={plans}
+            planningGaps={planningGaps}
+            activePlanId={selectedPlan?.id}
+            onSelectPlan={onSelectPlan}
+            onEditPlanCourse={onEditPlanCourse}
+            editingPlanCourseKey={editingPlanCourseKey || (isGenerating ? "generation-in-progress" : "")}
+          />
+        ) : plans.length > 0 ? (
           <div className="comparison-grid">
             {plans.map(plan => {
               const rows = rowsByPlan.get(plan.id) || [];
@@ -846,8 +1073,13 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
                 ? rows.filter(row => !identicalRowKeys.has(row.key))
                 : rows;
               const selected = selectedPlanId === plan.id;
+              const invalid = plan.validation?.valid === false;
               return (
-                <article className={`comparison-plan-card${selected ? " is-selected" : ""}`} key={plan.id}>
+                <article
+                  className={`comparison-plan-card${selected ? " is-selected" : ""}`}
+                  data-plan-id={plan.id}
+                  key={plan.id}
+                >
                   <div className="comparison-plan-summary">
                     <div className="plan-title-row">
                       <h2>{plan.label}</h2>
@@ -879,14 +1111,20 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
                     <p className="no-differences">No schedule differences in this plan.</p>
                   )}
 
-                  <p className="plan-validation">Validated against all 12 requirement slots</p>
+                  <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
+                    {planValidationLabel(plan)}
+                  </p>
                   <button
                     type="button"
                     className="choose-plan-button"
                     aria-pressed={selected}
-                    onClick={() => setSelectedPlanId(plan.id)}
+                    onClick={() => onChoosePlan(plan.id)}
                   >
-                    {selected ? `${plan.label} selected` : `Choose ${plan.label}`}
+                    {invalid
+                      ? `Review ${plan.label} issues`
+                      : selected
+                        ? `Review selected ${plan.label}`
+                        : `Choose ${plan.label}`}
                   </button>
                 </article>
               );
@@ -898,7 +1136,7 @@ function PlanComparisonScreen({ report, courses, isExiting, onEditCourses }) {
           </div>
         )}
 
-        <PlanningGaps items={planningGaps} />
+        {!isPlanView && <PlanningGaps items={planningGaps} />}
       </div>
     </main>
   );
@@ -975,59 +1213,147 @@ export default function Page() {
   const [requirementPopoverPosition, setRequirementPopoverPosition] = useState(null);
   const [pendingPrerequisiteSelection, setPendingPrerequisiteSelection] = useState(null);
   const requirementCardRefs = useRef({});
+  const requirementTriggerRefs = useRef({});
   const courseAccordionRefs = useRef({});
   const generatedInputSignatureRef = useRef("");
+  const generationInFlightRef = useRef(false);
+  const generationRequestRef = useRef(0);
+  const generationAbortRef = useRef(null);
+  const latestFormRef = useRef(initialForm);
   const [courseSearch, setCourseSearch] = useState("");
   const [isEditingPlanDate, setIsEditingPlanDate] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
+  const [plannerView, setPlannerView] = useState(PLANNER_VIEWS.INPUT);
+  const [selectedPlanId, setSelectedPlanId] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [editingPlanCourseKey, setEditingPlanCourseKey] = useState("");
+  const [planEditStatus, setPlanEditStatus] = useState("");
+  const [planEditUndo, setPlanEditUndo] = useState(null);
   const [isComparisonExiting, setIsComparisonExiting] = useState(false);
   const planningContext = resolvePlanningContext(formData);
+  const planningStart = buildPlanningSlots(planningContext)[0]?.label || "To be confirmed";
   const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
   const summerStandingSelection = planningContext.isSummer && ["yes", "no"].includes(formData.summerStandingConfirmed)
     ? formData.summerStandingConfirmed === "yes"
       ? `${planningContext.standingLabel} in Fall ${planningContext.startYear}`
       : `${planningContext.standingLabel} during ${planningContext.startYear - 1}\u2013${String(planningContext.startYear).slice(-2)} academic year`
     : "";
+  latestFormRef.current = formData;
+
+  function plannerUrl(view, planId = "") {
+    const url = new URL(window.location.href);
+    if (view === PLANNER_VIEWS.INPUT) {
+      url.searchParams.delete("view");
+      url.searchParams.delete("plan");
+    } else {
+      url.searchParams.set("view", view);
+      if (view === PLANNER_VIEWS.PLAN && planId) url.searchParams.set("plan", planId);
+      else url.searchParams.delete("plan");
+    }
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
+
+  function navigatePlanner(nextView, nextPlanId = selectedPlanId, { replace = false } = {}) {
+    const plans = economicsResult(report)?.economicsPlans || [];
+    const safePlanId = plans.some(plan => plan.id === nextPlanId)
+      ? nextPlanId
+      : plans[0]?.id || "";
+    const safeView = nextView === PLANNER_VIEWS.INPUT || report
+      ? nextView
+      : PLANNER_VIEWS.INPUT;
+    const historyState = {
+      econPlanner: true,
+      view: safeView,
+      planId: safePlanId,
+      previousView: plannerView
+    };
+    if (!replace && plannerView === PLANNER_VIEWS.COMPARE && nextView === PLANNER_VIEWS.PLAN) {
+      window.history.replaceState(
+        { ...window.history.state, econPlanner: true, view: plannerView, planId: safePlanId },
+        "",
+        plannerUrl(plannerView, safePlanId)
+      );
+    }
+    window.history[replace ? "replaceState" : "pushState"](
+      historyState,
+      "",
+      plannerUrl(safeView, safePlanId)
+    );
+    setSelectedPlanId(safePlanId);
+    setPlannerView(safeView);
+    setPlanEditStatus("");
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+  }
 
   useEffect(() => {
     setAppleLayoutPreview(new URLSearchParams(window.location.search).get("layout") !== "classic");
   }, []);
 
   useEffect(() => {
+    let restoredForm = { ...initialForm, planCreationDate: localToday() };
+    let restoredCourseSearch = "";
+
     try {
       const saved = window.localStorage.getItem(PLANNER_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.formData && Array.isArray(parsed.formData.courses)) {
-          const { entryCatalogYear, majorDeclarationCatalogYear, ...savedFormData } = parsed.formData;
+          const {
+            entryCatalogYear: _entryCatalogYear,
+            majorDeclarationCatalogYear: _majorDeclarationCatalogYear,
+            ...savedFormData
+          } = parsed.formData;
           const savedPlanCreationDateEdited = savedFormData.planCreationDateEdited === true;
-          setFormData(current => ({
-            ...current,
+          restoredForm = {
+            ...restoredForm,
             ...savedFormData,
             courses: migrateSavedCourses(savedFormData.courses),
             planCreationDate: savedPlanCreationDateEdited && savedFormData.planCreationDate
               ? savedFormData.planCreationDate
               : localToday(),
             planCreationDateEdited: savedPlanCreationDateEdited
-          }));
+          };
         }
-        if (parsed.requirementModes && typeof parsed.requirementModes === "object") {
-          setRequirementModes(parsed.requirementModes);
-        }
-        if (typeof parsed.courseSearch === "string") {
-          setCourseSearch(parsed.courseSearch);
-        }
+        if (typeof parsed.courseSearch === "string") restoredCourseSearch = parsed.courseSearch;
       }
     } catch {
       window.localStorage.removeItem(PLANNER_STORAGE_KEY);
     }
 
-    setFormData(current => current.planCreationDate
-      ? current
-      : { ...current, planCreationDate: localToday() });
+    setFormData(restoredForm);
+    setCourseSearch(restoredCourseSearch);
 
+    const requestedView = plannerViewFromSearch(window.location.search);
+    const restoredSession = restoreGeneratedPlannerSession(
+      window.sessionStorage.getItem(GENERATED_PLANNER_SESSION_KEY),
+      plannerInputSignature(restoredForm)
+    );
+    let initialView = PLANNER_VIEWS.INPUT;
+    let initialPlanId = "";
+    if (restoredSession) {
+      setReport(restoredSession.report);
+      generatedInputSignatureRef.current = restoredSession.inputSignature;
+      initialPlanId = new URLSearchParams(window.location.search).get("plan") || restoredSession.selectedPlanId;
+      const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
+      if (!plans.some(plan => plan.id === initialPlanId)) initialPlanId = plans[0]?.id || "";
+      initialView = requestedView;
+      setSelectedPlanId(initialPlanId);
+      setPlannerView(initialView);
+      setPlanEditUndo(restoredSession.planEditUndo);
+    } else {
+      window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY);
+      if (requestedView !== PLANNER_VIEWS.INPUT) {
+        setStatus("That generated plan is no longer available. Review your saved inputs and generate new plans.");
+      }
+    }
+
+    window.history.replaceState(
+      { econPlanner: true, view: initialView, planId: initialPlanId, previousView: null },
+      "",
+      plannerUrl(initialView, initialPlanId)
+    );
     window.history.scrollRestoration = "manual";
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     setIsHydrated(true);
@@ -1040,42 +1366,115 @@ export default function Page() {
       window.localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify({
         schemaVersion: PLANNER_STORAGE_VERSION,
         formData,
-        requirementModes,
         courseSearch
       }));
     } catch {
       // Local storage may be unavailable in restricted browser sessions.
     }
-  }, [courseSearch, formData, isHydrated, requirementModes]);
+  }, [courseSearch, formData, isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    try {
+      if (report && generatedInputSignatureRef.current) {
+        window.sessionStorage.setItem(GENERATED_PLANNER_SESSION_KEY, JSON.stringify(
+          createGeneratedPlannerSession({
+            report,
+            inputSignature: generatedInputSignatureRef.current,
+            selectedPlanId,
+            view: plannerView,
+            planEditUndo
+          })
+        ));
+      } else {
+        window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY);
+      }
+    } catch {
+      // Session storage may be unavailable in restricted browser sessions.
+    }
+  }, [isHydrated, planEditUndo, plannerView, report, selectedPlanId]);
+
+  useEffect(() => {
+    if (!isHydrated) return undefined;
+
+    function handlePlannerHistory(event) {
+      const requestedView = event.state?.econPlanner
+        ? event.state.view
+        : plannerViewFromSearch(window.location.search);
+      const plans = economicsResult(report)?.economicsPlans || [];
+      const requestedPlanId = event.state?.planId || new URLSearchParams(window.location.search).get("plan");
+      if (requestedView !== PLANNER_VIEWS.INPUT && !plans.length) {
+        setPlannerView(PLANNER_VIEWS.INPUT);
+        setSelectedPlanId("");
+        setStatus("That generated plan is no longer available. Generate new plans to continue.");
+        window.history.replaceState(
+          { econPlanner: true, view: PLANNER_VIEWS.INPUT, planId: "", previousView: null },
+          "",
+          plannerUrl(PLANNER_VIEWS.INPUT)
+        );
+        return;
+      }
+
+      const safePlanId = plans.some(plan => plan.id === requestedPlanId)
+        ? requestedPlanId
+        : plans[0]?.id || "";
+      setSelectedPlanId(safePlanId);
+      setPlannerView(requestedView);
+      setPlanEditStatus("");
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+
+    window.addEventListener("popstate", handlePlannerHistory);
+    return () => window.removeEventListener("popstate", handlePlannerHistory);
+  }, [isHydrated, report]);
+
+  useEffect(() => () => generationAbortRef.current?.abort(), []);
 
   useEffect(() => {
     if (!report || !generatedInputSignatureRef.current) return;
     if (plannerInputSignature(formData) === generatedInputSignatureRef.current) return;
+    generationAbortRef.current?.abort();
+    generationInFlightRef.current = false;
     generatedInputSignatureRef.current = "";
     setReport(null);
+    setSelectedPlanId("");
+    setPlannerView(PLANNER_VIEWS.INPUT);
+    setPlanEditUndo(null);
+    setPlanEditStatus("");
+    setIsGenerating(false);
     setStatus("");
+    window.history.replaceState(
+      { econPlanner: true, view: PLANNER_VIEWS.INPUT, planId: "", previousView: null },
+      "",
+      plannerUrl(PLANNER_VIEWS.INPUT)
+    );
   }, [formData, report]);
 
   useEffect(() => {
     if (!requirementScrollTarget) return undefined;
 
     const frame = window.requestAnimationFrame(() => {
-      requirementCardRefs.current[requirementScrollTarget]?.scrollIntoView({
+      const card = requirementCardRefs.current[requirementScrollTarget];
+      card?.scrollIntoView({
         behavior: "smooth",
         block: "nearest"
       });
+      if (pendingPrerequisiteSelection?.groupId === requirementScrollTarget) card?.focus();
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [requirementScrollTarget]);
+  }, [pendingPrerequisiteSelection, requirementScrollTarget]);
 
-  function closeRequirementPopover(groupId) {
+  function closeRequirementPopover(groupId, { restoreFocus = true } = {}) {
     setRequirementModes(current => current[groupId]
       ? { ...current, [groupId]: "" }
       : current);
     setRequirementScrollTarget(current => current === groupId ? "" : current);
     setRequirementPopoverPosition(current => current?.groupId === groupId ? null : current);
     setPendingPrerequisiteSelection(current => current?.groupId === groupId ? null : current);
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => requirementTriggerRefs.current[groupId]?.focus());
+    }
   }
 
   useEffect(() => {
@@ -1095,8 +1494,21 @@ export default function Page() {
       setPendingPrerequisiteSelection(null);
     }
 
+    function handlePopoverKeydown(event) {
+      if (event.key !== "Escape") return;
+      const openGroupId = pendingPrerequisiteSelection?.groupId
+        || Object.keys(requirementModes).find(id => requirementModes[id]);
+      if (!openGroupId) return;
+      event.preventDefault();
+      closeRequirementPopover(openGroupId);
+    }
+
     document.addEventListener("pointerdown", handleOutsidePointer);
-    return () => document.removeEventListener("pointerdown", handleOutsidePointer);
+    document.addEventListener("keydown", handlePopoverKeydown);
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsidePointer);
+      document.removeEventListener("keydown", handlePopoverKeydown);
+    };
   }, [pendingPrerequisiteSelection, requirementModes]);
 
   function applyCourseChanges(changes) {
@@ -1158,6 +1570,7 @@ export default function Page() {
         courseCode: code,
         targetStatus
       });
+      if (event?.currentTarget) requirementTriggerRefs.current[group.id] = event.currentTarget;
       setRequirementScrollTarget(group.id);
       if (event) setPopoverPosition(group, event);
       return;
@@ -1181,6 +1594,7 @@ export default function Page() {
       }
 
       setRequirementModes(current => ({ ...current, [group.id]: nextStatus }));
+      if (event?.currentTarget) requirementTriggerRefs.current[group.id] = event.currentTarget;
       setPendingPrerequisiteSelection(null);
       setRequirementScrollTarget(group.id);
       setPopoverPosition(group, event);
@@ -1211,7 +1625,9 @@ export default function Page() {
   }
 
   async function mapMajors(event) {
-    event.preventDefault();
+    event?.preventDefault();
+
+    if (generationInFlightRef.current) return;
 
     if (!formData.planCreationDate) {
       setStatus("Enter the plan creation date before generating a plan.");
@@ -1228,31 +1644,67 @@ export default function Page() {
       return;
     }
 
+    generationInFlightRef.current = true;
+    setIsGenerating(true);
     setStatus("Building your economics plan...");
-    setReport(null);
+    setPlanEditStatus("");
 
     const student = {
       ...formData,
       courses: selectedCourses(formData.courses)
     };
+    const requestSignature = plannerInputSignature(formData);
+    const requestId = generationRequestRef.current + 1;
+    generationRequestRef.current = requestId;
+    generationAbortRef.current?.abort();
+    const controller = new AbortController();
+    generationAbortRef.current = controller;
 
     try {
       const response = await fetch("/api/majors/map", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ student })
+        body: JSON.stringify({ student }),
+        signal: controller.signal
       });
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || "The planner could not complete.");
-      generatedInputSignatureRef.current = plannerInputSignature(formData);
+      if (requestId !== generationRequestRef.current || controller.signal.aborted) return;
+      if (plannerInputSignature(latestFormRef.current) !== requestSignature) {
+        setStatus("Your answers changed while plans were being generated. Generate again with the current answers.");
+        return;
+      }
+
+      const plans = economicsResult(data)?.economicsPlans || [];
+      const firstPlanId = plans[0]?.id || "";
+      generatedInputSignatureRef.current = requestSignature;
       setIsComparisonExiting(false);
       setReport(data);
+      setSelectedPlanId(firstPlanId);
+      setPlannerView(PLANNER_VIEWS.COMPARE);
+      setPlanEditUndo(null);
+      window.history.pushState(
+        {
+          econPlanner: true,
+          view: PLANNER_VIEWS.COMPARE,
+          planId: firstPlanId,
+          previousView: plannerView
+        },
+        "",
+        plannerUrl(PLANNER_VIEWS.COMPARE, firstPlanId)
+      );
       setStatus("");
       window.requestAnimationFrame(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       });
     } catch (error) {
-      setStatus(error.message);
+      if (error.name !== "AbortError") setStatus(error.message);
+    } finally {
+      if (requestId === generationRequestRef.current) {
+        generationInFlightRef.current = false;
+        generationAbortRef.current = null;
+        setIsGenerating(false);
+      }
     }
   }
 
@@ -1326,16 +1778,20 @@ export default function Page() {
       ...(rule.any || []).map(options => ({ label: "Choose one or more", options }))
     ];
     const targetStatusLabel = pending.targetStatus === "completed" ? "Taken" : "In Progress";
+    const prerequisiteTitleId = `prerequisite-title-${domId(group.id)}`;
 
     return (
       <div
         className="requirement-choice-card prerequisite-choice-card"
+        role="dialog"
+        aria-labelledby={prerequisiteTitleId}
+        tabIndex={-1}
         style={prerequisitePopoverStyle(group.id)}
         ref={node => {
           requirementCardRefs.current[group.id] = node;
         }}
       >
-        <strong>Confirm prerequisites for {pending.courseCode}</strong>
+        <strong id={prerequisiteTitleId}>Confirm prerequisites for {pending.courseCode}</strong>
         <p className="prerequisite-help">Set each prerequisite status, then confirm {targetStatusLabel.toLowerCase()}.</p>
         <div className="prerequisite-sections">
           {requirementSections.map((section, sectionIndex) => (
@@ -1406,6 +1862,7 @@ export default function Page() {
     const isHanoverOnly = group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code));
     const allowsApCredit = group.courseCodes.some(code => AP_CREDIT_ALLOWED_COURSE_CODES.has(code));
     const takenButtonLabel = allowsApCredit ? "Taken or AP credit" : "Taken";
+    const requirementTitleId = `requirement-title-${domId(group.id)}`;
     return (
       <div
         className={`course-row${(group.options && requirementMode) || hasPendingPrerequisite ? " has-requirement" : ""}`}
@@ -1446,13 +1903,16 @@ export default function Page() {
         {group.options && requirementMode && !hasPendingPrerequisite && (
           <div
             className="requirement-choice-card"
+            role="group"
+            aria-labelledby={requirementTitleId}
+            tabIndex={-1}
             style={prerequisitePopoverStyle(group.id)}
             onMouseLeave={() => closeRequirementPopover(group.id)}
             ref={node => {
               requirementCardRefs.current[group.id] = node;
             }}
           >
-            <strong>Which course(s) satisfy this requirement?</strong>
+            <strong id={requirementTitleId}>Which course(s) satisfy this requirement?</strong>
             <div className="choice-options">
               {group.options.map(option => {
                 const course = formData.courses.find(item => item.code === option.code);
@@ -1498,16 +1958,105 @@ export default function Page() {
     );
   }
 
+  function navigateBackTo(targetView) {
+    if (window.history.state?.econPlanner && window.history.state.previousView === targetView) {
+      window.history.back();
+      return;
+    }
+    navigatePlanner(targetView, selectedPlanId, { replace: true });
+  }
+
+  async function editPlanCourse(edit) {
+    if (editingPlanCourseKey || generationInFlightRef.current) return;
+    const result = economicsResult(report);
+    const plans = result?.economicsPlans || [];
+    const sourcePlan = plans.find(plan => plan.id === edit.planId);
+    if (!sourcePlan || (edit.type === "move" && edit.fromTermId === edit.toTermId)) return;
+
+    const sourceTerm = sourcePlan.terms.find(term => (term.slotId || term.term) === edit.fromTermId);
+    const selectedCourse = sourceTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
+    if (!selectedCourse) {
+      setPlanEditStatus("That course could not be found in the selected plan.");
+      return;
+    }
+
+    const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
+    const candidatePlan = {
+      ...sourcePlan,
+      terms: sourcePlan.terms.map(term => {
+        const termId = term.slotId || term.term;
+        let courses = term.courses;
+        if (termId === edit.fromTermId) {
+          courses = courses.filter(course => planCourseIdentity(course) !== edit.courseId);
+        }
+        if (edit.type === "move" && termId === edit.toTermId) {
+          courses = [...courses, selectedCourse];
+        }
+        return courses === term.courses ? term : { ...term, courses };
+      })
+    };
+    const candidatePlans = plans.map(plan => plan.id === sourcePlan.id ? candidatePlan : plan);
+
+    setEditingPlanCourseKey(editKey);
+    setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
+    try {
+      const response = await fetch("/api/majors/map", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "validate-plan",
+          student: {
+            ...formData,
+            courses: selectedCourses(formData.courses)
+          },
+          plan: candidatePlan,
+          plans: candidatePlans
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "The plan edit could not be validated.");
+
+      setPlanEditUndo({
+        planId: sourcePlan.id,
+        plan: sourcePlan,
+        planSetValidation: result.economicsPlanValidation
+      });
+      setReport(current => replaceEconomicsPlan(
+        current,
+        sourcePlan.id,
+        data.plan,
+        data.planSetValidation
+      ));
+      setPlanEditStatus(data.plan.validation.valid
+        ? `${sourcePlan.label} was updated and remains valid.`
+        : `${sourcePlan.label} was updated as a draft. Resolve the listed blocking issues or undo the edit.`);
+    } catch (error) {
+      setPlanEditStatus(error.message);
+    } finally {
+      setEditingPlanCourseKey("");
+    }
+  }
+
+  function undoPlanEdit() {
+    if (!planEditUndo) return;
+    const restoredPlan = planEditUndo.plan;
+    setReport(current => replaceEconomicsPlan(
+      current,
+      planEditUndo.planId,
+      restoredPlan,
+      planEditUndo.planSetValidation
+    ));
+    setPlanEditUndo(null);
+    setPlanEditStatus(`${restoredPlan.label} was restored.`);
+  }
+
   function returnToCourseSelection() {
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     const finish = () => {
-      generatedInputSignatureRef.current = "";
-      setReport(null);
       setStatus("");
+      setPlanEditStatus("");
       setIsComparisonExiting(false);
-      window.requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      });
+      navigateBackTo(PLANNER_VIEWS.INPUT);
     };
 
     if (reducedMotion) {
@@ -1518,13 +2067,37 @@ export default function Page() {
     window.setTimeout(finish, 240);
   }
 
-  if (report) {
+  if (!isHydrated) {
+    return (
+      <main className="planner-loading" aria-busy="true" aria-label="Loading EconPlanner">
+        <style jsx global>{`
+          body { margin: 0; background: #f7f8fa; }
+          .planner-loading { min-height: 100vh; }
+        `}</style>
+      </main>
+    );
+  }
+
+  if (isHydrated && report && plannerView !== PLANNER_VIEWS.INPUT) {
     return (
       <PlanComparisonScreen
         report={report}
         courses={formData.courses}
+        displayName={formData.displayName}
+        view={plannerView}
+        selectedPlanId={selectedPlanId}
         isExiting={isComparisonExiting}
+        isGenerating={isGenerating}
+        editingPlanCourseKey={editingPlanCourseKey}
+        planEditStatus={planEditStatus}
+        canUndoPlanEdit={Boolean(planEditUndo)}
         onEditCourses={returnToCourseSelection}
+        onBackToCompare={() => navigateBackTo(PLANNER_VIEWS.COMPARE)}
+        onChoosePlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
+        onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
+        onRegenerate={() => mapMajors()}
+        onEditPlanCourse={editPlanCourse}
+        onUndoPlanEdit={undoPlanEdit}
       />
     );
   }
@@ -2212,6 +2785,17 @@ export default function Page() {
           color: #7690aa;
         }
         main.apple-layout-preview .generate-card { border: 0; padding: 0; background: transparent; }
+        main.apple-layout-preview .return-to-plans-button {
+          width: 100%;
+          margin: 0 0 .55rem;
+          padding: .45rem .6rem;
+          border: 1px solid #155eef;
+          border-radius: .35rem;
+          background: #fff;
+          color: #0b47c8;
+          font-size: 12px;
+          font-weight: 700;
+        }
         main.apple-layout-preview .generate-button {
           width: 100%;
           border: 0;
@@ -2367,6 +2951,7 @@ export default function Page() {
                   <button
                     type="button"
                     className={formData.academicStanding === value ? "is-selected" : ""}
+                    aria-pressed={formData.academicStanding === value}
                     key={value}
                     onClick={() => setFormData(current => ({ ...current, academicStanding: value, summerStandingConfirmed: "" }))}
                   >
@@ -2375,6 +2960,15 @@ export default function Page() {
                 ))}
               </div>
               <div className="apple-mini-fields">
+                <label>
+                  <span>Student name (optional)</span>
+                  <input
+                    type="text"
+                    autoComplete="name"
+                    value={formData.displayName}
+                    onChange={event => setFormData(current => ({ ...current, displayName: event.target.value }))}
+                  />
+                </label>
                 <label>
                   <span>Plan creation date</span>
                   <input
@@ -2391,6 +2985,10 @@ export default function Page() {
                 <label>
                   <span>Expected graduation</span>
                   <input type="text" value={planningContext.expectedGraduationTerm || "To be confirmed"} readOnly />
+                </label>
+                <label>
+                  <span>Planning starts</span>
+                  <input type="text" value={planningStart} readOnly />
                 </label>
               </div>
               {planningContext.requiresSummerClarification && (
@@ -2447,6 +3045,9 @@ export default function Page() {
                   type="search"
                   value={courseSearch}
                   onChange={event => setCourseSearch(event.target.value)}
+                  onKeyDown={event => {
+                    if (event.key === "Enter") event.preventDefault();
+                  }}
                   placeholder="Search by course or title"
                 />
               </label>
@@ -2488,7 +3089,7 @@ export default function Page() {
           </div>
 
           <div className="apple-right-column">
-          <PlannerSummary report={report} courses={formData.courses} planningContext={planningContext} />
+          <PlannerSummary report={null} courses={formData.courses} planningContext={planningContext} />
 
           <section className="generate-card">
             {!inputPrerequisiteValidation.valid && (
@@ -2501,14 +3102,24 @@ export default function Page() {
                 </ul>
               </div>
             )}
+            {status && <p className="status" role="status">{status}</p>}
+            {report && generatedInputSignatureRef.current === plannerInputSignature(formData) && (
+              <button
+                type="button"
+                className="return-to-plans-button"
+                onClick={() => navigatePlanner(PLANNER_VIEWS.COMPARE, selectedPlanId)}
+              >
+                Return to generated plans
+              </button>
+            )}
             <div className="generate-row">
               <button
                 type="submit"
                 className="generate-button"
-                disabled={!formData.planCreationDate || planningContext.requiresSummerClarification || !inputPrerequisiteValidation.valid}
+                disabled={isGenerating || !formData.planCreationDate || planningContext.requiresSummerClarification || !inputPrerequisiteValidation.valid}
               >
                 <span className="default-generate-label">3. Generate My Plan</span>
-                <span className="apple-generate-label">Generate my three plans &#8594;</span>
+                <span className="apple-generate-label">{isGenerating ? "Generating plans..." : "Generate my three plans →"}</span>
               </button>
             </div>
           </section>
@@ -2516,12 +3127,6 @@ export default function Page() {
         </div>
       </form>
 
-      {status && <p className="status" role="status">{status}</p>}
-      <AdvisorAttention catalog={report?.catalog} />
-      <PlanTimeline
-        plans={economicsResult(report)?.economicsPlans || []}
-        planningGaps={economicsResult(report)?.economicsPlanningGaps || []}
-      />
     </main>
   );
 }

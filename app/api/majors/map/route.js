@@ -1,7 +1,12 @@
 import { availableCatalogYears, loadCatalog, resolveCatalogYear } from "../../../../lib/catalog/load.js";
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
-import { assigned100LevelElectives, buildEconomicsTermPlans } from "../../../../lib/planning/economics.js";
+import {
+  assigned100LevelElectives,
+  buildEconomicsTermPlans,
+  validateGeneratedPlan,
+  validatePlanSet
+} from "../../../../lib/planning/economics.js";
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { compareRequirementSnapshots } from "../../../../lib/catalog/compare.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
@@ -164,6 +169,36 @@ function mapCatalogPrograms(catalog, student, catalogReview) {
   });
 }
 
+function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, plans }) {
+  const variant = catalog.variants.find(item => item.programId === "economics");
+  const program = catalog.programs.find(item => item.id === variant?.programId);
+  if (!variant || !program) {
+    return { error: "The approved Economics program could not be loaded for plan validation." };
+  }
+
+  const mapping = mapStudentToProgram(
+    { ...program, ...variant },
+    catalog.requirementsByProgram.get(program.id),
+    student
+  );
+  const validation = validateGeneratedPlan(plan, {
+    student,
+    mapping,
+    schedule: catalog.economicsSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get(program.id),
+    context: planningContext
+  });
+  const validatedPlan = { ...plan, validation };
+  const candidatePlans = Array.isArray(plans)
+    ? plans.map(item => item.id === validatedPlan.id ? validatedPlan : item)
+    : [validatedPlan];
+
+  return {
+    plan: validatedPlan,
+    planSetValidation: validatePlanSet(candidatePlans)
+  };
+}
+
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -218,6 +253,22 @@ export async function POST(request) {
         code: "INVALID_STUDENT_PREREQUISITES",
         prerequisiteIssues: prerequisiteValidation.issues
       }, 422);
+    }
+
+    if (body?.action === "validate-plan") {
+      if (!body.plan?.id || !Array.isArray(body.plan?.terms)) {
+        return jsonResponse({ error: "A generated Economics plan is required for validation." }, 400);
+      }
+      const editedPlanResult = validateEditedEconomicsPlan({
+        catalog,
+        student,
+        planningContext,
+        plan: body.plan,
+        plans: body.plans
+      });
+      return editedPlanResult.error
+        ? jsonResponse({ error: editedPlanResult.error }, 422)
+        : jsonResponse(editedPlanResult);
     }
     let catalogReview = {
       selectedCatalogYear: catalogResolution.selectedCatalogYear,

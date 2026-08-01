@@ -220,3 +220,44 @@ test("major mapper reports instructor approval for current concurrent math", asy
   assert.ok(economics.economicsPlans.every(plan => plan.terms[0].term === "Spring/May 2027"));
   assert.ok(economics.economicsPlans.every(plan => !plan.terms.some(term => term.term === "Winter 2027")));
 });
+
+test("edited plan validation recalculates only the submitted candidate plan", async () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2025-09-01",
+    courses: []
+  };
+  const generatedResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student })
+  }));
+  const generated = await generatedResponse.json();
+  const economics = generated.programs.find(result => result.program?.id === "economics-base");
+  const originalPlan = economics.economicsPlans[1];
+  const firstCourseTerm = originalPlan.terms.find(term => term.courses.length > 0);
+  const editedPlan = {
+    ...originalPlan,
+    terms: originalPlan.terms.map(term => term === firstCourseTerm
+      ? { ...term, courses: term.courses.slice(1) }
+      : term)
+  };
+
+  const validationResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      action: "validate-plan",
+      student,
+      plan: editedPlan,
+      plans: economics.economicsPlans.map(plan => plan.id === editedPlan.id ? editedPlan : plan)
+    })
+  }));
+  const validation = await validationResponse.json();
+
+  assert.equal(validationResponse.status, 200);
+  assert.equal(validation.plan.id, originalPlan.id);
+  assert.equal(validation.plan.validation.valid, false);
+  assert.ok(validation.plan.validation.errors.some(error => /remains unscheduled/.test(error)));
+  assert.equal(validation.planSetValidation.valid, false);
+});
