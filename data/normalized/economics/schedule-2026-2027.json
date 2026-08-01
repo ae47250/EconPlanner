@@ -18,91 +18,160 @@
       {
         "course": "ECO 113",
         "section": "A",
-        "title": "Principles of Microeconomics"
+        "title": "Principles of Microeconomics",
+        "faculty": "Dodge, Eric R.",
+        "days": "Tue, Thu",
+        "startTime": "8:00 AM",
+        "endTime": "9:45 AM"
       },
       {
         "course": "ECO 114",
         "section": "A",
-        "title": "Principles of Macroeconomics"
+        "title": "Principles of Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "days": "Mon, Wed, Fri",
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
       },
       {
         "course": "ECO 114",
         "section": "B",
-        "title": "Principles of Macroeconomics"
+        "title": "Principles of Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "days": "Mon, Wed, Fri",
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
       },
       {
         "course": "ECO 114",
         "section": "C",
-        "title": "Principles of Macroeconomics"
+        "title": "Principles of Macroeconomics",
+        "faculty": "Jaradat, Hamzeh A.",
+        "days": "Tue, Thu",
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
       },
       {
         "course": "ECO 213",
         "section": "A",
-        "title": "Intermediate Microeconomics"
+        "title": "Intermediate Microeconomics",
+        "faculty": "Dodge, Eric R.",
+        "days": "Tue, Thu",
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
       },
       {
         "course": "ECO 234",
         "section": "A",
-        "title": "Rational Choices"
+        "title": "Rational Choices",
+        "crossListedAs": ["PHI 234"],
+        "faculty": "Bates, Jared G.",
+        "days": "Mon, Wed, Fri",
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
       },
       {
         "course": "ECO 333",
         "section": "A",
-        "title": "International Trade & Finance"
+        "title": "International Trade & Finance",
+        "faculty": "Eiriksson, Agust",
+        "days": "Mon, Wed, Fri",
+        "startTime": "1:20 PM",
+        "endTime": "2:30 PM"
       }
     ],
     "Winter": [
       {
         "course": "ECO 113",
         "section": "J",
-        "title": "Principles of Microeconomics"
+        "title": "Principles of Microeconomics",
+        "faculty": "Jaradat, Hamzeh A.",
+        "days": "Tue, Thu",
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
       },
       {
         "course": "ECO 113",
         "section": "K",
-        "title": "Principles of Microeconomics"
+        "title": "Principles of Microeconomics",
+        "faculty": "Dodge, Eric R.",
+        "days": "Mon, Wed, Fri",
+        "startTime": "8:00 AM",
+        "endTime": "9:10 AM"
       },
       {
         "course": "ECO 114",
         "section": "J",
-        "title": "Principles of Macroeconomics"
+        "title": "Principles of Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "days": "Tue, Thu",
+        "startTime": "8:00 AM",
+        "endTime": "9:45 AM"
       },
       {
         "course": "ECO 161",
         "section": "J",
-        "title": "Foundations of Economics"
+        "title": "Foundations of Economics",
+        "faculty": "Eiriksson, Agust",
+        "days": "Tue, Thu",
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
       },
       {
         "course": "ECO 214",
         "section": "J",
-        "title": "Intermediate Macroeconomics"
+        "title": "Intermediate Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "days": "Tue, Thu",
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
       },
       {
         "course": "ECO 221",
         "section": "J",
-        "title": "Environmental Economics"
+        "title": "Environmental Economics",
+        "faculty": "Dodge, Eric R.",
+        "days": "Mon, Wed, Fri",
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
       },
       {
         "course": "ECO 321",
         "section": "J",
-        "title": "Money & Financial Markets"
+        "title": "Money & Financial Markets",
+        "faculty": "Jaradat, Hamzeh A.",
+        "days": "Tue, Thu",
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
       },
       {
         "course": "ECO 461",
         "section": "J",
-        "title": "Senior Seminar - Econometrics"
+        "title": "Senior Seminar - Econometrics",
+        "faculty": "Dodge, Eric R.",
+        "days": "Mon, Wed, Fri",
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
       }
     ],
     "May": [
       {
         "course": "ECO 222",
         "section": "S",
-        "title": "Economics of the European Union"
+        "title": "Economics of the European Union",
+        "faculty": "Eiriksson, Agust",
+        "days": "Mon, Tue, Wed, Thu, Fri",
+        "startTime": "10:15 AM",
+        "endTime": "12:30 PM"
       },
       {
         "course": "ECO 260",
         "section": "S",
-        "title": "Special Topics"
+        "title": "Special Topics",
+        "faculty": "Dodge, Eric R.",
+        "days": "Mon, Tue, Wed, Thu, Fri",
+        "startTime": "8:00 AM",
+        "endTime": "10:15 AM"
       }
     ],
     "Summer": [

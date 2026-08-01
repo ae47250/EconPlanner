@@ -17,6 +17,18 @@ function jsonResponse(payload, status = 200) {
   return Response.json(payload, { status });
 }
 
+function resolveEconomicsCatalog(requestedCatalogYear, catalogYears) {
+  const resolution = resolveCatalogYear(requestedCatalogYear, catalogYears);
+  if (resolution.catalogResolutionStatus !== "unavailable" || !catalogYears.includes("2025-2026")) {
+    return resolution;
+  }
+  return {
+    requestedCatalogYear,
+    selectedCatalogYear: "2025-2026",
+    catalogResolutionStatus: "economics_provisional_fallback"
+  };
+}
+
 function sortResults(results) {
   const riskRank = {
     FEASIBLE: 0,
@@ -44,6 +56,14 @@ function catalogAdvisorAttention(resolution, catalogReview, planningContext) {
       title: "Advisor Attention",
       severity: "warning",
       message: `The ${resolution.requestedCatalogYear.replace("-", "/")} Economics catalog was unavailable, so EconMapper used the approved ${resolution.selectedCatalogYear.replace("-", "/")} requirements as a temporary fallback. Confirm the applicable requirements with the Economics Department before relying on this plan.`
+    });
+  }
+  if (resolution.catalogResolutionStatus === "economics_provisional_fallback") {
+    notices.push({
+      code: "ECONOMICS_PROVISIONAL_CATALOG_FALLBACK",
+      title: "Advisor Attention",
+      severity: "warning",
+      message: `The ${resolution.requestedCatalogYear.replace("-", "/")} entry catalog is unavailable. EconMapper used the approved 2025/2026 Economics requirements provisionally so graduation planning can continue. An advisor must confirm the student's governing Economics requirements; this fallback does not apply to any other major.`
     });
   }
 
@@ -100,20 +120,27 @@ function prerequisiteAdvisorAttention(validation) {
 
 function planAdvisorAttention(results) {
   const economics = results.find(result => result.program?.id === "economics-base");
-  return (economics?.economicsPlans || []).flatMap(plan => (
-    (plan.advisorChecks || [])
+  const notices = (economics?.economicsPlans || []).flatMap(plan => [
+    ...(plan.advisorChecks || [])
       .filter(check => /Concurrent enrollment requires approval/i.test(check.reason || ""))
       .map(check => ({
-        code: `PLAN_CONCURRENT_MATH_${plan.id}_${check.course.replace(/\s/g, "_")}`,
-        title: `${plan.label} requires instructor approval`,
+        code: `PLAN_CHECK_${check.course.replace(/\s/g, "_")}`,
+        title: "Graduation plan advisor review",
         severity: "warning",
-        message: `${plan.label}: ${check.reason}`
-      }))
-  ));
+        message: check.reason
+      })),
+    ...(plan.validation?.warnings || []).map((message, index) => ({
+      code: `PLAN_WARNING_${index}`,
+      title: "Graduation planning assumption",
+      severity: "warning",
+      message
+    }))
+  ]);
+  return [...new Map(notices.map(notice => [notice.message, notice])).values()];
 }
 
-function mapCatalogPrograms(catalog, student, catalogReview) {
-  return catalog.variants.map(variant => {
+function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = false } = {}) {
+  return catalog.variants.filter(variant => !economicsOnly || variant.programId === "economics").map(variant => {
     const program = catalog.programs.find(item => item.id === variant.programId) || {
       id: variant.programId,
       name: variant.label,
@@ -220,7 +247,7 @@ export async function POST(request) {
     if (!requestedCatalogYear) {
       return jsonResponse({ error: "The entry catalog year could not be inferred from the student standing and plan date.", availableCatalogYears: catalogYears }, 400);
     }
-    const catalogResolution = resolveCatalogYear(requestedCatalogYear, catalogYears);
+    const catalogResolution = resolveEconomicsCatalog(requestedCatalogYear, catalogYears);
     if (catalogResolution.catalogResolutionStatus === "unavailable") {
       return jsonResponse({
         error: `Entry catalog year ${requestedCatalogYear} is unavailable, and no earlier approved Economics snapshot can be used.`,
@@ -294,7 +321,8 @@ export async function POST(request) {
       }
     }
 
-    const results = mapCatalogPrograms(catalog, student, catalogReview);
+    const economicsOnly = catalogResolution.catalogResolutionStatus === "economics_provisional_fallback";
+    const results = mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly });
     const advisorAttention = [
       ...catalogAdvisorAttention(catalogResolution, catalogReview, planningContext),
       ...electiveAdvisorAttention(results),
@@ -316,7 +344,8 @@ export async function POST(request) {
           ? "entry_catalog_year_inferred_from_standing_and_plan_date"
           : "previous_approved_catalog_fallback",
         uncertainty: advisorAttention.length ? advisorAttention.map(notice => notice.message).join(" ") : null,
-        availableCatalogYears: catalogYears
+        availableCatalogYears: catalogYears,
+        scope: economicsOnly ? "economics_only_provisional" : "catalog_snapshot"
       },
       summary: {
         programCount: results.length,

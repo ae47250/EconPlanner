@@ -109,7 +109,7 @@ test("missing 2026-2027 entry catalog uses 2025-2026 and returns Advisor Attenti
   assert.match(data.catalog.advisorAttention[0].message, /2026\/2027 Economics catalog was unavailable/);
 });
 
-test("missing entry catalog blocks when no earlier approved snapshot exists", async () => {
+test("missing historical entry catalog uses an Economics-only provisional fallback", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -123,10 +123,40 @@ test("missing entry catalog blocks when no earlier approved snapshot exists", as
   }));
   const data = await response.json();
 
-  assert.equal(response.status, 422);
-  assert.equal(data.requestedCatalogYear, "2023-2024");
-  assert.equal(data.selectedCatalogYear, null);
-  assert.equal(data.catalogResolutionStatus, "unavailable");
+  assert.equal(response.status, 200);
+  assert.equal(data.catalog.requestedCatalogYear, "2023-2024");
+  assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
+  assert.equal(data.catalog.catalogResolutionStatus, "economics_provisional_fallback");
+  assert.equal(data.catalog.scope, "economics_only_provisional");
+  assert.equal(data.programs.length, 1);
+  assert.equal(data.programs[0].program.id, "economics-base");
+  const notice = data.catalog.advisorAttention.find(item => item.code === "ECONOMICS_PROVISIONAL_CATALOG_FALLBACK");
+  assert.match(notice.message, /does not apply to any other major/);
+});
+
+test("major mapper returns graduation-priority senior plans and advisor warnings", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "senior",
+        planCreationDate: "2026-07-30",
+        summerStandingConfirmed: "yes",
+        courses: ["ECO 113", "ECO 114", "MAT 113", "ECO 214"].map(code => ({ code, status: "completed" }))
+      }
+    })
+  }));
+  const data = await response.json();
+  const economics = data.programs[0];
+
+  assert.equal(response.status, 200);
+  assert.equal(economics.economicsPlans.length, 2);
+  assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "graduation_priority"));
+  assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
+  assert.ok(data.catalog.advisorAttention.some(item => /standard two-course limit/.test(item.message)));
+  assert.ok(data.catalog.advisorAttention.some(item => /Schedule confirmation required/.test(item.message)));
+  assert.ok(economics.economicsPlanningGaps.some(item => /2 genuinely distinct feasible plans/.test(item.message)));
 });
 
 test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async () => {

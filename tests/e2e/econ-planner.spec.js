@@ -35,7 +35,7 @@ function courseStatus(page, code, status) {
 }
 
 async function generatePlans(page) {
-  await page.getByRole("button", { name: /Generate my three plans/ }).click();
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
   await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
 }
 
@@ -120,7 +120,7 @@ test("generation is single-flight and three plans support compare, history, refr
     await route.continue();
   });
 
-  const generateButton = page.getByRole("button", { name: /Generate my three plans/ });
+  const generateButton = page.getByRole("button", { name: /Generate my plans/ });
   await generateButton.dblclick();
   await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
   expect(generationRequests).toBe(1);
@@ -186,7 +186,7 @@ test("generation is single-flight and three plans support compare, history, refr
   await expect(page.locator(".plan-validation-errors")).toContainText("not verified");
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
 
-  await page.getByRole("button", { name: "Regenerate all three plans" }).click();
+  await page.getByRole("button", { name: "Regenerate plans" }).click();
   await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
   expect(generationRequests).toBe(2);
 
@@ -207,7 +207,7 @@ test("missing information and generation failures stay visible without losing in
   await expect(page.getByRole("status")).toContainText("no longer available");
   await expect(page).not.toHaveURL(/view=plan/);
 
-  const generateButton = page.getByRole("button", { name: /Generate my three plans/ });
+  const generateButton = page.getByRole("button", { name: /Generate my plans/ });
   await page.getByLabel("Plan creation date", { exact: true }).fill("");
   await expect(generateButton).toBeDisabled();
 
@@ -225,6 +225,39 @@ test("missing information and generation failures stay visible without losing in
   await expect(page.getByRole("status")).toContainText("Planner service is temporarily unavailable.");
   await expect(generateButton).toBeEnabled();
   await expect(courseStatus(page, "ECO 113", "Completed")).toHaveAttribute("aria-pressed", "true");
+});
+
+test("graduation-first senior workflow shows two realistic plans and advisor warnings", async ({ page }) => {
+  await setStanding(page, "Senior");
+  await setPlanDate(page, "2026-07-30", "yes");
+  for (const code of ["ECO 113", "ECO 114"]) {
+    await courseStatus(page, code, "Completed").click();
+  }
+  await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
+  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await courseStatus(page, "ECO 214", "Completed").click();
+
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
+  const cards = page.locator("article[data-plan-id]");
+  await expect(cards).toHaveCount(2);
+  await expect(page.getByText(/2 genuinely distinct feasible plans/)).toBeVisible();
+  await expect(page.getByText(/standard two-course limit/).first()).toBeVisible();
+  await expect(page.getByText(/Schedule confirmation required/).first()).toBeVisible();
+  for (const card of await cards.all()) {
+    await expect(card.getByText("Statistics requirement")).toBeVisible();
+    await expect(card.getByText("ECO 213")).toBeVisible();
+    await expect(card.getByText("ECO 461")).toBeVisible();
+    await expect(card.getByText("ECO 321")).toBeVisible();
+    await expect(card.getByText("ECO 234")).toBeVisible();
+    await expect(card.getByText("ECO 333")).toBeVisible();
+    await expect(card.getByText("ECO 221")).toBeVisible();
+  }
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(350);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
 });
 
 test("mobile principal workflow keeps controls and prerequisite dialog inside the viewport", async ({ page }) => {

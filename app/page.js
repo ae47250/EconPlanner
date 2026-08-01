@@ -509,6 +509,10 @@ function planValidationLabel(plan) {
     const count = plan.validation.errors?.length || 1;
     return `Needs attention: ${count} blocking validation ${count === 1 ? "issue" : "issues"}`;
   }
+  const warningCount = plan?.validation?.warnings?.length || 0;
+  if (warningCount) {
+    return `Validated with ${warningCount} advisor-review ${warningCount === 1 ? "warning" : "warnings"}`;
+  }
   const requirementCount = plan?.validation?.checkedRequirementCount;
   return requirementCount
     ? `Validated against all ${requirementCount} requirement slots`
@@ -581,6 +585,13 @@ function PlanComparisonScreen({
     "plan-1": "Even load",
     "plan-2": "More later",
     "plan-3": "Standing-aware"
+  };
+  const planBadge = plan => {
+    if (plan.planningMode !== "graduation_priority") return planBadges[plan.id] || "Validated";
+    const mayCourse = plan.terms
+      ?.find(term => term.scheduleTerm === "May")
+      ?.courses?.[0]?.course;
+    return mayCourse ? `${mayCourse} in May` : "Graduation priority";
   };
 
   return (
@@ -1003,7 +1014,7 @@ function PlanComparisonScreen({
             disabled={isGenerating || Boolean(editingPlanCourseKey)}
             onClick={onRegenerate}
           >
-            {isGenerating ? "Regenerating..." : "Regenerate all three plans"}
+            {isGenerating ? "Regenerating..." : "Regenerate plans"}
           </button>
           <button type="button" className="edit-courses-button" onClick={onEditCourses}>
             Edit completed courses
@@ -1025,10 +1036,16 @@ function PlanComparisonScreen({
         </section>
         <div className="comparison-heading-row">
           <div>
-            <h1>{isPlanView ? `Review ${selectedPlan?.label || "your plan"}` : "Compare your plans"}</h1>
+            <h1>{isPlanView
+              ? `Review ${selectedPlan?.label || "your plan"}`
+              : plans.length > 1
+                ? "Compare your plans"
+                : "Your feasible plan"}</h1>
             <p>{isPlanView
               ? "Switch plans, adjust one plan, or return to the side-by-side comparison."
-              : "Same degree requirements and graduation target, different pacing."}</p>
+              : plans.length > 1
+                ? "Same degree requirements and graduation target, different feasible schedules."
+                : "The verified schedule supports one feasible plan; infeasible or duplicate filler plans are not shown."}</p>
           </div>
           {!isPlanView && plans.length > 1 && (
             <label className="difference-toggle">
@@ -1083,7 +1100,7 @@ function PlanComparisonScreen({
                   <div className="comparison-plan-summary">
                     <div className="plan-title-row">
                       <h2>{plan.label}</h2>
-                      <span className="plan-strategy-badge">{planBadges[plan.id] || "Validated"}</span>
+                      <span className="plan-strategy-badge">{planBadge(plan)}</span>
                     </div>
                     <p>{plan.description}</p>
                   </div>
@@ -3119,7 +3136,7 @@ export default function Page() {
                 disabled={isGenerating || !formData.planCreationDate || planningContext.requiresSummerClarification || !inputPrerequisiteValidation.valid}
               >
                 <span className="default-generate-label">3. Generate My Plan</span>
-                <span className="apple-generate-label">{isGenerating ? "Generating plans..." : "Generate my three plans →"}</span>
+                <span className="apple-generate-label">{isGenerating ? "Generating plans..." : "Generate my plans →"}</span>
               </button>
             </div>
           </section>
