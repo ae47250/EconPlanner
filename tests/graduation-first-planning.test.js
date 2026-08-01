@@ -36,7 +36,6 @@ function upcomingStudent(standing, codes) {
   return {
     academicStanding: standing,
     planCreationDate: "2026-07-30",
-    summerStandingConfirmed: "yes",
     courses: completed(codes)
   };
 }
@@ -119,6 +118,28 @@ test("one-year-early final Winter carries senior standing for ECO 461", () => {
   const finalWinter = buildPlanningSlots(context).find(slot => slot.termKey === "Winter");
   assert.equal(context.remainingYears, 1);
   assert.equal(finalWinter.absoluteStandingIndex, 3);
+});
+
+test("transfer plans keep the selected graduation target and omit C-2", () => {
+  const student = {
+    isTransferStudent: true,
+    transferExpectedGraduationYear: "2030",
+    transferEntryAcademicYear: "2025-2026",
+    planCreationDate: "2027-01-10",
+    courses: []
+  };
+  const { result } = bundle(student);
+
+  assert.equal(result.earlyGraduationContext, null);
+  assert.ok(result.candidateOutcomes.every(outcome => outcome.id !== "plan-c2"));
+  assert.ok(result.plans.every(plan => plan.planningContext.expectedGraduationTerm === "Spring/May 2030"));
+
+  const fiveYear = bundle({
+    ...student,
+    transferExpectedGraduationYear: "2031"
+  }).result;
+  assert.equal(fiveYear.plans[0].distribution.targetYears.length, 5);
+  assert.equal(fiveYear.plans[0].terms.at(-1).term, "Spring/May 2031");
 });
 
 test("PSY 217 unlocks ECO 461, while concurrent statistics remains blocked", () => {

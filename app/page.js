@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { buildPlanningSlots, resolvePlanningContext } from "../lib/planning/horizon.js";
+import {
+  buildPlanningSlots,
+  resolvePlanningContext,
+  transferPlanningOptions
+} from "../lib/planning/horizon.js";
 import {
   selectedStatus,
   validateCoursePrerequisites,
@@ -19,7 +23,7 @@ import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
-const PLANNER_STORAGE_VERSION = 3;
+const PLANNER_STORAGE_VERSION = 4;
 const COURSE_CATALOG = economicsCourseData.courses || [];
 const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
   (course.aliases || []).map(alias => [alias, course.code])
@@ -189,7 +193,9 @@ function plannerInputSignature(formData) {
   return JSON.stringify({
     academicStanding: formData.academicStanding,
     planCreationDate: formData.planCreationDate,
-    summerStandingConfirmed: formData.summerStandingConfirmed,
+    isTransferStudent: formData.isTransferStudent,
+    transferExpectedGraduationYear: formData.transferExpectedGraduationYear,
+    transferEntryAcademicYear: formData.transferEntryAcademicYear,
     reservedCourseUnits: formData.reservedCourseUnits,
     courses: selectedCourses(formData.courses)
       .map(course => [canonicalSavedCode(course.code), course.status, course.units, course.source])
@@ -202,7 +208,9 @@ const initialForm = {
   academicStanding: "freshman",
   planCreationDate: "",
   planCreationDateEdited: false,
-  summerStandingConfirmed: "",
+  isTransferStudent: false,
+  transferExpectedGraduationYear: "",
+  transferEntryAcademicYear: "",
   expectedGraduationTerm: "",
   reservedCourseUnits: {},
   courses: SELECTABLE_COURSE_CATALOG.map(blankCourse),
@@ -292,6 +300,10 @@ function formatPlanCreationDate(value) {
 
 function formatAcademicYear(value) {
   return value ? String(value).replace("-", "/") : "Academic year";
+}
+
+function formatAcademicYearCompact(startYear) {
+  return `${startYear}\u2013${String(startYear + 1).slice(-2)}`;
 }
 
 function PlanningGaps({ items = [] }) {
@@ -649,7 +661,7 @@ function PlanComparisonScreen({
     });
     return signatures.length > 1 && signatures.every(signature => signature === signatures[0]);
   }));
-  const standing = displayName?.trim() || planningContext?.effectiveStandingLabel
+  const standing = displayName?.trim() || (planningContext?.isTransferStudent ? "Transfer plan" : planningContext?.effectiveStandingLabel)
     || planningContext?.standingLabel
     || "Student";
   const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
@@ -1274,14 +1286,14 @@ function PlannerSummary({ report, courses, planningContext: initialPlanningConte
             <div><span>Courses in plan</span><strong>{planCourseCount(plan)}</strong></div>
           </div>
           {planningContext?.expectedGraduationTerm && (
-            <p className="summary-footnote">{planningContext.effectiveStandingLabel || planningContext.standingLabel} plan, {planningContext.remainingYears} years remaining; expected graduation {planningContext.expectedGraduationTerm}.</p>
+            <p className="summary-footnote">{planningContext.isTransferStudent ? "Transfer plan" : `${planningContext.effectiveStandingLabel || planningContext.standingLabel} plan`}, {planningContext.remainingYears} years remaining; expected graduation {planningContext.expectedGraduationTerm}.</p>
           )}
           <p className="summary-footnote">Applied catalog: {formatAcademicYear(catalog?.selectedCatalogYear)}. The plan uses the selected course status and verified economics scheduling rules.</p>
         </>
       ) : (
         <>
           <div className="apple-summary-preview">
-            <div className="apple-summary-line"><span>Class standing</span><strong>{planningContext?.standingLabel || "Choose standing"}</strong></div>
+            <div className="apple-summary-line"><span>{planningContext?.isTransferStudent ? "Plan type" : "Class standing"}</span><strong>{planningContext?.isTransferStudent ? "Transfer plan" : planningContext?.standingLabel || "Choose standing"}</strong></div>
             <div className="apple-summary-line"><span>Planning horizon</span><strong>{planningContext?.remainingYears ? `${planningContext.remainingYears} years` : "To be confirmed"}</strong></div>
             <div className="apple-summary-line"><span>Completed</span><strong>{completedCount}</strong></div>
             <div className="apple-summary-line"><span>In progress</span><strong>{inProgressCount}</strong></div>
@@ -1340,12 +1352,38 @@ export default function Page() {
   const planningSlots = buildPlanningSlots(planningContext);
   const planningStart = planningSlots[0]?.label || "To be confirmed";
   const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
-  const summerStandingSelection = planningContext.isSummer && ["yes", "no"].includes(formData.summerStandingConfirmed)
-    ? formData.summerStandingConfirmed === "yes"
-      ? `${planningContext.standingLabel} in Fall ${planningContext.startYear}`
-      : `${planningContext.standingLabel} during ${planningContext.startYear - 1}\u2013${String(planningContext.startYear).slice(-2)} academic year`
-    : "";
+  const transferOptions = transferPlanningOptions(planningContext);
+  const standingQuestion = planningContext.isSummer
+    ? "What year will you be in this fall?"
+    : "What year are you in this academic year?";
+  const standingHelp = planningContext.isSummer
+    ? `Choose the year you'll start in Fall ${planningContext.startYear}.`
+    : `Choose your year for the ${formatAcademicYearCompact(planningContext.startYear)} academic year.`;
   latestFormRef.current = formData;
+
+  function updatePlanCreationDate(current, planCreationDate) {
+    const next = {
+      ...current,
+      planCreationDate,
+      planCreationDateEdited: true
+    };
+    if (!current.isTransferStudent) return next;
+
+    const nextContext = resolvePlanningContext(next);
+    const nextOptions = transferPlanningOptions(nextContext);
+    const selectedGraduationYear = Number(current.transferExpectedGraduationYear);
+    const graduationYearStillValid = selectedGraduationYear >= nextContext.startYear + 1
+      && selectedGraduationYear <= nextContext.startYear + 5;
+    return {
+      ...next,
+      transferExpectedGraduationYear: graduationYearStillValid
+        ? current.transferExpectedGraduationYear
+        : "",
+      transferEntryAcademicYear: nextOptions.entryAcademicYears.includes(current.transferEntryAcademicYear)
+        ? current.transferEntryAcademicYear
+        : ""
+    };
+  }
 
   function plannerUrl(view, planId = "") {
     const url = new URL(window.location.href);
@@ -1408,6 +1446,7 @@ export default function Page() {
           const {
             entryCatalogYear: _entryCatalogYear,
             majorDeclarationCatalogYear: _majorDeclarationCatalogYear,
+            summerStandingConfirmed: _summerStandingConfirmed,
             ...savedFormData
           } = parsed.formData;
           const savedPlanCreationDateEdited = savedFormData.planCreationDateEdited === true;
@@ -1739,8 +1778,8 @@ export default function Page() {
       return;
     }
 
-    if (planningContext.requiresSummerClarification) {
-      setStatus("Answer the summer class-standing question before generating a plan.");
+    if (formData.isTransferStudent && !planningContext.transferValidation.valid) {
+      setStatus(planningContext.transferValidation.errors[0]);
       return;
     }
 
@@ -2283,10 +2322,7 @@ export default function Page() {
         .planning-field { display: grid; gap: .25rem; }
         .planning-field label, .planning-label { color: var(--planner-muted); }
         .planning-field input, .planning-field select { width: 100%; box-sizing: border-box; }
-        .summer-standing-selection { display: flex; align-items: center; gap: .35rem; margin-top: .35rem; color: var(--planner-muted); }
-        .summer-standing-selection strong { color: #171a1c; font-weight: 700; }
-        button.summer-standing-change { width: auto; min-height: 0 !important; margin: 0; padding: 0 .3rem; border: 0; background: transparent; color: #1d4ed8; font-family: var(--planner-font-family); font-size: var(--planner-body-size); text-decoration: underline; }
-        button.summer-standing-change:hover { color: #163ea9; }
+        .standing-help { margin: .25rem 0 0; color: var(--planner-muted); }
         .date-display { display: flex; align-items: baseline; gap: .4rem; min-height: 1.5rem; }
         .date-display strong { font-weight: 400; }
         button.date-edit-button { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0; border: 0; border-radius: .3rem; background: transparent; color: #1d4ed8; }
@@ -2294,13 +2330,27 @@ export default function Page() {
         button.date-edit-button:hover { color: #163ea9; }
         button.date-edit-button:focus-visible { outline: 2px solid #93c5fd; outline-offset: 1px; }
         #plan-creation-date::-webkit-calendar-picker-indicator { display: none; }
-        .clarification-card { display: block; max-width: 38rem; margin-top: .85rem; padding: .8rem; border: 1px solid #6db784; background: #effaf1; }
-        .clarification-card strong { display: block; }
-        .clarification-card p { margin: .35rem 0 .65rem; color: var(--planner-muted); }
-        .clarification-card > p, .clarification-card > .radio-choices { width: 100%; box-sizing: border-box; }
-        .radio-choices { display: grid; grid-template-columns: 1fr; gap: .35rem; margin-top: .65rem; padding-left: 3ch; }
-        .radio-choice { display: flex; align-items: center; gap: .35rem; cursor: pointer; }
-        .radio-choice input { margin: 0; }
+        button.transfer-student-trigger, button.regular-standing-trigger { width: auto; min-height: 0 !important; margin: .65rem 0 0; padding: 0; border: 0; background: transparent; color: #1d4ed8; text-align: left; text-decoration: underline; cursor: pointer; }
+        button.transfer-student-trigger:hover, button.regular-standing-trigger:hover { color: #163ea9; }
+        .transfer-student-card { max-width: 46rem; margin-top: .75rem; padding: .85rem; border: 1px solid #8dbddb; border-radius: .6rem; background: #f7fbff; }
+        .transfer-card-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
+        .transfer-card-heading h2 { margin: 0; color: #111; }
+        .transfer-card-heading p { max-width: 46rem; margin: .35rem 0 0; color: var(--planner-muted); }
+        button.regular-standing-trigger { flex: 0 0 auto; margin-top: 0; }
+        .transfer-graduation-fieldset { min-width: 0; margin: .85rem 0 0; padding: 0; border: 0; }
+        .transfer-graduation-fieldset legend, .transfer-entry-year > span { color: #171a1c; font-weight: 700; }
+        .transfer-graduation-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin-top: .4rem; }
+        .transfer-graduation-options button { width: 100%; min-height: 2rem; margin: 0; padding: .35rem; border: 1px solid var(--planner-border); border-radius: .4rem; background: #fff; color: #171a1c; }
+        .transfer-graduation-options button.is-selected { border-color: #3699ef; background: #3699ef; color: #fff; }
+        .transfer-other-year { display: flex; align-items: center; gap: .5rem; margin-top: .55rem; }
+        .transfer-other-year label { display: flex; align-items: center; gap: .3rem; cursor: pointer; }
+        .transfer-other-year input[type="radio"] { margin: 0; }
+        .transfer-other-year input[type="number"] { width: 7rem; box-sizing: border-box; }
+        .transfer-other-year span { color: var(--planner-muted); }
+        .transfer-entry-year { display: grid; gap: .3rem; max-width: 22rem; margin-top: .85rem; }
+        .transfer-entry-year select { width: 100%; box-sizing: border-box; }
+        .transfer-validation { margin: .65rem 0 0; padding-left: 1.25rem; color: #9b2c20; }
+        .transfer-advisor-note { margin: .75rem 0 0; padding-top: .65rem; border-top: 1px solid #cfe2f0; color: var(--planner-muted); }
         .search-label { display: block; width: 33.333%; margin: 1rem 0 .7rem; }
         .search-label input { width: 100%; box-sizing: border-box; margin: 0; }
         .course-columns { display: grid; grid-template-columns: max-content max-content; gap: .45rem; align-items: start; justify-content: start; }
@@ -2421,6 +2471,10 @@ export default function Page() {
           .course-name { width: auto; }
           .search-label { width: 100%; }
           .planning-fields { grid-template-columns: 1fr; }
+          .transfer-card-heading { display: block; }
+          button.regular-standing-trigger { margin-top: .55rem; }
+          .transfer-graduation-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .transfer-other-year { align-items: flex-start; flex-wrap: wrap; }
           .course-name { white-space: normal; }
           .course-name span { white-space: normal; }
           .course-toggles { flex-wrap: wrap; }
@@ -2967,7 +3021,7 @@ export default function Page() {
           <h2>The EconPlanner combines your completed and current courses, major requirements, and course timing to show what you still need and help build a manageable semester-by-semester path through the rest of your time at Hanover College so you can plan ahead easily.</h2>
           <p className="instruction-lead"><span className="lead-aqua">This</span> <span className="lead-gold">is</span> <span className="lead-orange">what</span> <span className="lead-gold">you</span> <span className="lead-aqua">do</span></p>
           <div className="planner-instructions">
-            <p>1. Choose class standing</p>
+            <p>1. Choose your year in college or transfer graduation target</p>
             <p>2. Select Econ and cognate courses taken or in progress</p>
             <p>3. Click on Generate My Plan below course selection list.</p>
             <p>4. EconPlanner will generate a course plan.</p>
@@ -2980,38 +3034,30 @@ export default function Page() {
             <div className="planning-details">
               <div className="section-heading">
                 <div>
-                  <h2>1. Choose class standing and courses taken or in progress</h2>
-                  <p>These two answers set the number of years and terms in your plan.</p>
+                  <h2>1. Choose your planning year and courses taken or in progress</h2>
+                  <p>Your year in college or transfer graduation target sets the number of years and terms in your plan.</p>
                 </div>
               </div>
               <div className="planning-fields">
                 <div className="planning-field">
-                  <label htmlFor="academic-standing">Class standing</label>
-                  <select
-                    id="academic-standing"
-                    value={formData.academicStanding}
-                    onChange={event => setFormData(current => ({
-                      ...current,
-                      academicStanding: event.target.value,
-                      summerStandingConfirmed: ""
-                    }))}
-                  >
-                    <option value="freshman">Freshman</option>
-                    <option value="sophomore">Sophomore</option>
-                    <option value="junior">Junior</option>
-                    <option value="senior">Senior</option>
-                  </select>
-                  {summerStandingSelection && (
-                    <div className="summer-standing-selection" role="status">
-                      <span>Selected: <strong>{summerStandingSelection}</strong></span>
-                      <button
-                        type="button"
-                        className="summer-standing-change"
-                        onClick={() => setFormData(current => ({ ...current, summerStandingConfirmed: "" }))}
+                  {!formData.isTransferStudent && (
+                    <>
+                      <label htmlFor="academic-standing">{standingQuestion}</label>
+                      <select
+                        id="academic-standing"
+                        value={formData.academicStanding}
+                        onChange={event => setFormData(current => ({
+                          ...current,
+                          academicStanding: event.target.value
+                        }))}
                       >
-                        Change
-                      </button>
-                    </div>
+                        <option value="freshman">Freshman</option>
+                        <option value="sophomore">Sophomore</option>
+                        <option value="junior">Junior</option>
+                        <option value="senior">Senior</option>
+                      </select>
+                      <p className="standing-help">{standingHelp}</p>
+                    </>
                   )}
                 </div>
                 <div className="planning-field">
@@ -3035,12 +3081,7 @@ export default function Page() {
                       type="date"
                       aria-labelledby="plan-creation-date-label"
                       value={formData.planCreationDate}
-                      onChange={event => setFormData(current => ({
-                        ...current,
-                        planCreationDate: event.target.value,
-                        planCreationDateEdited: true,
-                        summerStandingConfirmed: ""
-                      }))}
+                      onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))}
                     />
                   )}
                 </div>
@@ -3072,28 +3113,144 @@ export default function Page() {
                   </div>
                 </details>
               )}
-              <div className="apple-planning-heading">
-                <h2>Where are you in your degree?</h2>
-                <p>Choose the standing you will have in the upcoming Fall.</p>
-              </div>
-              <div className="apple-standing-segmented" role="group" aria-label="Class standing">
-                {[
-                  ["freshman", "Freshman"],
-                  ["sophomore", "Sophomore"],
-                  ["junior", "Junior"],
-                  ["senior", "Senior"]
-                ].map(([value, label]) => (
+              {!formData.isTransferStudent && (
+                <>
+                  <div className="apple-planning-heading">
+                    <h2>{standingQuestion}</h2>
+                    <p>{standingHelp}</p>
+                  </div>
+                  <div className="apple-standing-segmented" role="group" aria-label="Class standing">
+                    {[
+                      ["freshman", "Freshman"],
+                      ["sophomore", "Sophomore"],
+                      ["junior", "Junior"],
+                      ["senior", "Senior"]
+                    ].map(([value, label]) => (
+                      <button
+                        type="button"
+                        className={formData.academicStanding === value ? "is-selected" : ""}
+                        aria-pressed={formData.academicStanding === value}
+                        key={value}
+                        onClick={() => setFormData(current => ({ ...current, academicStanding: value }))}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
                   <button
                     type="button"
-                    className={formData.academicStanding === value ? "is-selected" : ""}
-                    aria-pressed={formData.academicStanding === value}
-                    key={value}
-                    onClick={() => setFormData(current => ({ ...current, academicStanding: value, summerStandingConfirmed: "" }))}
+                    className="transfer-student-trigger"
+                    aria-expanded="false"
+                    aria-controls="transfer-student-planning"
+                    onClick={() => setFormData(current => ({
+                      ...current,
+                      isTransferStudent: true,
+                      transferExpectedGraduationYear: "",
+                      transferEntryAcademicYear: ""
+                    }))}
                   >
-                    {label}
+                    Are you a transfer student? Choose your graduation year instead.
                   </button>
-                ))}
-              </div>
+                </>
+              )}
+              {formData.isTransferStudent && (
+                <section
+                  id="transfer-student-planning"
+                  className="transfer-student-card"
+                  aria-labelledby="transfer-student-heading"
+                >
+                  <div className="transfer-card-heading">
+                    <div>
+                      <h2 id="transfer-student-heading">Transfer student planning</h2>
+                      <p>Transfer credits do not always line up with the usual Freshman, Sophomore, Junior, or Senior labels. Choose when you expect to graduate, and EconPlanner will set the length of your plan.</p>
+                    </div>
+                    <button
+                      type="button"
+                      className="regular-standing-trigger"
+                      onClick={() => setFormData(current => ({
+                        ...current,
+                        isTransferStudent: false,
+                        transferExpectedGraduationYear: "",
+                        transferEntryAcademicYear: ""
+                      }))}
+                    >
+                      Use regular class-year choices
+                    </button>
+                  </div>
+                  <fieldset className="transfer-graduation-fieldset">
+                    <legend>When do you expect to graduate?</legend>
+                    <div className="transfer-graduation-options">
+                      {transferOptions.graduationYears.map(year => (
+                        <button
+                          type="button"
+                          key={year}
+                          className={Number(formData.transferExpectedGraduationYear) === year ? "is-selected" : ""}
+                          aria-pressed={Number(formData.transferExpectedGraduationYear) === year}
+                          onClick={() => setFormData(current => ({
+                            ...current,
+                            transferExpectedGraduationYear: String(year)
+                          }))}
+                        >
+                          Spring/May {year}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="transfer-other-year">
+                      <label>
+                        <input
+                          type="radio"
+                          name="transfer-graduation-year"
+                          checked={Number(formData.transferExpectedGraduationYear) === transferOptions.otherGraduationYear}
+                          onChange={() => setFormData(current => ({
+                            ...current,
+                            transferExpectedGraduationYear: String(transferOptions.otherGraduationYear)
+                          }))}
+                        />
+                        Other
+                      </label>
+                      <input
+                        type="number"
+                        aria-label="Other expected graduation year"
+                        min={transferOptions.otherGraduationYear}
+                        max={transferOptions.otherGraduationYear}
+                        value={Number(formData.transferExpectedGraduationYear) >= transferOptions.otherGraduationYear
+                          ? formData.transferExpectedGraduationYear
+                          : transferOptions.otherGraduationYear || ""}
+                        onFocus={() => setFormData(current => ({
+                          ...current,
+                          transferExpectedGraduationYear: String(transferOptions.otherGraduationYear)
+                        }))}
+                        onChange={event => setFormData(current => ({
+                          ...current,
+                          transferExpectedGraduationYear: event.target.value
+                        }))}
+                      />
+                      <span>Five-year maximum</span>
+                    </div>
+                  </fieldset>
+                  <label className="transfer-entry-year">
+                    <span>When did you first enroll at Hanover?</span>
+                    <select
+                      value={formData.transferEntryAcademicYear}
+                      onChange={event => setFormData(current => ({
+                        ...current,
+                        transferEntryAcademicYear: event.target.value
+                      }))}
+                    >
+                      <option value="">Choose an academic year</option>
+                      {transferOptions.entryAcademicYears.map(year => (
+                        <option value={year} key={year}>{formatAcademicYear(year)}</option>
+                      ))}
+                    </select>
+                  </label>
+                  {!planningContext.transferValidation.valid && (
+                    <ul className="transfer-validation" role="alert">
+                      {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
+                    </ul>
+                  )}
+                  <p className="transfer-advisor-note">Hanover's Registrar decides how transfer credits apply. Confirm your catalog year and course equivalencies with your advisor or the Registrar.</p>
+                </section>
+              )}
               <div className="apple-mini-fields">
                 <label>
                   <span>Student name (optional)</span>
@@ -3109,12 +3266,7 @@ export default function Page() {
                   <input
                     type="date"
                     value={formData.planCreationDate}
-                    onChange={event => setFormData(current => ({
-                      ...current,
-                      planCreationDate: event.target.value,
-                      planCreationDateEdited: true,
-                      summerStandingConfirmed: ""
-                    }))}
+                    onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))}
                   />
                 </label>
                 <label>
@@ -3126,34 +3278,6 @@ export default function Page() {
                   <input type="text" value={planningStart} readOnly />
                 </label>
               </div>
-              {planningContext.requiresSummerClarification && (
-                <div className="clarification-card" role="group" aria-labelledby="summer-standing-question">
-                  <strong id="summer-standing-question">{planningContext.question}</strong>
-                  <p>Summer class standing can refer to the upcoming Fall or the academic year that ended in Spring/May.<br />Choose one so the planner does not guess.</p>
-                  <div className="radio-choices">
-                    <label className="radio-choice">
-                      <input
-                        type="radio"
-                        name="summer-standing-confirmed"
-                        value="yes"
-                        checked={formData.summerStandingConfirmed === "yes"}
-                        onChange={event => setFormData(current => ({ ...current, summerStandingConfirmed: event.target.value }))}
-                      />
-                      Yes, I will be this standing in the upcoming Fall.
-                    </label>
-                    <label className="radio-choice">
-                      <input
-                        type="radio"
-                        name="summer-standing-confirmed"
-                        value="no"
-                        checked={formData.summerStandingConfirmed === "no"}
-                        onChange={event => setFormData(current => ({ ...current, summerStandingConfirmed: event.target.value }))}
-                      />
-                      No, I was this standing during the year that ended in Spring/May.
-                    </label>
-                  </div>
-                </div>
-              )}
             </div>
           </section>
 
@@ -3251,7 +3375,7 @@ export default function Page() {
               <button
                 type="submit"
                 className="generate-button"
-                disabled={isGenerating || !formData.planCreationDate || planningContext.requiresSummerClarification || !inputPrerequisiteValidation.valid}
+                disabled={isGenerating || !formData.planCreationDate || !planningContext.transferValidation.valid || !inputPrerequisiteValidation.valid}
               >
                 <span className="default-generate-label">3. Generate My Plan</span>
                 <span className="apple-generate-label">{isGenerating ? "Generating plans..." : "Generate my plans →"}</span>

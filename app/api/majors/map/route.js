@@ -243,12 +243,12 @@ export async function POST(request) {
     if (!student.planCreationDate) {
       return jsonResponse({ error: "Plan creation date is required before mapping majors.", planningContext }, 400);
     }
-    if (student.planCreationDate && planningContext.requiresSummerClarification) {
+    if (planningContext.isTransferStudent && !planningContext.transferValidation.valid) {
       return jsonResponse({
-        error: planningContext.question,
-        requiresSummerClarification: true,
+        error: planningContext.transferValidation.errors[0],
+        code: "INVALID_TRANSFER_PLANNING_INPUT",
         planningContext
-      }, 409);
+      }, 422);
     }
     const catalogYears = await availableCatalogYears();
     const requestedCatalogYear = planningContext.entryCatalogYear;
@@ -350,7 +350,9 @@ export async function POST(request) {
         advisorAttention,
         evaluatedCatalogYears: [catalogResolution.selectedCatalogYear],
         basis: catalogResolution.catalogResolutionStatus === "exact"
-          ? "entry_catalog_year_inferred_from_standing_and_plan_date"
+          ? (planningContext.isTransferStudent
+              ? "transfer_hanover_entry_academic_year"
+              : "entry_catalog_year_inferred_from_standing_and_plan_date")
           : "previous_approved_catalog_fallback",
         uncertainty: advisorAttention.length ? advisorAttention.map(notice => notice.message).join(" ") : null,
         availableCatalogYears: catalogYears,

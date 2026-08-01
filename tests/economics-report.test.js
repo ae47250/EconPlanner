@@ -45,6 +45,22 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
   assert.equal(html.includes("{{"), false);
 });
 
+test("transfer reports use the selected graduation and Hanover entry years", async () => {
+  const report = await buildEconomicsReportFromStudent({
+    ...fixture.student,
+    isTransferStudent: true,
+    transferExpectedGraduationYear: "2027",
+    transferEntryAcademicYear: "2025-2026",
+    planCreationDate: "2026-07-28"
+  }, "2026-07-28");
+
+  assert.equal(report.student.academicStanding, "Transfer plan");
+  assert.equal(report.student.planType, "transfer");
+  assert.equal(report.student.transferEntryAcademicYear, "2025-2026");
+  assert.equal(report.student.expectedGraduationTerm, "Spring/May 2027");
+  assert.match(report.inputSummary, /transfer plan targeting Spring\/May 2027/);
+});
+
 test("selected report plan is revalidated and rendered exactly", async () => {
   const generated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28");
   const selectedPlan = structuredClone(generated.selectedPlan);

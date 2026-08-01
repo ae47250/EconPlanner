@@ -17,15 +17,8 @@ async function setStanding(page, label) {
   await expect(button).toHaveAttribute("aria-pressed", "true");
 }
 
-async function setPlanDate(page, date, summerAnswer = "yes") {
+async function setPlanDate(page, date) {
   await page.getByLabel("Plan creation date", { exact: true }).fill(date);
-  const summerQuestion = page.getByText(/Summer class standing can refer/);
-  if (await summerQuestion.isVisible().catch(() => false)) {
-    const answer = summerAnswer === "yes"
-      ? /Yes, I will be this standing in the upcoming Fall/
-      : /No, I was this standing during the year that ended/;
-    await page.getByLabel(answer).click();
-  }
 }
 
 function courseStatus(page, code, status) {
@@ -54,12 +47,16 @@ test("standing, term, graduation, course status, and prerequisite controls stay 
   ]);
   for (const [standing, expectedGraduation] of expectedByStanding) {
     await setStanding(page, standing);
-    await setPlanDate(page, "2026-07-31", "yes");
+    await setPlanDate(page, "2026-07-31");
     await expect(page.getByLabel("Expected graduation")).toHaveValue(expectedGraduation);
     await expect(page.getByLabel("Planning starts")).toHaveValue("Fall 2026");
   }
 
   await setStanding(page, "Freshman");
+  await setPlanDate(page, "2026-08-23");
+  await expect(page.getByRole("heading", { name: "What year will you be in this fall?" })).toBeVisible();
+  await setPlanDate(page, "2026-08-24");
+  await expect(page.getByRole("heading", { name: "What year are you in this academic year?" })).toBeVisible();
   await setPlanDate(page, "2026-09-01");
   await expect(page.getByLabel("Planning starts")).toHaveValue("Winter 2027");
   await setPlanDate(page, "2027-02-01");
@@ -103,6 +100,31 @@ test("standing, term, graduation, course status, and prerequisite controls stay 
   await page.getByRole("searchbox").fill("ECO 333");
   await page.getByRole("searchbox").press("Enter");
   await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
+});
+
+test("transfer students choose graduation and Hanover entry years instead of class standing", async ({ page }) => {
+  await setPlanDate(page, "2027-01-10");
+  await page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." }).click();
+
+  await expect(page.getByRole("heading", { name: "Transfer student planning" })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Class standing" })).toHaveCount(0);
+  for (const year of [2027, 2028, 2029, 2030]) {
+    await expect(page.getByRole("button", { name: `Spring/May ${year}` })).toBeVisible();
+  }
+  await expect(page.getByLabel("Other expected graduation year")).toHaveValue("2031");
+
+  await page.getByRole("button", { name: "Spring/May 2030" }).click();
+  await page.getByLabel("When did you first enroll at Hanover?").selectOption("2025-2026");
+  await expect(page.getByLabel("Expected graduation", { exact: true })).toHaveValue("Spring/May 2030");
+
+  await setPlanDate(page, "2030-09-01");
+  await expect(page.getByLabel("Expected graduation", { exact: true })).toHaveValue("To be confirmed");
+  await expect(page.getByLabel("When did you first enroll at Hanover?")).toHaveValue("");
+  await expect(page.locator(".transfer-validation")).toContainText("Choose an expected graduation year");
+
+  await page.getByRole("button", { name: "Use regular class-year choices" }).click();
+  await expect(page.getByRole("group", { name: "Class standing" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Transfer student planning" })).toHaveCount(0);
 });
 
 test("generation is single-flight and distinct plans support compare, history, refresh, isolated edit, and undo", async ({ page }) => {
@@ -257,6 +279,13 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
 test("mobile principal workflow keeps controls and prerequisite dialog inside the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await setPlanDate(page, "2026-07-31");
+  await page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." }).click();
+  const transferCard = page.getByRole("region", { name: "Transfer student planning" });
+  await expect(transferCard).toBeVisible();
+  const transferCardBox = await transferCard.boundingBox();
+  expect(transferCardBox.x).toBeGreaterThanOrEqual(0);
+  expect(transferCardBox.x + transferCardBox.width).toBeLessThanOrEqual(390);
+  await page.getByRole("button", { name: "Use regular class-year choices" }).click();
   const completed213 = courseStatus(page, "ECO 213", "Completed");
   await completed213.click();
   const dialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });

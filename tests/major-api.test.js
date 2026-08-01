@@ -24,7 +24,7 @@ test("major mapper returns every captured program and Economics schedule", async
   assert.ok(economics.annualSchedule.terms.May.some(course => course.section === "S"));
 });
 
-test("major mapper asks for summer standing clarification instead of guessing", async () => {
+test("major mapper treats summer standing as the upcoming Fall without clarification", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -37,13 +37,58 @@ test("major mapper asks for summer standing clarification instead of guessing", 
     })
   }));
   const data = await response.json();
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
 
-  assert.equal(response.status, 409);
-  assert.equal(data.requiresSummerClarification, true);
-  assert.equal(
-    data.error,
-    "Will you be a freshman in Fall 2026, or were you a freshman during last May term?"
-  );
+  assert.equal(response.status, 200);
+  assert.equal(economics.planningContext.requiresSummerClarification, false);
+  assert.equal(economics.planningContext.standingBasis, "upcoming_fall");
+  assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
+});
+
+test("major mapper validates transfer graduation and Hanover entry years", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        isTransferStudent: true,
+        transferExpectedGraduationYear: "2032",
+        transferEntryAcademicYear: "2026-2027",
+        planCreationDate: "2027-01-10",
+        courses: []
+      }
+    })
+  }));
+  const data = await response.json();
+
+  assert.equal(response.status, 422);
+  assert.equal(data.code, "INVALID_TRANSFER_PLANNING_INPUT");
+  assert.match(data.error, /2027 through 2031/);
+});
+
+test("major mapper uses transfer entry catalog and keeps the selected graduation target", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        isTransferStudent: true,
+        transferExpectedGraduationYear: "2030",
+        transferEntryAcademicYear: "2025-2026",
+        planCreationDate: "2027-01-10",
+        courses: []
+      }
+    })
+  }));
+  const data = await response.json();
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
+
+  assert.equal(response.status, 200);
+  assert.equal(data.catalog.requestedCatalogYear, "2025-2026");
+  assert.equal(data.catalog.basis, "transfer_hanover_entry_academic_year");
+  assert.equal(economics.planningContext.isTransferStudent, true);
+  assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
+  assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "plan-c2"));
 });
 
 test("major mapper returns standing-limited candidate outcomes and distinct plans", async () => {
@@ -144,7 +189,6 @@ test("major mapper returns graduation-priority senior plans and advisor warnings
       student: {
         academicStanding: "senior",
         planCreationDate: "2026-07-30",
-        summerStandingConfirmed: "yes",
         courses: ["ECO 113", "ECO 114", "MAT 113", "ECO 214"].map(code => ({ code, status: "completed" }))
       }
     })
