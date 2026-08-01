@@ -4,6 +4,7 @@ import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
 import {
   assigned100LevelElectives,
   buildEconomicsTermPlans,
+  classifyFeasibility,
   validateGeneratedPlan,
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
@@ -124,13 +125,13 @@ function planAdvisorAttention(results) {
     ...(plan.advisorChecks || [])
       .filter(check => /Concurrent enrollment requires approval/i.test(check.reason || ""))
       .map(check => ({
-        code: `PLAN_CHECK_${check.course.replace(/\s/g, "_")}`,
+        code: `PLAN_CHECK_${plan.id}_${check.course.replace(/\s/g, "_")}`,
         title: "Graduation plan advisor review",
         severity: "warning",
         message: check.reason
       })),
     ...(plan.validation?.warnings || []).map((message, index) => ({
-      code: `PLAN_WARNING_${index}`,
+      code: `PLAN_WARNING_${plan.id}_${index}`,
       title: "Graduation planning assumption",
       severity: "warning",
       message
@@ -191,6 +192,9 @@ function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = f
       economicsPlanningGaps,
       economicsPlanValidation: economicsPlanBundle?.planSetValidation || null,
       planningContext: economicsPlanBundle?.context || null,
+      economicsCandidateOutcomes: economicsPlanBundle?.candidateOutcomes || [],
+      economicsPlanConvergences: economicsPlanBundle?.convergences || [],
+      earlyGraduationContext: economicsPlanBundle?.earlyGraduationContext || null,
       catalogReview: variant.programId === "economics" ? catalogReview : null
     };
   });
@@ -216,6 +220,11 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     context: planningContext
   });
   const validatedPlan = { ...plan, validation };
+  validatedPlan.feasibilityStatus = classifyFeasibility(validatedPlan, student);
+  validatedPlan.verification = {
+    ...(validatedPlan.verification || {}),
+    status: validatedPlan.feasibilityStatus
+  };
   const candidatePlans = Array.isArray(plans)
     ? plans.map(item => item.id === validatedPlan.id ? validatedPlan : item)
     : [validatedPlan];

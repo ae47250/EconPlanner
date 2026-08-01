@@ -5,7 +5,8 @@
   "sourceRefs": [
     "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
     "data/raw/economics/Econ_Course_Offerings.md",
-    "data/raw/economics/Term_Structure.md"
+    "data/raw/economics/Term_Structure.md",
+    "data/raw/economics/Department_Confirmed_Planning_Policies.md"
   ],
   "requirementSlots": [
     {
@@ -54,7 +55,9 @@
         "PSY 217"
       ],
       "units": 1,
-      "provisionalOptions": [
+      "capstonePrerequisiteOptions": [
+        "MAT 217",
+        "ECO 257",
         "PSY 217"
       ]
     },
@@ -112,6 +115,9 @@
           "assignedCode": "BUSN 323"
         }
       },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
       "maxLevel100": 1,
       "units": 1
     },
@@ -135,6 +141,9 @@
           "assignedCode": "BUSN 323"
         }
       },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
       "maxLevel100": 1,
       "units": 1
     },
@@ -158,6 +167,9 @@
           "assignedCode": "BUSN 323"
         }
       },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
       "maxLevel100": 1,
       "units": 1
     },
@@ -181,6 +193,9 @@
           "assignedCode": "BUSN 323"
         }
       },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
       "maxLevel100": 1,
       "units": 1
     }

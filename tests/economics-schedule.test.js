@@ -23,7 +23,7 @@ test("2026/2027 schedule preserves Fall, Winter, May, and Summer offerings", () 
   assert.ok(schedule.terms.Winter.some(course => course.course === "ECO 214"));
   assert.ok(schedule.terms.May.some(course => course.course === "ECO 222" && course.section === "S"));
   assert.ok(schedule.terms.May.some(course => course.course === "ECO 260" && course.section === "S"));
-  assert.ok(schedule.terms.Summer.some(course => course.course === "ECO 113" && course.delivery === "online"));
+  assert.ok(schedule.terms.Summer.some(course => course.course === "ECO 113" && course.meeting.delivery === "online"));
   assert.equal(schedule.source.sectionCodeSMeans, "May");
   assert.match(schedule.source.summerOfferingNote, /last-resort/);
 });

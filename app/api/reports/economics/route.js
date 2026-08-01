@@ -8,7 +8,11 @@ export const runtime = "nodejs";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const report = await buildEconomicsReportFromStudent(body?.student || body || {});
+    const report = await buildEconomicsReportFromStudent(
+      body?.student || body || {},
+      body?.preparedDate,
+      body?.selectedPlan || null
+    );
     if (body?.format === "json") return Response.json(report);
 
     const template = await readFile(path.join(process.cwd(), "templates/econplannertemplate.html"), "utf8");

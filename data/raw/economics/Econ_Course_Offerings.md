@@ -11,7 +11,7 @@ These are planning rules, not a replacement for checking the official schedule i
 - ECO 113 and ECO 114 are offered in both Fall and Winter.
 - ECO 113 and ECO 114 usually have many sections each term.
 - ECO 213 and ECO 214 are Fall/Winter courses only.
-- ECO 213 and ECO 214 are never offered in the same term.
+- ECO 213 and ECO 214 normally alternate between Fall and Winter and have not been offered in the same term. This is an offering pattern, not an enrollment prohibition.
 - If both ECO 213 and ECO 214 are still needed and prerequisites allow both, place one in Fall and the other in Winter.
 - Either ECO 213 or ECO 214 may be placed first unless the student provides updated current-year schedule information.
 - If prerequisites allow only one of ECO 213 or ECO 214, place the allowed course first and delay the other to a later Fall/Winter term.
@@ -48,11 +48,11 @@ Never place the following courses in May Term:
 
 - ECO 461 is the senior seminar / capstone.
 - Senior-seminar and capstone requirements must be completed at Hanover; transfer, AP, and equivalency credit do not satisfy the requirement.
-- ECO 461 can only be taken in senior year.
+- ECO 461 can only be taken with senior standing; a student graduating one year early has senior standing in the final Winter.
 - ECO 461 is offered in Winter term only.
 - ECO 461 normally has one Winter offering per academic year; verify future schedules before treating a later offering as confirmed.
 - Never place ECO 461 in Fall or May Term.
-- Never place ECO 461 before senior year.
+- Never place ECO 461 before senior standing.
 
 ## Requirement-Substitution Notes
 
@@ -62,8 +62,7 @@ Never place the following courses in May Term:
 - Because the department has not been able to offer ECO 257 reliably, do not suggest ECO 257 by itself.
 - When suggesting this requirement, write it as: MAT 217 / ECO 257 / PSY 217.
 - Do not place MAT 217, ECO 257, or PSY 217 in May Term.
-- For ECO 461 planning, ECO 257 or MAT 217 satisfies the listed prerequisite pathway.
-- If the student uses PSY 217, flag advisor confirmation for the ECO 461 prerequisite pathway.
+- For ECO 461 planning, ECO 257, MAT 217, or PSY 217 satisfies the statistics prerequisite pathway.
 
 ### ECO 321 / BUSN 323
 
@@ -81,7 +80,8 @@ Never place the following courses in May Term:
 - When no specific current elective schedule is available, write “ECO elective” instead of naming a specific elective.
 - Use only electives listed in the economics major requirements and prerequisites file if naming a specific elective.
 - Check prerequisites before naming any specific elective.
-- Do not schedule more than one ECO elective in any term unless the student explicitly asks for a heavier economics load.
+- Prefer no more than two total ECO courses in Fall or Winter. Graduation need may justify a heavier Economics load, up to the four-course regular-term capacity, with a warning.
+- Every ECO 260 special-topics course counts as an ECO elective.
 - Labor Economics must be treated as ECO 331 and requires ECO 213 first.
 
 ## Course-Planning Behavior Rules
@@ -90,9 +90,9 @@ When building a student course plan:
 
 - Never schedule a course in a term where this file says it is not offered.
 - Never place ECO 461 outside Winter of senior year.
-- Never place ECO 213 and ECO 214 in the same term.
+- Follow the verified ECO 213/ECO 214 offering order. Their normal separation is an offering pattern rather than a universal enrollment prohibition.
 - Never place ECO 113, ECO 114, ECO 213, ECO 214, ECO 321, BUSN 323, MAT 217, ECO 257, PSY 217, or ECO 461 in May Term.
 - For May Term, use the generic label “ECO elective” unless the student provides updated specific course-offering information.
 - Do not schedule more than one May Term course.
-- Do not schedule more than one ECO elective in any term unless the student explicitly asks for a heavier economics load.
+- Prefer no more than two total ECO courses in Fall or Winter; allow a heavier Economics load when needed to reach the graduation target and show a warning.
 - Use ECO as the course prefix throughout course plans.

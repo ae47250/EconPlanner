@@ -148,6 +148,19 @@
         "MAT 217",
         "PSY 217"
       ]
+    ],
+    "concurrentWithApproval": [
+      {
+        "options": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "approval": "department",
+        "policySource": "department-confirmed-local-policy",
+        "reason": "concurrent_intermediate_with_capstone",
+        "requiresCompletedFromOptions": 1,
+        "maxConcurrent": 1
+      }
     ]
   },
   "ECO 471": {

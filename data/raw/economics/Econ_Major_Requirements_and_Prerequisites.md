@@ -10,11 +10,13 @@ This file is for course-planning support. It is not a replacement for the offici
 
 Never place a course before any of its prerequisites.
 
-A course may be scheduled only after all prerequisites have been completed in a prior term, except for the department-approved concurrent-math policy below.
+A course may be scheduled only after all prerequisites have been completed in a prior term, except for the department-approved concurrent-math and concurrent-intermediate policies below.
 
-If a prerequisite is planned, it must appear in an earlier term, never in the same or a later term, unless it is MAT 113 or MAT 121 placed concurrently with ECO 213 or ECO 214 under the documented exception.
+If a prerequisite is planned, it must appear in an earlier term, never in the same or a later term, unless a documented exception below applies and its required approval is recorded.
 
 Department-approved local policy: MAT 113 or MAT 121 may be taken concurrently with ECO 213 or ECO 214 only with approval from the ECO 213 or ECO 214 instructor. ECO 113 must still be completed before ECO 213, and ECO 114 must still be completed before ECO 214. The public catalog course descriptions remain the formal prerequisite source; use concurrent math only as a last resort when a prerequisite-first plan cannot fit the remaining horizon.
+
+Department-approved local policy: when exactly one of ECO 213 or ECO 214 is already completed, the other may be taken concurrently with ECO 461 only with explicit Economics Department approval. The concurrent intermediate must satisfy its own introductory and mathematics prerequisites, and the statistics option must be completed before ECO 461.
 
 A generated plan never adds courses to the regular term containing the plan-creation date. Courses already being taken in that term must be recorded as In Progress. A prerequisite marked In Progress may satisfy a dependent course only after the current term ends.
 
@@ -71,12 +73,12 @@ Use this sequence logic when building plans:
 4. ECO 214 requires ECO 114 plus MAT 113 or MAT 121.
 5. ECO 257 requires ECO 113 or ECO 114.
 6. ECO 321 requires ECO 113 and ECO 114.
-7. ECO 461 requires ECO 213, ECO 214, and ECO 257 or MAT 217.
+7. ECO 461 requires ECO 213, ECO 214, and ECO 257, MAT 217, or PSY 217, subject only to the documented concurrent-intermediate exception.
 8. ECO 471 requires ECO 213, ECO 214, and ECO 321.
 
 Advisor-confirmation flags:
 
-- If a student uses PSY 217 instead of ECO 257 or MAT 217, confirm whether it satisfies the prerequisite pathway into ECO 461.
+- PSY 217 is a department-confirmed prerequisite pathway into ECO 461.
 - If a student uses BUSN 323 instead of ECO 321, confirm whether it satisfies any later course prerequisite that specifically names ECO 321.
 - ECO 357 requires department permission.
 - Directed study and special topics courses may require advisor or department approval.
@@ -96,7 +98,7 @@ Advisor-confirmation flags:
 - ECO 224 — no prerequisite listed in source material
 - ECO 234 — no prerequisite listed in source material
 - ECO 257 — ECO 113 or ECO 114
-- ECO 260 — no prerequisite listed in source material; topic varies
+- ECO 260 — no prerequisite listed in source material; every ECO 260 special-topics course counts as an ECO elective
 - ECO 307 — no prerequisite listed in source material; directed study, 0.50 unit
 - ECO 315 — ECO 113 or ECO 114
 - ECO 316 — ECO 113 and ECO 114
@@ -108,7 +110,7 @@ Advisor-confirmation flags:
 - ECO 357 — ECO 213, ECO 214, and department permission
 - ECO 360 — no prerequisite listed in source material; topic varies
 - ECO 370 — no prerequisite listed in source material; directed study
-- ECO 461 — ECO 213, ECO 214, and ECO 257 or MAT 217
+- ECO 461 — ECO 213, ECO 214, and ECO 257, MAT 217, or PSY 217; one intermediate may be concurrent only under the documented department-approved exception
 - ECO 471 — ECO 213, ECO 214, and ECO 321
 
 ## ECO Course Title Reference
@@ -129,7 +131,7 @@ Use this section to match course titles to course numbers. When the user names a
 | ECO 224 | Introduction to Sustainability | None listed | ECO elective candidate if listed as ECO credit. |
 | ECO 234 | Rational Choices | None listed | Cross-listed with PHI 234. Count either course code as the same course; advisor approval is not required. |
 | ECO 257 | Quantitative Methods for Business/Economics | ECO 113 or ECO 114 | Required for the major unless replaced by MAT 217 or PSY 217. |
-| ECO 260 | Special Topics | None listed | Topic varies. Confirm topic and whether it counts toward the major/elective requirement. |
+| ECO 260 | Special Topics | None listed | Every ECO 260 special-topics course counts as an ECO elective. |
 | ECO 307 | Directed Study | None listed | 0.50 unit. Confirm whether and how it counts toward the major. |
 | ECO 315 | U.S. Economic History | ECO 113 or ECO 114 | ECO elective candidate. |
 | ECO 316 | History of Economic Thought | ECO 113 and ECO 114 | ECO elective candidate. |
@@ -141,7 +143,7 @@ Use this section to match course titles to course numbers. When the user names a
 | ECO 357 | Internship | ECO 213, ECO 214, and department permission | Confirm department permission before scheduling. |
 | ECO 360 | Special Topics | None listed | Topic varies. Confirm topic and whether it counts toward the major/elective requirement. |
 | ECO 370 | Directed Study | None listed | Confirm whether and how it counts toward the major. |
-| ECO 461 | Senior Seminar: Econometrics | ECO 213, ECO 214, and ECO 257 or MAT 217 | Required culminating course for the major; must be completed at Hanover in senior Winter. |
+| ECO 461 | Senior Seminar: Econometrics | ECO 213, ECO 214, and ECO 257, MAT 217, or PSY 217 | Required culminating course for the major; must be completed at Hanover in senior Winter. One intermediate may be concurrent only with Economics Department approval when the other is already complete. |
 | ECO 471 | Senior Thesis | ECO 213, ECO 214, and ECO 321 | Recommended for students intending to pursue graduate study. |
 
 ## Course Title Matching Rules
@@ -169,7 +171,7 @@ If the user gives a partial title, infer the most likely course only when the ma
 
 When the student needs an economics elective but no specific elective schedule is available, use the generic label “ECO elective” rather than naming a specific course.
 
-Do not place more than one ECO elective in the same term unless the user explicitly asks for a heavier economics load.
+Prefer no more than two total ECO courses in Fall or Winter. Graduation need may justify as many as four total courses in a regular term, with a heavy-major-load warning.
 
 If naming a specific elective, check its prerequisite first. Examples:
 
@@ -180,7 +182,7 @@ If naming a specific elective, check its prerequisite first. Examples:
 
 Special Topics, Directed Study, Internship, and cross-listed courses require extra caution:
 
-- ECO 160, ECO 260, and ECO 360 are Special Topics. The topic may change.
+- ECO 160 and ECO 360 are Special Topics whose major applicability may need confirmation. Every ECO 260 special-topics course counts as an ECO elective.
 - ECO 307 and ECO 370 are Directed Study courses. Confirm whether they count and how many units they carry.
 - ECO 357 is Internship and requires department permission.
 - ECO 234 is cross-listed with PHI 234. Count either course code as the same course; advisor approval is not required.
@@ -193,9 +195,9 @@ Do not place ECO 213 before ECO 113. Place MAT 113 or MAT 121 first unless the l
 
 Do not place ECO 214 before ECO 114. Place MAT 113 or MAT 121 first unless the last-resort concurrent-math exception is explicitly marked with ECO 214 instructor approval.
 
-Do not place ECO 461 before ECO 213, ECO 214, and ECO 257 or MAT 217.
+Do not place ECO 461 before ECO 213, ECO 214, and ECO 257, MAT 217, or PSY 217, except that exactly one intermediate may be concurrent under the documented Economics Department-approved exception.
 
-Do not treat PSY 217 as automatically satisfying the ECO 461 prerequisite without advisor confirmation.
+Treat PSY 217 as a confirmed prerequisite pathway into ECO 461.
 
 Do not treat BUSN 323 as automatically satisfying ECO 471 prerequisites without advisor confirmation.
 

@@ -44,3 +44,28 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
   assert.ok(html.includes("EconMapper"));
   assert.equal(html.includes("{{"), false);
 });
+
+test("selected report plan is revalidated and rendered exactly", async () => {
+  const generated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28");
+  const selectedPlan = structuredClone(generated.selectedPlan);
+  const response = await reportPost(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student: fixture.student, preparedDate: "2026-07-28", selectedPlan, format: "json" })
+  }));
+  const report = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(report.selectedPlan.id, selectedPlan.id);
+  assert.deepEqual(
+    report.terms.flatMap(term => term.courses.map(course => course.code)),
+    selectedPlan.terms.flatMap(term => term.courses.map(course => course.course))
+  );
+
+  selectedPlan.terms[0].courses.push({ course: "ECO 999", requirementId: "eco-113", source: "verified-offering" });
+  const invalidResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student: fixture.student, preparedDate: "2026-07-28", selectedPlan, format: "json" })
+  }));
+  assert.equal(invalidResponse.status, 422);
+});

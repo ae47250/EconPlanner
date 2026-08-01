@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T06:01:32.578Z",
+  "generatedAt": "2026-08-01T00:00:00.000Z",
   "entries": [
     {
       "role": "catalog_home",
@@ -278,14 +278,21 @@
       "role": "economics_source",
       "source": "department-provided:Econ_Major_Requirements_and_Prerequisites (1).md",
       "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
-      "sha256": "1ea74417ec7d1f83b1e01fe53369ab9a6f5d89243095e49bef189816bd0a918b",
-      "notes": "Includes the department-approved local concurrent-math policy confirmed by the project owner on 2026-07-30; the public catalog remains the formal prerequisite source."
+      "sha256": "6da52642cf4fcaa8d9d10075cba1158347e831aacc98b21cf3fcc4b7ff06565f",
+      "notes": "Updated from department-confirmed local planning policies through 2026-08-01; the public catalog remains the formal prerequisite source."
     },
     {
       "role": "economics_source",
       "source": "department-provided:Econ_Course_Offerings.md",
       "path": "data/raw/economics/Econ_Course_Offerings.md",
-      "sha256": "91e52f0c2460ed01a2caf28fcd167c57542f40f67ad0ba5e02f5714f6acf5620"
+      "sha256": "2d6d4cd295789d5d1f23728ef4deecadae97c3bd346548deb9f989add6b9f24d"
+    },
+    {
+      "role": "economics_local_policy",
+      "source": "department-confirmed:planning-policies-2026-08-01",
+      "confirmedOn": "2026-08-01",
+      "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
+      "sha256": "b23325fa29bf9feb85f1e92d6d2cccf394640d3b97229baa4fe177a3fd275383"
     },
     {
       "role": "economics_source",

@@ -190,6 +190,7 @@ function plannerInputSignature(formData) {
     academicStanding: formData.academicStanding,
     planCreationDate: formData.planCreationDate,
     summerStandingConfirmed: formData.summerStandingConfirmed,
+    reservedCourseUnits: formData.reservedCourseUnits,
     courses: selectedCourses(formData.courses)
       .map(course => [canonicalSavedCode(course.code), course.status, course.units, course.source])
       .sort((left, right) => left[0].localeCompare(right[0]))
@@ -203,6 +204,7 @@ const initialForm = {
   planCreationDateEdited: false,
   summerStandingConfirmed: "",
   expectedGraduationTerm: "",
+  reservedCourseUnits: {},
   courses: SELECTABLE_COURSE_CATALOG.map(blankCourse),
   advisorApprovals: ""
 };
@@ -411,6 +413,8 @@ function PlanTimeline({
                               <div className="plan-course-summary">
                                 <strong>{course.course}</strong>
                                 <span>{course.title}</span>
+                                {courseAvailabilityLabel(course) && <span className="plan-course-availability">{courseAvailabilityLabel(course)}</span>}
+                                {course.approvalRequired?.length > 0 && <span className="plan-course-approval">Approval required</span>}
                               </div>
                               {onEditPlanCourse && (
                                 <div className="plan-course-actions">
@@ -492,6 +496,12 @@ function PlanTimeline({
             </ul>
           </div>
         )}
+        {activePlan.studentMessages?.length > 0 && (
+          <div className="plan-notes" role="status">
+            <strong>Plan conditions and warnings</strong>
+            <ul>{activePlan.studentMessages.map(message => <li key={message}>{message}</li>)}</ul>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -517,6 +527,68 @@ function planValidationLabel(plan) {
   return requirementCount
     ? `Validated against all ${requirementCount} requirement slots`
     : "Validated by the Economics planning rules";
+}
+
+function feasibilityLabel(status) {
+  return ({
+    VERIFIED_FEASIBLE: "Verified feasible",
+    CONDITIONALLY_FEASIBLE: "Conditionally feasible",
+    PRELIMINARY_ONLY: "Preliminary only",
+    NOT_FEASIBLE: "Not feasible"
+  })[status] || "Status pending";
+}
+
+function courseAvailabilityLabel(course) {
+  const availability = course?.availability;
+  if (!availability?.status) {
+    return course?.verificationStatus === "unverified" ? "Offering not yet verified" : "";
+  }
+  const seats = Number.isFinite(availability.seatsOpen)
+    ? ` · ${availability.seatsOpen} of ${availability.capacity ?? "?"} seats open`
+    : "";
+  return `${availability.status[0].toUpperCase()}${availability.status.slice(1)}${seats}`;
+}
+
+function CandidateOutcomes({ outcomes = [], convergences = [] }) {
+  if (!outcomes.length && !convergences.length) return null;
+  return (
+    <section className="candidate-outcomes" aria-label="Plan candidate results">
+      <h2>Plan candidate results</h2>
+      {outcomes.length > 0 && (
+        <ul>
+          {outcomes.map(outcome => (
+            <li key={`${outcome.id}-${outcome.label}`}>
+              <strong>{outcome.label}:</strong> {feasibilityLabel(outcome.status)}{outcome.displayed ? " · shown" : " · not shown"}
+              {outcome.reasons?.length > 0 && ` — ${outcome.reasons.map(item => item.reason || item.message || item).join("; ")}`}
+            </li>
+          ))}
+        </ul>
+      )}
+      {convergences.map(item => <p key={`${item.keptPlanId}-${item.convergedPlanId}`}>{item.message}</p>)}
+    </section>
+  );
+}
+
+function ScheduleAvailability({ schedule }) {
+  const terms = Object.entries(schedule?.terms || {});
+  if (!terms.length) return null;
+  return (
+    <details className="schedule-availability">
+      <summary>Current section availability ({formatAcademicYear(schedule.academicYear)})</summary>
+      {terms.map(([term, sections]) => (
+        <section key={term}>
+          <h3>{term}</h3>
+          <ul>
+            {sections.map((section, index) => (
+              <li key={`${term}-${section.course}-${section.section || index}`}>
+                <strong>{section.course}{section.section ? `-${section.section}` : ""}</strong>: {courseAvailabilityLabel(section)}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </details>
+  );
 }
 
 function comparisonScheduleRows(plan) {
@@ -561,6 +633,8 @@ function PlanComparisonScreen({
   const result = economicsResult(report);
   const plans = result?.economicsPlans || [];
   const planningGaps = result?.economicsPlanningGaps || [];
+  const candidateOutcomes = result?.economicsCandidateOutcomes || [];
+  const convergences = result?.economicsPlanConvergences || [];
   const planningContext = result?.planningContext;
   const [showDifferencesOnly, setShowDifferencesOnly] = useState(false);
   const isPlanView = view === PLANNER_VIEWS.PLAN;
@@ -584,7 +658,8 @@ function PlanComparisonScreen({
   const planBadges = {
     "plan-1": "Even load",
     "plan-2": "More later",
-    "plan-3": "Standing-aware"
+    "plan-3": "Explore first",
+    "plan-c2": "One year early"
   };
   const planBadge = plan => {
     if (plan.planningMode !== "graduation_priority") return planBadges[plan.id] || "Validated";
@@ -882,6 +957,8 @@ function PlanComparisonScreen({
         .comparison-page .plan-course-summary strong,
         .comparison-page .plan-course-summary span { display: block; }
         .comparison-page .plan-course-summary span { margin-top: .15rem; color: #53627a; font-size: 12px; }
+        .comparison-page .plan-course-summary .plan-course-availability { color: #2f5f52; }
+        .comparison-page .plan-course-summary .plan-course-approval { color: #8a4c00; font-weight: 700; }
         .comparison-page .plan-course-actions { display: grid; gap: .35rem; margin-top: .5rem; }
         .comparison-page .plan-course-actions select,
         .comparison-page .plan-course-actions button { width: 100%; min-height: 2rem; font-size: 12px; }
@@ -889,6 +966,14 @@ function PlanComparisonScreen({
         .comparison-page .plan-validation-errors { margin-top: 1rem; padding: .8rem; border: 1px solid #c85a4c; background: #fff2ef; color: #6f2119; }
         .comparison-page .plan-validation-errors ul { margin: .45rem 0 0; padding-left: 1.2rem; }
         .plan-edit-status { margin: .75rem 0; color: #33425d; }
+        .candidate-outcomes { margin: 1rem 0; padding: .9rem 1rem; border: 1px solid #cfd8e6; border-radius: 12px; background: rgba(255,255,255,.8); }
+        .candidate-outcomes h2 { margin: 0 0 .5rem; font-size: 1rem; }
+        .candidate-outcomes ul { margin: 0; padding-left: 1.2rem; }
+        .candidate-outcomes p { margin: .55rem 0 0; }
+        .schedule-availability { margin: 1rem 0; padding: .8rem 1rem; border: 1px solid #cfd8e6; border-radius: 12px; background: rgba(255,255,255,.8); }
+        .schedule-availability summary { cursor: pointer; font-weight: 700; }
+        .schedule-availability h3 { margin: .75rem 0 .25rem; font-size: .95rem; }
+        .schedule-availability ul { margin: 0; padding-left: 1.2rem; }
         .choose-plan-button {
           width: calc(100% - 2rem);
           min-height: 0;
@@ -1060,6 +1145,8 @@ function PlanComparisonScreen({
         </div>
 
         <AdvisorAttention catalog={report?.catalog} />
+        <CandidateOutcomes outcomes={candidateOutcomes} convergences={convergences} />
+        <ScheduleAvailability schedule={result?.annualSchedule} />
 
         {planEditStatus && <p className="plan-edit-status" role="status">{planEditStatus}</p>}
         {isPlanView && canUndoPlanEdit && (
@@ -1129,7 +1216,7 @@ function PlanComparisonScreen({
                   )}
 
                   <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
-                    {planValidationLabel(plan)}
+                    {feasibilityLabel(plan.feasibilityStatus)} · {planValidationLabel(plan)}
                   </p>
                   <button
                     type="button"
@@ -1250,7 +1337,8 @@ export default function Page() {
   const [planEditUndo, setPlanEditUndo] = useState(null);
   const [isComparisonExiting, setIsComparisonExiting] = useState(false);
   const planningContext = resolvePlanningContext(formData);
-  const planningStart = buildPlanningSlots(planningContext)[0]?.label || "To be confirmed";
+  const planningSlots = buildPlanningSlots(planningContext);
+  const planningStart = planningSlots[0]?.label || "To be confirmed";
   const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
   const summerStandingSelection = planningContext.isSummer && ["yes", "no"].includes(formData.summerStandingConfirmed)
     ? formData.summerStandingConfirmed === "yes"
@@ -2569,6 +2657,9 @@ export default function Page() {
           font-size: 11px;
           line-height: 1.1 !important;
         }
+        main.apple-layout-preview .non-major-commitments { margin: 1rem 0; padding: .8rem; border: 1px solid #d8e0ea; border-radius: .65rem; }
+        main.apple-layout-preview .non-major-commitments summary { cursor: pointer; font-weight: 700; }
+        main.apple-layout-preview .non-major-commitments p { color: #52627a; font-size: .88rem; }
         main.apple-layout-preview .apple-course-heading {
           display: flex;
           align-items: start;
@@ -2954,6 +3045,33 @@ export default function Page() {
                   )}
                 </div>
               </div>
+              {planningSlots.length > 0 && (
+                <details className="non-major-commitments">
+                  <summary>Enter planned non-major courses (optional)</summary>
+                  <p>These courses use space in a term even though EconPlanner does not place them.</p>
+                  <div className="apple-mini-fields">
+                    {planningSlots.filter(slot => !slot.isSummer).map(slot => (
+                      <label key={slot.id}>
+                        <span>{slot.label}</span>
+                        <input
+                          type="number"
+                          min="0"
+                          max={slot.termKey === "Spring" ? "1" : "4"}
+                          step="1"
+                          value={formData.reservedCourseUnits?.[slot.id] ?? ""}
+                          onChange={event => setFormData(current => ({
+                            ...current,
+                            reservedCourseUnits: {
+                              ...(current.reservedCourseUnits || {}),
+                              [slot.id]: event.target.value === "" ? 0 : Number(event.target.value)
+                            }
+                          }))}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                </details>
+              )}
               <div className="apple-planning-heading">
                 <h2>Where are you in your degree?</h2>
                 <p>Choose the standing you will have in the upcoming Fall.</p>

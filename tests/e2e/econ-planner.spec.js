@@ -105,7 +105,7 @@ test("standing, term, graduation, course status, and prerequisite controls stay 
   await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
 });
 
-test("generation is single-flight and three plans support compare, history, refresh, isolated edit, and undo", async ({ page }) => {
+test("generation is single-flight and distinct plans support compare, history, refresh, isolated edit, and undo", async ({ page }) => {
   await page.getByRole("textbox", { name: "Student name (optional)" }).fill("Alex Student");
   await setPlanDate(page, "2026-07-31");
   await courseStatus(page, "ECO 113", "Completed").click();
@@ -129,7 +129,7 @@ test("generation is single-flight and three plans support compare, history, refr
   await expect(cards).toHaveCount(3);
   await expect(cards.nth(0)).toHaveAttribute("data-plan-id", "plan-1");
   await expect(cards.nth(1)).toHaveAttribute("data-plan-id", "plan-2");
-  await expect(cards.nth(2)).toHaveAttribute("data-plan-id", "plan-3");
+  await expect(cards.nth(2)).toHaveAttribute("data-plan-id", "plan-c2");
   const originalSchedules = await cards.locator("tbody").allInnerTexts();
   expect(new Set(originalSchedules).size).toBe(3);
 
@@ -157,7 +157,7 @@ test("generation is single-flight and three plans support compare, history, refr
   await expect(page.getByText("Alex Student", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Remove ECO 114" }).click();
-  await expect(page.getByRole("status")).toContainText("updated as a draft");
+  await expect(page.locator(".plan-edit-status")).toContainText("updated as a draft");
   await expect(page.locator(".plan-validation-errors")).toContainText("Requirement eco-114 remains unscheduled");
   await page.reload();
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toBeVisible();
@@ -173,16 +173,11 @@ test("generation is single-flight and three plans support compare, history, refr
   await page.getByRole("button", { name: "Review Plan B issues" }).click();
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
   await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
-  await expect(page.getByRole("status")).toContainText("Plan B was restored");
+  await expect(page.locator(".plan-edit-status")).toContainText("Plan B was restored");
 
   await page.getByRole("combobox", { name: "Move ECO 114 to another term" })
     .selectOption({ label: "2026/2027 Winter" });
-  await expect(page.getByRole("status")).toContainText("updated as a draft");
-  await expect(page.locator(".plan-validation-errors")).toContainText("missing prerequisites");
-  await page.getByRole("button", { name: "Undo last plan edit" }).click();
-
-  await page.getByRole("combobox", { name: "Move ECO 321 to another term" })
-    .selectOption({ label: "2026/2027 Spring/May" });
+  await expect(page.locator(".plan-edit-status")).toContainText("updated as a draft");
   await expect(page.locator(".plan-validation-errors")).toContainText("not verified");
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
 
@@ -227,7 +222,7 @@ test("missing information and generation failures stay visible without losing in
   await expect(courseStatus(page, "ECO 113", "Completed")).toHaveAttribute("aria-pressed", "true");
 });
 
-test("graduation-first senior workflow shows two realistic plans and advisor warnings", async ({ page }) => {
+test("graduation-first senior workflow shows one highest-ranked realistic plan and advisor warnings", async ({ page }) => {
   await setStanding(page, "Senior");
   await setPlanDate(page, "2026-07-30", "yes");
   for (const code of ["ECO 113", "ECO 114"]) {
@@ -238,11 +233,10 @@ test("graduation-first senior workflow shows two realistic plans and advisor war
   await courseStatus(page, "ECO 214", "Completed").click();
 
   await page.getByRole("button", { name: /Generate my plans/ }).click();
-  await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole("heading", { name: "Your feasible plan" })).toBeVisible({ timeout: 15000 });
   const cards = page.locator("article[data-plan-id]");
-  await expect(cards).toHaveCount(2);
-  await expect(page.getByText(/2 genuinely distinct feasible plans/)).toBeVisible();
-  await expect(page.getByText(/standard two-course limit/).first()).toBeVisible();
+  await expect(cards).toHaveCount(1);
+  await expect(page.getByText(/more than two Economics courses/).first()).toBeVisible();
   await expect(page.getByText(/Schedule confirmation required/).first()).toBeVisible();
   for (const card of await cards.all()) {
     await expect(card.getByText("Statistics requirement")).toBeVisible();
@@ -278,6 +272,6 @@ test("mobile principal workflow keeps controls and prerequisite dialog inside th
   await page.waitForTimeout(350);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
-  await page.getByRole("button", { name: "Choose Plan C" }).click();
-  await expect(page.getByRole("heading", { name: "Review Plan C" })).toBeVisible();
+  await page.getByRole("button", { name: "Choose Plan C-2" }).click();
+  await expect(page.getByRole("heading", { name: "Review Plan C-2" })).toBeVisible();
 });

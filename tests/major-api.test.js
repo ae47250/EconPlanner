@@ -46,14 +46,14 @@ test("major mapper asks for summer standing clarification instead of guessing", 
   );
 });
 
-test("major mapper returns three dated Economics plans", async () => {
+test("major mapper returns standing-limited candidate outcomes and distinct plans", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       student: {
         academicStanding: "freshman",
-        planCreationDate: "2025-09-01",
+        planCreationDate: "2026-09-01",
         courses: []
       }
     })
@@ -62,8 +62,10 @@ test("major mapper returns three dated Economics plans", async () => {
   const economics = data.programs.find(result => result.program?.id === "economics-base");
 
   assert.equal(response.status, 200);
-  assert.equal(economics.economicsPlans.length, 3);
-  assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2029");
+  assert.equal(economics.economicsPlans.length, 2);
+  assert.equal(economics.economicsCandidateOutcomes.length, 4);
+  assert.ok(economics.economicsPlans.some(plan => plan.id === "plan-c2"));
+  assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
 });
 
 test("major mapper uses the inferred entry catalog and reports an unavailable newer catalog", async () => {
@@ -151,12 +153,12 @@ test("major mapper returns graduation-priority senior plans and advisor warnings
   const economics = data.programs[0];
 
   assert.equal(response.status, 200);
-  assert.equal(economics.economicsPlans.length, 2);
+  assert.equal(economics.economicsPlans.length, 1);
   assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "graduation_priority"));
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
-  assert.ok(data.catalog.advisorAttention.some(item => /standard two-course limit/.test(item.message)));
+  assert.ok(data.catalog.advisorAttention.some(item => /more than two Economics courses/.test(item.message)));
   assert.ok(data.catalog.advisorAttention.some(item => /Schedule confirmation required/.test(item.message)));
-  assert.ok(economics.economicsPlanningGaps.some(item => /2 genuinely distinct feasible plans/.test(item.message)));
+  assert.equal(economics.economicsPlans[0].feasibilityStatus, "PRELIMINARY_ONLY");
 });
 
 test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async () => {
@@ -246,15 +248,15 @@ test("major mapper reports instructor approval for current concurrent math", asy
   assert.equal(response.status, 200);
   assert.match(notice.message, /MAT 113/);
   assert.match(notice.message, /ECO 213 instructor/);
-  assert.equal(economics.economicsPlans.length, 3);
-  assert.ok(economics.economicsPlans.every(plan => plan.terms[0].term === "Spring/May 2027"));
-  assert.ok(economics.economicsPlans.every(plan => !plan.terms.some(term => term.term === "Winter 2027")));
+  assert.equal(economics.economicsPlans.length, 0);
+  assert.equal(economics.economicsCandidateOutcomes.length, 4);
+  assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.status === "NOT_FEASIBLE"));
 });
 
 test("edited plan validation recalculates only the submitted candidate plan", async () => {
   const student = {
     academicStanding: "freshman",
-    planCreationDate: "2025-09-01",
+    planCreationDate: "2026-09-01",
     courses: []
   };
   const generatedResponse = await POST(new Request("http://localhost/api/majors/map", {
@@ -264,7 +266,7 @@ test("edited plan validation recalculates only the submitted candidate plan", as
   }));
   const generated = await generatedResponse.json();
   const economics = generated.programs.find(result => result.program?.id === "economics-base");
-  const originalPlan = economics.economicsPlans[1];
+  const originalPlan = economics.economicsPlans[0];
   const firstCourseTerm = originalPlan.terms.find(term => term.courses.length > 0);
   const editedPlan = {
     ...originalPlan,
