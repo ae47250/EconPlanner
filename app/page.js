@@ -587,6 +587,7 @@ function feasibilityLabel(status) {
     VERIFIED_FEASIBLE: "Verified feasible",
     CONDITIONALLY_FEASIBLE: "Conditionally feasible",
     PRELIMINARY_ONLY: "Preliminary only",
+    SEARCH_INCOMPLETE: "Search incomplete - advisor review needed",
     NOT_FEASIBLE: "Not feasible"
   })[status] || "Status pending";
 }

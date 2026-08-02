@@ -4,6 +4,9 @@ import { readFile } from "node:fs/promises";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import {
   buildEconomicsTermPlans,
+  buildEconomicsTermPlan,
+  FEASIBILITY_STATUS,
+  SEARCH_INCOMPLETE_MESSAGE,
   validateGeneratedPlan
 } from "../lib/planning/economics.js";
 import {
@@ -24,11 +27,11 @@ const requirements = JSON.parse(await readFile(new URL("../data/normalized/econo
 
 const completed = codes => codes.map(code => ({ code, status: "completed" }));
 
-function bundle(student, scheduleOverride = schedule) {
+function bundle(student, scheduleOverride = schedule, options = {}) {
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   return {
     mapping,
-    result: buildEconomicsTermPlans({ student, mapping, schedule: scheduleOverride, prerequisites })
+    result: buildEconomicsTermPlans({ student, mapping, schedule: scheduleOverride, prerequisites, ...options })
   };
 }
 
@@ -82,7 +85,8 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
     const { mapping, result } = bundle(upcomingStudent("sophomore", codes));
     return {
       remaining: mapping.strict.remainingUnits,
-      outcome: result.candidateOutcomes.find(item => item.id === "plan-c2")
+      outcome: result.candidateOutcomes.find(item => item.id === "plan-c2"),
+      plan: result.plans.find(item => item.id === "plan-c2")
     };
   });
 
@@ -93,17 +97,34 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
     "PRELIMINARY_ONLY",
     "PRELIMINARY_ONLY"
   ]);
+  assert.equal(statuses[0].plan.feasibility.search.complete, false);
+  assert.equal(statuses[0].plan.feasibility.search.terminationReason, "SOLUTION_BUDGET");
+  assert.ok(statuses[0].plan.feasibility.search.validSolutionCount >= 100);
+  assert.notEqual(statuses[0].plan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);
 });
 
-test("junior C-2 rejects a numerical ten-course fit and needs four usable elective sections for nine", () => {
-  const tenRemaining = bundle(upcomingStudent("junior", ["ECO 113", "ECO 114"]));
+test("junior C-2 rejects a numerical ten-course fit and finds the valid nine-course sequence", () => {
+  const tenStudent = upcomingStudent("junior", ["ECO 113", "ECO 114"]);
+  const tenRemaining = bundle(tenStudent);
   assert.equal(tenRemaining.mapping.strict.remainingUnits, 10);
   assert.equal(tenRemaining.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
+  const tenPlan = buildEconomicsTermPlan({
+    student: tenStudent,
+    mapping: tenRemaining.mapping,
+    schedule,
+    prerequisites,
+    planningContext: buildEarlyGraduationContext(resolvePlanningContext(tenStudent)),
+    planVariant: { id: "plan-c2", label: "Plan C-2", strategy: "early-graduation", description: "" },
+    planningMode: "graduation_priority"
+  });
+  assert.equal(tenPlan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);
+  assert.equal(tenPlan.feasibility.search.complete, true);
+  assert.equal(tenPlan.feasibility.search.terminationReason, "COUNT_CAPACITY");
 
   const baseProfile = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const threeUsable = bundle(baseProfile);
   assert.equal(threeUsable.mapping.strict.remainingUnits, 9);
-  assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
+  assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "PRELIMINARY_ONLY");
 
   const fourUsableSchedule = structuredClone(schedule);
   const fourthElective = extraOpenElective("ECO 315", "A");
@@ -111,6 +132,118 @@ test("junior C-2 rejects a numerical ten-course fit and needs four usable electi
   fourUsableSchedule.terms.Fall.push(extraOpenElective("ECO 224"), fourthElective);
   const fourUsable = bundle(baseProfile, fourUsableSchedule);
   assert.notEqual(fourUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
+});
+
+test("J+3 C-2 uses BUSN 323 for Finance and ECO 321 for an elective without double counting", () => {
+  const student = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
+  const { mapping, result } = bundle(student);
+  const plan = result.plans.find(item => item.id === "plan-c2");
+
+  assert.ok(plan);
+  assert.equal(plan.validation.valid, true);
+  assert.equal(plan.feasibilityStatus, "PRELIMINARY_ONLY");
+  assert.ok(plan.requirementAllocation.valid);
+  assert.ok(plan.requirementAllocation.assignments.some(item => (
+    item.slotId === "finance" && item.code === "BUSN 323" && item.source === "planned"
+  )));
+  assert.ok(plan.requirementAllocation.assignments.some(item => (
+    String(item.slotId).startsWith("eco-elective") && item.code === "ECO 321"
+  )));
+
+  const electives = plan.terms.flatMap(term => term.courses)
+    .filter(course => String(course.requirementId).startsWith("eco-elective"));
+  assert.equal(electives.length, 4);
+  assert.equal(new Set(electives.map(course => course.course)).size, 4);
+
+  const fall = plan.terms.find(term => term.term === "Fall 2026");
+  const winter = plan.terms.find(term => term.term === "Winter 2027");
+  const may = plan.terms.find(term => term.term === "Spring/May 2027");
+  assert.equal(fall.courses.length, 4);
+  assert.equal(winter.courses.length, 4);
+  assert.equal(may.courses.length, 1);
+  assert.ok(fall.courses.some(course => course.course === "MAT 217"));
+  assert.ok(winter.courses.some(course => course.course === "ECO 461"));
+  const capstone = winter.courses.find(course => course.course === "ECO 461");
+  assert.ok(capstone.approvalRequired.some(item => (
+    item.type === "department" && item.prerequisite === "ECO 214"
+  )));
+  assert.equal(validateGeneratedPlan(plan, {
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    context: result.context
+  }).valid, true);
+});
+
+test("node-limited plans are search-incomplete rather than declared infeasible", () => {
+  const student = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const context = buildEarlyGraduationContext(resolvePlanningContext(student));
+  const plan = buildEconomicsTermPlan({
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    planningContext: context,
+    planVariant: { id: "plan-c2", label: "Plan C-2", strategy: "early-graduation", description: "" },
+    planningMode: "graduation_priority",
+    nodeLimit: 1
+  });
+
+  assert.equal(plan.validation.valid, false);
+  assert.equal(plan.feasibilityStatus, FEASIBILITY_STATUS.SEARCH_INCOMPLETE);
+  assert.equal(plan.feasibility.overallStatus, FEASIBILITY_STATUS.SEARCH_INCOMPLETE);
+  assert.equal(plan.feasibility.search.complete, false);
+  assert.equal(plan.feasibility.search.terminationReason, "NODE_LIMIT");
+  assert.equal(plan.feasibility.search.validSolutionCount, 0);
+  assert.equal(plan.feasibility.blockingReasons.length, 0);
+  assert.ok(plan.studentMessages.includes(SEARCH_INCOMPLETE_MESSAGE));
+
+  const limitedBundle = bundle(student, schedule, { nodeLimit: 1 }).result;
+  const c2 = limitedBundle.candidateOutcomes.find(item => item.id === "plan-c2");
+  assert.equal(c2.status, FEASIBILITY_STATUS.SEARCH_INCOMPLETE);
+  assert.equal(c2.suppressionReason.code, "SEARCH_INCOMPLETE");
+  assert.ok(limitedBundle.planningGaps.some(item => item.message === SEARCH_INCOMPLETE_MESSAGE));
+});
+
+test("the solver backtracks from a conflicting Fall placement to a valid Winter alternative", () => {
+  const conflictSchedule = structuredClone(schedule);
+  conflictSchedule.terms.Winter = conflictSchedule.terms.Winter.filter(item => item.course !== "ECO 321");
+  for (const offering of conflictSchedule.terms.Fall.filter(item => item.course === "ECO 114")) {
+    offering.days = "Mon";
+    offering.startTime = "10:00 AM";
+    offering.endTime = "11:00 AM";
+  }
+  conflictSchedule.terms.Fall.push({
+    course: "BUSN 323",
+    section: "A",
+    title: "Financial Management",
+    units: 1,
+    instructor: "Department",
+    days: "Mon",
+    startTime: "10:00 AM",
+    endTime: "11:00 AM",
+    startDate: "2026-08-24",
+    endDate: "2026-12-11",
+    availability: { status: "open", seatsOpen: 10, capacity: 20, asOf: "2026-07-30" },
+    verificationStatus: "verified"
+  });
+  const student = upcomingStudent("senior", [
+    "ECO 113", "MAT 113", "ECO 213", "ECO 214", "ECO 257", "ECO 461",
+    "ECO 221", "ECO 222", "ECO 234", "ECO 333"
+  ]);
+  const { result } = bundle(student, conflictSchedule);
+  const plan = result.plans[0];
+  const fall = plan.terms.find(term => term.term === "Fall 2026");
+  const winter = plan.terms.find(term => term.term === "Winter 2027");
+
+  assert.equal(plan.validation.valid, true);
+  assert.ok(fall.courses.some(course => course.course === "BUSN 323"));
+  assert.ok(!fall.courses.some(course => course.course === "ECO 114"));
+  assert.ok(winter.courses.some(course => course.course === "ECO 114"));
+  assert.ok(plan.feasibility.search.nodesVisited > plan.feasibility.search.firstSolutionNode);
+  assert.ok(plan.feasibility.search.completionAttempts > 1);
 });
 
 test("one-year-early final Winter carries senior standing for ECO 461", () => {

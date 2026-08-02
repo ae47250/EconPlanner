@@ -45,6 +45,7 @@ test("the 51-profile audit matrix returns only complete, distinct, bounded-searc
 
   const juniorP3 = outcomes.find(item => item.id === "JP3");
   const juniorP3Early = juniorP3.result.candidateOutcomes.find(item => item.id === "plan-c2");
-  assert.equal(juniorP3Early.displayed, false);
-  assert.ok(juniorP3Early.suppressionReason);
+  assert.equal(juniorP3Early.status, "PRELIMINARY_ONLY");
+  assert.equal(juniorP3Early.displayed, true);
+  assert.equal(juniorP3Early.suppressionReason, null);
 });

@@ -6,6 +6,8 @@ import {
   buildFeasibilityDetails,
   buildEconomicsTermPlans,
   classifyFeasibility,
+  FEASIBILITY_STATUS,
+  SEARCH_INCOMPLETE_MESSAGE,
   validateGeneratedPlan,
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
@@ -155,12 +157,16 @@ function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = f
         })
       : null;
     const economicsPlanningGaps = economicsPlanBundle?.planningGaps || [];
+    const economicsSearchIncomplete = economicsPlanBundle?.candidateOutcomes?.some(item => (
+      item.status === FEASIBILITY_STATUS.SEARCH_INCOMPLETE
+    ));
     const combinedRiskReasons = [
       ...riskReasons,
-      ...economicsPlanningGaps.map(gap => gap.message || gap.reason).filter(Boolean)
+      ...economicsPlanningGaps.map(gap => gap.message || gap.reason).filter(Boolean),
+      ...(economicsSearchIncomplete ? [SEARCH_INCOMPLETE_MESSAGE] : [])
     ];
     const riskClass = economicsPlanBundle && !economicsPlanBundle.plans.length
-      ? "NOT_CURRENTLY_FEASIBLE"
+      ? economicsSearchIncomplete ? "FEASIBLE_WITH_ASSUMPTIONS" : "NOT_CURRENTLY_FEASIBLE"
       : combinedRiskReasons.length
         ? "FEASIBLE_WITH_ASSUMPTIONS"
         : mapping.risk.class;
