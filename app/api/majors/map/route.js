@@ -214,7 +214,20 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     prerequisites: catalog.prerequisitesByProgram.get(program.id),
     context: planningContext
   });
-  const validatedPlan = { ...plan, validation };
+  const validatedPlan = {
+    ...plan,
+    validation,
+    distribution: validation.distribution.applicable
+      ? {
+          ...plan.distribution,
+          actualYearCounts: validation.distribution.targetYearCounts.map((targetCount, yearIndex) => ({
+            yearIndex,
+            targetCount,
+            actualCount: validation.distribution.actualYearCounts[yearIndex]
+          }))
+        }
+      : plan.distribution
+  };
   validatedPlan.feasibilityStatus = classifyFeasibility(validatedPlan, student);
   validatedPlan.feasibility = buildFeasibilityDetails(
     validatedPlan,
@@ -303,9 +316,17 @@ export async function POST(request) {
         plan: body.plan,
         plans: body.plans
       });
-      return editedPlanResult.error
-        ? jsonResponse({ error: editedPlanResult.error }, 422)
-        : jsonResponse(editedPlanResult);
+      if (editedPlanResult.error) {
+        return jsonResponse({ error: editedPlanResult.error }, 422);
+      }
+      if (!editedPlanResult.plan.validation.valid) {
+        return jsonResponse({
+          error: `That plan change cannot be saved. ${editedPlanResult.plan.validation.errors[0] || "It violates the Economics planning rules."}`,
+          code: "INVALID_PLAN_EDIT",
+          validation: editedPlanResult.plan.validation
+        }, 422);
+      }
+      return jsonResponse(editedPlanResult);
     }
     let catalogReview = {
       selectedCatalogYear: catalogResolution.selectedCatalogYear,

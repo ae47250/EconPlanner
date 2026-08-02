@@ -181,10 +181,11 @@ test("generation is single-flight and distinct plans support compare, history, r
   await expect(page.getByText("Alex Student", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Remove ECO 114" }).click();
-  await expect(page.locator(".plan-edit-status")).toContainText("updated as a draft");
-  await expect(page.locator(".plan-validation-errors")).toContainText("Requirement eco-114 remains unscheduled");
+  await expect(page.locator(".plan-edit-status")).toContainText("That plan change cannot be saved");
+  await expect(page.locator(".plan-edit-status")).toContainText(/ECO 214 is missing prerequisites: ECO 114|Requirement eco-114 remains unscheduled/);
+  await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
   await page.getByRole("button", { name: "Compare plans" }).click();
 
   const editedCards = page.locator("article[data-plan-id]");
@@ -193,21 +194,19 @@ test("generation is single-flight and distinct plans support compare, history, r
     item.querySelector("tbody")?.innerText || ""
   ])));
   expect(editedSchedules["plan-1"]).toBe(originalSchedules["plan-1"]);
-  expect(editedSchedules["plan-2"]).not.toBe(originalSchedules["plan-2"]);
+  expect(editedSchedules["plan-2"]).toBe(originalSchedules["plan-2"]);
   expect(editedSchedules["plan-3"]).toBe(originalSchedules["plan-3"]);
   expect(editedSchedules["plan-c2"]).toBe(originalSchedules["plan-c2"]);
-  await expect(page.locator('article[data-plan-id="plan-2"] .plan-validation')).toContainText("Needs attention");
 
-  await page.getByRole("button", { name: "Review Plan B issues" }).click();
-  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+  await page.getByRole("button", { name: "Review selected Plan B" }).click();
   await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
-  await expect(page.locator(".plan-edit-status")).toContainText("Plan B was restored");
 
   await page.getByRole("combobox", { name: "Move ECO 114 to another term" })
     .selectOption({ label: "2026/2027 Winter" });
-  await expect(page.locator(".plan-edit-status")).toContainText("updated as a draft");
-  await expect(page.locator(".plan-validation-errors")).toContainText("not verified");
-  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+  await expect(page.locator(".plan-edit-status")).toContainText("That plan change cannot be saved");
+  await expect(page.locator(".plan-edit-status")).toContainText("not verified");
+  await expect(page.getByRole("combobox", { name: "Move ECO 114 to another term" })).toHaveValue("fall-2026");
+  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
 
   await page.getByRole("button", { name: "Regenerate plans" }).click();
   await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });

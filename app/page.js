@@ -2286,6 +2286,9 @@ export default function Page() {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || "The plan edit could not be validated.");
+      if (!data.plan?.validation?.valid) {
+        throw new Error(data.plan?.validation?.errors?.[0] || "That plan change violates the Economics planning rules.");
+      }
 
       setPlanEditUndo({
         planId: sourcePlan.id,
@@ -2298,9 +2301,7 @@ export default function Page() {
         data.plan,
         data.planSetValidation
       ));
-      setPlanEditStatus(data.plan.validation.valid
-        ? `${sourcePlan.label} was updated and remains valid.`
-        : `${sourcePlan.label} was updated as a draft. Resolve the listed blocking issues or undo the edit.`);
+      setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
     } catch (error) {
       setPlanEditStatus(error.message);
     } finally {

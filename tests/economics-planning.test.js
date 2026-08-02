@@ -90,8 +90,18 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
   assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Plan A", "Plan B", "Plan C", "Plan C-2"]);
   assert.equal(result.planSetValidation.valid, true);
   assert.equal(result.planSetValidation.uniquePlanCount, result.plans.length);
-  assert.deepEqual(result.plans.find(plan => plan.label === "Plan A").distribution.targetYearCounts, [2, 3, 3, 4]);
-  assert.deepEqual(result.plans.find(plan => plan.label === "Plan C-2").distribution.targetYearCounts, [4, 4, 4]);
+  const expectedDistributions = new Map([
+    ["Plan A", [3, 3, 3, 3]],
+    ["Plan B", [1, 2, 4, 5]],
+    ["Plan C", [2, 2, 3, 5]],
+    ["Plan C-2", [4, 4, 4]]
+  ]);
+  for (const plan of result.plans) {
+    assert.deepEqual(plan.distribution.targetYearCounts, expectedDistributions.get(plan.label));
+    assert.deepEqual(plan.validation.distribution.actualYearCounts, expectedDistributions.get(plan.label));
+    assert.equal(plan.validation.distribution.valid, true);
+    assert.equal(plan.validation.distribution.exact, true);
+  }
   assert.ok(result.plans.every(plan => plan.validation.valid));
   assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(result.plans.find(plan => !plan.isEarlyGraduation).terms.some(term => term.term === "Spring/May 2030"));
@@ -102,6 +112,43 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
 
   assert.equal(result.plans.find(plan => plan.label === "Plan C-2").isEarlyGraduation, true);
   assert.equal(result.plans.find(plan => plan.label === "Plan C-2").feasibilityStatus, "PRELIMINARY_ONLY");
+});
+
+test("a proven prerequisite constraint records a validated distribution exception", () => {
+  const unresolved = [{ requirementId: "eco-461", options: ["ECO 461"] }];
+  const mapping = {
+    requirements: [{ id: "eco-461", kind: "exact", label: "Senior Seminar", options: ["ECO 461"] }],
+    assignments: [],
+    optimistic: { unresolved },
+    projectedAfterInProgress: { optimistic: { unresolved } }
+  };
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-02",
+    courses: ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "MAT 217"]
+      .map(code => ({ code, status: "completed" }))
+  };
+  const plan = buildEconomicsTermPlan({ student, mapping, schedule, prerequisites });
+
+  assert.deepEqual(plan.distribution.targetYearCounts, [1, 0, 0, 0]);
+  assert.deepEqual(plan.validation.distribution.actualYearCounts, [0, 0, 0, 1]);
+  assert.equal(plan.preferredDistributionException.code, "PREFERRED_DISTRIBUTION_EXCEPTION");
+  assert.equal(plan.preferredDistributionException.allowedAnnualDistance, 2);
+  assert.equal(plan.validation.distribution.valid, true);
+  assert.equal(plan.validation.distribution.exact, false);
+  assert.ok(plan.validation.warnings.some(message => /exact Balanced yearly distribution is not feasible/.test(message)));
+
+  const unprovenException = structuredClone(plan);
+  delete unprovenException.search.attempts;
+  const validation = validateGeneratedPlan(unprovenException, {
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    context: plan.planningContext
+  });
+  assert.equal(validation.valid, false);
+  assert.equal(validation.distribution.valid, false);
 });
 
 test("validated plans cover every required course, choice group, cognate, and elective slot", () => {
@@ -226,7 +273,7 @@ test("plan-set validation rejects duplicate placements", () => {
   assert.equal(validation.pairwise.every(pair => pair.different === false), true);
 });
 
-test("ECO 113 uses the verified online Summer offering only as a last resort", () => {
+test("ECO 113 avoids Summer when a regular future placement remains feasible", () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-09-01",
@@ -242,16 +289,12 @@ test("ECO 113 uses the verified online Summer offering only as a last resort", (
     schedule: noRegularECO113Schedule,
     prerequisites
   });
-  const summerTerm = result.plans[0].terms.find(term => term.isSummer);
-
-  assert.equal(summerTerm.term, "Summer 2027");
-  assert.equal(summerTerm.courses[0].course, "ECO 113");
-  assert.equal(summerTerm.courses[0].source, "summer-last-resort");
-  assert.deepEqual(result.plans[0].summerFallbacks, [{
-    course: "ECO 113",
-    term: "Summer 2027",
-    reason: "Regular-term placement was not sufficient under the current prerequisites, schedule, and planning horizon."
-  }]);
+  assert.ok(result.plans.length > 0);
+  assert.ok(result.plans.every(plan => plan.terms.every(term => !term.isSummer || term.courses.length === 0)));
+  assert.ok(result.plans.every(plan => plan.terms.some(term => (
+    !term.isSummer && term.courses.some(course => course.course === "ECO 113")
+  ))));
+  assert.ok(result.plans.every(plan => plan.summerFallbacks.length === 0));
 });
 
 test("ECO 307 does not satisfy one of the four full-unit elective slots", () => {

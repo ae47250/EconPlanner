@@ -26,6 +26,10 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   assert.ok(html.includes(String(report.remaining.strict)));
   assert.equal(html.includes("{{"), false);
   assert.equal(reportPlanCount(report) > 0, true);
+  assert.equal(
+    (html.match(/class="course"/g) || []).length,
+    report.terms.reduce((total, term) => total + term.courses.length, 0)
+  );
 });
 
 test("Economics report API returns canonical JSON or populated HTML", async () => {
@@ -103,6 +107,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(/<script\b/i.test(submitted.html), false);
   assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
   assert.equal(submitted.html.includes("{{"), false);
+  assert.match(submitted.html, /<span class="course">ECO 461(?:-[^<]+)?<\/span>/);
   assert.match(submitted.correlationId, /^[A-Za-z0-9._:-]+$/);
   assert.equal(/[^\x00-\x7F]/.test(submitted.html), false);
 });

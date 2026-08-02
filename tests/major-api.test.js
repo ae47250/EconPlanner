@@ -297,7 +297,7 @@ test("major mapper reports instructor approval for current concurrent math", asy
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
 });
 
-test("edited plan validation recalculates only the submitted candidate plan", async () => {
+test("edited plan validation rejects an incomplete submitted candidate", async () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-09-01",
@@ -331,9 +331,115 @@ test("edited plan validation recalculates only the submitted candidate plan", as
   }));
   const validation = await validationResponse.json();
 
-  assert.equal(validationResponse.status, 200);
-  assert.equal(validation.plan.id, originalPlan.id);
-  assert.equal(validation.plan.validation.valid, false);
-  assert.ok(validation.plan.validation.errors.some(error => /remains unscheduled/.test(error)));
-  assert.equal(validation.planSetValidation.valid, false);
+  assert.equal(validationResponse.status, 422);
+  assert.equal(validation.code, "INVALID_PLAN_EDIT");
+  assert.equal(validation.validation.valid, false);
+  assert.ok(validation.validation.errors.some(error => /remains unscheduled/.test(error)));
+  assert.equal(validation.plan, undefined);
+});
+
+test("edited plan validation blocks moving mathematics after its dependent courses", async () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-02",
+    courses: []
+  };
+  const generatedResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student })
+  }));
+  const generated = await generatedResponse.json();
+  const economics = generated.programs.find(result => result.program?.id === "economics-base");
+  const originalPlan = economics.economicsPlans[0];
+  const editedPlan = structuredClone(originalPlan);
+  const mathTermIndex = editedPlan.terms.findIndex(term => term.courses.some(course => (
+    course.course === "MAT 113" || course.course === "MAT 121"
+  )));
+  const capstoneTermIndex = editedPlan.terms.findIndex(term => term.courses.some(course => course.course === "ECO 461"));
+  const targetTermIndex = editedPlan.terms.findIndex((term, index) => index > capstoneTermIndex && term.courses.length === 1);
+
+  assert.ok(mathTermIndex >= 0);
+  assert.ok(capstoneTermIndex >= 0);
+  assert.ok(targetTermIndex > capstoneTermIndex);
+
+  const mathCourseIndex = editedPlan.terms[mathTermIndex].courses.findIndex(course => (
+    course.course === "MAT 113" || course.course === "MAT 121"
+  ));
+  const [mathCourse] = editedPlan.terms[mathTermIndex].courses.splice(mathCourseIndex, 1);
+  const [displacedCourse] = editedPlan.terms[targetTermIndex].courses.splice(0, 1);
+  editedPlan.terms[mathTermIndex].courses.push(displacedCourse);
+  editedPlan.terms[targetTermIndex].courses.push(mathCourse);
+
+  const validationResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      action: "validate-plan",
+      student,
+      plan: editedPlan,
+      plans: economics.economicsPlans.map(plan => plan.id === editedPlan.id ? editedPlan : plan)
+    })
+  }));
+  const validation = await validationResponse.json();
+
+  assert.equal(validationResponse.status, 422);
+  assert.equal(validation.code, "INVALID_PLAN_EDIT");
+  assert.equal(validation.validation.valid, false);
+  assert.ok(validation.validation.errors.some(error => (
+    /ECO 213 is missing prerequisites: MAT 113 \/ MAT 121/.test(error)
+    || /ECO 214 is missing prerequisites: MAT 113 \/ MAT 121/.test(error)
+  )));
+});
+
+test("edited plan validation preserves the selected plan's yearly design", async () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-02",
+    courses: []
+  };
+  const generatedResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student })
+  }));
+  const generated = await generatedResponse.json();
+  const economics = generated.programs.find(result => result.program?.id === "economics-base");
+  const originalPlan = economics.economicsPlans.find(plan => plan.label === "Plan A");
+  const editedPlan = structuredClone(originalPlan);
+  const sourceTermIndex = editedPlan.terms.findLastIndex(term => (
+    term.courses.some(course => course.course === "ECO elective")
+  ));
+  const sourceYearIndex = editedPlan.terms[sourceTermIndex].yearIndex;
+  const targetTermIndex = editedPlan.terms.findIndex(term => (
+    term.yearIndex > 0
+    && term.yearIndex !== sourceYearIndex
+    && ["Fall", "Winter"].includes(term.termKey)
+    && term.courses.length < 4
+    && term.courses.filter(course => String(course.course).startsWith("ECO ")).length < 2
+  ));
+
+  assert.ok(sourceTermIndex >= 0);
+  assert.ok(targetTermIndex >= 0);
+  const electiveIndex = editedPlan.terms[sourceTermIndex].courses.findIndex(course => course.course === "ECO elective");
+  const [elective] = editedPlan.terms[sourceTermIndex].courses.splice(electiveIndex, 1);
+  editedPlan.terms[targetTermIndex].courses.push(elective);
+
+  const validationResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      action: "validate-plan",
+      student,
+      plan: editedPlan,
+      plans: economics.economicsPlans.map(plan => plan.id === editedPlan.id ? editedPlan : plan)
+    })
+  }));
+  const validation = await validationResponse.json();
+
+  assert.equal(validationResponse.status, 422);
+  assert.equal(validation.code, "INVALID_PLAN_EDIT");
+  assert.equal(validation.validation.valid, false);
+  assert.equal(validation.validation.distribution.valid, false);
+  assert.match(validation.validation.errors.join(" | "), /Plan A no longer follows its Balanced yearly distribution/);
 });
