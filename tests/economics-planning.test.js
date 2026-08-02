@@ -93,7 +93,7 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
   const expectedDistributions = new Map([
     ["Plan A", [3, 3, 3, 3]],
     ["Plan B", [1, 2, 4, 5]],
-    ["Plan C", [2, 2, 3, 5]],
+    ["Plan C", [3, 3, 3, 3]],
     ["Plan C-2", [4, 4, 4]]
   ]);
   for (const plan of result.plans) {
@@ -103,6 +103,17 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
     assert.equal(plan.validation.distribution.exact, true);
   }
   assert.ok(result.plans.every(plan => plan.validation.valid));
+  const exploreFirst = result.plans.find(plan => plan.label === "Plan C");
+  assert.ok(exploreFirst.terms.filter(term => term.yearIndex === 0)
+    .flatMap(term => term.courses)
+    .some(course => course.course === "ECO 113"));
+  assert.ok(exploreFirst.terms.filter(term => term.yearIndex === 0)
+    .flatMap(term => term.courses)
+    .some(course => course.course === "ECO 114"));
+  assert.ok(exploreFirst.terms.filter(term => term.yearIndex === 0)
+    .flatMap(term => term.courses)
+    .some(course => ["MAT 113", "MAT 121", "MAT 217", "ECO 257", "PSY 217"].includes(course.course)));
+  assert.ok(result.candidateOutcomes.every(outcome => outcome.candidatePool?.retainedDistinctSchedules >= 1));
   assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(result.plans.find(plan => !plan.isEarlyGraduation).terms.some(term => term.term === "Spring/May 2030"));
   assert.equal(result.plans[0].terms[0].displayTerm, "Winter");

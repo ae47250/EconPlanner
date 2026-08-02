@@ -613,6 +613,10 @@ function CandidateOutcomes({ outcomes = [], convergences = [] }) {
           {outcomes.map(outcome => (
             <li key={`${outcome.id}-${outcome.label}`}>
               <strong>{outcome.label}:</strong> {feasibilityLabel(outcome.status)}{outcome.displayed ? " · shown" : " · not shown"}
+              {outcome.substitutionReason === "NEXT_DISTINCT_RESERVE" && " · using its next-best distinct schedule"}
+              {outcome.displayed && outcome.selectedCandidateRank > 1 && ` · reserve candidate ${outcome.selectedCandidateRank}`}
+              {outcome.candidatePool?.retainedDistinctSchedules > 1 && ` · ${outcome.candidatePool.retainedDistinctSchedules} validated options retained`}
+              {!outcome.displayed && outcome.suppressionReason?.code === "NO_DISTINCT_RETAINED_CANDIDATE" && " · search stopped before a distinct retained option was found"}
               {outcome.reasons?.length > 0 && ` — ${outcome.reasons.map(item => item.reason || item.message || item).join("; ")}`}
             </li>
           ))}

@@ -48,4 +48,11 @@ test("the 51-profile audit matrix returns only complete, distinct, bounded-searc
   assert.equal(juniorP3Early.status, "PRELIMINARY_ONLY");
   assert.equal(juniorP3Early.displayed, true);
   assert.equal(juniorP3Early.suppressionReason, null);
+
+  const freshmanP8 = outcomes.find(item => item.id === "FP8");
+  const freshmanP8PlanB = freshmanP8.result.candidateOutcomes.find(item => item.id === "plan-2");
+  assert.equal(freshmanP8PlanB.displayed, true);
+  assert.equal(freshmanP8PlanB.substitutionReason, "NEXT_DISTINCT_RESERVE");
+  assert.equal(freshmanP8PlanB.selectedCandidateRank, 2);
+  assert.ok(freshmanP8PlanB.candidatePool.retainedDistinctSchedules > 1);
 });

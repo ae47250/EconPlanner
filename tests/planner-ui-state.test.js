@@ -60,7 +60,7 @@ test("generated planner sessions from before distribution validation regenerate"
     view: PLANNER_VIEWS.COMPARE
   });
 
-  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 5);
+  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 6);
   assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 4 }, "student-input-v1"), null);
 });
 
