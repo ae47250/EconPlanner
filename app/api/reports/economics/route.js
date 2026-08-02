@@ -21,13 +21,13 @@ export async function handleEconomicsReportRequest(request, dependencies = {}) {
     const html = renderEconomicsHtml(report, template);
     if (body?.format === "pdf") {
       const result = await createPdfFromHtml(
-        { html, filename: "EconPlanner_Report.pdf" },
+        { html, filename: "EconPlanner-Economics-Plan.pdf" },
         dependencies
       );
       return new Response(result.pdf, {
         headers: {
           "Content-Type": "application/pdf",
-          "Content-Disposition": 'attachment; filename="EconPlanner_Report.pdf"',
+          "Content-Disposition": 'attachment; filename="EconPlanner-Economics-Plan.pdf"',
           "Cache-Control": "no-store",
           "X-Content-Type-Options": "nosniff",
           ...result.diagnostics
@@ -35,17 +35,29 @@ export async function handleEconomicsReportRequest(request, dependencies = {}) {
       });
     }
     return new Response(html, {
-      headers: { "Content-Type": "text/html; charset=utf-8" }
+      headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" }
     });
   } catch (error) {
     if (error instanceof PdfCreationClientError) {
+      console.error(JSON.stringify({
+        event: "econplanner_pdf_failed",
+        code: error.code,
+        status: error.status,
+        correlationId: error.diagnostics?.correlationId || null,
+        upstreamStatus: error.diagnostics?.upstreamStatus || null
+      }));
       return Response.json(
-        { error: "The Economics report PDF could not be created.", code: error.code },
+        { error: error.message, code: error.code },
         { status: error.status, headers: { "Cache-Control": "no-store" } }
       );
     }
-    console.error(error);
-    return Response.json({ error: "The Economics report could not be generated from the supplied student data." }, { status: 422 });
+    const selectedPlanInvalid = /selected Economics plan no longer passes server validation/i.test(error?.message || "");
+    return Response.json({
+      error: selectedPlanInvalid
+        ? "The selected plan changed or no longer passes validation. Regenerate the plan before downloading it."
+        : "The Economics report could not be generated from the supplied student data.",
+      code: selectedPlanInvalid ? "SELECTED_PLAN_INVALID" : "ECONOMICS_REPORT_INVALID"
+    }, { status: 422, headers: { "Cache-Control": "no-store" } });
   }
 }
 

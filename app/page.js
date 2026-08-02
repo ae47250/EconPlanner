@@ -430,6 +430,29 @@ function PlanTimeline({
                               </div>
                               {onEditPlanCourse && (
                                 <div className="plan-course-actions">
+                                  {course.alternativeOptions?.length > 1 && (
+                                    <label>
+                                      <span className="sr-only">Choose the elective for {term.displayTerm || term.term}</span>
+                                      <select
+                                        aria-label={`Choose elective for ${term.displayTerm || term.term}`}
+                                        disabled={Boolean(editingPlanCourseKey)}
+                                        value={course.selectedOptionId || ""}
+                                        onChange={event => onEditPlanCourse({
+                                          type: "option",
+                                          planId: activePlan.id,
+                                          fromTermId: termId,
+                                          courseId,
+                                          optionId: event.target.value
+                                        })}
+                                      >
+                                        {course.alternativeOptions.map(option => (
+                                          <option value={option.id} key={option.id}>
+                                            {option.course}{option.section ? `-${option.section}` : ""}: {option.title}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    </label>
+                                  )}
                                   <label>
                                     <span className="sr-only">Move {course.course} to another term</span>
                                     <select
@@ -492,6 +515,24 @@ function PlanTimeline({
             <strong>This edited plan needs attention.</strong>
             <ul>
               {activePlan.validation.errors.map(error => <li key={error}>{error}</li>)}
+            </ul>
+          </div>
+        )}
+        {activePlan.feasibility && (
+          <div className="plan-notes" aria-label="Plan feasibility details">
+            <strong>Plan verification and conditions</strong>
+            <ul>
+              <li>Offerings: {activePlan.feasibility.verification?.offerings || "unknown"}</li>
+              <li>Meeting times: {activePlan.feasibility.verification?.meetings || "unknown"}</li>
+              <li>Availability: {activePlan.feasibility.verification?.availability || "unknown"}</li>
+              {activePlan.feasibility.requiredApprovals?.map(item => (
+                <li key={`${item.course}-${item.prerequisite}-${item.term}`}>{item.message}</li>
+              ))}
+              {activePlan.feasibility.enrollmentConditions?.map(item => (
+                <li key={`${item.type}-${item.course}-${item.section}-${item.term}`}>
+                  {item.course}{item.section ? `-${item.section}` : ""} in {item.term}: {item.type.replaceAll("_", " ")}
+                </li>
+              ))}
             </ul>
           </div>
         )}
@@ -1907,7 +1948,7 @@ export default function Page() {
       const objectUrl = URL.createObjectURL(await response.blob());
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = "EconPlanner_Report.pdf";
+      link.download = "EconPlanner-Economics-Plan.pdf";
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -2192,6 +2233,21 @@ export default function Page() {
       return;
     }
 
+    const selectedAlternative = edit.type === "option"
+      ? selectedCourse.alternativeOptions?.find(option => option.id === edit.optionId)
+      : null;
+    if (edit.type === "option" && !selectedAlternative) {
+      setPlanEditStatus("That elective option is no longer available in this plan.");
+      return;
+    }
+    const replacementCourse = selectedAlternative ? {
+      ...selectedCourse,
+      ...selectedAlternative,
+      requirementId: selectedCourse.requirementId,
+      selectedOptionId: selectedAlternative.id,
+      alternativeOptions: selectedCourse.alternativeOptions
+    } : selectedCourse;
+
     const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
     const candidatePlan = {
       ...sourcePlan,
@@ -2199,10 +2255,12 @@ export default function Page() {
         const termId = term.slotId || term.term;
         let courses = term.courses;
         if (termId === edit.fromTermId) {
-          courses = courses.filter(course => planCourseIdentity(course) !== edit.courseId);
+          courses = edit.type === "option"
+            ? courses.map(course => planCourseIdentity(course) === edit.courseId ? replacementCourse : course)
+            : courses.filter(course => planCourseIdentity(course) !== edit.courseId);
         }
         if (edit.type === "move" && termId === edit.toTermId) {
-          courses = [...courses, selectedCourse];
+          courses = [...courses, replacementCourse];
         }
         return courses === term.courses ? term : { ...term, courses };
       })

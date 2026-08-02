@@ -103,6 +103,8 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(/<script\b/i.test(submitted.html), false);
   assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
   assert.equal(submitted.html.includes("{{"), false);
+  assert.match(submitted.correlationId, /^[A-Za-z0-9._:-]+$/);
+  assert.equal(/[^\x00-\x7F]/.test(submitted.html), false);
 });
 
 test("PDF client rejects a cross-origin stored download before forwarding the preview bypass", async () => {
@@ -132,9 +134,27 @@ test("PDF client rejects a cross-origin stored download before forwarding the pr
         });
       }
     }),
-    error => error.code === "pdf_creation_failed"
+    error => error.code === "PDF_CREATION_FAILED"
   );
   assert.equal(fetchCount, 1);
+});
+
+test("Economics PDF API returns stable disabled and configuration errors", async () => {
+  const disabled = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf" })
+  }), { environment: { PDF_CREATION_ENABLED: "false" } });
+  assert.equal(disabled.status, 503);
+  assert.equal((await disabled.json()).code, "PDF_CREATION_DISABLED");
+
+  const missing = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf" })
+  }), { environment: { PDF_CREATION_ENABLED: "true" } });
+  assert.equal(missing.status, 503);
+  assert.equal((await missing.json()).code, "PDF_CREATION_NOT_CONFIGURED");
 });
 
 test("transfer reports use the selected graduation and Hanover entry years", async () => {

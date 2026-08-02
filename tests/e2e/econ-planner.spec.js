@@ -148,12 +148,14 @@ test("generation is single-flight and distinct plans support compare, history, r
   expect(generationRequests).toBe(1);
 
   const cards = page.locator("article[data-plan-id]");
-  await expect(cards).toHaveCount(3);
-  await expect(cards.nth(0)).toHaveAttribute("data-plan-id", "plan-1");
-  await expect(cards.nth(1)).toHaveAttribute("data-plan-id", "plan-2");
-  await expect(cards.nth(2)).toHaveAttribute("data-plan-id", "plan-c2");
-  const originalSchedules = await cards.locator("tbody").allInnerTexts();
-  expect(new Set(originalSchedules).size).toBe(3);
+  await expect(cards).toHaveCount(4);
+  const displayedPlanIds = new Set(await cards.evaluateAll(items => items.map(item => item.dataset.planId)));
+  expect(displayedPlanIds).toEqual(new Set(["plan-1", "plan-2", "plan-3", "plan-c2"]));
+  const originalSchedules = Object.fromEntries(await cards.evaluateAll(items => items.map(item => [
+    item.dataset.planId,
+    item.querySelector("tbody")?.innerText || ""
+  ])));
+  expect(new Set(Object.values(originalSchedules)).size).toBe(4);
 
   for (const card of await cards.all()) {
     const exactRows = card.locator("tbody tr").filter({ hasNotText: "Term to be confirmed" });
@@ -166,7 +168,7 @@ test("generation is single-flight and distinct plans support compare, history, r
 
   await page.getByRole("checkbox", { name: "Show differences only" }).check();
   await expect(page.getByRole("checkbox", { name: "Show differences only" })).toBeChecked();
-  await page.getByRole("button", { name: "Choose Plan B" }).click();
+  await page.getByRole("button", { name: /(?:Choose|Review selected) Plan B/ }).click();
   await expect(page.getByRole("heading", { name: "Review Plan B" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Plan B" })).toHaveAttribute("aria-selected", "true");
 
@@ -186,11 +188,15 @@ test("generation is single-flight and distinct plans support compare, history, r
   await page.getByRole("button", { name: "Compare plans" }).click();
 
   const editedCards = page.locator("article[data-plan-id]");
-  const editedSchedules = await editedCards.locator("tbody").allInnerTexts();
-  expect(editedSchedules[0]).toBe(originalSchedules[0]);
-  expect(editedSchedules[1]).not.toBe(originalSchedules[1]);
-  expect(editedSchedules[2]).toBe(originalSchedules[2]);
-  await expect(editedCards.nth(1).locator(".plan-validation")).toContainText("Needs attention");
+  const editedSchedules = Object.fromEntries(await editedCards.evaluateAll(items => items.map(item => [
+    item.dataset.planId,
+    item.querySelector("tbody")?.innerText || ""
+  ])));
+  expect(editedSchedules["plan-1"]).toBe(originalSchedules["plan-1"]);
+  expect(editedSchedules["plan-2"]).not.toBe(originalSchedules["plan-2"]);
+  expect(editedSchedules["plan-3"]).toBe(originalSchedules["plan-3"]);
+  expect(editedSchedules["plan-c2"]).toBe(originalSchedules["plan-c2"]);
+  await expect(page.locator('article[data-plan-id="plan-2"] .plan-validation')).toContainText("Needs attention");
 
   await page.getByRole("button", { name: "Review Plan B issues" }).click();
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
@@ -261,7 +267,7 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
   await expect(page.getByText(/more than two Economics courses/).first()).toBeVisible();
   await expect(page.getByText(/Schedule confirmation required/).first()).toBeVisible();
   for (const card of await cards.all()) {
-    await expect(card.getByText("Statistics requirement")).toBeVisible();
+    await expect(card.getByText("MAT 217")).toBeVisible();
     await expect(card.getByText("ECO 213")).toBeVisible();
     await expect(card.getByText("ECO 461")).toBeVisible();
     await expect(card.getByText("ECO 321")).toBeVisible();
@@ -274,6 +280,37 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
   await page.waitForTimeout(350);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test("selected elective options persist through server validation and PDF errors stay student friendly", async ({ page }) => {
+  await setStanding(page, "Senior");
+  await setPlanDate(page, "2026-07-30");
+  for (const code of ["ECO 113", "ECO 114"]) {
+    await courseStatus(page, code, "Completed").click();
+  }
+  await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
+  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await courseStatus(page, "ECO 214", "Completed").click();
+
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Your feasible plan" })).toBeVisible({ timeout: 15000 });
+  await page.getByRole("button", { name: /Review selected Plan/ }).click();
+  await expect(page.getByText("Plan verification and conditions", { exact: true })).toBeVisible();
+
+  const elective = page.getByRole("combobox", { name: /Choose elective for/ });
+  await expect(elective).toBeVisible();
+  const options = await elective.locator("option").evaluateAll(items => items.map(item => ({ value: item.value, text: item.textContent })));
+  expect(options.length).toBeGreaterThan(1);
+  const initial = await elective.inputValue();
+  const alternative = options.find(option => option.value !== initial);
+  await elective.selectOption(alternative.value);
+  await expect(page.locator(".plan-edit-status")).toContainText("updated and remains valid");
+  await expect(elective).toHaveValue(alternative.value);
+
+  await page.reload();
+  await expect(page.getByRole("combobox", { name: /Choose elective for/ })).toHaveValue(alternative.value);
+  await page.getByRole("button", { name: "Download PDF" }).click();
+  await expect(page.locator(".pdf-download-status")).toContainText("PDF downloads are not enabled", { timeout: 15000 });
 });
 
 test("mobile principal workflow keeps controls and prerequisite dialog inside the viewport", async ({ page }) => {
@@ -297,7 +334,7 @@ test("mobile principal workflow keeps controls and prerequisite dialog inside th
 
   await courseStatus(page, "ECO 113", "Completed").click();
   await generatePlans(page);
-  await expect(page.locator("article[data-plan-id]")).toHaveCount(3);
+  await expect(page.locator("article[data-plan-id]")).toHaveCount(4);
   await page.waitForTimeout(350);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);
