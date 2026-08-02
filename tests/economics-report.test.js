@@ -58,11 +58,13 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
     environment: {
       PDF_CREATION_ENABLED: "true",
       PDF_CREATION_API_URL: "https://pdf-creator.example",
-      PDF_CREATION_API_KEY: "a".repeat(43)
+      PDF_CREATION_API_KEY: "a".repeat(43),
+      PDF_CREATION_BYPASS_TOKEN: "preview-bypass"
     },
     fetchImpl: async (url, options) => {
       assert.equal(url.href, "https://pdf-creator.example/api/v1/pdfs");
       assert.equal(options.headers.Authorization, `Bearer ${"a".repeat(43)}`);
+      assert.equal(options.headers["x-vercel-protection-bypass"], "preview-bypass");
       submitted = JSON.parse(options.body);
       return new Response(new Uint8Array([0x25, 0x50, 0x44, 0x46]), {
         headers: {
