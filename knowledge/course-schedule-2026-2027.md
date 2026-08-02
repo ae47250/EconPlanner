@@ -1,6 +1,6 @@
 # Course Schedule 2026/2027
 
-This file contains known economics course offerings for 2026/2027. For this academic year, this schedule is mandatory for ECO course placement. Do not suggest a 2026/2027 ECO course in a term where it is not listed here.
+This file is the human-readable view of `data/normalized/economics/schedule-2026-2027.json`. For this academic year, the canonical schedule data is mandatory for ECO course placement. Do not suggest a 2026/2027 ECO course in a term where it is not listed there.
 
 Seat counts, enrollment status, and room numbers are intentionally omitted.
 
@@ -13,6 +13,7 @@ Seat counts, enrollment status, and room numbers are intentionally omitted.
 | 2026/2027 | Fall | ECO 114 | B | Principles of Macroeconomics | Eiriksson, Agust | Mon, Wed, Fri | 10:40 AM | 11:50 AM |
 | 2026/2027 | Fall | ECO 114 | C | Principles of Macroeconomics | Jaradat, Hamzeh A. | Tue, Thu | 12:20 PM | 2:05 PM |
 | 2026/2027 | Fall | ECO 213 | A | Intermediate Microeconomics | Dodge, Eric R. | Tue, Thu | 10:00 AM | 11:45 AM |
+| 2026/2027 | Fall | ECO 234 | A | Rational Choices (cross-listed as PHI 234) | Bates, Jared G. | Mon, Wed, Fri | 10:40 AM | 11:50 AM |
 | 2026/2027 | Fall | ECO 333 | A | International Trade & Finance | Eiriksson, Agust | Mon, Wed, Fri | 1:20 PM | 2:30 PM |
 | 2026/2027 | Winter | ECO 113 | J | Principles of Microeconomics | Jaradat, Hamzeh A. | Tue, Thu | 10:00 AM | 11:45 AM |
 | 2026/2027 | Winter | ECO 113 | K | Principles of Microeconomics | Dodge, Eric R. | Mon, Wed, Fri | 8:00 AM | 9:10 AM |
@@ -24,6 +25,7 @@ Seat counts, enrollment status, and room numbers are intentionally omitted.
 | 2026/2027 | Winter | ECO 461 | J | Senior Seminar - Econometrics | Dodge, Eric R. | Mon, Wed, Fri | 10:40 AM | 11:50 AM |
 | 2026/2027 | May | ECO 222 | S | Economics of the European Union | Eiriksson, Agust | Mon, Tue, Wed, Thu, Fri | 10:15 AM | 12:30 PM |
 | 2026/2027 | May | ECO 260 | S | Special Topics | Dodge, Eric R. | Mon, Tue, Wed, Thu, Fri | 8:00 AM | 10:15 AM |
+| 2026/2027 | Summer | ECO 113 | Online | Principles of Microeconomics | — | Online | — | — |
 
 ## Known 2026/2027 Elective Options
 

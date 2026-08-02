@@ -42,10 +42,16 @@ Any ECO course may count as an economics elective except required ECO courses:
 - `ECO 213`
 - `ECO 214`
 - `ECO 257`
-- `ECO 321`
 - `ECO 461`
 
 `BUSN 323`, `MAT 217`, and `PSY 217` do not count as ECO electives.
+
+Finance assignment is deterministic:
+
+- Either `ECO 321` or `BUSN 323` satisfies the Finance requirement.
+- If both are completed or in progress, assign `BUSN 323` to Finance and allow `ECO 321` to count as an ECO elective.
+- Never count `ECO 321` as both Finance and an elective.
+- `BUSN 323` never counts as an ECO elective and does not require advisor approval merely to satisfy Finance.
 
 If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257` as an elective by default. Flag advisor confirmation if the student wants to use `ECO 257` that way.
 
@@ -60,9 +66,14 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 7. `ECO 461` requires `ECO 213`, `ECO 214`, and `ECO 257`, `MAT 217`, or `PSY 217`.
 8. `ECO 471` requires `ECO 213`, `ECO 214`, and `ECO 321`.
 
+The public catalog course descriptions are the formal prerequisite source. Separate department-approved local policy allows `MAT 113` or `MAT 121` to be taken concurrently with `ECO 213` or `ECO 214` only with approval from that ECO course's instructor. This exception does not allow concurrent `ECO 113`/`ECO 213` or `ECO 114`/`ECO 214`, and it is used only when no prerequisite-first plan fits the student's remaining horizon.
+
 ## Timing Rules
 
+- A generated plan never adds courses to the regular term containing the plan-creation date. Courses being taken in that term must be recorded as `In Progress`.
+- A prerequisite marked `In Progress` becomes available for a dependent course only after the current term.
 - `ECO 461` requires senior standing and may only be scheduled in senior Winter.
+- Senior-seminar and capstone requirements must be completed at Hanover; transfer, AP, and equivalency credit do not satisfy the requirement. In Economics, `ECO 461` is the culminating senior seminar and normally has one Winter offering per academic year.
 - The statistics option must be completed no later than Fall of senior year because it is needed before Winter senior-year `ECO 461`.
 - It is recommended to complete the statistics option by the end of junior year.
 - It is recommended, when feasible, to complete both `ECO 213` and `ECO 214` by the end of junior year.
@@ -83,6 +94,7 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 - `ECO 161` — no prerequisite listed in source material; counts as an ECO elective, subject to the one-100-level-elective rule
 - `ECO 213` — `ECO 113`; `MAT 113` or `MAT 121`
 - `ECO 214` — `ECO 114`; `MAT 113` or `MAT 121`
+- `ECO 213` / `ECO 214` concurrent-math exception — `MAT 113` or `MAT 121` may be concurrent only with the ECO course instructor's approval; all other prerequisites must be completed first
 - `ECO 221` — `ECO 113`
 - `ECO 222` — `ECO 114`
 - `ECO 223` — `ECO 113` or `ECO 114` or `ECO 161`
@@ -96,7 +108,7 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 - `ECO 321` — `ECO 113` and `ECO 114`
 - `ECO 331` — `ECO 213`
 - `ECO 333` — `ECO 114`
-- `ECO 335` — `ECO 213`, `ECO 257`, and `MAT 112` or `MAT 121` or equivalent
+- `ECO 335` — `ECO 213`, `ECO 257`, and `MAT 121` or equivalent
 - `ECO 337` — `ECO 113` or `ECO 114`
 - `ECO 357` — `ECO 213`, `ECO 214`, and department permission
 - `ECO 360` — no prerequisite listed in source material; topic varies
@@ -118,7 +130,7 @@ If `MAT 217` or `PSY 217` satisfies the statistics option, do not count `ECO 257
 | `ECO 222` | Economics of the European Union | ECO elective candidate; requires `ECO 114`. |
 | `ECO 223` | Economics: Poverty & Discrimination | ECO elective candidate. |
 | `ECO 224` | Introduction to Sustainability | ECO elective candidate if listed as ECO credit. |
-| `ECO 234` | Rational Choices | Identical to `PHI 234`; confirm ECO credit if taken under another subject code. |
+| `ECO 234` | Rational Choices | Cross-listed with `PHI 234`; count either course code as the same course without advisor approval. |
 | `ECO 257` | Quantitative Methods for Business/Economics | Required statistics option unless replaced by `MAT 217` or `PSY 217`. |
 | `ECO 260` | Special Topics | Topic varies; counts as ECO elective when offered as ECO credit. |
 | `ECO 307` | Directed Study | Confirm whether and how it counts. |

@@ -1,0 +1,672 @@
+{
+  "schemaVersion": 2,
+  "academicYear": "2026-2027",
+  "verifiedOn": "2026-07-28",
+  "lastVerifiedAt": "2026-07-28T00:00:00-04:00",
+  "source": {
+    "type": "user_provided_schedule_screenshots",
+    "files": [
+      "data/raw/economics/schedule-2026-2027-fall.png",
+      "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    ],
+    "sectionCodeSMeans": "May",
+    "summerOfferingNote": "ECO 113 is available online in Summer as a last-resort option when the regular academic-year schedule cannot fit the student."
+  },
+  "courseOfferingNotes": {
+    "ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."
+  },
+  "terms": {
+    "Fall": [
+      {
+        "course": "ECO 113",
+        "section": "A",
+        "title": "Principles of Microeconomics",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "units": 1,
+        "availability": {
+          "status": "closed",
+          "rawStatus": "Full",
+          "seatsOpen": 0,
+          "capacity": 22,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "8:00 AM",
+          "endTime": "9:45 AM",
+          "startDate": "2026-08-24",
+          "endDate": "2026-12-11",
+          "delivery": "in_person",
+          "location": "Hanover College Science Center - 112"
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 114",
+        "section": "A",
+        "title": "Principles of Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "units": 1,
+        "availability": {
+          "status": "closed",
+          "rawStatus": "Full",
+          "seatsOpen": 0,
+          "capacity": 21,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "startTime": "9:20 AM",
+          "endTime": "10:30 AM",
+          "startDate": "2026-08-24",
+          "endDate": "2026-12-11",
+          "delivery": "in_person",
+          "location": "Hanover College Science Center - 115"
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 114",
+        "section": "B",
+        "title": "Principles of Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 1,
+          "capacity": 20,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "startTime": "10:40 AM",
+          "endTime": "11:50 AM",
+          "startDate": "2026-08-24",
+          "endDate": "2026-12-11",
+          "delivery": "in_person",
+          "location": "Hanover College Science Center - 115"
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 114",
+        "section": "C",
+        "title": "Principles of Macroeconomics",
+        "faculty": "Jaradat, Hamzeh A.",
+        "instructor": "Jaradat, Hamzeh A.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 1,
+          "capacity": 24,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "12:20 PM",
+          "endTime": "2:05 PM",
+          "startDate": "2026-08-24",
+          "endDate": "2026-12-11",
+          "delivery": "in_person",
+          "location": "Hanover College Science Center - 112"
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 213",
+        "section": "A",
+        "title": "Intermediate Microeconomics",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 8,
+          "capacity": 17,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "10:00 AM",
+          "endTime": "11:45 AM",
+          "startDate": "2026-08-24",
+          "endDate": "2026-12-11",
+          "delivery": "in_person",
+          "location": "Hanover College Science Center - 112"
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 234",
+        "section": "A",
+        "title": "Rational Choices",
+        "crossListedAs": [
+          "PHI 234"
+        ],
+        "faculty": "Bates, Jared G.",
+        "instructor": "Bates, Jared G.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 23,
+          "capacity": 24,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "startTime": "10:40 AM",
+          "endTime": "11:50 AM",
+          "startDate": "2026-08-24",
+          "endDate": "2026-12-11",
+          "delivery": "in_person",
+          "location": "Hanover College Classic Hall - 213"
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 333",
+        "section": "A",
+        "title": "International Trade & Finance",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 3,
+          "capacity": 24,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "startTime": "1:20 PM",
+          "endTime": "2:30 PM",
+          "startDate": "2026-08-24",
+          "endDate": "2026-12-11",
+          "delivery": "in_person",
+          "location": "Hanover College Science Center - 115"
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      }
+    ],
+    "Winter": [
+      {
+        "course": "ECO 113",
+        "section": "J",
+        "title": "Principles of Microeconomics",
+        "faculty": "Jaradat, Hamzeh A.",
+        "instructor": "Jaradat, Hamzeh A.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 24,
+          "capacity": 24,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "10:00 AM",
+          "endTime": "11:45 AM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 113",
+        "section": "K",
+        "title": "Principles of Microeconomics",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 24,
+          "capacity": 24,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "startTime": "8:00 AM",
+          "endTime": "9:10 AM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 114",
+        "section": "J",
+        "title": "Principles of Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 24,
+          "capacity": 24,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "8:00 AM",
+          "endTime": "9:45 AM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 161",
+        "section": "J",
+        "title": "Foundations of Economics",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 20,
+          "capacity": 20,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "12:20 PM",
+          "endTime": "2:05 PM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 214",
+        "section": "J",
+        "title": "Intermediate Macroeconomics",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 24,
+          "capacity": 24,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "10:00 AM",
+          "endTime": "11:45 AM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 221",
+        "section": "J",
+        "title": "Environmental Economics",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 20,
+          "capacity": 20,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "startTime": "9:20 AM",
+          "endTime": "10:30 AM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 321",
+        "section": "J",
+        "title": "Money & Financial Markets",
+        "faculty": "Jaradat, Hamzeh A.",
+        "instructor": "Jaradat, Hamzeh A.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 20,
+          "capacity": 20,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "startTime": "12:20 PM",
+          "endTime": "2:05 PM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 461",
+        "section": "J",
+        "title": "Senior Seminar - Econometrics",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 15,
+          "capacity": 15,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "startTime": "10:40 AM",
+          "endTime": "11:50 AM",
+          "startDate": "2027-01-11",
+          "endDate": "2027-04-23",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      }
+    ],
+    "May": [
+      {
+        "course": "ECO 222",
+        "section": "S",
+        "title": "Economics of the European Union",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 15,
+          "capacity": 15,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ],
+          "startTime": "10:15 AM",
+          "endTime": "12:30 PM",
+          "startDate": "2027-05-03",
+          "endDate": "2027-05-28",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      },
+      {
+        "course": "ECO 260",
+        "section": "S",
+        "title": "Special Topics",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "units": 1,
+        "availability": {
+          "status": "open",
+          "seatsOpen": 20,
+          "capacity": 20,
+          "asOf": "2026-07-28"
+        },
+        "meeting": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ],
+          "startTime": "8:00 AM",
+          "endTime": "10:15 AM",
+          "startDate": "2027-05-03",
+          "endDate": "2027-05-28",
+          "delivery": "in_person",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      }
+    ],
+    "Summer": [
+      {
+        "course": "ECO 113",
+        "section": "Online",
+        "title": "Principles of Microeconomics",
+        "units": 1,
+        "availability": {
+          "status": "unknown",
+          "seatsOpen": null,
+          "capacity": null,
+          "asOf": "2026-07-28"
+        },
+        "planningNote": "Last-resort summer option",
+        "meeting": {
+          "days": [],
+          "startTime": "",
+          "endTime": "",
+          "startDate": "",
+          "endDate": "",
+          "delivery": "online",
+          "location": ""
+        },
+        "provenance": {
+          "sourceType": "user_provided_schedule_screenshot",
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+          ],
+          "verifiedOn": "2026-07-28",
+          "normalizationCheck": "row_checked"
+        },
+        "verificationStatus": "verified"
+      }
+    ]
+  }
+}

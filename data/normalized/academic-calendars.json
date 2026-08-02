@@ -1,0 +1,22 @@
+{
+  "source": "https://www.hanover.edu/academics/calendar/",
+  "retrievedOn": "2026-07-29",
+  "approvalStatus": "OFFICIAL_HANOVER_SOURCE",
+  "academicYears": {
+    "2025-2026": {
+      "springTermEnd": "2026-05-22"
+    },
+    "2026-2027": {
+      "fallTermStart": "2026-08-24",
+      "springTermEnd": "2027-05-28"
+    }
+  },
+  "summerClarificationWindows": [
+    {
+      "start": "2026-05-23",
+      "end": "2026-08-23",
+      "upcomingFallYear": 2026,
+      "basis": "Day after Spring 2026 classes ended through day before Fall 2026 classes begin"
+    }
+  ]
+}

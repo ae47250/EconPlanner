@@ -1,0 +1,3 @@
+# Preserve downloaded official source formatting without treating source trailing whitespace as code errors.
+data/raw/** -whitespace
+templates/econplannertemplate.html -whitespace

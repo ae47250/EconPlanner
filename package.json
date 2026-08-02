@@ -6,13 +6,25 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "ingest:sources": "node scripts/ingest-economics-sources.mjs",
+    "ingest:catalog": "node scripts/ingest-hanover-catalog.mjs",
+    "normalize:catalog": "node scripts/normalize-hanover-catalog.mjs",
+    "report:economics": "node scripts/generate-economics-report.mjs",
+    "test": "node --test",
+    "test:e2e": "playwright test",
+    "lint": "eslint ."
   },
   "dependencies": {
     "next": "latest",
     "openai": "latest",
     "react": "latest",
     "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "eslint": "10.8.0",
+    "globals": "17.8.0"
   },
   "engines": {
     "node": ">=20"

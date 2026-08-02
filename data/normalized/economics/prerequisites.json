@@ -1,0 +1,179 @@
+{
+  "ECO 213": {
+    "all": [
+      "ECO 113"
+    ],
+    "any": [
+      [
+        "MAT 113",
+        "MAT 121"
+      ]
+    ],
+    "concurrentWithApproval": [
+      {
+        "options": [
+          "MAT 113",
+          "MAT 121"
+        ],
+        "approval": "instructor",
+        "policySource": "department-confirmed-local-policy",
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3",
+        "reason": "concurrent_math",
+        "lastResortOnly": true
+      }
+    ]
+  },
+  "ECO 214": {
+    "all": [
+      "ECO 114"
+    ],
+    "any": [
+      [
+        "MAT 113",
+        "MAT 121"
+      ]
+    ],
+    "concurrentWithApproval": [
+      {
+        "options": [
+          "MAT 113",
+          "MAT 121"
+        ],
+        "approval": "instructor",
+        "policySource": "department-confirmed-local-policy",
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3",
+        "reason": "concurrent_math",
+        "lastResortOnly": true
+      }
+    ]
+  },
+  "ECO 221": {
+    "all": [
+      "ECO 113"
+    ],
+    "any": []
+  },
+  "ECO 222": {
+    "all": [
+      "ECO 114"
+    ],
+    "any": []
+  },
+  "ECO 223": {
+    "all": [],
+    "any": [
+      [
+        "ECO 113",
+        "ECO 114",
+        "ECO 161"
+      ]
+    ]
+  },
+  "ECO 257": {
+    "all": [],
+    "any": [
+      [
+        "ECO 113",
+        "ECO 114"
+      ]
+    ]
+  },
+  "ECO 315": {
+    "all": [],
+    "any": [
+      [
+        "ECO 113",
+        "ECO 114"
+      ]
+    ]
+  },
+  "ECO 316": {
+    "all": [
+      "ECO 113",
+      "ECO 114"
+    ],
+    "any": []
+  },
+  "ECO 321": {
+    "all": [
+      "ECO 113",
+      "ECO 114"
+    ],
+    "any": []
+  },
+  "ECO 331": {
+    "all": [
+      "ECO 213"
+    ],
+    "any": []
+  },
+  "ECO 333": {
+    "all": [
+      "ECO 114"
+    ],
+    "any": []
+  },
+  "ECO 335": {
+    "all": [
+      "ECO 213",
+      "ECO 257"
+    ],
+    "any": [
+      [
+        "MAT 121"
+      ]
+    ]
+  },
+  "ECO 337": {
+    "all": [],
+    "any": [
+      [
+        "ECO 113",
+        "ECO 114"
+      ]
+    ]
+  },
+  "ECO 357": {
+    "all": [
+      "ECO 213",
+      "ECO 214"
+    ],
+    "any": [],
+    "permission": "department"
+  },
+  "ECO 461": {
+    "all": [
+      "ECO 213",
+      "ECO 214"
+    ],
+    "any": [
+      [
+        "ECO 257",
+        "MAT 217",
+        "PSY 217"
+      ]
+    ],
+    "concurrentWithApproval": [
+      {
+        "options": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "approval": "department",
+        "policySource": "department-confirmed-local-policy",
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4",
+        "reason": "concurrent_intermediate_with_capstone",
+        "requiresCompletedFromOptions": 1,
+        "maxConcurrent": 1
+      }
+    ]
+  },
+  "ECO 471": {
+    "all": [
+      "ECO 213",
+      "ECO 214",
+      "ECO 321"
+    ],
+    "any": []
+  }
+}

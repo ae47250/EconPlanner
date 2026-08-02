@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { validateCoursePlan } from "../../../lib/validateCoursePlan.js";
+import { renderScheduleKnowledge } from "../../../lib/schedule/annual.js";
 
 export const runtime = "nodejs";
 
@@ -11,7 +12,7 @@ const KNOWLEDGE_FILES = [
   "knowledge/major-requirements.md",
   "knowledge/course-offerings.md",
   "knowledge/term-structure.md",
-  "knowledge/course-schedule-2026-2027.md"
+  "data/normalized/economics/schedule-2026-2027.json"
 ];
 
 const INITIAL_MODEL = process.env.OPENAI_INITIAL_MODEL || "gpt-5.4-nano";
@@ -26,7 +27,7 @@ const RECOGNIZED_COURSES = new Set([
   "ECO 221", "ECO 222", "ECO 223", "ECO 224", "ECO 234", "ECO 257",
   "ECO 260", "ECO 307", "ECO 315", "ECO 316", "ECO 321", "ECO 331",
   "ECO 333", "ECO 335", "ECO 337", "ECO 357", "ECO 360", "ECO 370",
-  "ECO 461", "ECO 471", "MAT 112", "MAT 113", "MAT 121", "MAT 217",
+  "ECO 461", "ECO 471", "MAT 113", "MAT 121", "MAT 217", "PHI 234",
   "PSY 217", "BUSN 323"
 ]);
 
@@ -67,7 +68,7 @@ async function loadKnowledgeBundle() {
       return `\n\n--- FILE: ${file} ---\n${content}`;
     })
   );
-  return files.join("\n");
+  return `${files.join("\n")}\n\n--- CANONICAL SCHEDULE ---\n${renderScheduleKnowledge()}`;
 }
 
 function capWords(text, limit = 220) {
@@ -100,10 +101,12 @@ const ECO_TITLE_ALIASES = [
 function extractEcoCodes(value) {
   const text = String(value || "");
   const codes = new Set();
-  const matches = text.toUpperCase().matchAll(/\bECO\s*-?\s*(\d{3})\b/g);
+  const matches = text.toUpperCase().matchAll(/\b(ECO|PHI)\s*-?\s*(\d{3})\b/g);
 
   for (const match of matches) {
-    codes.add(`ECO ${match[1]}`);
+    const code = `${match[1]} ${match[2]}`;
+    if (code === "PHI 234") codes.add("ECO 234");
+    else if (code.startsWith("ECO ")) codes.add(code);
   }
 
   const lowered = text.toLowerCase();
@@ -175,7 +178,7 @@ function preflightStudentInput(studentInput) {
     studentInput.currentCourses,
     studentInput.additionalNotes
   ].join(" ");
-  const unknown = [...new Set([...courseText.toUpperCase().matchAll(/\b(ECO|MAT|PSY|BUSN)\s*-?\s*(\d{3})\b/g)]
+  const unknown = [...new Set([...courseText.toUpperCase().matchAll(/\b(ECO|MAT|PSY|BUSN|PHI)\s*-?\s*(\d{3})\b/g)]
     .map(match => `${match[1]} ${match[2]}`)
     .filter(code => !RECOGNIZED_COURSES.has(code)))];
 
@@ -214,22 +217,27 @@ Critical reminders:
 - In completed/current ECO fields, course names such as Intermediate Microeconomics, Intermediate Macroeconomics, Money & Financial Markets, and Quantitative Methods should be interpreted as their matching course codes.
 - Treat "not completed" as not done. Treat "currently taking" as in progress and do not schedule that requirement again.
 - If ECO 213 is completed/current, do not schedule ECO 113. If ECO 214 is completed/current, do not schedule ECO 114.
-- 2026/2027 ECO placement must follow the current schedule file exactly.
+- 2026/2027 ECO placement must follow the canonical schedule data exactly.
 - For academic years after 2026/2027, do not name specific ECO electives such as ECO 221 or ECO 333 unless the student provides current offering information. Use ECO elective instead.
 - For academic years after 2026/2027, do not display only ECO 213 or only ECO 214. Use "ECO 213 or ECO 214" and later "ECO 214 or ECO 213" because the exact future schedule is unknown.
 - Schedule ECO 213 and ECO 214 as soon as feasible after MAT 113 or MAT 121 and the appropriate introductory courses are complete.
 - For freshman plans, schedule MAT 113 or MAT 121 no later than the end of sophomore year. Do not rely on concurrent math enrollment with ECO 213 or ECO 214 unless no better plan is feasible.
+- MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only when the matching course-instructor approval is explicitly recorded; never infer approval just to make a plan fit.
+- ECO 213 and ECO 214 normally alternate between Fall and Winter. Their separation is an offering pattern, not a universal enrollment prohibition.
 - If MAT 113 or MAT 121 is current/in progress and ECO 213 cannot be placed in its correct known 2026/2027 Fall term, do not move ECO 213 to Winter 2026/2027. Wait and use the future-year alternative wording instead.
 - Prefer no more than two economics courses in Fall or Winter. Use three only when needed for timely major completion. Use four only if three cannot make completion on time possible. Never schedule more than four economics courses in Fall or Winter.
 - Do not schedule more than one ECO elective in any term unless the student explicitly asks for a heavier economics load or it is needed to finish the major on time.
 - Prefer no more than one ECO elective in senior year, but allow additional senior-year ECO electives when needed to complete the major by graduation. Still respect the term load limits and May Term limits.
 - When the statistics requirement is not completed, write the requirement group as MAT 217 / ECO 257 / PSY 217. Do not write ECO 257 by itself.
+- PSY 217 is a confirmed prerequisite pathway into ECO 461.
+- Every ECO 260 special-topics course counts as an ECO elective.
 - When the money/finance requirement is not completed, write the requirement group as ECO 321 / BUSN 323. Do not write ECO 321 by itself unless using the known 2026/2027 schedule specifically.
 - A returned plan must show every remaining major requirement, including four ECO electives, the math cognate, statistics option, money/finance option, ECO 213, ECO 214, and ECO 461.
 - If the remaining requirements cannot fit under the rules, return the closest valid JSON plan and explain the constraint briefly in notes; do not invent offerings or place courses in invalid terms.
 - For freshman and sophomore standard plans, do not accelerate the economics major to finish before senior year unless the student explicitly asks for that.
 - For freshman and sophomore standard plans, aim for 2-3 ECO courses per full academic year when feasible.
-- ECO 461 requires senior standing and may only be scheduled in senior Winter.
+- ECO 461 requires senior standing, must be completed at Hanover, and may only be scheduled in Winter. A student graduating one year early has senior standing in the final Winter.
+- If exactly one of ECO 213 or ECO 214 is already completed, the other may share Winter with ECO 461 only when explicit Economics Department approval is recorded and the statistics prerequisite is completed before Winter.
 - Do not schedule or mention ECO 471 in standard plans. Include ECO 471 only if the student explicitly asks for Senior Thesis.
 - ECO 471 requires senior standing and may only be scheduled in senior year.
 - The statistics option must be completed no later than Fall senior year and is recommended by the end of junior year.
@@ -401,7 +409,6 @@ function canReturnClosestPlan(studentInput, validation) {
     /more than one total course/i,
     /not listed as a valid ECO course/i,
     /already completed or in progress/i,
-    /ECO 213 and ECO 214 should not both/i,
     /must be scheduled only in Winter/i,
     /should be written as/i
   ];

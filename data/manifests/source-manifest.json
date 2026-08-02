@@ -1,0 +1,340 @@
+{
+  "generatedAt": "2026-08-01T00:00:00.000Z",
+  "entries": [
+    {
+      "role": "catalog_home",
+      "source": "https://catalog.hanover.edu/",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/catalog.html",
+      "sha256": "27b3147185f763e1aaed42e7183d97a239514ed65b636f4affc4d8756a09573a"
+    },
+    {
+      "role": "program_index",
+      "source": "https://catalog.hanover.edu/programs/",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/programs.html",
+      "sha256": "c349fbe571b18786c89c0cd29f8f91545fb6fac68ada6d64d59aeb354ea097dc"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/anthropology.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/anthropology.php",
+      "sha256": "80d3c2d16d29805712a54284d69829080943ec2d2c67d667c8a3fc5bcac53fe4"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/arthistory.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/arthistory.php",
+      "sha256": "3fad3d1b3139be29389a5dafbae116cdee867f97061d00b5404d384ad0722305"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/artanddesign.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/artanddesign.php",
+      "sha256": "b5f31498563827b6f66d3d9e77db5720c16500072d9b65dc93d6c07fca7e00ec"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/biochemistry.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/biochemistry.php",
+      "sha256": "2bbbc1eb398b1d98b7a826bc4c0acdd85fd889ad6f0b87ee03bc4a5215b0506c"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/biology.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/biology.php",
+      "sha256": "3d9f4edf9ffa0d382eb5e12ceb81c9bf1943a951546ae64e534f135253f067bc"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/business.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/business.php",
+      "sha256": "5e8f17947884d73bb3b5e55f04f30ceaf8b60a5d1abf2fd53adbc88b03169506"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/chemistry.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/chemistry.php",
+      "sha256": "9bc170fcba86ab64e7a359b978ddbbcbdcd19e72cff60ca1d2b80dc8302a4b94"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/classicalstudies.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/classicalstudies.php",
+      "sha256": "142bca9b46b31d611dcbda04e26d6bbf5164261ae763c8fad042b2e7a405bad2"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/communication.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/communication.php",
+      "sha256": "eb7ab871917710f5b52f9b5ca37fdfca45fabf8e53a8a7f70d18aa420977bf59"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/computerscience.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/computerscience.php",
+      "sha256": "d246cb05bb60a2bbfd98eb04f537d4bbf09019c854fd7232edb2e2587f1b6390"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/datascience.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/datascience.php",
+      "sha256": "16acfdb9b1e58a9d21249849739b2f00e3f3a9af3ddf65d31a221664e8f9ea27"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/economics.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/economics.php",
+      "sha256": "aed345bf32d752a1c93bd4cc99a20fa2fc553598844cbfb7ad5e33c2465f5be3"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/education.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/education.php",
+      "sha256": "a5e53ad0a1399723dec3f33a3372d7ac93415070ac41d08a0ef348f019bcaa37"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/engineering.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/engineering.php",
+      "sha256": "33152f201f95873e63dfe11772a3b37b6806316a9797af55cc3d54790474e587"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/english.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/english.php",
+      "sha256": "3acd25f8eac191440216671ebda5991f9f344dd9872841079462ecb99d4e02dc"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/french.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/french.php",
+      "sha256": "cf5d2349155142b4816f7a4428b9760d550347487935cd882b15de15305106d2"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/genderstudies.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/genderstudies.php",
+      "sha256": "31d70f0b9357813414742f82aa80b82c71ae2e437502753607301c8c5856e615"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/geology.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/geology.php",
+      "sha256": "6ab7eb75eb8da98407f1f4dff1fd4f087ed1071b9f23738d744666cc8021b8e1"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/german.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/german.php",
+      "sha256": "f4d63524c8e682deb12e3ca6b1c8f1f0352a86d0cdf866207c947365bfb2623f"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/healthandmovementstudies.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/healthandmovementstudies.php",
+      "sha256": "58078ba48c8b94fff13bb6055c1211a9a9e95e07ab1eb167186e4549e99a7475"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/history.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/history.php",
+      "sha256": "2459cd200c5dd18ce8240046ded6e39b70fa7a2db6ccb223f5fc94ee475a186f"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/internationalstudies.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/internationalstudies.php",
+      "sha256": "d880a34b1c7ab8b26cb5715a9c725751c484913b8230e756a09139e0239c4e92"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/kinesiologyandintegrativephysiology.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/kinesiologyandintegrativephysiology.php",
+      "sha256": "ad5325d97450b6687cd7a54da2513ce2210c649084f58605ed06eb2e4131690f"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/latin.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/latin.php",
+      "sha256": "5a1e7d66c65751725af79b04550fd64b6f73cba906b3132ff83c40462161fb24"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/mathematics.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/mathematics.php",
+      "sha256": "4ac2a84fb950047ab80bf473af221991d395079e2c16e725468e025a2e77a689"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/medievalandrenaissancestudies.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/medievalandrenaissancestudies.php",
+      "sha256": "f0237d51410f38fed25a9508f3cdea1daaece763c70961e6eb8f1bcd5dc07111"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/music.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/music.php",
+      "sha256": "57fa3338a57aae024583882b874d7f92a64a3d1a05295727209639c1b0582391"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/nursing.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/nursing.php",
+      "sha256": "ab6ba7047119a431fb853ae1fc205f96939d65a061adf5170ed71eee0e12b2ef"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/philosophy.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/philosophy.php",
+      "sha256": "6ff815443c5794f02049ba98a0b9453b0268d3fbfb7acc4d79097fc35aee549b"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/physicsandastronomy.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/physicsandastronomy.php",
+      "sha256": "7d4f302b0d7d039e0a9c4c821dedb15e88f18951fad5a6c3e701e874e7478b94"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/politicalscience.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/politicalscience.php",
+      "sha256": "79bf68ce1ca4b6c46147a6c09bcd5b693109551aaac2102036789ac0734213c0"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/psychology.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/psychology.php",
+      "sha256": "19554054bca87ef5d9be94e66f9fb593a7a98cbe70373b326bef176607f74f1a"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/sociology.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/sociology.php",
+      "sha256": "5c11bafe410c708dfd0a4d0f1ca613b7cc331ff4c9d8802ea2613b2b41dc8a07"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/spanish.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/spanish.php",
+      "sha256": "6cb60898e5ae0faa153a4652226420e99cb15b1317707e1153d589dc3924e23c"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/sportsmanagement.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/sportsmanagement.php",
+      "sha256": "a233499facf259923dd3c1ae60c5f54129a614195640b113dda4acb56040cc95"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/theatre.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/theatre.php",
+      "sha256": "5257a66dbcd37aedd0024a75b29e9f500cbb33d321582f8b325c3434f4769834"
+    },
+    {
+      "role": "program_page",
+      "source": "https://catalog.hanover.edu/programs/theologicalstudies.php",
+      "catalogYear": "2025-2026",
+      "path": "data/raw/hanover/catalog/2025-2026/theologicalstudies.php",
+      "sha256": "c1688243b03458891ee269745828ebc58d4538d7c98cf84778981312911a49f5"
+    },
+    {
+      "role": "economics_source",
+      "source": "department-provided:Econ_Major_Requirements_and_Prerequisites (1).md",
+      "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+      "sha256": "6da52642cf4fcaa8d9d10075cba1158347e831aacc98b21cf3fcc4b7ff06565f",
+      "notes": "Updated from department-confirmed local planning policies through 2026-08-01; the public catalog remains the formal prerequisite source."
+    },
+    {
+      "role": "economics_source",
+      "source": "department-provided:Econ_Course_Offerings.md",
+      "path": "data/raw/economics/Econ_Course_Offerings.md",
+      "sha256": "2d6d4cd295789d5d1f23728ef4deecadae97c3bd346548deb9f989add6b9f24d"
+    },
+    {
+      "role": "economics_local_policy",
+      "source": "department-confirmed:planning-policies-2026-08-01",
+      "confirmedOn": "2026-08-01",
+      "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
+      "sha256": "b23325fa29bf9feb85f1e92d6d2cccf394640d3b97229baa4fe177a3fd275383"
+    },
+    {
+      "role": "economics_source",
+      "source": "department-provided:Term_Structure.md",
+      "path": "data/raw/economics/Term_Structure.md",
+      "sha256": "2ef08b86aa2c4fa0f58fb213db21e3a99027bb833d0d4f52e23f51962f80acc3"
+    },
+    {
+      "role": "economics_source",
+      "source": "department-provided:07_spiffy_dashboard_template.html",
+      "path": "data/raw/economics/07_spiffy_dashboard_template.html",
+      "sha256": "a1f4c17d84be1116d8ca640d45df9ef1007191221ffb82e69c28dd533a029455"
+    },
+    {
+      "role": "economics_schedule_evidence",
+      "source": "user-provided-schedule-screenshot",
+      "path": "data/raw/economics/schedule-2026-2027-fall.png",
+      "sha256": "39b78e794d9ac5bf263163b6172943875aa37487f5adfbcb599b1413798cc42b"
+    },
+    {
+      "role": "economics_schedule_evidence",
+      "source": "user-provided-schedule-screenshot",
+      "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
+      "sha256": "fa240dd52020b3c23fd70c4133bec1f21dcaf276bde967568758db23c5e86570"
+    },
+    {
+      "role": "economics_canonical_courses",
+      "source": "https://catalog.hanover.edu/programs/economics.php",
+      "catalogYear": "2025-2026",
+      "retrievedOn": "2026-07-29",
+      "approvalStatus": "APPROVED_LOCAL_SOURCE",
+      "path": "data/normalized/economics/courses.json",
+      "sha256": "d50dd80eba46d7becd48781242029311e58e50e4a85ef748033c2387d820916d"
+    },
+    {
+      "role": "academic_calendar",
+      "source": "https://www.hanover.edu/academics/calendar/",
+      "academicYear": "2026-2027",
+      "retrievedOn": "2026-07-29",
+      "approvalStatus": "OFFICIAL_HANOVER_SOURCE",
+      "path": "data/normalized/academic-calendars.json",
+      "sha256": "dbb5eb7ac4638f953a7f576b40a776f4f66a102e5a3d8c2ce7792228cd3cc4f9"
+    }
+  ]
+}
