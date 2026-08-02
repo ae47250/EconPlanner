@@ -5,6 +5,7 @@ import { renderEconomicsHtml } from "../../../../lib/reports/economics-html.js";
 import { createPdfFromHtml, PdfCreationClientError } from "../../../../lib/pdf-creation-client.js";
 
 export const runtime = "nodejs";
+export const maxDuration = 120;
 
 export async function handleEconomicsReportRequest(request, dependencies = {}) {
   try {

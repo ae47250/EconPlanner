@@ -1,9 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { buildEconomicsReportFromStudent } from "../lib/reports/build-economics.js";
 import { renderEconomicsHtml } from "../lib/reports/economics-html.js";
 import { reportPlanCount } from "../lib/reports/economics.js";
+import { createPdfFromHtml } from "../lib/pdf-creation-client.js";
 import {
   handleEconomicsReportRequest,
   POST as reportPost
@@ -50,6 +52,8 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
 
 test("Economics report API sends inactive completed HTML to pdf-creator", async () => {
   let submitted;
+  const pdf = new Uint8Array([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31]);
+  const pdfSha256 = createHash("sha256").update(pdf).digest("hex");
   const response = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -62,28 +66,75 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
       PDF_CREATION_BYPASS_TOKEN: "preview-bypass"
     },
     fetchImpl: async (url, options) => {
-      assert.equal(url.href, "https://pdf-creator.example/api/v1/pdfs");
-      assert.equal(options.headers.Authorization, `Bearer ${"a".repeat(43)}`);
+      if (url.pathname === "/api/v1/pdfs") {
+        assert.equal(url.href, "https://pdf-creator.example/api/v1/pdfs");
+        assert.equal(options.headers.Authorization, `Bearer ${"a".repeat(43)}`);
+        assert.equal(options.headers["x-vercel-protection-bypass"], "preview-bypass");
+        submitted = JSON.parse(options.body);
+        return Response.json({
+          status: "complete",
+          requestId: "request-1",
+          reportId: "r30_00000000-0000-4000-8000-000000000001",
+          caller: "econplanner",
+          durationMs: 2000,
+          pdfBytes: pdf.byteLength,
+          pageCount: 2,
+          sha256: pdfSha256,
+          links: {
+            download: "https://pdf-creator.example/reports/r30_00000000-0000-4000-8000-000000000001/download"
+          }
+        });
+      }
+      assert.equal(url.href, "https://pdf-creator.example/reports/r30_00000000-0000-4000-8000-000000000001/download");
       assert.equal(options.headers["x-vercel-protection-bypass"], "preview-bypass");
-      submitted = JSON.parse(options.body);
-      return new Response(new Uint8Array([0x25, 0x50, 0x44, 0x46]), {
-        headers: {
-          "content-type": "application/pdf",
-          "x-pdf-page-count": "2"
-        }
-      });
+      assert.equal(options.headers.Authorization, undefined);
+      return new Response(pdf, { headers: { "content-type": "application/pdf" } });
     }
   });
 
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type"), /application\/pdf/);
   assert.match(response.headers.get("content-disposition"), /attachment/);
-  assert.equal(submitted.storeResult, false);
-  assert.equal(submitted.storeHtml, false);
+  assert.equal(submitted.storeResult, true);
+  assert.equal(submitted.storeHtml, true);
+  assert.equal(submitted.retentionDays, 30);
+  assert.match(submitted.idempotencyKey, /^econplanner:[0-9a-f]{64}$/);
   assert.match(submitted.html, /^<!doctype html>/i);
   assert.equal(/<script\b/i.test(submitted.html), false);
   assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
   assert.equal(submitted.html.includes("{{"), false);
+});
+
+test("PDF client rejects a cross-origin stored download before forwarding the preview bypass", async () => {
+  let fetchCount = 0;
+  await assert.rejects(
+    createPdfFromHtml({ html: "<!doctype html><html><body>safe</body></html>" }, {
+      environment: {
+        PDF_CREATION_ENABLED: "true",
+        PDF_CREATION_API_URL: "https://pdf-creator.example",
+        PDF_CREATION_API_KEY: "a".repeat(43),
+        PDF_CREATION_BYPASS_TOKEN: "preview-bypass"
+      },
+      fetchImpl: async () => {
+        fetchCount += 1;
+        return Response.json({
+          status: "complete",
+          requestId: "request-2",
+          reportId: "r30_00000000-0000-4000-8000-000000000002",
+          caller: "econplanner",
+          durationMs: 1000,
+          pdfBytes: 6,
+          pageCount: 1,
+          sha256: "a".repeat(64),
+          links: {
+            download: "https://untrusted.example/reports/r30_00000000-0000-4000-8000-000000000002/download"
+          }
+        });
+      }
+    }),
+    error => error.code === "pdf_creation_failed"
+  );
+  assert.equal(fetchCount, 1);
 });
 
 test("transfer reports use the selected graduation and Hanover entry years", async () => {
