@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-KNOWLEDGE TEMPLATE: ECONOMICS MAJOR PLAN — SPIFFY DASHBOARD
+KNOWLEDGE TEMPLATE: ECONOMICS MAJOR PLAN - SPIFFY DASHBOARD
 
 Use this file as the visual and structural source of truth for HTML and PDF output.
 It is a template, not a sample student record. Never preserve sample-specific values.
@@ -17,7 +17,7 @@ REQUIRED DYNAMIC FIELDS
 
 DYNAMIC-YEAR RULES
 - Calculate every academic year from the current date, Term_Structure.md, and the student's standing.
-- Do not copy 2026/2027–2029/2030 unless those years are actually correct.
+- Do not copy 2026/2027-2029/2030 unless those years are actually correct.
 - For a partly completed current year, include only remaining relevant term columns.
 
 GENERATION RULES
@@ -32,7 +32,7 @@ GENERATION RULES
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>{{STUDENT_NAME}} — Economics Major Course Plan</title>
+<title>{{STUDENT_NAME}} - Economics Major Course Plan</title>
 <style>
 
 *{box-sizing:border-box}
@@ -140,10 +140,6 @@ td:hover{background:#fbfaff}
 </style>
 </head>
 <body class="">
-<nav class="toolbar" aria-label="Report controls">
-  <button type="button" onclick="window.print()">Print / Save PDF</button>
-</nav>
-
     <main class="sheet">
       
     <header class="letterhead">
@@ -156,7 +152,7 @@ td:hover{background:#fbfaff}
         </svg>
         <div class="brand-copy">
           <div class="university-name">HANOVER COLLEGE</div>
-          <div class="tagline">PLAN. MAP. ADVISE. <span class="sparkle">✦</span></div>
+          <div class="tagline">PLAN. MAP. ADVISE.</div>
         </div>
       </div>
       <div class="office-copy">
@@ -174,8 +170,8 @@ td:hover{background:#fbfaff}
         </div>
         <p class="assumptions" data-field="input-summary">{{INPUT_SUMMARY}}</p>
         <div class="plan-key">
-          <span>Planning aid—confirm requirements and availability with an academic advisor.</span>
-          <span><b>✓</b> next-year offering verified; seat availability not verified.</span>
+          <span>Planning aid - confirm requirements and availability with an academic advisor.</span>
+          <span>Verified offerings use the schedule evidence shown in the report.</span>
         </div>
         
 <div class="spiffy-stats" aria-label="Plan at a glance">
@@ -192,7 +188,7 @@ td:hover{background:#fbfaff}
       <template id="year-block-template">
         <section class="year-block">
           <div class="year-heading">
-            <h2>{{YEAR_LABEL}} <span>— {{ACADEMIC_YEAR}}</span></h2>
+            <h2>{{YEAR_LABEL}} <span>- {{ACADEMIC_YEAR}}</span></h2>
           </div>
           <div class="table-wrap">
             <table>
@@ -209,16 +205,5 @@ td:hover{background:#fbfaff}
       </template>
     </main>
 
-<script>
-document.querySelectorAll('.year-block').forEach((card, index) => {
-  card.style.opacity = '0';
-  card.style.transform = 'translateY(12px)';
-  setTimeout(() => {
-    card.style.transition = 'opacity .45s ease, transform .45s ease, box-shadow .22s ease';
-    card.style.opacity = '1';
-    card.style.transform = 'translateY(0)';
-  }, 120 + index * 90);
-});
-</script>
 </body>
 </html>

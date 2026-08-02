@@ -16,7 +16,9 @@
           "MAT 121"
         ],
         "approval": "instructor",
-        "policySource": "department-approved",
+        "policySource": "department-confirmed-local-policy",
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3",
+        "reason": "concurrent_math",
         "lastResortOnly": true
       }
     ]
@@ -38,7 +40,9 @@
           "MAT 121"
         ],
         "approval": "instructor",
-        "policySource": "department-approved",
+        "policySource": "department-confirmed-local-policy",
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3",
+        "reason": "concurrent_math",
         "lastResortOnly": true
       }
     ]
@@ -157,6 +161,7 @@
         ],
         "approval": "department",
         "policySource": "department-confirmed-local-policy",
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4",
         "reason": "concurrent_intermediate_with_capstone",
         "requiresCompletedFromOptions": 1,
         "maxConcurrent": 1

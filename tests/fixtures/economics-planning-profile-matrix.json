@@ -1,0 +1,23 @@
+{
+  "planCreationDate": "2026-07-30",
+  "standings": ["freshman", "sophomore", "junior"],
+  "profiles": [
+    { "id": "P0", "path": "progressive", "courses": [] },
+    { "id": "P1", "path": "progressive", "courses": ["ECO 113"] },
+    { "id": "P2", "path": "progressive", "courses": ["ECO 113", "MAT 113"] },
+    { "id": "P3", "path": "progressive", "courses": ["ECO 113", "MAT 113", "ECO 213"] },
+    { "id": "P4", "path": "progressive", "courses": ["ECO 113", "MAT 113", "ECO 213", "ECO 114"] },
+    { "id": "P5", "path": "progressive", "courses": ["ECO 113", "MAT 113", "ECO 213", "ECO 114", "ECO 214"] },
+    { "id": "P6", "path": "progressive", "courses": ["ECO 113", "MAT 113", "ECO 213", "ECO 114", "ECO 214", "MAT 217"] },
+    { "id": "P7", "path": "progressive", "courses": ["ECO 113", "MAT 113", "ECO 213", "ECO 114", "ECO 214", "MAT 217", "BUSN 323"] },
+    { "id": "P8", "path": "progressive", "courses": ["ECO 113", "MAT 113", "ECO 213", "ECO 114", "ECO 214", "MAT 217", "BUSN 323", "ECO 221"] },
+    { "id": "W1", "path": "weak", "courses": ["MAT 113"] },
+    { "id": "W2", "path": "weak", "courses": ["MAT 113", "ECO 161"] },
+    { "id": "W3", "path": "weak", "courses": ["MAT 113", "ECO 161", "ECO 221"] },
+    { "id": "W4", "path": "weak", "courses": ["MAT 113", "ECO 161", "ECO 221", "ECO 222"] },
+    { "id": "W5", "path": "weak", "courses": ["MAT 113", "ECO 161", "ECO 221", "ECO 222", "ECO 234"] },
+    { "id": "W6", "path": "weak", "courses": ["MAT 113", "ECO 161", "ECO 221", "ECO 222", "ECO 234", "ECO 113"] },
+    { "id": "W7", "path": "weak", "courses": ["MAT 113", "ECO 161", "ECO 221", "ECO 222", "ECO 234", "ECO 113", "ECO 114"] },
+    { "id": "W8", "path": "weak", "courses": ["MAT 113", "ECO 161", "ECO 221", "ECO 222", "ECO 234", "ECO 113", "ECO 114", "MAT 217"] }
+  ]
+}

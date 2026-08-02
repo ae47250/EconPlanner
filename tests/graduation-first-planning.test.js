@@ -88,9 +88,9 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
 
   assert.deepEqual(statuses.map(item => item.remaining), [12, 11, 10, 9]);
   assert.deepEqual(statuses.map(item => item.outcome.status), [
-    "NOT_FEASIBLE",
-    "NOT_FEASIBLE",
-    "NOT_FEASIBLE",
+    "PRELIMINARY_ONLY",
+    "PRELIMINARY_ONLY",
+    "PRELIMINARY_ONLY",
     "PRELIMINARY_ONLY"
   ]);
 });

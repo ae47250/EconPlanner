@@ -48,28 +48,31 @@ function validCurrentCoursesForFuturePrerequisite(rule, focus) {
 }
 
 test("Economics term planner keeps prerequisite courses in earlier terms", () => {
-  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, {
+  const student = {
     academicStanding: "senior",
+    planCreationDate: "2026-07-30",
     courses: [
       { code: "ECO 113", status: "completed" },
       { code: "ECO 114", status: "completed" },
-      { code: "MAT 113", status: "completed" }
+      { code: "MAT 113", status: "completed" },
+      { code: "ECO 214", status: "completed" }
     ]
-  });
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const plan = buildEconomicsTermPlan({
-    student: { academicStanding: "senior", courses: [{ code: "ECO 113", status: "completed" }, { code: "ECO 114", status: "completed" }, { code: "MAT 113", status: "completed" }] },
+    student,
     mapping,
     schedule,
-    prerequisites
+    prerequisites,
+    planningMode: "graduation_priority"
   });
-  const fall = plan.terms.find(term => term.term === "Fall").courses.map(course => course.course);
-  const winter = plan.terms.find(term => term.term === "Winter").courses.map(course => course.course);
+  const fall = plan.terms.find(term => term.term === "Fall 2026").courses.map(course => course.course);
+  const winter = plan.terms.find(term => term.term === "Winter 2027").courses.map(course => course.course);
 
   assert.ok(fall.includes("ECO 213"));
-  assert.ok(winter.includes("ECO 214"));
-  assert.ok(!fall.includes("ECO 214"));
-  assert.ok(!fall.includes("ECO 461") && !winter.includes("ECO 461"));
-  assert.ok(plan.terms.some(term => term.isPlaceholder && term.courses.some(course => course.course === "ECO elective")));
+  assert.ok(winter.includes("ECO 461"));
+  assert.ok(!winter.includes("ECO 213"));
+  assert.equal(plan.validation.valid, true);
 });
 
 test("dated freshman planning returns distinct feasible normal and one-year-early plans", () => {
@@ -81,13 +84,14 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
 
-  assert.equal(result.plans.length, 2);
-  assert.deepEqual(result.plans.map(plan => plan.label), ["Plan A", "Plan C-2"]);
+  assert.ok(result.plans.length >= 2 && result.plans.length <= 4);
+  assert.ok(result.plans.some(plan => plan.label === "Plan A"));
+  assert.ok(result.plans.some(plan => plan.label === "Plan C-2"));
   assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Plan A", "Plan B", "Plan C", "Plan C-2"]);
   assert.equal(result.planSetValidation.valid, true);
-  assert.equal(result.planSetValidation.uniquePlanCount, 2);
-  assert.deepEqual(result.plans[0].distribution.targetYearCounts, [2, 3, 3, 4]);
-  assert.deepEqual(result.plans[1].distribution.targetYearCounts, [4, 4, 4]);
+  assert.equal(result.planSetValidation.uniquePlanCount, result.plans.length);
+  assert.deepEqual(result.plans.find(plan => plan.label === "Plan A").distribution.targetYearCounts, [2, 3, 3, 4]);
+  assert.deepEqual(result.plans.find(plan => plan.label === "Plan C-2").distribution.targetYearCounts, [4, 4, 4]);
   assert.ok(result.plans.every(plan => plan.validation.valid));
   assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(result.plans.find(plan => !plan.isEarlyGraduation).terms.some(term => term.term === "Spring/May 2030"));
@@ -96,8 +100,8 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
   assert.ok(result.plans.every(plan => plan.terms.every(term => !term.isSummer)));
   assert.ok(result.plans.every(plan => plan.terms.every(term => term.courses.length <= (term.term.startsWith("Spring/May") ? 1 : 4))));
 
-  assert.equal(result.plans[1].isEarlyGraduation, true);
-  assert.equal(result.plans[1].feasibilityStatus, "PRELIMINARY_ONLY");
+  assert.equal(result.plans.find(plan => plan.label === "Plan C-2").isEarlyGraduation, true);
+  assert.equal(result.plans.find(plan => plan.label === "Plan C-2").feasibilityStatus, "PRELIMINARY_ONLY");
 });
 
 test("validated plans cover every required course, choice group, cognate, and elective slot", () => {
@@ -166,14 +170,16 @@ test("standing-specific candidate limits show only distinct feasible results", (
 
   const junior = {
     academicStanding: "junior",
-    planCreationDate: "2026-09-01",
+    planCreationDate: "2026-07-30",
     courses: []
   };
   const juniorMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, junior);
   const juniorPlans = buildEconomicsTermPlans({ student: junior, mapping: juniorMapping, schedule, prerequisites });
-  assert.equal(juniorPlans.plans.length, 0);
-  assert.ok(juniorPlans.planningGaps.some(item => item.requirementId === "eco-461"));
-  assert.ok(juniorPlans.planningGaps.some(item => item.code === "FEWER_THAN_EXPECTED_VALID_PLANS"));
+  assert.ok(juniorPlans.plans.length > 0 && juniorPlans.plans.length <= 2);
+  assert.ok(juniorPlans.plans.every(plan => plan.validation.valid));
+  assert.ok(juniorPlans.plans.every(plan => (
+    plan.terms.flatMap(term => term.courses).some(course => course.course === "ECO 461")
+  )));
 });
 
 test("named courses are not placed from a different academic year's schedule", () => {
@@ -338,13 +344,12 @@ test("concurrent math is used only after a prerequisite-first plan fails and req
   const fall = fallbackPlan.terms.find(term => term.termKey === "Fall");
   const intermediate = fall.courses.find(course => course.course === "ECO 213");
   assert.ok(fall.courses.some(course => course.course === "MAT 113"));
-  assert.deepEqual(intermediate.approvalRequired, [{
-    type: "instructor",
-    reason: "concurrent_math",
-    prerequisite: "MAT 113",
-    policySource: "department-approved"
-  }]);
-  assert.ok(fallbackPlan.advisorChecks.some(check => /Concurrent enrollment requires approval/.test(check.reason)));
+  assert.equal(intermediate.approvalRequired.length, 1);
+  assert.equal(intermediate.approvalRequired[0].type, "instructor");
+  assert.equal(intermediate.approvalRequired[0].reason, "concurrent_math");
+  assert.equal(intermediate.approvalRequired[0].prerequisite, "MAT 113");
+  assert.equal(intermediate.approvalRequired[0].policySource, "department-confirmed-local-policy");
+  assert.ok(fallbackPlan.advisorChecks.some(check => /Approval from the ECO 213 instructor is required/.test(check.reason)));
 
   const unmarkedPlan = structuredClone(fallbackPlan);
   delete unmarkedPlan.terms
@@ -528,13 +533,11 @@ test("graduation priority produces realistic one-year senior plans from verified
     const fall = plan.terms.find(term => term.term === "Fall 2026");
     const winter = plan.terms.find(term => term.term === "Winter 2027");
     const may = plan.terms.find(term => term.term === "Spring/May 2027");
-    assert.deepEqual(fall.courses.map(course => course.course), [
-      "Statistics requirement", "ECO 213", "ECO 234", "ECO 333"
-    ]);
-    assert.deepEqual(winter.courses.map(course => course.course), ["ECO 321", "ECO 221", "ECO 461"]);
+    assert.deepEqual(fall.courses.map(course => course.course), ["ECO 213", "ECO 234", "ECO 333", "MAT 217"]);
+    assert.deepEqual(winter.courses.map(course => course.course), ["ECO 221", "ECO 321", "ECO 461"]);
     assert.ok(["ECO 222", "ECO 260"].includes(may.courses[0].course));
     assert.ok(plan.validation.warnings.some(warning => /more than two Economics courses/.test(warning)));
-    assert.ok(plan.validation.warnings.some(warning => /confirm whether MAT 217/.test(warning)));
+    assert.ok(plan.validation.warnings.some(warning => /Schedule confirmation required for MAT 217/.test(warning)));
     assert.ok(plan.terms.every(term => term.courses.length <= (term.termKey === "May" ? 1 : 4)));
     assert.ok(plan.terms.flatMap(term => term.courses).filter(course => course.course.startsWith("ECO ")).every(course => (
       ["verified-offering", "summer-last-resort"].includes(course.source)

@@ -1,8 +1,9 @@
-import { availableCatalogYears, loadCatalog, resolveCatalogYear } from "../../../../lib/catalog/load.js";
+import { availableCatalogYears, loadCatalog, resolveEconomicsCatalogYear } from "../../../../lib/catalog/load.js";
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
 import {
   assigned100LevelElectives,
+  buildFeasibilityDetails,
   buildEconomicsTermPlans,
   classifyFeasibility,
   validateGeneratedPlan,
@@ -16,18 +17,6 @@ export const runtime = "nodejs";
 
 function jsonResponse(payload, status = 200) {
   return Response.json(payload, { status });
-}
-
-function resolveEconomicsCatalog(requestedCatalogYear, catalogYears) {
-  const resolution = resolveCatalogYear(requestedCatalogYear, catalogYears);
-  if (resolution.catalogResolutionStatus !== "unavailable" || !catalogYears.includes("2025-2026")) {
-    return resolution;
-  }
-  return {
-    requestedCatalogYear,
-    selectedCatalogYear: "2025-2026",
-    catalogResolutionStatus: "economics_provisional_fallback"
-  };
 }
 
 function sortResults(results) {
@@ -221,9 +210,15 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
   });
   const validatedPlan = { ...plan, validation };
   validatedPlan.feasibilityStatus = classifyFeasibility(validatedPlan, student);
+  validatedPlan.feasibility = buildFeasibilityDetails(
+    validatedPlan,
+    student,
+    validatedPlan.feasibility?.search
+  );
   validatedPlan.verification = {
     ...(validatedPlan.verification || {}),
-    status: validatedPlan.feasibilityStatus
+    status: validatedPlan.feasibilityStatus,
+    ...validatedPlan.feasibility.verification
   };
   const candidatePlans = Array.isArray(plans)
     ? plans.map(item => item.id === validatedPlan.id ? validatedPlan : item)
@@ -256,7 +251,7 @@ export async function POST(request) {
     if (!requestedCatalogYear) {
       return jsonResponse({ error: "The entry catalog year could not be inferred from the student standing and plan date.", availableCatalogYears: catalogYears }, 400);
     }
-    const catalogResolution = resolveEconomicsCatalog(requestedCatalogYear, catalogYears);
+    const catalogResolution = resolveEconomicsCatalogYear(requestedCatalogYear, catalogYears);
     if (catalogResolution.catalogResolutionStatus === "unavailable") {
       return jsonResponse({
         error: `Entry catalog year ${requestedCatalogYear} is unavailable, and no earlier approved Economics snapshot can be used.`,
