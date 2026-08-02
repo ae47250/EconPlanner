@@ -1,0 +1,813 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "id": "hanover-economics-planning-policy",
+    "version": 1,
+    "confirmationDate": "2026-08-01",
+    "reviewedBy": "Economics Department representative and project owner",
+    "scope": "Independent test-oracle rules for Hanover College Economics major planning",
+    "allowedStatuses": [
+      "CONFIRMED",
+      "POLICY_REVIEW_REQUIRED",
+      "ADVISOR_CONFIRMATION_REQUIRED",
+      "EQUIVALENCY_NOT_CONFIRMED"
+    ]
+  },
+  "confirmationRecords": [
+    {
+      "id": "ECON-DEPARTMENT-2026-08-01",
+      "date": "2026-08-01",
+      "reviewedBy": "Economics Department representative and project owner"
+    }
+  ],
+  "sources": [
+    {
+      "id": "DEPARTMENT-POLICIES",
+      "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
+      "authority": "department-confirmed local policy"
+    },
+    {
+      "id": "ECONOMICS-REQUIREMENTS",
+      "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+      "authority": "catalog-derived Economics requirements and prerequisites"
+    },
+    {
+      "id": "ECONOMICS-OFFERINGS",
+      "path": "data/raw/economics/Econ_Course_Offerings.md",
+      "authority": "Economics offering guidance"
+    },
+    {
+      "id": "TERM-STRUCTURE",
+      "path": "data/raw/economics/Term_Structure.md",
+      "authority": "Hanover term and normal-load guidance"
+    }
+  ],
+  "requirementRules": [
+    {
+      "ruleId": "REQ-MAJOR-COURSE-COUNT",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Economics Major Requirements"
+      ],
+      "kind": "count",
+      "scope": "major",
+      "slotCount": 11
+    },
+    {
+      "ruleId": "REQ-COGNATE-COURSE-COUNT",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Economics Major Requirements"
+      ],
+      "kind": "count",
+      "scope": "cognate",
+      "slotCount": 1
+    },
+    {
+      "ruleId": "REQ-ECO-113",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses"
+      ],
+      "kind": "exact",
+      "slotCount": 1,
+      "options": [
+        "ECO 113"
+      ]
+    },
+    {
+      "ruleId": "REQ-ECO-114",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses"
+      ],
+      "kind": "exact",
+      "slotCount": 1,
+      "options": [
+        "ECO 114"
+      ]
+    },
+    {
+      "ruleId": "REQ-ECO-213",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses"
+      ],
+      "kind": "exact",
+      "slotCount": 1,
+      "options": [
+        "ECO 213"
+      ]
+    },
+    {
+      "ruleId": "REQ-ECO-214",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses"
+      ],
+      "kind": "exact",
+      "slotCount": 1,
+      "options": [
+        "ECO 214"
+      ]
+    },
+    {
+      "ruleId": "REQ-STATISTICS",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses",
+        "DEPARTMENT-POLICIES#Confirmed policy 1"
+      ],
+      "kind": "choice",
+      "slotCount": 1,
+      "options": [
+        "ECO 257",
+        "MAT 217",
+        "PSY 217"
+      ]
+    },
+    {
+      "ruleId": "REQ-FINANCE",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses",
+        "ECONOMICS-OFFERINGS#ECO 321 / BUSN 323"
+      ],
+      "kind": "choice",
+      "slotCount": 1,
+      "options": [
+        "ECO 321",
+        "BUSN 323"
+      ]
+    },
+    {
+      "ruleId": "REQ-ECO-461",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses",
+        "DEPARTMENT-POLICIES#Confirmed policy 6"
+      ],
+      "kind": "exact",
+      "slotCount": 1,
+      "options": [
+        "ECO 461"
+      ]
+    },
+    {
+      "ruleId": "REQ-COGNATE",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Cognate requirement"
+      ],
+      "kind": "choice",
+      "slotCount": 1,
+      "options": [
+        "MAT 113",
+        "MAT 121"
+      ]
+    },
+    {
+      "ruleId": "REQ-ECO-ELECTIVES",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Elective requirement"
+      ],
+      "kind": "elective",
+      "slotCount": 4,
+      "subject": "ECO"
+    }
+  ],
+  "prerequisiteRules": [
+    {
+      "ruleId": "PREREQ-ECO-213",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 213",
+      "allOf": [
+        "ECO 113"
+      ],
+      "oneOfGroups": [
+        [
+          "MAT 113",
+          "MAT 121"
+        ]
+      ]
+    },
+    {
+      "ruleId": "PREREQ-ECO-214",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 214",
+      "allOf": [
+        "ECO 114"
+      ],
+      "oneOfGroups": [
+        [
+          "MAT 113",
+          "MAT 121"
+        ]
+      ]
+    },
+    {
+      "ruleId": "PREREQ-ECO-221",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 221",
+      "allOf": [
+        "ECO 113"
+      ],
+      "oneOfGroups": []
+    },
+    {
+      "ruleId": "PREREQ-ECO-222",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 222",
+      "allOf": [
+        "ECO 114"
+      ],
+      "oneOfGroups": []
+    },
+    {
+      "ruleId": "PREREQ-ECO-223",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 223",
+      "allOf": [],
+      "oneOfGroups": [
+        [
+          "ECO 113",
+          "ECO 114",
+          "ECO 161"
+        ]
+      ]
+    },
+    {
+      "ruleId": "PREREQ-ECO-257",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 257",
+      "allOf": [],
+      "oneOfGroups": [
+        [
+          "ECO 113",
+          "ECO 114"
+        ]
+      ]
+    },
+    {
+      "ruleId": "PREREQ-ECO-315",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 315",
+      "allOf": [],
+      "oneOfGroups": [
+        [
+          "ECO 113",
+          "ECO 114"
+        ]
+      ]
+    },
+    {
+      "ruleId": "PREREQ-ECO-316",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 316",
+      "allOf": [
+        "ECO 113",
+        "ECO 114"
+      ],
+      "oneOfGroups": []
+    },
+    {
+      "ruleId": "PREREQ-ECO-321",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 321",
+      "allOf": [
+        "ECO 113",
+        "ECO 114"
+      ],
+      "oneOfGroups": []
+    },
+    {
+      "ruleId": "PREREQ-ECO-331",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 331",
+      "allOf": [
+        "ECO 213"
+      ],
+      "oneOfGroups": []
+    },
+    {
+      "ruleId": "PREREQ-ECO-333",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 333",
+      "allOf": [
+        "ECO 114"
+      ],
+      "oneOfGroups": []
+    },
+    {
+      "ruleId": "PREREQ-ECO-335",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 335",
+      "allOf": [
+        "ECO 213",
+        "ECO 257"
+      ],
+      "oneOfGroups": [
+        [
+          "MAT 121"
+        ]
+      ],
+      "unresolvedRuleId": "REVIEW-ECO-335-MATH-EQUIVALENT"
+    },
+    {
+      "ruleId": "PREREQ-ECO-337",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 337",
+      "allOf": [],
+      "oneOfGroups": [
+        [
+          "ECO 113",
+          "ECO 114"
+        ]
+      ]
+    },
+    {
+      "ruleId": "PREREQ-ECO-357",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 357",
+      "allOf": [
+        "ECO 213",
+        "ECO 214"
+      ],
+      "oneOfGroups": []
+    },
+    {
+      "ruleId": "PREREQ-ECO-461",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required Course Sequence Logic",
+        "DEPARTMENT-POLICIES#Confirmed policies 1 and 4"
+      ],
+      "course": "ECO 461",
+      "allOf": [
+        "ECO 213",
+        "ECO 214"
+      ],
+      "oneOfGroups": [
+        [
+          "ECO 257",
+          "MAT 217",
+          "PSY 217"
+        ]
+      ]
+    },
+    {
+      "ruleId": "PREREQ-ECO-471",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 471",
+      "allOf": [
+        "ECO 213",
+        "ECO 214",
+        "ECO 321"
+      ],
+      "oneOfGroups": []
+    }
+  ],
+  "concurrencyRules": [
+    {
+      "ruleId": "CONCURRENT-MATH-ECO-213",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 3"
+      ],
+      "course": "ECO 213",
+      "concurrentOptions": [
+        "MAT 113",
+        "MAT 121"
+      ],
+      "mustBeCompletedBefore": [
+        "ECO 113"
+      ],
+      "approvalAuthority": "ECO 213 instructor",
+      "lastResortOnly": true
+    },
+    {
+      "ruleId": "CONCURRENT-MATH-ECO-214",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 3"
+      ],
+      "course": "ECO 214",
+      "concurrentOptions": [
+        "MAT 113",
+        "MAT 121"
+      ],
+      "mustBeCompletedBefore": [
+        "ECO 114"
+      ],
+      "approvalAuthority": "ECO 214 instructor",
+      "lastResortOnly": true
+    },
+    {
+      "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 4"
+      ],
+      "course": "ECO 461",
+      "concurrentOptions": [
+        "ECO 213",
+        "ECO 214"
+      ],
+      "requiresCompletedFromOptions": 1,
+      "maxConcurrent": 1,
+      "statisticsMustBeCompletedBefore": true,
+      "concurrentCoursePrerequisitesMustBeSatisfied": true,
+      "approvalAuthority": "Economics Department"
+    }
+  ],
+  "permissionRules": [
+    {
+      "ruleId": "PERMISSION-ECO-357",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+      ],
+      "course": "ECO 357",
+      "approvalAuthority": "Economics Department",
+      "required": true
+    }
+  ],
+  "electiveRules": [
+    {
+      "ruleId": "ELECTIVE-MAX-ONE-100-LEVEL",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Elective requirement"
+      ],
+      "maximum": 1,
+      "level": 100
+    },
+    {
+      "ruleId": "ELECTIVE-ECO-260-COUNTS",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 8"
+      ],
+      "course": "ECO 260",
+      "countsAs": "ECO elective"
+    },
+    {
+      "ruleId": "ELECTIVE-CROSSLIST-ECO-234-PHI-234",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Special Topics Directed Study Internship and cross-listed courses"
+      ],
+      "canonicalCourse": "ECO 234",
+      "equivalentCodes": [
+        "ECO 234",
+        "PHI 234"
+      ],
+      "countOnce": true
+    },
+    {
+      "ruleId": "ELECTIVE-NO-DOUBLE-COUNT",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Elective requirement"
+      ],
+      "courseMayFillAtMostOneRequirement": true
+    }
+  ],
+  "capstoneRules": [
+    {
+      "ruleId": "CAPSTONE-WINTER-ONLY",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 6"
+      ],
+      "course": "ECO 461",
+      "allowedTerms": [
+        "Winter"
+      ]
+    },
+    {
+      "ruleId": "CAPSTONE-SENIOR-STANDING",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 6"
+      ],
+      "course": "ECO 461",
+      "requiredStanding": "Senior"
+    },
+    {
+      "ruleId": "CAPSTONE-EARLY-GRADUATE-STANDING",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 2"
+      ],
+      "course": "ECO 461",
+      "oneAcademicYearEarlyCountsAsSeniorInFinalWinter": true
+    },
+    {
+      "ruleId": "CAPSTONE-HANOVER-RESIDENCY",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 6"
+      ],
+      "course": "ECO 461",
+      "requiredInstitution": "Hanover College"
+    },
+    {
+      "ruleId": "CAPSTONE-STATISTICS-BEFORE",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policies 1 and 4"
+      ],
+      "course": "ECO 461",
+      "mustBeCompletedBeforeOneOf": [
+        "ECO 257",
+        "MAT 217",
+        "PSY 217"
+      ]
+    }
+  ],
+  "planningRules": [
+    {
+      "ruleId": "CAPACITY-FALL",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "TERM-STRUCTURE#Fall Term"
+      ],
+      "term": "Fall",
+      "maxTotalCourses": 4
+    },
+    {
+      "ruleId": "CAPACITY-WINTER",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "TERM-STRUCTURE#Winter Term"
+      ],
+      "term": "Winter",
+      "maxTotalCourses": 4
+    },
+    {
+      "ruleId": "CAPACITY-MAY",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "TERM-STRUCTURE#May Term"
+      ],
+      "term": "May",
+      "maxTotalCourses": 1
+    },
+    {
+      "ruleId": "PLANNING-CURRENT-TERM-EXCLUDED",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core Scheduling Rule"
+      ],
+      "excludeTermContainingPlanDate": true
+    },
+    {
+      "ruleId": "PLANNING-IN-PROGRESS-UNLOCKS-LATER",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core Scheduling Rule"
+      ],
+      "inProgressAvailableAfterCurrentTermOnly": true
+    },
+    {
+      "ruleId": "PLANNING-ECO-LOAD-PREFERENCE",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 7"
+      ],
+      "terms": [
+        "Fall",
+        "Winter"
+      ],
+      "preferredMaxEconomicsCourses": 2,
+      "graduationNeedMayUseTotalTermCapacity": true,
+      "warningRequiredAbovePreference": true
+    },
+    {
+      "ruleId": "PLANNING-INTERMEDIATE-OFFERING-SEPARATION",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 5",
+        "ECONOMICS-OFFERINGS#General Offering Pattern"
+      ],
+      "courses": [
+        "ECO 213",
+        "ECO 214"
+      ],
+      "normalPattern": "different Fall and Winter terms",
+      "universalSameTermProhibition": false,
+      "verifiedScheduleControls": true
+    },
+    {
+      "ruleId": "PLANNING-MAY-COURSE-EXCLUSIONS",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-OFFERINGS#May Term"
+      ],
+      "term": "May",
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 321",
+        "BUSN 323",
+        "MAT 217",
+        "ECO 257",
+        "PSY 217",
+        "ECO 461"
+      ]
+    },
+    {
+      "ruleId": "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core Scheduling Rule",
+        "ECONOMICS-OFFERINGS#General Offering Pattern"
+      ],
+      "unverifiedFutureOfferingStatus": "PRELIMINARY_ONLY"
+    }
+  ],
+  "scheduleEvidenceRules": [
+    {
+      "ruleId": "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Schedule evidence policy"
+      ],
+      "acceptedEvidence": [
+        "official schedule export",
+        "complete legible screenshot"
+      ],
+      "requiredScreenshotFields": [
+        "academicYear",
+        "term",
+        "course",
+        "section",
+        "title",
+        "instructor",
+        "credits",
+        "dates",
+        "meetingPattern",
+        "seats",
+        "sectionStatus"
+      ],
+      "conditionalScreenshotFields": [
+        "delivery",
+        "location"
+      ]
+    },
+    {
+      "ruleId": "SCHEDULE-EVIDENCE-PROVENANCE",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Schedule evidence policy"
+      ],
+      "requiredMetadata": [
+        "verificationTimestamp",
+        "sourceFileProvenance"
+      ]
+    },
+    {
+      "ruleId": "SCHEDULE-AVAILABILITY-BEHAVIOR",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed policy 9"
+      ],
+      "statuses": {
+        "open": "may support a feasible plan",
+        "closed": "cannot support a feasible plan without an available alternative",
+        "waitlisted": "makes the plan conditional",
+        "unknown": "must be shown as unknown"
+      }
+    }
+  ],
+  "unresolvedPolicyQuestions": [
+    {
+      "ruleId": "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE",
+      "status": "POLICY_REVIEW_REQUIRED",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core Scheduling Rule"
+      ],
+      "question": "Does completion of an advanced course automatically establish that its listed prerequisites were satisfied?",
+      "oracleBehavior": "Do not infer prerequisite completion from the advanced course alone."
+    },
+    {
+      "ruleId": "REVIEW-ECO-335-MATH-EQUIVALENT",
+      "status": "EQUIVALENCY_NOT_CONFIRMED",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#ECO 335"
+      ],
+      "question": "Which courses or records count as the MAT 121 equivalent for ECO 335?",
+      "oracleBehavior": "Accept explicit MAT 121; return EQUIVALENCY_NOT_CONFIRMED for a claimed equivalent until reviewed."
+    },
+    {
+      "ruleId": "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE",
+      "status": "ADVISOR_CONFIRMATION_REQUIRED",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Use of This File"
+      ],
+      "question": "How do waivers, substitutions, and equivalencies satisfy prerequisites versus major requirements?",
+      "oracleBehavior": "Return ADVISOR_CONFIRMATION_REQUIRED unless the record explicitly documents both the approved scope and authority."
+    }
+  ]
+}
