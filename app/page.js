@@ -639,6 +639,9 @@ function PlanComparisonScreen({
   onChoosePlan,
   onSelectPlan,
   onRegenerate,
+  onDownloadPdf,
+  isDownloadingPdf,
+  pdfStatus,
   onEditPlanCourse,
   onUndoPlanEdit
 }) {
@@ -742,6 +745,7 @@ function PlanComparisonScreen({
         .edit-courses-button,
         .regenerate-plans-button,
         .compare-plans-button,
+        .download-pdf-button,
         .undo-plan-edit-button {
           width: auto;
           min-height: 0;
@@ -758,9 +762,12 @@ function PlanComparisonScreen({
         .edit-courses-button:hover,
         .regenerate-plans-button:hover,
         .compare-plans-button:hover,
+        .download-pdf-button:hover,
         .undo-plan-edit-button:hover { background: #edf4ff; }
         .regenerate-plans-button:disabled,
+        .download-pdf-button:disabled,
         .undo-plan-edit-button:disabled { cursor: wait; opacity: .65; }
+        .pdf-download-status { color: #33425d; font-size: 12px; }
         .comparison-content {
           width: min(1460px, calc(100% - 3rem));
           margin: 0 auto;
@@ -1101,9 +1108,19 @@ function PlanComparisonScreen({
         </div>
         <div className="comparison-actions">
           {isPlanView && (
-            <button type="button" className="compare-plans-button" onClick={onBackToCompare}>
-              Compare plans
-            </button>
+            <>
+              <button
+                type="button"
+                className="download-pdf-button"
+                disabled={isDownloadingPdf || Boolean(editingPlanCourseKey)}
+                onClick={onDownloadPdf}
+              >
+                {isDownloadingPdf ? "Creating PDF..." : "Download PDF"}
+              </button>
+              <button type="button" className="compare-plans-button" onClick={onBackToCompare}>
+                Compare plans
+              </button>
+            </>
           )}
           <button
             type="button"
@@ -1120,6 +1137,7 @@ function PlanComparisonScreen({
       </header>
 
       <div className="comparison-content">
+        {pdfStatus && <p className="pdf-download-status" role="status" aria-live="polite">{pdfStatus}</p>}
         <button
           type="button"
           className="comparison-back"
@@ -1344,6 +1362,8 @@ export default function Page() {
   const [plannerView, setPlannerView] = useState(PLANNER_VIEWS.INPUT);
   const [selectedPlanId, setSelectedPlanId] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const [pdfStatus, setPdfStatus] = useState("");
   const [editingPlanCourseKey, setEditingPlanCourseKey] = useState("");
   const [planEditStatus, setPlanEditStatus] = useState("");
   const [planEditUndo, setPlanEditUndo] = useState(null);
@@ -1852,6 +1872,54 @@ export default function Page() {
     }
   }
 
+  async function downloadSelectedPlanPdf() {
+    const selectedPlan = (economicsResult(report)?.economicsPlans || [])
+      .find(plan => plan.id === selectedPlanId);
+    if (!selectedPlan) {
+      setPdfStatus("Choose a plan before downloading its PDF.");
+      return;
+    }
+
+    setIsDownloadingPdf(true);
+    setPdfStatus("Creating your PDF...");
+    try {
+      const response = await fetch("/api/reports/economics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          student: {
+            ...formData,
+            courses: selectedCourses(formData.courses)
+          },
+          preparedDate: formData.planCreationDate,
+          selectedPlan,
+          format: "pdf"
+        })
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.error || "The PDF could not be created.");
+      }
+      if (!response.headers.get("content-type")?.toLowerCase().startsWith("application/pdf")) {
+        throw new Error("The PDF service returned an invalid response.");
+      }
+
+      const objectUrl = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = "EconPlanner_Report.pdf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+      setPdfStatus("PDF downloaded.");
+    } catch (error) {
+      setPdfStatus(error.message || "The PDF could not be created.");
+    } finally {
+      setIsDownloadingPdf(false);
+    }
+  }
+
   const query = courseSearch.trim().toLowerCase();
   const visibleGroups = COURSE_DISPLAY_GROUPS.filter(group =>
     !query || `${group.code} ${group.title} ${(group.options || []).map(option => `${option.code} ${option.title}`).join(" ")}`.toLowerCase().includes(query)
@@ -2240,6 +2308,9 @@ export default function Page() {
         onChoosePlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
         onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
         onRegenerate={() => mapMajors()}
+        onDownloadPdf={downloadSelectedPlanPdf}
+        isDownloadingPdf={isDownloadingPdf}
+        pdfStatus={pdfStatus}
         onEditPlanCourse={editPlanCourse}
         onUndoPlanEdit={undoPlanEdit}
       />

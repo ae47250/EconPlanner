@@ -4,7 +4,10 @@ import { readFile } from "node:fs/promises";
 import { buildEconomicsReportFromStudent } from "../lib/reports/build-economics.js";
 import { renderEconomicsHtml } from "../lib/reports/economics-html.js";
 import { reportPlanCount } from "../lib/reports/economics.js";
-import { POST as reportPost } from "../app/api/reports/economics/route.js";
+import {
+  handleEconomicsReportRequest,
+  POST as reportPost
+} from "../app/api/reports/economics/route.js";
 
 const fixture = JSON.parse(await readFile(new URL("./fixtures/economics-report-student.json", import.meta.url), "utf8"));
 const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
@@ -43,6 +46,42 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
   assert.match(htmlResponse.headers.get("content-type"), /text\/html/);
   assert.ok(html.includes("EconMapper"));
   assert.equal(html.includes("{{"), false);
+});
+
+test("Economics report API sends inactive completed HTML to pdf-creator", async () => {
+  let submitted;
+  const response = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf" })
+  }), {
+    environment: {
+      PDF_CREATION_ENABLED: "true",
+      PDF_CREATION_API_URL: "https://pdf-creator.example",
+      PDF_CREATION_API_KEY: "a".repeat(43)
+    },
+    fetchImpl: async (url, options) => {
+      assert.equal(url.href, "https://pdf-creator.example/api/v1/pdfs");
+      assert.equal(options.headers.Authorization, `Bearer ${"a".repeat(43)}`);
+      submitted = JSON.parse(options.body);
+      return new Response(new Uint8Array([0x25, 0x50, 0x44, 0x46]), {
+        headers: {
+          "content-type": "application/pdf",
+          "x-pdf-page-count": "2"
+        }
+      });
+    }
+  });
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type"), /application\/pdf/);
+  assert.match(response.headers.get("content-disposition"), /attachment/);
+  assert.equal(submitted.storeResult, false);
+  assert.equal(submitted.storeHtml, false);
+  assert.match(submitted.html, /^<!doctype html>/i);
+  assert.equal(/<script\b/i.test(submitted.html), false);
+  assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
+  assert.equal(submitted.html.includes("{{"), false);
 });
 
 test("transfer reports use the selected graduation and Hanover entry years", async () => {

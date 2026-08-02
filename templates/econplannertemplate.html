@@ -140,10 +140,6 @@ td:hover{background:#fbfaff}
 </style>
 </head>
 <body class="">
-<nav class="toolbar" aria-label="Report controls">
-  <button type="button" onclick="window.print()">Print / Save PDF</button>
-</nav>
-
     <main class="sheet">
       
     <header class="letterhead">
@@ -209,16 +205,5 @@ td:hover{background:#fbfaff}
       </template>
     </main>
 
-<script>
-document.querySelectorAll('.year-block').forEach((card, index) => {
-  card.style.opacity = '0';
-  card.style.transform = 'translateY(12px)';
-  setTimeout(() => {
-    card.style.transition = 'opacity .45s ease, transform .45s ease, box-shadow .22s ease';
-    card.style.opacity = '1';
-    card.style.transform = 'translateY(0)';
-  }, 120 + index * 90);
-});
-</script>
 </body>
 </html>
