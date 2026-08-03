@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "economics-core-fictional-student-profiles-v1",
+  "authorship": "handwritten-fictional",
+  "planCreationDate": "2026-07-30",
+  "findingClasses": [
+    "CURRENT_CONTRACT",
+    "CONFIRMED_DEFECT",
+    "POLICY_REVIEW",
+    "FEATURE_GATED"
+  ],
+  "defaultExpectations": {
+    "allowedFeasibilityStatuses": [
+      "VERIFIED_FEASIBLE",
+      "CONDITIONALLY_FEASIBLE",
+      "PRELIMINARY_ONLY"
+    ],
+    "requiredRequirementCoverage": true,
+    "coursesThatMustNotBeRepeated": "all_completed_or_in_progress",
+    "requiredPrerequisiteOrder": [
+      { "before": "ECO 113", "after": "ECO 213" },
+      { "before": "ECO 114", "after": "ECO 214" },
+      { "beforeOneOf": ["ECO 257", "MAT 217", "PSY 217"], "after": "ECO 461" }
+    ],
+    "forbiddenSameTermPlacements": [
+      ["ECO 114", "ECO 321"],
+      ["ECO 257", "ECO 461"],
+      ["MAT 217", "ECO 461"],
+      ["PSY 217", "ECO 461"]
+    ],
+    "requiredApprovals": [],
+    "expectedWarningsContaining": []
+  },
+  "profiles": [
+    {
+      "id": "F-EMPTY-NORMAL-AND-EARLY",
+      "group": "freshman",
+      "student": { "academicStanding": "freshman", "courses": [] },
+      "coverage": ["no_completed_courses", "normal_graduation", "one_year_early_request"],
+      "expectations": {
+        "displayedPlanCount": { "min": 4, "max": 4 },
+        "requiredDisplayedStrategies": ["plan-1", "plan-2", "plan-3", "plan-c2"],
+        "expectedWarningsContaining": ["projected placement"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT"]
+      }
+    },
+    {
+      "id": "F-ONE-PRINCIPLE-MATH-MISSING",
+      "group": "freshman",
+      "student": {
+        "academicStanding": "freshman",
+        "courses": [{ "code": "ECO 113", "status": "completed" }]
+      },
+      "coverage": ["one_principle_completed", "mathematics_missing", "explore_first"],
+      "expectations": {
+        "displayedPlanCount": { "min": 3, "max": 4 },
+        "requiredDisplayedStrategies": ["plan-1", "plan-3", "plan-c2"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT"]
+      }
+    },
+    {
+      "id": "F-PRINCIPLE-IN-PROGRESS",
+      "group": "freshman",
+      "planCreationDate": "2026-04-15",
+      "student": {
+        "academicStanding": "freshman",
+        "courses": [{
+          "code": "ECO 113",
+          "status": "in_progress",
+          "academicYear": "2025/2026",
+          "termKey": "Spring/May"
+        }]
+      },
+      "coverage": ["one_principle_in_progress", "running_term_exclusion"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 4 },
+        "forbiddenPlannedCourses": ["ECO 113"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT"]
+      }
+    },
+    {
+      "id": "SO-ONE-PRINCIPLE-AND-MATH",
+      "group": "sophomore",
+      "student": {
+        "academicStanding": "sophomore",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" }
+        ]
+      },
+      "coverage": ["one_principle_completed", "mathematics_completed", "explore_first"],
+      "expectations": {
+        "displayedPlanCount": { "min": 3, "max": 4 },
+        "requiredDisplayedStrategies": ["plan-1", "plan-3"],
+        "strategyAssertions": [{
+          "strategyId": "plan-3",
+          "mustContain": ["ECO 114", "ECO 213"],
+          "mustContainOneOf": ["ECO 257", "MAT 217", "PSY 217"]
+        }],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT"]
+      }
+    },
+    {
+      "id": "SO-STATISTICS-COMPLETED",
+      "group": "sophomore",
+      "student": {
+        "academicStanding": "sophomore",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" }
+        ]
+      },
+      "coverage": ["both_principles_completed", "mathematics_completed", "statistics_completed"],
+      "expectations": {
+        "displayedPlanCount": { "min": 2, "max": 4 },
+        "forbiddenPlannedCourses": ["MAT 217"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT"]
+      }
+    },
+    {
+      "id": "SO-EARLY-GRADUATION-REQUEST",
+      "group": "sophomore",
+      "student": {
+        "academicStanding": "sophomore",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" }
+        ]
+      },
+      "coverage": ["one_year_early_request", "both_principles_completed", "mathematics_completed"],
+      "expectations": {
+        "displayedPlanCount": { "min": 2, "max": 4 },
+        "candidateStrategyStatuses": { "plan-c2": ["PRELIMINARY_ONLY", "NOT_FEASIBLE"] },
+        "expectedFindingClasses": ["CONFIRMED_DEFECT"]
+      }
+    },
+    {
+      "id": "J-ONE-INTERMEDIATE-COMPLETED",
+      "group": "junior",
+      "student": {
+        "academicStanding": "junior",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" }
+        ]
+      },
+      "coverage": ["one_intermediate_completed", "statistics_completed", "one_year_early_request"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 2 },
+        "forbiddenDisplayedStrategies": ["plan-3"],
+        "candidateStrategyStatuses": { "plan-c2": ["PRELIMINARY_ONLY"] },
+        "expectedFindingClasses": ["CONFIRMED_DEFECT", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "J-BOTH-INTERMEDIATES-COMPLETED",
+      "group": "junior",
+      "student": {
+        "academicStanding": "junior",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" }
+        ]
+      },
+      "coverage": ["both_intermediates_completed", "statistics_completed"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 2 },
+        "forbiddenDisplayedStrategies": ["plan-3"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "J-IMPOSSIBLE-ONE-YEAR-EARLY",
+      "group": "junior",
+      "student": { "academicStanding": "junior", "courses": [] },
+      "coverage": ["no_completed_courses", "impossible_one_year_early_request"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 2 },
+        "candidateStrategyStatuses": { "plan-c2": ["NOT_FEASIBLE"] },
+        "forbiddenDisplayedStrategies": ["plan-c2", "plan-3"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "SR-STRICT-CAPSTONE-PATH",
+      "group": "senior",
+      "student": {
+        "academicStanding": "senior",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" },
+          { "code": "ECO 161", "status": "completed" },
+          { "code": "ECO 260", "status": "completed" },
+          { "code": "PHI 234", "status": "completed" },
+          { "code": "ECO 321", "status": "completed" }
+        ]
+      },
+      "coverage": ["senior_strict_capstone_path", "both_intermediates_completed", "statistics_completed"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 1 },
+        "requiredDisplayedStrategies": ["plan-1"],
+        "strategyAssertions": [{ "strategyId": "plan-1", "mustContain": ["ECO 461"] }],
+        "expectedWarningsContaining": ["Seat availability"],
+        "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "SR-CONCURRENT-INTERMEDIATE-CAPSTONE",
+      "group": "senior",
+      "student": {
+        "academicStanding": "senior",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" },
+          { "code": "ECO 161", "status": "completed" },
+          { "code": "ECO 260", "status": "completed" },
+          { "code": "PHI 234", "status": "completed" },
+          { "code": "ECO 321", "status": "completed" }
+        ]
+      },
+      "coverage": ["one_intermediate_completed", "one_intermediate_concurrent_with_eco461"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 1 },
+        "requiredApprovals": ["CONCURRENT-INTERMEDIATE-ECO-461"],
+        "requiredSameTermPlacements": [["ECO 214", "ECO 461"]],
+        "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "SR-BOTH-INTERMEDIATES-MISSING",
+      "group": "senior",
+      "student": {
+        "academicStanding": "senior",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" },
+          { "code": "ECO 161", "status": "completed" },
+          { "code": "ECO 260", "status": "completed" },
+          { "code": "PHI 234", "status": "completed" },
+          { "code": "ECO 321", "status": "completed" }
+        ]
+      },
+      "coverage": ["both_intermediates_missing", "senior_not_feasible"],
+      "expectations": {
+        "displayedPlanCount": { "min": 0, "max": 0 },
+        "candidateStrategyStatuses": { "plan-1": ["NOT_FEASIBLE"], "plan-2": ["NOT_FEASIBLE"] },
+        "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "TR-ONE-YEAR-HORIZON",
+      "group": "transfer",
+      "student": {
+        "isTransferStudent": true,
+        "transferExpectedGraduationYear": "2027",
+        "transferEntryAcademicYear": "2025-2026",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" },
+          { "code": "ECO 161", "status": "completed" },
+          { "code": "ECO 260", "status": "completed" },
+          { "code": "PHI 234", "status": "completed" },
+          { "code": "ECO 321", "status": "completed" }
+        ]
+      },
+      "coverage": ["transfer_student", "one_year_transfer_horizon"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 1 },
+        "expectedRemainingYears": 1,
+        "forbiddenDisplayedStrategies": ["plan-c2"],
+        "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "TR-THREE-YEAR-PROVISIONAL-EQUIVALENCY",
+      "group": "transfer",
+      "student": {
+        "isTransferStudent": true,
+        "transferExpectedGraduationYear": "2029",
+        "transferEntryAcademicYear": "2025-2026",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "PSY 217", "status": "transfer", "source": "transfer_equivalency", "units": 1 }
+        ]
+      },
+      "coverage": ["transfer_student", "three_year_transfer_horizon", "provisional_transfer_equivalency"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 3 },
+        "expectedRemainingYears": 3,
+        "forbiddenDisplayedStrategies": ["plan-c2"],
+        "requiredPolicyReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT", "POLICY_REVIEW", "FEATURE_GATED"]
+      }
+    },
+    {
+      "id": "TR-FIVE-YEAR-HORIZON",
+      "group": "transfer",
+      "student": {
+        "isTransferStudent": true,
+        "transferExpectedGraduationYear": "2031",
+        "transferEntryAcademicYear": "2026-2027",
+        "courses": []
+      },
+      "coverage": ["transfer_student", "five_year_transfer_horizon", "no_completed_courses"],
+      "expectations": {
+        "displayedPlanCount": { "min": 1, "max": 3 },
+        "expectedRemainingYears": 5,
+        "forbiddenDisplayedStrategies": ["plan-c2"],
+        "expectedFindingClasses": ["CONFIRMED_DEFECT", "FEATURE_GATED"]
+      }
+    }
+  ]
+}
