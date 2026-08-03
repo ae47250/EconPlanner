@@ -221,3 +221,45 @@ test("selected report plan is revalidated and rendered exactly", async () => {
   }));
   assert.equal(invalidResponse.status, 422);
 });
+
+test("report and PDF validation reject a selected plan that exceeds authoritative reserved capacity", async () => {
+  const generated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28");
+  const selectedPlan = structuredClone(generated.selectedPlan);
+  const fall = selectedPlan.terms.find(term => term.slotId === "fall-2026");
+  assert.ok(fall.courses.length > 2);
+  fall.reservedCourseUnits = 0;
+  fall.reservedOutsideCourseUnits = 0;
+  const student = {
+    ...fixture.student,
+    planCreationDate: "2026-07-28",
+    reservedCourseUnits: { "fall-2026": 2 }
+  };
+
+  const reportResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student, preparedDate: "2026-07-28", selectedPlan, format: "json" })
+  }));
+  assert.equal(reportResponse.status, 422);
+  assert.equal((await reportResponse.json()).code, "SELECTED_PLAN_INVALID");
+
+  let pdfCreatorCalls = 0;
+  const pdfResponse = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student, preparedDate: "2026-07-28", selectedPlan, format: "pdf" })
+  }), {
+    environment: {
+      PDF_CREATION_ENABLED: "true",
+      PDF_CREATION_API_URL: "https://pdf-creator.example",
+      PDF_CREATION_API_KEY: "a".repeat(43)
+    },
+    fetchImpl: async () => {
+      pdfCreatorCalls += 1;
+      throw new Error("PDF creation must not run for an invalid selected plan.");
+    }
+  });
+  assert.equal(pdfResponse.status, 422);
+  assert.equal((await pdfResponse.json()).code, "SELECTED_PLAN_INVALID");
+  assert.equal(pdfCreatorCalls, 0);
+});

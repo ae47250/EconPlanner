@@ -113,6 +113,45 @@ test("major mapper returns standing-limited candidate outcomes and distinct plan
   assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
 });
 
+test("major mapper generation continues to enforce authoritative reserved term capacity", async () => {
+  const baseStudent = {
+    academicStanding: "senior",
+    planCreationDate: "2026-07-30",
+    courses: [
+      "ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323"
+    ].map(code => ({ code, status: "completed" }))
+  };
+
+  async function generate(reservedCourseUnits = {}) {
+    const response = await POST(new Request("http://localhost/api/majors/map", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ student: { ...baseStudent, reservedCourseUnits } })
+    }));
+    const data = await response.json();
+    const economics = data.programs.find(result => result.program?.id === "economics-base");
+    assert.equal(response.status, 200, JSON.stringify(data));
+    return economics;
+  }
+
+  const unreserved = await generate();
+  assert.equal(unreserved.economicsPlans[0].terms.find(term => term.slotId === "fall-2026").courses.length, 2);
+
+  const threeFallSpacesReserved = await generate({ "fall-2026": 3 });
+  assert.ok(threeFallSpacesReserved.economicsPlans.length > 0);
+  assert.ok(threeFallSpacesReserved.economicsPlans.every(plan => (
+    plan.validation.valid
+    && plan.terms.find(term => term.slotId === "fall-2026").courses.length <= 1
+  )));
+
+  const springSpaceReserved = await generate({ "spring-2027": 1 });
+  assert.ok(springSpaceReserved.economicsPlans.length > 0);
+  assert.ok(springSpaceReserved.economicsPlans.every(plan => (
+    plan.validation.valid
+    && plan.terms.find(term => term.slotId === "spring-2027").courses.length === 0
+  )));
+});
+
 test("major mapper uses the inferred entry catalog and reports an unavailable newer catalog", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",

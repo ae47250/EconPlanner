@@ -43,6 +43,11 @@ const PROFILES = Object.freeze({
     planCreationDate: "2026-07-30",
     courses: completed(["ECO 113", "MAT 113", "ECO 213"])
   },
+  flexibleFourYearPlan: {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-02",
+    courses: []
+  },
   existingHundredLevelElective: {
     academicStanding: "senior",
     planCreationDate: "2026-07-30",
@@ -69,10 +74,10 @@ const TASK15_FINDINGS = Object.freeze({
     reason: "The validate-plan contract has no partial-plan mode, so an intentional course removal is reported as an unscheduled requirement."
   },
   studentReservationCapacity: {
-    classification: "CONFIRMED_PRODUCTION_ORACLE_DISAGREEMENT",
-    production: "ACCEPTED",
+    classification: "CONFIRMED_PRODUCTION_ORACLE_AGREEMENT",
+    production: "REJECTED_CAPACITY_EXCEEDED",
     oracle: "REJECTED_CAPACITY_EXCEEDED",
-    reason: "The handler receives student reservations but does not reconstruct reserved units onto submitted plan terms before validation."
+    reason: "Production and the independent oracle both enforce authoritative student reservations when a submitted plan is validated."
   },
   duplicateRequirementAssignment: {
     classification: "CONFIRMED_PRODUCTION_ORACLE_DISAGREEMENT",
@@ -291,13 +296,18 @@ function assertOracleAccepted(student, plan) {
   return audit;
 }
 
-async function assertAccepted(student, plan, options = {}) {
+async function assertProductionAccepted(student, plan, options = {}) {
   const result = await validateEdit(student, plan, options);
   assert.equal(result.response.status, 200, JSON.stringify(result.data));
   assert.equal(result.data.plan?.validation?.valid, true);
   assert.equal(result.data.planSetValidation?.valid, true);
-  assertOracleAccepted(student, result.data.plan);
   return result.data.plan;
+}
+
+async function assertAccepted(student, plan, options = {}) {
+  const acceptedPlan = await assertProductionAccepted(student, plan, options);
+  assertOracleAccepted(student, acceptedPlan);
+  return acceptedPlan;
 }
 
 async function assertRejected(student, plan, reasonPattern, options = {}) {
@@ -460,21 +470,119 @@ test("Task 15 API rejects term-capacity violations", async () => {
   await assertRejected(student, edited, /Fall 2026 exceeds the total course limit/);
 });
 
-test("Task 15 records that edited-plan validation currently ignores student reservation capacity", async t => {
-  const finding = TASK15_FINDINGS.studentReservationCapacity;
-  const generatedResult = await generated("verifiedFiveRemaining");
+test("Task 15 keeps the normal four-course Fall capacity when nothing is reserved", async () => {
+  const { student, economics } = await generated("largeConcurrentPlan");
+  const plan = structuredClone(economics.economicsPlans[0]);
+  assert.equal(plan.terms.find(term => term.slotId === "fall-2026").courses.length, 4);
+  await assertProductionAccepted(student, plan);
+});
+
+test("Task 15 accepts three Fall courses with one reserved space and rejects four", async () => {
+  const flexible = await generated("flexibleFourYearPlan");
   const student = {
+    ...flexible.student,
+    reservedCourseUnits: { "fall-2028": 1 }
+  };
+  const exactCapacity = structuredClone(flexible.economics.economicsPlans.find(plan => plan.label === "Plan C"));
+  moveCourse(
+    exactCapacity,
+    course => course.course === "ECO 213",
+    term => term.slotId === "fall-2028"
+  );
+  useExplicitProjectedCapstoneSource(exactCapacity);
+  const accepted = await assertProductionAccepted(student, exactCapacity);
+  assert.equal(accepted.terms.find(term => term.slotId === "fall-2028").courses.length, 3);
+
+  const overloaded = await generated("largeConcurrentPlan");
+  const overloadedStudent = {
+    ...overloaded.student,
+    reservedCourseUnits: { "fall-2026": 1 }
+  };
+  await assertRejected(
+    overloadedStudent,
+    structuredClone(overloaded.economics.economicsPlans[0]),
+    /Fall 2026 exceeds the total course limit/
+  );
+});
+
+test("Task 15 accepts one Fall course with three reserved spaces and rejects two", async () => {
+  const student = {
+    ...profile("verifiedFiveRemaining"),
+    reservedCourseUnits: { "fall-2026": 3 }
+  };
+  const generatedResult = await postMap({ student });
+  assert.equal(generatedResult.response.status, 200, JSON.stringify(generatedResult.data));
+  const economics = generatedResult.data.programs.find(item => item.program?.id === "economics-base");
+  const exactCapacity = structuredClone(economics.economicsPlans[0]);
+  const fallCourse = findCourse(exactCapacity, (_course, term) => term.slotId === "fall-2026");
+  const alternative = fallCourse.course.alternativeOptions.find(option => option.course !== fallCourse.course.course);
+  assert.ok(alternative);
+  replaceCourse(exactCapacity, course => course === fallCourse.course, {
+    ...fallCourse.course,
+    ...alternative,
+    requirementId: fallCourse.course.requirementId,
+    selectedOptionId: alternative.id,
+    alternativeOptions: fallCourse.course.alternativeOptions
+  });
+  const accepted = await assertProductionAccepted(student, exactCapacity);
+  assert.equal(accepted.terms.find(term => term.slotId === "fall-2026").courses.length, 1);
+
+  const unreserved = await generated("verifiedFiveRemaining");
+  await assertRejected(
+    student,
+    structuredClone(unreserved.economics.economicsPlans[0]),
+    /Fall 2026 exceeds the total course limit/
+  );
+});
+
+test("Task 15 gives four reserved Fall spaces and one reserved Spring/May space zero planner capacity", async () => {
+  const generatedResult = await generated("verifiedFiveRemaining");
+  const fallStudent = {
     ...generatedResult.student,
     reservedCourseUnits: { "fall-2026": 4 }
   };
-  const edited = structuredClone(generatedResult.economics.economicsPlans[0]);
-  const result = await validateEdit(student, edited);
-  assert.equal(result.response.status, 200, JSON.stringify(result.data));
-  assert.equal(result.data.plan.validation.valid, true);
-  const audit = auditPlan(student, result.data.plan);
-  assert.equal(audit.valid, false);
+  await assertRejected(
+    fallStudent,
+    structuredClone(generatedResult.economics.economicsPlans[0]),
+    /Fall 2026 exceeds the total course limit/
+  );
+
+  const springStudent = {
+    ...generatedResult.student,
+    reservedCourseUnits: { "spring-2027": 1 }
+  };
+  await assertRejected(
+    springStudent,
+    structuredClone(generatedResult.economics.economicsPlans[0]),
+    /Spring\/May 2027 exceeds the total course limit/
+  );
+});
+
+test("Task 15 ignores submitted reservation metadata and uses the authoritative student request", async t => {
+  const finding = TASK15_FINDINGS.studentReservationCapacity;
+  const generatedResult = await generated("verifiedFiveRemaining");
+  const authoritativeReservation = {
+    ...generatedResult.student,
+    reservedCourseUnits: { "fall-2026": 4 }
+  };
+  const understated = structuredClone(generatedResult.economics.economicsPlans[0]);
+  const understatedFall = understated.terms.find(term => term.slotId === "fall-2026");
+  understatedFall.reservedCourseUnits = 0;
+  understatedFall.reservedOutsideCourseUnits = 0;
+  const { audit } = await assertRejected(
+    authoritativeReservation,
+    understated,
+    /Fall 2026 exceeds the total course limit/
+  );
   assert.ok(audit.violations.some(violation => violation.code === "CAPACITY_EXCEEDED"));
-  assert.equal(finding.classification, "CONFIRMED_PRODUCTION_ORACLE_DISAGREEMENT");
+
+  const overstated = structuredClone(generatedResult.economics.economicsPlans[0]);
+  const overstatedFall = overstated.terms.find(term => term.slotId === "fall-2026");
+  overstatedFall.reservedCourseUnits = 4;
+  overstatedFall.reservedOutsideCourseUnits = 4;
+  await assertAccepted(generatedResult.student, overstated);
+
+  assert.equal(finding.classification, "CONFIRMED_PRODUCTION_ORACLE_AGREEMENT");
   t.diagnostic(JSON.stringify({ scenario: "student-reservation-capacity", ...finding }));
 });
 
@@ -590,7 +698,11 @@ test("Task 15 disagreement registry is explicit and contains no unclassified fin
   ]);
   assert.equal(
     Object.values(TASK15_FINDINGS).filter(item => item.classification === "CONFIRMED_PRODUCTION_ORACLE_DISAGREEMENT").length,
-    2
+    1
+  );
+  assert.equal(
+    Object.values(TASK15_FINDINGS).filter(item => item.classification === "CONFIRMED_PRODUCTION_ORACLE_AGREEMENT").length,
+    1
   );
   t.diagnostic(JSON.stringify({ task: 15, findings: TASK15_FINDINGS }));
 });
