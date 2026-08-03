@@ -443,3 +443,53 @@ test("edited plan validation preserves the selected plan's yearly design", async
   assert.equal(validation.validation.distribution.valid, false);
   assert.match(validation.validation.errors.join(" | "), /Plan A no longer follows its Balanced yearly distribution/);
 });
+
+test("edited plan validation rejects canonical schedule tampering and post-graduation terms", async () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-02",
+    courses: []
+  };
+  const generatedResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student })
+  }));
+  const generated = await generatedResponse.json();
+  const economics = generated.programs.find(result => result.program?.id === "economics-base");
+  const originalPlan = economics.economicsPlans[0];
+
+  const tamperedSchedule = structuredClone(originalPlan);
+  const verifiedCourse = tamperedSchedule.terms
+    .flatMap(term => term.courses)
+    .find(course => course.source === "verified-offering" && Number.isFinite(course.availability?.seatsOpen));
+  assert.ok(verifiedCourse);
+  verifiedCourse.availability.seatsOpen += 7;
+  const scheduleResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ action: "validate-plan", student, plan: tamperedSchedule, plans: [tamperedSchedule] })
+  }));
+  const scheduleResult = await scheduleResponse.json();
+  assert.equal(scheduleResponse.status, 422);
+  assert.ok(scheduleResult.validation.errors.some(error => /canonical verified schedule/.test(error)));
+
+  const afterGraduation = structuredClone(originalPlan);
+  const graduationYear = economics.planningContext.expectedGraduationYear;
+  const finalTerm = afterGraduation.terms.at(-1);
+  finalTerm.academicYear = `${graduationYear}/${graduationYear + 1}`;
+  finalTerm.yearIndex = economics.planningContext.remainingYears;
+  finalTerm.term = `Fall ${graduationYear}`;
+  finalTerm.displayTerm = "Fall";
+  finalTerm.termKey = "Fall";
+  finalTerm.scheduleTerm = "Fall";
+  finalTerm.slotId = `fall-${graduationYear}`;
+  const horizonResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ action: "validate-plan", student, plan: afterGraduation, plans: [afterGraduation] })
+  }));
+  const horizonResult = await horizonResponse.json();
+  assert.equal(horizonResponse.status, 422);
+  assert.ok(horizonResult.validation.errors.some(error => /graduation planning horizon/.test(error)));
+});

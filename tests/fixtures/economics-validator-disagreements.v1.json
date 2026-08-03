@@ -61,20 +61,20 @@
       "mutationId": "APPROVAL_AUTHORITY_WRONG",
       "baselineId": "concurrent-capstone",
       "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "CONFIRMED_DEFECT",
-      "followUp": "Production must compare the recorded approval authority with the Economics Department authority."
+      "status": "AGREEMENT",
+      "followUp": "Keep approval authority matched to the Economics Department authority."
     },
     {
       "id": "VAL-006-APPROVAL-COURSE-WRONG",
       "mutationId": "APPROVAL_COURSE_WRONG",
       "baselineId": "concurrent-capstone",
       "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "CONFIRMED_DEFECT",
-      "followUp": "Production must verify that approval metadata names ECO 461 as the approved course."
+      "status": "AGREEMENT",
+      "followUp": "Keep approval metadata tied to ECO 461 as the approved course."
     },
     {
       "id": "VAL-007-APPROVAL-PREREQUISITE-WRONG",
@@ -91,10 +91,10 @@
       "mutationId": "APPROVAL_TERM_WRONG",
       "baselineId": "concurrent-capstone",
       "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "CONFIRMED_DEFECT",
-      "followUp": "Production must compare the recorded approval term with the actual concurrent term."
+      "status": "AGREEMENT",
+      "followUp": "Keep approval metadata tied to the actual concurrent term."
     },
     {
       "id": "VAL-009-ECO461-IN-FALL",
@@ -181,20 +181,20 @@
       "mutationId": "FALSIFIED_CANONICAL_MEETING",
       "baselineId": "full-sequence",
       "ruleId": "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "CONFIRMED_DEFECT",
-      "followUp": "Production must reject plan-embedded meeting data that differs from the canonical verified section."
+      "status": "AGREEMENT",
+      "followUp": "Keep plan-embedded meeting data matched to the canonical verified section."
     },
     {
       "id": "VAL-018-FALSIFIED-AVAILABILITY-DATA",
       "mutationId": "FALSIFIED_AVAILABILITY",
       "baselineId": "full-sequence",
       "ruleId": "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "CONFIRMED_DEFECT",
-      "followUp": "Production must reject plan-embedded seat data that differs from the canonical verified section."
+      "status": "AGREEMENT",
+      "followUp": "Keep plan-embedded seat data matched to the canonical verified section."
     },
     {
       "id": "VAL-019-ECO321-DOUBLE-COUNTED",
@@ -251,10 +251,10 @@
       "mutationId": "TERM_AFTER_GRADUATION",
       "baselineId": "future-capstone",
       "ruleId": "ORACLE-STRUCTURE-HORIZON",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "CONFIRMED_DEFECT",
-      "followUp": "Production must reject every planned term after the selected graduation horizon."
+      "status": "AGREEMENT",
+      "followUp": "Keep every planned term within the selected graduation horizon."
     }
   ]
 }

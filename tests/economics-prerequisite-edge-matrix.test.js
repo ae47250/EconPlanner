@@ -169,8 +169,19 @@ function approvalReason(rule) {
 }
 
 function approvalRecord(rule, dependent, prerequisite, anchor, oracleFormat) {
+  const productionPolicy = (productionPrerequisites[dependent]?.concurrentWithApproval || [])
+    .find(item => (item.options || []).includes(prerequisite));
+  const productionCode = rule.ruleId === "CONCURRENT-INTERMEDIATE-ECO-461"
+    ? "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL"
+    : "CONCURRENT_MATH_INSTRUCTOR_APPROVAL";
   return {
-    ...(oracleFormat ? { ruleId: rule.ruleId } : {}),
+    ...(oracleFormat
+      ? { ruleId: rule.ruleId }
+      : {
+          code: productionCode,
+          policySource: productionPolicy?.policySource,
+          sourceRef: productionPolicy?.sourceRef
+        }),
     type: approvalType(rule, oracleFormat),
     authority: rule.approvalAuthority,
     course: dependent,

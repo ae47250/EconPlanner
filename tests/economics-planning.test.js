@@ -419,6 +419,32 @@ test("concurrent math is used only after a prerequisite-first plan fails and req
   });
   assert.equal(validation.valid, false);
   assert.ok(validation.errors.some(error => /approval from the ECO 213 instructor/.test(error)));
+
+  for (const [field, value] of [
+    ["authority", "Economics Department"],
+    ["course", "ECO 214"],
+    ["term", "Winter 2027"],
+    ["code", "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL"],
+    ["type", "department"],
+    ["reason", "concurrent_intermediate_with_capstone"],
+    ["policySource", "invented-policy"],
+    ["sourceRef", "invented-source"]
+  ]) {
+    const corrupted = structuredClone(fallbackPlan);
+    const approval = corrupted.terms
+      .flatMap(term => term.courses)
+      .find(course => course.course === "ECO 213")
+      .approvalRequired[0];
+    approval[field] = value;
+    const corruptedValidation = validateGeneratedPlan(corrupted, {
+      student,
+      mapping,
+      schedule: concurrentSchedule,
+      prerequisites,
+      context: fallbackPlan.planningContext
+    });
+    assert.equal(corruptedValidation.valid, false, `${field} must match the required instructor approval`);
+  }
 });
 
 test("an in-progress prerequisite unlocks a dependent course only after the current term", () => {
@@ -709,4 +735,68 @@ test("schedule provider normalizes provenance, cross-lists, and meeting conflict
   assert.equal(canonicalScheduleCode(normalized, "PHI 234"), "ECO 234");
   assert.equal(selectConflictFreeOffering(normalized, winter, "ECO 161", [eco321]), null);
   assert.ok(eco321.meeting.startMinutes < eco321.meeting.endMinutes);
+});
+
+test("verified schedule facts and the graduation horizon are authoritative", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-07-30",
+    courses: []
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const plan = result.plans[0];
+  const verifiedCourse = plan.terms
+    .flatMap(term => term.courses)
+    .find(course => course.source === "verified-offering"
+      && course.meeting?.startTime
+      && Number.isFinite(course.availability?.seatsOpen));
+
+  assert.ok(verifiedCourse);
+  assert.equal(validateGeneratedPlan(plan, {
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    context: result.context
+  }).valid, true, "unmodified canonical meeting and availability data must pass");
+
+  const falsifiedMeeting = structuredClone(plan);
+  const meetingCourse = falsifiedMeeting.terms
+    .flatMap(term => term.courses)
+    .find(course => course.course === verifiedCourse.course && course.section === verifiedCourse.section);
+  meetingCourse.meeting.startTime = "1:00 PM";
+  meetingCourse.meeting.startMinutes = 780;
+  const meetingValidation = validateGeneratedPlan(falsifiedMeeting, {
+    student, mapping, schedule, prerequisites, context: result.context
+  });
+  assert.equal(meetingValidation.valid, false);
+  assert.ok(meetingValidation.errors.some(error => /canonical verified schedule for meeting start time/.test(error)));
+
+  const falsifiedAvailability = structuredClone(plan);
+  const availabilityCourse = falsifiedAvailability.terms
+    .flatMap(term => term.courses)
+    .find(course => course.course === verifiedCourse.course && course.section === verifiedCourse.section);
+  availabilityCourse.availability.seatsOpen += 7;
+  const availabilityValidation = validateGeneratedPlan(falsifiedAvailability, {
+    student, mapping, schedule, prerequisites, context: result.context
+  });
+  assert.equal(availabilityValidation.valid, false);
+  assert.ok(availabilityValidation.errors.some(error => /canonical verified schedule for availability seatsOpen/.test(error)));
+
+  const afterGraduation = structuredClone(plan);
+  const finalTerm = afterGraduation.terms.at(-1);
+  finalTerm.academicYear = `${result.context.expectedGraduationYear}/${result.context.expectedGraduationYear + 1}`;
+  finalTerm.yearIndex = result.context.remainingYears;
+  finalTerm.term = `Fall ${result.context.expectedGraduationYear}`;
+  finalTerm.displayTerm = "Fall";
+  finalTerm.termKey = "Fall";
+  finalTerm.scheduleTerm = "Fall";
+  finalTerm.slotId = `fall-${result.context.expectedGraduationYear}`;
+  const horizonValidation = validateGeneratedPlan(afterGraduation, {
+    student, mapping, schedule, prerequisites, context: result.context
+  });
+  assert.equal(horizonValidation.valid, false);
+  assert.ok(horizonValidation.errors.some(error => /authoritative graduation planning horizon/.test(error)));
+  assert.ok(plan.terms.some(term => term.term === result.context.expectedGraduationTerm), "graduation-term control must be present");
 });

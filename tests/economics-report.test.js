@@ -194,6 +194,25 @@ test("selected report plan is revalidated and rendered exactly", async () => {
     selectedPlan.terms.flatMap(term => term.courses.map(course => course.course))
   );
 
+  const tamperedMeetingPlan = structuredClone(selectedPlan);
+  const verifiedCourse = tamperedMeetingPlan.terms
+    .flatMap(term => term.courses)
+    .find(course => course.source === "verified-offering" && course.meeting?.startTime);
+  assert.ok(verifiedCourse);
+  verifiedCourse.meeting.startTime = "1:00 PM";
+  verifiedCourse.meeting.startMinutes = 780;
+  const tamperedMeetingResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: fixture.student,
+      preparedDate: "2026-07-28",
+      selectedPlan: tamperedMeetingPlan,
+      format: "json"
+    })
+  }));
+  assert.equal(tamperedMeetingResponse.status, 422);
+
   selectedPlan.terms[0].courses.push({ course: "ECO 999", requirementId: "eco-113", source: "verified-offering" });
   const invalidResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
     method: "POST",
