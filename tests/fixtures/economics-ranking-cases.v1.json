@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "economics-strategy-ranking-cases-v1",
+  "authorship": "Handcrafted Task 13 comparisons",
+  "purpose": "Direct objective-level checks of current Plan A, Plan B, Plan C, Plan C-2, common safety ranking, senior selection, and ECO 257 validity.",
+  "profiles": [
+    {
+      "id": "freshman-empty",
+      "student": {
+        "academicStanding": "freshman",
+        "planCreationDate": "2026-09-01",
+        "courses": []
+      }
+    },
+    {
+      "id": "sophomore-explore-113-math",
+      "student": {
+        "academicStanding": "sophomore",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" }
+        ]
+      }
+    },
+    {
+      "id": "sophomore-explore-114-math",
+      "student": {
+        "academicStanding": "sophomore",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" }
+        ]
+      }
+    },
+    {
+      "id": "sophomore-c2-ready",
+      "student": {
+        "academicStanding": "sophomore",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" }
+        ]
+      }
+    },
+    {
+      "id": "junior-c2-approval-comparison",
+      "student": {
+        "academicStanding": "junior",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" }
+        ]
+      }
+    },
+    {
+      "id": "senior-seven-remaining",
+      "student": {
+        "academicStanding": "senior",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" }
+        ]
+      }
+    },
+    {
+      "id": "senior-capstone-only",
+      "student": {
+        "academicStanding": "senior",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" },
+          { "code": "ECO 161", "status": "completed" },
+          { "code": "ECO 221", "status": "completed" },
+          { "code": "ECO 234", "status": "completed" },
+          { "code": "ECO 260", "status": "completed" }
+        ]
+      }
+    }
+  ],
+  "strategyCases": {
+    "planA": {
+      "profileId": "freshman-empty",
+      "expectedAnnualLoads": [3, 3, 3, 3],
+      "seniorProfileId": "senior-seven-remaining",
+      "preferredTermLoads": [3, 3, 1],
+      "concentratedTermLoads": [4, 3, 0]
+    },
+    "planB": {
+      "profileId": "freshman-empty",
+      "expectedAnnualLoads": [1, 2, 4, 5],
+      "maximumAllowedAdjacentIncrease": 2,
+      "requireNonemptyFirstYear": true
+    },
+    "planC": {
+      "freshmanProfileId": "freshman-empty",
+      "freshmanRequiredFirstYear": ["ECO 113", "ECO 114"],
+      "portableOptions": ["MAT 113", "MAT 121", "MAT 217", "ECO 257", "PSY 217"],
+      "sophomore113ProfileId": "sophomore-explore-113-math",
+      "sophomore113RequiredFirstYear": ["ECO 114", "ECO 213"],
+      "sophomore114ProfileId": "sophomore-explore-114-math",
+      "sophomore114RequiredFirstYear": ["ECO 113", "ECO 214"],
+      "statisticsOptions": ["MAT 217", "ECO 257", "PSY 217"],
+      "excludedStandings": ["junior", "senior"]
+    },
+    "planC2": {
+      "profileId": "sophomore-c2-ready",
+      "expectedRemainingYears": 2,
+      "expectedGraduationTerm": "Spring/May 2028",
+      "approvalComparisonProfileId": "junior-c2-approval-comparison"
+    }
+  },
+  "commonSafetyCases": {
+    "availabilityProfileId": "senior-capstone-only",
+    "availabilityCourse": "ECO 461",
+    "availabilityVariants": [
+      { "id": "open-current", "status": "open", "seatsOpen": 15, "asOf": "2026-07-30" },
+      { "id": "waitlisted-current", "status": "waitlisted", "seatsOpen": 0, "asOf": "2026-07-30" },
+      { "id": "open-stale", "status": "open", "seatsOpen": 15, "asOf": "2026-07-01" }
+    ],
+    "placeholderComparisonProfileId": "sophomore-c2-ready",
+    "seniorBalanceProfileId": "senior-seven-remaining",
+    "balancedTermLoads": [4, 2, 1],
+    "unnecessaryConcentrationTermLoads": [4, 3, 0],
+    "planAObservedOrder": ["4/3/0", "4/2/1"],
+    "planAObservedOrderClassification": "QUESTIONABLE_CURRENT_BEHAVIOR",
+    "seniorSafetyPreferredOrder": ["4/2/1", "4/3/0"]
+  },
+  "displayLimits": {
+    "freshman": 4,
+    "sophomore": 4,
+    "junior": 2,
+    "senior": 1
+  },
+  "eco257ValidityCases": [
+    {
+      "id": "eco257-elective-after-mat217-statistics",
+      "profileId": "senior-seven-remaining",
+      "statisticsCourse": "MAT 217"
+    },
+    {
+      "id": "eco257-elective-after-psy217-statistics",
+      "profileId": "senior-seven-remaining",
+      "statisticsCourse": "PSY 217"
+    }
+  ]
+}
