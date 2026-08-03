@@ -391,6 +391,15 @@ function PlanTimeline({
           ))}
         </div>
       )}
+      {plans.filter(plan => plan.id !== activePlan.id).map(plan => (
+        <div
+          id={plan.id}
+          role="tabpanel"
+          aria-labelledby={`${plan.id}-tab`}
+          hidden
+          key={plan.id}
+        />
+      ))}
       <div id={activePlan.id} role="tabpanel" aria-labelledby={`${activePlan.id}-tab`}>
         <div className="section-heading">
           <span className="step-number">3.</span>
@@ -2672,7 +2681,7 @@ export default function Page() {
         main.apple-layout-preview .apple-progress {
           align-items: center;
           gap: .9rem;
-          color: #b4b4b8;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-progress-step {
@@ -2703,7 +2712,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-heading-row p {
           margin: .3rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-help-button {
@@ -2713,7 +2722,7 @@ export default function Page() {
           padding: .2rem 0;
           border: 0;
           background: transparent;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-help-button span { margin-left: .2rem; }
@@ -2786,7 +2795,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-planning-heading p {
           margin: .25rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .section-heading h2,
@@ -2815,8 +2824,8 @@ export default function Page() {
           font-size: 11px;
         }
         main.apple-layout-preview .apple-standing-segmented button.is-selected {
-          border-color: #3699ef;
-          background: #3699ef;
+          border-color: #0b5cad;
+          background: #0b5cad;
           color: #fff;
         }
         main.apple-layout-preview .apple-mini-fields {
@@ -2864,13 +2873,13 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-course-heading p {
           margin: .25rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-course-heading > span {
           flex: 0 0 auto;
           padding-top: .1rem;
-          color: #3699ef;
+          color: #0b5cad;
           font-size: 10px;
         }
         main.apple-layout-preview .apple-course-toolbar {
@@ -2891,7 +2900,6 @@ export default function Page() {
           font-size: 11px;
           line-height: 1.1 !important;
         }
-        main.apple-layout-preview .apple-course-toolbar .sr-only { display: none; }
         main.apple-layout-preview .apple-clear-button {
           width: auto;
           min-height: 1.65rem !important;
@@ -2931,7 +2939,7 @@ export default function Page() {
         }
         main.apple-layout-preview .course-name { width: auto; gap: .6rem; }
         main.apple-layout-preview .course-name strong { color: #111; font-weight: 500; }
-        main.apple-layout-preview .course-name span { color: #7e8791; }
+        main.apple-layout-preview .course-name span { color: #5f6873; }
         main.apple-layout-preview .course-toggles { gap: .45rem; }
         main.apple-layout-preview button.course-toggle {
           min-width: 5.4rem;
@@ -2950,6 +2958,11 @@ export default function Page() {
         main.apple-layout-preview button.course-toggle:focus {
           outline: none;
           box-shadow: none;
+        }
+        main.apple-layout-preview button.course-toggle:focus-visible {
+          outline: 3px solid #0b47c8;
+          outline-offset: 2px;
+          box-shadow: 0 0 0 1px #fff;
         }
         main.apple-layout-preview .default-course-label { display: none; }
         main.apple-layout-preview .apple-course-label { display: inline; }
@@ -3003,7 +3016,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-summary-courses li span,
         main.apple-layout-preview .apple-summary-no-courses {
-          color: #7e8791;
+          color: #5f6873;
         }
         main.apple-layout-preview .apple-summary-no-courses {
           margin: .3rem 0 0;
@@ -3011,7 +3024,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-summary-preview > p {
           margin: .45rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 10px;
           line-height: 1.35;
         }
@@ -3386,9 +3399,11 @@ export default function Page() {
                     </select>
                   </label>
                   {!planningContext.transferValidation.valid && (
-                    <ul className="transfer-validation" role="alert">
-                      {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
-                    </ul>
+                    <div role="alert">
+                      <ul className="transfer-validation">
+                        {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
+                      </ul>
+                    </div>
                   )}
                   <p className="transfer-advisor-note">Hanover's Registrar decides how transfer credits apply. Confirm your catalog year and course equivalencies with your advisor or the Registrar.</p>
                 </section>
@@ -3440,9 +3455,10 @@ export default function Page() {
             </div>
 
             <div className="apple-course-toolbar">
-              <label className="search-label">
-                <span className="sr-only">Search courses</span>
+              <label className="search-label" htmlFor="course-search">
+                <span>Search courses</span>
                 <input
+                  id="course-search"
                   type="search"
                   value={courseSearch}
                   onChange={event => setCourseSearch(event.target.value)}
