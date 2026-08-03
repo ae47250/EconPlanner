@@ -6,6 +6,7 @@ import {
 } from "./plan-signature.js";
 import { checkExternalEconomicsRequirements } from "./check-requirements.js";
 import { checkExternalEconomicsPrerequisites } from "./check-prerequisites.js";
+import { checkExternalEconomicsScheduleAndHorizon } from "./check-schedule-and-horizon.js";
 
 const STRUCTURAL_SOURCE = "tests/oracle/audit-external-plan.js#structural-contract";
 
@@ -414,5 +415,42 @@ export function auditExternalEconomicsPlanWithPrerequisites(input) {
     checkedRuleFamilies,
     uncheckedRuleFamilies,
     prerequisiteValidation: prerequisites
+  };
+}
+
+export function auditExternalEconomicsPlanComplete(input) {
+  const prerequisitesAudit = auditExternalEconomicsPlanWithPrerequisites(input);
+  if (prerequisitesAudit.violations.length
+    || prerequisitesAudit.prerequisiteValidation?.status !== "VALID_PREREQUISITES") {
+    return prerequisitesAudit;
+  }
+
+  const scheduleAndHorizon = checkExternalEconomicsScheduleAndHorizon({
+    ...input,
+    requirementAllocation: prerequisitesAudit.requirementAllocation
+  });
+  const checkedRuleFamilies = [
+    ...prerequisitesAudit.checkedRuleFamilies,
+    ...scheduleAndHorizon.checkedRuleFamilies
+  ];
+  const reviewedFamilies = new Set(scheduleAndHorizon.checkedRuleFamilies.map(item => item.family));
+  const reviewItems = [
+    ...prerequisitesAudit.reviewItems.filter(item => !reviewedFamilies.has(item.family)),
+    ...scheduleAndHorizon.reviewItems
+  ];
+
+  return {
+    ...prerequisitesAudit,
+    valid: scheduleAndHorizon.valid,
+    status: scheduleAndHorizon.status,
+    feasibilityStatus: scheduleAndHorizon.feasibilityStatus,
+    violations: scheduleAndHorizon.violations,
+    warnings: scheduleAndHorizon.warnings,
+    reviewItems,
+    enrollmentConditions: scheduleAndHorizon.enrollmentConditions,
+    preliminaryFindings: scheduleAndHorizon.preliminaryFindings,
+    checkedRuleFamilies,
+    uncheckedRuleFamilies: [],
+    scheduleAndHorizonValidation: scheduleAndHorizon
   };
 }
