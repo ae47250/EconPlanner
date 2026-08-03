@@ -30,6 +30,47 @@ const scheduleImages = [
   ]
 ];
 
+const fallScheduleEvidence = "data/raw/economics/schedule-2026-2027-winter-spring.png";
+const winterMayScheduleEvidence = "data/raw/economics/schedule-2026-2027-fall.png";
+const scheduleEvidenceMetadata = {
+  "schedule-2026-2027-fall.png": {
+    visibleContent: "Winter 2027 and May 2027 Economics sections",
+    sourceDocumentDate: null,
+    screenshotRetrievedOn: null,
+    repositoryIngestedOn: "2026-07-28",
+    repositoryIngestionEvidence: "Initial source manifest generatedAt 2026-07-28T06:01:32.578Z in commit a949629127957061ddecbfc81be98f214bee2b4e",
+    humanVerifiedOn: null,
+    availabilityAsOf: null
+  },
+  "schedule-2026-2027-winter-spring.png": {
+    visibleContent: "Fall 2026 Economics sections",
+    sourceDocumentDate: null,
+    screenshotRetrievedOn: null,
+    repositoryIngestedOn: "2026-07-28",
+    repositoryIngestionEvidence: "Initial source manifest generatedAt 2026-07-28T06:01:32.578Z in commit a949629127957061ddecbfc81be98f214bee2b4e",
+    humanVerifiedOn: null,
+    availabilityAsOf: null
+  }
+};
+
+function verifiedScheduleRow(course, section, title, sourceFile) {
+  return {
+    course,
+    section,
+    title,
+    provenance: {
+      sourceType: "user_provided_schedule_screenshot",
+      sourceFiles: [sourceFile],
+      sourceDocumentDate: null,
+      screenshotRetrievedOn: null,
+      repositoryIngestedOn: "2026-07-28",
+      humanVerifiedOn: null,
+      verifiedOn: null
+    },
+    verificationStatus: "verified"
+  };
+}
+
 const economicsRequirements = {
   id: "economics-major",
   catalogYear: "2025-2026",
@@ -131,7 +172,9 @@ const economicsPrerequisites = {
 
 const schedule2026 = {
   academicYear: "2026-2027",
-  verifiedOn: "2026-07-28",
+  verifiedOn: null,
+  lastVerifiedAt: null,
+  availabilityAsOf: null,
   source: {
     type: "user_provided_schedule_screenshots",
     files: [
@@ -139,44 +182,40 @@ const schedule2026 = {
       "data/raw/economics/schedule-2026-2027-winter-spring.png"
     ],
     sectionCodeSMeans: "May",
-    summerOfferingNote: "ECO 113 is available online in Summer as a last-resort option when the regular academic-year schedule cannot fit the student."
+    sourceDocumentDate: null,
+    screenshotRetrievedOn: null,
+    repositoryIngestedOn: "2026-07-28",
+    repositoryIngestionEvidence: "data/manifests/source-manifest.json",
+    humanVerifiedOn: null
   },
   courseOfferingNotes: {
     "ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."
   },
   terms: {
     Fall: [
-      { course: "ECO 113", section: "A", title: "Principles of Microeconomics" },
-      { course: "ECO 114", section: "A", title: "Principles of Macroeconomics" },
-      { course: "ECO 114", section: "B", title: "Principles of Macroeconomics" },
-      { course: "ECO 114", section: "C", title: "Principles of Macroeconomics" },
-      { course: "ECO 213", section: "A", title: "Intermediate Microeconomics" },
-      { course: "ECO 234", section: "A", title: "Rational Choices" },
-      { course: "ECO 333", section: "A", title: "International Trade & Finance" }
+      verifiedScheduleRow("ECO 113", "A", "Principles of Microeconomics", fallScheduleEvidence),
+      verifiedScheduleRow("ECO 114", "A", "Principles of Macroeconomics", fallScheduleEvidence),
+      verifiedScheduleRow("ECO 114", "B", "Principles of Macroeconomics", fallScheduleEvidence),
+      verifiedScheduleRow("ECO 114", "C", "Principles of Macroeconomics", fallScheduleEvidence),
+      verifiedScheduleRow("ECO 213", "A", "Intermediate Microeconomics", fallScheduleEvidence),
+      verifiedScheduleRow("ECO 234", "A", "Rational Choices", fallScheduleEvidence),
+      verifiedScheduleRow("ECO 333", "A", "International Trade & Finance", fallScheduleEvidence)
     ],
     Winter: [
-      { course: "ECO 113", section: "J", title: "Principles of Microeconomics" },
-      { course: "ECO 113", section: "K", title: "Principles of Microeconomics" },
-      { course: "ECO 114", section: "J", title: "Principles of Macroeconomics" },
-      { course: "ECO 161", section: "J", title: "Foundations of Economics" },
-      { course: "ECO 214", section: "J", title: "Intermediate Macroeconomics" },
-      { course: "ECO 221", section: "J", title: "Environmental Economics" },
-      { course: "ECO 321", section: "J", title: "Money & Financial Markets" },
-      { course: "ECO 461", section: "J", title: "Senior Seminar - Econometrics" }
+      verifiedScheduleRow("ECO 113", "J", "Principles of Microeconomics", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 113", "K", "Principles of Microeconomics", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 114", "J", "Principles of Macroeconomics", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 161", "J", "Foundations of Economics", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 214", "J", "Intermediate Macroeconomics", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 221", "J", "Environmental Economics", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 321", "J", "Money & Financial Markets", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 461", "J", "Senior Seminar - Econometrics", winterMayScheduleEvidence)
     ],
     May: [
-      { course: "ECO 222", section: "S", title: "Economics of the European Union" },
-      { course: "ECO 260", section: "S", title: "Special Topics" }
+      verifiedScheduleRow("ECO 222", "S", "Economics of the European Union", winterMayScheduleEvidence),
+      verifiedScheduleRow("ECO 260", "S", "Special Topics", winterMayScheduleEvidence)
     ],
-    Summer: [
-      {
-        course: "ECO 113",
-        section: "Online",
-        title: "Principles of Microeconomics",
-        delivery: "online",
-        planningNote: "Last-resort summer option"
-      }
-    ]
+    Summer: []
   }
 };
 
@@ -251,6 +290,7 @@ for (const [sourcePath, targetName] of scheduleImages) {
   manifestEntries.push({
     role: "economics_schedule_evidence",
     source: "user-provided-schedule-screenshot",
+    ...scheduleEvidenceMetadata[targetName],
     ...(await copySource(sourcePath, targetPath))
   });
 }
@@ -291,7 +331,7 @@ await writeFile(
       Summer: {
         maxTotalCourses: 1,
         maxEconomicsCourses: 1,
-        planningNote: "Use only as a last resort; ECO 113 is the verified summer option and is online."
+        planningNote: "No Summer Economics offering is verified; a Summer course cannot support a fully verified plan."
       }
     },
     hardRules: [

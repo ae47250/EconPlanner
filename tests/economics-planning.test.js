@@ -375,7 +375,8 @@ test("concurrent math is used only after a prerequisite-first plan fails and req
   concurrentSchedule.terms.Fall.push({
     course: "MAT 113",
     section: "A",
-    title: "Mathematics cognate"
+    title: "Mathematics cognate",
+    verificationStatus: "verified"
   });
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const strictPlan = buildEconomicsTermPlan({
@@ -702,7 +703,9 @@ test("schedule provider normalizes provenance, cross-lists, and meeting conflict
   const eco321 = selectConflictFreeOffering(normalized, winter, "ECO 321");
 
   assert.equal(normalized.provider.schemaVersion, 2);
-  assert.equal(normalized.provider.verifiedOn, "2026-07-28");
+  assert.equal(normalized.provider.verifiedOn, null);
+  assert.equal(normalized.provider.repositoryIngestedOn, "2026-07-28");
+  assert.equal(normalized.provider.availabilityAsOf, null);
   assert.equal(canonicalScheduleCode(normalized, "PHI 234"), "ECO 234");
   assert.equal(selectConflictFreeOffering(normalized, winter, "ECO 161", [eco321]), null);
   assert.ok(eco321.meeting.startMinutes < eco321.meeting.endMinutes);

@@ -310,13 +310,27 @@
       "role": "economics_schedule_evidence",
       "source": "user-provided-schedule-screenshot",
       "path": "data/raw/economics/schedule-2026-2027-fall.png",
-      "sha256": "39b78e794d9ac5bf263163b6172943875aa37487f5adfbcb599b1413798cc42b"
+      "sha256": "39b78e794d9ac5bf263163b6172943875aa37487f5adfbcb599b1413798cc42b",
+      "visibleContent": "Winter 2027 and May 2027 Economics sections",
+      "sourceDocumentDate": null,
+      "screenshotRetrievedOn": null,
+      "repositoryIngestedOn": "2026-07-28",
+      "repositoryIngestionEvidence": "Initial source manifest generatedAt 2026-07-28T06:01:32.578Z in commit a949629127957061ddecbfc81be98f214bee2b4e",
+      "humanVerifiedOn": null,
+      "availabilityAsOf": null
     },
     {
       "role": "economics_schedule_evidence",
       "source": "user-provided-schedule-screenshot",
       "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
-      "sha256": "fa240dd52020b3c23fd70c4133bec1f21dcaf276bde967568758db23c5e86570"
+      "sha256": "fa240dd52020b3c23fd70c4133bec1f21dcaf276bde967568758db23c5e86570",
+      "visibleContent": "Fall 2026 Economics sections",
+      "sourceDocumentDate": null,
+      "screenshotRetrievedOn": null,
+      "repositoryIngestedOn": "2026-07-28",
+      "repositoryIngestionEvidence": "Initial source manifest generatedAt 2026-07-28T06:01:32.578Z in commit a949629127957061ddecbfc81be98f214bee2b4e",
+      "humanVerifiedOn": null,
+      "availabilityAsOf": null
     },
     {
       "role": "economics_canonical_courses",

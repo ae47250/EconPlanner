@@ -25,7 +25,8 @@ Seat counts, enrollment status, and room numbers are intentionally omitted.
 | 2026/2027 | Winter | ECO 461 | J | Senior Seminar - Econometrics | Dodge, Eric R. | Mon, Wed, Fri | 10:40 AM | 11:50 AM |
 | 2026/2027 | May | ECO 222 | S | Economics of the European Union | Eiriksson, Agust | Mon, Tue, Wed, Thu, Fri | 10:15 AM | 12:30 PM |
 | 2026/2027 | May | ECO 260 | S | Special Topics | Dodge, Eric R. | Mon, Tue, Wed, Thu, Fri | 8:00 AM | 10:15 AM |
-| 2026/2027 | Summer | ECO 113 | Online | Principles of Microeconomics | — | Online | — | — |
+
+No Summer 2026/2027 Economics section is verified by the repository schedule evidence.
 
 ## Known 2026/2027 Elective Options
 

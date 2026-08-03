@@ -18,14 +18,15 @@ function planWithPlacement(term, course) {
   };
 }
 
-test("2026/2027 schedule preserves Fall, Winter, May, and Summer offerings", () => {
+test("2026/2027 schedule preserves verified Fall, Winter, and May offerings only", () => {
   assert.ok(schedule.terms.Fall.some(course => course.course === "ECO 234"));
   assert.ok(schedule.terms.Winter.some(course => course.course === "ECO 214"));
   assert.ok(schedule.terms.May.some(course => course.course === "ECO 222" && course.section === "S"));
   assert.ok(schedule.terms.May.some(course => course.course === "ECO 260" && course.section === "S"));
-  assert.ok(schedule.terms.Summer.some(course => course.course === "ECO 113" && course.meeting.delivery === "online"));
+  assert.equal(schedule.terms.Summer.some(course => course.verificationStatus === "verified"), false);
   assert.equal(schedule.source.sectionCodeSMeans, "May");
-  assert.match(schedule.source.summerOfferingNote, /last-resort/);
+  assert.equal(schedule.source.humanVerifiedOn, null);
+  assert.equal(schedule.availabilityAsOf, null);
 });
 
 test("ECO 213 and ECO 214 are separated and neither is a May offering", () => {

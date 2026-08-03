@@ -14,3 +14,20 @@ The manifest separates confirmed rules from unresolved questions. A review-requi
 6. Run `node --test tests/economics-policy-manifest.test.js`, then the full test and lint commands before accepting the update.
 
 Task 1 intentionally contains no verified schedule rows and no independent plan-audit code. Those are separate, later tasks so policy review, schedule review, and oracle behavior can be checked independently.
+
+## Verified schedule snapshot
+
+`verified-schedule-2026-2027.json` is a test-owned, independently reviewed transcription of the repository's source schedule screenshots. It is not generated from `data/normalized/economics/schedule-2026-2027.json`, and the drift test must never rewrite it.
+
+The source filenames do not match their visible contents: `schedule-2026-2027-winter-spring.png` contains the Fall rows, while `schedule-2026-2027-fall.png` visibly contains the Winter and May rows. Reviewers must inspect the image contents rather than trusting the filenames. The screenshots do not visibly supply a verification date, so the snapshot records that field as `null` and lists it in each row's `unknownFields`.
+
+### Row-by-row review and update procedure
+
+1. Obtain the official schedule export or complete, legible screenshots and store the evidence outside the oracle snapshot. Do not begin with production normalized JSON.
+2. Open each source artifact and verify its hash. Read every visible row separately, checking academic year, term, course, section, title, units, dates, meeting days and times, availability, and seats/capacity.
+3. Record only values visible in authoritative evidence. Set a missing value to `null`, add its field name to `unknownFields`, and retain the exact source path. Use the raw Economics requirements source for a canonical cross-list identity that is not printed in the schedule row.
+4. Have an independent reviewer repeat the comparison, then update the snapshot's review date, reviewer, evidence hashes, and rows. Keep unchanged section identities stable.
+5. Run `node --test tests/economics-schedule-drift.test.js`. Treat every added, removed, or changed section as a review failure. Investigate the evidence and production data; never copy production values into the oracle merely to make the test pass.
+6. If authoritative evidence changes, update the oracle row by row and document the review before any separate production-data correction. Run the policy-manifest test, full test suite, lint, and `git diff --check` afterward.
+
+Task 2 adds schedule evidence only. The independent plan-audit implementation remains a later task.

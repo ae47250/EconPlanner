@@ -341,9 +341,9 @@ test("availability distinguishes open, waitlisted, closed, stale, and schema-v1 
     lastVerifiedAt: "2026-07-30T12:00:00-04:00",
     terms: {
       Fall: [
-        { course: "ECO 224", section: "A", availability: { status: "closed", seatsOpen: 0, capacity: 20, asOf: "2026-07-30" } },
-        { course: "ECO 224", section: "B", availability: { status: "waitlisted", seatsOpen: 0, capacity: 20, asOf: "2026-07-30" } },
-        { course: "ECO 224", section: "C", availability: { status: "open", seatsOpen: 2, capacity: 20, asOf: "2026-07-30" } }
+        { course: "ECO 224", section: "A", verificationStatus: "verified", availability: { status: "closed", seatsOpen: 0, capacity: 20, asOf: "2026-07-30" } },
+        { course: "ECO 224", section: "B", verificationStatus: "verified", availability: { status: "waitlisted", seatsOpen: 0, capacity: 20, asOf: "2026-07-30" } },
+        { course: "ECO 224", section: "C", verificationStatus: "verified", availability: { status: "open", seatsOpen: 2, capacity: 20, asOf: "2026-07-30" } }
       ]
     }
   };
