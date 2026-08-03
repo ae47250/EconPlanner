@@ -383,7 +383,7 @@ test("@nightly browser history, reload, input changes, and stale versions contro
   await expect.poll(() => savedSession(page)).toBeNull();
 });
 
-test("@nightly interrupted, failed, and repeated edit requests never persist an invalid plan", async ({ page }, testInfo) => {
+test("@pr interrupted, failed, and simultaneous edit requests never persist an invalid plan", async ({ page }) => {
   await seedStudent(page, PROJECTED_MOVE_PROFILE);
   await generatePlans(page);
   await choosePlan(page, "Plan A");
@@ -442,11 +442,9 @@ test("@nightly interrupted, failed, and repeated edit requests never persist an 
     button.click();
     button.click();
   });
-  await expect.poll(() => editRequests).toBe(2);
-  testInfo.annotations.push({
-    type: "known-behavior",
-    description: "Two synchronous DOM clicks can start two validations before the edit control is disabled; neither failed edit is persisted."
-  });
+  await expect.poll(() => editRequests).toBe(1);
+  await page.waitForTimeout(100);
+  expect(editRequests).toBe(1);
   await expect(page.getByRole("button", { name: "Checking..." })).toBeDisabled();
   releaseRequest();
   await expect(statusMessage(page, "Repeated edit test completed safely")).toBeVisible();

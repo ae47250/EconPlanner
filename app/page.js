@@ -1399,6 +1399,7 @@ export default function Page() {
   const generationInFlightRef = useRef(false);
   const generationRequestRef = useRef(0);
   const generationAbortRef = useRef(null);
+  const planEditInFlightRef = useRef(false);
   const latestFormRef = useRef(initialForm);
   const [courseSearch, setCourseSearch] = useState("");
   const [isEditingPlanDate, setIsEditingPlanDate] = useState(false);
@@ -2225,91 +2226,97 @@ export default function Page() {
   }
 
   async function editPlanCourse(edit) {
-    if (editingPlanCourseKey || generationInFlightRef.current) return;
-    const result = economicsResult(report);
-    const plans = result?.economicsPlans || [];
-    const sourcePlan = plans.find(plan => plan.id === edit.planId);
-    if (!sourcePlan || (edit.type === "move" && edit.fromTermId === edit.toTermId)) return;
+    if (planEditInFlightRef.current || generationInFlightRef.current) return;
+    planEditInFlightRef.current = true;
 
-    const sourceTerm = sourcePlan.terms.find(term => (term.slotId || term.term) === edit.fromTermId);
-    const selectedCourse = sourceTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
-    if (!selectedCourse) {
-      setPlanEditStatus("That course could not be found in the selected plan.");
-      return;
-    }
-
-    const selectedAlternative = edit.type === "option"
-      ? selectedCourse.alternativeOptions?.find(option => option.id === edit.optionId)
-      : null;
-    if (edit.type === "option" && !selectedAlternative) {
-      setPlanEditStatus("That elective option is no longer available in this plan.");
-      return;
-    }
-    const replacementCourse = selectedAlternative ? {
-      ...selectedCourse,
-      ...selectedAlternative,
-      requirementId: selectedCourse.requirementId,
-      selectedOptionId: selectedAlternative.id,
-      alternativeOptions: selectedCourse.alternativeOptions
-    } : selectedCourse;
-
-    const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
-    const candidatePlan = {
-      ...sourcePlan,
-      terms: sourcePlan.terms.map(term => {
-        const termId = term.slotId || term.term;
-        let courses = term.courses;
-        if (termId === edit.fromTermId) {
-          courses = edit.type === "option"
-            ? courses.map(course => planCourseIdentity(course) === edit.courseId ? replacementCourse : course)
-            : courses.filter(course => planCourseIdentity(course) !== edit.courseId);
-        }
-        if (edit.type === "move" && termId === edit.toTermId) {
-          courses = [...courses, replacementCourse];
-        }
-        return courses === term.courses ? term : { ...term, courses };
-      })
-    };
-    const candidatePlans = plans.map(plan => plan.id === sourcePlan.id ? candidatePlan : plan);
-
-    setEditingPlanCourseKey(editKey);
-    setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
     try {
-      const response = await fetch("/api/majors/map", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "validate-plan",
-          student: {
-            ...formData,
-            courses: selectedCourses(formData.courses)
-          },
-          plan: candidatePlan,
-          plans: candidatePlans
-        })
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || "The plan edit could not be validated.");
-      if (!data.plan?.validation?.valid) {
-        throw new Error(data.plan?.validation?.errors?.[0] || "That plan change violates the Economics planning rules.");
+      const result = economicsResult(report);
+      const plans = result?.economicsPlans || [];
+      const sourcePlan = plans.find(plan => plan.id === edit.planId);
+      if (!sourcePlan || (edit.type === "move" && edit.fromTermId === edit.toTermId)) return;
+
+      const sourceTerm = sourcePlan.terms.find(term => (term.slotId || term.term) === edit.fromTermId);
+      const selectedCourse = sourceTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
+      if (!selectedCourse) {
+        setPlanEditStatus("That course could not be found in the selected plan.");
+        return;
       }
 
-      setPlanEditUndo({
-        planId: sourcePlan.id,
-        plan: sourcePlan,
-        planSetValidation: result.economicsPlanValidation
-      });
-      setReport(current => replaceEconomicsPlan(
-        current,
-        sourcePlan.id,
-        data.plan,
-        data.planSetValidation
-      ));
-      setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
-    } catch (error) {
-      setPlanEditStatus(error.message);
+      const selectedAlternative = edit.type === "option"
+        ? selectedCourse.alternativeOptions?.find(option => option.id === edit.optionId)
+        : null;
+      if (edit.type === "option" && !selectedAlternative) {
+        setPlanEditStatus("That elective option is no longer available in this plan.");
+        return;
+      }
+      const replacementCourse = selectedAlternative ? {
+        ...selectedCourse,
+        ...selectedAlternative,
+        requirementId: selectedCourse.requirementId,
+        selectedOptionId: selectedAlternative.id,
+        alternativeOptions: selectedCourse.alternativeOptions
+      } : selectedCourse;
+
+      const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
+      const candidatePlan = {
+        ...sourcePlan,
+        terms: sourcePlan.terms.map(term => {
+          const termId = term.slotId || term.term;
+          let courses = term.courses;
+          if (termId === edit.fromTermId) {
+            courses = edit.type === "option"
+              ? courses.map(course => planCourseIdentity(course) === edit.courseId ? replacementCourse : course)
+              : courses.filter(course => planCourseIdentity(course) !== edit.courseId);
+          }
+          if (edit.type === "move" && termId === edit.toTermId) {
+            courses = [...courses, replacementCourse];
+          }
+          return courses === term.courses ? term : { ...term, courses };
+        })
+      };
+      const candidatePlans = plans.map(plan => plan.id === sourcePlan.id ? candidatePlan : plan);
+
+      setEditingPlanCourseKey(editKey);
+      setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
+      try {
+        const response = await fetch("/api/majors/map", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "validate-plan",
+            student: {
+              ...formData,
+              courses: selectedCourses(formData.courses)
+            },
+            plan: candidatePlan,
+            plans: candidatePlans
+          })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "The plan edit could not be validated.");
+        if (!data.plan?.validation?.valid) {
+          throw new Error(data.plan?.validation?.errors?.[0] || "That plan change violates the Economics planning rules.");
+        }
+
+        setPlanEditUndo({
+          planId: sourcePlan.id,
+          plan: sourcePlan,
+          planSetValidation: result.economicsPlanValidation
+        });
+        setReport(current => replaceEconomicsPlan(
+          current,
+          sourcePlan.id,
+          data.plan,
+          data.planSetValidation
+        ));
+        setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
+      } catch (error) {
+        setPlanEditStatus(error.message);
+      } finally {
+        setEditingPlanCourseKey("");
+      }
     } finally {
-      setEditingPlanCourseKey("");
+      planEditInFlightRef.current = false;
     }
   }
 
