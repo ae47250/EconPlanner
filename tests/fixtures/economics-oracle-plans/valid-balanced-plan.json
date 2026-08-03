@@ -1,0 +1,74 @@
+{
+  "fixtureId": "oracle-valid-balanced",
+  "authorship": "handwritten",
+  "student": {
+    "studentId": "fictional-student-001",
+    "academicStanding": "sophomore"
+  },
+  "expectedContext": {
+    "startYear": 2026,
+    "remainingYears": 3,
+    "expectedGraduationYear": 2029,
+    "expectedGraduationTerm": "Spring/May 2029"
+  },
+  "plan": {
+    "id": "handwritten-balanced",
+    "label": "Handwritten balanced example",
+    "terms": [
+      {
+        "slotId": "fall-2026",
+        "term": "Fall 2026",
+        "termKey": "Fall",
+        "academicYear": "2026/2027",
+        "courses": [
+          {
+            "course": "ECO 113",
+            "requirementId": "eco-113",
+            "section": "A",
+            "source": "verified-offering"
+          },
+          {
+            "course": "MAT 113",
+            "requirementId": "cognate",
+            "section": "A",
+            "source": "supporting-offering"
+          }
+        ]
+      },
+      {
+        "slotId": "winter-2027",
+        "term": "Winter 2027",
+        "termKey": "Winter",
+        "academicYear": "2026/2027",
+        "courses": [
+          {
+            "course": "ECO 114",
+            "requirementId": "eco-114",
+            "section": "J",
+            "source": "verified-offering"
+          },
+          {
+            "course": "PSY 217",
+            "requirementId": "statistics",
+            "section": "A",
+            "source": "supporting-offering"
+          }
+        ]
+      },
+      {
+        "slotId": "spring-2027",
+        "term": "Spring/May 2027",
+        "termKey": "Spring/May",
+        "academicYear": "2026/2027",
+        "courses": [
+          {
+            "course": "ECO 260",
+            "requirementId": "eco-elective-1",
+            "section": "S",
+            "source": "verified-offering"
+          }
+        ]
+      }
+    ]
+  }
+}

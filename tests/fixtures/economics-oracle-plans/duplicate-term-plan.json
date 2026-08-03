@@ -1,0 +1,32 @@
+{
+  "fixtureId": "oracle-duplicate-term",
+  "authorship": "handwritten",
+  "student": {
+    "studentId": "fictional-student-003"
+  },
+  "expectedContext": {
+    "startYear": 2026,
+    "remainingYears": 3,
+    "expectedGraduationYear": 2029,
+    "expectedGraduationTerm": "Spring/May 2029"
+  },
+  "plan": {
+    "id": "duplicate-term",
+    "terms": [
+      {
+        "slotId": "fall-2026-first",
+        "term": "Fall 2026",
+        "termKey": "Fall",
+        "academicYear": "2026/2027",
+        "courses": []
+      },
+      {
+        "slotId": "fall-2026-second",
+        "term": "Fall 2026 duplicate",
+        "termKey": "Fall",
+        "academicYear": "2026-2027",
+        "courses": []
+      }
+    ]
+  }
+}

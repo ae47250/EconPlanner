@@ -1,0 +1,32 @@
+{
+  "fixtureId": "oracle-out-of-order-term",
+  "authorship": "handwritten",
+  "student": {
+    "studentId": "fictional-student-005"
+  },
+  "expectedContext": {
+    "startYear": 2026,
+    "remainingYears": 3,
+    "expectedGraduationYear": 2029,
+    "expectedGraduationTerm": "Spring/May 2029"
+  },
+  "plan": {
+    "id": "out-of-order-term",
+    "terms": [
+      {
+        "slotId": "winter-2027",
+        "term": "Winter 2027",
+        "termKey": "Winter",
+        "academicYear": "2026/2027",
+        "courses": []
+      },
+      {
+        "slotId": "fall-2026",
+        "term": "Fall 2026",
+        "termKey": "Fall",
+        "academicYear": "2026/2027",
+        "courses": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "authorship": "handwritten",
+  "fixtureId": "oracle-valid-balanced-reordered",
+  "expectedContext": {
+    "expectedGraduationTerm": "Spring/May 2029",
+    "expectedGraduationYear": 2029,
+    "remainingYears": 3,
+    "startYear": 2026
+  },
+  "student": {
+    "academicStanding": "sophomore",
+    "studentId": "fictional-student-001"
+  },
+  "plan": {
+    "terms": [
+      {
+        "courses": [
+          {
+            "source": "supporting-offering",
+            "section": "A",
+            "requirementId": "cognate",
+            "course": "MAT 113"
+          },
+          {
+            "source": "verified-offering",
+            "section": "A",
+            "requirementId": "eco-113",
+            "course": "ECO 113"
+          }
+        ],
+        "academicYear": "2026-2027",
+        "termKey": "Fall",
+        "term": "Fall 2026",
+        "slotId": "fall-2026"
+      },
+      {
+        "courses": [
+          {
+            "source": "supporting-offering",
+            "section": "A",
+            "requirementId": "statistics",
+            "course": "PSY 217"
+          },
+          {
+            "source": "verified-offering",
+            "section": "J",
+            "requirementId": "eco-114",
+            "course": "ECO 114"
+          }
+        ],
+        "academicYear": "2026-2027",
+        "termKey": "Winter",
+        "term": "Winter 2027",
+        "slotId": "winter-2027"
+      },
+      {
+        "courses": [
+          {
+            "source": "verified-offering",
+            "section": "S",
+            "requirementId": "eco-elective-1",
+            "course": "ECO 260"
+          }
+        ],
+        "academicYear": "2026-2027",
+        "termKey": "Spring/May",
+        "term": "Spring/May 2027",
+        "slotId": "spring-2027"
+      }
+    ],
+    "label": "A different display label",
+    "id": "different-nonsemantic-id"
+  }
+}
