@@ -23,6 +23,7 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "@playwright/test": "1.62.1",
     "eslint": "10.8.0",
     "fast-check": "4.9.0",
