@@ -107,7 +107,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(/<script\b/i.test(submitted.html), false);
   assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
   assert.equal(submitted.html.includes("{{"), false);
-  assert.match(submitted.html, /<span class="course">ECO 461(?:-[^<]+)?<\/span>/);
+  assert.match(submitted.html, /<span class="course"(?:\s+data-requirement-id="[^"]+")?>ECO 461(?:-[^<]+)?<\/span>/);
   assert.match(submitted.correlationId, /^[A-Za-z0-9._:-]+$/);
   assert.equal(/[^\x00-\x7F]/.test(submitted.html), false);
 });
