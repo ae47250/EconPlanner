@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "economics-requirement-allocation-matrix",
+  "version": 1,
+  "authorship": "handwritten-independent",
+  "reviewedOn": "2026-08-03",
+  "reviewedBy": "Project owner and independent test-oracle review",
+  "policyRef": "tests/oracle/economics-policy.v1.json",
+  "policyVersion": 2,
+  "purpose": "Test confirmed Economics requirement assignments and preserve explicit review states without using production allocation as academic authority.",
+  "mandatoryExactCourses": ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 461"],
+  "assignmentDefaults": {
+    "fixed": {
+      "REQ-ECO-113": "ECO 113",
+      "REQ-ECO-114": "ECO 114",
+      "REQ-ECO-213": "ECO 213",
+      "REQ-ECO-214": "ECO 214",
+      "REQ-ECO-461": "ECO 461"
+    }
+  },
+  "cases": [
+    {
+      "caseId": "finance-eco321-alone",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["ECO 321"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "ECO 321", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "finance-busn323-alone",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "finance-both-busn-finance-eco321-elective",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["ECO 321", "BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 321", "ECO 161", "ECO 221", "ECO 260"],
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 260", "ECO 321"] }
+    },
+    {
+      "caseId": "finance-eco321-explicit-finance",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["ECO 321"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "requirementHints": { "ECO 321": "finance" },
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "ECO 321", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "finance-eco321-explicit-elective-with-busn",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["ECO 321", "BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 321", "ECO 161", "ECO 221", "ECO 260"],
+      "requirementHints": { "BUSN 323": "finance", "ECO 321": "eco-elective-candidate" },
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 260", "ECO 321"] }
+    },
+    {
+      "caseId": "statistics-eco257",
+      "category": "confirmed",
+      "statistics": "ECO 257",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "ECO 257", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "statistics-mat217",
+      "category": "confirmed",
+      "statistics": "MAT 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "MAT 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "statistics-psy217",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 221", "ECO 234", "ECO 260", "ECO 333"],
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 221", "ECO 234", "ECO 260", "ECO 333"] }
+    },
+    {
+      "caseId": "statistics-mat217-eco257-elective",
+      "category": "invalid",
+      "statistics": "MAT 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 257", "ECO 221", "ECO 234", "ECO 260"],
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["ELECTIVE-ECO-257-STATISTICS-ONLY"]
+    },
+    {
+      "caseId": "elective-eco260-counts",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 221", "ECO 234", "ECO 260", "ECO 333"],
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 221", "ECO 234", "ECO 260", "ECO 333"] }
+    },
+    {
+      "caseId": "electives-zero-completed",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "completedElectiveCount": 0,
+      "expectedCompletedElectiveCount": 0,
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "electives-one-completed",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "completedElectiveCount": 1,
+      "expectedCompletedElectiveCount": 1,
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "electives-two-completed",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "completedElectiveCount": 2,
+      "expectedCompletedElectiveCount": 2,
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "electives-three-completed",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "completedElectiveCount": 3,
+      "expectedCompletedElectiveCount": 3,
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "electives-four-completed",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "completedElectiveCount": 4,
+      "expectedCompletedElectiveCount": 4,
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "elective-one-existing-100-level",
+      "category": "confirmed",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "completedElectiveCount": 1,
+      "expectedCompletedElectiveCount": 1,
+      "expectedOracleStatus": "VALID_REQUIREMENTS",
+      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"] }
+    },
+    {
+      "caseId": "finance-eco321-attempted-double-count",
+      "category": "invalid",
+      "statistics": "PSY 217",
+      "financeCourses": ["ECO 321"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 321", "ECO 161", "ECO 221", "ECO 260"],
+      "requirementHints": { "ECO 321": "finance-and-eco-elective-4" },
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["REQ-FINANCE", "ELECTIVE-NO-DOUBLE-COUNT"]
+    },
+    {
+      "caseId": "elective-crosslist-eco234-phi234-duplicate",
+      "category": "invalid",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 260", "ECO 234", "PHI 234"],
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["ELECTIVE-CROSSLIST-ECO-234-PHI-234", "ELECTIVE-NO-DOUBLE-COUNT"]
+    },
+    {
+      "caseId": "elective-eco307-half-unit",
+      "category": "invalid",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 307"],
+      "courseOverrides": { "ECO 307": { "units": 0.5 } },
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["REQ-ECO-ELECTIVES"]
+    },
+    {
+      "caseId": "elective-attempted-second-100-level",
+      "category": "invalid",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 171", "ECO 221", "ECO 260"],
+      "completedElectiveCount": 1,
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["ELECTIVE-MAX-ONE-100-LEVEL"]
+    },
+    {
+      "caseId": "capstone-transfer-eco461",
+      "category": "invalid",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "courseOverrides": { "ECO 461": { "status": "transfer", "source": "transfer", "institution": "Transfer institution" } },
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["CAPSTONE-HANOVER-RESIDENCY"]
+    },
+    {
+      "caseId": "capstone-ap-eco461",
+      "category": "invalid",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "courseOverrides": { "ECO 461": { "status": "completed", "source": "ap-credit", "institution": "AP credit" } },
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["CAPSTONE-HANOVER-RESIDENCY"]
+    },
+    {
+      "caseId": "review-provisional-transfer-statistics",
+      "category": "review",
+      "statistics": "ECO 257",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "courseOverrides": { "ECO 257": { "status": "transfer", "source": "transfer-equivalency" } },
+      "requirementClaims": [{ "kind": "equivalency", "targetRuleId": "REQ-STATISTICS", "course": "ECO 257" }],
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "expectedProduction": { "strictComplete": false, "optimisticComplete": true }
+    },
+    {
+      "caseId": "review-uncertain-cognate-equivalency",
+      "category": "review",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 125",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "courseOverrides": { "MAT 125": { "status": "uncertain", "source": "uncertain-equivalency" } },
+      "requirementClaims": [{ "kind": "equivalency", "targetRuleId": "REQ-COGNATE", "course": "MAT 125" }],
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "expectedProduction": { "strictComplete": false, "optimisticComplete": false }
+    },
+    {
+      "caseId": "review-cognate-waiver",
+      "category": "review",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": null,
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "requirementClaims": [{ "kind": "waiver", "targetRuleId": "REQ-COGNATE" }],
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "expectedProduction": { "strictComplete": false, "optimisticComplete": false, "appliedUnits": 11 }
+    },
+    {
+      "caseId": "review-eco214-substitution",
+      "category": "review",
+      "statistics": "PSY 217",
+      "financeCourses": ["BUSN 323"],
+      "cognate": "MAT 113",
+      "electives": ["ECO 161", "ECO 221", "ECO 234", "ECO 260"],
+      "omittedCourses": ["ECO 214"],
+      "extraCourses": ["ECO 299"],
+      "courseOverrides": { "ECO 299": { "status": "uncertain", "source": "proposed-substitution" } },
+      "requirementClaims": [{ "kind": "substitution", "targetRuleId": "REQ-ECO-214", "course": "ECO 299" }],
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "expectedProduction": { "strictComplete": false, "optimisticComplete": false, "appliedUnits": 11 }
+    }
+  ],
+  "allowedProductionDisagreements": [
+    { "caseId": "review-provisional-transfer-statistics", "oracleStatus": "REVIEW_REQUIRED", "productionComplete": true, "classification": "PRODUCTION_OPTIMISTIC_WITHOUT_ORACLE_REVIEW_STATE" },
+    { "caseId": "review-uncertain-cognate-equivalency", "oracleStatus": "REVIEW_REQUIRED", "productionComplete": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
+    { "caseId": "review-cognate-waiver", "oracleStatus": "REVIEW_REQUIRED", "productionComplete": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
+    { "caseId": "review-eco214-substitution", "oracleStatus": "REVIEW_REQUIRED", "productionComplete": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" }
+  ]
+}

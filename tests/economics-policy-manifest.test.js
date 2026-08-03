@@ -26,8 +26,8 @@ function byId(ruleId) {
 test("policy manifest has stable version and review metadata", () => {
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.policy.id, "hanover-economics-planning-policy");
-  assert.equal(manifest.policy.version, 1);
-  assert.equal(manifest.policy.confirmationDate, "2026-08-01");
+  assert.equal(manifest.policy.version, 2);
+  assert.equal(manifest.policy.confirmationDate, "2026-08-03");
   assert.equal(
     manifest.policy.reviewedBy,
     "Economics Department representative and project owner"
@@ -139,6 +139,12 @@ test("confirmed exceptions, permissions, capacity, electives, and capstone rules
   assert.equal(byId("CAPACITY-MAY").maxTotalCourses, 1);
   assert.equal(byId("ELECTIVE-MAX-ONE-100-LEVEL").maximum, 1);
   assert.equal(byId("ELECTIVE-ECO-260-COUNTS").countsAs, "ECO elective");
+  assert.deepEqual(byId("ELECTIVE-ECO-257-STATISTICS-ONLY").allowedRequirementRuleIds, [
+    "REQ-STATISTICS"
+  ]);
+  assert.deepEqual(byId("ELECTIVE-ECO-257-STATISTICS-ONLY").excludedRequirementRuleIds, [
+    "REQ-ECO-ELECTIVES"
+  ]);
   assert.deepEqual(byId("CAPSTONE-WINTER-ONLY").allowedTerms, ["Winter"]);
   assert.equal(byId("CAPSTONE-SENIOR-STANDING").requiredStanding, "Senior");
   assert.equal(byId("CAPSTONE-HANOVER-RESIDENCY").requiredInstitution, "Hanover College");

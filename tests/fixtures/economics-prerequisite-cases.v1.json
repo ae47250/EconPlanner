@@ -6,7 +6,7 @@
   "reviewedOn": "2026-08-03",
   "reviewedBy": "Project owner and independent test-oracle review",
   "policyRef": "tests/oracle/economics-policy.v1.json",
-  "policyVersion": 1,
+  "policyVersion": 2,
   "purpose": "Test every confirmed Economics prerequisite edge without treating production prerequisite data as academic authority.",
   "matrixPolicy": {
     "pullRequestSubset": "Every confirmed edge receives the core chronology and evidence cases. Confirmed concurrency and ECO 357 permission cases are also exercised.",

@@ -122,16 +122,22 @@ function makeSlots(policy) {
   return slots;
 }
 
-function isElectiveCandidate(course) {
+function isElectiveCandidate(course, policy) {
   const code = course.canonicalCourse;
+  const statisticsOnlyRule = ruleById(policy, "ELECTIVE-ECO-257-STATISTICS-ONLY");
+  if (statisticsOnlyRule?.status === "CONFIRMED"
+    && code === canonicalCourse(statisticsOnlyRule.course)
+    && statisticsOnlyRule.excludedRequirementRuleIds?.includes("REQ-ECO-ELECTIVES")) {
+    return false;
+  }
   if (code === "ECO 307") return false;
   if (!code.startsWith("ECO ")) return false;
   if (Number.isFinite(course.units) && course.units < 1) return false;
   return Boolean(courseNumber(code));
 }
 
-function courseMatchesSlot(course, slot) {
-  if (slot.ruleId === "REQ-ECO-ELECTIVES") return isElectiveCandidate(course);
+function courseMatchesSlot(course, slot, policy) {
+  if (slot.ruleId === "REQ-ECO-ELECTIVES") return isElectiveCandidate(course, policy);
   return slot.options.includes(course.canonicalCourse);
 }
 
@@ -147,10 +153,10 @@ function allocationSignature(allocation) {
   return [...fixed, `REQ-ECO-ELECTIVES:${electives.join(",")}`].join("|");
 }
 
-function exhaustiveAllocations(courses, slots) {
+function exhaustiveAllocations(courses, slots, policy) {
   const candidates = slots.map(slot => courses
     .map((course, courseIndex) => ({ course, courseIndex }))
-    .filter(({ course }) => courseMatchesSlot(course, slot)));
+    .filter(({ course }) => courseMatchesSlot(course, slot, policy)));
   const order = slots
     .map((slot, slotIndex) => ({ slot, slotIndex, candidateCount: candidates[slotIndex].length }))
     .sort((left, right) => left.candidateCount - right.candidateCount
@@ -279,6 +285,17 @@ function diagnoseFailure(courses, slots, candidates, coveredRuleIds, policy) {
     policy
   ));
 
+  const statisticsOnlyRule = ruleById(policy, "ELECTIVE-ECO-257-STATISTICS-ONLY");
+  const hintedStatisticsOnly = electiveHints.find(course => (
+    course.canonicalCourse === canonicalCourse(statisticsOnlyRule?.course)
+  ));
+  if (hintedStatisticsOnly) violations.push(violation(
+    "ELECTIVE-ECO-257-STATISTICS-ONLY",
+    hintedStatisticsOnly.objectPath,
+    "ECO 257 may satisfy only the statistics requirement and is not an Economics elective.",
+    policy
+  ));
+
   const crossListEntries = courses.filter(course => course.canonicalCourse === "ECO 234");
   if (crossListEntries.length > 1 && electiveHints.filter(course => course.canonicalCourse === "ECO 234").length > 1) {
     violations.push(violation(
@@ -302,7 +319,7 @@ function diagnoseFailure(courses, slots, candidates, coveredRuleIds, policy) {
 
   const fixedEconomicsCourses = new Set(["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 461"]);
   const eligibleElectives = courses.filter(course => (
-    isElectiveCandidate(course) && !fixedEconomicsCourses.has(course.canonicalCourse)
+    isElectiveCandidate(course, policy) && !fixedEconomicsCourses.has(course.canonicalCourse)
   ));
   const uniqueElectives = new Map(eligibleElectives.map(course => [course.identity, course]));
   const oneHundredLevel = [...uniqueElectives.values()].filter(course => {
@@ -376,7 +393,7 @@ export function checkExternalEconomicsRequirements(input) {
       policy
     )
     : null;
-  const { results, candidates } = exhaustiveAllocations(courses, slots);
+  const { results, candidates } = exhaustiveAllocations(courses, slots, policy);
   const violations = residencyViolation ? [residencyViolation] : [];
   if (!results.length && !residencyViolation) {
     violations.push(...diagnoseFailure(courses, slots, candidates, claims.coveredRuleIds, policy));

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 1,
-    "confirmationDate": "2026-08-01",
+    "version": 2,
+    "confirmationDate": "2026-08-03",
     "reviewedBy": "Economics Department representative and project owner",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -18,6 +18,12 @@
       "id": "ECON-DEPARTMENT-2026-08-01",
       "date": "2026-08-01",
       "reviewedBy": "Economics Department representative and project owner"
+    },
+    {
+      "id": "ECON-DEPARTMENT-2026-08-03",
+      "date": "2026-08-03",
+      "reviewedBy": "Economics Department representative and project owner",
+      "summary": "ECO 257 may satisfy only the statistics requirement and may not count as an Economics elective, including when MAT 217 or PSY 217 fills statistics."
     }
   ],
   "sources": [
@@ -529,6 +535,23 @@
       ],
       "course": "ECO 260",
       "countsAs": "ECO elective"
+    },
+    {
+      "ruleId": "ELECTIVE-ECO-257-STATISTICS-ONLY",
+      "status": "CONFIRMED",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-03",
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Required economics courses",
+        "ECONOMICS-REQUIREMENTS#Elective requirement"
+      ],
+      "course": "ECO 257",
+      "allowedRequirementRuleIds": [
+        "REQ-STATISTICS"
+      ],
+      "excludedRequirementRuleIds": [
+        "REQ-ECO-ELECTIVES"
+      ],
+      "staffingContext": "ECO 257 has not been offered recently because of staffing shortages; use of MAT 217 or PSY 217 for statistics does not change ECO 257 elective eligibility."
     },
     {
       "ruleId": "ELECTIVE-CROSSLIST-ECO-234-PHI-234",
