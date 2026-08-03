@@ -5,6 +5,7 @@ import {
   parseExternalAcademicYear
 } from "./plan-signature.js";
 import { checkExternalEconomicsRequirements } from "./check-requirements.js";
+import { checkExternalEconomicsPrerequisites } from "./check-prerequisites.js";
 
 const STRUCTURAL_SOURCE = "tests/oracle/audit-external-plan.js#structural-contract";
 
@@ -373,5 +374,45 @@ export function auditExternalEconomicsPlanWithRequirements(input) {
     checkedRuleFamilies,
     uncheckedRuleFamilies,
     requirementAllocation: requirements
+  };
+}
+
+export function auditExternalEconomicsPlanWithPrerequisites(input) {
+  const requirementsAudit = auditExternalEconomicsPlanWithRequirements(input);
+  if (requirementsAudit.violations.length
+    || requirementsAudit.requirementAllocation?.status !== "VALID_REQUIREMENTS") {
+    return requirementsAudit;
+  }
+
+  const prerequisites = checkExternalEconomicsPrerequisites(input);
+  const prerequisiteReviewItems = prerequisites.reviewItems.filter(
+    item => item.code !== "RULE_FAMILY_NOT_CHECKED"
+  );
+  const checkedRuleFamilies = [
+    ...requirementsAudit.checkedRuleFamilies,
+    ...prerequisites.checkedRuleFamilies
+  ];
+  const uncheckedRuleFamilies = prerequisites.uncheckedRuleFamilies;
+  const status = prerequisites.violations.length
+    ? prerequisites.status
+    : prerequisiteReviewItems.length
+      ? "REVIEW_REQUIRED"
+      : "NOT_CHECKED";
+
+  return {
+    ...requirementsAudit,
+    valid: false,
+    status,
+    violations: prerequisites.violations,
+    warnings: prerequisites.warnings,
+    reviewItems: [
+      ...prerequisiteReviewItems,
+      ...requirementsAudit.reviewItems.filter(item => uncheckedRuleFamilies.some(
+        family => family.family === item.family
+      ))
+    ],
+    checkedRuleFamilies,
+    uncheckedRuleFamilies,
+    prerequisiteValidation: prerequisites
   };
 }
