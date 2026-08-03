@@ -1,0 +1,199 @@
+{
+  "authorship": "handwritten",
+  "cases": [
+    {
+      "fixtureId": "requirements-valid-busn-finance-eco321-elective",
+      "expectedStatus": "VALID_REQUIREMENTS",
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-valid-eco321-finance",
+      "expectedStatus": "VALID_REQUIREMENTS",
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "ECO 321",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
+      ]
+    },
+    {
+      "fixtureId": "requirements-valid-mat217-statistics",
+      "expectedStatus": "VALID_REQUIREMENTS",
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 121", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-valid-eco257-statistics",
+      "expectedStatus": "VALID_REQUIREMENTS",
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-valid-eco234-crosslist",
+      "expectedStatus": "VALID_REQUIREMENTS",
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "ECO 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-valid-repeatable-eco260",
+      "expectedStatus": "VALID_REQUIREMENTS",
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161",
+        { "course": "ECO 260", "repeatableInstanceId": "topic-a" },
+        { "course": "ECO 260", "repeatableInstanceId": "topic-b" },
+        "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-missing-eco214",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["REQ-ECO-214"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-two-100-level-electives",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["ELECTIVE-MAX-ONE-100-LEVEL"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 171", "ECO 260", "PHI 234"
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-eco321-double-count",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["REQ-FINANCE", "ELECTIVE-NO-DOUBLE-COUNT"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217",
+        { "course": "ECO 321", "requirementId": "finance-and-eco-elective-4" },
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234"
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-eco307-elective",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["REQ-ECO-ELECTIVES"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234",
+        { "course": "ECO 307", "units": 0.5, "requirementId": "eco-elective-4" }
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-crosslist-double-count",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["ELECTIVE-CROSSLIST-ECO-234-PHI-234"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260",
+        { "course": "ECO 234", "requirementId": "eco-elective-3" },
+        { "course": "PHI 234", "requirementId": "eco-elective-4" }
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-ordinary-double-count",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["ELECTIVE-NO-DOUBLE-COUNT"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "PHI 234",
+        { "course": "ECO 260", "requirementId": "eco-elective-3" },
+        { "course": "ECO 260", "requirementId": "eco-elective-4" }
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-mat217-as-elective",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["REQ-ECO-ELECTIVES"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234",
+        { "course": "MAT 217", "requirementId": "eco-elective-4" }
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-psy217-as-elective",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["REQ-ECO-ELECTIVES"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234",
+        { "course": "PSY 217", "requirementId": "eco-elective-4" }
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-capstone-residency",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["CAPSTONE-HANOVER-RESIDENCY"],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Transfer institution" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-review-waiver",
+      "expectedStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "requirementClaims": [
+        { "kind": "waiver", "targetRuleId": "REQ-COGNATE" }
+      ],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-review-substitution",
+      "expectedStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "requirementClaims": [
+        { "kind": "substitution", "targetRuleId": "REQ-ECO-214", "course": "ECO 299" }
+      ],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    },
+    {
+      "fixtureId": "requirements-review-unconfirmed-equivalency",
+      "expectedStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "requirementClaims": [
+        { "kind": "equivalency", "targetRuleId": "REQ-COGNATE", "course": "MAT 125" }
+      ],
+      "courses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 125", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+      ]
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import {
   externalTermPosition,
   parseExternalAcademicYear
 } from "./plan-signature.js";
+import { checkExternalEconomicsRequirements } from "./check-requirements.js";
 
 const STRUCTURAL_SOURCE = "tests/oracle/audit-external-plan.js#structural-contract";
 
@@ -332,5 +333,45 @@ export function auditExternalEconomicsPlan(input) {
     semanticSignature: createExternalPlanSemanticSignature(args.plan, args.expectedContext),
     checkedRuleFamilies,
     uncheckedRuleFamilies
+  };
+}
+
+export function auditExternalEconomicsPlanWithRequirements(input) {
+  const structural = auditExternalEconomicsPlan(input);
+  if (structural.violations.length) return structural;
+
+  const requirements = checkExternalEconomicsRequirements(input);
+  const structuralReviewItems = structural.reviewItems.filter(
+    item => item.family !== "REQUIREMENT_ALLOCATION"
+  );
+  const requirementReviewItems = requirements.reviewItems.filter(
+    item => item.code !== "RULE_FAMILY_NOT_CHECKED"
+  );
+  const checkedRuleFamilies = [
+    ...structural.checkedRuleFamilies,
+    ...requirements.checkedRuleFamilies
+  ];
+  const uncheckedRuleFamilies = requirements.uncheckedRuleFamilies;
+  const status = requirements.violations.length
+    ? requirements.status
+    : requirementReviewItems.length
+      ? "REVIEW_REQUIRED"
+      : "NOT_CHECKED";
+
+  return {
+    ...structural,
+    valid: false,
+    status,
+    violations: requirements.violations,
+    warnings: requirements.warnings,
+    reviewItems: [
+      ...requirementReviewItems,
+      ...structuralReviewItems.filter(item => uncheckedRuleFamilies.some(
+        family => family.family === item.family
+      ))
+    ],
+    checkedRuleFamilies,
+    uncheckedRuleFamilies,
+    requirementAllocation: requirements
   };
 }
