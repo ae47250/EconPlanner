@@ -260,6 +260,52 @@ function economicsResult(report) {
   return economicsResultFromReport(report);
 }
 
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function hasValidGeneratedPlan(plan) {
+  return isPlainObject(plan)
+    && typeof plan.id === "string"
+    && plan.id.length > 0
+    && Array.isArray(plan.terms)
+    && plan.terms.every(term => (
+      isPlainObject(term)
+      && typeof (term.slotId || term.term) === "string"
+      && Array.isArray(term.courses)
+      && term.courses.every(course => isPlainObject(course) && typeof course.course === "string" && course.course.length > 0)
+    ));
+}
+
+function isValidGeneratedPlannerReport(report) {
+  if (!isPlainObject(report) || !Array.isArray(report.programs)) return false;
+  const result = economicsResult(report);
+  if (!isPlainObject(result) || !isPlainObject(result.program)) return false;
+  if (result.program.id !== "economics-base" && result.program.name !== "Economics") return false;
+  if (!Array.isArray(result.economicsPlans)
+    || !Array.isArray(result.economicsPlanningGaps)
+    || !Array.isArray(result.economicsCandidateOutcomes)) return false;
+
+  if (!result.economicsPlans.every(hasValidGeneratedPlan)) return false;
+  if (!result.economicsPlans.length) return result.economicsPlan === null;
+  return hasValidGeneratedPlan(result.economicsPlan)
+    && result.economicsPlan.id === result.economicsPlans[0].id;
+}
+
+function studentFacingRequestError(error, fallback, connectionMessage = "The planner could not connect. Please try again.") {
+  const message = typeof error?.message === "string" ? error.message.trim() : "";
+  if (error?.name === "AbortError" || /abort(?:ed|error)?/i.test(message)) {
+    return "The request was interrupted. Please try again.";
+  }
+  if (error?.name === "TimeoutError" || /timed?\s*out|timeout/i.test(message)) {
+    return "The planner took too long to respond. Please try again.";
+  }
+  if (!message || /failed to fetch|networkerror|network request failed|load failed|network stack/i.test(message)) {
+    return connectionMessage;
+  }
+  return message || fallback;
+}
+
 function planCourseCount(plan) {
   return plan?.terms?.reduce((count, term) => count + term.courses.length, 0) || 0;
 }
@@ -452,7 +498,7 @@ function PlanTimeline({
                                           fromTermId: termId,
                                           courseId,
                                           optionId: event.target.value
-                                        })}
+                                        }, event.currentTarget)}
                                       >
                                         {course.alternativeOptions.map(option => (
                                           <option value={option.id} key={option.id}>
@@ -468,13 +514,13 @@ function PlanTimeline({
                                       aria-label={`Move ${course.course} to another term`}
                                       disabled={Boolean(editingPlanCourseKey)}
                                       value={termId}
-                                      onChange={event => onEditPlanCourse({
-                                        type: "move",
-                                        planId: activePlan.id,
-                                        fromTermId: termId,
-                                        toTermId: event.target.value,
-                                        courseId
-                                      })}
+                                        onChange={event => onEditPlanCourse({
+                                          type: "move",
+                                          planId: activePlan.id,
+                                          fromTermId: termId,
+                                          toTermId: event.target.value,
+                                          courseId
+                                        }, event.currentTarget)}
                                     >
                                       {(activePlan.terms || []).map(optionTerm => {
                                         const optionTermId = optionTerm.slotId || optionTerm.term;
@@ -489,12 +535,12 @@ function PlanTimeline({
                                   <button
                                     type="button"
                                     disabled={Boolean(editingPlanCourseKey)}
-                                    onClick={() => onEditPlanCourse({
+                                    onClick={event => onEditPlanCourse({
                                       type: "remove",
                                       planId: activePlan.id,
                                       fromTermId: termId,
                                       courseId
-                                    })}
+                                    }, event.currentTarget)}
                                   >
                                     {editingPlanCourseKey === editKey ? "Checking..." : `Remove ${course.course}`}
                                   </button>
@@ -695,6 +741,7 @@ function PlanComparisonScreen({
   onSelectPlan,
   onRegenerate,
   onDownloadPdf,
+  downloadButtonRef,
   isDownloadingPdf,
   pdfStatus,
   onEditPlanCourse,
@@ -1167,8 +1214,9 @@ function PlanComparisonScreen({
               <button
                 type="button"
                 className="download-pdf-button"
+                ref={downloadButtonRef}
                 disabled={isDownloadingPdf || Boolean(editingPlanCourseKey)}
-                onClick={onDownloadPdf}
+                onClick={() => onDownloadPdf()}
               >
                 {isDownloadingPdf ? "Creating PDF..." : "Download PDF"}
               </button>
@@ -1409,6 +1457,12 @@ export default function Page() {
   const generationRequestRef = useRef(0);
   const generationAbortRef = useRef(null);
   const planEditInFlightRef = useRef(false);
+  const pdfDownloadInFlightRef = useRef(false);
+  const pdfDownloadAbortRef = useRef(null);
+  const generateButtonRef = useRef(null);
+  const planEditTriggerRef = useRef(null);
+  const downloadButtonRef = useRef(null);
+  const [failureFocusTarget, setFailureFocusTarget] = useState("");
   const latestFormRef = useRef(initialForm);
   const [courseSearch, setCourseSearch] = useState("");
   const [isEditingPlanDate, setIsEditingPlanDate] = useState(false);
@@ -1648,7 +1702,27 @@ export default function Page() {
     return () => window.removeEventListener("popstate", handlePlannerHistory);
   }, [isHydrated, report]);
 
-  useEffect(() => () => generationAbortRef.current?.abort(), []);
+  useEffect(() => () => {
+    generationAbortRef.current?.abort();
+    pdfDownloadAbortRef.current?.abort();
+  }, []);
+
+  function restoreFocusAfterFailure(target) {
+    setFailureFocusTarget(target);
+  }
+
+  useEffect(() => {
+    const control = failureFocusTarget === "generate"
+      ? generateButtonRef.current
+      : failureFocusTarget === "download"
+        ? downloadButtonRef.current
+        : failureFocusTarget === "plan-edit"
+          ? planEditTriggerRef.current
+          : null;
+    if (!control || isGenerating || isDownloadingPdf || editingPlanCourseKey) return;
+    setFailureFocusTarget("");
+    window.requestAnimationFrame(() => control.focus());
+  }, [editingPlanCourseKey, failureFocusTarget, isDownloadingPdf, isGenerating, pdfStatus, planEditStatus, status]);
 
   useEffect(() => {
     if (!report || !generatedInputSignatureRef.current) return;
@@ -1887,7 +1961,9 @@ export default function Page() {
         body: JSON.stringify({ student }),
         signal: controller.signal
       });
-      const data = await response.json().catch(() => ({}));
+      const data = await response.json().catch(() => {
+        throw new Error("The planner returned an invalid response. Please try again.");
+      });
       if (!response.ok) throw new Error(data.error || "The planner could not complete.");
       if (requestId !== generationRequestRef.current || controller.signal.aborted) return;
       if (plannerInputSignature(latestFormRef.current) !== requestSignature) {
@@ -1895,7 +1971,10 @@ export default function Page() {
         return;
       }
 
-      const plans = economicsResult(data)?.economicsPlans || [];
+      if (!isValidGeneratedPlannerReport(data)) {
+        throw new Error("The planner returned an invalid response. Please try again.");
+      }
+      const plans = economicsResult(data).economicsPlans;
       const firstPlanId = plans[0]?.id || "";
       generatedInputSignatureRef.current = requestSignature;
       setIsComparisonExiting(false);
@@ -1918,7 +1997,10 @@ export default function Page() {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       });
     } catch (error) {
-      if (error.name !== "AbortError") setStatus(error.message);
+      if (requestId === generationRequestRef.current) {
+        setStatus(studentFacingRequestError(error, "The planner could not complete. Please try again."));
+        restoreFocusAfterFailure("generate");
+      }
     } finally {
       if (requestId === generationRequestRef.current) {
         generationInFlightRef.current = false;
@@ -1929,6 +2011,7 @@ export default function Page() {
   }
 
   async function downloadSelectedPlanPdf() {
+    if (pdfDownloadInFlightRef.current) return;
     const selectedPlan = (economicsResult(report)?.economicsPlans || [])
       .find(plan => plan.id === selectedPlanId);
     if (!selectedPlan) {
@@ -1936,6 +2019,9 @@ export default function Page() {
       return;
     }
 
+    pdfDownloadInFlightRef.current = true;
+    const controller = new AbortController();
+    pdfDownloadAbortRef.current = controller;
     setIsDownloadingPdf(true);
     setPdfStatus("Creating your PDF...");
     try {
@@ -1950,7 +2036,8 @@ export default function Page() {
           preparedDate: formData.planCreationDate,
           selectedPlan,
           format: "pdf"
-        })
+        }),
+        signal: controller.signal
       });
       if (!response.ok) {
         const result = await response.json().catch(() => ({}));
@@ -1970,9 +2057,14 @@ export default function Page() {
       window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
       setPdfStatus("PDF downloaded.");
     } catch (error) {
-      setPdfStatus(error.message || "The PDF could not be created.");
+      setPdfStatus(studentFacingRequestError(error, "The PDF could not be created."));
+      restoreFocusAfterFailure("download");
     } finally {
-      setIsDownloadingPdf(false);
+      if (pdfDownloadAbortRef.current === controller) {
+        pdfDownloadAbortRef.current = null;
+        pdfDownloadInFlightRef.current = false;
+        setIsDownloadingPdf(false);
+      }
     }
   }
 
@@ -2234,9 +2326,10 @@ export default function Page() {
     navigatePlanner(targetView, selectedPlanId, { replace: true });
   }
 
-  async function editPlanCourse(edit) {
+  async function editPlanCourse(edit, trigger) {
     if (planEditInFlightRef.current || generationInFlightRef.current) return;
     planEditInFlightRef.current = true;
+    planEditTriggerRef.current = trigger;
 
     try {
       const result = economicsResult(report);
@@ -2320,7 +2413,12 @@ export default function Page() {
         ));
         setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
       } catch (error) {
-        setPlanEditStatus(error.message);
+        setPlanEditStatus(studentFacingRequestError(
+          error,
+          "The plan edit could not be validated.",
+          "The plan edit could not be validated. Please try again."
+        ));
+        restoreFocusAfterFailure("plan-edit");
       } finally {
         setEditingPlanCourseKey("");
       }
@@ -2389,6 +2487,7 @@ export default function Page() {
         onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
         onRegenerate={() => mapMajors()}
         onDownloadPdf={downloadSelectedPlanPdf}
+        downloadButtonRef={downloadButtonRef}
         isDownloadingPdf={isDownloadingPdf}
         pdfStatus={pdfStatus}
         onEditPlanCourse={editPlanCourse}
@@ -3533,6 +3632,7 @@ export default function Page() {
               <button
                 type="submit"
                 className="generate-button"
+                ref={generateButtonRef}
                 disabled={isGenerating || !formData.planCreationDate || !planningContext.transferValidation.valid || !inputPrerequisiteValidation.valid}
               >
                 <span className="default-generate-label">3. Generate My Plan</span>

@@ -312,6 +312,60 @@ test("selected elective options persist through server validation and PDF errors
   await expect(page.locator(".pdf-download-status")).toContainText("PDF downloads are not enabled", { timeout: 15000 });
 });
 
+test("PDF download recovers cleanly after failed and aborted requests", async ({ page }) => {
+  await setStanding(page, "Senior");
+  await setPlanDate(page, "2026-07-30");
+  for (const code of ["ECO 113", "ECO 114"]) {
+    await courseStatus(page, code, "Completed").click();
+  }
+  await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
+  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await courseStatus(page, "ECO 214", "Completed").click();
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Your feasible plan" })).toBeVisible({ timeout: 15000 });
+  await page.getByRole("button", { name: /Review selected Plan/ }).click();
+
+  const download = page.getByRole("button", { name: "Download PDF" });
+  await page.route("**/api/reports/economics", route => route.fulfill({
+    status: 503,
+    contentType: "application/json",
+    body: JSON.stringify({ error: "PDF creation is temporarily unavailable." })
+  }));
+  await download.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".pdf-download-status")).toContainText("temporarily unavailable");
+  await expect(download).toBeFocused();
+  await page.unroute("**/api/reports/economics");
+
+  await page.route("**/api/reports/economics", route => route.abort("aborted"));
+  const abortedRequest = page.waitForEvent("requestfailed", request => request.url().endsWith("/api/reports/economics"));
+  await download.click();
+  await abortedRequest;
+  await expect(page.locator(".pdf-download-status")).toContainText(/interrupted|could not connect/i);
+  await expect(page.locator(".pdf-download-status")).not.toContainText(/failed to fetch|aborterror/i);
+  await expect(download).toBeFocused();
+  await page.unroute("**/api/reports/economics");
+
+  const recoveredRequest = page.waitForRequest(request => request.url().endsWith("/api/reports/economics"));
+  await download.click();
+  await recoveredRequest;
+});
+
+test("a structurally malformed successful planner response is rejected before storage", async ({ page }) => {
+  await setPlanDate(page, "2026-07-30");
+  await page.route("**/api/majors/map", route => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ programs: [] })
+  }));
+
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
+  await expect(page.locator(".generate-card .status")).toContainText("invalid response");
+  await expect(page.locator("main.comparison-page")).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.sessionStorage.getItem("econ-planner-generated-session"))).toBeNull();
+});
+
 test("mobile principal workflow keeps controls and prerequisite dialog inside the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await setPlanDate(page, "2026-07-31");
