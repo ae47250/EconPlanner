@@ -801,17 +801,18 @@ function PlanComparisonScreen({
         .comparison-page {
           box-sizing: border-box;
           min-height: 100vh;
+          overflow-wrap: anywhere;
           animation: comparison-enter .28s ease-out both;
         }
         .comparison-page * { box-sizing: border-box; }
         .comparison-page.is-exiting { animation: comparison-exit .24s ease-in both; }
         @keyframes comparison-enter {
-          from { opacity: 0; transform: translateX(4rem); }
-          to { opacity: 1; transform: translateX(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         @keyframes comparison-exit {
-          from { opacity: 1; transform: translateX(0); }
-          to { opacity: 0; transform: translateX(4rem); }
+          from { opacity: 1; }
+          to { opacity: 0; }
         }
         .comparison-topbar {
           display: flex;
