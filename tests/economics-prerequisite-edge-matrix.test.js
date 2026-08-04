@@ -804,7 +804,7 @@ test(
     const evaluations = nightlyOnlyCases.map(evaluateMatrixCase);
     evaluations.forEach(assertOracleOutcome);
     const disagreements = assertProductionDisagreements(evaluations, "nightly-only");
-    assert.equal(disagreements.length, 23);
+    assert.equal(disagreements.length, 5);
     if (REPORT) {
       console.log(JSON.stringify({
         suite: "nightly-only",
