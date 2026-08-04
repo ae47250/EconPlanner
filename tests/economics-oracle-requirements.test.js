@@ -21,7 +21,10 @@ const fixtureDocument = JSON.parse(await readFile(
 
 function externalInput(fixture) {
   return {
-    student: { studentId: `fictional-${fixture.fixtureId}` },
+    student: {
+      studentId: `fictional-${fixture.fixtureId}`,
+      completedCourses: fixture.completedCourses || []
+    },
     expectedContext: {
       startYear: 2026,
       remainingYears: 1,
@@ -74,7 +77,7 @@ test("Task 4 oracle has no prohibited production imports", async () => {
 test("all accepted handwritten fixtures produce one complete 12-slot allocation", () => {
   const accepted = fixtureDocument.cases.filter(item => item.expectedStatus === "VALID_REQUIREMENTS");
   assert.equal(fixtureDocument.authorship, "handwritten");
-  assert.equal(accepted.length, 6);
+  assert.equal(accepted.length, 7);
 
   for (const fixture of accepted) {
     const result = checkExternalEconomicsRequirements(externalInput(fixture));
@@ -94,6 +97,57 @@ test("all accepted handwritten fixtures produce one complete 12-slot allocation"
     const capstone = result.allocation.find(item => item.ruleId === "REQ-ECO-461");
     assert.equal(capstone.attributes.requiredInstitution, "Hanover College", fixture.fixtureId);
   }
+});
+
+test("multiple valid cognate allocations still hand one complete 12-slot allocation to later oracles", () => {
+  const fixture = structuredClone(fixtureById("requirements-valid-busn-finance-eco321-elective"));
+  fixture.courses.push("MAT 121");
+  const result = checkExternalEconomicsRequirements(externalInput(fixture));
+
+  assert.equal(result.valid, true);
+  assert.equal(result.allocations.length, 2);
+  assert.equal(result.allocation.length, 12);
+  assert.equal(new Set(result.allocation.map(item => item.slotId)).size, 12);
+});
+
+test("four distinct future elective placeholders fill four planned slots without becoming completed courses", () => {
+  const fixture = fixtureById("requirements-valid-four-distinct-future-elective-placeholders");
+  const result = checkExternalEconomicsRequirements(externalInput(fixture));
+  const placeholders = result.allocation.filter(item => item.planningState === "placeholder");
+  const completed = result.allocation.filter(item => item.planningState === "completed");
+
+  assert.equal(result.valid, true);
+  assert.equal(result.allocation.length, 12);
+  assert.equal(placeholders.length, 4);
+  assert.equal(completed.length, 8);
+  assert.equal(new Set(placeholders.map(item => item.placeholderSlotIdentity)).size, 4);
+  assert.equal(new Set(placeholders.map(item => item.requirementAllocationIdentity)).size, 4);
+  assert.ok(placeholders.every(item => item.actualCourseIdentity === null));
+  assert.ok(placeholders.every(item => item.offeringSource === "projected-offering"));
+  assert.ok(placeholders.every(item => item.coursePath.startsWith("$.plan.terms")));
+  assert.ok(completed.every(item => item.coursePath.startsWith("$.student.completedCourses")));
+});
+
+test("three future placeholders cannot fill four elective slots and a repeated placeholder slot is rejected", () => {
+  const three = checkExternalEconomicsRequirements(externalInput(
+    fixtureById("requirements-reject-only-three-future-elective-placeholders")
+  ));
+  const duplicate = checkExternalEconomicsRequirements(externalInput(
+    fixtureById("requirements-reject-duplicate-future-placeholder-slot")
+  ));
+
+  assert.equal(three.valid, false);
+  assert.ok(three.violations.some(item => item.code === "REQ-ECO-ELECTIVES"));
+  assert.equal(duplicate.valid, false);
+  assert.ok(duplicate.violations.some(item => item.code === "ELECTIVE-NO-DOUBLE-COUNT"));
+});
+
+test("the same actual course still cannot fill two requirement slots", () => {
+  const result = checkExternalEconomicsRequirements(externalInput(
+    fixtureById("requirements-reject-ordinary-double-count")
+  ));
+  assert.equal(result.valid, false);
+  assert.ok(result.violations.some(item => item.code === "ELECTIVE-NO-DOUBLE-COUNT"));
 });
 
 test("finance, statistics, ECO 260, and cross-list choices allocate under confirmed rules", () => {
@@ -124,7 +178,7 @@ test("finance, statistics, ECO 260, and cross-list choices allocate under confir
 test("rejected handwritten fixtures fail with their intended manifest rule codes", () => {
   const rejected = fixtureDocument.cases.filter(item => item.expectedStatus === "INVALID_REQUIREMENTS");
   const manifestRuleIds = policyRuleIds();
-  assert.equal(rejected.length, 9);
+  assert.equal(rejected.length, 11);
 
   for (const fixture of rejected) {
     const result = checkExternalEconomicsRequirements(externalInput(fixture));

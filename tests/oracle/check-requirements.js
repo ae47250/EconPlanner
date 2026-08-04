@@ -18,6 +18,11 @@ const UNCHECKED_FAMILIES = Object.freeze([
   "CAPACITY",
   "GRADUATION_RULES"
 ]);
+const SUPPORTING_REQUIREMENT_PLACEHOLDERS = new Map([
+  ["STATISTICS REQUIREMENT", "REQ-STATISTICS"],
+  ["MATHEMATICS COGNATE", "REQ-COGNATE"],
+  ["FINANCE REQUIREMENT", "REQ-FINANCE"]
+]);
 
 function isObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -62,7 +67,39 @@ function courseNumber(code) {
   return match ? Number(match[1]) : null;
 }
 
-function courseIdentity(course) {
+function electivePlaceholderPolicy(policy) {
+  return ruleById(policy, "REQ-ECO-ELECTIVES")?.futurePlaceholder || {};
+}
+
+function isGenericElectivePlaceholder(course, policy) {
+  const displayLabel = normalizedCourse(electivePlaceholderPolicy(policy).displayLabel || "ECO elective");
+  return canonicalCourse(course.course) === displayLabel;
+}
+
+function genericPlaceholderRuleId(course, policy) {
+  if (isGenericElectivePlaceholder(course, policy)) return "REQ-ECO-ELECTIVES";
+  return SUPPORTING_REQUIREMENT_PLACEHOLDERS.get(canonicalCourse(course.course)) || null;
+}
+
+function placeholderSlotIdentity(course, policy) {
+  if (!genericPlaceholderRuleId(course, policy)) return null;
+  const identityFields = electivePlaceholderPolicy(policy).identityFields || [
+    "placeholderSlotId",
+    "requirementId"
+  ];
+  for (const field of identityFields) {
+    const value = normalizedText(course[field]);
+    if (value) return value.toUpperCase();
+  }
+  return null;
+}
+
+function courseIdentity(course, policy) {
+  const placeholderIdentity = placeholderSlotIdentity(course, policy);
+  const placeholderRuleId = genericPlaceholderRuleId(course, policy);
+  if (placeholderRuleId) {
+    return `${placeholderRuleId}-PLACEHOLDER#${placeholderIdentity || "MISSING-SLOT-IDENTITY"}`;
+  }
   const canonical = canonicalCourse(course.course);
   if (canonical === "ECO 260" && normalizedText(course.repeatableInstanceId)) {
     return `${canonical}#${normalizedText(course.repeatableInstanceId).toUpperCase()}`;
@@ -70,17 +107,24 @@ function courseIdentity(course) {
   return canonical;
 }
 
-function collectCourses(student, plan) {
+function collectCourses(student, plan, policy) {
   const courses = [];
   const completed = Array.isArray(student?.completedCourses) ? student.completedCourses : [];
   completed.forEach((entry, index) => {
     const course = typeof entry === "string" ? { course: entry } : entry;
     if (!isObject(course) || !normalizedCourse(course.course)) return;
+    const placeholderIdentity = placeholderSlotIdentity(course, policy);
     courses.push({
       ...course,
       course: normalizedCourse(course.course),
       canonicalCourse: canonicalCourse(course.course),
-      identity: courseIdentity(course),
+      actualCourseIdentity: genericPlaceholderRuleId(course, policy)
+        ? null
+        : canonicalCourse(course.course),
+      placeholderSlotIdentity: placeholderIdentity,
+      requirementAllocationIdentity: normalizedText(course.requirementId) || null,
+      identity: courseIdentity(course, policy),
+      planningState: "completed",
       objectPath: `$.student.completedCourses[${index}]`
     });
   });
@@ -90,11 +134,18 @@ function collectCourses(student, plan) {
     const entries = Array.isArray(term?.courses) ? term.courses : [];
     entries.forEach((course, courseIndex) => {
       if (!isObject(course) || !normalizedCourse(course.course)) return;
+      const placeholderIdentity = placeholderSlotIdentity(course, policy);
       courses.push({
         ...course,
         course: normalizedCourse(course.course),
         canonicalCourse: canonicalCourse(course.course),
-        identity: courseIdentity(course),
+        actualCourseIdentity: genericPlaceholderRuleId(course, policy)
+          ? null
+          : canonicalCourse(course.course),
+        placeholderSlotIdentity: placeholderIdentity,
+        requirementAllocationIdentity: normalizedText(course.requirementId) || null,
+        identity: courseIdentity(course, policy),
+        planningState: genericPlaceholderRuleId(course, policy) ? "placeholder" : "planned",
         objectPath: `$.plan.terms[${termIndex}].courses[${courseIndex}]`
       });
     });
@@ -123,6 +174,9 @@ function makeSlots(policy) {
 }
 
 function isElectiveCandidate(course, policy) {
+  if (isGenericElectivePlaceholder(course, policy)) {
+    return course.planningState === "placeholder" && Boolean(course.placeholderSlotIdentity);
+  }
   const code = course.canonicalCourse;
   const statisticsOnlyRule = ruleById(policy, "ELECTIVE-ECO-257-STATISTICS-ONLY");
   if (statisticsOnlyRule?.status === "CONFIRMED"
@@ -137,6 +191,12 @@ function isElectiveCandidate(course, policy) {
 }
 
 function courseMatchesSlot(course, slot, policy) {
+  const placeholderRuleId = genericPlaceholderRuleId(course, policy);
+  if (placeholderRuleId) {
+    return course.planningState === "placeholder"
+      && Boolean(course.placeholderSlotIdentity)
+      && slot.ruleId === placeholderRuleId;
+  }
   if (slot.ruleId === "REQ-ECO-ELECTIVES") return isElectiveCandidate(course, policy);
   return slot.options.includes(course.canonicalCourse);
 }
@@ -188,6 +248,11 @@ function exhaustiveAllocations(courses, slots, policy) {
           ruleId: slot.ruleId,
           course: selected.course.course,
           canonicalCourse: selected.course.canonicalCourse,
+          actualCourseIdentity: selected.course.actualCourseIdentity,
+          placeholderSlotIdentity: selected.course.placeholderSlotIdentity,
+          requirementAllocationIdentity: selected.course.requirementAllocationIdentity,
+          planningState: selected.course.planningState,
+          offeringSource: normalizedText(selected.course.source) || null,
           courseIdentity: selected.course.identity,
           coursePath: selected.course.objectPath,
           attributes: slot.attributes
@@ -306,22 +371,31 @@ function diagnoseFailure(courses, slots, candidates, coveredRuleIds, policy) {
     ));
   }
 
+  const fixedEconomicsCourses = new Set(["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 461"]);
+  const eligibleElectives = courses.filter(course => (
+    isElectiveCandidate(course, policy) && !fixedEconomicsCourses.has(course.canonicalCourse)
+  ));
+  const uniqueElectives = new Map(eligibleElectives.map(course => [course.identity, course]));
+  if (uniqueElectives.size < 4) {
+    violations.push(violation(
+      "REQ-ECO-ELECTIVES",
+      "$.plan",
+      `Only ${uniqueElectives.size} distinct qualifying elective slots are available; four are required.`,
+      policy
+    ));
+  }
+
   const identityCounts = new Map();
   for (const course of courses) identityCounts.set(course.identity, (identityCounts.get(course.identity) || 0) + 1);
   if ([...identityCounts.values()].some(count => count > 1)) {
     violations.push(violation(
       "ELECTIVE-NO-DOUBLE-COUNT",
       "$.plan",
-      "A concrete course identity may fill at most one requirement slot.",
+      "An actual course or future placeholder slot may fill at most one requirement slot.",
       policy
     ));
   }
 
-  const fixedEconomicsCourses = new Set(["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 461"]);
-  const eligibleElectives = courses.filter(course => (
-    isElectiveCandidate(course, policy) && !fixedEconomicsCourses.has(course.canonicalCourse)
-  ));
-  const uniqueElectives = new Map(eligibleElectives.map(course => [course.identity, course]));
   const oneHundredLevel = [...uniqueElectives.values()].filter(course => {
     const number = courseNumber(course.canonicalCourse);
     return number !== null && number >= 100 && number < 200;
@@ -380,7 +454,7 @@ export function checkExternalEconomicsRequirements(input) {
     return requirementResult({ violations });
   }
 
-  const courses = collectCourses(student, plan);
+  const courses = collectCourses(student, plan, policy);
   const slots = makeSlots(policy);
   const claims = requirementClaims(plan, policy);
   const capstone = courses.find(course => course.canonicalCourse === "ECO 461");
@@ -428,7 +502,7 @@ function requirementResult({ allocations = [], violations = [], reviewItems = []
     violations,
     warnings: [],
     reviewItems: [...reviewItems, ...remainingReviewItems],
-    allocation: allocations.length === 1 ? allocations[0] : null,
+    allocation: allocations.length ? allocations[0] : null,
     allocations,
     checkedRuleFamilies: [{ family: "REQUIREMENT_ALLOCATION", status: "CHECKED" }],
     uncheckedRuleFamilies

@@ -97,13 +97,13 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
     "PRELIMINARY_ONLY",
     "PRELIMINARY_ONLY"
   ]);
-  assert.equal(statuses[0].plan.feasibility.search.complete, false);
-  assert.equal(statuses[0].plan.feasibility.search.terminationReason, "SOLUTION_BUDGET");
-  assert.ok(statuses[0].plan.feasibility.search.validSolutionCount >= 100);
+  assert.equal(statuses[0].plan.feasibility.search.complete, true);
+  assert.equal(statuses[0].plan.feasibility.search.terminationReason, null);
+  assert.ok(statuses[0].plan.feasibility.search.validSolutionCount > 0);
   assert.notEqual(statuses[0].plan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);
 });
 
-test("junior C-2 rejects a numerical ten-course fit and finds the valid nine-course sequence", () => {
+test("junior C-2 rejects numerical fits until verified-year elective capacity makes nine courses schedulable", () => {
   const tenStudent = upcomingStudent("junior", ["ECO 113", "ECO 114"]);
   const tenRemaining = bundle(tenStudent);
   assert.equal(tenRemaining.mapping.strict.remainingUnits, 10);
@@ -124,7 +124,7 @@ test("junior C-2 rejects a numerical ten-course fit and finds the valid nine-cou
   const baseProfile = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const threeUsable = bundle(baseProfile);
   assert.equal(threeUsable.mapping.strict.remainingUnits, 9);
-  assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "PRELIMINARY_ONLY");
+  assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
 
   const fourUsableSchedule = structuredClone(schedule);
   const fourthElective = extraOpenElective("ECO 315", "A");
@@ -134,9 +134,13 @@ test("junior C-2 rejects a numerical ten-course fit and finds the valid nine-cou
   assert.notEqual(fourUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
 });
 
-test("J+3 C-2 uses BUSN 323 for Finance and ECO 321 for an elective without double counting", () => {
+test("J+3 C-2 uses verified ECO 321 for Finance and never invents a verified-year BUSN 323 placeholder", () => {
   const student = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
-  const { mapping, result } = bundle(student);
+  const verifiedElectiveSchedule = structuredClone(schedule);
+  const fourthElective = extraOpenElective("ECO 315", "A");
+  fourthElective.days = "Wed";
+  verifiedElectiveSchedule.terms.Fall.push(extraOpenElective("ECO 224"), fourthElective);
+  const { mapping, result } = bundle(student, verifiedElectiveSchedule);
   const plan = result.plans.find(item => item.id === "plan-c2");
 
   assert.ok(plan);
@@ -144,11 +148,9 @@ test("J+3 C-2 uses BUSN 323 for Finance and ECO 321 for an elective without doub
   assert.equal(plan.feasibilityStatus, "PRELIMINARY_ONLY");
   assert.ok(plan.requirementAllocation.valid);
   assert.ok(plan.requirementAllocation.assignments.some(item => (
-    item.slotId === "finance" && item.code === "BUSN 323" && item.source === "planned"
+    item.slotId === "finance" && item.code === "ECO 321" && item.source === "planned"
   )));
-  assert.ok(plan.requirementAllocation.assignments.some(item => (
-    String(item.slotId).startsWith("eco-elective") && item.code === "ECO 321"
-  )));
+  assert.equal(plan.terms.flatMap(term => term.courses).some(course => course.course === "BUSN 323"), false);
 
   const electives = plan.terms.flatMap(term => term.courses)
     .filter(course => String(course.requirementId).startsWith("eco-elective"));
@@ -161,7 +163,7 @@ test("J+3 C-2 uses BUSN 323 for Finance and ECO 321 for an elective without doub
   assert.equal(fall.courses.length, 4);
   assert.equal(winter.courses.length, 4);
   assert.equal(may.courses.length, 1);
-  assert.ok(fall.courses.some(course => course.course === "MAT 217"));
+  assert.ok(fall.courses.some(course => course.course === "Statistics requirement"));
   assert.ok(winter.courses.some(course => course.course === "ECO 461"));
   const capstone = winter.courses.find(course => course.course === "ECO 461");
   assert.ok(capstone.approvalRequired.some(item => (
@@ -170,7 +172,7 @@ test("J+3 C-2 uses BUSN 323 for Finance and ECO 321 for an elective without doub
   assert.equal(validateGeneratedPlan(plan, {
     student,
     mapping,
-    schedule,
+    schedule: verifiedElectiveSchedule,
     prerequisites,
     context: result.context
   }).valid, true);

@@ -42,9 +42,6 @@ const APPROVAL_TYPES = Object.freeze({
   "CONCURRENT-MATH-ECO-214": "INSTRUCTOR_APPROVAL"
 });
 const CLASSIFIED_CONFIRMED_DEFECT_CODES = new Set([
-  "ELECTIVE-NO-DOUBLE-COUNT",
-  "REQ-MAJOR-COURSE-COUNT",
-  "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR",
   "SCHEDULE_FUTURE_SOURCE_NOT_EXPLICIT"
 ]);
 const CLASSIFIED_POLICY_REVIEW_CODES = new Set([
@@ -266,13 +263,23 @@ function placementMap(student, plan) {
     .forEach(course => placements.set(canonicalCourse(course.code), Number.NEGATIVE_INFINITY));
   plan.terms.forEach(term => {
     const position = externalTermPosition(term.academicYear, term.termKey);
-    term.courses.forEach(course => placements.set(canonicalCourse(course.course), position));
+    term.courses.forEach(course => {
+      placements.set(canonicalCourse(course.course), position);
+      if (course.source === "requirement-placeholder") {
+        for (const option of course.options || []) placements.set(canonicalCourse(option), position);
+      }
+    });
   });
   return placements;
 }
 
 function planCourseCodes(plan) {
-  return plan.terms.flatMap(term => term.courses.map(course => canonicalCourse(course.course)));
+  return plan.terms.flatMap(term => term.courses.flatMap(course => [
+    canonicalCourse(course.course),
+    ...(course.source === "requirement-placeholder"
+      ? (course.options || []).map(canonicalCourse)
+      : [])
+  ]));
 }
 
 function assertPlanConstraints(evaluation, plan, expectations) {

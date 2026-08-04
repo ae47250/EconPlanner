@@ -18,9 +18,6 @@ const APPROVAL_TYPES = Object.freeze({
   "CONCURRENT-MATH-ECO-214": "INSTRUCTOR_APPROVAL"
 });
 const CLASSIFIED_CONFIRMED_DEFECT_CODES = new Set([
-  "ELECTIVE-NO-DOUBLE-COUNT",
-  "REQ-MAJOR-COURSE-COUNT",
-  "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR",
   "SCHEDULE_FUTURE_SOURCE_NOT_EXPLICIT"
 ]);
 const CLASSIFIED_POLICY_REVIEW_CODES = new Set([
@@ -188,9 +185,10 @@ test("the 51-profile audit matrix returns only complete, distinct, bounded-searc
 
   const juniorP3 = outcomes.find(item => item.id === "JP3");
   const juniorP3Early = juniorP3.result.candidateOutcomes.find(item => item.id === "plan-c2");
-  assert.equal(juniorP3Early.status, "PRELIMINARY_ONLY");
-  assert.equal(juniorP3Early.displayed, true);
-  assert.equal(juniorP3Early.suppressionReason, null);
+  assert.equal(juniorP3Early.status, "NOT_FEASIBLE");
+  assert.equal(juniorP3Early.displayed, false);
+  assert.equal(juniorP3Early.suppressionReason?.code, "NOT_FEASIBLE");
+  assert.match(juniorP3Early.suppressionReason?.message || "", /4\/4\/1 capacity/);
 
   const freshmanP8 = outcomes.find(item => item.id === "FP8");
   const freshmanP8PlanB = freshmanP8.result.candidateOutcomes.find(item => item.id === "plan-2");

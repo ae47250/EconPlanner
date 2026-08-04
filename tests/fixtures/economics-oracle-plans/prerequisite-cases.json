@@ -60,6 +60,45 @@
       ]
     },
     {
+      "fixtureId": "prereq-valid-generic-cognate-placeholder-unlocks-later-intermediate",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 113"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [{
+            "course": "Mathematics cognate",
+            "source": "requirement-placeholder",
+            "options": ["MAT 113", "MAT 121"]
+          }]
+        },
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "courses": ["ECO 213"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-generic-statistics-placeholder-unlocks-later-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [{
+            "course": "Statistics requirement",
+            "source": "requirement-placeholder",
+            "options": ["ECO 257", "MAT 217", "PSY 217"]
+          }]
+        },
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [{ "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
       "fixtureId": "prereq-valid-concurrent-math-eco213",
       "expectedStatus": "VALID_PREREQUISITES",
       "student": { "completedCourses": ["ECO 113"] },

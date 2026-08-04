@@ -41,7 +41,7 @@ const PROFILES = Object.freeze({
   largeConcurrentPlan: {
     academicStanding: "senior",
     planCreationDate: "2026-07-30",
-    courses: completed(["ECO 113", "MAT 113", "ECO 213"])
+    courses: completed(["ECO 113", "ECO 114", "MAT 113", "ECO 213"])
   },
   flexibleFourYearPlan: {
     academicStanding: "freshman",
@@ -353,6 +353,32 @@ function useExplicitProjectedCapstoneSource(plan) {
   return plan;
 }
 
+async function futureFourCourseFallPlan() {
+  const { student, economics } = await generated("flexibleFourYearPlan");
+  const plan = structuredClone(economics.economicsPlans.find(item => item.label === "Plan B"));
+  assert.ok(plan, "Plan B is required for the future four-course Fall capacity fixture.");
+  moveCourse(
+    plan,
+    (course, term) => term.slotId === "winter-2030" && course.course === "BUSN 323",
+    term => term.slotId === "fall-2029"
+  );
+  moveCourse(
+    plan,
+    (course, term) => term.slotId === "spring-2030" && String(course.requirementId).startsWith("eco-elective"),
+    term => term.slotId === "fall-2029"
+  );
+  useExplicitProjectedCapstoneSource(plan);
+  return { student, plan };
+}
+
+async function futureTwoCourseFallPlan() {
+  const { student, economics } = await generated("flexibleFourYearPlan");
+  const plan = structuredClone(economics.economicsPlans.find(item => item.label === "Plan B"));
+  assert.ok(plan, "Plan B is required for the future total-capacity fixture.");
+  useExplicitProjectedCapstoneSource(plan);
+  return { student, plan };
+}
+
 test("Task 15 API accepts a valid projected-course move and independently revalidates it", async () => {
   const { student, economics } = await generated("projectedMove");
   const edited = structuredClone(economics.economicsPlans.find(plan => plan.id === "plan-1"));
@@ -460,20 +486,15 @@ test("Task 15 API rejects missing and wrong approval metadata", async () => {
 });
 
 test("Task 15 API rejects term-capacity violations", async () => {
-  const { student, economics } = await generated("largeConcurrentPlan");
-  const edited = structuredClone(economics.economicsPlans[0]);
-  moveCourse(
-    edited,
-    course => course.course === "ECO 222",
-    term => term.termKey === "Fall"
-  );
-  await assertRejected(student, edited, /Fall 2026 exceeds the total course limit/);
+  const { student, plan } = await futureTwoCourseFallPlan();
+  student.reservedCourseUnits = { "fall-2029": 3 };
+  await assertRejected(student, plan, /Fall 2029 exceeds the total course limit/);
 });
 
-test("Task 15 keeps the normal four-course Fall capacity when nothing is reserved", async () => {
-  const { student, economics } = await generated("largeConcurrentPlan");
-  const plan = structuredClone(economics.economicsPlans[0]);
-  assert.equal(plan.terms.find(term => term.slotId === "fall-2026").courses.length, 4);
+test("Task 15 accepts two future-Fall Economics courses plus two reserved outside courses", async () => {
+  const { student, plan } = await futureTwoCourseFallPlan();
+  student.reservedCourseUnits = { "fall-2029": 2 };
+  assert.equal(plan.terms.find(term => term.slotId === "fall-2029").courses.length, 2);
   await assertProductionAccepted(student, plan);
 });
 
@@ -493,15 +514,12 @@ test("Task 15 accepts three Fall courses with one reserved space and rejects fou
   const accepted = await assertProductionAccepted(student, exactCapacity);
   assert.equal(accepted.terms.find(term => term.slotId === "fall-2028").courses.length, 3);
 
-  const overloaded = await generated("largeConcurrentPlan");
-  const overloadedStudent = {
-    ...overloaded.student,
-    reservedCourseUnits: { "fall-2026": 1 }
-  };
+  const overloaded = await futureFourCourseFallPlan();
+  const overloadedStudent = { ...overloaded.student, reservedCourseUnits: { "fall-2029": 1 } };
   await assertRejected(
     overloadedStudent,
-    structuredClone(overloaded.economics.economicsPlans[0]),
-    /Fall 2026 exceeds the total course limit/
+    overloaded.plan,
+    /Fall 2029 exceeds the total course limit/
   );
 });
 

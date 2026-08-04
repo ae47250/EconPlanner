@@ -2,11 +2,10 @@
   "schemaVersion": 1,
   "fixtureId": "economics-candidate-pool-capabilities-v1",
   "authorship": "Handcrafted Task 14 capability and candidate-pool cases",
-  "purpose": "Capability-gated checks for retained candidate pools, reserve substitution, convergence, deterministic search limits, and ECO 257 filtering.",
+  "purpose": "Required checks for active retained candidate pools, reserve substitution, convergence, deterministic search limits, and ECO 257 filtering.",
   "capabilityPolicy": {
-    "availableStatus": "ACTIVE",
-    "unavailableStatus": "FEATURE_GATED",
-    "unavailableExplanation": "This branch does not expose the retained candidate-pool and reserve-selection interfaces required by Task 14. The Task 14 behavioral cases are skipped rather than treated as failures on an older branch."
+    "requiredStatus": "ACTIVE",
+    "missingCapabilityBehavior": "FAIL"
   },
   "requiredCapabilities": [
     {

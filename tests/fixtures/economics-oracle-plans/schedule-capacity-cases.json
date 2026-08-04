@@ -110,7 +110,10 @@
   ],
   "offeringCases": [
     { "fixtureId": "future-projected", "academicYear": "2027/2028", "termKey": "Fall", "course": "ECO 333", "source": "projected-offering", "expectedStatus": "PRELIMINARY_ONLY" },
-    { "fixtureId": "verified-year-projected", "academicYear": "2026/2027", "termKey": "Fall", "course": "ECO 333", "source": "projected-offering", "expectedStatus": "NOT_FEASIBLE" },
+    { "fixtureId": "future-generic-elective-placeholder", "academicYear": "2027/2028", "termKey": "Fall", "course": "ECO elective", "source": "projected-offering", "expectedStatus": "PRELIMINARY_ONLY" },
+    { "fixtureId": "verified-year-projected", "academicYear": "2026/2027", "termKey": "Fall", "course": "ECO 333", "source": "projected-offering", "expectedStatus": "NOT_FEASIBLE", "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR" },
+    { "fixtureId": "verified-year-generic-elective-placeholder", "academicYear": "2026/2027", "termKey": "Fall", "course": "ECO elective", "source": "projected-offering", "expectedStatus": "NOT_FEASIBLE", "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR" },
+    { "fixtureId": "verified-year-named-requirement-placeholder", "academicYear": "2026/2027", "termKey": "Fall", "course": "BUSN 323", "source": "requirement-placeholder", "expectedStatus": "NOT_FEASIBLE", "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR" },
     { "fixtureId": "future-source-missing", "academicYear": "2027/2028", "termKey": "Fall", "course": "ECO 333", "source": "", "expectedStatus": "NOT_FEASIBLE" }
   ],
   "summerCases": [

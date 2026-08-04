@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 2,
-    "confirmationDate": "2026-08-03",
+    "version": 3,
+    "confirmationDate": "2026-08-04",
     "reviewedBy": "Economics Department representative and project owner",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -24,6 +24,12 @@
       "date": "2026-08-03",
       "reviewedBy": "Economics Department representative and project owner",
       "summary": "ECO 257 may satisfy only the statistics requirement and may not count as an Economics elective, including when MAT 217 or PSY 217 fills statistics."
+    },
+    {
+      "id": "ECON-DEPARTMENT-2026-08-04",
+      "date": "2026-08-04",
+      "reviewedBy": "Economics Department representative and project owner",
+      "summary": "Distinct future ECO elective placeholders represent separate planned requirement slots beyond the verified schedule horizon; they are not completed or verified courses, and neither actual courses nor placeholder slots may be reused."
     }
   ],
   "sources": [
@@ -185,13 +191,25 @@
     {
       "ruleId": "REQ-ECO-ELECTIVES",
       "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "confirmationRef": "ECON-DEPARTMENT-2026-08-04",
       "sourceRefs": [
-        "ECONOMICS-REQUIREMENTS#Elective requirement"
+        "ECONOMICS-REQUIREMENTS#Elective requirement",
+        "DEPARTMENT-POLICIES#Confirmed policy 10"
       ],
       "kind": "elective",
       "slotCount": 4,
-      "subject": "ECO"
+      "subject": "ECO",
+      "futurePlaceholder": {
+        "displayLabel": "ECO elective",
+        "identityFields": [
+          "placeholderSlotId",
+          "requirementId"
+        ],
+        "countsAsPlannedSlot": true,
+        "countsAsCompletedCourse": false,
+        "allowedBeyondVerifiedScheduleHorizon": true,
+        "allowedInVerifiedScheduleYear": false
+      }
     }
   ],
   "prerequisiteRules": [

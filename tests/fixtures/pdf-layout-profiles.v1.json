@@ -57,13 +57,14 @@
         "planCreationDate": "2026-07-30",
         "courses": [
           { "code": "ECO 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 114", "status": "completed", "units": 1, "source": "manual_code" },
           { "code": "MAT 113", "status": "completed", "units": 1, "source": "manual_code" },
           { "code": "ECO 213", "status": "completed", "units": 1, "source": "manual_code" }
         ]
       },
       "expectations": {
         "minimumAcademicYears": 1,
-        "minimumCourses": 9,
+        "minimumCourses": 8,
         "minimumWarnings": 8,
         "minimumApprovals": 1,
         "requiredAvailabilityStates": ["open", "unknown"],

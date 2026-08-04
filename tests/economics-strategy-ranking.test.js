@@ -182,7 +182,9 @@ function coursePosition(plan, code) {
 function statisticsPlacement(plan) {
   return plan.terms.flatMap((term, termIndex) => (
     term.courses.map(course => ({ term, termIndex, course }))
-  )).find(item => ["MAT 217", "ECO 257", "PSY 217"].includes(item.course.course)) || null;
+  )).find(item => (
+    ["MAT 217", "ECO 257", "PSY 217", "Statistics requirement"].includes(item.course.course)
+  )) || null;
 }
 
 function planWithTermLoads(reserve, loads) {
@@ -293,26 +295,8 @@ function auditPlan(student, plan, verifiedSchedule = oracleSchedule) {
   });
 }
 
-function expectedOracleViolationCodes(plan) {
-  const codes = new Set();
-  const genericElectiveCount = plan.terms
-    .flatMap(term => term.courses || [])
-    .filter(course => course.course === "ECO elective")
-    .length;
-  if (genericElectiveCount > 1) codes.add("ELECTIVE-NO-DOUBLE-COUNT");
-  if (genericElectiveCount <= 1 && plan.terms.some(term => (
-    term.academicYear === "2026/2027"
-    && term.courses.some(course => (
-      course.source === "requirement-placeholder"
-      && course.course !== "Statistics requirement"
-    ))
-  ))) codes.add("SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR");
-  return [...codes].sort();
-}
-
 function assertOracleOutcomeClassified(student, plan, verifiedSchedule = oracleSchedule) {
   const audit = auditPlan(student, plan, verifiedSchedule);
-  const allowedViolationCodes = new Set(expectedOracleViolationCodes(plan));
   const actualViolationCodes = [...new Set(audit.violations.map(violation => violation.code))].sort();
   const reviewCodes = audit.reviewItems
     .filter(item => item.code !== "RULE_FAMILY_NOT_CHECKED")
@@ -322,8 +306,9 @@ function assertOracleOutcomeClassified(student, plan, verifiedSchedule = oracleS
     "REVIEW-ECO-335-MATH-EQUIVALENT",
     "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"
   ]);
-  assert.ok(
-    actualViolationCodes.every(code => allowedViolationCodes.has(code)),
+  assert.deepEqual(
+    actualViolationCodes,
+    [],
     `${plan.label || plan.id} produced an unclassified independent-oracle outcome: ${JSON.stringify(audit.violations)}`
   );
   assert.ok(
@@ -463,7 +448,7 @@ test("Plan C uses standing-appropriate portable foundations and a safe prerequis
   }
 });
 
-test("Plan C-2 keeps the shortened horizon and prefers lower load, fewer approvals, and fewer placeholders", () => {
+test("Plan C-2 keeps the shortened horizon and ranks policy-valid reserves by load and approvals", () => {
   const definition = fixture.strategyCases.planC2;
   const result = strategyResult(definition.profileId, "plan-c2", { candidateLimit: 100 });
   assertReserveAudited(result);
@@ -477,22 +462,20 @@ test("Plan C-2 keeps the shortened horizon and prefers lower load, fewer approva
   assert.ok(result.selected.candidateRank < heavier.candidateRank);
   assertOracleOutcomeClassified(result.student, heavier);
 
-  const sameObjectiveDifferentVerification = result.reserve.find(plan => {
-    const selected = objectiveFacts(result.selected);
-    const candidate = objectiveFacts(plan);
-    return candidate.maxTermLoad === selected.maxTermLoad
-      && candidate.maxEconomicsLoad === selected.maxEconomicsLoad
-      && candidate.approvalWeight === selected.approvalWeight
-      && candidate.conditionCount === selected.conditionCount
-      && candidate.loadSquares === selected.loadSquares
-      && candidate.verifiedCount < selected.verifiedCount;
-  });
-  assert.ok(sameObjectiveDifferentVerification, "The C-2 pool must contain a more placeholder-heavy tie.");
-  assert.ok(result.selected.candidateRank < sameObjectiveDifferentVerification.candidateRank);
-  assert.ok(compareEconomicsPlans(result.selected, sameObjectiveDifferentVerification) < 0);
-  assertOracleOutcomeClassified(result.student, sameObjectiveDifferentVerification);
+  const retained = [result.selected, ...result.reserve];
+  assert.ok(retained.every(plan => objectiveFacts(plan).verifiedCount === objectiveFacts(result.selected).verifiedCount));
+  assert.ok(retained.every(plan => plan.terms.every(term => (
+    term.academicYear !== productionSchedule.academicYear
+    || term.courses.every(course => (
+      course.course !== "ECO elective"
+      && !(course.course === "BUSN 323" && course.source === "requirement-placeholder")
+    ))
+  ))), "The C-2 pool must not retain the former invalid verified-year placeholder tie.");
 
-  const approvalResult = strategyResult(definition.approvalComparisonProfileId, "plan-c2", {
+  // The corrected C-2 pool has one policy-valid semantic schedule for this
+  // profile. Plan B retains the same student's independently valid, isolated
+  // approval-weight comparison without reintroducing the forbidden placeholder.
+  const approvalResult = strategyResult(definition.approvalComparisonProfileId, "plan-2", {
     allowConcurrentMath: true,
     candidateLimit: 100
   });
@@ -632,7 +615,14 @@ test("ECO 257 elective candidates are academically invalid before any strategy m
   for (const definition of fixture.eco257ValidityCases) {
     const source = senior.reserve.find(plan => (
       plan.terms.some(term => term.courses.some(course => (
-        course.course === definition.statisticsCourse && course.requirementId === "statistics"
+        course.requirementId === "statistics"
+        && (
+          course.course === definition.statisticsCourse
+          || (
+            course.course === "Statistics requirement"
+            && course.options?.includes(definition.statisticsCourse)
+          )
+        )
       )))
     ));
     assert.ok(source, `${definition.id} lacks its valid statistics baseline.`);

@@ -110,12 +110,12 @@
     "planC": {
       "freshmanProfileId": "freshman-empty",
       "freshmanRequiredFirstYear": ["ECO 113", "ECO 114"],
-      "portableOptions": ["MAT 113", "MAT 121", "MAT 217", "ECO 257", "PSY 217"],
+      "portableOptions": ["MAT 113", "MAT 121", "Mathematics cognate", "MAT 217", "ECO 257", "PSY 217", "Statistics requirement"],
       "sophomore113ProfileId": "sophomore-explore-113-math",
       "sophomore113RequiredFirstYear": ["ECO 114", "ECO 213"],
       "sophomore114ProfileId": "sophomore-explore-114-math",
       "sophomore114RequiredFirstYear": ["ECO 113", "ECO 214"],
-      "statisticsOptions": ["MAT 217", "ECO 257", "PSY 217"],
+      "statisticsOptions": ["MAT 217", "ECO 257", "PSY 217", "Statistics requirement"],
       "excludedStandings": ["junior", "senior"]
     },
     "planC2": {

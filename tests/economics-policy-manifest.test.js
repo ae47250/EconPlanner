@@ -26,8 +26,8 @@ function byId(ruleId) {
 test("policy manifest has stable version and review metadata", () => {
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.policy.id, "hanover-economics-planning-policy");
-  assert.equal(manifest.policy.version, 2);
-  assert.equal(manifest.policy.confirmationDate, "2026-08-03");
+  assert.equal(manifest.policy.version, 3);
+  assert.equal(manifest.policy.confirmationDate, "2026-08-04");
   assert.equal(
     manifest.policy.reviewedBy,
     "Economics Department representative and project owner"
@@ -96,6 +96,14 @@ test("the manifest defines all twelve Economics major slots", () => {
   assert.deepEqual(byId("REQ-STATISTICS").options, ["ECO 257", "MAT 217", "PSY 217"]);
   assert.deepEqual(byId("REQ-FINANCE").options, ["ECO 321", "BUSN 323"]);
   assert.equal(byId("REQ-ECO-ELECTIVES").slotCount, 4);
+  assert.deepEqual(byId("REQ-ECO-ELECTIVES").futurePlaceholder, {
+    displayLabel: "ECO elective",
+    identityFields: ["placeholderSlotId", "requirementId"],
+    countsAsPlannedSlot: true,
+    countsAsCompletedCourse: false,
+    allowedBeyondVerifiedScheduleHorizon: true,
+    allowedInVerifiedScheduleYear: false
+  });
 });
 
 test("the prerequisite table covers every confirmed dependent course", () => {

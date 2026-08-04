@@ -31,7 +31,7 @@ const LARGE_SELECTED_STUDENT = Object.freeze({
   displayName: "Artifact Parity Student",
   academicStanding: "senior",
   planCreationDate: PREPARED_DATE,
-  courses: completed(["ECO 113", "MAT 113", "ECO 213"])
+  courses: completed(["ECO 113", "ECO 114", "MAT 113", "ECO 213"])
 });
 
 const PROJECTED_STUDENT = Object.freeze({
@@ -228,8 +228,8 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
     assert.equal(courseOccurrences(projection, "ECO 222"), 0);
   }
   assert.equal(expected.feasibilityStatus, "PRELIMINARY_ONLY");
-  assert.equal(expected.terms.flatMap(term => term.courses).filter(course => course.requirementRole).length, 9);
-  assert.equal(expected.warnings.length, 12);
+  assert.equal(expected.terms.flatMap(term => term.courses).filter(course => course.requirementRole).length, 8);
+  assert.equal(expected.warnings.length, 11);
   assert.equal(expected.advisorAttention.length, 1);
   assert.ok(expected.terms.some(term => term.courses.some(course => course.approvals.length > 0)));
 

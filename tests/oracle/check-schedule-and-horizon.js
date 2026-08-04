@@ -10,6 +10,7 @@ const PRELIMINARY_SOURCES = new Set([
   "projected-offering",
   "future-placeholder",
   "requirement-placeholder",
+  "recurring-rule-unconfirmed",
   "unverified-offering",
   "summer-last-resort"
 ]);
@@ -170,15 +171,21 @@ function checkOfferingSource({ policy, verifiedSchedule, term, termIndex, course
   const path = `$.plan.terms[${termIndex}].courses[${courseIndex}]`;
   const source = text(course.source);
   const verifiedYear = normalizeYear(term.academicYear) === normalizeYear(verifiedSchedule?.academicYear);
+  const electivePlaceholderLabel = policyRule(policy, "REQ-ECO-ELECTIVES")
+    ?.futurePlaceholder?.displayLabel || "ECO elective";
+  const isGenericElectivePlaceholder = upper(course.course) === upper(electivePlaceholderLabel);
   const isSummerFallback = canonicalExternalTermKey(term.termKey) === "Summer"
     && source === "summer-last-resort";
-  if (verifiedYear && source !== VERIFIED_SOURCE && concreteCourse(course.course) && !isSummerFallback) {
+  if (verifiedYear
+    && source !== VERIFIED_SOURCE
+    && (concreteCourse(course.course) || isGenericElectivePlaceholder)
+    && !isSummerFallback) {
     violations.push(finding(
       policy,
       "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR",
       "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY",
       `${path}.source`,
-      `A named ${term.academicYear} course cannot use a projected source when that academic year's independent schedule is verified.`,
+      `A named course or generic elective placeholder cannot use a projected source in verified academic year ${term.academicYear}.`,
       { sourceReference: SCHEDULE_SOURCE }
     ));
     return;

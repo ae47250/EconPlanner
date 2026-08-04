@@ -40,9 +40,6 @@ const APPROVAL_TYPES = Object.freeze({
   "CONCURRENT-MATH-ECO-214": "INSTRUCTOR_APPROVAL"
 });
 const CLASSIFIED_ORACLE_VIOLATIONS = new Set([
-  "ELECTIVE-NO-DOUBLE-COUNT",
-  "REQ-MAJOR-COURSE-COUNT",
-  "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR",
   "SCHEDULE_FUTURE_SOURCE_NOT_EXPLICIT"
 ]);
 const CLASSIFIED_ORACLE_REVIEWS = new Set([
@@ -361,6 +358,23 @@ function plannerStudent(profile) {
     }))
   };
   const context = resolvePlanningContext(student);
+  const inProgressAcademicYearStart = context.isSummer
+    ? context.startYear - 1
+    : context.startYear;
+  const inProgressTermKey = context.isSummer
+    ? "Summer"
+    : context.startTerm === "Spring"
+      ? "Spring/May"
+      : context.startTerm;
+  student.courses = student.courses.map(course => (
+    course.status === "in_progress"
+      ? {
+          ...course,
+          academicYear: `${inProgressAcademicYearStart}/${inProgressAcademicYearStart + 1}`,
+          termKey: inProgressTermKey
+        }
+      : course
+  ));
   student.reservedCourseUnits = Object.fromEntries(
     buildPlanningSlots(context)
       .filter(slot => !slot.isSummer)
@@ -380,7 +394,11 @@ function auditPlan(student, plan, policy, verifiedSchedule) {
       })),
       inProgressCourses: activeCourses
         .filter(course => course.status === "in_progress")
-        .map(course => ({ course: course.code })),
+        .map(course => ({
+          course: course.code,
+          academicYear: course.academicYear,
+          termKey: course.termKey
+        })),
       reservedCourseUnits: student.reservedCourseUnits
     },
     expectedContext: plan.planningContext,

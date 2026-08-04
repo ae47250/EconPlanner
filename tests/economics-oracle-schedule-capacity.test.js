@@ -245,6 +245,12 @@ test("future offerings are preliminary and verified-year projected sources are r
     const input = projectedInput({ ...fixture, graduationYear });
     const result = checkExternalEconomicsScheduleAndHorizon(input);
     assert.equal(result.status, fixture.expectedStatus, fixture.fixtureId);
+    if (fixture.expectedCode) {
+      assert.ok(
+        result.violations.some(item => item.code === fixture.expectedCode),
+        `${fixture.fixtureId}: ${fixture.expectedCode}`
+      );
+    }
   }
 });
 

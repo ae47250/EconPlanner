@@ -308,26 +308,28 @@ async function detectCapabilities() {
     .map(capability => capability.id);
   return {
     status: missing.length
-      ? capabilitiesFixture.capabilityPolicy.unavailableStatus
-      : capabilitiesFixture.capabilityPolicy.availableStatus,
+      ? "MISSING_REQUIRED_CAPABILITY"
+      : capabilitiesFixture.capabilityPolicy.requiredStatus,
     missing,
     detected: Object.fromEntries(detected)
   };
 }
 
 const capability = await detectCapabilities();
-const featureGateMessage = `${capabilitiesFixture.capabilityPolicy.unavailableStatus}: ${capabilitiesFixture.capabilityPolicy.unavailableExplanation} Missing: ${capability.missing.join(", ") || "none"}.`;
+const missingCapabilityMessage = `Active candidate-pool behavior is missing: ${capability.missing.join(", ") || "none"}.`;
 
-function requireCandidatePools(t) {
-  if (capability.status === capabilitiesFixture.capabilityPolicy.availableStatus) return true;
-  t.skip(featureGateMessage);
-  return false;
+function requireCandidatePools() {
+  assert.deepEqual(capability.missing, [], missingCapabilityMessage);
+  assert.equal(capability.status, capabilitiesFixture.capabilityPolicy.requiredStatus);
+  return true;
 }
 
-test("Task 14 candidate-pool capability is detected or explicitly feature-gated", t => {
+test("Task 14 active candidate-pool capabilities are all required", t => {
   assert.equal(capabilitiesFixture.schemaVersion, 1);
   assert.equal(capabilitiesFixture.authorship, "Handcrafted Task 14 capability and candidate-pool cases");
-  assert.ok(["ACTIVE", "FEATURE_GATED"].includes(capability.status));
+  assert.equal(capabilitiesFixture.capabilityPolicy.missingCapabilityBehavior, "FAIL");
+  assert.equal(capability.status, "ACTIVE");
+  assert.deepEqual(capability.missing, []);
   assert.deepEqual(
     Object.keys(capability.detected).sort(),
     capabilitiesFixture.requiredCapabilities.map(item => item.id).sort()

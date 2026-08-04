@@ -39,6 +39,12 @@ function courseStatus(page, code, status) {
     .getByRole("button", { name: status, exact: true });
 }
 
+async function selectRequirementChoice(page, code) {
+  const choice = page.getByRole("checkbox", { name: new RegExp(`^${code}\\b`) });
+  await choice.check({ force: true });
+  await expect(choice).toBeChecked();
+}
+
 function requestBody(request) {
   try {
     return request.postDataJSON();
@@ -399,7 +405,7 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
     await courseStatus(page, code, "Completed").click();
   }
   await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
-  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await selectRequirementChoice(page, "MAT 113");
   await courseStatus(page, "ECO 214", "Completed").click();
 
   await page.getByRole("button", { name: /Generate my plans/ }).click();
@@ -407,9 +413,9 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
   const cards = page.locator("article[data-plan-id]");
   await expect(cards).toHaveCount(1);
   await expect(page.getByText(/more than two Economics courses/).first()).toBeVisible();
-  await expect(page.getByText(/Schedule confirmation required/).first()).toBeVisible();
+  await expect(page.getByText(/Schedule confirmation required.*MAT 217, ECO 257, or PSY 217/).first()).toBeVisible();
   for (const card of await cards.all()) {
-    await expect(card.getByText("MAT 217")).toBeVisible();
+    await expect(card.getByText("Statistics requirement")).toBeVisible();
     await expect(card.getByText("ECO 213")).toBeVisible();
     await expect(card.getByText("ECO 461")).toBeVisible();
     await expect(card.getByText("ECO 321")).toBeVisible();
@@ -431,7 +437,7 @@ test("selected elective options persist through server validation and PDF errors
     await courseStatus(page, code, "Completed").click();
   }
   await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
-  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await selectRequirementChoice(page, "MAT 113");
   await courseStatus(page, "ECO 214", "Completed").click();
 
   await page.getByRole("button", { name: /Generate my plans/ }).click();
@@ -462,7 +468,7 @@ test("PDF download recovers cleanly after failed and aborted requests", async ({
     await courseStatus(page, code, "Completed").click();
   }
   await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
-  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await selectRequirementChoice(page, "MAT 113");
   await courseStatus(page, "ECO 214", "Completed").click();
   await page.getByRole("button", { name: /Generate my plans/ }).click();
   await expect(page.getByRole("heading", { name: "Your feasible plan" })).toBeVisible({ timeout: 15000 });

@@ -147,7 +147,7 @@ test("every manifest prerequisite table row accepts prior evidence and rejects m
 test("handwritten valid cases enforce chronology and every confirmed exception", () => {
   const accepted = fixtureDocument.cases.filter(item => item.expectedStatus === "VALID_PREREQUISITES");
   assert.equal(fixtureDocument.authorship, "handwritten");
-  assert.equal(accepted.length, 8);
+  assert.equal(accepted.length, 10);
 
   for (const fixture of accepted) {
     const result = checkExternalEconomicsPrerequisites(externalInput(fixture));

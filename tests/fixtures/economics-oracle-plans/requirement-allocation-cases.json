@@ -59,6 +59,21 @@
       ]
     },
     {
+      "fixtureId": "requirements-valid-four-distinct-future-elective-placeholders",
+      "expectedStatus": "VALID_REQUIREMENTS",
+      "completedCourses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113"
+      ],
+      "courses": [
+        { "course": "ECO elective", "requirementId": "eco-elective-1", "placeholderSlotId": "2027-2028-fall-elective-1", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-2", "placeholderSlotId": "2027-2028-winter-elective-2", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-3", "placeholderSlotId": "2028-2029-fall-elective-3", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-4", "placeholderSlotId": "2028-2029-winter-elective-4", "source": "projected-offering" }
+      ]
+    },
+    {
       "fixtureId": "requirements-reject-missing-eco214",
       "expectedStatus": "INVALID_REQUIREMENTS",
       "expectedCodes": ["REQ-ECO-214"],
@@ -122,6 +137,37 @@
         "MAT 113", "ECO 161", "PHI 234",
         { "course": "ECO 260", "requirementId": "eco-elective-3" },
         { "course": "ECO 260", "requirementId": "eco-elective-4" }
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-only-three-future-elective-placeholders",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["REQ-ECO-ELECTIVES"],
+      "completedCourses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113"
+      ],
+      "courses": [
+        { "course": "ECO elective", "requirementId": "eco-elective-1", "placeholderSlotId": "2027-2028-fall-elective-1", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-2", "placeholderSlotId": "2027-2028-winter-elective-2", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-3", "placeholderSlotId": "2028-2029-fall-elective-3", "source": "projected-offering" }
+      ]
+    },
+    {
+      "fixtureId": "requirements-reject-duplicate-future-placeholder-slot",
+      "expectedStatus": "INVALID_REQUIREMENTS",
+      "expectedCodes": ["ELECTIVE-NO-DOUBLE-COUNT"],
+      "completedCourses": [
+        "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
+        { "course": "ECO 461", "institution": "Hanover College" },
+        "MAT 113"
+      ],
+      "courses": [
+        { "course": "ECO elective", "requirementId": "eco-elective-1", "placeholderSlotId": "2027-2028-fall-elective-1", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-2", "placeholderSlotId": "2027-2028-winter-elective-2", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-3", "placeholderSlotId": "duplicate-elective-slot", "source": "projected-offering" },
+        { "course": "ECO elective", "requirementId": "eco-elective-4", "placeholderSlotId": "duplicate-elective-slot", "source": "projected-offering" }
       ]
     },
     {

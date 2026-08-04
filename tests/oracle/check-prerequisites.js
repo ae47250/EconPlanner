@@ -5,6 +5,10 @@ import {
 } from "./plan-signature.js";
 
 const ORACLE_SOURCE = "tests/oracle/economics-policy.v1.json";
+const PLACEHOLDER_OPTION_GROUPS = new Map([
+  ["MATHEMATICS COGNATE", new Set(["MAT 113", "MAT 121"])],
+  ["STATISTICS REQUIREMENT", new Set(["ECO 257", "MAT 217", "PSY 217"])]
+]);
 
 const UNCHECKED_FAMILIES = Object.freeze([
   "SCHEDULE",
@@ -208,6 +212,24 @@ function hasCompletedEvidence(entries, course) {
   return entries.some(entry => entry.state === "completed" && entry.course === upper(course));
 }
 
+function placeholderCoversGroup(entry, group) {
+  if (entry.state !== "planned" || entry.source !== "requirement-placeholder") return false;
+  const declaredGroup = PLACEHOLDER_OPTION_GROUPS.get(entry.course);
+  const declaredOptions = new Set((entry.options || []).map(upper));
+  return Boolean(declaredGroup)
+    && group.every(option => declaredGroup.has(upper(option)))
+    && group.every(option => declaredOptions.has(upper(option)));
+}
+
+function hasEarlierGroupEvidence(entries, group, dependentPosition) {
+  return group.some(prerequisite => hasEarlierEvidence(entries, prerequisite, dependentPosition))
+    || entries.some(entry => (
+      entry.position !== null
+      && entry.position < dependentPosition
+      && placeholderCoversGroup(entry, group)
+    ));
+}
+
 function samePositionEntries(entries, courses, position) {
   const options = new Set(courses.map(upper));
   return entries.filter(entry => options.has(entry.course) && entry.position === position);
@@ -333,7 +355,7 @@ function validateNormalRule({ policy, entries, claims, approvals, usedApprovals,
   }
 
   for (const group of rule.oneOfGroups || []) {
-    if (group.some(prerequisite => hasEarlierEvidence(entries, prerequisite, entry.position))) continue;
+    if (hasEarlierGroupEvidence(entries, group, entry.position)) continue;
     if (claimCovers(claims, entry.course, group)) continue;
     const concurrencyRule = (policy.concurrencyRules || []).find(candidate => (
       upper(candidate.course) === entry.course
@@ -417,7 +439,7 @@ function validateCapstone({
 
   const statisticsRule = ruleById(policy, "CAPSTONE-STATISTICS-BEFORE");
   const statistics = statisticsRule.mustBeCompletedBeforeOneOf || [];
-  const statisticsEarlier = statistics.some(course => hasEarlierEvidence(entries, course, entry.position));
+  const statisticsEarlier = hasEarlierGroupEvidence(entries, statistics, entry.position);
   if (!statisticsEarlier && !claimCovers(claims, entry.course, statistics)) {
     violations.push(makeFinding(
       policy,
