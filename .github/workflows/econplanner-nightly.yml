@@ -19,8 +19,51 @@ env:
   PDF_CREATION_ENABLED: "false"
 
 jobs:
+  notify_start:
+    name: Send nightly start email
+    if: ${{ github.run_attempt == 1 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      started_at: ${{ steps.context.outputs.started_at }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          install: false
+
+      - name: Record nightly start time
+        id: context
+        shell: bash
+        run: echo "started_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+
+      - name: Send one nightly start email
+        env:
+          MOCK_NOTIFICATIONS: "false"
+          PINGRAM_API_KEY: ${{ secrets.PINGRAM_API_KEY }}
+          PINGRAM_API_URL: ${{ secrets.PINGRAM_API_URL }}
+          PINGRAM_FROM_EMAIL: ${{ secrets.PINGRAM_FROM_EMAIL }}
+          PINGRAM_FROM_NAME: ${{ secrets.PINGRAM_FROM_NAME }}
+          PINGRAM_REPLY_TO: ${{ secrets.PINGRAM_REPLY_TO }}
+          ECONPLANNER_NOTIFICATION_EMAIL: ${{ secrets.ECONPLANNER_NOTIFICATION_EMAIL }}
+        run: >-
+          node scripts/notify-econplanner-nightly.mjs
+          --status started
+          --repository "${{ github.repository }}"
+          --branch "${{ github.ref_name }}"
+          --workflow-name "${{ github.workflow }}"
+          --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          --start-time "${{ steps.context.outputs.started_at }}"
+
   generated-matrix:
     name: Generated profiles (shard ${{ matrix.shard }}/4)
+    needs: notify_start
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -68,6 +111,8 @@ jobs:
 
   deterministic:
     name: Exhaustive policy, oracle, mutation, and planner tests
+    needs: notify_start
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -189,6 +234,8 @@ jobs:
 
   browser:
     name: Repeated browser, accessibility, and adversarial tests
+    needs: notify_start
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -260,6 +307,8 @@ jobs:
 
   quality:
     name: Lint, build, and repository hygiene
+    needs: notify_start
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -288,6 +337,8 @@ jobs:
 
   hosted-pdf:
     name: Optional hosted PDF contract
+    needs: notify_start
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -372,3 +423,193 @@ jobs:
           path: output/economics-pdf-verification/
           if-no-files-found: ignore
           retention-days: 14
+
+  notify_final:
+    name: Send one final nightly email
+    if: ${{ always() && github.run_attempt == 1 }}
+    needs:
+      - notify_start
+      - generated-matrix
+      - deterministic
+      - browser
+      - quality
+      - hosted-pdf
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          install: false
+
+      - name: Download available fictional-profile failure evidence
+        id: download_profile_failures
+        if: ${{ needs.generated-matrix.result != 'success' }}
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          pattern: generated-profile-failures-*
+          path: ${{ runner.temp }}/econplanner-profile-failures
+          merge-multiple: true
+
+      - name: Read safe fictional-profile failure context
+        id: profile_context
+        if: ${{ steps.download_profile_failures.outcome == 'success' }}
+        shell: bash
+        env:
+          FAILURE_DIRECTORY: ${{ runner.temp }}/econplanner-profile-failures
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import path from "node:path";
+
+          function findFailureFiles(directory) {
+            if (!fs.existsSync(directory)) return [];
+            return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+              const itemPath = path.join(directory, entry.name);
+              if (entry.isDirectory()) return findFailureFiles(itemPath);
+              return entry.name.endsWith(".failures.json") ? [itemPath] : [];
+            });
+          }
+
+          function safeToken(value, fallback = "") {
+            const token = String(value ?? "").trim();
+            return /^[A-Za-z0-9._/-]{1,160}$/.test(token) ? token : fallback;
+          }
+
+          const failures = findFailureFiles(process.env.FAILURE_DIRECTORY)
+            .sort()
+            .flatMap(file => {
+              try {
+                const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+                return Array.isArray(parsed.failures) ? parsed.failures : [];
+              } catch {
+                return [];
+              }
+            });
+          const first = failures[0] || {};
+          const failedTests = failures.length > 0 ? String(failures.length) : "";
+          const output = [
+            `profile_id=${safeToken(first.profileId)}`,
+            `seed=${safeToken(first.seed)}`,
+            `shard=${safeToken(first.shard)}`,
+            `failed_tests=${failedTests}`,
+          ];
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `${output.join("\n")}\n`);
+          NODE
+
+      - name: Determine the complete nightly result
+        id: outcome
+        shell: bash
+        env:
+          NIGHTLY_NEEDS: ${{ toJSON(needs) }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+
+          const needs = JSON.parse(process.env.NIGHTLY_NEEDS);
+          const testJobs = [
+            ["generated-matrix", "generated profile matrix"],
+            ["deterministic", "policy, oracle, mutation, and planner tests"],
+            ["browser", "browser, accessibility, and adversarial tests"],
+            ["quality", "lint, build, and repository hygiene"],
+            ["hosted-pdf", "hosted PDF contract"],
+          ];
+          const failedTests = testJobs
+            .filter(([id]) => needs[id]?.result !== "success")
+            .map(([, label]) => label);
+          const startNotificationFailed = needs.notify_start?.result !== "success";
+          const testsFailed = failedTests.length > 0;
+          const status = testsFailed || startNotificationFailed ? "failed" : "succeeded";
+          const failedPhases = [
+            ...failedTests,
+            ...(startNotificationFailed ? ["start notification"] : []),
+          ];
+          let summary = "All nightly test jobs completed successfully.";
+          if (testsFailed && startNotificationFailed) {
+            summary = "Nightly tests failed and the start notification failed.";
+          } else if (testsFailed) {
+            summary = `${failedTests.length} nightly job(s) failed or did not complete successfully.`;
+          } else if (startNotificationFailed) {
+            summary = "Nightly tests succeeded, but the start notification failed.";
+          }
+
+          const recordedStart = needs.notify_start?.outputs?.started_at;
+          const parsedStart = Date.parse(recordedStart || "");
+          const startedAt = Number.isFinite(parsedStart)
+            ? new Date(parsedStart).toISOString()
+            : new Date().toISOString();
+          const durationSeconds = Number.isFinite(parsedStart)
+            ? Math.max(0, Math.round((Date.now() - parsedStart) / 1000))
+            : 0;
+          const output = [
+            `status=${status}`,
+            `started_at=${startedAt}`,
+            `duration_seconds=${durationSeconds}`,
+            `failed_phase=${failedPhases.join(", ")}`,
+            `failure_summary=${summary}`,
+            `tests_failed=${testsFailed}`,
+            `start_notification_failed=${startNotificationFailed}`,
+          ];
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `${output.join("\n")}\n`);
+          NODE
+
+      - name: Send one final nightly email
+        id: final_notification
+        continue-on-error: true
+        env:
+          MOCK_NOTIFICATIONS: "false"
+          PINGRAM_API_KEY: ${{ secrets.PINGRAM_API_KEY }}
+          PINGRAM_API_URL: ${{ secrets.PINGRAM_API_URL }}
+          PINGRAM_FROM_EMAIL: ${{ secrets.PINGRAM_FROM_EMAIL }}
+          PINGRAM_FROM_NAME: ${{ secrets.PINGRAM_FROM_NAME }}
+          PINGRAM_REPLY_TO: ${{ secrets.PINGRAM_REPLY_TO }}
+          ECONPLANNER_NOTIFICATION_EMAIL: ${{ secrets.ECONPLANNER_NOTIFICATION_EMAIL }}
+        run: >-
+          node scripts/notify-econplanner-nightly.mjs
+          --status "${{ steps.outcome.outputs.status }}"
+          --repository "${{ github.repository }}"
+          --branch "${{ github.ref_name }}"
+          --workflow-name "${{ github.workflow }}"
+          --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          --start-time "${{ steps.outcome.outputs.started_at }}"
+          --duration-seconds "${{ steps.outcome.outputs.duration_seconds }}"
+          --failed-phase "${{ steps.outcome.outputs.failed_phase }}"
+          --profile-id "${{ steps.profile_context.outputs.profile_id }}"
+          --seed "${{ steps.profile_context.outputs.seed }}"
+          --shard "${{ steps.profile_context.outputs.shard }}"
+          --failure-summary "${{ steps.outcome.outputs.failure_summary }}"
+          --failed-tests "${{ steps.profile_context.outputs.failed_tests }}"
+
+      - name: Preserve test and notification failures
+        if: ${{ always() }}
+        shell: bash
+        env:
+          TESTS_FAILED: ${{ steps.outcome.outputs.tests_failed }}
+          START_NOTIFICATION_FAILED: ${{ steps.outcome.outputs.start_notification_failed }}
+          FINAL_NOTIFICATION_OUTCOME: ${{ steps.final_notification.outcome }}
+        run: |
+          if [ "$FINAL_NOTIFICATION_OUTCOME" != "success" ]; then
+            if [ "$TESTS_FAILED" = "true" ]; then
+              echo "Nightly tests failed and final notification delivery failed."
+            elif [ "$START_NOTIFICATION_FAILED" = "true" ]; then
+              echo "Start and final notification delivery failed; nightly tests succeeded."
+            else
+              echo "Nightly tests succeeded, but final notification delivery failed."
+            fi
+            exit 1
+          fi
+          if [ "$TESTS_FAILED" = "true" ]; then
+            echo "Nightly tests failed; the final notification was delivered."
+            exit 1
+          fi
+          if [ "$START_NOTIFICATION_FAILED" = "true" ]; then
+            echo "Nightly tests succeeded and the final notification was delivered, but the start notification failed."
+            exit 1
+          fi
+          echo "Nightly tests and both notification deliveries succeeded."
