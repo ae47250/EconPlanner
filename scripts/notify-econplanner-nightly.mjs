@@ -186,6 +186,7 @@ export function buildNightlyNotificationContent(input, options = {}) {
     .map(([label, value]) => `<tr><th align="left">${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>`)
     .join("");
   const runUrl = escapeHtml(notification.runUrl);
+  const artifactsUrl = escapeHtml(`${notification.runUrl}#artifacts`);
 
   return {
     notification,
@@ -193,7 +194,8 @@ export function buildNightlyNotificationContent(input, options = {}) {
     html: [
       `<h1>EconPlanner nightly ${escapeHtml(notification.status)}</h1>`,
       `<table>${htmlRows}</table>`,
-      `<p><a href="${runUrl}">Open GitHub Actions run</a></p>`,
+      `<p><a href="${runUrl}">View job-by-job test results</a></p>`,
+      `<p><a href="${artifactsUrl}">Download detailed result files</a> from the Artifacts section. GitHub sign-in may be required.</p>`,
     ].join(""),
   };
 }

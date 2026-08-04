@@ -211,6 +211,19 @@ test("optional duration is included when known", () => {
   assert.match(html, /2 minutes 5 seconds/);
 });
 
+test("email links to the run results and downloadable artifacts", () => {
+  const { html } = buildNightlyNotificationContent(fictionalInput);
+  assert.match(
+    html,
+    /href="https:\/\/example\.test\/actions\/runs\/1001">View job-by-job test results<\/a>/,
+  );
+  assert.match(
+    html,
+    /href="https:\/\/example\.test\/actions\/runs\/1001#artifacts">Download detailed result files<\/a>/,
+  );
+  assert.match(html, /GitHub sign-in may be required\./);
+});
+
 test("optional failed phase is included when known", () => {
   const { html } = buildNightlyNotificationContent({
     ...fictionalInput,
