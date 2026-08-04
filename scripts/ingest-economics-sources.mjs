@@ -1,6 +1,6 @@
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import crypto from "node:crypto";
+import { sourceEvidenceSha256 } from "../lib/source-evidence-hash.js";
 
 const root = process.cwd();
 const sourceRoot = process.env.ECON_SOURCE_DIR || "C:/Users/eiriksson/Downloads";
@@ -249,7 +249,7 @@ async function ensureDirectories() {
 
 async function sha256(filePath) {
   const bytes = await readFile(filePath);
-  return crypto.createHash("sha256").update(bytes).digest("hex");
+  return sourceEvidenceSha256(bytes, filePath);
 }
 
 async function copySource(sourcePath, targetPath) {
