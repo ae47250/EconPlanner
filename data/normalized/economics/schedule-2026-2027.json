@@ -1,8 +1,9 @@
 {
   "schemaVersion": 2,
   "academicYear": "2026-2027",
-  "verifiedOn": "2026-07-28",
-  "lastVerifiedAt": "2026-07-28T00:00:00-04:00",
+  "verifiedOn": null,
+  "lastVerifiedAt": null,
+  "availabilityAsOf": null,
   "source": {
     "type": "user_provided_schedule_screenshots",
     "files": [
@@ -10,7 +11,11 @@
       "data/raw/economics/schedule-2026-2027-winter-spring.png"
     ],
     "sectionCodeSMeans": "May",
-    "summerOfferingNote": "ECO 113 is available online in Summer as a last-resort option when the regular academic-year schedule cannot fit the student."
+    "sourceDocumentDate": null,
+    "screenshotRetrievedOn": null,
+    "repositoryIngestedOn": "2026-07-28",
+    "repositoryIngestionEvidence": "data/manifests/source-manifest.json",
+    "humanVerifiedOn": null
   },
   "courseOfferingNotes": {
     "ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."
@@ -29,7 +34,7 @@
           "rawStatus": "Full",
           "seatsOpen": 0,
           "capacity": 22,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -46,9 +51,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-fall.png"
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -65,7 +74,7 @@
           "rawStatus": "Full",
           "seatsOpen": 0,
           "capacity": 21,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -83,9 +92,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-fall.png"
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -101,7 +114,7 @@
           "status": "open",
           "seatsOpen": 1,
           "capacity": 20,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -119,9 +132,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-fall.png"
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -137,7 +154,7 @@
           "status": "open",
           "seatsOpen": 1,
           "capacity": 24,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -154,9 +171,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-fall.png"
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -172,7 +193,7 @@
           "status": "open",
           "seatsOpen": 8,
           "capacity": 17,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -189,9 +210,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-fall.png"
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -210,7 +235,7 @@
           "status": "open",
           "seatsOpen": 23,
           "capacity": 24,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -228,9 +253,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-fall.png"
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -246,7 +275,7 @@
           "status": "open",
           "seatsOpen": 3,
           "capacity": 24,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -264,9 +293,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-fall.png"
+            "data/raw/economics/schedule-2026-2027-winter-spring.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -284,7 +317,7 @@
           "status": "open",
           "seatsOpen": 24,
           "capacity": 24,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -301,9 +334,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -319,7 +356,7 @@
           "status": "open",
           "seatsOpen": 24,
           "capacity": 24,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -337,9 +374,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -355,7 +396,7 @@
           "status": "open",
           "seatsOpen": 24,
           "capacity": 24,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -372,9 +413,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -390,7 +435,7 @@
           "status": "open",
           "seatsOpen": 20,
           "capacity": 20,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -407,9 +452,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -425,7 +474,7 @@
           "status": "open",
           "seatsOpen": 24,
           "capacity": 24,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -442,9 +491,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -460,7 +513,7 @@
           "status": "open",
           "seatsOpen": 20,
           "capacity": 20,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -478,9 +531,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -496,7 +553,7 @@
           "status": "open",
           "seatsOpen": 20,
           "capacity": 20,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -513,9 +570,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -531,7 +592,7 @@
           "status": "open",
           "seatsOpen": 15,
           "capacity": 15,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -549,9 +610,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -569,7 +634,7 @@
           "status": "open",
           "seatsOpen": 15,
           "capacity": 15,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -589,9 +654,13 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
@@ -607,7 +676,7 @@
           "status": "open",
           "seatsOpen": 20,
           "capacity": 20,
-          "asOf": "2026-07-28"
+          "asOf": null
         },
         "meeting": {
           "days": [
@@ -627,46 +696,18 @@
         "provenance": {
           "sourceType": "user_provided_schedule_screenshot",
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-fall.png"
           ],
-          "verifiedOn": "2026-07-28",
+          "sourceDocumentDate": null,
+          "screenshotRetrievedOn": null,
+          "repositoryIngestedOn": "2026-07-28",
+          "humanVerifiedOn": null,
+          "verifiedOn": null,
           "normalizationCheck": "row_checked"
         },
         "verificationStatus": "verified"
       }
     ],
-    "Summer": [
-      {
-        "course": "ECO 113",
-        "section": "Online",
-        "title": "Principles of Microeconomics",
-        "units": 1,
-        "availability": {
-          "status": "unknown",
-          "seatsOpen": null,
-          "capacity": null,
-          "asOf": "2026-07-28"
-        },
-        "planningNote": "Last-resort summer option",
-        "meeting": {
-          "days": [],
-          "startTime": "",
-          "endTime": "",
-          "startDate": "",
-          "endDate": "",
-          "delivery": "online",
-          "location": ""
-        },
-        "provenance": {
-          "sourceType": "user_provided_schedule_screenshot",
-          "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
-          ],
-          "verifiedOn": "2026-07-28",
-          "normalizationCheck": "row_checked"
-        },
-        "verificationStatus": "verified"
-      }
-    ]
+    "Summer": []
   }
 }

@@ -1,0 +1,25 @@
+{
+  "fixtureId": "oracle-malformed-horizon",
+  "authorship": "handwritten",
+  "student": {
+    "studentId": "fictional-student-006"
+  },
+  "expectedContext": {
+    "startYear": 2026,
+    "remainingYears": 3,
+    "expectedGraduationYear": 2030,
+    "expectedGraduationTerm": "Winter 2030"
+  },
+  "plan": {
+    "id": "malformed-horizon",
+    "terms": [
+      {
+        "slotId": "fall-2026",
+        "term": "Fall 2026",
+        "termKey": "Fall",
+        "academicYear": "2026/2027",
+        "courses": []
+      }
+    ]
+  }
+}

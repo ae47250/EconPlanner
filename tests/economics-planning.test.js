@@ -90,9 +90,33 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
   assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Plan A", "Plan B", "Plan C", "Plan C-2"]);
   assert.equal(result.planSetValidation.valid, true);
   assert.equal(result.planSetValidation.uniquePlanCount, result.plans.length);
-  assert.deepEqual(result.plans.find(plan => plan.label === "Plan A").distribution.targetYearCounts, [2, 3, 3, 4]);
-  assert.deepEqual(result.plans.find(plan => plan.label === "Plan C-2").distribution.targetYearCounts, [4, 4, 4]);
+  const expectedDistributions = new Map([
+    ["Plan A", [3, 3, 3, 3]],
+    ["Plan B", [1, 2, 4, 5]],
+    ["Plan C", [3, 3, 3, 3]],
+    ["Plan C-2", [4, 4, 4]]
+  ]);
+  for (const plan of result.plans) {
+    assert.deepEqual(plan.distribution.targetYearCounts, expectedDistributions.get(plan.label));
+    assert.deepEqual(plan.validation.distribution.actualYearCounts, expectedDistributions.get(plan.label));
+    assert.equal(plan.validation.distribution.valid, true);
+    assert.equal(plan.validation.distribution.exact, true);
+  }
   assert.ok(result.plans.every(plan => plan.validation.valid));
+  const exploreFirst = result.plans.find(plan => plan.label === "Plan C");
+  assert.ok(exploreFirst.terms.filter(term => term.yearIndex === 0)
+    .flatMap(term => term.courses)
+    .some(course => course.course === "ECO 113"));
+  assert.ok(exploreFirst.terms.filter(term => term.yearIndex === 0)
+    .flatMap(term => term.courses)
+    .some(course => course.course === "ECO 114"));
+  assert.ok(exploreFirst.terms.filter(term => term.yearIndex === 0)
+    .flatMap(term => term.courses)
+    .some(course => [
+      "MAT 113", "MAT 121", "MAT 217", "ECO 257", "PSY 217",
+      "Mathematics cognate", "Statistics requirement"
+    ].includes(course.course)));
+  assert.ok(result.candidateOutcomes.every(outcome => outcome.candidatePool?.retainedDistinctSchedules >= 1));
   assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(result.plans.find(plan => !plan.isEarlyGraduation).terms.some(term => term.term === "Spring/May 2030"));
   assert.equal(result.plans[0].terms[0].displayTerm, "Winter");
@@ -102,6 +126,43 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
 
   assert.equal(result.plans.find(plan => plan.label === "Plan C-2").isEarlyGraduation, true);
   assert.equal(result.plans.find(plan => plan.label === "Plan C-2").feasibilityStatus, "PRELIMINARY_ONLY");
+});
+
+test("a proven prerequisite constraint records a validated distribution exception", () => {
+  const unresolved = [{ requirementId: "eco-461", options: ["ECO 461"] }];
+  const mapping = {
+    requirements: [{ id: "eco-461", kind: "exact", label: "Senior Seminar", options: ["ECO 461"] }],
+    assignments: [],
+    optimistic: { unresolved },
+    projectedAfterInProgress: { optimistic: { unresolved } }
+  };
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-02",
+    courses: ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "MAT 217"]
+      .map(code => ({ code, status: "completed" }))
+  };
+  const plan = buildEconomicsTermPlan({ student, mapping, schedule, prerequisites });
+
+  assert.deepEqual(plan.distribution.targetYearCounts, [1, 0, 0, 0]);
+  assert.deepEqual(plan.validation.distribution.actualYearCounts, [0, 0, 0, 1]);
+  assert.equal(plan.preferredDistributionException.code, "PREFERRED_DISTRIBUTION_EXCEPTION");
+  assert.equal(plan.preferredDistributionException.allowedAnnualDistance, 2);
+  assert.equal(plan.validation.distribution.valid, true);
+  assert.equal(plan.validation.distribution.exact, false);
+  assert.ok(plan.validation.warnings.some(message => /exact Balanced yearly distribution is not feasible/.test(message)));
+
+  const unprovenException = structuredClone(plan);
+  delete unprovenException.search.attempts;
+  const validation = validateGeneratedPlan(unprovenException, {
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    context: plan.planningContext
+  });
+  assert.equal(validation.valid, false);
+  assert.equal(validation.distribution.valid, false);
 });
 
 test("validated plans cover every required course, choice group, cognate, and elective slot", () => {
@@ -217,6 +278,51 @@ test("generated-plan validation rejects a fabricated course", () => {
   assert.ok(validation.errors.some(error => error.includes("ECO 999")));
 });
 
+test("verified-year planning uses verified named courses and rejects generic or named placeholders", () => {
+  const student = {
+    academicStanding: "junior",
+    planCreationDate: "2026-07-30",
+    courses: [
+      { code: "ECO 113", status: "completed" },
+      { code: "ECO 114", status: "completed" },
+      { code: "MAT 113", status: "completed" },
+      { code: "ECO 213", status: "completed" },
+      { code: "ECO 214", status: "completed" },
+      { code: "MAT 217", status: "completed" }
+    ]
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const verifiedYearCourses = result.plans.flatMap(plan => plan.terms
+    .filter(term => term.academicYear.replace("/", "-") === schedule.academicYear)
+    .flatMap(term => term.courses));
+
+  assert.ok(result.plans.length > 0);
+  assert.ok(verifiedYearCourses.length > 0);
+  assert.ok(verifiedYearCourses.every(course => course.course !== "ECO elective"));
+  assert.ok(verifiedYearCourses.every(course => course.source !== "requirement-placeholder"));
+  assert.ok(verifiedYearCourses.every(course => (
+    course.source === "verified-offering" || course.source === "summer-last-resort"
+  )));
+
+  for (const course of [
+    { course: "ECO elective", requirementId: "eco-elective-1", source: "projected-offering" },
+    { course: "BUSN 323", requirementId: "finance", source: "requirement-placeholder" }
+  ]) {
+    const validation = validateGeneratedPlan({
+      terms: [{
+        term: "Fall 2026",
+        termKey: "Fall",
+        scheduleTerm: "Fall",
+        academicYear: schedule.academicYear,
+        courses: [course]
+      }]
+    }, { student, mapping, schedule, prerequisites });
+    assert.equal(validation.valid, false);
+    assert.ok(validation.errors.some(error => /verified schedule/.test(error)), course.course);
+  }
+});
+
 test("plan-set validation rejects duplicate placements", () => {
   const plan = { id: "plan-1", label: "Plan A", terms: [{ term: "Fall", courses: [{ course: "ECO elective" }] }] };
   const validation = validatePlanSet([plan, { ...plan, id: "plan-2", label: "Plan B" }, { ...plan, id: "plan-3", label: "Plan C" }]);
@@ -226,7 +332,7 @@ test("plan-set validation rejects duplicate placements", () => {
   assert.equal(validation.pairwise.every(pair => pair.different === false), true);
 });
 
-test("ECO 113 uses the verified online Summer offering only as a last resort", () => {
+test("ECO 113 avoids Summer when a regular future placement remains feasible", () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-09-01",
@@ -242,16 +348,12 @@ test("ECO 113 uses the verified online Summer offering only as a last resort", (
     schedule: noRegularECO113Schedule,
     prerequisites
   });
-  const summerTerm = result.plans[0].terms.find(term => term.isSummer);
-
-  assert.equal(summerTerm.term, "Summer 2027");
-  assert.equal(summerTerm.courses[0].course, "ECO 113");
-  assert.equal(summerTerm.courses[0].source, "summer-last-resort");
-  assert.deepEqual(result.plans[0].summerFallbacks, [{
-    course: "ECO 113",
-    term: "Summer 2027",
-    reason: "Regular-term placement was not sufficient under the current prerequisites, schedule, and planning horizon."
-  }]);
+  assert.ok(result.plans.length > 0);
+  assert.ok(result.plans.every(plan => plan.terms.every(term => !term.isSummer || term.courses.length === 0)));
+  assert.ok(result.plans.every(plan => plan.terms.some(term => (
+    !term.isSummer && term.courses.some(course => course.course === "ECO 113")
+  ))));
+  assert.ok(result.plans.every(plan => plan.summerFallbacks.length === 0));
 });
 
 test("ECO 307 does not satisfy one of the four full-unit elective slots", () => {
@@ -321,7 +423,8 @@ test("concurrent math is used only after a prerequisite-first plan fails and req
   concurrentSchedule.terms.Fall.push({
     course: "MAT 113",
     section: "A",
-    title: "Mathematics cognate"
+    title: "Mathematics cognate",
+    verificationStatus: "verified"
   });
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const strictPlan = buildEconomicsTermPlan({
@@ -364,6 +467,32 @@ test("concurrent math is used only after a prerequisite-first plan fails and req
   });
   assert.equal(validation.valid, false);
   assert.ok(validation.errors.some(error => /approval from the ECO 213 instructor/.test(error)));
+
+  for (const [field, value] of [
+    ["authority", "Economics Department"],
+    ["course", "ECO 214"],
+    ["term", "Winter 2027"],
+    ["code", "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL"],
+    ["type", "department"],
+    ["reason", "concurrent_intermediate_with_capstone"],
+    ["policySource", "invented-policy"],
+    ["sourceRef", "invented-source"]
+  ]) {
+    const corrupted = structuredClone(fallbackPlan);
+    const approval = corrupted.terms
+      .flatMap(term => term.courses)
+      .find(course => course.course === "ECO 213")
+      .approvalRequired[0];
+    approval[field] = value;
+    const corruptedValidation = validateGeneratedPlan(corrupted, {
+      student,
+      mapping,
+      schedule: concurrentSchedule,
+      prerequisites,
+      context: fallbackPlan.planningContext
+    });
+    assert.equal(corruptedValidation.valid, false, `${field} must match the required instructor approval`);
+  }
 });
 
 test("an in-progress prerequisite unlocks a dependent course only after the current term", () => {
@@ -518,7 +647,7 @@ function upcomingSenior(codes) {
   };
 }
 
-test("graduation priority produces realistic one-year senior plans from verified offerings", () => {
+test("graduation priority uses verified Economics offerings plus an explicit supporting placeholder", () => {
   const student = upcomingSenior(["ECO 113", "ECO 114", "MAT 113", "ECO 214"]);
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
@@ -533,11 +662,11 @@ test("graduation priority produces realistic one-year senior plans from verified
     const fall = plan.terms.find(term => term.term === "Fall 2026");
     const winter = plan.terms.find(term => term.term === "Winter 2027");
     const may = plan.terms.find(term => term.term === "Spring/May 2027");
-    assert.deepEqual(fall.courses.map(course => course.course), ["ECO 213", "ECO 234", "ECO 333", "MAT 217"]);
+    assert.deepEqual(fall.courses.map(course => course.course), ["ECO 213", "ECO 234", "ECO 333", "Statistics requirement"]);
     assert.deepEqual(winter.courses.map(course => course.course), ["ECO 221", "ECO 321", "ECO 461"]);
     assert.ok(["ECO 222", "ECO 260"].includes(may.courses[0].course));
     assert.ok(plan.validation.warnings.some(warning => /more than two Economics courses/.test(warning)));
-    assert.ok(plan.validation.warnings.some(warning => /Schedule confirmation required for MAT 217/.test(warning)));
+    assert.ok(plan.validation.warnings.some(warning => /confirm whether MAT 217, ECO 257, or PSY 217/.test(warning)));
     assert.ok(plan.terms.every(term => term.courses.length <= (term.termKey === "May" ? 1 : 4)));
     assert.ok(plan.terms.flatMap(term => term.courses).filter(course => course.course.startsWith("ECO ")).every(course => (
       ["verified-offering", "summer-last-resort"].includes(course.source)
@@ -648,8 +777,74 @@ test("schedule provider normalizes provenance, cross-lists, and meeting conflict
   const eco321 = selectConflictFreeOffering(normalized, winter, "ECO 321");
 
   assert.equal(normalized.provider.schemaVersion, 2);
-  assert.equal(normalized.provider.verifiedOn, "2026-07-28");
+  assert.equal(normalized.provider.verifiedOn, null);
+  assert.equal(normalized.provider.repositoryIngestedOn, "2026-07-28");
+  assert.equal(normalized.provider.availabilityAsOf, null);
   assert.equal(canonicalScheduleCode(normalized, "PHI 234"), "ECO 234");
   assert.equal(selectConflictFreeOffering(normalized, winter, "ECO 161", [eco321]), null);
   assert.ok(eco321.meeting.startMinutes < eco321.meeting.endMinutes);
+});
+
+test("verified schedule facts and the graduation horizon are authoritative", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-07-30",
+    courses: []
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const plan = result.plans[0];
+  const verifiedCourse = plan.terms
+    .flatMap(term => term.courses)
+    .find(course => course.source === "verified-offering"
+      && course.meeting?.startTime
+      && Number.isFinite(course.availability?.seatsOpen));
+
+  assert.ok(verifiedCourse);
+  assert.equal(validateGeneratedPlan(plan, {
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    context: result.context
+  }).valid, true, "unmodified canonical meeting and availability data must pass");
+
+  const falsifiedMeeting = structuredClone(plan);
+  const meetingCourse = falsifiedMeeting.terms
+    .flatMap(term => term.courses)
+    .find(course => course.course === verifiedCourse.course && course.section === verifiedCourse.section);
+  meetingCourse.meeting.startTime = "1:00 PM";
+  meetingCourse.meeting.startMinutes = 780;
+  const meetingValidation = validateGeneratedPlan(falsifiedMeeting, {
+    student, mapping, schedule, prerequisites, context: result.context
+  });
+  assert.equal(meetingValidation.valid, false);
+  assert.ok(meetingValidation.errors.some(error => /canonical verified schedule for meeting start time/.test(error)));
+
+  const falsifiedAvailability = structuredClone(plan);
+  const availabilityCourse = falsifiedAvailability.terms
+    .flatMap(term => term.courses)
+    .find(course => course.course === verifiedCourse.course && course.section === verifiedCourse.section);
+  availabilityCourse.availability.seatsOpen += 7;
+  const availabilityValidation = validateGeneratedPlan(falsifiedAvailability, {
+    student, mapping, schedule, prerequisites, context: result.context
+  });
+  assert.equal(availabilityValidation.valid, false);
+  assert.ok(availabilityValidation.errors.some(error => /canonical verified schedule for availability seatsOpen/.test(error)));
+
+  const afterGraduation = structuredClone(plan);
+  const finalTerm = afterGraduation.terms.at(-1);
+  finalTerm.academicYear = `${result.context.expectedGraduationYear}/${result.context.expectedGraduationYear + 1}`;
+  finalTerm.yearIndex = result.context.remainingYears;
+  finalTerm.term = `Fall ${result.context.expectedGraduationYear}`;
+  finalTerm.displayTerm = "Fall";
+  finalTerm.termKey = "Fall";
+  finalTerm.scheduleTerm = "Fall";
+  finalTerm.slotId = `fall-${result.context.expectedGraduationYear}`;
+  const horizonValidation = validateGeneratedPlan(afterGraduation, {
+    student, mapping, schedule, prerequisites, context: result.context
+  });
+  assert.equal(horizonValidation.valid, false);
+  assert.ok(horizonValidation.errors.some(error => /authoritative graduation planning horizon/.test(error)));
+  assert.ok(plan.terms.some(term => term.term === result.context.expectedGraduationTerm), "graduation-term control must be present");
 });

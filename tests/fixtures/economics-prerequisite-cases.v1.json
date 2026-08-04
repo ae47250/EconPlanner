@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "economics-prerequisite-edge-and-status-matrix",
+  "version": 1,
+  "authorship": "handwritten-independent",
+  "reviewedOn": "2026-08-03",
+  "reviewedBy": "Project owner and independent test-oracle review",
+  "policyRef": "tests/oracle/economics-policy.v1.json",
+  "policyVersion": 3,
+  "purpose": "Test every confirmed Economics prerequisite edge without treating production prerequisite data as academic authority.",
+  "matrixPolicy": {
+    "pullRequestSubset": "Every confirmed edge receives the core chronology and evidence cases. Confirmed concurrency and ECO 357 permission cases are also exercised.",
+    "nightlyOnlySubset": "Every confirmed edge receives the less common failed, withdrawn, repeated-record, and wrong-approval-metadata cases. Correct approval is accepted only for a documented exception. ECO 357 permission receives its own metadata mutations.",
+    "nightlyEnvironmentVariable": "ECONOMICS_PREREQUISITE_MATRIX_NIGHTLY",
+    "symmetryReduction": "Alternative prerequisites share scenario templates, but every option remains a separately counted and executed edge. ECO 213 Fall and ECO 214 Winter anchors are never collapsed.",
+    "reviewBehavior": "AP, transfer, uncertain, equivalency, waiver, substitution, and advanced-course closure evidence are review states unless the independent policy explicitly confirms the evidence scope."
+  },
+  "ruleAnchors": [
+    { "ruleId": "PREREQ-ECO-213", "course": "ECO 213", "academicYear": "2026/2027", "termKey": "Fall", "term": "Fall 2026" },
+    { "ruleId": "PREREQ-ECO-214", "course": "ECO 214", "academicYear": "2026/2027", "termKey": "Winter", "term": "Winter 2027" },
+    { "ruleId": "PREREQ-ECO-221", "course": "ECO 221", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-222", "course": "ECO 222", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-223", "course": "ECO 223", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-257", "course": "ECO 257", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-315", "course": "ECO 315", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-316", "course": "ECO 316", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-321", "course": "ECO 321", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-331", "course": "ECO 331", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-333", "course": "ECO 333", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-335", "course": "ECO 335", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-337", "course": "ECO 337", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" },
+    { "ruleId": "PREREQ-ECO-357", "course": "ECO 357", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027", "permissionRuleId": "PERMISSION-ECO-357" },
+    { "ruleId": "PREREQ-ECO-461", "course": "ECO 461", "academicYear": "2026/2027", "termKey": "Winter", "term": "Winter 2027", "institution": "Hanover College", "projectedStanding": "Senior" },
+    { "ruleId": "PREREQ-ECO-471", "course": "ECO 471", "academicYear": "2027/2028", "termKey": "Fall", "term": "Fall 2027" }
+  ],
+  "pullRequestScenarios": [
+    { "scenarioId": "all_prerequisites_completed", "expectedOracleStatus": "VALID_PREREQUISITES" },
+    { "scenarioId": "target_prerequisite_missing", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+    { "scenarioId": "all_prerequisites_missing", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+    { "scenarioId": "prerequisite_in_progress_same_term", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+    { "scenarioId": "dependent_in_later_term", "expectedOracleStatus": "VALID_PREREQUISITES" },
+    { "scenarioId": "same_term_without_approval", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+    { "scenarioId": "ap_evidence", "expectedOracleStatus": "REVIEW_REQUIRED", "reviewRule": "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE" },
+    { "scenarioId": "transfer_evidence", "expectedOracleStatus": "REVIEW_REQUIRED", "reviewRule": "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE" },
+    { "scenarioId": "uncertain_evidence", "expectedOracleStatus": "REVIEW_REQUIRED", "reviewRule": "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE" }
+  ],
+  "nightlyOnlyScenarios": [
+    { "scenarioId": "failed_prerequisite", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+    { "scenarioId": "withdrawn_prerequisite", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+    { "scenarioId": "repeated_course_record", "expectedOracleStatus": "VALID_PREREQUISITES" }
+  ],
+  "concurrencyScenarios": {
+    "pullRequest": [
+      { "scenarioId": "same_term_with_correct_approval", "expectedOracleStatus": "VALID_PREREQUISITES" }
+    ],
+    "nightlyOnly": [
+      { "scenarioId": "wrong_approval_type", "mutation": "type", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "wrong_approval_authority", "mutation": "authority", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "wrong_approval_course", "mutation": "course", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "wrong_approval_prerequisite", "mutation": "prerequisite", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "wrong_approval_term", "mutation": "term", "expectedOracleStatus": "INVALID_PREREQUISITES" }
+    ]
+  },
+  "permissionScenarios": {
+    "pullRequest": [
+      { "scenarioId": "permission_correct", "expectedOracleStatus": "VALID_PREREQUISITES" },
+      { "scenarioId": "permission_missing", "expectedOracleStatus": "INVALID_PREREQUISITES" }
+    ],
+    "nightlyOnly": [
+      { "scenarioId": "permission_wrong_type", "mutation": "type", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "permission_wrong_authority", "mutation": "authority", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "permission_wrong_course", "mutation": "course", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "permission_wrong_prerequisite", "mutation": "prerequisite", "expectedOracleStatus": "INVALID_PREREQUISITES" },
+      { "scenarioId": "permission_wrong_term", "mutation": "term", "expectedOracleStatus": "INVALID_PREREQUISITES" }
+    ]
+  },
+  "reviewOnlyCases": [
+    {
+      "scenarioId": "advanced_course_without_prerequisite_records",
+      "kind": "advanced-course-closure",
+      "course": "ECO 335",
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewRule": "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE"
+    },
+    {
+      "scenarioId": "eco335_math_equivalent",
+      "kind": "equivalency",
+      "course": "ECO 335",
+      "prerequisite": "MAT 121",
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewRule": "REVIEW-ECO-335-MATH-EQUIVALENT"
+    },
+    {
+      "scenarioId": "eco331_prerequisite_waiver",
+      "kind": "waiver",
+      "course": "ECO 331",
+      "prerequisite": "ECO 213",
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewRule": "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"
+    },
+    {
+      "scenarioId": "eco333_prerequisite_substitution",
+      "kind": "substitution",
+      "course": "ECO 333",
+      "prerequisite": "ECO 114",
+      "expectedOracleStatus": "REVIEW_REQUIRED",
+      "expectedReviewRule": "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"
+    }
+  ],
+  "allowedProductionDisagreements": [
+    { "scenarioId": "ap_evidence", "oracleStatus": "REVIEW_REQUIRED", "productionValid": true, "classification": "PRODUCTION_ACCEPTS_UNREVIEWED_EVIDENCE" },
+    { "scenarioId": "transfer_evidence", "oracleStatus": "REVIEW_REQUIRED", "productionValid": true, "classification": "PRODUCTION_ACCEPTS_UNREVIEWED_EVIDENCE" },
+    { "scenarioId": "uncertain_evidence", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
+    { "scenarioId": "permission_missing", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
+    { "scenarioId": "permission_wrong_type", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
+    { "scenarioId": "permission_wrong_authority", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
+    { "scenarioId": "permission_wrong_course", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
+    { "scenarioId": "permission_wrong_prerequisite", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
+    { "scenarioId": "permission_wrong_term", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
+    { "scenarioId": "advanced_course_without_prerequisite_records", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
+    { "scenarioId": "eco335_math_equivalent", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
+    { "scenarioId": "eco331_prerequisite_waiver", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
+    { "scenarioId": "eco333_prerequisite_substitution", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" }
+  ]
+}

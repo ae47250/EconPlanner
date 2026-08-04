@@ -4,9 +4,12 @@ import { readFile } from "node:fs/promises";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import {
   buildEconomicsTermPlans,
+  PLAN_VARIANTS,
   semanticPlanSignature,
   validateGeneratedPlan
 } from "../lib/planning/economics.js";
+import { solveEconomicsTermPlan } from "../lib/planning/termSolver.js";
+import { buildPlanningSlots, resolvePlanningContext } from "../lib/planning/horizon.js";
 import { buildEconomicsReportFromStudent } from "../lib/reports/build-economics.js";
 
 const schedule = JSON.parse(await readFile(new URL("../data/normalized/economics/schedule-2026-2027.json", import.meta.url), "utf8"));
@@ -22,6 +25,98 @@ function generate(student) {
     bundle: buildEconomicsTermPlans({ student, mapping, schedule, prerequisites })
   };
 }
+
+function planningSlots(student) {
+  return buildPlanningSlots(resolvePlanningContext(student)).map((slot, order) => ({
+    ...slot,
+    order,
+    reservedCourseUnits: 0
+  }));
+}
+
+function verifiedSupportingOffering(course, section, status, meeting) {
+  return {
+    course,
+    section,
+    title: `${course} test section`,
+    units: 1,
+    instructor: "Department",
+    availability: { status, seatsOpen: status === "open" ? 4 : 0, capacity: 20, asOf: "2026-07-28" },
+    meeting,
+    verificationStatus: "verified",
+    provenance: { sourceType: "test", verifiedOn: "2026-07-28" }
+  };
+}
+
+test("the solver retains deterministic, prerequisite-valid complete schedules", () => {
+  const student = { academicStanding: "freshman", planCreationDate: "2026-09-01", courses: [] };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const slots = planningSlots(student);
+  const solved = solveEconomicsTermPlan({
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    slots,
+    context: resolvePlanningContext(student),
+    distribution: { targetYearCounts: [3, 3, 3, 3], targetTermCounts: {} },
+    requireTargetDistribution: true,
+    solutionBudget: 3
+  });
+
+  assert.equal(solved.solutions.length, 3);
+  assert.deepEqual(solved.solution, solved.solutions[0].plan);
+  assert.equal(solved.search.terminationReason, "SOLUTION_BUDGET");
+  assert.equal(solved.search.complete, false);
+  assert.equal(new Set(solved.solutions.map(item => item.signature)).size, solved.solutions.length);
+});
+
+test("Explore First gives sophomores the introductory, intermediate, and statistics sequence before electives", () => {
+  const supportingSchedule = structuredClone(schedule);
+  supportingSchedule.terms.Fall.push(
+    verifiedSupportingOffering("MAT 217", "A", "waitlisted", {
+      days: ["Mon", "Wed"], startTime: "2:20 PM", endTime: "3:30 PM", startDate: "2026-08-24", endDate: "2026-12-11"
+    }),
+    verifiedSupportingOffering("PSY 217", "B", "open", {
+      days: ["Tue", "Thu"], startTime: "2:20 PM", endTime: "3:30 PM", startDate: "2026-08-24", endDate: "2026-12-11"
+    })
+  );
+  const student = {
+    academicStanding: "sophomore",
+    planCreationDate: "2026-07-30",
+    courses: completed(["ECO 113", "MAT 113"])
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const bundle = buildEconomicsTermPlans({ student, mapping, schedule: supportingSchedule, prerequisites });
+  const plan = bundle.plans.find(item => item.id === "plan-3");
+  const firstYear = plan.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses);
+
+  assert.ok(firstYear.some(course => course.course === "ECO 114"));
+  assert.ok(firstYear.some(course => course.course === "ECO 213"));
+  assert.ok(firstYear.some(course => course.course === "PSY 217"));
+  assert.ok(!firstYear.some(course => String(course.requirementId).startsWith("eco-elective")));
+
+  const mirrorStudent = {
+    ...student,
+    courses: completed(["ECO 114", "MAT 113"])
+  };
+  const mirrorMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, mirrorStudent);
+  const mirror = buildEconomicsTermPlans({ student: mirrorStudent, mapping: mirrorMapping, schedule: supportingSchedule, prerequisites })
+    .plans.find(item => item.id === "plan-3");
+  const mirrorFirstYear = mirror.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses);
+  assert.ok(mirrorFirstYear.some(course => course.course === "ECO 113"));
+  assert.ok(mirrorFirstYear.some(course => course.course === "ECO 214"));
+  assert.ok(mirrorFirstYear.some(course => course.course === "PSY 217"));
+});
+
+test("Plan C is not considered for junior or senior students", () => {
+  for (const academicStanding of ["junior", "senior"]) {
+    const student = { academicStanding, planCreationDate: "2026-07-30", courses: [] };
+    const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+    const bundle = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+    assert.ok(!bundle.candidateOutcomes.some(item => item.id === PLAN_VARIANTS[2].id));
+  }
+});
 
 test("preliminary plans expose approvals independently from the overall status", () => {
   const student = {

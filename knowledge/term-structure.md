@@ -2,7 +2,7 @@
 
 This college uses three academic terms each year: Fall, Winter, and May.
 
-Summer is not part of the regular Fall/Winter/May planning sequence. ECO 113 may appear in Summer only as the verified online last-resort exception.
+Summer is not part of the regular Fall/Winter/May planning sequence. No Summer Economics offering is verified by the current repository schedule evidence.
 
 ## Fall Term
 

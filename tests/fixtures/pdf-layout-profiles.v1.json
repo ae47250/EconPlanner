@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "fixtureVersion": "pdf-layout-profiles.v1",
+  "dataClassification": "fictional-test-only",
+  "externalContractTest": true,
+  "preparedDate": "2026-07-30",
+  "profiles": [
+    {
+      "id": "long-four-year-waitlist-layout",
+      "description": "Fictional four-year layout stress profile with twelve planned courses, many warnings, and one waitlist presentation condition.",
+      "executionMode": "rendered-html",
+      "selectedPlanId": "plan-1",
+      "student": {
+        "displayName": "Fictional Long Layout Student",
+        "academicStanding": "freshman",
+        "planCreationDate": "2026-07-30",
+        "courses": []
+      },
+      "layoutMutations": {
+        "availability": [
+          {
+            "academicYear": "2026/2027",
+            "term": "Spring",
+            "course": "ECO 222",
+            "section": "S",
+            "value": {
+              "status": "waitlisted",
+              "seatsOpen": 0,
+              "capacity": 25,
+              "asOf": "2026-07-30"
+            }
+          }
+        ],
+        "warnings": [
+          "This fictional section is waitlisted; the schedule works only if a seat becomes available."
+        ]
+      },
+      "expectations": {
+        "minimumAcademicYears": 4,
+        "minimumCourses": 12,
+        "minimumWarnings": 10,
+        "minimumApprovals": 0,
+        "requiredAvailabilityStates": ["open", "unknown", "waitlisted"],
+        "requiredCourseRoles": [
+          { "course": "ECO 257", "role": "statistics" }
+        ]
+      }
+    },
+    {
+      "id": "approval-heavy-final-year",
+      "description": "Fictional final-year plan with a documented Economics Department concurrency approval and many warnings.",
+      "executionMode": "report-route",
+      "selectedPlanId": "plan-1",
+      "student": {
+        "displayName": "Fictional Approval Layout Student",
+        "academicStanding": "senior",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 114", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "MAT 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 213", "status": "completed", "units": 1, "source": "manual_code" }
+        ]
+      },
+      "expectations": {
+        "minimumAcademicYears": 1,
+        "minimumCourses": 8,
+        "minimumWarnings": 8,
+        "minimumApprovals": 1,
+        "requiredAvailabilityStates": ["open", "unknown"],
+        "requiredCourseRoles": []
+      }
+    },
+    {
+      "id": "eco-257-statistics",
+      "description": "Fictional profile in which ECO 257 is the statistics requirement and never an Economics elective.",
+      "executionMode": "report-route",
+      "preparedDate": "2027-07-30",
+      "selectedPlanId": "plan-1",
+      "student": {
+        "displayName": "Fictional ECO 257 Statistics Student",
+        "academicStanding": "senior",
+        "planCreationDate": "2027-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 114", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 213", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 214", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "MAT 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "BUSN 323", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 161", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 221", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 234", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 260", "status": "completed", "units": 1, "source": "manual_code" }
+        ]
+      },
+      "expectations": {
+        "minimumAcademicYears": 1,
+        "minimumCourses": 2,
+        "minimumWarnings": 1,
+        "minimumApprovals": 0,
+        "requiredAvailabilityStates": ["unknown"],
+        "requiredCourseRoles": [
+          { "course": "ECO 257", "role": "statistics" }
+        ]
+      }
+    }
+  ],
+  "invalidSelectedPlanCases": [
+    {
+      "id": "eco-257-as-elective",
+      "description": "A fictional mutation that replaces the first ECO elective with ECO 257 and must be rejected before any hosted call.",
+      "baseProfileId": "approval-heavy-final-year",
+      "targetRequirementPrefix": "eco-elective",
+      "replacement": {
+        "course": "ECO 257",
+        "title": "Applied Statistics",
+        "section": "",
+        "source": "requirement-placeholder",
+        "verificationStatus": "unverified",
+        "availability": {
+          "status": "unknown",
+          "seatsOpen": null,
+          "capacity": null,
+          "asOf": null
+        },
+        "meeting": {
+          "days": [],
+          "startMinutes": null,
+          "endMinutes": null
+        }
+      },
+      "expectedStatus": 422,
+      "expectedCode": "SELECTED_PLAN_INVALID"
+    }
+  ]
+}

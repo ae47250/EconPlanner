@@ -26,6 +26,10 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   assert.ok(html.includes(String(report.remaining.strict)));
   assert.equal(html.includes("{{"), false);
   assert.equal(reportPlanCount(report) > 0, true);
+  assert.equal(
+    (html.match(/class="course"/g) || []).length,
+    report.terms.reduce((total, term) => total + term.courses.length, 0)
+  );
 });
 
 test("Economics report API returns canonical JSON or populated HTML", async () => {
@@ -103,6 +107,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(/<script\b/i.test(submitted.html), false);
   assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
   assert.equal(submitted.html.includes("{{"), false);
+  assert.match(submitted.html, /<span class="course"(?:\s+data-requirement-id="[^"]+")?>ECO 461(?:-[^<]+)?<\/span>/);
   assert.match(submitted.correlationId, /^[A-Za-z0-9._:-]+$/);
   assert.equal(/[^\x00-\x7F]/.test(submitted.html), false);
 });
@@ -189,6 +194,25 @@ test("selected report plan is revalidated and rendered exactly", async () => {
     selectedPlan.terms.flatMap(term => term.courses.map(course => course.course))
   );
 
+  const tamperedMeetingPlan = structuredClone(selectedPlan);
+  const verifiedCourse = tamperedMeetingPlan.terms
+    .flatMap(term => term.courses)
+    .find(course => course.source === "verified-offering" && course.meeting?.startTime);
+  assert.ok(verifiedCourse);
+  verifiedCourse.meeting.startTime = "1:00 PM";
+  verifiedCourse.meeting.startMinutes = 780;
+  const tamperedMeetingResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: fixture.student,
+      preparedDate: "2026-07-28",
+      selectedPlan: tamperedMeetingPlan,
+      format: "json"
+    })
+  }));
+  assert.equal(tamperedMeetingResponse.status, 422);
+
   selectedPlan.terms[0].courses.push({ course: "ECO 999", requirementId: "eco-113", source: "verified-offering" });
   const invalidResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
     method: "POST",
@@ -196,4 +220,46 @@ test("selected report plan is revalidated and rendered exactly", async () => {
     body: JSON.stringify({ student: fixture.student, preparedDate: "2026-07-28", selectedPlan, format: "json" })
   }));
   assert.equal(invalidResponse.status, 422);
+});
+
+test("report and PDF validation reject a selected plan that exceeds authoritative reserved capacity", async () => {
+  const generated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28");
+  const selectedPlan = structuredClone(generated.selectedPlan);
+  const fall = selectedPlan.terms.find(term => term.slotId === "fall-2026");
+  assert.ok(fall.courses.length > 2);
+  fall.reservedCourseUnits = 0;
+  fall.reservedOutsideCourseUnits = 0;
+  const student = {
+    ...fixture.student,
+    planCreationDate: "2026-07-28",
+    reservedCourseUnits: { "fall-2026": 2 }
+  };
+
+  const reportResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student, preparedDate: "2026-07-28", selectedPlan, format: "json" })
+  }));
+  assert.equal(reportResponse.status, 422);
+  assert.equal((await reportResponse.json()).code, "SELECTED_PLAN_INVALID");
+
+  let pdfCreatorCalls = 0;
+  const pdfResponse = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student, preparedDate: "2026-07-28", selectedPlan, format: "pdf" })
+  }), {
+    environment: {
+      PDF_CREATION_ENABLED: "true",
+      PDF_CREATION_API_URL: "https://pdf-creator.example",
+      PDF_CREATION_API_KEY: "a".repeat(43)
+    },
+    fetchImpl: async () => {
+      pdfCreatorCalls += 1;
+      throw new Error("PDF creation must not run for an invalid selected plan.");
+    }
+  });
+  assert.equal(pdfResponse.status, 422);
+  assert.equal((await pdfResponse.json()).code, "SELECTED_PLAN_INVALID");
+  assert.equal(pdfCreatorCalls, 0);
 });

@@ -1,5 +1,17 @@
 import { expect, test } from "@playwright/test";
 
+const OVERFLOW_VIEWPORTS = [
+  { name: "original mobile", width: 390, height: 844, repetitions: 5 },
+  { name: "narrow phone", width: 320, height: 700, repetitions: 3 },
+  { name: "desktop", width: 1440, height: 900, repetitions: 1 }
+];
+const LONG_WRAP_TOKEN = "FictionalOverflowWrapProbe".repeat(32);
+const LONG_STUDENT_NAME = `Alexandria${LONG_WRAP_TOKEN}`;
+const LONG_PLAN_DESCRIPTION = `Fictional plan description ${LONG_WRAP_TOKEN}`;
+const LONG_COURSE_TITLE = `Fictional course title ${LONG_WRAP_TOKEN}`;
+const LONG_PLAN_WARNING = `Fictional plan warning ${LONG_WRAP_TOKEN}`;
+const LONG_APPROVAL_MESSAGE = `Fictional approval condition ${LONG_WRAP_TOKEN}`;
+
 async function resetPlanner(page) {
   await page.goto("/?layout=apple");
   await page.evaluate(() => {
@@ -27,9 +39,146 @@ function courseStatus(page, code, status) {
     .getByRole("button", { name: status, exact: true });
 }
 
-async function generatePlans(page) {
-  await page.getByRole("button", { name: /Generate my plans/ }).click();
-  await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
+async function selectRequirementChoice(page, code) {
+  const choice = page.getByRole("checkbox", { name: new RegExp(`^${code}\\b`) });
+  await choice.check({ force: true });
+  await expect(choice).toBeChecked();
+}
+
+function requestBody(request) {
+  try {
+    return request.postDataJSON();
+  } catch {
+    return null;
+  }
+}
+
+function isGenerationRequest(request) {
+  if (!request.url().endsWith("/api/majors/map") || request.method() !== "POST") return false;
+  return requestBody(request)?.action !== "validate-plan";
+}
+
+async function installLongContentResponse(page) {
+  await page.route("**/api/majors/map", async route => {
+    if (!isGenerationRequest(route.request())) {
+      await route.continue();
+      return;
+    }
+    const upstream = await route.fetch();
+    const data = await upstream.json();
+    const economics = data.programs?.find(program => program.program?.id === "economics-base");
+    const firstPlan = economics.economicsPlans?.[0];
+    const selectedPlan = economics.economicsPlans?.find(plan => plan.label === "Plan C-2");
+    if (firstPlan) firstPlan.description = LONG_PLAN_DESCRIPTION;
+    if (selectedPlan) {
+      const firstCourse = selectedPlan.terms?.flatMap(term => term.courses || [])[0];
+      if (firstCourse) firstCourse.title = LONG_COURSE_TITLE;
+      selectedPlan.studentMessages = [LONG_PLAN_WARNING, ...(selectedPlan.studentMessages || [])];
+      selectedPlan.feasibility = {
+        ...(selectedPlan.feasibility || {}),
+        requiredApprovals: [
+          {
+            course: "ECO 999",
+            prerequisite: "Fictional prerequisite",
+            term: "Fictional term",
+            authority: "Fictional approval authority",
+            message: LONG_APPROVAL_MESSAGE
+          },
+          ...(selectedPlan.feasibility?.requiredApprovals || [])
+        ]
+      };
+    }
+    await route.fulfill({ response: upstream, json: data });
+  });
+}
+
+async function assertNoHorizontalOverflow(page, label) {
+  const measurement = await page.evaluate(() => {
+    const root = document.documentElement;
+    const clientWidth = root.clientWidth;
+    const describe = element => {
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return {
+        element: element.tagName.toLowerCase(),
+        id: element.id,
+        className: typeof element.className === "string" ? element.className : "",
+        left: Math.round(rect.left * 100) / 100,
+        right: Math.round(rect.right * 100) / 100,
+        width: Math.round(rect.width * 100) / 100,
+        computedWidth: style.width,
+        minWidth: style.minWidth,
+        maxWidth: style.maxWidth,
+        overflowX: style.overflowX,
+        overflowWrap: style.overflowWrap,
+        whiteSpace: style.whiteSpace,
+        position: style.position,
+        transform: style.transform,
+        animationName: style.animationName
+      };
+    };
+    const offenders = [...document.body.querySelectorAll("*")]
+      .filter(element => {
+        const rect = element.getBoundingClientRect();
+        return rect.left < -0.5 || rect.right > clientWidth + 0.5;
+      })
+      .slice(0, 12)
+      .map(describe);
+    return {
+      clientWidth,
+      scrollWidth: root.scrollWidth,
+      overflow: root.scrollWidth - clientWidth,
+      offenders
+    };
+  });
+  expect(
+    measurement.scrollWidth,
+    `${label}: ${JSON.stringify(measurement)}`
+  ).toBeLessThanOrEqual(measurement.clientWidth);
+}
+
+async function assertInsideViewport(locator, label) {
+  const measurement = await locator.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    const parentRect = element.parentElement.getBoundingClientRect();
+    return {
+      viewportWidth: document.documentElement.clientWidth,
+      parentWidth: parentRect.width,
+      width: rect.width,
+      left: rect.left,
+      right: rect.right
+    };
+  });
+  expect(measurement.left, `${label}: ${JSON.stringify(measurement)}`).toBeGreaterThanOrEqual(0);
+  expect(measurement.right, `${label}: ${JSON.stringify(measurement)}`).toBeLessThanOrEqual(measurement.viewportWidth);
+}
+
+async function assertLongTextWraps(locator, label) {
+  const measurement = await locator.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    const parentRect = element.parentElement.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    const lineHeight = Number.parseFloat(style.lineHeight) || Number.parseFloat(style.fontSize) * 1.2;
+    return {
+      viewportWidth: document.documentElement.clientWidth,
+      parentWidth: parentRect.width,
+      width: rect.width,
+      height: rect.height,
+      left: rect.left,
+      right: rect.right,
+      lineHeight,
+      lineRects: element.getClientRects().length,
+      overflowWrap: style.overflowWrap,
+      whiteSpace: style.whiteSpace
+    };
+  });
+  expect(measurement.left, `${label}: ${JSON.stringify(measurement)}`).toBeGreaterThanOrEqual(0);
+  expect(measurement.right, `${label}: ${JSON.stringify(measurement)}`).toBeLessThanOrEqual(measurement.viewportWidth);
+  expect(measurement.width, `${label}: ${JSON.stringify(measurement)}`).toBeLessThanOrEqual(measurement.parentWidth + 0.5);
+  expect(
+    measurement.lineRects > 1 || measurement.height > measurement.lineHeight * 1.5,
+    `${label} should wrap across lines: ${JSON.stringify(measurement)}`
+  ).toBe(true);
 }
 
 test.beforeEach(async ({ page }) => {
@@ -181,10 +330,11 @@ test("generation is single-flight and distinct plans support compare, history, r
   await expect(page.getByText("Alex Student", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Remove ECO 114" }).click();
-  await expect(page.locator(".plan-edit-status")).toContainText("updated as a draft");
-  await expect(page.locator(".plan-validation-errors")).toContainText("Requirement eco-114 remains unscheduled");
+  await expect(page.locator(".plan-edit-status")).toContainText("That plan change cannot be saved");
+  await expect(page.locator(".plan-edit-status")).toContainText(/ECO 214 is missing prerequisites: ECO 114|Requirement eco-114 remains unscheduled/);
+  await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
   await page.getByRole("button", { name: "Compare plans" }).click();
 
   const editedCards = page.locator("article[data-plan-id]");
@@ -193,21 +343,19 @@ test("generation is single-flight and distinct plans support compare, history, r
     item.querySelector("tbody")?.innerText || ""
   ])));
   expect(editedSchedules["plan-1"]).toBe(originalSchedules["plan-1"]);
-  expect(editedSchedules["plan-2"]).not.toBe(originalSchedules["plan-2"]);
+  expect(editedSchedules["plan-2"]).toBe(originalSchedules["plan-2"]);
   expect(editedSchedules["plan-3"]).toBe(originalSchedules["plan-3"]);
   expect(editedSchedules["plan-c2"]).toBe(originalSchedules["plan-c2"]);
-  await expect(page.locator('article[data-plan-id="plan-2"] .plan-validation')).toContainText("Needs attention");
 
-  await page.getByRole("button", { name: "Review Plan B issues" }).click();
-  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+  await page.getByRole("button", { name: "Review selected Plan B" }).click();
   await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
-  await expect(page.locator(".plan-edit-status")).toContainText("Plan B was restored");
 
   await page.getByRole("combobox", { name: "Move ECO 114 to another term" })
     .selectOption({ label: "2026/2027 Winter" });
-  await expect(page.locator(".plan-edit-status")).toContainText("updated as a draft");
-  await expect(page.locator(".plan-validation-errors")).toContainText("not verified");
-  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+  await expect(page.locator(".plan-edit-status")).toContainText("That plan change cannot be saved");
+  await expect(page.locator(".plan-edit-status")).toContainText("not verified");
+  await expect(page.getByRole("combobox", { name: "Move ECO 114 to another term" })).toHaveValue("fall-2026");
+  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
 
   await page.getByRole("button", { name: "Regenerate plans" }).click();
   await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
@@ -257,7 +405,7 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
     await courseStatus(page, code, "Completed").click();
   }
   await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
-  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await selectRequirementChoice(page, "MAT 113");
   await courseStatus(page, "ECO 214", "Completed").click();
 
   await page.getByRole("button", { name: /Generate my plans/ }).click();
@@ -265,9 +413,9 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
   const cards = page.locator("article[data-plan-id]");
   await expect(cards).toHaveCount(1);
   await expect(page.getByText(/more than two Economics courses/).first()).toBeVisible();
-  await expect(page.getByText(/Schedule confirmation required/).first()).toBeVisible();
+  await expect(page.getByText(/Schedule confirmation required.*MAT 217, ECO 257, or PSY 217/).first()).toBeVisible();
   for (const card of await cards.all()) {
-    await expect(card.getByText("MAT 217")).toBeVisible();
+    await expect(card.getByText("Statistics requirement")).toBeVisible();
     await expect(card.getByText("ECO 213")).toBeVisible();
     await expect(card.getByText("ECO 461")).toBeVisible();
     await expect(card.getByText("ECO 321")).toBeVisible();
@@ -289,7 +437,7 @@ test("selected elective options persist through server validation and PDF errors
     await courseStatus(page, code, "Completed").click();
   }
   await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
-  await page.locator(".choice-option").filter({ hasText: "MAT 113" }).click();
+  await selectRequirementChoice(page, "MAT 113");
   await courseStatus(page, "ECO 214", "Completed").click();
 
   await page.getByRole("button", { name: /Generate my plans/ }).click();
@@ -313,31 +461,115 @@ test("selected elective options persist through server validation and PDF errors
   await expect(page.locator(".pdf-download-status")).toContainText("PDF downloads are not enabled", { timeout: 15000 });
 });
 
-test("mobile principal workflow keeps controls and prerequisite dialog inside the viewport", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await setPlanDate(page, "2026-07-31");
-  await page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." }).click();
-  const transferCard = page.getByRole("region", { name: "Transfer student planning" });
-  await expect(transferCard).toBeVisible();
-  const transferCardBox = await transferCard.boundingBox();
-  expect(transferCardBox.x).toBeGreaterThanOrEqual(0);
-  expect(transferCardBox.x + transferCardBox.width).toBeLessThanOrEqual(390);
-  await page.getByRole("button", { name: "Use regular class-year choices" }).click();
-  const completed213 = courseStatus(page, "ECO 213", "Completed");
-  await completed213.click();
-  const dialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
-  await expect(dialog).toBeVisible();
-  const dialogBox = await dialog.boundingBox();
-  expect(dialogBox.x).toBeGreaterThanOrEqual(0);
-  expect(dialogBox.x + dialogBox.width).toBeLessThanOrEqual(390);
-  await page.getByRole("button", { name: "Cancel" }).click();
+test("PDF download recovers cleanly after failed and aborted requests", async ({ page }) => {
+  await setStanding(page, "Senior");
+  await setPlanDate(page, "2026-07-30");
+  for (const code of ["ECO 113", "ECO 114"]) {
+    await courseStatus(page, code, "Completed").click();
+  }
+  await courseStatus(page, "MAT 113 / MAT 121", "Completed").click();
+  await selectRequirementChoice(page, "MAT 113");
+  await courseStatus(page, "ECO 214", "Completed").click();
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Your feasible plan" })).toBeVisible({ timeout: 15000 });
+  await page.getByRole("button", { name: /Review selected Plan/ }).click();
 
-  await courseStatus(page, "ECO 113", "Completed").click();
-  await generatePlans(page);
-  await expect(page.locator("article[data-plan-id]")).toHaveCount(4);
-  await page.waitForTimeout(350);
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow).toBeLessThanOrEqual(1);
-  await page.getByRole("button", { name: "Choose Plan C-2" }).click();
-  await expect(page.getByRole("heading", { name: "Review Plan C-2" })).toBeVisible();
+  const download = page.getByRole("button", { name: "Download PDF" });
+  await page.route("**/api/reports/economics", route => route.fulfill({
+    status: 503,
+    contentType: "application/json",
+    body: JSON.stringify({ error: "PDF creation is temporarily unavailable." })
+  }));
+  await download.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".pdf-download-status")).toContainText("temporarily unavailable");
+  await expect(download).toBeFocused();
+  await page.unroute("**/api/reports/economics");
+
+  await page.route("**/api/reports/economics", route => route.abort("aborted"));
+  const abortedRequest = page.waitForEvent("requestfailed", request => request.url().endsWith("/api/reports/economics"));
+  await download.click();
+  await abortedRequest;
+  await expect(page.locator(".pdf-download-status")).toContainText(/interrupted|could not connect/i);
+  await expect(page.locator(".pdf-download-status")).not.toContainText(/failed to fetch|aborterror/i);
+  await expect(download).toBeFocused();
+  await page.unroute("**/api/reports/economics");
+
+  const recoveredRequest = page.waitForRequest(request => request.url().endsWith("/api/reports/economics"));
+  await download.click();
+  await recoveredRequest;
+});
+
+test("a structurally malformed successful planner response is rejected before storage", async ({ page }) => {
+  await setPlanDate(page, "2026-07-30");
+  await page.route("**/api/majors/map", route => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ programs: [] })
+  }));
+
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
+  await expect(page.locator(".generate-card .status")).toContainText("invalid response");
+  await expect(page.locator("main.comparison-page")).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.sessionStorage.getItem("econ-planner-generated-session"))).toBeNull();
+});
+
+test("comparison entry, dialog, and long content stay inside every target viewport", async ({ page }) => {
+  test.setTimeout(180000);
+  await installLongContentResponse(page);
+
+  for (const viewport of OVERFLOW_VIEWPORTS) {
+    for (let repetition = 1; repetition <= viewport.repetitions; repetition += 1) {
+      const label = `${viewport.name} ${viewport.width}px repetition ${repetition}`;
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await resetPlanner(page);
+      await setPlanDate(page, "2026-07-31");
+      await page.getByRole("textbox", { name: "Student name (optional)" }).fill(LONG_STUDENT_NAME);
+
+      await page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." }).click();
+      const transferCard = page.getByRole("region", { name: "Transfer student planning" });
+      await expect(transferCard).toBeVisible();
+      await assertInsideViewport(transferCard, `${label} transfer card`);
+      await assertNoHorizontalOverflow(page, `${label} transfer state`);
+
+      await page.getByRole("button", { name: "Use regular class-year choices" }).click();
+      const completed213 = courseStatus(page, "ECO 213", "Completed");
+      await completed213.click();
+      const dialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
+      await expect(dialog).toBeVisible();
+      await assertInsideViewport(dialog, `${label} prerequisite dialog`);
+      await assertNoHorizontalOverflow(page, `${label} prerequisite dialog`);
+      await page.getByRole("button", { name: "Cancel" }).click();
+
+      await courseStatus(page, "ECO 113", "Completed").click();
+      const generationResponse = page.waitForResponse(response => isGenerationRequest(response.request()));
+      await page.getByRole("button", { name: /Generate my plans/ }).click();
+      expect((await generationResponse).status()).toBe(200);
+      await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
+      await expect(page.locator("article[data-plan-id]")).toHaveCount(4);
+      await assertNoHorizontalOverflow(page, `${label} comparison entry`);
+
+      const studentName = page.getByText(LONG_STUDENT_NAME, { exact: true });
+      const planDescription = page.getByText(LONG_PLAN_DESCRIPTION, { exact: true });
+      await expect(studentName).toBeVisible();
+      await expect(planDescription).toBeVisible();
+      await assertLongTextWraps(studentName, `${label} fictional student name`);
+      await assertLongTextWraps(planDescription, `${label} fictional plan description`);
+      await assertNoHorizontalOverflow(page, `${label} long content`);
+
+      await page.getByRole("button", { name: "Choose Plan C-2" }).click();
+      await expect(page.getByRole("heading", { name: "Review Plan C-2" })).toBeVisible();
+      const courseTitle = page.getByText(LONG_COURSE_TITLE, { exact: true });
+      const planWarning = page.getByText(LONG_PLAN_WARNING, { exact: true });
+      const approvalMessage = page.getByText(LONG_APPROVAL_MESSAGE, { exact: true });
+      await expect(courseTitle).toBeVisible();
+      await expect(planWarning).toBeVisible();
+      await expect(approvalMessage).toBeVisible();
+      await assertLongTextWraps(courseTitle, `${label} fictional course title`);
+      await assertLongTextWraps(planWarning, `${label} fictional plan warning`);
+      await assertLongTextWraps(approvalMessage, `${label} fictional approval`);
+      await assertNoHorizontalOverflow(page, `${label} selected plan`);
+    }
+  }
 });

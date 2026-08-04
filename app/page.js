@@ -260,6 +260,52 @@ function economicsResult(report) {
   return economicsResultFromReport(report);
 }
 
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function hasValidGeneratedPlan(plan) {
+  return isPlainObject(plan)
+    && typeof plan.id === "string"
+    && plan.id.length > 0
+    && Array.isArray(plan.terms)
+    && plan.terms.every(term => (
+      isPlainObject(term)
+      && typeof (term.slotId || term.term) === "string"
+      && Array.isArray(term.courses)
+      && term.courses.every(course => isPlainObject(course) && typeof course.course === "string" && course.course.length > 0)
+    ));
+}
+
+function isValidGeneratedPlannerReport(report) {
+  if (!isPlainObject(report) || !Array.isArray(report.programs)) return false;
+  const result = economicsResult(report);
+  if (!isPlainObject(result) || !isPlainObject(result.program)) return false;
+  if (result.program.id !== "economics-base" && result.program.name !== "Economics") return false;
+  if (!Array.isArray(result.economicsPlans)
+    || !Array.isArray(result.economicsPlanningGaps)
+    || !Array.isArray(result.economicsCandidateOutcomes)) return false;
+
+  if (!result.economicsPlans.every(hasValidGeneratedPlan)) return false;
+  if (!result.economicsPlans.length) return result.economicsPlan === null;
+  return hasValidGeneratedPlan(result.economicsPlan)
+    && result.economicsPlan.id === result.economicsPlans[0].id;
+}
+
+function studentFacingRequestError(error, fallback, connectionMessage = "The planner could not connect. Please try again.") {
+  const message = typeof error?.message === "string" ? error.message.trim() : "";
+  if (error?.name === "AbortError" || /abort(?:ed|error)?/i.test(message)) {
+    return "The request was interrupted. Please try again.";
+  }
+  if (error?.name === "TimeoutError" || /timed?\s*out|timeout/i.test(message)) {
+    return "The planner took too long to respond. Please try again.";
+  }
+  if (!message || /failed to fetch|networkerror|network request failed|load failed|network stack/i.test(message)) {
+    return connectionMessage;
+  }
+  return message || fallback;
+}
+
 function planCourseCount(plan) {
   return plan?.terms?.reduce((count, term) => count + term.courses.length, 0) || 0;
 }
@@ -391,6 +437,15 @@ function PlanTimeline({
           ))}
         </div>
       )}
+      {plans.filter(plan => plan.id !== activePlan.id).map(plan => (
+        <div
+          id={plan.id}
+          role="tabpanel"
+          aria-labelledby={`${plan.id}-tab`}
+          hidden
+          key={plan.id}
+        />
+      ))}
       <div id={activePlan.id} role="tabpanel" aria-labelledby={`${activePlan.id}-tab`}>
         <div className="section-heading">
           <span className="step-number">3.</span>
@@ -443,7 +498,7 @@ function PlanTimeline({
                                           fromTermId: termId,
                                           courseId,
                                           optionId: event.target.value
-                                        })}
+                                        }, event.currentTarget)}
                                       >
                                         {course.alternativeOptions.map(option => (
                                           <option value={option.id} key={option.id}>
@@ -459,13 +514,13 @@ function PlanTimeline({
                                       aria-label={`Move ${course.course} to another term`}
                                       disabled={Boolean(editingPlanCourseKey)}
                                       value={termId}
-                                      onChange={event => onEditPlanCourse({
-                                        type: "move",
-                                        planId: activePlan.id,
-                                        fromTermId: termId,
-                                        toTermId: event.target.value,
-                                        courseId
-                                      })}
+                                        onChange={event => onEditPlanCourse({
+                                          type: "move",
+                                          planId: activePlan.id,
+                                          fromTermId: termId,
+                                          toTermId: event.target.value,
+                                          courseId
+                                        }, event.currentTarget)}
                                     >
                                       {(activePlan.terms || []).map(optionTerm => {
                                         const optionTermId = optionTerm.slotId || optionTerm.term;
@@ -480,12 +535,12 @@ function PlanTimeline({
                                   <button
                                     type="button"
                                     disabled={Boolean(editingPlanCourseKey)}
-                                    onClick={() => onEditPlanCourse({
+                                    onClick={event => onEditPlanCourse({
                                       type: "remove",
                                       planId: activePlan.id,
                                       fromTermId: termId,
                                       courseId
-                                    })}
+                                    }, event.currentTarget)}
                                   >
                                     {editingPlanCourseKey === editKey ? "Checking..." : `Remove ${course.course}`}
                                   </button>
@@ -613,6 +668,10 @@ function CandidateOutcomes({ outcomes = [], convergences = [] }) {
           {outcomes.map(outcome => (
             <li key={`${outcome.id}-${outcome.label}`}>
               <strong>{outcome.label}:</strong> {feasibilityLabel(outcome.status)}{outcome.displayed ? " · shown" : " · not shown"}
+              {outcome.substitutionReason === "NEXT_DISTINCT_RESERVE" && " · using its next-best distinct schedule"}
+              {outcome.displayed && outcome.selectedCandidateRank > 1 && ` · reserve candidate ${outcome.selectedCandidateRank}`}
+              {outcome.candidatePool?.retainedDistinctSchedules > 1 && ` · ${outcome.candidatePool.retainedDistinctSchedules} validated options retained`}
+              {!outcome.displayed && outcome.suppressionReason?.code === "NO_DISTINCT_RETAINED_CANDIDATE" && " · search stopped before a distinct retained option was found"}
               {outcome.reasons?.length > 0 && ` — ${outcome.reasons.map(item => item.reason || item.message || item).join("; ")}`}
             </li>
           ))}
@@ -682,6 +741,7 @@ function PlanComparisonScreen({
   onSelectPlan,
   onRegenerate,
   onDownloadPdf,
+  downloadButtonRef,
   isDownloadingPdf,
   pdfStatus,
   onEditPlanCourse,
@@ -741,17 +801,18 @@ function PlanComparisonScreen({
         .comparison-page {
           box-sizing: border-box;
           min-height: 100vh;
+          overflow-wrap: anywhere;
           animation: comparison-enter .28s ease-out both;
         }
         .comparison-page * { box-sizing: border-box; }
         .comparison-page.is-exiting { animation: comparison-exit .24s ease-in both; }
         @keyframes comparison-enter {
-          from { opacity: 0; transform: translateX(4rem); }
-          to { opacity: 1; transform: translateX(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         @keyframes comparison-exit {
-          from { opacity: 1; transform: translateX(0); }
-          to { opacity: 0; transform: translateX(4rem); }
+          from { opacity: 1; }
+          to { opacity: 0; }
         }
         .comparison-topbar {
           display: flex;
@@ -1154,8 +1215,9 @@ function PlanComparisonScreen({
               <button
                 type="button"
                 className="download-pdf-button"
+                ref={downloadButtonRef}
                 disabled={isDownloadingPdf || Boolean(editingPlanCourseKey)}
-                onClick={onDownloadPdf}
+                onClick={() => onDownloadPdf()}
               >
                 {isDownloadingPdf ? "Creating PDF..." : "Download PDF"}
               </button>
@@ -1395,6 +1457,13 @@ export default function Page() {
   const generationInFlightRef = useRef(false);
   const generationRequestRef = useRef(0);
   const generationAbortRef = useRef(null);
+  const planEditInFlightRef = useRef(false);
+  const pdfDownloadInFlightRef = useRef(false);
+  const pdfDownloadAbortRef = useRef(null);
+  const generateButtonRef = useRef(null);
+  const planEditTriggerRef = useRef(null);
+  const downloadButtonRef = useRef(null);
+  const [failureFocusTarget, setFailureFocusTarget] = useState("");
   const latestFormRef = useRef(initialForm);
   const [courseSearch, setCourseSearch] = useState("");
   const [isEditingPlanDate, setIsEditingPlanDate] = useState(false);
@@ -1634,7 +1703,27 @@ export default function Page() {
     return () => window.removeEventListener("popstate", handlePlannerHistory);
   }, [isHydrated, report]);
 
-  useEffect(() => () => generationAbortRef.current?.abort(), []);
+  useEffect(() => () => {
+    generationAbortRef.current?.abort();
+    pdfDownloadAbortRef.current?.abort();
+  }, []);
+
+  function restoreFocusAfterFailure(target) {
+    setFailureFocusTarget(target);
+  }
+
+  useEffect(() => {
+    const control = failureFocusTarget === "generate"
+      ? generateButtonRef.current
+      : failureFocusTarget === "download"
+        ? downloadButtonRef.current
+        : failureFocusTarget === "plan-edit"
+          ? planEditTriggerRef.current
+          : null;
+    if (!control || isGenerating || isDownloadingPdf || editingPlanCourseKey) return;
+    setFailureFocusTarget("");
+    window.requestAnimationFrame(() => control.focus());
+  }, [editingPlanCourseKey, failureFocusTarget, isDownloadingPdf, isGenerating, pdfStatus, planEditStatus, status]);
 
   useEffect(() => {
     if (!report || !generatedInputSignatureRef.current) return;
@@ -1873,7 +1962,9 @@ export default function Page() {
         body: JSON.stringify({ student }),
         signal: controller.signal
       });
-      const data = await response.json().catch(() => ({}));
+      const data = await response.json().catch(() => {
+        throw new Error("The planner returned an invalid response. Please try again.");
+      });
       if (!response.ok) throw new Error(data.error || "The planner could not complete.");
       if (requestId !== generationRequestRef.current || controller.signal.aborted) return;
       if (plannerInputSignature(latestFormRef.current) !== requestSignature) {
@@ -1881,7 +1972,10 @@ export default function Page() {
         return;
       }
 
-      const plans = economicsResult(data)?.economicsPlans || [];
+      if (!isValidGeneratedPlannerReport(data)) {
+        throw new Error("The planner returned an invalid response. Please try again.");
+      }
+      const plans = economicsResult(data).economicsPlans;
       const firstPlanId = plans[0]?.id || "";
       generatedInputSignatureRef.current = requestSignature;
       setIsComparisonExiting(false);
@@ -1904,7 +1998,10 @@ export default function Page() {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
       });
     } catch (error) {
-      if (error.name !== "AbortError") setStatus(error.message);
+      if (requestId === generationRequestRef.current) {
+        setStatus(studentFacingRequestError(error, "The planner could not complete. Please try again."));
+        restoreFocusAfterFailure("generate");
+      }
     } finally {
       if (requestId === generationRequestRef.current) {
         generationInFlightRef.current = false;
@@ -1915,6 +2012,7 @@ export default function Page() {
   }
 
   async function downloadSelectedPlanPdf() {
+    if (pdfDownloadInFlightRef.current) return;
     const selectedPlan = (economicsResult(report)?.economicsPlans || [])
       .find(plan => plan.id === selectedPlanId);
     if (!selectedPlan) {
@@ -1922,6 +2020,9 @@ export default function Page() {
       return;
     }
 
+    pdfDownloadInFlightRef.current = true;
+    const controller = new AbortController();
+    pdfDownloadAbortRef.current = controller;
     setIsDownloadingPdf(true);
     setPdfStatus("Creating your PDF...");
     try {
@@ -1936,7 +2037,8 @@ export default function Page() {
           preparedDate: formData.planCreationDate,
           selectedPlan,
           format: "pdf"
-        })
+        }),
+        signal: controller.signal
       });
       if (!response.ok) {
         const result = await response.json().catch(() => ({}));
@@ -1956,9 +2058,14 @@ export default function Page() {
       window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
       setPdfStatus("PDF downloaded.");
     } catch (error) {
-      setPdfStatus(error.message || "The PDF could not be created.");
+      setPdfStatus(studentFacingRequestError(error, "The PDF could not be created."));
+      restoreFocusAfterFailure("download");
     } finally {
-      setIsDownloadingPdf(false);
+      if (pdfDownloadAbortRef.current === controller) {
+        pdfDownloadAbortRef.current = null;
+        pdfDownloadInFlightRef.current = false;
+        setIsDownloadingPdf(false);
+      }
     }
   }
 
@@ -2220,91 +2327,104 @@ export default function Page() {
     navigatePlanner(targetView, selectedPlanId, { replace: true });
   }
 
-  async function editPlanCourse(edit) {
-    if (editingPlanCourseKey || generationInFlightRef.current) return;
-    const result = economicsResult(report);
-    const plans = result?.economicsPlans || [];
-    const sourcePlan = plans.find(plan => plan.id === edit.planId);
-    if (!sourcePlan || (edit.type === "move" && edit.fromTermId === edit.toTermId)) return;
+  async function editPlanCourse(edit, trigger) {
+    if (planEditInFlightRef.current || generationInFlightRef.current) return;
+    planEditInFlightRef.current = true;
+    planEditTriggerRef.current = trigger;
 
-    const sourceTerm = sourcePlan.terms.find(term => (term.slotId || term.term) === edit.fromTermId);
-    const selectedCourse = sourceTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
-    if (!selectedCourse) {
-      setPlanEditStatus("That course could not be found in the selected plan.");
-      return;
-    }
-
-    const selectedAlternative = edit.type === "option"
-      ? selectedCourse.alternativeOptions?.find(option => option.id === edit.optionId)
-      : null;
-    if (edit.type === "option" && !selectedAlternative) {
-      setPlanEditStatus("That elective option is no longer available in this plan.");
-      return;
-    }
-    const replacementCourse = selectedAlternative ? {
-      ...selectedCourse,
-      ...selectedAlternative,
-      requirementId: selectedCourse.requirementId,
-      selectedOptionId: selectedAlternative.id,
-      alternativeOptions: selectedCourse.alternativeOptions
-    } : selectedCourse;
-
-    const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
-    const candidatePlan = {
-      ...sourcePlan,
-      terms: sourcePlan.terms.map(term => {
-        const termId = term.slotId || term.term;
-        let courses = term.courses;
-        if (termId === edit.fromTermId) {
-          courses = edit.type === "option"
-            ? courses.map(course => planCourseIdentity(course) === edit.courseId ? replacementCourse : course)
-            : courses.filter(course => planCourseIdentity(course) !== edit.courseId);
-        }
-        if (edit.type === "move" && termId === edit.toTermId) {
-          courses = [...courses, replacementCourse];
-        }
-        return courses === term.courses ? term : { ...term, courses };
-      })
-    };
-    const candidatePlans = plans.map(plan => plan.id === sourcePlan.id ? candidatePlan : plan);
-
-    setEditingPlanCourseKey(editKey);
-    setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
     try {
-      const response = await fetch("/api/majors/map", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "validate-plan",
-          student: {
-            ...formData,
-            courses: selectedCourses(formData.courses)
-          },
-          plan: candidatePlan,
-          plans: candidatePlans
-        })
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || "The plan edit could not be validated.");
+      const result = economicsResult(report);
+      const plans = result?.economicsPlans || [];
+      const sourcePlan = plans.find(plan => plan.id === edit.planId);
+      if (!sourcePlan || (edit.type === "move" && edit.fromTermId === edit.toTermId)) return;
 
-      setPlanEditUndo({
-        planId: sourcePlan.id,
-        plan: sourcePlan,
-        planSetValidation: result.economicsPlanValidation
-      });
-      setReport(current => replaceEconomicsPlan(
-        current,
-        sourcePlan.id,
-        data.plan,
-        data.planSetValidation
-      ));
-      setPlanEditStatus(data.plan.validation.valid
-        ? `${sourcePlan.label} was updated and remains valid.`
-        : `${sourcePlan.label} was updated as a draft. Resolve the listed blocking issues or undo the edit.`);
-    } catch (error) {
-      setPlanEditStatus(error.message);
+      const sourceTerm = sourcePlan.terms.find(term => (term.slotId || term.term) === edit.fromTermId);
+      const selectedCourse = sourceTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
+      if (!selectedCourse) {
+        setPlanEditStatus("That course could not be found in the selected plan.");
+        return;
+      }
+
+      const selectedAlternative = edit.type === "option"
+        ? selectedCourse.alternativeOptions?.find(option => option.id === edit.optionId)
+        : null;
+      if (edit.type === "option" && !selectedAlternative) {
+        setPlanEditStatus("That elective option is no longer available in this plan.");
+        return;
+      }
+      const replacementCourse = selectedAlternative ? {
+        ...selectedCourse,
+        ...selectedAlternative,
+        requirementId: selectedCourse.requirementId,
+        selectedOptionId: selectedAlternative.id,
+        alternativeOptions: selectedCourse.alternativeOptions
+      } : selectedCourse;
+
+      const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
+      const candidatePlan = {
+        ...sourcePlan,
+        terms: sourcePlan.terms.map(term => {
+          const termId = term.slotId || term.term;
+          let courses = term.courses;
+          if (termId === edit.fromTermId) {
+            courses = edit.type === "option"
+              ? courses.map(course => planCourseIdentity(course) === edit.courseId ? replacementCourse : course)
+              : courses.filter(course => planCourseIdentity(course) !== edit.courseId);
+          }
+          if (edit.type === "move" && termId === edit.toTermId) {
+            courses = [...courses, replacementCourse];
+          }
+          return courses === term.courses ? term : { ...term, courses };
+        })
+      };
+      const candidatePlans = plans.map(plan => plan.id === sourcePlan.id ? candidatePlan : plan);
+
+      setEditingPlanCourseKey(editKey);
+      setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
+      try {
+        const response = await fetch("/api/majors/map", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "validate-plan",
+            student: {
+              ...formData,
+              courses: selectedCourses(formData.courses)
+            },
+            plan: candidatePlan,
+            plans: candidatePlans
+          })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "The plan edit could not be validated.");
+        if (!data.plan?.validation?.valid) {
+          throw new Error(data.plan?.validation?.errors?.[0] || "That plan change violates the Economics planning rules.");
+        }
+
+        setPlanEditUndo({
+          planId: sourcePlan.id,
+          plan: sourcePlan,
+          planSetValidation: result.economicsPlanValidation
+        });
+        setReport(current => replaceEconomicsPlan(
+          current,
+          sourcePlan.id,
+          data.plan,
+          data.planSetValidation
+        ));
+        setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
+      } catch (error) {
+        setPlanEditStatus(studentFacingRequestError(
+          error,
+          "The plan edit could not be validated.",
+          "The plan edit could not be validated. Please try again."
+        ));
+        restoreFocusAfterFailure("plan-edit");
+      } finally {
+        setEditingPlanCourseKey("");
+      }
     } finally {
-      setEditingPlanCourseKey("");
+      planEditInFlightRef.current = false;
     }
   }
 
@@ -2368,6 +2488,7 @@ export default function Page() {
         onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
         onRegenerate={() => mapMajors()}
         onDownloadPdf={downloadSelectedPlanPdf}
+        downloadButtonRef={downloadButtonRef}
         isDownloadingPdf={isDownloadingPdf}
         pdfStatus={pdfStatus}
         onEditPlanCourse={editPlanCourse}
@@ -2660,7 +2781,7 @@ export default function Page() {
         main.apple-layout-preview .apple-progress {
           align-items: center;
           gap: .9rem;
-          color: #b4b4b8;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-progress-step {
@@ -2691,7 +2812,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-heading-row p {
           margin: .3rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-help-button {
@@ -2701,7 +2822,7 @@ export default function Page() {
           padding: .2rem 0;
           border: 0;
           background: transparent;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-help-button span { margin-left: .2rem; }
@@ -2774,7 +2895,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-planning-heading p {
           margin: .25rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .section-heading h2,
@@ -2803,8 +2924,8 @@ export default function Page() {
           font-size: 11px;
         }
         main.apple-layout-preview .apple-standing-segmented button.is-selected {
-          border-color: #3699ef;
-          background: #3699ef;
+          border-color: #0b5cad;
+          background: #0b5cad;
           color: #fff;
         }
         main.apple-layout-preview .apple-mini-fields {
@@ -2852,13 +2973,13 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-course-heading p {
           margin: .25rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 11px;
         }
         main.apple-layout-preview .apple-course-heading > span {
           flex: 0 0 auto;
           padding-top: .1rem;
-          color: #3699ef;
+          color: #0b5cad;
           font-size: 10px;
         }
         main.apple-layout-preview .apple-course-toolbar {
@@ -2879,7 +3000,6 @@ export default function Page() {
           font-size: 11px;
           line-height: 1.1 !important;
         }
-        main.apple-layout-preview .apple-course-toolbar .sr-only { display: none; }
         main.apple-layout-preview .apple-clear-button {
           width: auto;
           min-height: 1.65rem !important;
@@ -2919,7 +3039,7 @@ export default function Page() {
         }
         main.apple-layout-preview .course-name { width: auto; gap: .6rem; }
         main.apple-layout-preview .course-name strong { color: #111; font-weight: 500; }
-        main.apple-layout-preview .course-name span { color: #7e8791; }
+        main.apple-layout-preview .course-name span { color: #5f6873; }
         main.apple-layout-preview .course-toggles { gap: .45rem; }
         main.apple-layout-preview button.course-toggle {
           min-width: 5.4rem;
@@ -2938,6 +3058,11 @@ export default function Page() {
         main.apple-layout-preview button.course-toggle:focus {
           outline: none;
           box-shadow: none;
+        }
+        main.apple-layout-preview button.course-toggle:focus-visible {
+          outline: 3px solid #0b47c8;
+          outline-offset: 2px;
+          box-shadow: 0 0 0 1px #fff;
         }
         main.apple-layout-preview .default-course-label { display: none; }
         main.apple-layout-preview .apple-course-label { display: inline; }
@@ -2991,7 +3116,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-summary-courses li span,
         main.apple-layout-preview .apple-summary-no-courses {
-          color: #7e8791;
+          color: #5f6873;
         }
         main.apple-layout-preview .apple-summary-no-courses {
           margin: .3rem 0 0;
@@ -2999,7 +3124,7 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-summary-preview > p {
           margin: .45rem 0 0;
-          color: #7e8791;
+          color: #5f6873;
           font-size: 10px;
           line-height: 1.35;
         }
@@ -3374,9 +3499,11 @@ export default function Page() {
                     </select>
                   </label>
                   {!planningContext.transferValidation.valid && (
-                    <ul className="transfer-validation" role="alert">
-                      {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
-                    </ul>
+                    <div role="alert">
+                      <ul className="transfer-validation">
+                        {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
+                      </ul>
+                    </div>
                   )}
                   <p className="transfer-advisor-note">Hanover's Registrar decides how transfer credits apply. Confirm your catalog year and course equivalencies with your advisor or the Registrar.</p>
                 </section>
@@ -3428,9 +3555,10 @@ export default function Page() {
             </div>
 
             <div className="apple-course-toolbar">
-              <label className="search-label">
-                <span className="sr-only">Search courses</span>
+              <label className="search-label" htmlFor="course-search">
+                <span>Search courses</span>
                 <input
+                  id="course-search"
                   type="search"
                   value={courseSearch}
                   onChange={event => setCourseSearch(event.target.value)}
@@ -3505,6 +3633,7 @@ export default function Page() {
               <button
                 type="submit"
                 className="generate-button"
+                ref={generateButtonRef}
                 disabled={isGenerating || !formData.planCreationDate || !planningContext.transferValidation.valid || !inputPrerequisiteValidation.valid}
               >
                 <span className="default-generate-label">3. Generate My Plan</span>

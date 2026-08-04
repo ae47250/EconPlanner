@@ -1,0 +1,562 @@
+{
+  "authorship": "handwritten",
+  "cases": [
+    {
+      "fixtureId": "prereq-valid-integrated-strict-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": {
+        "completedCourses": [
+          "ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "PSY 217",
+          "BUSN 323", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        ]
+      },
+      "expectedContext": {
+        "startYear": 2026,
+        "remainingYears": 2,
+        "expectedGraduationYear": 2028,
+        "expectedGraduationTerm": "Spring/May 2028",
+        "oneAcademicYearEarly": true
+      },
+      "terms": [
+        {
+          "slotId": "winter-2028",
+          "term": "Winter 2028",
+          "termKey": "Winter",
+          "academicYear": "2027/2028",
+          "courses": [
+            { "course": "ECO 461", "institution": "Hanover College" }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-fall-unlocks-winter",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 113"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["ECO 114"]
+        },
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "courses": ["ECO 321"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-in-progress-unlocks-later",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": {
+        "inProgressCourses": [
+          { "course": "ECO 113", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027" }
+        ]
+      },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "courses": ["ECO 221"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-generic-cognate-placeholder-unlocks-later-intermediate",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 113"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [{
+            "course": "Mathematics cognate",
+            "source": "requirement-placeholder",
+            "options": ["MAT 113", "MAT 121"]
+          }]
+        },
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "courses": ["ECO 213"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-generic-statistics-placeholder-unlocks-later-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [{
+            "course": "Statistics requirement",
+            "source": "requirement-placeholder",
+            "options": ["ECO 257", "MAT 217", "PSY 217"]
+          }]
+        },
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [{ "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-concurrent-math-eco213",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 113"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [
+            "MAT 113",
+            {
+              "course": "ECO 213",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-MATH-ECO-213",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 213 instructor",
+                  "course": "ECO 213",
+                  "prerequisite": "MAT 113",
+                  "term": "Fall 2026",
+                  "reason": "MAT 113 is concurrent with ECO 213.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-concurrent-math-eco214",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 114"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [
+            "MAT 121",
+            {
+              "course": "ECO 214",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-MATH-ECO-214",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 214 instructor",
+                  "course": "ECO 214",
+                  "prerequisite": "MAT 121",
+                  "term": "Fall 2026",
+                  "reason": "MAT 121 is concurrent with ECO 214.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-concurrent-eco214-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": {
+        "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "PSY 217"]
+      },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [
+            "ECO 214",
+            {
+              "course": "ECO 461",
+              "institution": "Hanover College",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+                  "type": "DEPARTMENT_APPROVAL",
+                  "authority": "Economics Department",
+                  "course": "ECO 461",
+                  "prerequisite": "ECO 214",
+                  "term": "Winter 2027",
+                  "reason": "ECO 214 is concurrent with ECO 461.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-concurrent-eco213-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": {
+        "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 214", "PSY 217"]
+      },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [
+            "ECO 213",
+            {
+              "course": "ECO 461",
+              "institution": "Hanover College",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+                  "type": "DEPARTMENT_APPROVAL",
+                  "authority": "Economics Department",
+                  "course": "ECO 461",
+                  "prerequisite": "ECO 213",
+                  "term": "Winter 2027",
+                  "reason": "ECO 213 is concurrent with ECO 461.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-eco357-permission",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 357",
+              "approvalRequired": [
+                {
+                  "ruleId": "PERMISSION-ECO-357",
+                  "type": "DEPARTMENT_PERMISSION",
+                  "authority": "Economics Department",
+                  "course": "ECO 357",
+                  "prerequisite": null,
+                  "term": "Fall 2026",
+                  "reason": "Economics Department permission is recorded.",
+                  "sourceRef": "ECONOMICS-REQUIREMENTS#Key Prerequisites by Course Number"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-in-progress-same-term",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["PREREQ-ECO-221"],
+      "student": {
+        "inProgressCourses": [
+          { "course": "ECO 113", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027" }
+        ]
+      },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["ECO 221"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-prerequisite-after-dependent",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["PREREQ-ECO-221"],
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["ECO 221"]
+        },
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "courses": ["ECO 113"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-intro-concurrent-eco213",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["PREREQ-ECO-213"],
+      "student": { "completedCourses": ["MAT 113"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["ECO 113", "ECO 213"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-intro-concurrent-eco214",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["PREREQ-ECO-214"],
+      "student": { "completedCourses": ["MAT 121"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["ECO 114", "ECO 214"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-concurrent-math-eco213-no-approval",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CONCURRENT-MATH-ECO-213"],
+      "student": { "completedCourses": ["ECO 113"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["MAT 113", "ECO 213"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-concurrent-math-eco214-no-approval",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CONCURRENT-MATH-ECO-214"],
+      "student": { "completedCourses": ["ECO 114"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["MAT 121", "ECO 214"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-capstone-concurrency-no-approval",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CONCURRENT-INTERMEDIATE-ECO-461"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "PSY 217"] },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": ["ECO 214", { "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-capstone-other-intermediate-not-completed",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CONCURRENT-INTERMEDIATE-ECO-461"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "PSY 217"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["ECO 213"]
+        },
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [
+            "ECO 214",
+            {
+              "course": "ECO 461",
+              "institution": "Hanover College",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+                  "type": "DEPARTMENT_APPROVAL",
+                  "authority": "Economics Department",
+                  "course": "ECO 461",
+                  "prerequisite": "ECO 214",
+                  "term": "Winter 2027",
+                  "reason": "ECO 214 is concurrent with ECO 461.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-both-intermediates-concurrent-capstone",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CONCURRENT-INTERMEDIATE-ECO-461"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "PSY 217"] },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": ["ECO 213", "ECO 214", { "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-statistics-concurrent-capstone",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CAPSTONE-STATISTICS-BEFORE"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"] },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": ["PSY 217", { "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-both-intermediates-missing-capstone",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["PREREQ-ECO-461"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "PSY 217"] },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [{ "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-eco357-permission-missing",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["PERMISSION-ECO-357"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": ["ECO 357"]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-capstone-not-winter",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CAPSTONE-WINTER-ONLY"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "PSY 217"] },
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [{ "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-capstone-not-senior",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CAPSTONE-SENIOR-STANDING"],
+      "student": {
+        "academicStanding": "Junior",
+        "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "PSY 217"]
+      },
+      "expectedContext": {
+        "startYear": 2026,
+        "remainingYears": 2,
+        "expectedGraduationYear": 2028,
+        "expectedGraduationTerm": "Spring/May 2028"
+      },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "courses": [{ "course": "ECO 461", "institution": "Hanover College" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-capstone-not-hanover",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CAPSTONE-HANOVER-RESIDENCY"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "PSY 217"] },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [{ "course": "ECO 461", "institution": "Transfer institution" }]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-review-completed-advanced-missing-records",
+      "expectedStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE"],
+      "student": { "completedCourses": ["ECO 331"] },
+      "terms": []
+    },
+    {
+      "fixtureId": "prereq-review-eco335-unconfirmed-equivalent",
+      "expectedStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-ECO-335-MATH-EQUIVALENT"],
+      "student": {
+        "completedCourses": [
+          "ECO 113", "MAT 113", "ECO 213", "ECO 257",
+          {
+            "course": "ECO 335",
+            "prerequisiteClaims": [
+              { "kind": "equivalency", "prerequisite": "MAT 121", "course": "MAT 125" }
+            ]
+          }
+        ]
+      },
+      "terms": []
+    },
+    {
+      "fixtureId": "prereq-review-undocumented-waiver",
+      "expectedStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 331",
+              "prerequisiteClaims": [
+                { "kind": "waiver", "prerequisite": "ECO 213" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-review-undocumented-substitution",
+      "expectedStatus": "REVIEW_REQUIRED",
+      "expectedReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "terms": [
+        {
+          "slotId": "fall-2026", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 333",
+              "prerequisiteClaims": [
+                { "kind": "substitution", "prerequisite": "ECO 114", "course": "ECO 199" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "prerequisiteTableCases": [
+    { "course": "ECO 213", "ruleId": "PREREQ-ECO-213", "completedCourses": ["ECO 113", "MAT 113"], "missingCourse": "ECO 113" },
+    { "course": "ECO 214", "ruleId": "PREREQ-ECO-214", "completedCourses": ["ECO 114", "MAT 121"], "missingCourse": "ECO 114" },
+    { "course": "ECO 221", "ruleId": "PREREQ-ECO-221", "completedCourses": ["ECO 113"], "missingCourse": "ECO 113" },
+    { "course": "ECO 222", "ruleId": "PREREQ-ECO-222", "completedCourses": ["ECO 114"], "missingCourse": "ECO 114" },
+    { "course": "ECO 223", "ruleId": "PREREQ-ECO-223", "completedCourses": ["ECO 161"], "missingCourse": "ECO 161" },
+    { "course": "ECO 257", "ruleId": "PREREQ-ECO-257", "completedCourses": ["ECO 113"], "missingCourse": "ECO 113" },
+    { "course": "ECO 315", "ruleId": "PREREQ-ECO-315", "completedCourses": ["ECO 114"], "missingCourse": "ECO 114" },
+    { "course": "ECO 316", "ruleId": "PREREQ-ECO-316", "completedCourses": ["ECO 113", "ECO 114"], "missingCourse": "ECO 114" },
+    { "course": "ECO 321", "ruleId": "PREREQ-ECO-321", "completedCourses": ["ECO 113", "ECO 114"], "missingCourse": "ECO 114" },
+    { "course": "ECO 331", "ruleId": "PREREQ-ECO-331", "completedCourses": ["ECO 113", "MAT 113", "ECO 213"], "missingCourse": "ECO 213" },
+    { "course": "ECO 333", "ruleId": "PREREQ-ECO-333", "completedCourses": ["ECO 114"], "missingCourse": "ECO 114" },
+    { "course": "ECO 335", "ruleId": "PREREQ-ECO-335", "completedCourses": ["ECO 113", "MAT 113", "ECO 213", "ECO 257", "MAT 121"], "missingCourse": "MAT 121" },
+    { "course": "ECO 337", "ruleId": "PREREQ-ECO-337", "completedCourses": ["ECO 113"], "missingCourse": "ECO 113" },
+    { "course": "ECO 357", "ruleId": "PREREQ-ECO-357", "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"], "missingCourse": "ECO 214", "permissionRequired": true },
+    { "course": "ECO 471", "ruleId": "PREREQ-ECO-471", "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "ECO 321"], "missingCourse": "ECO 321" }
+  ],
+  "approvalMetadataCases": [
+    { "fixtureId": "approval-invalid-rule-id", "field": "ruleId", "value": "CONCURRENT-MATH-ECO-214" },
+    { "fixtureId": "approval-invalid-type", "field": "type", "value": "DEPARTMENT_APPROVAL" },
+    { "fixtureId": "approval-invalid-authority", "field": "authority", "value": "Economics Department" },
+    { "fixtureId": "approval-invalid-course", "field": "course", "value": "ECO 214" },
+    { "fixtureId": "approval-invalid-prerequisite", "field": "prerequisite", "value": "MAT 121" },
+    { "fixtureId": "approval-invalid-term", "field": "term", "value": "Winter 2027" },
+    { "fixtureId": "approval-invalid-reason", "field": "reason", "value": "" },
+    { "fixtureId": "approval-invalid-source", "field": "sourceRef", "value": "UNCONFIRMED-SOURCE" },
+    { "fixtureId": "approval-invalid-attachment", "field": "attachment", "value": "MAT 113" }
+  ]
+}

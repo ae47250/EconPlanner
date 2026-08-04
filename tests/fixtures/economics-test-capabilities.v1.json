@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "economics-candidate-pool-capabilities-v1",
+  "authorship": "Handcrafted Task 14 capability and candidate-pool cases",
+  "purpose": "Required checks for active retained candidate pools, reserve substitution, convergence, deterministic search limits, and ECO 257 filtering.",
+  "capabilityPolicy": {
+    "requiredStatus": "ACTIVE",
+    "missingCapabilityBehavior": "FAIL"
+  },
+  "requiredCapabilities": [
+    {
+      "id": "MULTIPLE_CANDIDATE_RESERVE",
+      "description": "A strategy result exposes more than one validated candidate through _candidateReserve."
+    },
+    {
+      "id": "CANDIDATE_POOL_DIAGNOSTICS",
+      "description": "A strategy result exposes candidatePool counts and deterministic search completion metadata."
+    },
+    {
+      "id": "RESERVE_SUBSTITUTION",
+      "description": "Plan-set outcomes expose NEXT_DISTINCT_RESERVE when a safe reserve replaces a duplicate top schedule."
+    },
+    {
+      "id": "SEARCH_INCOMPLETE",
+      "description": "A deterministic node limit reports SEARCH_INCOMPLETE without claiming infeasibility or convergence."
+    },
+    {
+      "id": "SEMANTIC_SIGNATURE",
+      "description": "The planner exports semanticPlanSignature for meaningful duplicate detection."
+    }
+  ],
+  "profiles": [
+    {
+      "id": "verified-five-remaining",
+      "description": "A senior with four verified electives and ECO 461 remaining; all retained placements use independently verified Economics sections.",
+      "student": {
+        "academicStanding": "senior",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" }
+        ]
+      }
+    },
+    {
+      "id": "safe-reserve-two-remaining",
+      "description": "A senior with one elective and ECO 461 remaining; Plan A and Plan B share their top schedule and have a safe distinct reserve.",
+      "student": {
+        "academicStanding": "senior",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" },
+          { "code": "ECO 161", "status": "completed" },
+          { "code": "ECO 221", "status": "completed" },
+          { "code": "ECO 234", "status": "completed" }
+        ]
+      }
+    },
+    {
+      "id": "capstone-only",
+      "description": "A senior with only ECO 461 remaining; Plan A and Plan B genuinely converge after a complete search.",
+      "student": {
+        "academicStanding": "senior",
+        "planCreationDate": "2026-07-30",
+        "courses": [
+          { "code": "ECO 113", "status": "completed" },
+          { "code": "ECO 114", "status": "completed" },
+          { "code": "ECO 213", "status": "completed" },
+          { "code": "ECO 214", "status": "completed" },
+          { "code": "MAT 113", "status": "completed" },
+          { "code": "MAT 217", "status": "completed" },
+          { "code": "BUSN 323", "status": "completed" },
+          { "code": "ECO 161", "status": "completed" },
+          { "code": "ECO 221", "status": "completed" },
+          { "code": "ECO 234", "status": "completed" },
+          { "code": "ECO 260", "status": "completed" }
+        ]
+      }
+    }
+  ],
+  "expectations": {
+    "multipleCandidatePool": {
+      "profileId": "verified-five-remaining",
+      "variantId": "plan-1",
+      "minimumRetainedDistinctSchedules": 2,
+      "minimumSemanticDuplicatesRemoved": 1,
+      "searchTerminationReason": "EXHAUSTED"
+    },
+    "safeReserveSubstitution": {
+      "profileId": "safe-reserve-two-remaining",
+      "topStrategies": ["plan-1", "plan-2"],
+      "substitutedStrategy": "plan-2",
+      "substitutionReason": "NEXT_DISTINCT_RESERVE",
+      "selectedCandidateRank": 2
+    },
+    "unsafeReserve": {
+      "profileId": "safe-reserve-two-remaining",
+      "closedTerms": ["May"],
+      "suppressionCode": "SEMANTIC_CONVERGENCE"
+    },
+    "trueConvergence": {
+      "profileId": "capstone-only",
+      "convergenceCode": "PLANS_CONVERGED",
+      "suppressionCode": "SEMANTIC_CONVERGENCE"
+    },
+    "searchIncomplete": {
+      "profileId": "verified-five-remaining",
+      "nodeLimit": 1,
+      "status": "SEARCH_INCOMPLETE",
+      "terminationReason": "NODE_LIMIT"
+    },
+    "eco257": {
+      "allowedRequirementId": "statistics",
+      "prohibitedRequirementPrefix": "eco-elective",
+      "oracleRuleId": "ELECTIVE-ECO-257-STATISTICS-ONLY"
+    }
+  }
+}

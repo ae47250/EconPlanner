@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "registryVersion": 1,
+  "policyVersion": 3,
+  "authorship": "handwritten-curated-mutations",
+  "reviewedOn": "2026-08-03",
+  "reviewer": "Economics Department / EconPlanner testing review",
+  "resultValues": [
+    "ACCEPT",
+    "REJECT"
+  ],
+  "statusValues": [
+    "AGREEMENT",
+    "CONFIRMED_DEFECT",
+    "POLICY_REVIEW",
+    "FEATURE_GATED"
+  ],
+  "mutations": [
+    {
+      "id": "VAL-001-PREREQUISITE-AFTER-DEPENDENT",
+      "mutationId": "PREREQUISITE_AFTER_DEPENDENT",
+      "baselineId": "full-sequence",
+      "ruleId": "PREREQ-ECO-213",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep both validators rejecting a prerequisite that occurs after its dependent course."
+    },
+    {
+      "id": "VAL-002-ECO113-CONCURRENT-ECO213",
+      "mutationId": "ECO_113_CONCURRENT_WITH_ECO_213",
+      "baselineId": "full-sequence",
+      "ruleId": "PREREQ-ECO-213",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep ECO 113 as a completed-before prerequisite for ECO 213."
+    },
+    {
+      "id": "VAL-003-ECO114-CONCURRENT-ECO214",
+      "mutationId": "ECO_114_CONCURRENT_WITH_ECO_214",
+      "baselineId": "full-sequence",
+      "ruleId": "PREREQ-ECO-214",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep ECO 114 as a completed-before prerequisite for ECO 214."
+    },
+    {
+      "id": "VAL-004-APPROVAL-MISSING",
+      "mutationId": "APPROVAL_METADATA_MISSING",
+      "baselineId": "concurrent-capstone",
+      "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep the explicit Economics Department approval record mandatory."
+    },
+    {
+      "id": "VAL-005-APPROVAL-AUTHORITY-WRONG",
+      "mutationId": "APPROVAL_AUTHORITY_WRONG",
+      "baselineId": "concurrent-capstone",
+      "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep approval authority matched to the Economics Department authority."
+    },
+    {
+      "id": "VAL-006-APPROVAL-COURSE-WRONG",
+      "mutationId": "APPROVAL_COURSE_WRONG",
+      "baselineId": "concurrent-capstone",
+      "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep approval metadata tied to ECO 461 as the approved course."
+    },
+    {
+      "id": "VAL-007-APPROVAL-PREREQUISITE-WRONG",
+      "mutationId": "APPROVAL_PREREQUISITE_WRONG",
+      "baselineId": "concurrent-capstone",
+      "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep approval tied to the exact intermediate course taken concurrently."
+    },
+    {
+      "id": "VAL-008-APPROVAL-TERM-WRONG",
+      "mutationId": "APPROVAL_TERM_WRONG",
+      "baselineId": "concurrent-capstone",
+      "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep approval metadata tied to the actual concurrent term."
+    },
+    {
+      "id": "VAL-009-ECO461-IN-FALL",
+      "mutationId": "ECO_461_IN_FALL",
+      "baselineId": "future-capstone",
+      "ruleId": "CAPSTONE-WINTER-ONLY",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep ECO 461 restricted to Winter."
+    },
+    {
+      "id": "VAL-010-ECO461-BELOW-SENIOR",
+      "mutationId": "ECO_461_BELOW_SENIOR_STANDING",
+      "baselineId": "junior-capstone",
+      "ruleId": "CAPSTONE-SENIOR-STANDING",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep ECO 461 restricted to projected senior standing."
+    },
+    {
+      "id": "VAL-011-ECO461-RESIDENCY",
+      "mutationId": "ECO_461_RESIDENCY_CHANGED",
+      "baselineId": "future-capstone",
+      "ruleId": "CAPSTONE-HANOVER-RESIDENCY",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep Hanover residency mandatory for ECO 461."
+    },
+    {
+      "id": "VAL-012-STATISTICS-CONCURRENT-ECO461",
+      "mutationId": "STATISTICS_CONCURRENT_WITH_ECO_461",
+      "baselineId": "statistics-before-capstone",
+      "ruleId": "CAPSTONE-STATISTICS-BEFORE",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep statistics completed before the ECO 461 Winter."
+    },
+    {
+      "id": "VAL-013-FIFTH-REGULAR-TERM-COURSE",
+      "mutationId": "FIFTH_FALL_WINTER_COURSE",
+      "baselineId": "full-fall",
+      "ruleId": "CAPACITY-FALL",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep Fall and Winter plans within four total courses."
+    },
+    {
+      "id": "VAL-014-SECOND-SPRING-MAY-COURSE",
+      "mutationId": "SECOND_SPRING_MAY_COURSE",
+      "baselineId": "full-may",
+      "ruleId": "CAPACITY-MAY",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep Spring/May plans within one course."
+    },
+    {
+      "id": "VAL-015-CLOSED-SECTION",
+      "mutationId": "CLOSED_SECTION",
+      "baselineId": "full-sequence",
+      "ruleId": "SCHEDULE-AVAILABILITY-BEHAVIOR",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep closed sections from supporting feasible plans."
+    },
+    {
+      "id": "VAL-016-DIRECT-MEETING-CONFLICT",
+      "mutationId": "DIRECT_MEETING_CONFLICT",
+      "baselineId": "full-sequence",
+      "ruleId": "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep directly overlapping verified meetings blocked."
+    },
+    {
+      "id": "VAL-017-FALSIFIED-MEETING-DATA",
+      "mutationId": "FALSIFIED_CANONICAL_MEETING",
+      "baselineId": "full-sequence",
+      "ruleId": "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep plan-embedded meeting data matched to the canonical verified section."
+    },
+    {
+      "id": "VAL-018-FALSIFIED-AVAILABILITY-DATA",
+      "mutationId": "FALSIFIED_AVAILABILITY",
+      "baselineId": "full-sequence",
+      "ruleId": "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep plan-embedded seat data matched to the canonical verified section."
+    },
+    {
+      "id": "VAL-019-ECO321-DOUBLE-COUNTED",
+      "mutationId": "ECO_321_DOUBLE_COUNTED",
+      "baselineId": "full-sequence",
+      "ruleId": "ELECTIVE-NO-DOUBLE-COUNT",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep ECO 321 from filling finance and an elective simultaneously."
+    },
+    {
+      "id": "VAL-020-ECO257-ELECTIVE",
+      "mutationId": "ECO_257_ASSIGNED_TO_ELECTIVE",
+      "baselineId": "full-sequence",
+      "ruleId": "ELECTIVE-ECO-257-STATISTICS-ONLY",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep ECO 257 restricted to the statistics slot."
+    },
+    {
+      "id": "VAL-021-ECO257-ELECTIVE-AFTER-MAT217",
+      "mutationId": "ECO_257_ELECTIVE_AFTER_OTHER_STATISTICS",
+      "baselineId": "full-sequence",
+      "ruleId": "ELECTIVE-ECO-257-STATISTICS-ONLY",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep ECO 257 ineligible as an elective even after MAT 217 fills statistics."
+    },
+    {
+      "id": "VAL-022-SECOND-100-LEVEL-ELECTIVE",
+      "mutationId": "SECOND_100_LEVEL_ELECTIVE",
+      "baselineId": "full-sequence",
+      "ruleId": "ELECTIVE-MAX-ONE-100-LEVEL",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep the elective set limited to one 100-level Economics course."
+    },
+    {
+      "id": "VAL-023-COMPLETED-COURSE-RESCHEDULED",
+      "mutationId": "COMPLETED_COURSE_RESCHEDULED",
+      "baselineId": "completed-elective",
+      "ruleId": "ELECTIVE-NO-DOUBLE-COUNT",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep a completed nonrepeatable course from being scheduled again."
+    },
+    {
+      "id": "VAL-024-TERM-AFTER-GRADUATION",
+      "mutationId": "TERM_AFTER_GRADUATION",
+      "baselineId": "future-capstone",
+      "ruleId": "ORACLE-STRUCTURE-HORIZON",
+      "expectedProductionResult": "REJECT",
+      "expectedOracleResult": "REJECT",
+      "status": "AGREEMENT",
+      "followUp": "Keep every planned term within the selected graduation horizon."
+    }
+  ]
+}

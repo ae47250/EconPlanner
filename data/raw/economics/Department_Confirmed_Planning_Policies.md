@@ -19,6 +19,7 @@
 7. No more than two Economics courses in Fall or Winter is a preferred advising load, not a hard academic limit. When additional Economics courses are necessary for graduation, the plan may include up to the normal four-course total term load and must display a heavy-major-load warning.
 8. Every ECO 260 Special Topics course counts as one of the four Economics electives.
 9. Plans must show whether a verified section is open, closed, waitlisted, or has unknown availability. Closed sections cannot support a feasible plan without an available alternative; waitlisted sections make a plan conditional.
+10. The major requires four qualifying ECO electives. Inside the verified schedule horizon, use verified named courses and sections when available; a generic placeholder may not replace a known verified offering. Beyond that horizon, separate future requirement slots may each display as `ECO elective`, but each must retain a distinct internal identity based on its requirement slot or plan position. Placeholder slots count as planned requirements, not completed courses. Reusing the same actual course or the same placeholder slot is prohibited, while four distinct future elective slots may satisfy the four-elective planning requirement.
 
 ## Schedule evidence policy
 

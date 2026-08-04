@@ -1,0 +1,25 @@
+{
+  "fixtureId": "oracle-malformed-academic-year",
+  "authorship": "handwritten",
+  "student": {
+    "studentId": "fictional-student-007"
+  },
+  "expectedContext": {
+    "startYear": 2026,
+    "remainingYears": 3,
+    "expectedGraduationYear": 2029,
+    "expectedGraduationTerm": "Spring/May 2029"
+  },
+  "plan": {
+    "id": "malformed-academic-year",
+    "terms": [
+      {
+        "slotId": "fall-2026",
+        "term": "Fall 2026",
+        "termKey": "Fall",
+        "academicYear": "2026/2028",
+        "courses": []
+      }
+    ]
+  }
+}

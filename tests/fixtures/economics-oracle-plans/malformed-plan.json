@@ -1,0 +1,19 @@
+{
+  "fixtureId": "oracle-malformed-plan",
+  "authorship": "handwritten",
+  "student": {
+    "studentId": "fictional-student-002"
+  },
+  "expectedContext": {
+    "startYear": 2026,
+    "remainingYears": 3,
+    "expectedGraduationYear": 2029,
+    "expectedGraduationTerm": "Spring/May 2029"
+  },
+  "plan": {
+    "id": "malformed-terms",
+    "terms": {
+      "Fall": []
+    }
+  }
+}

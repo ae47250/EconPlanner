@@ -11,6 +11,7 @@
     "ingest:catalog": "node scripts/ingest-hanover-catalog.mjs",
     "normalize:catalog": "node scripts/normalize-hanover-catalog.mjs",
     "report:economics": "node scripts/generate-economics-report.mjs",
+    "verify:pdf:economics": "node scripts/verify-economics-pdf.mjs",
     "test": "node --test",
     "test:e2e": "playwright test",
     "lint": "eslint ."
@@ -22,8 +23,10 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "@playwright/test": "1.62.1",
     "eslint": "10.8.0",
+    "fast-check": "4.9.0",
     "globals": "17.8.0"
   },
   "engines": {

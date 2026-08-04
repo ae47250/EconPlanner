@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   createGeneratedPlannerSession,
+  GENERATED_PLANNER_SESSION_VERSION,
   PLANNER_VIEWS,
   plannerViewFromSearch,
   replaceEconomicsPlan,
@@ -49,6 +50,18 @@ test("generated planner session is rejected after an earlier answer changes", ()
   });
 
   assert.equal(restoreGeneratedPlannerSession(saved, "after-change"), null);
+});
+
+test("generated planner sessions from before distribution validation regenerate", () => {
+  const saved = createGeneratedPlannerSession({
+    report: sampleReport(),
+    inputSignature: "student-input-v1",
+    selectedPlanId: "plan-1",
+    view: PLANNER_VIEWS.COMPARE
+  });
+
+  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 6);
+  assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 4 }, "student-input-v1"), null);
 });
 
 test("replacing one generated plan leaves the other plan objects untouched", () => {

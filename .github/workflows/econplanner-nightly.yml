@@ -1,0 +1,615 @@
+name: EconPlanner nightly tests
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 07:17 UTC is approximately 2:17 AM EST or 3:17 AM EDT.
+    - cron: "17 7 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: econplanner-nightly-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: "true"
+  NEXT_TELEMETRY_DISABLED: "1"
+  PDF_CREATION_ENABLED: "false"
+
+jobs:
+  notify_start:
+    name: Send nightly start email
+    if: ${{ github.run_attempt == 1 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      started_at: ${{ steps.context.outputs.started_at }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          install: false
+
+      - name: Record nightly start time
+        id: context
+        shell: bash
+        run: echo "started_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
+
+      - name: Send one nightly start email
+        env:
+          MOCK_NOTIFICATIONS: "false"
+          PINGRAM_API_KEY: ${{ secrets.PINGRAM_API_KEY }}
+          PINGRAM_API_URL: ${{ secrets.PINGRAM_API_URL }}
+          PINGRAM_FROM_EMAIL: ${{ secrets.PINGRAM_FROM_EMAIL }}
+          PINGRAM_FROM_NAME: ${{ secrets.PINGRAM_FROM_NAME }}
+          PINGRAM_REPLY_TO: ${{ secrets.PINGRAM_REPLY_TO }}
+          ECONPLANNER_NOTIFICATION_EMAIL: ${{ secrets.ECONPLANNER_NOTIFICATION_EMAIL }}
+        run: >-
+          node scripts/notify-econplanner-nightly.mjs
+          --status started
+          --repository "${{ github.repository }}"
+          --branch "${{ github.ref_name }}"
+          --workflow-name "${{ github.workflow }}"
+          --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          --start-time "${{ steps.context.outputs.started_at }}"
+
+  generated-matrix:
+    name: Generated profiles (shard ${{ matrix.shard }}/4)
+    needs: notify_start
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node and pnpm
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run fixed-seed fictional profile shard
+        run: >-
+          node scripts/run-economics-nightly-matrix.mjs
+          --shard ${{ matrix.shard }}/4
+          --output test-results/economics-nightly-matrix/shard-${{ matrix.shard }}.json
+
+      - name: Upload generated-profile metrics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated-profile-metrics-shard-${{ matrix.shard }}
+          path: test-results/economics-nightly-matrix/shard-${{ matrix.shard }}.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload generated-profile failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated-profile-failures-shard-${{ matrix.shard }}
+          path: test-results/economics-nightly-matrix/shard-${{ matrix.shard }}.failures.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+  deterministic:
+    name: Exhaustive policy, oracle, mutation, and planner tests
+    needs: notify_start
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node and pnpm
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run normal 336-case prerequisite matrix
+        shell: bash
+        env:
+          ECONOMICS_PREREQUISITE_MATRIX_REPORT: "1"
+        run: |
+          set -o pipefail
+          mkdir -p test-results/nightly-deterministic
+          node --test tests/economics-prerequisite-edge-matrix.test.js \
+            2>&1 | tee test-results/nightly-deterministic/prerequisite-normal.log
+
+      - name: Run corrected optional 293-case prerequisite matrix
+        shell: bash
+        env:
+          ECONOMICS_PREREQUISITE_MATRIX_NIGHTLY: "1"
+          ECONOMICS_PREREQUISITE_MATRIX_REPORT: "1"
+        run: |
+          set -o pipefail
+          node --test \
+            --test-name-pattern "nightly-only prerequisite subset" \
+            tests/economics-prerequisite-edge-matrix.test.js \
+            2>&1 | tee test-results/nightly-deterministic/prerequisite-optional.log
+
+      - name: Run allocation, approval identity, and exhaustive mutation matrices
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test \
+            tests/economics-policy-manifest.test.js \
+            tests/economics-schedule-drift.test.js \
+            tests/economics-independent-oracle-structure.test.js \
+            tests/economics-oracle-requirements.test.js \
+            tests/economics-oracle-prerequisites.test.js \
+            tests/economics-oracle-schedule-capacity.test.js \
+            tests/economics-requirement-allocation-matrix.test.js \
+            tests/economics-validator-disagreements.test.js \
+            tests/economics-plan-editing-api.test.js \
+            tests/major-api.test.js \
+            tests/economics-report.test.js \
+            tests/economics-report-parity.test.js \
+            2>&1 | tee test-results/nightly-deterministic/exhaustive-matrices.log
+
+      - name: Record 629-case prerequisite summary
+        run: >-
+          node scripts/run-economics-nightly-matrix.mjs
+          --summarize-prerequisites
+          --normal-log test-results/nightly-deterministic/prerequisite-normal.log
+          --optional-log test-results/nightly-deterministic/prerequisite-optional.log
+          --output test-results/nightly-deterministic/prerequisite-summary.json
+
+      - name: Upload prerequisite-matrix metrics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-prerequisite-matrix-metrics
+          path: test-results/nightly-deterministic/prerequisite-summary.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Run large fixed-seed property combinations
+        shell: bash
+        env:
+          ECONOMICS_PROPERTY_MODE: nightly
+        run: |
+          set -o pipefail
+          node --test tests/economics-properties.test.js \
+            2>&1 | tee test-results/nightly-deterministic/properties.log
+
+      - name: Repeat deterministic ranking and candidate-pool checks
+        shell: bash
+        run: |
+          set -o pipefail
+          for repetition in 1 2 3; do
+            node --test \
+              tests/economics-strategy-ranking.test.js \
+              tests/economics-candidate-pools.test.js \
+              2>&1 | tee "test-results/nightly-deterministic/ranking-${repetition}.log"
+          done
+
+      - name: Run complete unit regression suite
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm test 2>&1 | tee test-results/nightly-deterministic/full-unit.log
+
+      - name: Validate fictional report and PDF projections without a hosted service
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run verify:pdf:economics -- --dry-run \
+            2>&1 | tee test-results/nightly-deterministic/pdf-dry-run.log
+
+      - name: Upload deterministic failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-deterministic-failure-evidence
+          path: |
+            test-results/nightly-deterministic/
+            output/economics-pdf-verification/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  browser:
+    name: Repeated browser, accessibility, and adversarial tests
+    needs: notify_start
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node and pnpm
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chrome and operating-system dependencies
+        run: pnpm exec playwright install --with-deps chrome
+
+      - name: Run the full browser suite three times on fresh servers
+        shell: bash
+        run: |
+          mkdir -p test-results/nightly-browser
+          overall=0
+          for repetition in 1 2 3; do
+            export PLAYWRIGHT_PORT="$((3200 + repetition))"
+            export PLAYWRIGHT_JSON_OUTPUT_NAME="test-results/nightly-browser/run-${repetition}.json"
+            pnpm exec playwright test \
+              --reporter=list,json \
+              --output "test-results/nightly-browser/run-${repetition}" \
+              2>&1 | tee "test-results/nightly-browser/run-${repetition}.log"
+            status=${PIPESTATUS[0]}
+            if [ "$status" -ne 0 ]; then overall=1; fi
+          done
+          node scripts/run-economics-nightly-matrix.mjs \
+            --summarize-playwright \
+            --input test-results/nightly-browser/run-1.json \
+            --input test-results/nightly-browser/run-2.json \
+            --input test-results/nightly-browser/run-3.json \
+            --output test-results/nightly-browser/summary.json
+          summary_status=$?
+          if [ "$summary_status" -ne 0 ]; then overall=1; fi
+          exit "$overall"
+
+      - name: Upload browser metrics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-browser-metrics
+          path: test-results/nightly-browser/summary.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-browser-failure-evidence
+          path: |
+            test-results/nightly-browser/**/*.zip
+            test-results/nightly-browser/**/*.png
+            test-results/nightly-browser/**/*.webm
+            test-results/nightly-browser/**/error-context.md
+            test-results/nightly-browser/run-*.log
+            test-results/nightly-browser/run-*.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+  quality:
+    name: Lint, build, and repository hygiene
+    needs: notify_start
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node and pnpm
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Build production application
+        run: pnpm run build
+
+      - name: Check whitespace and patch hygiene
+        run: git diff --check
+
+  hosted-pdf:
+    name: Optional hosted PDF contract
+    needs: notify_start
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node and pnpm
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prove the live verifier safely skips without credentials
+        shell: bash
+        env:
+          PDF_CREATION_ENABLED: "false"
+          PDF_CREATION_API_URL: ""
+          PDF_CREATION_API_KEY: ""
+          PDF_CREATION_BYPASS_TOKEN: ""
+        run: |
+          mkdir -p test-results/nightly-pdf
+          pnpm run verify:pdf:economics -- --live \
+            2>&1 | tee test-results/nightly-pdf/safe-skip.log
+
+      - name: Detect hosted PDF credentials without exposing them
+        id: pdf-credentials
+        shell: bash
+        env:
+          ENABLED: ${{ secrets.PDF_CREATION_ENABLED }}
+          API_URL: ${{ secrets.PDF_CREATION_API_URL }}
+          API_KEY: ${{ secrets.PDF_CREATION_API_KEY }}
+        run: |
+          if [ "$ENABLED" = "true" ] && [ -n "$API_URL" ] && [ -n "$API_KEY" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Poppler for the hosted PDF contract only
+        if: steps.pdf-credentials.outputs.configured == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes poppler-utils
+
+      - name: Run hosted PDF contract with fictional fixtures
+        if: steps.pdf-credentials.outputs.configured == 'true'
+        shell: bash
+        env:
+          PDF_CREATION_ENABLED: ${{ secrets.PDF_CREATION_ENABLED }}
+          PDF_CREATION_API_URL: ${{ secrets.PDF_CREATION_API_URL }}
+          PDF_CREATION_API_KEY: ${{ secrets.PDF_CREATION_API_KEY }}
+          PDF_CREATION_BYPASS_TOKEN: ${{ secrets.PDF_CREATION_BYPASS_TOKEN }}
+        run: |
+          set -o pipefail
+          pnpm run verify:pdf:economics -- --live \
+            2>&1 | tee test-results/nightly-pdf/live-contract.log
+
+      - name: Record safe hosted-PDF skip
+        if: steps.pdf-credentials.outputs.configured != 'true'
+        run: echo "Hosted PDF contract skipped because the required GitHub secrets are unavailable." > test-results/nightly-pdf/hosted-result.txt
+
+      - name: Upload hosted-PDF result
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-hosted-pdf-result
+          path: |
+            test-results/nightly-pdf/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload hosted-PDF failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-hosted-pdf-failure-evidence
+          path: output/economics-pdf-verification/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  notify_final:
+    name: Send one final nightly email
+    if: ${{ always() && github.run_attempt == 1 }}
+    needs:
+      - notify_start
+      - generated-matrix
+      - deterministic
+      - browser
+      - quality
+      - hosted-pdf
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          install: false
+
+      - name: Download available fictional-profile failure evidence
+        id: download_profile_failures
+        if: ${{ needs.generated-matrix.result != 'success' }}
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          pattern: generated-profile-failures-*
+          path: ${{ runner.temp }}/econplanner-profile-failures
+          merge-multiple: true
+
+      - name: Read safe fictional-profile failure context
+        id: profile_context
+        if: ${{ steps.download_profile_failures.outcome == 'success' }}
+        shell: bash
+        env:
+          FAILURE_DIRECTORY: ${{ runner.temp }}/econplanner-profile-failures
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import path from "node:path";
+
+          function findFailureFiles(directory) {
+            if (!fs.existsSync(directory)) return [];
+            return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+              const itemPath = path.join(directory, entry.name);
+              if (entry.isDirectory()) return findFailureFiles(itemPath);
+              return entry.name.endsWith(".failures.json") ? [itemPath] : [];
+            });
+          }
+
+          function safeToken(value, fallback = "") {
+            const token = String(value ?? "").trim();
+            return /^[A-Za-z0-9._/-]{1,160}$/.test(token) ? token : fallback;
+          }
+
+          const failures = findFailureFiles(process.env.FAILURE_DIRECTORY)
+            .sort()
+            .flatMap(file => {
+              try {
+                const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
+                return Array.isArray(parsed.failures) ? parsed.failures : [];
+              } catch {
+                return [];
+              }
+            });
+          const first = failures[0] || {};
+          const failedTests = failures.length > 0 ? String(failures.length) : "";
+          const output = [
+            `profile_id=${safeToken(first.profileId)}`,
+            `seed=${safeToken(first.seed)}`,
+            `shard=${safeToken(first.shard)}`,
+            `failed_tests=${failedTests}`,
+          ];
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `${output.join("\n")}\n`);
+          NODE
+
+      - name: Determine the complete nightly result
+        id: outcome
+        shell: bash
+        env:
+          NIGHTLY_NEEDS: ${{ toJSON(needs) }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+
+          const needs = JSON.parse(process.env.NIGHTLY_NEEDS);
+          const testJobs = [
+            ["generated-matrix", "generated profile matrix"],
+            ["deterministic", "policy, oracle, mutation, and planner tests"],
+            ["browser", "browser, accessibility, and adversarial tests"],
+            ["quality", "lint, build, and repository hygiene"],
+            ["hosted-pdf", "hosted PDF contract"],
+          ];
+          const failedTests = testJobs
+            .filter(([id]) => needs[id]?.result !== "success")
+            .map(([, label]) => label);
+          const startNotificationFailed = needs.notify_start?.result !== "success";
+          const testsFailed = failedTests.length > 0;
+          const status = testsFailed || startNotificationFailed ? "failed" : "succeeded";
+          const failedPhases = [
+            ...failedTests,
+            ...(startNotificationFailed ? ["start notification"] : []),
+          ];
+          let summary = "All nightly test jobs completed successfully.";
+          if (testsFailed && startNotificationFailed) {
+            summary = "Nightly tests failed and the start notification failed.";
+          } else if (testsFailed) {
+            summary = `${failedTests.length} nightly job(s) failed or did not complete successfully.`;
+          } else if (startNotificationFailed) {
+            summary = "Nightly tests succeeded, but the start notification failed.";
+          }
+
+          const recordedStart = needs.notify_start?.outputs?.started_at;
+          const parsedStart = Date.parse(recordedStart || "");
+          const startedAt = Number.isFinite(parsedStart)
+            ? new Date(parsedStart).toISOString()
+            : new Date().toISOString();
+          const durationSeconds = Number.isFinite(parsedStart)
+            ? Math.max(0, Math.round((Date.now() - parsedStart) / 1000))
+            : 0;
+          const output = [
+            `status=${status}`,
+            `started_at=${startedAt}`,
+            `duration_seconds=${durationSeconds}`,
+            `failed_phase=${failedPhases.join(", ")}`,
+            `failure_summary=${summary}`,
+            `tests_failed=${testsFailed}`,
+            `start_notification_failed=${startNotificationFailed}`,
+          ];
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `${output.join("\n")}\n`);
+          NODE
+
+      - name: Send one final nightly email
+        id: final_notification
+        continue-on-error: true
+        env:
+          MOCK_NOTIFICATIONS: "false"
+          PINGRAM_API_KEY: ${{ secrets.PINGRAM_API_KEY }}
+          PINGRAM_API_URL: ${{ secrets.PINGRAM_API_URL }}
+          PINGRAM_FROM_EMAIL: ${{ secrets.PINGRAM_FROM_EMAIL }}
+          PINGRAM_FROM_NAME: ${{ secrets.PINGRAM_FROM_NAME }}
+          PINGRAM_REPLY_TO: ${{ secrets.PINGRAM_REPLY_TO }}
+          ECONPLANNER_NOTIFICATION_EMAIL: ${{ secrets.ECONPLANNER_NOTIFICATION_EMAIL }}
+        run: >-
+          node scripts/notify-econplanner-nightly.mjs
+          --status "${{ steps.outcome.outputs.status }}"
+          --repository "${{ github.repository }}"
+          --branch "${{ github.ref_name }}"
+          --workflow-name "${{ github.workflow }}"
+          --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          --start-time "${{ steps.outcome.outputs.started_at }}"
+          --duration-seconds "${{ steps.outcome.outputs.duration_seconds }}"
+          --failed-phase "${{ steps.outcome.outputs.failed_phase }}"
+          --profile-id "${{ steps.profile_context.outputs.profile_id }}"
+          --seed "${{ steps.profile_context.outputs.seed }}"
+          --shard "${{ steps.profile_context.outputs.shard }}"
+          --failure-summary "${{ steps.outcome.outputs.failure_summary }}"
+          --failed-tests "${{ steps.profile_context.outputs.failed_tests }}"
+
+      - name: Preserve test and notification failures
+        if: ${{ always() }}
+        shell: bash
+        env:
+          TESTS_FAILED: ${{ steps.outcome.outputs.tests_failed }}
+          START_NOTIFICATION_FAILED: ${{ steps.outcome.outputs.start_notification_failed }}
+          FINAL_NOTIFICATION_OUTCOME: ${{ steps.final_notification.outcome }}
+        run: |
+          if [ "$FINAL_NOTIFICATION_OUTCOME" != "success" ]; then
+            if [ "$TESTS_FAILED" = "true" ]; then
+              echo "Nightly tests failed and final notification delivery failed."
+            elif [ "$START_NOTIFICATION_FAILED" = "true" ]; then
+              echo "Start and final notification delivery failed; nightly tests succeeded."
+            else
+              echo "Nightly tests succeeded, but final notification delivery failed."
+            fi
+            exit 1
+          fi
+          if [ "$TESTS_FAILED" = "true" ]; then
+            echo "Nightly tests failed; the final notification was delivered."
+            exit 1
+          fi
+          if [ "$START_NOTIFICATION_FAILED" = "true" ]; then
+            echo "Nightly tests succeeded and the final notification was delivered, but the start notification failed."
+            exit 1
+          fi
+          echo "Nightly tests and both notification deliveries succeeded."

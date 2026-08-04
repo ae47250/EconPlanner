@@ -1,0 +1,595 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "hanover-economics-verified-schedule-2026-2027",
+  "academicYear": "2026-2027",
+  "review": {
+    "status": "INDEPENDENT_ROW_REVIEW",
+    "reviewedOn": "2026-08-02",
+    "reviewedBy": "Codex Task 2 independent source review",
+    "method": "Each section was transcribed row by row from repository-owned source screenshots without reading values from the production normalized schedule."
+  },
+  "unknownValue": null,
+  "sources": [
+    {
+      "sourceId": "MYHANOVER-FALL-2026",
+      "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
+      "sha256": "fa240dd52020b3c23fd70c4133bec1f21dcaf276bde967568758db23c5e86570",
+      "visibleContent": "Fall sections dated 2026-08-24 through 2026-12-11",
+      "reviewNote": "The filename says winter-spring, but the visible rows are Fall 2026 rows."
+    },
+    {
+      "sourceId": "MYHANOVER-WINTER-MAY-2027",
+      "path": "data/raw/economics/schedule-2026-2027-fall.png",
+      "sha256": "39b78e794d9ac5bf263163b6172943875aa37487f5adfbcb599b1413798cc42b",
+      "visibleContent": "Winter sections dated 2027-01-11 through 2027-04-23 and May sections dated 2027-05-03 through 2027-05-28",
+      "reviewNote": "The filename says fall, but the visible selector and rows are Winter/Spring 2026-2027 rows."
+    },
+    {
+      "sourceId": "ECONOMICS-CROSSLIST-ECO-234",
+      "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+      "sha256": "6da52642cf4fcaa8d9d10075cba1158347e831aacc98b21cf3fcc4b7ff06565f",
+      "visibleContent": "ECO 234 is cross-listed with PHI 234 and is counted once."
+    }
+  ],
+  "sections": [
+    {
+      "term": "Fall",
+      "course": "ECO 113",
+      "canonicalCrossListIdentity": [
+        "ECO 113"
+      ],
+      "section": "A",
+      "title": "Principles of Microeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "9:45 AM"
+      },
+      "availability": {
+        "state": "closed",
+        "seatsOpen": 0,
+        "capacity": 22
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "A",
+      "title": "Principles of Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
+      },
+      "availability": {
+        "state": "closed",
+        "seatsOpen": 0,
+        "capacity": 21
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "B",
+      "title": "Principles of Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 1,
+        "capacity": 20
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "C",
+      "title": "Principles of Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 1,
+        "capacity": 24
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 213",
+      "canonicalCrossListIdentity": [
+        "ECO 213"
+      ],
+      "section": "A",
+      "title": "Intermediate Microeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 8,
+        "capacity": 17
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 234",
+      "canonicalCrossListIdentity": [
+        "ECO 234",
+        "PHI 234"
+      ],
+      "canonicalIdentitySourceReference": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md#ECO-234",
+      "section": "A",
+      "title": "Rational Choices",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 23,
+        "capacity": 24
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 333",
+      "canonicalCrossListIdentity": [
+        "ECO 333"
+      ],
+      "section": "A",
+      "title": "International Trade & Finance",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "1:20 PM",
+        "endTime": "2:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 3,
+        "capacity": 24
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 113",
+      "canonicalCrossListIdentity": [
+        "ECO 113"
+      ],
+      "section": "J",
+      "title": "Principles of Microeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 113",
+      "canonicalCrossListIdentity": [
+        "ECO 113"
+      ],
+      "section": "K",
+      "title": "Principles of Microeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "9:10 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "J",
+      "title": "Principles of Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "9:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 161",
+      "canonicalCrossListIdentity": [
+        "ECO 161"
+      ],
+      "section": "J",
+      "title": "Foundations of Economics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 214",
+      "canonicalCrossListIdentity": [
+        "ECO 214"
+      ],
+      "section": "J",
+      "title": "Intermediate Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 221",
+      "canonicalCrossListIdentity": [
+        "ECO 221"
+      ],
+      "section": "J",
+      "title": "Environmental Economics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 321",
+      "canonicalCrossListIdentity": [
+        "ECO 321"
+      ],
+      "section": "J",
+      "title": "Money & Financial Markets",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 461",
+      "canonicalCrossListIdentity": [
+        "ECO 461"
+      ],
+      "section": "J",
+      "title": "Senior Seminar - Econometrics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 15,
+        "capacity": 15
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "May",
+      "course": "ECO 222",
+      "canonicalCrossListIdentity": [
+        "ECO 222"
+      ],
+      "section": "S",
+      "title": "Economics of the European Union",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-05-03",
+        "endDate": "2027-05-28"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "startTime": "10:15 AM",
+        "endTime": "12:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 15,
+        "capacity": 15
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    },
+    {
+      "term": "May",
+      "course": "ECO 260",
+      "canonicalCrossListIdentity": [
+        "ECO 260"
+      ],
+      "section": "S",
+      "title": "Special Topics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-05-03",
+        "endDate": "2027-05-28"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "10:15 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+    }
+  ]
+}

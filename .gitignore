@@ -7,3 +7,11 @@ node_modules
 tmp
 test-results/
 playwright-report/
+
+# Failure-only PDF, PNG, extracted text, and benchmark evidence from the external contract test.
+output/economics-pdf-verification/
+
+# Local protected planning demo artifact.
+output/pdf/Planning-Demo-Fixed-EconPlanner-Plan.pdf
+
+.env*
