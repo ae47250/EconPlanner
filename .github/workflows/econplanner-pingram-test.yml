@@ -41,5 +41,6 @@ jobs:
           PINGRAM_FROM_NAME: ${{ secrets.PINGRAM_FROM_NAME }}
           PINGRAM_REPLY_TO: ${{ secrets.PINGRAM_REPLY_TO }}
           ECONPLANNER_NOTIFICATION_EMAIL: ${{ secrets.ECONPLANNER_NOTIFICATION_EMAIL }}
+          ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX: ${{ vars.ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX }}
           PINGRAM_TEST_PHONE: ${{ secrets.PINGRAM_TEST_PHONE }}
         run: node scripts/test-pingram-notification.mjs

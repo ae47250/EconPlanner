@@ -51,6 +51,7 @@ jobs:
           PINGRAM_FROM_NAME: ${{ secrets.PINGRAM_FROM_NAME }}
           PINGRAM_REPLY_TO: ${{ secrets.PINGRAM_REPLY_TO }}
           ECONPLANNER_NOTIFICATION_EMAIL: ${{ secrets.ECONPLANNER_NOTIFICATION_EMAIL }}
+          ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX: ${{ vars.ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX }}
         run: >-
           node scripts/notify-econplanner-nightly.mjs
           --status started
@@ -570,6 +571,7 @@ jobs:
           PINGRAM_FROM_NAME: ${{ secrets.PINGRAM_FROM_NAME }}
           PINGRAM_REPLY_TO: ${{ secrets.PINGRAM_REPLY_TO }}
           ECONPLANNER_NOTIFICATION_EMAIL: ${{ secrets.ECONPLANNER_NOTIFICATION_EMAIL }}
+          ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX: ${{ vars.ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX }}
         run: >-
           node scripts/notify-econplanner-nightly.mjs
           --status "${{ steps.outcome.outputs.status }}"

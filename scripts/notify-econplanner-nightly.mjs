@@ -3,8 +3,16 @@ import { fileURLToPath } from "node:url";
 
 const SUPPORTED_STATUSES = new Set(["started", "succeeded", "failed"]);
 const DEFAULT_PINGRAM_API_URL = "https://api.pingram.io";
+export const DEFAULT_NOTIFICATION_SUBJECT_PREFIX = "EconPlanner Nightly";
+export const MAX_NOTIFICATION_SUBJECT_PREFIX_LENGTH = 120;
 const DEFAULT_TIMEOUT_MS = 10_000;
 const MAX_FAILURE_SUMMARY_LENGTH = 300;
+const SUBJECT_LABELS = Object.freeze({
+  started: "Started",
+  succeeded: "Passed",
+  failed: "Failed",
+  test: "Test",
+});
 
 export class NightlyNotificationError extends Error {
   constructor(code, message, details = {}) {
@@ -17,6 +25,37 @@ export class NightlyNotificationError extends Error {
 
 function compact(value) {
   return String(value ?? "").trim();
+}
+
+export function normalizeNotificationSubjectPrefix(value) {
+  const prefix = compact(value);
+  if (!prefix) return DEFAULT_NOTIFICATION_SUBJECT_PREFIX;
+  if (/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u.test(prefix)) {
+    throw new NightlyNotificationError(
+      "INVALID_NOTIFICATION_SUBJECT_PREFIX",
+      "EconPlanner notification subject prefix must not contain control or newline characters.",
+      { field: "ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX" },
+    );
+  }
+  if (prefix.length > MAX_NOTIFICATION_SUBJECT_PREFIX_LENGTH) {
+    throw new NightlyNotificationError(
+      "INVALID_NOTIFICATION_SUBJECT_PREFIX",
+      `EconPlanner notification subject prefix must be ${MAX_NOTIFICATION_SUBJECT_PREFIX_LENGTH} characters or fewer.`,
+      { field: "ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX" },
+    );
+  }
+  return prefix;
+}
+
+export function buildNotificationSubject(status, prefixValue) {
+  const label = SUBJECT_LABELS[compact(status).toLowerCase()];
+  if (!label) {
+    throw new NightlyNotificationError(
+      "UNSUPPORTED_NOTIFICATION_STATUS",
+      `Unsupported EconPlanner notification subject status: ${compact(status) || "(missing)"}.`,
+    );
+  }
+  return `${normalizeNotificationSubjectPrefix(prefixValue)} — ${label}`;
 }
 
 function safeText(value, maxLength = 160) {
@@ -124,10 +163,9 @@ function formatDuration(seconds) {
   return remainder ? `${minutes} minutes ${remainder} seconds` : `${minutes} minutes`;
 }
 
-export function buildNightlyNotificationContent(input) {
+export function buildNightlyNotificationContent(input, options = {}) {
   const notification = normalizeInput(input);
-  const statusLabel = notification.status.toUpperCase();
-  const subject = `[EconPlanner nightly] ${statusLabel} - ${notification.branch}`;
+  const subject = buildNotificationSubject(notification.status, options.subjectPrefix);
   const rows = [
     ["Application", notification.application],
     ["Repository", notification.repository],
@@ -236,7 +274,9 @@ export async function notifyEconPlannerNightly(input, options = {}) {
   const env = options.env || process.env;
   const fetchImpl = options.fetchImpl || globalThis.fetch;
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const { notification, subject, html } = buildNightlyNotificationContent(input);
+  const { notification, subject, html } = buildNightlyNotificationContent(input, {
+    subjectPrefix: env.ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX,
+  });
   const mode = notificationMode(env);
 
   if (mode !== "live") {

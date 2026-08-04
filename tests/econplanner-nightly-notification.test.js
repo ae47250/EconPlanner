@@ -1,12 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
 
 import {
+  DEFAULT_NOTIFICATION_SUBJECT_PREFIX,
+  MAX_NOTIFICATION_SUBJECT_PREFIX_LENGTH,
   NightlyNotificationError,
+  buildNotificationSubject,
   buildNightlyNotificationContent,
   notifyEconPlannerNightly,
+  normalizeNotificationSubjectPrefix,
   pingramEmailEndpoint,
 } from "../scripts/notify-econplanner-nightly.mjs";
+import {
+  emailPayload as buildDiagnosticEmailPayload,
+  runDiagnostic,
+} from "../scripts/test-pingram-notification.mjs";
 
 const fictionalInput = Object.freeze({
   status: "started",
@@ -37,10 +46,10 @@ function fakeResponse({ ok = true, status = 202, body = { id: "fictional-message
   };
 }
 
-async function captureLiveRequest(input = fictionalInput, response = fakeResponse()) {
+async function captureLiveRequest(input = fictionalInput, response = fakeResponse(), env = fictionalLiveEnv) {
   const calls = [];
   const result = await notifyEconPlannerNightly(input, {
-    env: fictionalLiveEnv,
+    env,
     fetchImpl: async (...args) => {
       calls.push(args);
       return response;
@@ -113,6 +122,55 @@ test("unsupported notification status is rejected", async () => {
   );
 });
 
+test("notification subject prefix defaults when unset or blank", () => {
+  assert.equal(normalizeNotificationSubjectPrefix(undefined), DEFAULT_NOTIFICATION_SUBJECT_PREFIX);
+  assert.equal(normalizeNotificationSubjectPrefix("   "), DEFAULT_NOTIFICATION_SUBJECT_PREFIX);
+  assert.equal(buildNotificationSubject("started"), "EconPlanner Nightly — Started");
+});
+
+test("notification subject prefix accepts custom text and trims surrounding whitespace", () => {
+  assert.equal(normalizeNotificationSubjectPrefix("  Economics QA  "), "Economics QA");
+  assert.equal(buildNotificationSubject("succeeded", "  Economics QA  "), "Economics QA — Passed");
+});
+
+test("notification subject prefix rejects newline and control characters", () => {
+  for (const prefix of ["Economics\nInjected-Header: blocked", "Economics\rNightly", "Economics\u0000Nightly"]) {
+    assert.throws(
+      () => normalizeNotificationSubjectPrefix(prefix),
+      (error) => error instanceof NightlyNotificationError
+        && error.code === "INVALID_NOTIFICATION_SUBJECT_PREFIX",
+    );
+  }
+});
+
+test("notification subject prefix rejects excessively long values", () => {
+  assert.equal(normalizeNotificationSubjectPrefix("x".repeat(MAX_NOTIFICATION_SUBJECT_PREFIX_LENGTH)).length, 120);
+  assert.throws(
+    () => normalizeNotificationSubjectPrefix("x".repeat(MAX_NOTIFICATION_SUBJECT_PREFIX_LENGTH + 1)),
+    (error) => error instanceof NightlyNotificationError
+      && error.code === "INVALID_NOTIFICATION_SUBJECT_PREFIX",
+  );
+});
+
+test("nightly subjects use Started, Passed, and Failed labels", () => {
+  assert.equal(buildNotificationSubject("started", "Economics QA"), "Economics QA — Started");
+  assert.equal(buildNotificationSubject("succeeded", "Economics QA"), "Economics QA — Passed");
+  assert.equal(buildNotificationSubject("failed", "Economics QA"), "Economics QA — Failed");
+});
+
+test("standalone diagnostic subject uses the same prefix and Test label", () => {
+  const payload = buildDiagnosticEmailPayload({
+    ...fictionalLiveEnv,
+    ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX: "  Economics QA  ",
+  });
+  assert.equal(payload.email.subject, "Economics QA — Test");
+  assert.equal(payload.to.email, fictionalLiveEnv.ECONPLANNER_NOTIFICATION_EMAIL);
+  assert.equal(payload.email.senderEmail, fictionalLiveEnv.PINGRAM_FROM_EMAIL);
+  assert.equal(payload.email.senderName, fictionalLiveEnv.PINGRAM_FROM_NAME);
+  assert.deepEqual(payload.options.email.replyToAddresses, [fictionalLiveEnv.PINGRAM_REPLY_TO]);
+  assert.deepEqual(payload.forceChannels, ["EMAIL"]);
+});
+
 test("started payload follows the confirmed Pingram email contract", async () => {
   const { endpoint, request, body } = await captureLiveRequest();
   assert.equal(endpoint, "https://pingram.example.test/send");
@@ -123,14 +181,16 @@ test("started payload follows the confirmed Pingram email contract", async () =>
   assert.deepEqual(body.forceChannels, ["EMAIL"]);
   assert.equal(body.to.email, "administrator@example.test");
   assert.equal(body.email.senderEmail, "sender@example.test");
-  assert.match(body.email.subject, /STARTED/);
+  assert.equal(body.email.subject, "EconPlanner Nightly — Started");
   assert.match(body.email.html, /Fictional EconPlanner nightly/);
   assert.deepEqual(body.options.email.replyToAddresses, ["reply@example.test"]);
+  assert.equal(body.options.email.fromAddress, fictionalLiveEnv.PINGRAM_FROM_EMAIL);
+  assert.equal(body.options.email.fromName, fictionalLiveEnv.PINGRAM_FROM_NAME);
 });
 
 test("succeeded payload identifies a successful run", async () => {
   const { body } = await captureLiveRequest({ ...fictionalInput, status: "succeeded" });
-  assert.match(body.email.subject, /SUCCEEDED/);
+  assert.equal(body.email.subject, "EconPlanner Nightly — Passed");
   assert.match(body.email.html, /succeeded/);
 });
 
@@ -141,7 +201,7 @@ test("failed payload includes a short safe failure summary and failed count", as
     failureSummary: "Two fictional planner assertions failed.",
     failedTests: 2,
   });
-  assert.match(body.email.subject, /FAILED/);
+  assert.equal(body.email.subject, "EconPlanner Nightly — Failed");
   assert.match(body.email.html, /Two fictional planner assertions failed\./);
   assert.match(body.email.html, />2</);
 });
@@ -276,6 +336,36 @@ test("all safety-mode test paths prove no live request occurs", async () => {
   await notifyEconPlannerNightly(fictionalInput, { env: {}, fetchImpl });
   await notifyEconPlannerNightly(fictionalInput, { env: { MOCK_NOTIFICATIONS: "true" }, fetchImpl });
   assert.equal(requestCount, 0);
+});
+
+test("standalone diagnostic mock mode preserves email delivery behavior without sending", async () => {
+  let requestCount = 0;
+  const result = await runDiagnostic({
+    ...fictionalLiveEnv,
+    MOCK_NOTIFICATIONS: "true",
+    PINGRAM_TEST_CHANNEL: "email",
+  }, async () => {
+    requestCount += 1;
+    throw new Error("network must not be called");
+  });
+  assert.deepEqual(result.results, [
+    { channel: "email", ok: true, mode: "mock", sent: false },
+  ]);
+  assert.equal(requestCount, 0);
+});
+
+test("workflows use the non-secret subject variable without changing notification counts or triggers", () => {
+  const nightly = fs.readFileSync(new URL("../.github/workflows/econplanner-nightly.yml", import.meta.url), "utf8");
+  const diagnostic = fs.readFileSync(new URL("../.github/workflows/econplanner-pingram-test.yml", import.meta.url), "utf8");
+  const variableReference = "ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX: ${{ vars.ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX }}";
+
+  assert.equal(nightly.split(variableReference).length - 1, 2);
+  assert.equal(nightly.split("node scripts/notify-econplanner-nightly.mjs").length - 1, 2);
+  assert.equal(nightly.split("--status started").length - 1, 1);
+  assert.equal(nightly.split("--status \"${{ steps.outcome.outputs.status }}\"").length - 1, 1);
+  assert.equal(diagnostic.split(variableReference).length - 1, 1);
+  assert.match(diagnostic, /^on:\r?\n  workflow_dispatch:/m);
+  assert.doesNotMatch(diagnostic, /^  (schedule|push|pull_request):/m);
 });
 
 test("endpoint normalization matches the existing Pingram integration", () => {
