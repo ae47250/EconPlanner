@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "econ-2025-2026.1",
+  "program": "ECONOMICS",
+  "catalogApplicability": ["2025-2026"],
+  "status": "DRAFT",
+  "authorityHierarchy": [
+    "ACTIVE_EXACT_SCHEDULE",
+    "DEPARTMENT_CONFIRMED_WITHIN_BOUNDARY",
+    "OFFICIAL_CATALOG",
+    "COLLEGE_WIDE_RULE",
+    "APPROVED_RECURRING_POLICY",
+    "HISTORICAL_PRELIMINARY_EVIDENCE",
+    "REVIEW_OR_TBC_ON_UNRESOLVED_CONFLICT"
+  ],
+  "inputs": [
+    {"id": "provenance", "path": "policy/provenance/sources.json", "schema": null},
+    {"id": "courses", "path": "policy/courses/economics.json", "schema": null},
+    {"id": "requirements", "path": "policy/requirements/economics-2025-2026.json", "schema": "policy/schema/policy-record.v1.schema.json"},
+    {"id": "prerequisites", "path": "policy/rules/prerequisites.json", "schema": "policy/schema/policy-record.v1.schema.json"},
+    {"id": "requirement-allocation", "path": "policy/rules/requirement-allocation.json", "schema": "policy/schema/policy-record.v1.schema.json"},
+    {"id": "permissions-exceptions", "path": "policy/rules/permissions-exceptions.json", "schema": "policy/schema/policy-record.v1.schema.json"},
+    {"id": "terms-load-graduation", "path": "policy/rules/terms-load-graduation.json", "schema": "policy/schema/policy-record.v1.schema.json"},
+    {"id": "schedule-2026-2027", "path": "policy/schedules/2026-2027.json", "schema": "policy/schema/schedule-release.v1.schema.json"},
+    {"id": "offering-patterns", "path": "policy/offering-patterns/economics.json", "schema": "policy/schema/offering-pattern.v1.schema.json"},
+    {"id": "messages-en-US", "path": "policy/messages/en-US.json", "schema": "policy/schema/message-catalog.v1.schema.json"},
+    {"id": "unresolved", "path": "policy/unresolved/policy-questions.json", "schema": null}
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://econplanner.local/schema/approval-instance.v1.schema.json",
+  "title": "EconPlanner approval or exception instance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["approvalId", "schemaVersion", "ruleId", "scope", "authority", "authorityBoundary", "evidenceRef", "effectiveDate", "expirationDate", "status", "modifiedCondition", "recordedBy", "recordedAt", "auditHistory"],
+  "properties": {
+    "approvalId": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "1.0.0"},
+    "ruleId": {"type": "string", "minLength": 1},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["studentRefHash", "course", "termId", "requirementId"],
+      "properties": {
+        "studentRefHash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "course": {"type": "string"},
+        "termId": {"type": "string"},
+        "requirementId": {"type": ["string", "null"]}
+      }
+    },
+    "authority": {"type": "string"},
+    "authorityBoundary": {"type": "string"},
+    "evidenceRef": {"type": "string"},
+    "effectiveDate": {"type": "string", "format": "date"},
+    "expirationDate": {"type": ["string", "null"], "format": "date"},
+    "status": {"enum": ["APPROVED", "REVOKED", "EXPIRED"]},
+    "modifiedCondition": {"type": "string"},
+    "recordedBy": {"type": "string"},
+    "recordedAt": {"type": "string", "format": "date-time"},
+    "auditHistory": {"type": "array", "items": {"type": "object"}}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://econplanner.local/schema/message-catalog.v1.schema.json",
+  "title": "EconPlanner canonical message catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "locale", "messages"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "locale": {"const": "en-US"},
+    "messages": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "string", "minLength": 1}
+    }
+  }
+}

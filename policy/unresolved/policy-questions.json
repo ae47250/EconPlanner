@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "econ-2025-2026.1",
+  "questions": [
+    {
+      "ruleId": "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE",
+      "status": "REVIEW_REQUIRED",
+      "sourceRefs": ["ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"],
+      "question": "What evidence establishes historical prerequisite satisfaction for an already completed or transferred advanced course?",
+      "requiredDisposition": "Preserve completed history and emit REVIEW_REQUIRED; do not infer or erase facts."
+    },
+    {
+      "ruleId": "REVIEW-ECO-335-MATH-EQUIVALENT",
+      "status": "REVIEW_REQUIRED",
+      "sourceRefs": ["ECONOMICS-REQUIREMENTS#ECO-335"],
+      "question": "Which documented courses or equivalencies satisfy the MAT 121 equivalent language for ECO 335?",
+      "requiredDisposition": "Accept explicit MAT 121; review claimed equivalents."
+    },
+    {
+      "ruleId": "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE",
+      "status": "REVIEW_REQUIRED",
+      "sourceRefs": ["ECONOMICS-REQUIREMENTS#Use-of-This-File"],
+      "question": "How does a waiver, substitution, or equivalency apply separately to prerequisites and major requirements?",
+      "requiredDisposition": "Require documented authority and scope for each use."
+    },
+    {
+      "ruleId": "REVIEW-ENROLLMENT-FULL-DISPOSITION",
+      "status": "REVIEW_REQUIRED",
+      "sourceRefs": ["DEPARTMENT-POLICIES#Confirmed-policy-9"],
+      "question": "What governed decision applies when a section is FULL?",
+      "requiredDisposition": "Return REVIEW_REQUIRED; never silently treat FULL as OPEN or CLOSED."
+    },
+    {
+      "ruleId": "REVIEW-SCHEDULE-EVIDENCE-TIMESTAMPS",
+      "status": "REVIEW_REQUIRED",
+      "sourceRefs": ["SCHEDULE-2026-2027-FALL#image", "SCHEDULE-2026-2027-WINTER-MAY#image"],
+      "question": "What are the original schedule release date, retrieval time, availability-as-of time, and human verification time?",
+      "requiredDisposition": "Preserve null timestamps and do not invent them."
+    }
+  ]
+}

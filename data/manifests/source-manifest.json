@@ -285,14 +285,25 @@
       "role": "economics_source",
       "source": "department-provided:Econ_Course_Offerings.md",
       "path": "data/raw/economics/Econ_Course_Offerings.md",
-      "sha256": "2d6d4cd295789d5d1f23728ef4deecadae97c3bd346548deb9f989add6b9f24d"
+      "sha256": "c7ca6b3f570920bb71a73101231c1053a877e4c8716d31b2a4faac50f1e9856e"
     },
     {
       "role": "economics_local_policy",
       "source": "department-confirmed:planning-policies-2026-08-01",
       "confirmedOn": "2026-08-01",
       "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
-      "sha256": "b23325fa29bf9feb85f1e92d6d2cccf394640d3b97229baa4fe177a3fd275383"
+      "sha256": "9e249beba8ba9c4d4ab1ba9ba6c4045781f14959c293002863b436bcda6acd09"
+    },
+    {
+      "role": "economics_policy_confirmation",
+      "source": "codex-thread:owner-confirmation-2026-08-05#eco-257-statistics-only",
+      "authority": "Economics Department domain policy",
+      "authorityBoundary": "ECO_257_REQUIREMENT_ALLOCATION",
+      "confirmedOn": "2026-08-05",
+      "reviewedBy": "Project owner and Economics Department domain expert",
+      "contentSha256": "1c6518667ccf9fcc709c6ebead3867debdf8d7515eaf05e744a96b75a2b20963",
+      "supersedes": "Ambiguous older prose suggesting ECO 257 might receive elective treatment",
+      "statement": "ECO 257 may satisfy the Statistics requirement only; it must never count as an Economics elective, and no advisor override permits elective treatment unless a future separately documented policy explicitly changes this rule."
     },
     {
       "role": "economics_source",

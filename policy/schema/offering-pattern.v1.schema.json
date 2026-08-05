@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://econplanner.local/schema/offering-pattern.v1.schema.json",
+  "title": "EconPlanner offering-pattern collection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "policyVersion", "patterns"],
+  "properties": {
+    "schemaVersion": {"const": "1.0.0"},
+    "policyVersion": {"type": "string"},
+    "patterns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["patternId", "course", "authority", "authorityBoundary", "sourceRefs", "evidenceType", "hardExcludedTerms", "approvedRecurringTerms", "yearsObserved", "observationsByTerm", "contradictoryYears", "confidence", "projectionGranularity", "projectionPolicy", "effective", "review", "supersedes"],
+        "properties": {
+          "patternId": {"type": "string", "minLength": 1},
+          "course": {"oneOf": [{"type": "string"}, {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}]},
+          "authority": {"type": "string", "minLength": 1},
+          "authorityBoundary": {"type": "string", "minLength": 1},
+          "sourceRefs": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+          "evidenceType": {"enum": ["DEPARTMENT_RECURRING", "HISTORICAL_INFERENCE", "WEAK", "CONFLICTING", "NONE"]},
+          "hardExcludedTerms": {"type": "array", "items": {"enum": ["FALL", "WINTER", "MAY", "SUMMER"]}, "uniqueItems": true},
+          "approvedRecurringTerms": {"type": "array", "items": {"enum": ["FALL", "WINTER", "MAY", "SUMMER"]}, "uniqueItems": true},
+          "yearsObserved": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "observationsByTerm": {"type": "object"},
+          "contradictoryYears": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "confidence": {"enum": ["CONFIRMED_PATTERN", "HISTORICAL_ONLY", "WEAK", "CONFLICTING", "NONE"]},
+          "projectionGranularity": {"enum": ["EXACT_TERM", "ACADEMIC_YEAR_TBC", "NONE"]},
+          "projectionPolicy": {"type": "object"},
+          "effective": {"type": "object", "required": ["from", "through"], "properties": {"from": {"type": "string", "format": "date"}, "through": {"type": ["string", "null"], "format": "date"}}},
+          "review": {"type": "object", "required": ["reviewer", "lastReviewDate"], "properties": {"reviewer": {"type": "string"}, "lastReviewDate": {"type": "string", "format": "date"}}},
+          "supersedes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+        }
+      }
+    }
+  }
+}

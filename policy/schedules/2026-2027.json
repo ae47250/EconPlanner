@@ -1,0 +1,45 @@
+{
+  "releaseId": "schedule-2026-2027-v1",
+  "schemaVersion": "1.0.0",
+  "academicYear": "2026-2027",
+  "releaseStatus": "ACTIVE",
+  "authority": "REGISTRAR_OR_VERIFIED_DEPARTMENT_SOURCE",
+  "sourceRefs": ["SCHEDULE-2026-2027-FALL#image", "SCHEDULE-2026-2027-WINTER-MAY#image"],
+  "effectiveDate": "2026-07-28",
+  "supersedes": null,
+  "terms": [
+    {
+      "termId": "2026-FALL", "canonicalTerm": "FALL", "sourceAliases": ["Fall"], "displayLabel": "Fall 2026", "coverage": "COMPLETE",
+      "sections": [
+        {"sectionId":"2026-FALL-ECO-113-A","course":"ECO 113","title":"Principles of Microeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"FULL","meeting":{"days":["TUE","THU"],"startTime":"08:00","endTime":"09:45","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"IN_PERSON","location":"Hanover College Science Center - 112"},"sourceRefs":["SCHEDULE-2026-2027-FALL#ECO-113-A"]},
+        {"sectionId":"2026-FALL-ECO-114-A","course":"ECO 114","title":"Principles of Macroeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"FULL","meeting":{"days":["MON","WED","FRI"],"startTime":"09:20","endTime":"10:30","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"IN_PERSON","location":"Hanover College Science Center - 115"},"sourceRefs":["SCHEDULE-2026-2027-FALL#ECO-114-A"]},
+        {"sectionId":"2026-FALL-ECO-114-B","course":"ECO 114","title":"Principles of Macroeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","WED","FRI"],"startTime":"10:40","endTime":"11:50","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"IN_PERSON","location":"Hanover College Science Center - 115"},"sourceRefs":["SCHEDULE-2026-2027-FALL#ECO-114-B"]},
+        {"sectionId":"2026-FALL-ECO-114-C","course":"ECO 114","title":"Principles of Macroeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["TUE","THU"],"startTime":"12:20","endTime":"14:05","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"IN_PERSON","location":"Hanover College Science Center - 112"},"sourceRefs":["SCHEDULE-2026-2027-FALL#ECO-114-C"]},
+        {"sectionId":"2026-FALL-ECO-213-A","course":"ECO 213","title":"Intermediate Microeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["TUE","THU"],"startTime":"10:00","endTime":"11:45","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"IN_PERSON","location":"Hanover College Science Center - 112"},"sourceRefs":["SCHEDULE-2026-2027-FALL#ECO-213-A"]},
+        {"sectionId":"2026-FALL-ECO-234-A","course":"ECO 234","title":"Rational Choices","crossListedAs":["PHI 234"],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","WED","FRI"],"startTime":"10:40","endTime":"11:50","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"IN_PERSON","location":"Hanover College Classic Hall - 213"},"sourceRefs":["SCHEDULE-2026-2027-FALL#ECO-234-A"]},
+        {"sectionId":"2026-FALL-ECO-333-A","course":"ECO 333","title":"International Trade & Finance","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","WED","FRI"],"startTime":"13:20","endTime":"14:30","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"IN_PERSON","location":"Hanover College Science Center - 115"},"sourceRefs":["SCHEDULE-2026-2027-FALL#ECO-333-A"]}
+      ]
+    },
+    {
+      "termId": "2027-WINTER", "canonicalTerm": "WINTER", "sourceAliases": ["Winter"], "displayLabel": "Winter 2027", "coverage": "COMPLETE",
+      "sections": [
+        {"sectionId":"2027-WINTER-ECO-113-J","course":"ECO 113","title":"Principles of Microeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["TUE","THU"],"startTime":"10:00","endTime":"11:45","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-113-J"]},
+        {"sectionId":"2027-WINTER-ECO-113-K","course":"ECO 113","title":"Principles of Microeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","WED","FRI"],"startTime":"08:00","endTime":"09:10","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-113-K"]},
+        {"sectionId":"2027-WINTER-ECO-114-J","course":"ECO 114","title":"Principles of Macroeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["TUE","THU"],"startTime":"08:00","endTime":"09:45","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-114-J"]},
+        {"sectionId":"2027-WINTER-ECO-161-J","course":"ECO 161","title":"Foundations of Economics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["TUE","THU"],"startTime":"12:20","endTime":"14:05","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-161-J"]},
+        {"sectionId":"2027-WINTER-ECO-214-J","course":"ECO 214","title":"Intermediate Macroeconomics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["TUE","THU"],"startTime":"10:00","endTime":"11:45","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-214-J"]},
+        {"sectionId":"2027-WINTER-ECO-221-J","course":"ECO 221","title":"Environmental Economics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","WED","FRI"],"startTime":"09:20","endTime":"10:30","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-221-J"]},
+        {"sectionId":"2027-WINTER-ECO-321-J","course":"ECO 321","title":"Money & Financial Markets","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["TUE","THU"],"startTime":"12:20","endTime":"14:05","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-321-J"]},
+        {"sectionId":"2027-WINTER-ECO-461-J","course":"ECO 461","title":"Senior Seminar - Econometrics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","WED","FRI"],"startTime":"10:40","endTime":"11:50","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-461-J"]}
+      ]
+    },
+    {
+      "termId": "2027-MAY", "canonicalTerm": "MAY", "sourceAliases": ["May", "Spring", "Spring/May"], "displayLabel": "Spring/May 2027", "coverage": "COMPLETE",
+      "sections": [
+        {"sectionId":"2027-MAY-ECO-222-S","course":"ECO 222","title":"Economics of the European Union","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","TUE","WED","THU","FRI"],"startTime":"10:15","endTime":"12:30","startDate":"2027-05-03","endDate":"2027-05-28","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-222-S"]},
+        {"sectionId":"2027-MAY-ECO-260-S","course":"ECO 260","title":"Special Topics","crossListedAs":[],"units":1,"offeringExistence":"OFFERED","enrollmentState":"OPEN","meeting":{"days":["MON","TUE","WED","THU","FRI"],"startTime":"08:00","endTime":"10:15","startDate":"2027-05-03","endDate":"2027-05-28","delivery":"IN_PERSON","location":""},"sourceRefs":["SCHEDULE-2026-2027-WINTER-MAY#ECO-260-S"]}
+      ]
+    },
+    {"termId":"2027-SUMMER","canonicalTerm":"SUMMER","sourceAliases":["Summer"],"displayLabel":"Summer 2027","coverage":"UNAVAILABLE","sections":[]}
+  ]
+}
