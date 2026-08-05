@@ -185,6 +185,16 @@ test.beforeEach(async ({ page }) => {
   await resetPlanner(page);
 });
 
+test("intake header shows the URVESKA logo above EconPlanner without the legacy E icon", async ({ page }) => {
+  const brand = page.locator(".apple-brand");
+  await expect(brand.getByRole("img", { name: "URVESKA" })).toHaveAttribute(
+    "src",
+    "/urveska-midnight-gold-underlined.png"
+  );
+  await expect(brand.getByText("EconPlanner", { exact: true })).toBeVisible();
+  await expect(page.locator(".apple-brand-mark")).toHaveCount(0);
+});
+
 test("standing, term, graduation, course status, and prerequisite controls stay coherent", async ({ page }) => {
   await page.getByRole("textbox", { name: "Student name (optional)" }).fill("Alex Student");
 
@@ -347,6 +357,9 @@ test("generation is single-flight and distinct plans support compare, history, r
     item.querySelector("tbody")?.innerText || ""
   ])));
   expect(new Set(Object.values(originalSchedules)).size).toBe(3);
+  const displayedTermCounts = await cards.evaluateAll(items => items.map(item => item.querySelectorAll("tbody tr").length));
+  expect(new Set(displayedTermCounts).size).toBe(1);
+  expect(displayedTermCounts[0]).toBeGreaterThan(0);
 
   for (const card of await cards.all()) {
     const exactRows = card.locator("tbody tr").filter({ hasNotText: "Term to be confirmed" });
@@ -355,13 +368,40 @@ test("generation is single-flight and distinct plans support compare, history, r
     }
     await expect(card.getByText("ECO 461").first()).toBeVisible();
     await expect(card.getByRole("cell", { name: "Winter", exact: true }).last()).toBeVisible();
+    await expect(card.getByText("No major course assigned", { exact: true }).first()).toBeVisible();
   }
 
-  await page.getByRole("checkbox", { name: "Show differences only" }).check();
-  await expect(page.getByRole("checkbox", { name: "Show differences only" })).toBeChecked();
+  const advisorAttention = page.locator(".advisor-attention");
+  await expect(advisorAttention.getByRole("heading", { name: "Graduation planning assumptions" })).toHaveCount(1);
+  await expect(advisorAttention.getByRole("heading", { name: "Published 2026/2027 schedule checks" })).toBeVisible();
+  await expect(advisorAttention.getByRole("heading", { name: "Projected placement" })).toBeVisible();
+  await expect(advisorAttention.getByText("Graduation planning assumption", { exact: true })).toHaveCount(0);
+  await expect(advisorAttention.getByText(/ECO 213 and ECO 214 tend to be offered in different terms/)).toBeVisible();
+  const selectedCompareCard = page.locator("article.comparison-plan-card.is-selected");
+  await expect(selectedCompareCard).toHaveCount(1);
+  const selectedComparePlanId = await selectedCompareCard.getAttribute("data-plan-id");
+  await expect(advisorAttention).toHaveAttribute("data-plan-id", selectedComparePlanId);
+  await expect(advisorAttention.getByText(/Warnings shown for Plan/)).toBeVisible();
+  const selectedAvailability = page.locator(".schedule-availability");
+  await expect(selectedAvailability.getByText("ECO 114", { exact: false })).toHaveCount(3);
+  await expect(selectedAvailability.getByText("ECO 213", { exact: false })).toHaveCount(0);
+  const selectedAdvisorText = await advisorAttention.innerText();
+
+  await page.getByRole("checkbox", { name: "Highlight differences" }).check();
+  await expect(page.getByRole("checkbox", { name: "Highlight differences" })).toBeChecked();
+  await expect(page.getByText(/Blue courses are shared by every plan in the same term/)).toBeVisible();
+  for (const card of await cards.all()) {
+    const sharedCapstone = card.locator(".comparison-shared-course").filter({ hasText: "ECO 461" });
+    await expect(sharedCapstone).toHaveCount(1);
+    await expect(sharedCapstone).toBeVisible();
+  }
   await page.getByRole("button", { name: /(?:Choose|Review selected) Plan B/ }).click();
   await expect(page.getByRole("heading", { name: "Review Plan B" })).toBeVisible();
   await expect(page.getByRole("tab", { name: "Plan B" })).toHaveAttribute("aria-selected", "true");
+  const planBAdvisorAttention = page.locator(".advisor-attention");
+  await expect(planBAdvisorAttention).toHaveAttribute("data-plan-id", "plan-2");
+  expect(await planBAdvisorAttention.innerText()).not.toBe(selectedAdvisorText);
+  await expect(page.locator(".schedule-availability").getByText("ECO 214", { exact: false })).toHaveCount(0);
 
   await page.goBack();
   await expect(page.getByRole("button", { name: "Review selected Plan B" })).toBeVisible();

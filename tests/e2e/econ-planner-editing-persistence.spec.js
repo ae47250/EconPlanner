@@ -232,6 +232,10 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   await generatePlans(page);
   await choosePlan(page, "Plan A");
 
+  const advisorAttention = page.locator(".advisor-attention");
+  await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
+  const advisorBeforeEdit = await advisorAttention.innerText();
+
   const originalSession = await savedSession(page);
   const originalSignatures = savedPlanSignatures(originalSession);
   expect(originalSession.selectedPlanId).toBe("plan-1");
@@ -242,6 +246,8 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   expect(moveResponse.status()).toBe(200);
   await expect(statusMessage(page, "Plan A was updated and remains valid")).toBeVisible();
   await expect(page.getByRole("combobox", { name: "Move ECO 214 to another term" })).toHaveValue("winter-2028");
+  await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
+  expect(await advisorAttention.innerText()).not.toBe(advisorBeforeEdit);
 
   const editedSession = await savedSession(page);
   const editedSignatures = savedPlanSignatures(editedSession);

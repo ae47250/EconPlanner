@@ -374,13 +374,115 @@ function PlanningGaps({ items = [] }) {
   );
 }
 
-function AdvisorAttention({ catalog }) {
-  const notices = catalog?.advisorAttention || [];
+function warningCourseCodes(message) {
+  return [...new Set(String(message || "").match(/\b(?:BUSN|ECO|MAT|PSY)\s+\d{3}\b/g) || [])]
+    .sort((left, right) => left.localeCompare(right));
+}
+
+function projectedWarningCourse(message) {
+  return String(message || "").match(/^(.+?) in (?:Fall|Winter|Spring\/May|May|Summer) \d{4} is a projected placement/i)?.[1]
+    || null;
+}
+
+function projectedWarningPlacement(message) {
+  const match = String(message || "").match(/^(.+?) in ((?:Fall|Winter|Spring\/May|May|Summer) \d{4}) is a projected placement/i);
+  return match ? `${match[1]} — ${match[2]}` : null;
+}
+
+function isFlattenedPlanNotice(notice) {
+  return String(notice?.code || "").startsWith("PLAN_")
+    || ["Graduation planning assumption", "Graduation plan advisor review"].includes(notice?.title);
+}
+
+function academicYearKey(value) {
+  return String(value || "").replace("/", "-");
+}
+
+function scheduleTermKey(term) {
+  const value = String(term?.termKey || term?.scheduleTerm || term?.displayTerm || term?.term || "");
+  if (/spring|may/i.test(value)) return "May";
+  return value;
+}
+
+function planPublishedScheduleNotices(plan, schedule) {
+  const scheduleYear = academicYearKey(schedule?.academicYear);
+  if (!scheduleYear || !plan) return [];
+  const scheduleTerms = schedule?.terms || {};
+  return (plan.terms || []).flatMap(term => {
+    if (academicYearKey(term.academicYear) !== scheduleYear) return [];
+    const sections = scheduleTerms[scheduleTermKey(term)] || [];
+    return (term.courses || []).flatMap(course => {
+      if (!course.course || course.course === "ECO elective" || course.course.includes("requirement")) return [];
+      const matchingSections = sections.filter(section => section.course === course.course);
+      if (!matchingSections.length) return [];
+      const availability = [...new Set(matchingSections.map(section => {
+        const label = courseAvailabilityLabel(section);
+        return label || "not recorded";
+      }))];
+      return [{
+        code: `SELECTED_PLAN_SCHEDULE_${term.slotId || term.term}_${course.course}`.replace(/[^A-Z0-9_]/gi, "_"),
+        title: "Graduation planning assumption",
+        severity: "warning",
+        message: `${course.course} in ${term.term || term.displayTerm}: current seat availability is ${availability.join("; ")}. Confirm before registration.`
+      }];
+    });
+  });
+}
+
+function selectedPlanNotices(plan, schedule) {
+  if (!plan) return [];
+  const messages = [
+    ...(plan.validation?.warnings || []).filter(message => !/^Seat availability for /i.test(message)),
+    ...(plan.advisorChecks || []).map(item => item.reason).filter(Boolean)
+  ];
+  const notices = messages.map((message, index) => ({
+    code: `SELECTED_PLAN_WARNING_${plan.id}_${index}`,
+    title: "Graduation planning assumption",
+    severity: "warning",
+    message
+  }));
+  return [...new Map([
+    ...notices,
+    ...planPublishedScheduleNotices(plan, schedule)
+  ].map(notice => [notice.message, notice])).values()];
+}
+
+function AdvisorAttention({ catalog, plan, schedule }) {
+  const globalNotices = (catalog?.advisorAttention || []).filter(notice => !isFlattenedPlanNotice(notice));
+  const notices = [...new Map([
+    ...globalNotices,
+    ...selectedPlanNotices(plan, schedule)
+  ].map(notice => [notice.message, notice])).values()];
   if (!notices.length) return null;
+  const planningNotices = notices.filter(notice => notice.title === "Graduation planning assumption");
+  const otherNotices = notices.filter(notice => notice.title !== "Graduation planning assumption");
+  const projectedNotices = planningNotices.filter(notice => /projected placement/i.test(notice.message || ""));
+  const publishedScheduleNotices = planningNotices.filter(notice => !/projected placement/i.test(notice.message || ""));
+  const seatAvailabilityCourses = [...new Set(publishedScheduleNotices
+    .filter(notice => /seat|availability|waitlist|closed/i.test(notice.message || ""))
+    .flatMap(notice => warningCourseCodes(notice.message)))].sort((left, right) => left.localeCompare(right));
+  const scheduleConfirmationCourses = [...new Set(publishedScheduleNotices
+    .filter(notice => !/seat|availability|waitlist|closed/i.test(notice.message || ""))
+    .flatMap(notice => warningCourseCodes(notice.message)))].sort((left, right) => left.localeCompare(right));
+  const publishedScheduleMessages = [...new Set(publishedScheduleNotices
+    .filter(notice => warningCourseCodes(notice.message).length === 0)
+    .map(notice => notice.message))];
+  const projectedCourses = [...new Set(projectedNotices
+    .map(notice => projectedWarningPlacement(notice.message) || projectedWarningCourse(notice.message))
+    .filter(Boolean))].sort((left, right) => left.localeCompare(right));
+  const plannedCourses = new Set((plan?.terms || []).flatMap(term => (
+    (term.courses || []).map(course => course.course)
+  )));
+  const bothIntermediatesRemain = plannedCourses.has("ECO 213") && plannedCourses.has("ECO 214");
+  const publishedScheduleLabel = schedule?.academicYear
+    ? `Published ${formatAcademicYear(schedule.academicYear)} schedule checks`
+    : "Published schedule checks";
+
   return (
-    <section className="advisor-attention" aria-live="polite">
+    <section className="advisor-attention" aria-live="polite" data-plan-id={plan?.id || ""}>
       <h2>Advisor Attention</h2>
-      {notices.map(notice => (
+      {plan?.label && <p className="advisor-attention-scope">Warnings shown for {plan.label}.</p>}
+      {otherNotices.map(notice => (
         <div className={`advisor-attention-item is-${notice.severity || "warning"}`} key={notice.code}>
           {notice.title && notice.title !== "Advisor Attention" && <strong>{notice.title}</strong>}
           <p>{notice.message}</p>
@@ -391,6 +493,37 @@ function AdvisorAttention({ catalog }) {
           )}
         </div>
       ))}
+      {planningNotices.length > 0 && (
+        <div className="advisor-attention-item graduation-assumptions">
+          <h3>Graduation planning assumptions</h3>
+          <div className="advisor-attention-groups">
+            <section>
+              <h4>{publishedScheduleLabel}</h4>
+              <ul>
+                {seatAvailabilityCourses.length > 0 && (
+                  <li><strong>Confirm seat availability:</strong> {seatAvailabilityCourses.join(", ")}.</li>
+                )}
+                {scheduleConfirmationCourses.length > 0 && (
+                  <li><strong>Confirm offerings and time conflicts:</strong> {scheduleConfirmationCourses.join(", ")}.</li>
+                )}
+                {publishedScheduleMessages.map(message => <li key={message}>{message}</li>)}
+              </ul>
+            </section>
+            {projectedCourses.length > 0 && (
+              <section>
+                <h4>Projected placement</h4>
+                <p>Later schedules are not yet published. Confirm these planned courses when their official schedules become available:</p>
+                <p className="projected-course-list">{projectedCourses.join(", ")}.</p>
+                {bothIntermediatesRemain && (
+                  <p className="offering-pattern-note">
+                    <strong>Known pattern:</strong> ECO 213 and ECO 214 tend to be offered in different terms. The available evidence does not yet establish which course will be offered first.
+                  </p>
+                )}
+              </section>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -688,12 +821,18 @@ function CandidateOutcomes({ outcomes = [], convergences = [] }) {
   );
 }
 
-function ScheduleAvailability({ schedule }) {
-  const terms = Object.entries(schedule?.terms || {});
+function ScheduleAvailability({ schedule, plan }) {
+  const scheduleYear = academicYearKey(schedule?.academicYear);
+  const plannedByTerm = new Map((plan?.terms || [])
+    .filter(term => academicYearKey(term.academicYear) === scheduleYear)
+    .map(term => [scheduleTermKey(term), new Set((term.courses || []).map(course => course.course))]));
+  const terms = Object.entries(schedule?.terms || {})
+    .map(([term, sections]) => [term, sections.filter(section => plannedByTerm.get(term)?.has(section.course))])
+    .filter(([, sections]) => sections.length > 0);
   if (!terms.length) return null;
   return (
     <details className="schedule-availability">
-      <summary>Current section availability ({formatAcademicYear(schedule.academicYear)})</summary>
+      <summary>Current section availability for {plan?.label || "this plan"} ({formatAcademicYear(schedule.academicYear)})</summary>
       {terms.map(([term, sections]) => (
         <section key={term}>
           <h3>{term}</h3>
@@ -712,12 +851,11 @@ function ScheduleAvailability({ schedule }) {
 
 function comparisonScheduleRows(plan) {
   const rows = (plan?.terms || [])
-    .filter(term => term.courses.length > 0)
     .map(term => ({
       key: `${term.academicYear || ""}-${term.isPlaceholder ? "TBC" : term.displayTerm || term.term}`,
       academicYear: formatAcademicYear(term.academicYear),
       term: term.isPlaceholder ? "Term to be confirmed" : term.displayTerm || term.term,
-      courses: term.courses.map(compactPlanCourse)
+      courses: (term.courses || []).map(compactPlanCourse)
     }));
 
   return rows.map((row, index) => {
@@ -759,18 +897,20 @@ function PlanComparisonScreen({
   const candidateOutcomes = result?.economicsCandidateOutcomes || [];
   const convergences = result?.economicsPlanConvergences || [];
   const planningContext = result?.planningContext;
-  const [showDifferencesOnly, setShowDifferencesOnly] = useState(false);
+  const [highlightDifferences, setHighlightDifferences] = useState(false);
   const isPlanView = view === PLANNER_VIEWS.PLAN;
   const selectedPlan = plans.find(plan => plan.id === selectedPlanId) || plans[0];
 
   const rowsByPlan = new Map(plans.map(plan => [plan.id, comparisonScheduleRows(plan)]));
   const allRowKeys = new Set([...rowsByPlan.values()].flatMap(rows => rows.map(row => row.key)));
-  const identicalRowKeys = new Set([...allRowKeys].filter(key => {
-    const signatures = plans.map(plan => {
-      const row = rowsByPlan.get(plan.id)?.find(item => item.key === key);
-      return row ? row.courses.join("|") : "";
-    });
-    return signatures.length > 1 && signatures.every(signature => signature === signatures[0]);
+  const sharedCoursesByRow = new Map([...allRowKeys].map(key => {
+    const courseSets = plans.map(plan => new Set(
+      rowsByPlan.get(plan.id)?.find(item => item.key === key)?.courses || []
+    ));
+    const shared = courseSets.length > 1
+      ? [...courseSets[0]].filter(course => courseSets.every(set => set.has(course)))
+      : [];
+    return [key, new Set(shared)];
   }));
   const standing = displayName?.trim() || (planningContext?.isTransferStudent ? "Transfer plan" : planningContext?.effectiveStandingLabel)
     || planningContext?.standingLabel
@@ -941,6 +1081,16 @@ function PlanComparisonScreen({
           accent-color: #155eef;
           cursor: pointer;
         }
+        .comparison-difference-key {
+          margin: -.35rem 0 1rem;
+          padding: .65rem .8rem;
+          border: 1px solid #b8cdf4;
+          border-radius: .5rem;
+          background: #f3f7ff;
+          color: #33425d;
+          font-size: 13px;
+        }
+        .comparison-difference-key strong { color: #4169a6; }
         .comparison-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1031,12 +1181,13 @@ function PlanComparisonScreen({
           overflow-wrap: normal;
           word-break: normal;
         }
-        .no-differences {
-          margin: 1rem;
-          padding: 1rem;
-          border: 1px dashed #aebdd0;
-          color: #53627a;
-          text-align: center;
+        .comparison-shared-course {
+          color: #4169a6;
+          font-weight: 500;
+        }
+        .comparison-empty-term {
+          color: #68758a;
+          font-weight: 500;
         }
         .plan-validation {
           margin: auto .9rem .7rem;
@@ -1145,12 +1296,43 @@ function PlanComparisonScreen({
           color: #8b5500;
           font-size: 14px;
         }
+        .comparison-page .advisor-attention-scope {
+          margin: -.15rem 0 .5rem;
+          color: #6b7280;
+          font-size: 11px;
+          font-style: italic;
+        }
+        .comparison-page .advisor-attention h3 {
+          margin: 0;
+          color: #1d4ed8;
+          font-size: 13px;
+        }
+        .comparison-page .advisor-attention h4 {
+          margin: 0 0 .3rem;
+          color: #714600;
+          font-size: 12px;
+        }
         .comparison-page .advisor-attention-item + .advisor-attention-item {
           margin-top: .5rem;
           padding-top: .5rem;
           border-top: 1px solid #e4c679;
         }
         .comparison-page .advisor-attention-item p { margin: .25rem 0 0; }
+        .comparison-page .advisor-attention-groups {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: .65rem 1rem;
+          margin-top: .5rem;
+        }
+        .comparison-page .advisor-attention-groups ul {
+          margin: .3rem 0 0;
+          padding-left: 1rem;
+        }
+        .comparison-page .projected-course-list { font-weight: 700; }
+        .comparison-page .offering-pattern-note {
+          padding-left: .55rem;
+          border-left: 3px solid #8fb2ee;
+        }
         .comparison-page .planning-gaps {
           margin-top: 1rem;
           border-color: #d17a65;
@@ -1164,6 +1346,7 @@ function PlanComparisonScreen({
           .comparison-grid { grid-template-columns: 1fr; }
           .comparison-plan-summary { min-height: 0; }
           .comparison-page .plan-grid { grid-template-columns: 1fr; }
+          .comparison-page .advisor-attention-groups { grid-template-columns: 1fr; }
         }
         @media (max-width: 700px) {
           .comparison-topbar {
@@ -1274,19 +1457,25 @@ function PlanComparisonScreen({
           </div>
           {!isPlanView && plans.length > 1 && (
             <label className="difference-toggle">
-              <span>Show differences only</span>
+              <span>Highlight differences</span>
               <input
                 type="checkbox"
-                checked={showDifferencesOnly}
-                onChange={event => setShowDifferencesOnly(event.target.checked)}
+                checked={highlightDifferences}
+                onChange={event => setHighlightDifferences(event.target.checked)}
               />
             </label>
           )}
         </div>
 
-        <AdvisorAttention catalog={report?.catalog} />
+        {highlightDifferences && (
+          <p className="comparison-difference-key" role="status">
+            <strong>Blue courses are shared by every plan in the same term.</strong> They remain visible so you can compare the complete timeline; the darker courses are the schedule differences to review.
+          </p>
+        )}
+
+        <AdvisorAttention catalog={report?.catalog} plan={selectedPlan} schedule={result?.annualSchedule} />
         <CandidateOutcomes outcomes={candidateOutcomes} convergences={convergences} />
-        <ScheduleAvailability schedule={result?.annualSchedule} />
+        <ScheduleAvailability schedule={result?.annualSchedule} plan={selectedPlan} />
 
         {planEditStatus && <p className="plan-edit-status" role="status">{planEditStatus}</p>}
         {isPlanView && canUndoPlanEdit && (
@@ -1313,9 +1502,6 @@ function PlanComparisonScreen({
           <div className="comparison-grid">
             {plans.map(plan => {
               const rows = rowsByPlan.get(plan.id) || [];
-              const visibleRows = showDifferencesOnly
-                ? rows.filter(row => !identicalRowKeys.has(row.key))
-                : rows;
               const selected = selectedPlanId === plan.id;
               const invalid = plan.validation?.valid === false;
               return (
@@ -1332,7 +1518,7 @@ function PlanComparisonScreen({
                     <p>{plan.description}</p>
                   </div>
 
-                  {visibleRows.length > 0 ? (
+                  {rows.length > 0 ? (
                     <table className="compact-schedule">
                       <thead>
                         <tr>
@@ -1342,18 +1528,29 @@ function PlanComparisonScreen({
                         </tr>
                       </thead>
                       <tbody>
-                        {visibleRows.map(row => (
+                        {rows.map(row => (
                           <tr key={`${plan.id}-${row.key}`}>
                             {row.yearRowSpan && <td rowSpan={row.yearRowSpan}>{row.academicYear}</td>}
                             <td>{row.term}</td>
-                            <td>{row.courses.join(", ")}</td>
+                            <td>
+                              {row.courses.length > 0
+                                ? row.courses.map((course, index) => (
+                                    <span
+                                      className={highlightDifferences && sharedCoursesByRow.get(row.key)?.has(course)
+                                        ? "comparison-shared-course"
+                                        : undefined}
+                                      key={`${row.key}-${course}-${index}`}
+                                    >
+                                      {index > 0 ? ", " : ""}{course}
+                                    </span>
+                                  ))
+                                : <span className="comparison-empty-term">No major course assigned</span>}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
-                  ) : (
-                    <p className="no-differences">No schedule differences in this plan.</p>
-                  )}
+                  ) : null}
 
                   <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
                     {feasibilityLabel(plan.feasibilityStatus)} · {planValidationLabel(plan)}
@@ -2763,7 +2960,7 @@ export default function Page() {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
         main.apple-layout-preview .app-header {
-          min-height: 3.1rem;
+          min-height: 4.15rem;
           margin: 0 0 1rem;
           padding: .55rem 0;
           border-bottom: 1px solid #eef0f2;
@@ -2774,21 +2971,17 @@ export default function Page() {
         main.apple-layout-preview .apple-brand,
         main.apple-layout-preview .apple-progress { display: flex; }
         main.apple-layout-preview .apple-brand {
-          align-items: center;
-          gap: .45rem;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: .25rem;
           color: #111;
-          font-size: 12px;
+          font-size: 14.4px;
           font-weight: 500;
         }
-        main.apple-layout-preview .apple-brand-mark {
-          display: grid;
-          width: 1.55rem;
-          height: 1.55rem;
-          place-items: center;
-          border-radius: 50%;
-          background: #3699ef;
-          color: #fff;
-          font-size: 11px;
+        main.apple-layout-preview .apple-brand-logo {
+          display: block;
+          width: min(8.75rem, 36vw);
+          height: auto;
         }
         main.apple-layout-preview .apple-progress {
           align-items: center;
@@ -3262,8 +3455,12 @@ export default function Page() {
 
       <header className="app-header">
         <div className="apple-brand" aria-label="EconPlanner">
-          <span className="apple-brand-mark" aria-hidden="true">E</span>
-          <span>EconPlanner</span>
+          <img
+            className="apple-brand-logo"
+            src="/urveska-midnight-gold-underlined.png"
+            alt="URVESKA"
+          />
+          <span className="apple-brand-name">EconPlanner</span>
         </div>
         <div className="apple-progress" aria-label="Planner progress">
           <span className="apple-progress-step is-current"><span />About you</span>
