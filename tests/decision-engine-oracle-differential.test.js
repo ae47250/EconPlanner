@@ -32,7 +32,18 @@ test("prerequisite decisions agree across prior, missing, and concurrent evidenc
     { course: "ECO 331", available: ["ECO 213"], sameTerm: [], approvals: [] }
   ];
   for (const item of cases) {
-    const production = evaluatePrerequisites({ course: item.course, approvalRequired: item.approvals }, {}, facts, bundle, { traceId: "differential", availableCourses: new Set(item.available), sameTermCourses: new Set(item.sameTerm) });
+    const approvalInstances = item.approvals.length ? [{
+      approvalId: "differential-concurrency",
+      ruleId: "CONCURRENT-MATH-ECO-213",
+      status: "APPROVED",
+      scope: { course: "ECO 213", termId: null },
+      authority: "ECO_213_INSTRUCTOR",
+      authorityBoundary: "ECO_213_INTERMEDIATE_CONCURRENCY",
+      evidenceRef: "fixture-evidence",
+      effectiveDate: "2026-08-01",
+      expirationDate: null
+    }] : [];
+    const production = evaluatePrerequisites({ course: item.course }, {}, facts, bundle, { traceId: "differential", availableCourses: new Set(item.available), sameTermCourses: new Set(item.sameTerm), approvalInstances });
     const independent = oracleEvaluatePrerequisite(oracle, item.course, item);
     assert.equal(production.status, independent.status, JSON.stringify(item));
     assert.equal(production.reasonCode, independent.reasonCode, JSON.stringify(item));

@@ -1,17 +1,30 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
-import { classifyShadowDisagreement, recordShadowEvaluation, runDecisionEngineShadow } from "../lib/decision-engine/shadow.js";
+import { evaluatePlan, normalizeStudentFacts } from "../lib/decision-engine/index.js";
+import {
+  buildDecisionComparisonRecord,
+  classifyShadowDisagreement,
+  recordShadowEvaluation,
+  runDecisionEngineShadow
+} from "../lib/decision-engine/shadow.js";
 
 const bundle = await loadPolicyBundle({ allowPending: true });
 const student = { name: "Must Not Appear", email: "private@example.invalid", planCreationDate: "2026-08-05", courses: [] };
 
-function plan(course = { course: "ECO 234", section: "A", requirementId: "eco-elective-1", source: "verified-offering" }) {
-  return { id: "shadow-plan", terms: [{ academicYear: "2026-2027", termKey: "Fall", term: "Fall 2026", courses: [course] }], unscheduled: [] };
+function plan(course = { course: "ECO 114", section: "B", requirementId: "eco-114", source: "verified-offering" }) {
+  return { id: "shadow-plan", terms: [{ academicYear: "2026-2027", termKey: "Fall", term: "Fall 2026", yearIndex: 0, courses: [course] }], unscheduled: [] };
 }
 
 test("shadow evaluation records hashes and classifications without student data", async () => {
-  const record = await runDecisionEngineShadow({ student, plan: plan(), productionValidation: { valid: true, errors: [] }, bundle, source: "test" });
+  const record = await runDecisionEngineShadow({
+    student,
+    plan: plan(),
+    productionValidation: { valid: true, errors: [] },
+    bundle,
+    context: { planningContext: { startYear: 2026, expectedGraduationYear: 2027, effectiveStanding: "senior" } },
+    source: "test"
+  });
   assert.equal(record.mode, "SHADOW_NONAUTHORITATIVE");
   assert.equal(record.classification, "AGREEMENT_ALLOW");
   assert.equal(record.completionStatus, "COMPLETE");
@@ -21,6 +34,32 @@ test("shadow evaluation records hashes and classifications without student data"
   const output = [];
   recordShadowEvaluation(record, value => output.push(value));
   assert.match(output[0], /^ECONPLANNER_DECISION_SHADOW /);
+});
+
+test("observability reuses the authoritative plan decision without dropping planning context", () => {
+  const engine = evaluatePlan(
+    plan(),
+    normalizeStudentFacts(student),
+    { planningContext: { startYear: 2026, expectedGraduationYear: 2027, effectiveStanding: "senior" } },
+    bundle
+  );
+  const productionValidation = { valid: engine.academicallyValid, errors: [], policyDecision: engine };
+  const record = buildDecisionComparisonRecord({
+    student,
+    plan: plan(),
+    productionValidation,
+    engine: productionValidation.policyDecision,
+    source: "test-authoritative",
+    mode: "AUTHORITATIVE_REUSED",
+    latencyMs: engine.latencyMs,
+    scheduleReleaseId: bundle.releaseRefs.schedule
+  });
+  assert.equal(record.mode, "AUTHORITATIVE_REUSED");
+  assert.equal(record.evaluationSource, "PLAN_VALIDATION_POLICY_DECISION");
+  assert.equal(record.evidenceStatus, engine.evidenceStatus);
+  assert.equal(record.scheduleReleaseId, bundle.releaseRefs.schedule);
+  assert.equal(record.policyBundleHash, bundle.contentHash);
+  assert.ok(!record.reasonCodes.includes("PLANNING_CONTEXT_REQUIRED"));
 });
 
 test("FULL is a named review state rather than an unexpected disagreement", async () => {

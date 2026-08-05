@@ -15,6 +15,7 @@ import {
   validateObservabilityPolicy
 } from "../lib/nightly/econplannerMetrics.js";
 import {
+  assertFrozenCp4AuthoritySummary,
   assertFictionalProfileFile,
   canonicalPlannerInputHash,
   classifyNoPlan,
@@ -146,6 +147,50 @@ test("no-plan precedence never certifies an incomplete search as infeasible", ()
   });
   assert.equal(exhaustive.conclusion, "PROVEN_INFEASIBLE");
   assert.equal(exhaustive.reason, "COUNT_CAPACITY");
+});
+
+test("the CP4 frozen-cohort authority gate rejects blanket context reviews and unexplained convergence loss", () => {
+  const records = Array.from({ length: 439 }, (_, index) => ({
+    evidenceStatus: index < 246 ? "REVIEW_REQUIRED" : "PRELIMINARY",
+    reasonCodes: index < 246 ? ["ENROLLMENT_FULL"] : ["UNPUBLISHED_OFFERING_TBC"],
+    reviewFindings: index < 246 ? [{
+      ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"],
+      sourceRefs: ["DEPARTMENT-POLICIES#Confirmed-policy-9"]
+    }] : []
+  }));
+  const summary = {
+    metrics: {
+      profilesTested: 368,
+      profilesWithPlans: 186,
+      acceptedPlanCount: 439,
+      completion: { shadowDecision: { evidenceStatuses: { PRELIMINARY: 193, REVIEW_REQUIRED: 246 } } },
+      productionDecisionEngine: { unexpectedDisagreements: 0 },
+      oracleDisagreementCount: 0,
+      unclassifiedOracleDisagreementCount: 0
+    },
+    profiles: [{
+      profileId: "fictional-econ-20260805-c014e0de",
+      decisionShadow: records.slice(0, 438),
+      strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Plan A", convergedLabel: "Plan C" }]
+    }, {
+      profileId: "fictional-econ-20270117-a6a8df79",
+      decisionShadow: records.slice(438),
+      strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Plan A", convergedLabel: "Plan C" }]
+    }]
+  };
+  assert.deepEqual(assertFrozenCp4AuthoritySummary(summary), {
+    profiles: 368,
+    profilesWithPlans: 186,
+    displayedPlans: 439,
+    evidenceStatuses: { PRELIMINARY: 193, REVIEW_REQUIRED: 246 },
+    convergenceProfiles: [
+      "fictional-econ-20260805-c014e0de",
+      "fictional-econ-20270117-a6a8df79"
+    ]
+  });
+  const blanket = structuredClone(summary);
+  blanket.profiles[0].decisionShadow[0].reasonCodes = ["PLANNING_CONTEXT_REQUIRED"];
+  assert.throws(() => assertFrozenCp4AuthoritySummary(blanket), { code: "CP4_OBSERVABILITY_CONTEXT_OMITTED" });
 });
 
 test("profile-file replay accepts only explicitly fictional, PII-free inputs", () => {

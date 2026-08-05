@@ -258,6 +258,18 @@ function reservedUnits(student, term) {
     ?? 0);
 }
 
+function projectedReservedUnits(student, term) {
+  const year = Number(String(term.academicYear || "").match(/\d{4}/)?.[0]);
+  if (!Number.isFinite(year)) return {};
+  return {
+    Fall: Number(student.reservedCourseUnits?.[`fall-${year}`] || 0),
+    Winter: Number(student.reservedCourseUnits?.[`winter-${year + 1}`] || 0),
+    "Spring/May": Number(student.reservedCourseUnits?.[`spring-${year + 1}`]
+      ?? student.reservedCourseUnits?.[`may-${year + 1}`]
+      ?? 0)
+  };
+}
+
 function auditPlan(student, plan) {
   return auditExternalEconomicsPlanComplete({
     student: externalStudent(student),
@@ -267,6 +279,7 @@ function auditPlan(student, plan) {
       terms: plan.terms.map(term => ({
         ...term,
         reservedOutsideCourseUnits: reservedUnits(student, term),
+        reservedOutsideCourseUnitsByProjectedTerm: projectedReservedUnits(student, term),
         courses: term.courses.map(course => oracleCourse(plan, term, course))
       })),
       requirementClaims: []
@@ -357,16 +370,13 @@ async function futureFourCourseFallPlan() {
   const { student, economics } = await generated("flexibleFourYearPlan");
   const plan = structuredClone(economics.economicsPlans.find(item => item.label === "Plan B"));
   assert.ok(plan, "Plan B is required for the future four-course Fall capacity fixture.");
-  moveCourse(
-    plan,
-    (course, term) => term.slotId === "winter-2030" && course.course === "BUSN 323",
-    term => term.slotId === "fall-2029"
-  );
-  moveCourse(
-    plan,
-    (course, term) => term.slotId === "spring-2030" && String(course.requirementId).startsWith("eco-elective"),
-    term => term.slotId === "fall-2029"
-  );
+  const finalYear = plan.terms.find(term => term.academicYear === "2029/2030");
+  assert.ok(finalYear);
+  const winterElective = finalYear.courses.find(course => course.projectedTerm === "Winter" && String(course.requirementId).startsWith("eco-elective"));
+  const springElective = finalYear.courses.find(course => course.projectedTerm === "Spring" && String(course.requirementId).startsWith("eco-elective"));
+  assert.ok(winterElective && springElective);
+  Object.assign(winterElective, { projectedTerm: "Fall", planningSequence: 2 });
+  Object.assign(springElective, { projectedTerm: "Fall", planningSequence: 3 });
   useExplicitProjectedCapstoneSource(plan);
   return { student, plan };
 }
@@ -382,15 +392,12 @@ async function futureTwoCourseFallPlan() {
 test("Task 15 API accepts a valid projected-course move and independently revalidates it", async () => {
   const { student, economics } = await generated("projectedMove");
   const edited = structuredClone(economics.economicsPlans.find(plan => plan.id === "plan-1"));
-  const moved = moveCourse(
-    edited,
-    course => course.course === "ECO 214",
-    term => term.slotId === "winter-2028"
-  );
+  const moved = findCourse(edited, course => course.course === "ECO 214").course;
+  Object.assign(moved, { projectedTerm: "Winter", planningSequence: 100 });
   assert.equal(moved.source, "projected-offering");
   useExplicitProjectedCapstoneSource(edited);
   const accepted = await assertAccepted(student, edited);
-  assert.ok(accepted.terms.find(term => term.slotId === "winter-2028").courses.some(course => course.course === "ECO 214"));
+  assert.ok(courseEntries(accepted).some(({ course }) => course.course === "ECO 214" && course.projectedTerm === "Winter"));
 });
 
 test("Task 15 API reports an intentional partial removal as the current capability gap", async t => {
@@ -449,7 +456,7 @@ test("Task 15 API rejects an offering-breaking move using the authoritative sche
   await assertRejected(student, edited, /ECO 213 is not verified in the 2026\/2027 Winter offering/);
 });
 
-test("Task 15 API rejects substitution of a canonical closed section", async () => {
+test("Task 15 API preserves FULL as an explicit review state", async () => {
   const { student, economics } = await generated("concurrentCapstone");
   const edited = structuredClone(economics.economicsPlans[0]);
   replaceCourse(
@@ -457,7 +464,9 @@ test("Task 15 API rejects substitution of a canonical closed section", async () 
     course => course.course === "ECO 114",
     verifiedOffering(economics, "Fall", "ECO 114", "A", "eco-114")
   );
-  await assertRejected(student, edited, /ECO 114-A is closed in Fall 2026/);
+  const accepted = await assertProductionAccepted(student, edited);
+  assert.equal(accepted.validation.approved, false);
+  assert.ok(accepted.validation.reviewFindings.some(finding => finding.reasonCode === "ENROLLMENT_FULL"));
 });
 
 test("Task 15 API rejects creation of a canonical meeting conflict", async () => {
@@ -488,38 +497,34 @@ test("Task 15 API rejects missing and wrong approval metadata", async () => {
 test("Task 15 API rejects term-capacity violations", async () => {
   const { student, plan } = await futureTwoCourseFallPlan();
   student.reservedCourseUnits = { "fall-2029": 3 };
-  await assertRejected(student, plan, /Fall 2029 exceeds the total course limit/);
+  await assertRejected(student, plan, /2029\/2030 term to be confirmed exceeds the total course limit/);
 });
 
 test("Task 15 accepts two future-Fall Economics courses plus two reserved outside courses", async () => {
   const { student, plan } = await futureTwoCourseFallPlan();
   student.reservedCourseUnits = { "fall-2029": 2 };
-  assert.equal(plan.terms.find(term => term.slotId === "fall-2029").courses.length, 2);
+  assert.equal(plan.terms.find(term => term.academicYear === "2029/2030").courses.filter(course => course.projectedTerm === "Fall").length, 2);
   await assertProductionAccepted(student, plan);
 });
 
 test("Task 15 accepts three Fall courses with one reserved space and rejects four", async () => {
-  const flexible = await generated("flexibleFourYearPlan");
-  const student = {
-    ...flexible.student,
-    reservedCourseUnits: { "fall-2028": 1 }
-  };
-  const exactCapacity = structuredClone(flexible.economics.economicsPlans.find(plan => plan.label === "Plan C"));
-  moveCourse(
-    exactCapacity,
-    course => course.course === "ECO 213",
-    term => term.slotId === "fall-2028"
-  );
+  const exact = await futureTwoCourseFallPlan();
+  const student = { ...exact.student, reservedCourseUnits: { "fall-2029": 1 } };
+  const exactCapacity = structuredClone(exact.plan);
+  const finalYear = exactCapacity.terms.find(term => term.academicYear === "2029/2030");
+  const moved = finalYear.courses.find(course => course.projectedTerm === "Spring" && String(course.requirementId).startsWith("eco-elective"));
+  assert.ok(moved);
+  Object.assign(moved, { projectedTerm: "Fall", planningSequence: 2 });
   useExplicitProjectedCapstoneSource(exactCapacity);
   const accepted = await assertProductionAccepted(student, exactCapacity);
-  assert.equal(accepted.terms.find(term => term.slotId === "fall-2028").courses.length, 3);
+  assert.equal(accepted.terms.find(term => term.academicYear === "2029/2030").courses.filter(course => course.projectedTerm === "Fall").length, 3);
 
   const overloaded = await futureFourCourseFallPlan();
   const overloadedStudent = { ...overloaded.student, reservedCourseUnits: { "fall-2029": 1 } };
   await assertRejected(
     overloadedStudent,
     overloaded.plan,
-    /Fall 2029 exceeds the total course limit/
+    /2029\/2030 term to be confirmed exceeds the total course limit/
   );
 });
 
@@ -701,7 +706,15 @@ test("Task 15 API rejects ECO 257 assigned to an elective when MAT 217 or PSY 21
 test("Task 15 API accepts ECO 257 only as the statistics requirement", async () => {
   const { student, economics } = await generated("futureEco257Statistics");
   const plan = structuredClone(economics.economicsPlans[0]);
-  const eco257 = findCourse(plan, course => course.course === "ECO 257").course;
+  const statistics = findCourse(plan, course => course.requirementId === "statistics").course;
+  Object.assign(statistics, {
+    course: "ECO 257",
+    title: "Quantitative Methods for Business/Economics",
+    source: "projected-offering",
+    offeringStatus: "future_schedule_confirmation_required",
+    verificationStatus: "unverified"
+  });
+  const eco257 = statistics;
   assert.equal(eco257.requirementId, "statistics");
   useExplicitProjectedCapstoneSource(plan);
   const accepted = await assertAccepted(student, plan);

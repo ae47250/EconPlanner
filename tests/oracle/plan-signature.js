@@ -36,12 +36,14 @@ export function canonicalExternalTermKey(value) {
   if (normalized === "winter") return "Winter";
   if (["spring", "may", "spring/may"].includes(normalized)) return "Spring/May";
   if (normalized === "summer") return "Summer";
+  if (["tbc", "term to be confirmed", "academic year tbc"].includes(normalized)) return "TBC";
   return null;
 }
 
 export function externalTermPosition(academicYear, termKey) {
   const parsedYear = parseExternalAcademicYear(academicYear);
   const canonicalTerm = canonicalExternalTermKey(termKey);
+  if (parsedYear.valid && canonicalTerm === "TBC") return parsedYear.startYear * TERM_RANK.size;
   if (!parsedYear.valid || !TERM_RANK.has(canonicalTerm)) return null;
   return parsedYear.startYear * TERM_RANK.size + TERM_RANK.get(canonicalTerm);
 }

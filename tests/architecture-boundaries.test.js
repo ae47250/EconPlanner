@@ -26,9 +26,8 @@ test("the UI does not import academic policy or evaluator modules", async () => 
   assert.doesNotMatch(source, /lib\/decision-engine|lib\/policy|data\/compiled\/policy/iu);
 });
 
-test("shadow integrations cannot replace current production validation results", async () => {
-  for (const file of ["app/api/majors/map/route.js", "lib/reports/build-economics.js"]) {
-    const source = await readFile(new URL(file, root), "utf8");
-    assert.doesNotMatch(source, /return\s+.*runDecisionEngineShadow|validation\s*=\s*await\s+runDecisionEngineShadow/iu, file);
-  }
+test("the active mapper passes the compiled bundle into authoritative validation", async () => {
+  const source = await readFile(new URL("app/api/majors/map/route.js", root), "utf8");
+  assert.match(source, /policyBundle:\s*catalog\.policyBundle/iu);
+  assert.doesNotMatch(source, /runDecisionEngineShadow|runShadowSafely/iu);
 });

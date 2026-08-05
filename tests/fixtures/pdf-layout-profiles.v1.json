@@ -94,6 +94,18 @@
           { "code": "ECO 260", "status": "completed", "units": 1, "source": "manual_code" }
         ]
       },
+      "selectedPlanMutations": [
+        {
+          "requirementId": "statistics",
+          "replacement": {
+            "course": "ECO 257",
+            "title": "Applied Statistics",
+            "source": "projected-offering",
+            "offeringStatus": "future_schedule_confirmation_required",
+            "verificationStatus": "unverified"
+          }
+        }
+      ],
       "expectations": {
         "minimumAcademicYears": 1,
         "minimumCourses": 2,

@@ -243,7 +243,7 @@ function validateTerms(plan, horizon, violations) {
       code: "TERM_KEY_INVALID",
       ruleId: RULE_IDS.term,
       objectPath: `${path}.termKey`,
-      message: "termKey must be Fall, Winter, Spring/May, or Summer."
+      message: "termKey must be Fall, Winter, Spring/May, Summer, or TBC."
     });
 
     let termIdentity = null;

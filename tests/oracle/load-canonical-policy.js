@@ -59,9 +59,18 @@ export function oracleEvaluateAllocation(policy, course, requirementId) {
 }
 
 function approvalsCover(approvals, course, prerequisite, authority) {
-  return approvals.some(approval => String(approval.course || course).toUpperCase() === course
-    && String(approval.prerequisite || "").toUpperCase() === prerequisite
-    && String(approval.type || approval.authority || "").toUpperCase().includes(authority));
+  return approvals.some(approval => {
+    if (approval.approvalId) {
+      return approval.status === "APPROVED"
+        && String(approval.scope?.course || "").toUpperCase() === course
+        && String(approval.ruleId || "").includes(authority === "INSTRUCTOR" ? "MATH" : "INTERMEDIATE")
+        && String(approval.authority || "").toUpperCase().includes(authority);
+    }
+    return String(approval.course || course).toUpperCase() === course
+      && String(approval.prerequisite || "").toUpperCase() === prerequisite
+      && String(approval.type || approval.authority || "").toUpperCase().includes(authority)
+      && (!approval.authority || String(approval.authority).toUpperCase().includes(authority));
+  });
 }
 
 export function oracleEvaluatePrerequisite(policy, course, { available = [], sameTerm = [], approvals = [] } = {}) {
@@ -82,7 +91,13 @@ export function oracleEvaluatePrerequisite(policy, course, { available = [], sam
     if (!availableSet.has(prerequisite) && !concurrentApprovalCovers(prerequisite)) unresolved.push(prerequisite);
   }
   for (const group of rule.effect.oneOfGroups || []) {
-    if (!group.some(prerequisite => availableSet.has(prerequisite) || concurrentApprovalCovers(prerequisite))) unresolved.push(...group);
+    const normalized = [...group].sort().join("|");
+    const placeholderSatisfied = normalized === ["ECO 257", "MAT 217", "PSY 217"].sort().join("|")
+      ? availableSet.has("STATISTICS REQUIREMENT")
+      : normalized === ["MAT 113", "MAT 121"].sort().join("|")
+        ? availableSet.has("MATHEMATICS COGNATE")
+        : false;
+    if (!placeholderSatisfied && !group.some(prerequisite => availableSet.has(prerequisite) || concurrentApprovalCovers(prerequisite))) unresolved.push(...group);
   }
   return unresolved.length
     ? { status: "BLOCK", ruleIds: [rule.ruleId], reasonCode: "PREREQUISITE_NOT_SATISFIED", missing: [...new Set(unresolved)] }
@@ -115,6 +130,7 @@ export function oracleEvaluateOffering(policy, course, term) {
 
 export function oracleEvaluateTermLoad(policy, term) {
   const key = canonicalTerm(term.termKey || term.term);
+  if (key === "TBC") return { status: "PRELIMINARY", ruleIds: ["PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"], reasonCode: "TERM_LOAD_TO_BE_CONFIRMED" };
   const rule = policy.rules.find(candidate => candidate.ruleType === "termLoad" && candidate.condition.canonicalTerm === key);
   if (!rule) return { status: "UNKNOWN", ruleIds: [], reasonCode: "TERM_CAPACITY_RULE_MISSING" };
   const economics = (term.courses || []).filter(course => String(course.course).startsWith("ECO ") || course.course === "ECO elective").length;
@@ -126,17 +142,47 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan) {
   const findings = [];
   const available = new Set((student.courses || []).filter(course => ["completed", "transfer", "in_progress"].includes(course.status)).map(course => String(course.code).toUpperCase()));
   for (const [termIndex, term] of (plan.terms || []).entries()) {
+    const isTbc = canonicalTerm(term.termKey || term.term) === "TBC";
     findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, term) });
-    const sameTerm = (term.courses || []).flatMap(course => course.source === "requirement-placeholder" && Array.isArray(course.options)
-      ? course.options
-      : [course.course]);
-    for (const [courseIndex, course] of (term.courses || []).entries()) {
+    if (isTbc) {
+      const projectedGroups = new Map();
+      for (const course of term.courses || []) {
+        const projectedTerm = course.projectedTerm || "TBC";
+        projectedGroups.set(projectedTerm, [...(projectedGroups.get(projectedTerm) || []), course]);
+      }
+      for (const [projectedTerm, courses] of projectedGroups) {
+        if (projectedTerm !== "TBC") findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, { ...term, termKey: projectedTerm, courses }) });
+      }
+    }
+    const indexedCourses = (term.courses || []).map((course, courseIndex) => ({ course, courseIndex }));
+    const orderedCourses = isTbc
+      ? indexedCourses.toSorted((left, right) => Number(left.course.planningSequence ?? Number.MAX_SAFE_INTEGER)
+        - Number(right.course.planningSequence ?? Number.MAX_SAFE_INTEGER))
+      : indexedCourses;
+    let currentProjectedTerm = null;
+    let pendingCourses = [];
+    for (const { course, courseIndex } of orderedCourses) {
+      if (isTbc && currentProjectedTerm !== null && course.projectedTerm !== currentProjectedTerm) {
+        for (const pending of pendingCourses) available.add(String(pending).toUpperCase());
+        pendingCourses = [];
+      }
+      if (isTbc) currentProjectedTerm = course.projectedTerm || `sequence-${course.planningSequence}`;
+      const sameTerm = (term.courses || [])
+        .filter(candidate => !isTbc || (candidate !== course && candidate.projectedTerm === course.projectedTerm))
+        .flatMap(candidate => candidate.source === "requirement-placeholder" && Array.isArray(candidate.options)
+          ? candidate.options
+          : [candidate.course]);
       const path = `$.terms[${termIndex}].courses[${courseIndex}]`;
       findings.push({ path, ...oracleEvaluateAllocation(policy, course, course.requirementId) });
       findings.push({ path, ...oracleEvaluateOffering(policy, course, term) });
       if (course.course !== "ECO elective" && !String(course.source).includes("placeholder")) findings.push({ path, ...oracleEvaluatePrerequisite(policy, course.course, { available: [...available], sameTerm, approvals: course.approvalRequired || [] }) });
+      if (isTbc) pendingCourses.push(course.course);
     }
-    for (const course of sameTerm) available.add(String(course).toUpperCase());
+    if (isTbc) {
+      for (const pending of pendingCourses) available.add(String(pending).toUpperCase());
+    } else {
+      for (const course of term.courses || []) available.add(String(course.course).toUpperCase());
+    }
   }
   const status = findings.some(item => item.status === "BLOCK") ? "BLOCK"
     : findings.some(item => item.status === "UNKNOWN") ? "UNKNOWN"

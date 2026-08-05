@@ -502,12 +502,14 @@ function oracleInput(caseData) {
 
 function evaluateCase(caseData) {
   const mapping = mapStudentToProgram(PROGRAM, productionRequirements, caseData.student);
-  const production = validateGeneratedPlan(caseData.plan, {
+  const productionPlan = structuredClone(caseData.plan);
+  const production = validateGeneratedPlan(productionPlan, {
     student: caseData.student,
     mapping,
     schedule: rawProductionSchedule,
     prerequisites: productionPrerequisites,
-    context: caseData.context
+    context: caseData.context,
+    enforcePlanIntegrity: true
   });
   const oracle = auditExternalEconomicsPlan(oracleInput(caseData));
   return { production, oracle };
@@ -534,6 +536,9 @@ function diagnostic(entry, evaluation) {
     mutationId: entry.mutationId,
     productionValid: evaluation.production.valid,
     productionErrors: evaluation.production.errors,
+    productionBlocks: evaluation.production.policyDecision?.decisions
+      ?.filter(decision => decision.status === "BLOCK")
+      .map(decision => ({ reasonCode: decision.reasonCode, subject: decision.subject, path: decision.objectPath })) || [],
     oracleValid: evaluation.oracle.valid,
     oracleStatus: evaluation.oracle.status,
     oracleViolations: evaluation.oracle.violations.map(item => ({
@@ -577,7 +582,11 @@ test("every curated baseline is accepted before its one-defect mutation", () => 
     assert.equal(
       evaluation.production.valid,
       true,
-      `${baselineId}: production baseline failed: ${JSON.stringify(evaluation.production.errors)}`
+      `${baselineId}: production baseline failed: ${JSON.stringify({
+        errors: evaluation.production.errors,
+        blocks: evaluation.production.policyDecision?.decisions?.filter(decision => decision.status === "BLOCK")
+          .map(decision => ({ reasonCode: decision.reasonCode, subject: decision.subject, path: decision.objectPath })) || []
+      })}`
     );
     assert.equal(
       evaluation.oracle.valid,
@@ -597,9 +606,10 @@ test("production-validator disagreements exactly match the reviewed registry", (
     const evaluation = evaluateCase(mutated);
     const detail = diagnostic(entry, evaluation);
 
-    assert.ok(evaluation.oracle.violations.length > 0, `${entry.id}: oracle did not detect the mutation; ${detail}`);
+    const oracleFindings = [...evaluation.oracle.violations, ...substantiveReviews(evaluation.oracle)];
+    assert.ok(oracleFindings.length > 0, `${entry.id}: oracle did not detect the mutation; ${detail}`);
     assert.ok(
-      evaluation.oracle.violations.some(item => item.ruleId === entry.ruleId || item.code === entry.ruleId),
+      oracleFindings.some(item => item.ruleId === entry.ruleId || item.code === entry.ruleId),
       `${entry.id}: oracle did not report ${entry.ruleId}; ${detail}`
     );
     assert.equal(resultLabel(evaluation.oracle.valid), entry.expectedOracleResult, `${entry.id}: oracle drift; ${detail}`);

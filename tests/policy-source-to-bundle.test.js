@@ -6,11 +6,11 @@ import { loadCanonicalPolicy } from "./oracle/load-canonical-policy.js";
 
 const [source, bundle] = await Promise.all([
   loadCanonicalPolicy(),
-  loadPolicyBundle({ allowPending: true })
+  loadPolicyBundle()
 ]);
 
-test("pending bundles require explicit shadow-mode opt-in", async () => {
-  await assert.rejects(loadPolicyBundle({ useCache: false }), /is not active/);
+test("the CP4 active bundle loads without a shadow-mode override", async () => {
+  assert.equal((await loadPolicyBundle({ useCache: false })).activationStatus, "ACTIVE");
 });
 
 test("the independent canonical loader projects every active source rule into the bundle", () => {

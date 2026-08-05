@@ -111,13 +111,12 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
     "PRELIMINARY_ONLY",
     "PRELIMINARY_ONLY"
   ]);
-  assert.equal(statuses[0].plan.feasibility.search.complete, true);
-  assert.equal(statuses[0].plan.feasibility.search.terminationReason, null);
+  assert.equal(statuses[0].plan.feasibility.search.solutionFound, true);
   assert.ok(statuses[0].plan.feasibility.search.validSolutionCount > 0);
   assert.notEqual(statuses[0].plan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);
 });
 
-test("junior C-2 rejects numerical fits until verified-year elective capacity makes nine courses schedulable", () => {
+test("junior C-2 does not treat injected sections as authoritative verified-year capacity", () => {
   const tenStudent = earlyUpcomingStudent("junior", ["ECO 113", "ECO 114"]);
   const tenRemaining = bundle(tenStudent);
   assert.equal(tenRemaining.mapping.strict.remainingUnits, 10);
@@ -145,10 +144,10 @@ test("junior C-2 rejects numerical fits until verified-year elective capacity ma
   fourthElective.days = "Wed";
   fourUsableSchedule.terms.Fall.push(extraOpenElective("ECO 224"), fourthElective);
   const fourUsable = bundle(baseProfile, fourUsableSchedule);
-  assert.notEqual(fourUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
+  assert.equal(fourUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
 });
 
-test("J+3 C-2 uses verified ECO 321 for Finance and never invents a verified-year BUSN 323 placeholder", () => {
+test("J+3 C-2 cannot be made feasible by sections absent from the compiled schedule", () => {
   const student = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const verifiedElectiveSchedule = structuredClone(schedule);
   const fourthElective = extraOpenElective("ECO 315", "A");
@@ -157,39 +156,9 @@ test("J+3 C-2 uses verified ECO 321 for Finance and never invents a verified-yea
   const { mapping, result } = bundle(student, verifiedElectiveSchedule);
   const plan = result.plans.find(item => item.id === "plan-c2");
 
-  assert.ok(plan);
-  assert.equal(plan.validation.valid, true);
-  assert.equal(plan.feasibilityStatus, "PRELIMINARY_ONLY");
-  assert.ok(plan.requirementAllocation.valid);
-  assert.ok(plan.requirementAllocation.assignments.some(item => (
-    item.slotId === "finance" && item.code === "ECO 321" && item.source === "planned"
-  )));
-  assert.equal(plan.terms.flatMap(term => term.courses).some(course => course.course === "BUSN 323"), false);
-
-  const electives = plan.terms.flatMap(term => term.courses)
-    .filter(course => String(course.requirementId).startsWith("eco-elective"));
-  assert.equal(electives.length, 4);
-  assert.equal(new Set(electives.map(course => course.course)).size, 4);
-
-  const fall = plan.terms.find(term => term.term === "Fall 2026");
-  const winter = plan.terms.find(term => term.term === "Winter 2027");
-  const may = plan.terms.find(term => term.term === "Spring/May 2027");
-  assert.equal(fall.courses.length, 4);
-  assert.equal(winter.courses.length, 4);
-  assert.equal(may.courses.length, 1);
-  assert.ok(fall.courses.some(course => course.course === "Statistics requirement"));
-  assert.ok(winter.courses.some(course => course.course === "ECO 461"));
-  const capstone = winter.courses.find(course => course.course === "ECO 461");
-  assert.ok(capstone.approvalRequired.some(item => (
-    item.type === "department" && item.prerequisite === "ECO 214"
-  )));
-  assert.equal(validateGeneratedPlan(plan, {
-    student,
-    mapping,
-    schedule: verifiedElectiveSchedule,
-    prerequisites,
-    context: result.context
-  }).valid, true);
+  assert.equal(plan, undefined);
+  assert.equal(result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
+  assert.equal(mapping.strict.remainingUnits, 9);
 });
 
 test("node-limited plans are search-incomplete rather than declared infeasible", () => {
@@ -223,7 +192,7 @@ test("node-limited plans are search-incomplete rather than declared infeasible",
   assert.ok(limitedBundle.planningGaps.some(item => item.message === SEARCH_INCOMPLETE_MESSAGE));
 });
 
-test("the solver backtracks from a conflicting Fall placement to a valid Winter alternative", () => {
+test("the solver ignores ungoverned injected offerings", () => {
   const conflictSchedule = structuredClone(schedule);
   conflictSchedule.terms.Winter = conflictSchedule.terms.Winter.filter(item => item.course !== "ECO 321");
   for (const offering of conflictSchedule.terms.Fall.filter(item => item.course === "ECO 114")) {
@@ -252,14 +221,12 @@ test("the solver backtracks from a conflicting Fall placement to a valid Winter 
   const { result } = bundle(student, conflictSchedule);
   const plan = result.plans[0];
   const fall = plan.terms.find(term => term.term === "Fall 2026");
-  const winter = plan.terms.find(term => term.term === "Winter 2027");
 
   assert.equal(plan.validation.valid, true);
-  assert.ok(fall.courses.some(course => course.course === "BUSN 323"));
-  assert.ok(!fall.courses.some(course => course.course === "ECO 114"));
-  assert.ok(winter.courses.some(course => course.course === "ECO 114"));
-  assert.ok(plan.feasibility.search.nodesVisited > plan.feasibility.search.firstSolutionNode);
-  assert.ok(plan.feasibility.search.completionAttempts > 1);
+  assert.ok(!fall.courses.some(course => course.course === "BUSN 323" && course.section === "A"));
+  assert.ok(plan.terms.flatMap(term => term.courses).every(course => (
+    course.course !== "BUSN 323" || course.source !== "verified-offering"
+  )));
 });
 
 test("one-year-early final Winter carries confirmed senior standing for ECO 461", () => {
@@ -280,7 +247,8 @@ test("five-year regular plans use year-four ECO 461 and reserve year five as a f
   assert.equal(preferred.context.expectedGraduationTerm, "Spring/May 2031");
   assert.ok(preferred.plans.length > 0);
   assert.ok(preferred.plans.every(plan => (
-    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.term === "Winter 2030"
+    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.yearIndex === 3
+      && plan.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461")?.projectedTerm === "Winter"
   )));
 
   const fallback = bundle({
@@ -289,7 +257,8 @@ test("five-year regular plans use year-four ECO 461 and reserve year five as a f
   }).result;
   assert.ok(fallback.plans.length > 0);
   assert.ok(fallback.plans.every(plan => (
-    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.term === "Winter 2031"
+    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.yearIndex === 4
+      && plan.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461")?.projectedTerm === "Winter"
   )));
 });
 
@@ -312,9 +281,10 @@ test("transfer plans keep the selected graduation target and omit C-2", () => {
     transferExpectedGraduationYear: "2031"
   }).result;
   assert.equal(fiveYear.plans[0].distribution.targetYears.length, 5);
-  assert.equal(fiveYear.plans[0].terms.at(-1).term, "Spring/May 2031");
+  assert.equal(fiveYear.plans[0].terms.at(-1).term, "2030/2031 term to be confirmed");
   assert.ok(fiveYear.plans.every(plan => (
-    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.term === "Winter 2030"
+    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.yearIndex === 3
+      && plan.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461")?.projectedTerm === "Winter"
   )));
 });
 
