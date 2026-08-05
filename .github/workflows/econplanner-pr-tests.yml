@@ -44,6 +44,11 @@ jobs:
           tests/policy-compiler.test.js
           tests/policy-bundle-determinism.test.js
           tests/policy-source-bundle-parity.test.js
+          tests/policy-source-to-bundle.test.js
+          tests/production-decision-engine.test.js
+          tests/decision-engine-shadow.test.js
+          tests/decision-engine-oracle-differential.test.js
+          tests/architecture-boundaries.test.js
 
       - name: Run bounded deterministic regression suite
         shell: bash

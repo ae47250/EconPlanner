@@ -14,6 +14,7 @@ import {
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { compareRequirementSnapshots } from "../../../../lib/catalog/compare.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
+import { runShadowSafely } from "../../../../lib/decision-engine/shadow.js";
 
 export const runtime = "nodejs";
 
@@ -129,6 +130,19 @@ function planAdvisorAttention(results) {
     }))
   ]);
   return [...new Map(notices.map(notice => [notice.message, notice])).values()];
+}
+
+async function shadowEconomicsPlans({ student, catalogYear, results, source }) {
+  const economics = results.find(result => result.program?.id === "economics-base");
+  if (!economics) return [];
+  return Promise.all((economics.economicsPlans || []).map(plan => runShadowSafely({
+    student,
+    plan,
+    productionValidation: plan.validation,
+    catalogYear,
+    context: { planningContext: economics.planningContext },
+    source
+  })));
 }
 
 function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = false } = {}) {
@@ -326,6 +340,14 @@ export async function POST(request) {
       if (editedPlanResult.error) {
         return jsonResponse({ error: editedPlanResult.error }, 422);
       }
+      await runShadowSafely({
+        student,
+        plan: editedPlanResult.plan,
+        productionValidation: editedPlanResult.plan.validation,
+        catalogYear: catalogResolution.selectedCatalogYear,
+        context: { planningContext },
+        source: "major-map-edit-validation"
+      });
       if (!editedPlanResult.plan.validation.valid) {
         return jsonResponse({
           error: `That plan change cannot be saved. ${editedPlanResult.plan.validation.errors[0] || "It violates the Economics planning rules."}`,
@@ -361,6 +383,12 @@ export async function POST(request) {
 
     const economicsOnly = catalogResolution.catalogResolutionStatus === "economics_provisional_fallback";
     const results = mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly });
+    await shadowEconomicsPlans({
+      student,
+      catalogYear: catalogResolution.selectedCatalogYear,
+      results,
+      source: "major-map-generation"
+    });
     const advisorAttention = [
       ...catalogAdvisorAttention(catalogResolution, catalogReview, planningContext),
       ...electiveAdvisorAttention(results),

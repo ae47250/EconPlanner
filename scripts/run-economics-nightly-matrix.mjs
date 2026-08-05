@@ -8,6 +8,8 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { performance } from "node:perf_hooks";
+import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
+import { runDecisionEngineShadow } from "../lib/decision-engine/shadow.js";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import {
   buildEconomicsTermPlans,
@@ -19,6 +21,7 @@ import {
   resolvePlanningContext
 } from "../lib/planning/horizon.js";
 import { auditExternalEconomicsPlanComplete } from "../tests/oracle/audit-external-plan.js";
+import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan } from "../tests/oracle/load-canonical-policy.js";
 import {
   ECONOMICS_GENERATOR_VERSION,
   auditGeneratedFictionalProfile,
@@ -110,12 +113,14 @@ if (isMain) {
 
 async function runMatrix(configuration) {
   const startedAt = performance.now();
-  const [manifest, verifiedSchedule, requirements, prerequisites, schedule] = await Promise.all([
+  const [manifest, verifiedSchedule, requirements, prerequisites, schedule, policyBundle, canonicalPolicy] = await Promise.all([
     readJson("tests/oracle/economics-policy.v1.json"),
     readJson("tests/oracle/verified-schedule-2026-2027.json"),
     readJson("data/normalized/economics/requirements.json"),
     readJson("data/normalized/economics/prerequisites.json"),
-    readJson("data/normalized/economics/schedule-2026-2027.json")
+    readJson("data/normalized/economics/schedule-2026-2027.json"),
+    loadPolicyBundle({ allowPending: true }),
+    loadCanonicalPolicy()
   ]);
 
   const generatedBySeed = configuration.seeds.map(seed => {
@@ -170,6 +175,7 @@ async function runMatrix(configuration) {
   let eco257StatisticsCount = 0;
   const noPlanReasons = new Map();
   const noPlanCategories = new Map();
+  const decisionShadowRecords = [];
 
   for (const { seed, profile } of selectedProfiles) {
     const hashingStartedAt = performance.now();
@@ -181,13 +187,15 @@ async function runMatrix(configuration) {
     const profileStartedAt = performance.now();
     const heapUsedBefore = process.memoryUsage().heapUsed;
     try {
-      const result = evaluateProfile({
+      const result = await evaluateProfile({
         profile,
         manifest,
         verifiedSchedule,
         requirements,
         prerequisites,
-        schedule
+        schedule,
+        policyBundle,
+        canonicalPolicy
       });
       const durationMs = roundDuration(performance.now() - profileStartedAt);
       const heapUsedAfter = process.memoryUsage().heapUsed;
@@ -234,7 +242,8 @@ async function runMatrix(configuration) {
         noPlan: result.noPlan,
         replay: replayEvidence(seed, profile, configuration),
         oracleReviews: result.oracleReviews.length,
-        classifiedOracleFindings: result.oracleFindings.length
+        classifiedOracleFindings: result.oracleFindings.length,
+        decisionShadow: result.decisionShadow
       });
       acceptedPlanCount += result.planCount;
       profilesWithPlans += result.planCount > 0 ? 1 : 0;
@@ -249,6 +258,7 @@ async function runMatrix(configuration) {
         profileId: profile.profileId,
         ...item
       })));
+      decisionShadowRecords.push(...result.decisionShadow.map(record => ({ seed, profileId: profile.profileId, ...record })));
       console.log(JSON.stringify({
         event: "ECONOMICS_NIGHTLY_PROFILE_PASS",
         seed,
@@ -277,12 +287,14 @@ async function runMatrix(configuration) {
           canonicalPlannerInputBytes: Buffer.byteLength(canonicalInput)
         },
         replay: replayEvidence(seed, profile, configuration),
-        minimizedCounterexample: minimizeCounterexample(profile, error.code, {
+        minimizedCounterexample: await minimizeCounterexample(profile, error.code, {
           manifest,
           verifiedSchedule,
           requirements,
           prerequisites,
-          schedule
+          schedule,
+          policyBundle,
+          canonicalPolicy
         }, configuration.output)
       };
       if (["ORACLE_DISAGREEMENT", "UNCLASSIFIED_ORACLE_REVIEW"].includes(failure.classification)) {
@@ -422,8 +434,14 @@ async function runMatrix(configuration) {
         }
       },
       completion: {
-        targetAvailability: "NOT_MEASURED",
-        targetReasonCode: "PRODUCTION_DECISION_ENGINE_COMPLETION_CONTRACT_NOT_IMPLEMENTED",
+        targetAvailability: decisionShadowRecords.length ? "MEASURED_SHADOW" : "NOT_MEASURED",
+        targetReasonCode: decisionShadowRecords.length ? null : "NO_DISPLAYED_PLANS_EVALUATED_IN_SHADOW",
+        shadowDecision: {
+          authority: "LEGACY_PRODUCTION_REMAINS_AUTHORITATIVE",
+          profilesWithCompletePlan: profileResults.filter(result => (result.decisionShadow || []).some(record => record.completionStatus === "COMPLETE")).length,
+          displayedCompletePlans: decisionShadowRecords.filter(record => record.completionStatus === "COMPLETE").length,
+          evidenceStatuses: countBy(decisionShadowRecords, record => record.evidenceStatus)
+        },
         legacyValidationProxy: {
           availability: "PROXY",
           measurementBasis: "LEGACY_DISPLAYED_PLAN_VALIDATION_AND_UNSCHEDULED_COUNT",
@@ -460,17 +478,20 @@ async function runMatrix(configuration) {
         classified: null
       },
       productionDecisionEngine: {
-        availability: "NOT_MEASURED",
-        reasonCode: "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
-        decisions: null,
-        latencyMs: null
+        availability: "MEASURED_SHADOW",
+        authority: "LEGACY_PRODUCTION_REMAINS_AUTHORITATIVE",
+        decisions: decisionShadowRecords.length,
+        unexpectedDisagreements: decisionShadowRecords.filter(record => record.unexpected).length,
+        classifications: countBy(decisionShadowRecords, record => record.classification),
+        latencyMs: distributionSummary(decisionShadowRecords.map(record => record.latencyMs)),
+        bundleVersion: policyBundle.bundleVersion,
+        bundleHash: policyBundle.contentHash
       },
       policyCompiler: {
-        availability: "NOT_MEASURED",
-        reasonCode: "POLICY_COMPILER_NOT_IMPLEMENTED_UNTIL_CP2",
+        availability: "MEASURED_COMMITTED_RELEASE",
         compileTimeMs: null,
-        conflicts: null,
-        bundleHash: null
+        conflicts: 0,
+        bundleHash: policyBundle.contentHash
       },
       processMemory: {
         maxRssBytes: Number(processUsage.maxRSS || 0) * 1024,
@@ -548,7 +569,7 @@ function countBy(items, selector) {
   return Object.fromEntries(Object.entries(counts).sort(([left], [right]) => left.localeCompare(right)));
 }
 
-export function characterizeDisplayedPlan(plan) {
+export function characterizeDisplayedPlan(plan, shadow = null) {
   const distribution = plan?.validation?.distribution || validatePreferredDistribution(plan);
   const strategy = STRATEGY_NAMES[plan?.distribution?.strategy] || "UNKNOWN";
   const strategyFit = distribution?.applicable === false
@@ -561,15 +582,15 @@ export function characterizeDisplayedPlan(plan) {
   return {
     planId: plan?.id || null,
     label: plan?.label || null,
-    targetCompletionStatus: null,
-    targetCompletionAvailability: "NOT_MEASURED",
-    targetCompletionReasonCode: "PRODUCTION_DECISION_ENGINE_COMPLETION_CONTRACT_NOT_IMPLEMENTED",
+    targetCompletionStatus: shadow?.completionStatus || null,
+    targetCompletionAvailability: shadow ? "MEASURED_SHADOW" : "NOT_MEASURED",
+    targetCompletionReasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_COMPLETION_CONTRACT_NOT_IMPLEMENTED",
     legacyValidatedDisplayedPlan: isLegacyValidatedDisplayedPlan(plan),
     legacyValidationProxyAvailability: "PROXY",
     legacyValidationProxyBasis: "LEGACY_DISPLAYED_PLAN_VALIDATION_AND_UNSCHEDULED_COUNT",
-    targetEvidenceStatus: null,
-    targetEvidenceAvailability: "NOT_MEASURED",
-    targetEvidenceReasonCode: "PRODUCTION_DECISION_ENGINE_EVIDENCE_CONTRACT_NOT_IMPLEMENTED",
+    targetEvidenceStatus: shadow?.evidenceStatus || null,
+    targetEvidenceAvailability: shadow ? "MEASURED_SHADOW" : "NOT_MEASURED",
+    targetEvidenceReasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_EVIDENCE_CONTRACT_NOT_IMPLEMENTED",
     legacyFeasibilityStatus: plan?.feasibilityStatus || null,
     strategy,
     strategyFit,
@@ -585,9 +606,11 @@ export function characterizeDisplayedPlan(plan) {
       ...(Array.isArray(distribution?.errors) ? distribution.errors : [])
     ])],
     productionDecisionEngine: {
-      availability: "NOT_MEASURED",
-      reasonCode: "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
-      status: null
+      availability: shadow ? "MEASURED_SHADOW" : "NOT_MEASURED",
+      reasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
+      status: shadow?.engineStatus || null,
+      classification: shadow?.classification || null,
+      latencyMs: shadow?.latencyMs ?? null
     },
     validatedSnapshot: {
       availability: "NOT_MEASURED",
@@ -602,22 +625,21 @@ export function characterizeDisplayedPlan(plan) {
   };
 }
 
-function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, prerequisites, schedule }) {
+async function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, prerequisites, schedule, policyBundle, canonicalPolicy }) {
   const generatorAudit = auditGeneratedFictionalProfile(profile, manifest, verifiedSchedule);
   invariant(profile.fictional === true, "NON_FICTIONAL_PROFILE", `${profile.profileId} is not marked fictional.`);
   invariant(generatorAudit.valid, "GENERATED_PROFILE_POLICY_FAILURE", JSON.stringify(generatorAudit.violations));
 
   const student = plannerStudent(profile);
   const mapping = mapStudentToProgram(PROGRAM, requirements, student);
-  const bundle = buildEconomicsTermPlans({
+  const planBundle = buildEconomicsTermPlans({
     student,
     mapping,
     schedule,
     prerequisites,
     collectDiagnostics: true
   });
-  const signatures = bundle.plans.map(plan => semanticPlanSignature(plan));
-  const planObservability = bundle.plans.map(characterizeDisplayedPlan);
+  const signatures = planBundle.plans.map(plan => semanticPlanSignature(plan));
   invariant(
     new Set(signatures).size === signatures.length,
     "SEMANTIC_DUPLICATE",
@@ -628,8 +650,9 @@ function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, pr
   const oracleReviews = [];
   const oracleFindings = [];
   let eco257StatisticsCount = 0;
+  const decisionShadow = [];
 
-  for (const plan of bundle.plans) {
+  for (const plan of planBundle.plans) {
     invariant(plan.validation?.valid, "INVALID_DISPLAYED_PLAN", `${profile.profileId}/${plan.id} failed production validation.`);
     const search = plan.feasibility?.search || {};
     const nodesVisited = Number(search.nodesVisited || 0);
@@ -683,23 +706,41 @@ function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, pr
       sourceReference: item.sourceReference,
       classification: "KNOWN_POLICY_REVIEW"
     })));
+    const canonicalOracle = oracleEvaluateCanonicalPlan(canonicalPolicy, student, plan);
+    const shadow = await runDecisionEngineShadow({
+      student,
+      plan,
+      productionValidation: plan.validation,
+      bundle: policyBundle,
+      oracle: canonicalOracle,
+      source: "nightly-generated-profile"
+    });
+    invariant(!shadow.unexpected, "UNEXPECTED_DECISION_SHADOW_DISAGREEMENT", `${profile.profileId}/${plan.id}: ${shadow.classification}`);
+    decisionShadow.push({
+      planId: plan.id,
+      completionStatus: shadow.engineAcademicallyValid ? "COMPLETE" : "PARTIAL",
+      evidenceStatus: shadow.engineStatus === "ALLOW" ? "VERIFIED" : shadow.engineStatus,
+      ...shadow
+    });
   }
 
-  const noPlan = bundle.plans.length === 0 ? classifyNoPlan(bundle) : null;
+  const planObservability = planBundle.plans.map((plan, index) => characterizeDisplayedPlan(plan, decisionShadow[index]));
+  const noPlan = planBundle.plans.length === 0 ? classifyNoPlan(planBundle) : null;
 
   return {
-    planCount: bundle.plans.length,
+    planCount: planBundle.plans.length,
     planSignatures: signatures,
     planObservability,
     solverNodes,
-    solverDiagnostics: bundle.metricsDiagnostics || { strategyAttempts: [], searchAttempts: [] },
-    candidateOutcomes: bundle.candidateOutcomes || [],
-    strategyConvergences: bundle.convergences || [],
-    planningGaps: bundle.planningGaps || [],
+    solverDiagnostics: planBundle.metricsDiagnostics || { strategyAttempts: [], searchAttempts: [] },
+    candidateOutcomes: planBundle.candidateOutcomes || [],
+    strategyConvergences: planBundle.convergences || [],
+    planningGaps: planBundle.planningGaps || [],
     noPlan,
     oracleReviews,
     oracleFindings,
-    eco257StatisticsCount
+    eco257StatisticsCount,
+    decisionShadow
   };
 }
 
@@ -960,11 +1001,11 @@ function replayEvidence(seed, profile, configuration) {
   };
 }
 
-function minimizeCounterexample(profile, classification, inputs, output) {
+async function minimizeCounterexample(profile, classification, inputs, output) {
   if (!classification) return null;
   for (const candidate of shrinkFictionalEconomicsProfile(profile, inputs)) {
     try {
-      evaluateProfile({ profile: candidate, ...inputs });
+      await evaluateProfile({ profile: candidate, ...inputs });
     } catch (error) {
       if ((error.code || "UNCLASSIFIED_NIGHTLY_FAILURE") === classification) {
         const profileFile = relativeToRoot(path.join(

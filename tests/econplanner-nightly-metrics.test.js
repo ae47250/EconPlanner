@@ -43,6 +43,15 @@ function profile(id, hash, plans = 1) {
       strategyAttempts: [{ nodesVisited: 120, durationMs: 5, exhaustive: true, finalValidSchedules: plans, completeSchedulesExamined: 2 }],
       searchAttempts: [{ solutionBudgetHit: false }]
     },
+    decisionShadow: plans ? [{
+      classification: "AGREEMENT_ALLOW",
+      unexpected: false,
+      completionStatus: "COMPLETE",
+      evidenceStatus: "PRELIMINARY",
+      latencyMs: 2,
+      policyBundleVersion: "econ-2025-2026.1",
+      policyBundleHash: "sha256:fixture"
+    }] : [],
     noPlan: plans ? null : { conclusion: "PROVEN_INFEASIBLE", reason: "COUNT_CAPACITY", attempts: [{ exhaustive: true }] }
   };
 }
@@ -158,6 +167,12 @@ test("shard merging reports percentiles, imbalance, memory bytes, duplicates, an
   assert.equal(merged.solver.shardImbalanceRatio, 3);
   assert.equal(merged.solver.processMaxRssBytes, 2048);
   assert.equal(merged.computeTimeMs, 400);
+  assert.equal(merged.productionDecisionEngine.availability, "MEASURED_SHADOW");
+  assert.equal(merged.productionDecisionEngine.unexpectedDisagreements, 0);
+  assert.equal(merged.productionDecisionEngine.latencyMs.p95, 2);
+  assert.equal(merged.coverage.completion.targetAvailability, "MEASURED_SHADOW");
+  assert.equal(merged.coverage.completion.shadowDecision.profilesWithCompletePlan, 1);
+  assert.deepEqual(merged.coverage.completion.shadowDecision.evidenceStatuses, { PRELIMINARY: 1 });
 });
 
 test("shard validation rejects missing, duplicate, and malformed inputs", () => {

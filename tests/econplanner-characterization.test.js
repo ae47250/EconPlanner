@@ -49,7 +49,9 @@ test("CP0 records unavailable future contracts with null values", () => {
   assert.deepEqual(result.productionDecisionEngine, {
     availability: "NOT_MEASURED",
     reasonCode: "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
-    status: null
+    status: null,
+    classification: null,
+    latencyMs: null
   });
   assert.deepEqual(result.validatedSnapshot, {
     availability: "NOT_MEASURED",
