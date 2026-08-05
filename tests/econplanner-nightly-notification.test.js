@@ -395,6 +395,25 @@ test("workflows use the non-secret subject variable with one start and one aggre
   assert.doesNotMatch(diagnostic, /^  (schedule|push|pull_request):/m);
 });
 
+test("nightly reruns always aggregate while notifications remain first-attempt only", () => {
+  const nightly = fs.readFileSync(new URL("../.github/workflows/econplanner-nightly.yml", import.meta.url), "utf8");
+  const notifyStart = nightly.slice(nightly.indexOf("  notify_start:"), nightly.indexOf("  generated-matrix:"));
+  const notifyStartHeader = notifyStart.slice(0, notifyStart.indexOf("    steps:"));
+  const finalReporting = nightly.slice(nightly.indexOf("  final-reporting:"));
+  const finalReportingHeader = finalReporting.slice(0, finalReporting.indexOf("    steps:"));
+
+  assert.doesNotMatch(notifyStartHeader, /run_attempt/);
+  assert.match(notifyStart, /- id: notification[\s\S]*?if: \$\{\{ github\.run_attempt == 1 \}\}/);
+  assert.match(notifyStart, /Upload start-delivery record[\s\S]*?github\.run_attempt == 1/);
+  assert.match(finalReportingHeader, /if: \$\{\{ always\(\) \}\}/);
+  assert.doesNotMatch(finalReportingHeader, /run_attempt/);
+  assert.match(finalReporting, /Build draft aggregate and comparison/);
+  assert.match(finalReporting, /Merge final notification delivery into the run-wide aggregate/);
+  assert.match(finalReporting, /- id: final_notification[\s\S]*?if: \$\{\{ github\.run_attempt == 1 \}\}/);
+  assert.match(finalReporting, /if \(aggregate\.gateStatus === "RED"\) process\.exitCode = 1/);
+  assert.match(finalReporting, /process\.env\.WORKFLOW_ATTEMPT === "1"/);
+});
+
 test("endpoint normalization matches the existing Pingram integration", () => {
   assert.equal(pingramEmailEndpoint("https://api.pingram.io"), "https://api.pingram.io/send");
   assert.equal(pingramEmailEndpoint("https://api.pingram.io/send"), "https://api.pingram.io/send");

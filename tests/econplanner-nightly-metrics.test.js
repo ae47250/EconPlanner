@@ -51,7 +51,16 @@ function shard(index, profiles) {
   return {
     schemaVersion: 2,
     kind: "econplanner-nightly-generated-matrix",
-    provenance: { generatorVersion: 1, oraclePolicyVersion: 3, scheduleVersion: 2 },
+    provenance: {
+      repository: "fictional/econplanner",
+      commitSha: "fictional-commit",
+      originMainSha: "fictional-commit",
+      branch: "main",
+      generatorVersion: 1,
+      oraclePolicyVersion: 3,
+      scheduleVersion: 2,
+      metricSchemaVersion: 2
+    },
     selection: {
       seeds: [7],
       shard: { index, total: 2 },
@@ -211,6 +220,12 @@ test("GREEN, AMBER, and RED gate paths are distinct and timing remains AMBER", (
   assert.equal(evaluateGates(common).overall, "GREEN");
   assert.equal(evaluateGates({ ...common, pdf: { hosted: { configuration: "NOT_CONFIGURED", status: "SKIPPED" } } }).overall, "AMBER");
   assert.equal(evaluateGates({ ...common, mutations: { survivedCritical: 1 } }).overall, "RED");
+  const missingCommitShard = shard(2, [profile("p2", "h2")]);
+  missingCommitShard.provenance.commitSha = null;
+  const incompleteProvenance = mergeGeneratedShards([shard(1, [profile("p1", "h1")]), missingCommitShard]);
+  const provenanceGate = evaluateGates({ ...common, generated: incompleteProvenance });
+  assert.equal(provenanceGate.overall, "RED");
+  assert.ok(provenanceGate.red.some(item => item.code === "INCOMPLETE_GENERATED_SHARD_PROVENANCE"));
 });
 
 test("the approved v1 fixture is permanent, hash-complete, and adapts only common metrics", async () => {
@@ -251,4 +266,65 @@ test("aggregate separates wall time from summed parallel compute and reports mut
   assert.equal(aggregate.validation.oracleQuality.mutations.total, 24);
   assert.equal(aggregate.validation.oracleQuality.mutations.survivedCritical, 0);
   assert.equal(aggregate.validation.oracleQuality.mutations.killRate, 1);
+});
+
+test("aggregate provenance preserves exact shard identity when local values are unavailable", () => {
+  const identity = {
+    commitSha: "011a624f13f2cb1b62c1acf550ea91c67c6e71b3",
+    workflowRunId: 30967416964
+  };
+  const first = { ...shard(1, [profile("p1", "h1")]), provenance: { ...shard(1, []).provenance, ...identity, workflowAttempt: 1 } };
+  const second = { ...shard(2, [profile("p2", "h2")]), provenance: { ...shard(2, []).provenance, ...identity, workflowAttempt: 2 } };
+  const aggregate = buildAggregate({
+    shards: [first, second],
+    prerequisite: { schemaVersion: 2, kind: "econplanner-nightly-prerequisites", metrics: {}, normal: {}, optional: {} },
+    browser: { schemaVersion: 2, kind: "econplanner-nightly-browser", metrics: {} },
+    pdf: { schemaVersion: 2, kind: "econplanner-nightly-pdf", hosted: { configuration: "CONFIGURED", status: "PASSED" }, local: { status: "PASSED" } },
+    phases: [],
+    baseline,
+    observabilityPolicy,
+    oraclePolicy,
+    mutationRegistry,
+    provenance: {
+      commitSha: null,
+      workflowRunId: identity.workflowRunId,
+      workflowAttempt: 2,
+      startedAt: "2026-08-04T00:00:00Z",
+      completedAt: "2026-08-04T00:00:01Z"
+    }
+  });
+
+  assert.equal(aggregate.provenance.commitSha, identity.commitSha);
+  assert.equal(aggregate.provenance.workflowRunId, identity.workflowRunId);
+  assert.equal(aggregate.provenance.workflowAttempt, 2);
+  assert.deepEqual(aggregate.provenance.inputWorkflowAttempts, [1, 2]);
+  assert.equal(aggregate.workflow.wallTimeMs, 1000);
+});
+
+test("aggregate runtime identity cannot overwrite a different shard run", () => {
+  const exact = {
+    commitSha: "011a624f13f2cb1b62c1acf550ea91c67c6e71b3",
+    workflowRunId: 30967416964,
+    workflowAttempt: 3
+  };
+  const first = { ...shard(1, []), provenance: { ...shard(1, []).provenance, ...exact } };
+  const second = { ...shard(2, []), provenance: { ...shard(2, []).provenance, ...exact } };
+
+  assert.throws(() => buildAggregate({
+    shards: [first, second],
+    baseline,
+    observabilityPolicy,
+    oraclePolicy,
+    mutationRegistry,
+    provenance: { ...exact, workflowRunId: 999 }
+  }), { code: "MIXED_RUN_PROVENANCE" });
+
+  assert.throws(() => buildAggregate({
+    shards: [first, second],
+    baseline,
+    observabilityPolicy,
+    oraclePolicy,
+    mutationRegistry,
+    provenance: { ...exact, workflowAttempt: 2 }
+  }), { code: "MIXED_RUN_PROVENANCE" });
 });

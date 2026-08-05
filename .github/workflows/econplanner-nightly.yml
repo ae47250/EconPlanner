@@ -22,7 +22,6 @@ env:
 jobs:
   notify_start:
     name: Record start and send start email
-    if: ${{ github.run_attempt == 1 }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -42,6 +41,7 @@ jobs:
           echo "started_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_OUTPUT"
       - id: notification
         name: Send start email and record delivery separately
+        if: ${{ github.run_attempt == 1 }}
         continue-on-error: true
         env:
           MOCK_NOTIFICATIONS: "false"
@@ -62,7 +62,7 @@ jobs:
           --start-time "${{ steps.context.outputs.started_at }}"
           --delivery-output test-results/econplanner-nightly/notifications/start-delivery.json
       - name: Upload start-delivery record
-        if: always()
+        if: ${{ always() && github.run_attempt == 1 }}
         uses: actions/upload-artifact@v7
         with:
           name: econplanner-nightly-notification-start
@@ -70,7 +70,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Preserve start-delivery failure
-        if: ${{ steps.notification.outcome != 'success' }}
+        if: ${{ github.run_attempt == 1 && steps.notification.outcome != 'success' }}
         run: exit 1
 
   generated-matrix:
@@ -417,7 +417,7 @@ jobs:
 
   final-reporting:
     name: Aggregate, compare, summarize, notify, and gate
-    if: ${{ always() && github.run_attempt == 1 }}
+    if: ${{ always() }}
     needs: [notify_start, generated-matrix, deterministic, browser, quality, hosted-pdf]
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -457,6 +457,7 @@ jobs:
           node scripts/aggregate-econplanner-nightly.mjs --input test-results/econplanner-nightly/input --output test-results/econplanner-nightly/draft "${previous_args[@]}"
       - id: final_notification
         name: Send GREEN, AMBER, or RED final email and preserve delivery result
+        if: ${{ github.run_attempt == 1 }}
         continue-on-error: true
         env:
           MOCK_NOTIFICATIONS: "false"
@@ -496,6 +497,7 @@ jobs:
         if: always()
         env:
           NOTIFICATION_OUTCOME: ${{ steps.final_notification.outcome }}
+          WORKFLOW_ATTEMPT: ${{ github.run_attempt }}
         run: |
           node --input-type=module <<'NODE'
           import fs from "node:fs";
@@ -503,5 +505,5 @@ jobs:
           console.log(`Quality gate: ${aggregate.gateStatus}`);
           console.log(`Final notification step: ${process.env.NOTIFICATION_OUTCOME}`);
           if (aggregate.gateStatus === "RED") process.exitCode = 1;
-          if (process.env.NOTIFICATION_OUTCOME !== "success") process.exitCode = 1;
+          if (process.env.WORKFLOW_ATTEMPT === "1" && process.env.NOTIFICATION_OUTCOME !== "success") process.exitCode = 1;
           NODE

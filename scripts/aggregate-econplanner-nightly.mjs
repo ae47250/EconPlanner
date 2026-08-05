@@ -1,4 +1,5 @@
 import { readdir, readFile, mkdir, writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -77,6 +78,19 @@ function combinedPdf(items) {
   };
 }
 
+function gitValue(args) {
+  try {
+    return execFileSync("git", args, {
+      cwd: ROOT,
+      encoding: "utf8",
+      windowsHide: true,
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+
 async function readInputs(directory, outputDirectory) {
   const files = (await jsonFiles(directory)).filter(file => !path.resolve(file).startsWith(`${path.resolve(outputDirectory)}${path.sep}`));
   const items = [];
@@ -91,15 +105,24 @@ async function readInputs(directory, outputDirectory) {
 }
 
 function provenance(args) {
+  const commitSha = args["commit-sha"] || process.env.GITHUB_SHA || gitValue(["rev-parse", "HEAD"]);
+  const originMainSha = args["origin-main-sha"]
+    || gitValue(["rev-parse", "origin/main"])
+    || (process.env.GITHUB_REF_NAME === "main" ? process.env.GITHUB_SHA || null : null);
+  const worktreeOutput = gitValue(["status", "--porcelain"]);
   return {
-    repository: process.env.GITHUB_REPOSITORY || null,
-    commitSha: process.env.GITHUB_SHA || null,
-    branch: process.env.GITHUB_REF_NAME || null,
+    repository: process.env.GITHUB_REPOSITORY || gitValue(["config", "--get", "remote.origin.url"]),
+    commitSha,
+    originMainSha,
+    headMatchesOriginMain: commitSha && originMainSha ? commitSha === originMainSha : null,
+    branch: process.env.GITHUB_REF_NAME || gitValue(["branch", "--show-current"]),
     workflowName: process.env.GITHUB_WORKFLOW || null,
     workflowRunId: Number(process.env.GITHUB_RUN_ID) || null,
     workflowAttempt: Number(process.env.GITHUB_RUN_ATTEMPT) || null,
     startedAt: args["started-at"] || process.env.ECONPLANNER_NIGHTLY_START_TIME || null,
     completedAt: args["completed-at"] || new Date().toISOString(),
+    worktreeStatus: worktreeOutput === null ? "UNKNOWN" : worktreeOutput ? "DIRTY" : "CLEAN",
+    provenanceSource: process.env.GITHUB_SHA ? "GITHUB_ACTIONS" : "LOCAL_GIT",
     nodeVersion: process.version,
     metricSchemaVersion: 2
   };
