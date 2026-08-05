@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -10,7 +11,8 @@ import { performance } from "node:perf_hooks";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import {
   buildEconomicsTermPlans,
-  semanticPlanSignature
+  semanticPlanSignature,
+  validatePreferredDistribution
 } from "../lib/planning/economics.js";
 import {
   buildPlanningSlots,
@@ -39,6 +41,12 @@ const DEFAULT_SEEDS = Object.freeze([
 ]);
 const PROGRAM = Object.freeze({ id: "economics", name: "Economics" });
 const METRIC_SCHEMA_VERSION = 2;
+const STRATEGY_NAMES = Object.freeze({
+  equal: "BALANCED",
+  increasing: "STAGGERED",
+  "standing-specific": "EXPLORE_FIRST",
+  "early-graduation": "ONE_YEAR_EARLY"
+});
 const APPROVAL_TYPES = Object.freeze({
   "CONCURRENT-INTERMEDIATE-ECO-461": "DEPARTMENT_APPROVAL",
   "CONCURRENT-MATH-ECO-213": "INSTRUCTOR_APPROVAL",
@@ -51,6 +59,42 @@ const CLASSIFIED_ORACLE_REVIEWS = new Set([
   "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE",
   "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"
 ]);
+
+function gitValue(args) {
+  try {
+    return execFileSync("git", args, {
+      cwd: ROOT,
+      encoding: "utf8",
+      windowsHide: true,
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+
+function runtimeProvenance() {
+  const commitSha = process.env.GITHUB_SHA || gitValue(["rev-parse", "HEAD"]);
+  const originMainSha = gitValue(["rev-parse", "origin/main"])
+    || (process.env.GITHUB_REF_NAME === "main" ? process.env.GITHUB_SHA || null : null);
+  const worktreeOutput = gitValue(["status", "--porcelain"]);
+  return {
+    repository: process.env.GITHUB_REPOSITORY || gitValue(["config", "--get", "remote.origin.url"]),
+    commitSha,
+    originMainSha,
+    headMatchesOriginMain: commitSha && originMainSha ? commitSha === originMainSha : null,
+    branch: process.env.GITHUB_REF_NAME || gitValue(["branch", "--show-current"]),
+    workflowName: process.env.GITHUB_WORKFLOW || null,
+    workflowRunId: numericEnvironmentValue("GITHUB_RUN_ID"),
+    workflowAttempt: numericEnvironmentValue("GITHUB_RUN_ATTEMPT"),
+    worktreeStatus: worktreeOutput === null ? "UNKNOWN" : worktreeOutput ? "DIRTY" : "CLEAN",
+    provenanceSource: process.env.GITHUB_SHA ? "GITHUB_ACTIONS" : "LOCAL_GIT",
+    os: `${os.platform()} ${os.release()}`,
+    nodeVersion: process.version,
+    pnpmVersion: process.env.PNPM_VERSION || null,
+    metricSchemaVersion: METRIC_SCHEMA_VERSION
+  };
+}
 
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
 if (isMain) {
@@ -125,6 +169,7 @@ async function runMatrix(configuration) {
   let explainedNoPlanCount = 0;
   let eco257StatisticsCount = 0;
   const noPlanReasons = new Map();
+  const noPlanCategories = new Map();
 
   for (const { seed, profile } of selectedProfiles) {
     const hashingStartedAt = performance.now();
@@ -155,6 +200,7 @@ async function runMatrix(configuration) {
         );
         explainedNoPlanCount += 1;
         noPlanReasons.set(result.noPlan.reason, (noPlanReasons.get(result.noPlan.reason) || 0) + 1);
+        noPlanCategories.set(result.noPlan.category, (noPlanCategories.get(result.noPlan.category) || 0) + 1);
       }
       profileResults.push({
         seed,
@@ -177,10 +223,13 @@ async function runMatrix(configuration) {
         outcome: result.planCount > 0 ? "PLANS_PRODUCED" : "NO_PLAN",
         plans: result.planCount,
         planSignatures: result.planSignatures,
+        planObservability: result.planObservability,
+        legacyValidatedDisplayedPlan: result.planObservability.some(plan => plan.legacyValidatedDisplayedPlan),
         solverNodes: result.solverNodes,
         maximumSolverNodes: Math.max(0, ...result.solverNodes),
         solverDiagnostics: result.solverDiagnostics,
         candidateOutcomes: result.candidateOutcomes,
+        strategyConvergences: result.strategyConvergences,
         planningGaps: result.planningGaps,
         noPlan: result.noPlan,
         replay: replayEvidence(seed, profile, configuration),
@@ -272,6 +321,20 @@ async function runMatrix(configuration) {
   const attemptDurations = profileResults.flatMap(result => (
     result.solverDiagnostics?.strategyAttempts || []
   ).map(attempt => attempt.durationMs));
+  const strategyAttempts = profileResults.flatMap(result => result.solverDiagnostics?.strategyAttempts || []);
+  const firstSolverSolutionNodes = strategyAttempts
+    .map(attempt => attempt.firstSolutionNode)
+    .filter(value => value !== null && value !== undefined && value !== "" && Number.isFinite(Number(value)))
+    .map(Number);
+  const planObservability = profileResults.flatMap(result => result.planObservability || []);
+  const legacyFeasibilityStatuses = countBy(planObservability, plan => plan.legacyFeasibilityStatus);
+  const strategyFits = countBy(planObservability, plan => `${plan.strategy}:${plan.strategyFit}`);
+  const nodeLimitProfiles = profileResults.filter(result => (
+    result.solverDiagnostics?.strategyAttempts || []
+  ).some(attempt => attempt.terminationReason === "NODE_LIMIT"));
+  const nodeLimitProfilesWithLegacyValidatedDisplayedPlan = nodeLimitProfiles.filter(result => (
+    result.planObservability || []
+  ).some(plan => plan.legacyValidatedDisplayedPlan));
   const processUsage = process.resourceUsage();
   const summary = {
     schemaVersion: METRIC_SCHEMA_VERSION,
@@ -279,19 +342,10 @@ async function runMatrix(configuration) {
     generatedAt: new Date().toISOString(),
     dataClassification: "fictional-test-only",
     provenance: {
-      repository: process.env.GITHUB_REPOSITORY || null,
-      commitSha: process.env.GITHUB_SHA || null,
-      branch: process.env.GITHUB_REF_NAME || null,
-      workflowName: process.env.GITHUB_WORKFLOW || null,
-      workflowRunId: numericEnvironmentValue("GITHUB_RUN_ID"),
-      workflowAttempt: numericEnvironmentValue("GITHUB_RUN_ATTEMPT"),
-      os: `${os.platform()} ${os.release()}`,
-      nodeVersion: process.version,
-      pnpmVersion: process.env.PNPM_VERSION || null,
+      ...runtimeProvenance(),
       generatorVersion: ECONOMICS_GENERATOR_VERSION,
       oraclePolicyVersion: manifest.policy?.version ?? null,
-      scheduleVersion: schedule.schemaVersion ?? null,
-      metricSchemaVersion: METRIC_SCHEMA_VERSION
+      scheduleVersion: schedule.schemaVersion ?? null
     },
     selection: {
       mode: "fixed-seed-pairwise",
@@ -341,7 +395,82 @@ async function runMatrix(configuration) {
         ).filter(attempt => attempt.terminationReason === "NODE_LIMIT").length, 0),
         solutionBudgetHits: profileResults.reduce((count, result) => count + (
           result.solverDiagnostics?.searchAttempts || []
-        ).filter(attempt => attempt.solutionBudgetHit).length, 0)
+        ).filter(attempt => attempt.solutionBudgetHit).length, 0),
+        firstSolverSolutionNodes: {
+          availability: "MEASURED",
+          measurementBasis: "PRE_FINAL_VALIDATOR_SOLVER_ASSIGNMENT",
+          ...distributionSummary(firstSolverSolutionNodes)
+        },
+        timeToFirstCompletePlanMs: {
+          availability: "NOT_MEASURED",
+          reasonCode: "SOLVER_DOES_NOT_EMIT_FIRST_COMPLETE_SOLUTION_TIME",
+          value: null
+        },
+        nodesToFirstCompleteApprovedPlan: {
+          availability: "NOT_MEASURED",
+          reasonCode: "FIRST_SOLUTION_NODE_PRECEDES_FINAL_VALIDATION",
+          value: null
+        },
+        limitBehavior: {
+          nodeLimitProfiles: nodeLimitProfiles.length,
+          nodeLimitProfilesWithLegacyValidatedDisplayedPlan: nodeLimitProfilesWithLegacyValidatedDisplayedPlan.length,
+          exactIncumbentPreservation: {
+            availability: "NOT_MEASURED",
+            reasonCode: "INCUMBENT_IDENTITY_AND_ALTERNATIVE_BUDGET_NOT_EMITTED",
+            value: null
+          }
+        }
+      },
+      completion: {
+        targetAvailability: "NOT_MEASURED",
+        targetReasonCode: "PRODUCTION_DECISION_ENGINE_COMPLETION_CONTRACT_NOT_IMPLEMENTED",
+        legacyValidationProxy: {
+          availability: "PROXY",
+          measurementBasis: "LEGACY_DISPLAYED_PLAN_VALIDATION_AND_UNSCHEDULED_COUNT",
+          profilesWithLegacyValidatedDisplayedPlan: profileResults.filter(result => result.legacyValidatedDisplayedPlan).length,
+          displayedPlansValidatedAndScheduled: planObservability.filter(plan => plan.legacyValidatedDisplayedPlan).length,
+          plansByLegacyFeasibilityStatus: legacyFeasibilityStatuses
+        },
+        primaryProductCoverage: {
+          availability: "NOT_MEASURED",
+          reasonCode: "PRODUCTION_DECISION_ENGINE_SNAPSHOT_AND_REPORT_CONTRACT_NOT_IMPLEMENTED",
+          numerator: null,
+          denominator: selectedProfiles.length,
+          denominatorAvailability: "MEASURED",
+          percentage: null
+        },
+        perProfileReportReadiness: {
+          availability: "NOT_MEASURED",
+          reasonCode: "REPORT_AND_PDF_NOT_EXECUTED_FOR_EVERY_GENERATED_PROFILE",
+          numerator: null,
+          denominator: selectedProfiles.length
+        }
+      },
+      strategies: {
+        availability: "PROXY",
+        measurementBasis: "CURRENT_VALIDATOR_DISTRIBUTION_RESULT",
+        displayedPlanFits: strategyFits,
+        convergences: profileResults.reduce((sum, result) => sum + (result.strategyConvergences || []).length, 0)
+      },
+      moveDestinations: {
+        availability: "NOT_MEASURED",
+        reasonCode: "SERVER_DERIVED_DESTINATIONS_NOT_IMPLEMENTED_UNTIL_CP6",
+        requests: null,
+        destinations: null,
+        classified: null
+      },
+      productionDecisionEngine: {
+        availability: "NOT_MEASURED",
+        reasonCode: "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
+        decisions: null,
+        latencyMs: null
+      },
+      policyCompiler: {
+        availability: "NOT_MEASURED",
+        reasonCode: "POLICY_COMPILER_NOT_IMPLEMENTED_UNTIL_CP2",
+        compileTimeMs: null,
+        conflicts: null,
+        bundleHash: null
       },
       processMemory: {
         maxRssBytes: Number(processUsage.maxRSS || 0) * 1024,
@@ -360,7 +489,13 @@ async function runMatrix(configuration) {
       total: selectedProfiles.length - profilesWithPlans,
       explained: explainedNoPlanCount,
       unexplained: selectedProfiles.length - profilesWithPlans - explainedNoPlanCount,
-      reasons: Object.fromEntries([...noPlanReasons].sort(([left], [right]) => left.localeCompare(right)))
+      reasons: Object.fromEntries([...noPlanReasons].sort(([left], [right]) => left.localeCompare(right))),
+      categories: Object.fromEntries([...noPlanCategories].sort(([left], [right]) => left.localeCompare(right))),
+      productionFalseNegative: {
+        availability: "NOT_MEASURED",
+        reasonCode: "ORACLE_DOES_NOT_SEARCH_FOR_A_PLAN_WHEN_PRODUCTION_RETURNS_NO_PLAN",
+        count: null
+      }
     },
     dimensions: buildDimensionSummary(profileResults),
     highRiskCombinations: buildHighRiskCombinationSummary(profileResults),
@@ -399,6 +534,74 @@ async function runMatrix(configuration) {
   }));
 }
 
+function isLegacyValidatedDisplayedPlan(plan) {
+  return Boolean(plan?.validation?.valid && Array.isArray(plan?.unscheduled) && plan.unscheduled.length === 0);
+}
+
+function countBy(items, selector) {
+  const counts = {};
+  for (const item of items) {
+    const key = selector(item);
+    if (!key) continue;
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  return Object.fromEntries(Object.entries(counts).sort(([left], [right]) => left.localeCompare(right)));
+}
+
+export function characterizeDisplayedPlan(plan) {
+  const distribution = plan?.validation?.distribution || validatePreferredDistribution(plan);
+  const strategy = STRATEGY_NAMES[plan?.distribution?.strategy] || "UNKNOWN";
+  const strategyFit = distribution?.applicable === false
+    ? "NOT_APPLICABLE"
+    : distribution?.exact
+      ? "EXACT"
+      : distribution?.valid
+        ? "ACCEPTABLE"
+        : "MISMATCH";
+  return {
+    planId: plan?.id || null,
+    label: plan?.label || null,
+    targetCompletionStatus: null,
+    targetCompletionAvailability: "NOT_MEASURED",
+    targetCompletionReasonCode: "PRODUCTION_DECISION_ENGINE_COMPLETION_CONTRACT_NOT_IMPLEMENTED",
+    legacyValidatedDisplayedPlan: isLegacyValidatedDisplayedPlan(plan),
+    legacyValidationProxyAvailability: "PROXY",
+    legacyValidationProxyBasis: "LEGACY_DISPLAYED_PLAN_VALIDATION_AND_UNSCHEDULED_COUNT",
+    targetEvidenceStatus: null,
+    targetEvidenceAvailability: "NOT_MEASURED",
+    targetEvidenceReasonCode: "PRODUCTION_DECISION_ENGINE_EVIDENCE_CONTRACT_NOT_IMPLEMENTED",
+    legacyFeasibilityStatus: plan?.feasibilityStatus || null,
+    strategy,
+    strategyFit,
+    strategyFitAvailability: "PROXY",
+    strategyDeviation: distribution?.annualDistance !== null
+      && distribution?.annualDistance !== undefined
+      && distribution?.annualDistance !== ""
+      && Number.isFinite(Number(distribution.annualDistance))
+      ? Number(distribution.annualDistance)
+      : null,
+    deviationReasons: [...new Set([
+      ...(Array.isArray(distribution?.warnings) ? distribution.warnings : []),
+      ...(Array.isArray(distribution?.errors) ? distribution.errors : [])
+    ])],
+    productionDecisionEngine: {
+      availability: "NOT_MEASURED",
+      reasonCode: "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
+      status: null
+    },
+    validatedSnapshot: {
+      availability: "NOT_MEASURED",
+      reasonCode: "SIGNED_VALIDATED_PLAN_SNAPSHOT_NOT_IMPLEMENTED_UNTIL_CP6",
+      issued: null
+    },
+    reportReadiness: {
+      availability: "NOT_MEASURED",
+      reasonCode: "REPORT_AND_PDF_NOT_EXECUTED_FOR_EVERY_GENERATED_PROFILE",
+      ready: null
+    }
+  };
+}
+
 function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, prerequisites, schedule }) {
   const generatorAudit = auditGeneratedFictionalProfile(profile, manifest, verifiedSchedule);
   invariant(profile.fictional === true, "NON_FICTIONAL_PROFILE", `${profile.profileId} is not marked fictional.`);
@@ -414,6 +617,7 @@ function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, pr
     collectDiagnostics: true
   });
   const signatures = bundle.plans.map(plan => semanticPlanSignature(plan));
+  const planObservability = bundle.plans.map(characterizeDisplayedPlan);
   invariant(
     new Set(signatures).size === signatures.length,
     "SEMANTIC_DUPLICATE",
@@ -486,9 +690,11 @@ function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, pr
   return {
     planCount: bundle.plans.length,
     planSignatures: signatures,
+    planObservability,
     solverNodes,
     solverDiagnostics: bundle.metricsDiagnostics || { strategyAttempts: [], searchAttempts: [] },
     candidateOutcomes: bundle.candidateOutcomes || [],
+    strategyConvergences: bundle.convergences || [],
     planningGaps: bundle.planningGaps || [],
     noPlan,
     oracleReviews,
@@ -665,6 +871,30 @@ function duplicateInputGroups(profiles) {
     .sort((left, right) => left.plannerInputHash.localeCompare(right.plannerInputHash));
 }
 
+export function noPlanCategory(reason, conclusion = "UNKNOWN") {
+  if (reason === "INVALID_INPUT") return "INPUT_BLOCKED";
+  if (reason === "SEARCH_INCOMPLETE") return "SEARCH_INCOMPLETE";
+  if (reason === "POLICY_REVIEW_REQUIRED") return "POLICY_REVIEW_REQUIRED";
+  if (reason === "MISSING_OFFERING") return "SCHEDULE_BLOCKED";
+  if (conclusion === "PROVEN_INFEASIBLE" && [
+    "COUNT_CAPACITY",
+    "EMPTY_DOMAIN",
+    "NO_COMPLETE_ASSIGNMENT"
+  ].includes(reason)) return "INFEASIBLE_PROVEN";
+  if (reason === "PRODUCTION_FALSE_NEGATIVE") return "PRODUCTION_FALSE_NEGATIVE";
+  return "OTHER";
+}
+
+function classifiedNoPlan(conclusion, reason, evidence, additional = {}) {
+  return {
+    conclusion,
+    category: noPlanCategory(reason, conclusion),
+    reason,
+    ...additional,
+    ...evidence
+  };
+}
+
 function classifyNoPlan(bundle) {
   const diagnostics = bundle.metricsDiagnostics || {};
   const attempts = diagnostics.strategyAttempts || [];
@@ -676,37 +906,37 @@ function classifyNoPlan(bundle) {
     planningGaps: bundle.planningGaps || []
   };
   if (diagnostics.invalidInput) {
-    return { conclusion: "UNKNOWN", reason: "INVALID_INPUT", ...evidence };
+    return classifiedNoPlan("UNKNOWN", "INVALID_INPUT", evidence);
   }
   if (!attempts.length) {
-    return { conclusion: "UNKNOWN", reason: "UNEXPLAINED", ...evidence };
+    return classifiedNoPlan("UNKNOWN", "UNEXPLAINED", evidence);
   }
   const incomplete = attempts.filter(attempt => !attempt.exhaustive && !attempt.solutionFound);
   if (incomplete.length) {
-    return { conclusion: "UNKNOWN", reason: "SEARCH_INCOMPLETE", ...evidence };
+    return classifiedNoPlan("UNKNOWN", "SEARCH_INCOMPLETE", evidence);
   }
   if ((bundle.planningGaps || []).some(gap => /REVIEW|APPROVAL|POLICY/iu.test(`${gap.code || ""} ${gap.reason || ""} ${gap.message || ""}`))) {
-    return { conclusion: "UNKNOWN", reason: "POLICY_REVIEW_REQUIRED", ...evidence };
+    return classifiedNoPlan("UNKNOWN", "POLICY_REVIEW_REQUIRED", evidence);
   }
   const allCountCapacity = searchAttempts.length > 0
     && searchAttempts.every(attempt => attempt.failure === "COUNT_CAPACITY");
   if (allCountCapacity) {
-    return { conclusion: "PROVEN_INFEASIBLE", reason: "COUNT_CAPACITY", ...evidence };
+    return classifiedNoPlan("PROVEN_INFEASIBLE", "COUNT_CAPACITY", evidence);
   }
   const missingOffering = (bundle.planningGaps || []).some(gap => (
     /missing offering|no (?:verified )?offering|not offered/iu.test(`${gap.code || ""} ${gap.reason || ""} ${gap.message || ""}`)
   ));
   if (missingOffering) {
-    return { conclusion: "PROVEN_INFEASIBLE", reason: "MISSING_OFFERING", ...evidence };
+    return classifiedNoPlan("UNKNOWN", "MISSING_OFFERING", evidence);
   }
   const emptyDomains = [...new Set(searchAttempts.flatMap(attempt => attempt.emptyDomains || []))];
   if (emptyDomains.length) {
-    return { conclusion: "PROVEN_INFEASIBLE", reason: "EMPTY_DOMAIN", emptyDomains, ...evidence };
+    return classifiedNoPlan("PROVEN_INFEASIBLE", "EMPTY_DOMAIN", evidence, { emptyDomains });
   }
   if (attempts.every(attempt => attempt.exhaustive)) {
-    return { conclusion: "PROVEN_INFEASIBLE", reason: "NO_COMPLETE_ASSIGNMENT", ...evidence };
+    return classifiedNoPlan("PROVEN_INFEASIBLE", "NO_COMPLETE_ASSIGNMENT", evidence);
   }
-  return { conclusion: "UNKNOWN", reason: "OTHER_CLASSIFIED", classificationId: "NO_RETAINED_VALID_PLAN", ...evidence };
+  return classifiedNoPlan("UNKNOWN", "OTHER_CLASSIFIED", evidence, { classificationId: "NO_RETAINED_VALID_PLAN" });
 }
 
 function replayEvidence(seed, profile, configuration) {
