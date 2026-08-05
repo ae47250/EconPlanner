@@ -195,6 +195,99 @@ test("intake header shows the URVESKA logo above EconPlanner without the legacy 
   await expect(page.locator(".apple-brand-mark")).toHaveCount(0);
 });
 
+test("planning timeline is visually and semantically grouped", async ({ page }) => {
+  const timeline = page.getByRole("region", { name: "What year will you be in this fall?" });
+  await expect(timeline.getByText("Planning timeline", { exact: true })).toBeVisible();
+  await expect(timeline.getByRole("group", { name: "Class standing" })).toBeVisible();
+  await expect(timeline.getByRole("group", {
+    name: "How quickly do you want this plan to finish?"
+  })).toBeVisible();
+  await expect(timeline.getByText(/fourth college year/)).toBeVisible();
+  await expect(timeline.getByRole("button", {
+    name: "Transfer students: Change graduation year"
+  })).toHaveCount(0);
+  await expect(page.getByRole("button", {
+    name: "Transfer students: Change graduation year"
+  })).toBeVisible();
+
+  const visualGrouping = await timeline.evaluate(element => {
+    const styles = getComputedStyle(element);
+    return {
+      backgroundColor: styles.backgroundColor,
+      borderTopStyle: styles.borderTopStyle
+    };
+  });
+  expect(visualGrouping.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+  expect(visualGrouping.borderTopStyle).toBe("solid");
+
+  for (const width of [320, 375, 768, 1440]) {
+    await page.setViewportSize({ width, height: 844 });
+    const responsiveLayout = await timeline.evaluate(element => {
+      const bounds = element.getBoundingClientRect();
+      return {
+        left: bounds.left,
+        right: bounds.right,
+        viewportWidth: document.documentElement.clientWidth,
+        pageWidth: document.documentElement.scrollWidth
+      };
+    });
+    expect(responsiveLayout.left, `${width}px: ${JSON.stringify(responsiveLayout)}`).toBeGreaterThanOrEqual(0);
+    expect(responsiveLayout.right, `${width}px: ${JSON.stringify(responsiveLayout)}`)
+      .toBeLessThanOrEqual(responsiveLayout.viewportWidth);
+    expect(responsiveLayout.pageWidth, `${width}px: ${JSON.stringify(responsiveLayout)}`)
+      .toBe(responsiveLayout.viewportWidth);
+    const horizonFields = await page.locator(".apple-horizon-detail-pair label").evaluateAll(labels => (
+      labels.map(label => {
+        const bounds = label.getBoundingClientRect();
+        return { top: bounds.top, left: bounds.left, right: bounds.right };
+      })
+    ));
+    expect(horizonFields).toHaveLength(2);
+    expect(Math.abs(horizonFields[0].top - horizonFields[1].top), `${width}px: horizon fields wrapped`)
+      .toBeLessThan(2);
+    expect(horizonFields[1].right, `${width}px: horizon fields overflowed`)
+      .toBeLessThanOrEqual(responsiveLayout.viewportWidth);
+  }
+});
+
+test("planned non-major courses have their own card before course selection", async ({ page }) => {
+  const nonMajorCard = page.locator(".non-major-intake-card");
+  const courseCard = page.locator(".course-intake-card");
+  await expect(nonMajorCard).toContainText("Enter planned non-major courses (optional)");
+
+  const cardOrder = await nonMajorCard.evaluate((card, courseSelector) => {
+    const course = document.querySelector(courseSelector);
+    return Boolean(card.compareDocumentPosition(course) & Node.DOCUMENT_POSITION_FOLLOWING);
+  }, ".course-intake-card");
+  expect(cardOrder).toBe(true);
+
+  await nonMajorCard.locator("summary").click();
+  await expect(nonMajorCard.locator('input[type="number"]').first()).toBeVisible();
+  await expect(courseCard.getByRole("heading", { name: "Which courses have you taken?" })).toBeVisible();
+});
+
+test("planned non-major course entries persist and reach the planner request", async ({ page }) => {
+  const nonMajorCard = page.locator(".non-major-intake-card");
+  await nonMajorCard.locator("summary").click();
+  const firstReservedCourseInput = nonMajorCard.getByRole("spinbutton").first();
+  await firstReservedCourseInput.fill("2");
+
+  await expect.poll(() => page.evaluate(() => {
+    const saved = JSON.parse(window.localStorage.getItem("econ-planner-ui-state") || "null");
+    return Object.values(saved?.formData?.reservedCourseUnits || {}).includes(2);
+  })).toBe(true);
+
+  const responsePromise = page.waitForResponse(response => (
+    response.url().endsWith("/api/majors/map")
+      && response.request().method() === "POST"
+      && response.request().postDataJSON()?.action !== "validate-plan"
+  ));
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  const response = await responsePromise;
+  expect(response.status()).toBe(200);
+  expect(Object.values(response.request().postDataJSON().student.reservedCourseUnits)).toContain(2);
+});
+
 test("standing, term, graduation, course status, and prerequisite controls stay coherent", async ({ page }) => {
   await page.getByRole("textbox", { name: "Student name (optional)" }).fill("Alex Student");
 
@@ -296,7 +389,7 @@ test("planning pace requires and resets exact senior-standing confirmation", asy
 
 test("transfer students choose graduation and Hanover entry years instead of class standing", async ({ page }) => {
   await setPlanDate(page, "2027-01-10");
-  await page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." }).click();
+  await page.getByRole("button", { name: "Transfer students: Change graduation year" }).click();
 
   await expect(page.getByRole("heading", { name: "Transfer student planning" })).toBeVisible();
   await expect(page.getByRole("group", { name: "Class standing" })).toHaveCount(0);
@@ -377,6 +470,21 @@ test("generation is single-flight and distinct plans support compare, history, r
   await expect(advisorAttention.getByRole("heading", { name: "Projected placement" })).toBeVisible();
   await expect(advisorAttention.getByText("Graduation planning assumption", { exact: true })).toHaveCount(0);
   await expect(advisorAttention.getByText(/ECO 213 and ECO 214 tend to be offered in different terms/)).toBeVisible();
+  const projectedPlacementTerms = advisorAttention.locator(".projected-placement-list li");
+  await expect(projectedPlacementTerms.first()).toBeVisible();
+  const projectedTerms = await projectedPlacementTerms.evaluateAll(items => items.map(item => item.dataset.term));
+  expect(new Set(projectedTerms).size).toBe(projectedTerms.length);
+  for (const projectedTerm of projectedTerms) {
+    expect(projectedTerm).toMatch(/^(Fall|Winter|Spring\/May|May|Summer) \d{4}$/);
+  }
+  const projectedTermSortKey = term => {
+    const [, season, year] = term.match(/^(Fall|Winter|Spring\/May|May|Summer) (\d{4})$/);
+    const seasonOrder = { Winter: 0, "Spring/May": 1, May: 1, Summer: 2, Fall: 3 };
+    return Number(year) * 10 + seasonOrder[season];
+  };
+  expect(projectedTerms).toEqual(
+    [...projectedTerms].sort((left, right) => projectedTermSortKey(left) - projectedTermSortKey(right))
+  );
   const selectedCompareCard = page.locator("article.comparison-plan-card.is-selected");
   await expect(selectedCompareCard).toHaveCount(1);
   const selectedComparePlanId = await selectedCompareCard.getAttribute("data-plan-id");
@@ -494,7 +602,13 @@ test("graduation-first senior workflow shows one highest-ranked realistic plan a
   const cards = page.locator("article[data-plan-id]");
   await expect(cards).toHaveCount(1);
   await expect(page.getByText(/more than two Economics courses/).first()).toBeVisible();
-  await expect(page.getByText(/Schedule confirmation required.*MAT 217, ECO 257, or PSY 217/).first()).toBeVisible();
+  const offeringConfirmation = page.locator(".advisor-attention li", {
+    hasText: "Confirm offerings and time conflicts:"
+  });
+  await expect(offeringConfirmation).toHaveCount(1);
+  for (const statisticsChoice of ["ECO 257", "MAT 217", "PSY 217"]) {
+    await expect(offeringConfirmation).toContainText(statisticsChoice);
+  }
   for (const card of await cards.all()) {
     await expect(card.getByText("Statistics requirement")).toBeVisible();
     await expect(card.getByText("ECO 213")).toBeVisible();
@@ -608,7 +722,7 @@ test("comparison entry, dialog, and long content stay inside every target viewpo
       await setPlanDate(page, "2026-07-31");
       await page.getByRole("textbox", { name: "Student name (optional)" }).fill(LONG_STUDENT_NAME);
 
-      await page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." }).click();
+      await page.getByRole("button", { name: "Transfer students: Change graduation year" }).click();
       const transferCard = page.getByRole("region", { name: "Transfer student planning" });
       await expect(transferCard).toBeVisible();
       await assertInsideViewport(transferCard, `${label} transfer card`);

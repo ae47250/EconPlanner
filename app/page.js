@@ -379,14 +379,16 @@ function warningCourseCodes(message) {
     .sort((left, right) => left.localeCompare(right));
 }
 
-function projectedWarningCourse(message) {
-  return String(message || "").match(/^(.+?) in (?:Fall|Winter|Spring\/May|May|Summer) \d{4} is a projected placement/i)?.[1]
-    || null;
+function projectedWarningDetails(message) {
+  const match = String(message || "").match(/^(.+?) in ((?:Fall|Winter|Spring\/May|May|Summer) \d{4}) is a projected placement/i);
+  return match ? { course: match[1].trim(), term: match[2] } : null;
 }
 
-function projectedWarningPlacement(message) {
-  const match = String(message || "").match(/^(.+?) in ((?:Fall|Winter|Spring\/May|May|Summer) \d{4}) is a projected placement/i);
-  return match ? `${match[1]} — ${match[2]}` : null;
+function projectedTermOrder(term) {
+  const match = String(term || "").match(/^(Fall|Winter|Spring\/May|May|Summer) (\d{4})$/i);
+  if (!match) return Number.MAX_SAFE_INTEGER;
+  const termOrder = { winter: 0, "spring/may": 1, may: 1, summer: 2, fall: 3 };
+  return Number(match[2]) * 10 + termOrder[match[1].toLowerCase()];
 }
 
 function isFlattenedPlanNotice(notice) {
@@ -467,9 +469,26 @@ function AdvisorAttention({ catalog, plan, schedule }) {
   const publishedScheduleMessages = [...new Set(publishedScheduleNotices
     .filter(notice => warningCourseCodes(notice.message).length === 0)
     .map(notice => notice.message))];
-  const projectedCourses = [...new Set(projectedNotices
-    .map(notice => projectedWarningPlacement(notice.message) || projectedWarningCourse(notice.message))
-    .filter(Boolean))].sort((left, right) => left.localeCompare(right));
+  const projectedNoticeDetails = projectedNotices.map(notice => ({
+    message: notice.message,
+    placement: projectedWarningDetails(notice.message)
+  }));
+  const projectedPlacementByTerm = new Map();
+  for (const placement of projectedNoticeDetails.map(item => item.placement).filter(Boolean)) {
+    if (!projectedPlacementByTerm.has(placement.term)) projectedPlacementByTerm.set(placement.term, new Set());
+    projectedPlacementByTerm.get(placement.term).add(placement.course);
+  }
+  const projectedPlacementTerms = [...projectedPlacementByTerm.entries()]
+    .map(([term, courses]) => ({ term, courses: [...courses].sort((left, right) => left.localeCompare(right)) }))
+    .sort((left, right) => projectedTermOrder(left.term) - projectedTermOrder(right.term) || left.term.localeCompare(right.term));
+  const ungroupedProjectedMessages = [...new Set(projectedNoticeDetails
+    .filter(item => !item.placement)
+    .map(item => item.message))];
+  const hasPublishedScheduleChecks = seatAvailabilityCourses.length > 0
+    || scheduleConfirmationCourses.length > 0
+    || publishedScheduleMessages.length > 0;
+  const hasProjectedPlacementChecks = projectedPlacementTerms.length > 0
+    || ungroupedProjectedMessages.length > 0;
   const plannedCourses = new Set((plan?.terms || []).flatMap(term => (
     (term.courses || []).map(course => course.course)
   )));
@@ -497,23 +516,36 @@ function AdvisorAttention({ catalog, plan, schedule }) {
         <div className="advisor-attention-item graduation-assumptions">
           <h3>Graduation planning assumptions</h3>
           <div className="advisor-attention-groups">
-            <section>
-              <h4>{publishedScheduleLabel}</h4>
-              <ul>
-                {seatAvailabilityCourses.length > 0 && (
-                  <li><strong>Confirm seat availability:</strong> {seatAvailabilityCourses.join(", ")}.</li>
-                )}
-                {scheduleConfirmationCourses.length > 0 && (
-                  <li><strong>Confirm offerings and time conflicts:</strong> {scheduleConfirmationCourses.join(", ")}.</li>
-                )}
-                {publishedScheduleMessages.map(message => <li key={message}>{message}</li>)}
-              </ul>
-            </section>
-            {projectedCourses.length > 0 && (
+            {hasPublishedScheduleChecks && (
+              <section>
+                <h4>{publishedScheduleLabel}</h4>
+                <ul>
+                  {seatAvailabilityCourses.length > 0 && (
+                    <li><strong>Confirm seat availability:</strong> {seatAvailabilityCourses.join(", ")}.</li>
+                  )}
+                  {scheduleConfirmationCourses.length > 0 && (
+                    <li><strong>Confirm offerings and time conflicts:</strong> {scheduleConfirmationCourses.join(", ")}.</li>
+                  )}
+                  {publishedScheduleMessages.map(message => <li key={message}>{message}</li>)}
+                </ul>
+              </section>
+            )}
+            {hasProjectedPlacementChecks && (
               <section>
                 <h4>Projected placement</h4>
                 <p>Later schedules are not yet published. Confirm these planned courses when their official schedules become available:</p>
-                <p className="projected-course-list">{projectedCourses.join(", ")}.</p>
+                {projectedPlacementTerms.length > 0 && (
+                  <ul className="projected-placement-list">
+                    {projectedPlacementTerms.map(({ term, courses }) => (
+                      <li key={term} data-term={term}><strong>{term}:</strong> {courses.join(", ")}</li>
+                    ))}
+                  </ul>
+                )}
+                {ungroupedProjectedMessages.length > 0 && (
+                  <ul className="projected-placement-fallback">
+                    {ungroupedProjectedMessages.map(message => <li key={message}>{message}</li>)}
+                  </ul>
+                )}
                 {bothIntermediatesRemain && (
                   <p className="offering-pattern-note">
                     <strong>Known pattern:</strong> ECO 213 and ECO 214 tend to be offered in different terms. The available evidence does not yet establish which course will be offered first.
@@ -1328,7 +1360,8 @@ function PlanComparisonScreen({
           margin: .3rem 0 0;
           padding-left: 1rem;
         }
-        .comparison-page .projected-course-list { font-weight: 700; }
+        .comparison-page .projected-placement-list { margin: .35rem 0 0; padding-left: 1rem; }
+        .comparison-page .projected-placement-list li + li { margin-top: .15rem; }
         .comparison-page .offering-pattern-note {
           padding-left: .55rem;
           border-left: 3px solid #8fb2ee;
@@ -3058,10 +3091,12 @@ export default function Page() {
           padding: .55rem .65rem;
         }
         main.apple-layout-preview .planning-intake-card,
+        main.apple-layout-preview .non-major-intake-card,
         main.apple-layout-preview .course-intake-card {
           margin: 0;
         }
         main.apple-layout-preview .planning-intake-card,
+        main.apple-layout-preview .non-major-intake-card,
         main.apple-layout-preview .course-intake-card,
         main.apple-layout-preview .summary-card,
         main.apple-layout-preview .generate-card {
@@ -3091,11 +3126,25 @@ export default function Page() {
         main.apple-layout-preview .planning-details { margin: 0; padding: 0; border: 0; }
         main.apple-layout-preview .planning-details .section-heading,
         main.apple-layout-preview .course-heading { display: none; }
-        main.apple-layout-preview .apple-planning-heading { display: block; margin-bottom: .45rem; }
+        main.apple-layout-preview .planning-timeline-panel {
+          margin-top: .2rem;
+          padding: .9rem;
+          border: 1px solid #cbd8e6;
+          border-radius: .75rem;
+          background: #fff;
+        }
+        main.apple-layout-preview .planning-timeline-eyebrow {
+          margin: 0 0 .45rem;
+          color: #38536f;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: .02em;
+        }
+        main.apple-layout-preview .apple-planning-heading { display: block; margin-bottom: .65rem; }
         main.apple-layout-preview .apple-planning-heading h2 {
           margin: 0;
           color: #111;
-          font-size: 14px;
+          font-size: 16px;
           line-height: 1.2;
         }
         main.apple-layout-preview .apple-planning-heading p {
@@ -3140,6 +3189,17 @@ export default function Page() {
           justify-content: start;
           margin-top: .35rem;
           font-size: 11px;
+        }
+        main.apple-layout-preview .planning-timeline-panel .planning-pace-fieldset {
+          margin-top: .9rem;
+          padding-top: .75rem;
+          border-top: 1px solid #e1e7ee;
+        }
+        main.apple-layout-preview .planning-timeline-panel .standing-help {
+          max-width: 72ch;
+          margin: .55rem 0 0;
+          font-size: 12px;
+          line-height: 1.4;
         }
         main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options button {
           width: 14ch;
@@ -3616,82 +3676,35 @@ export default function Page() {
                   )}
                 </div>
               </div>
-              {planningSlots.length > 0 && (
-                <details className="non-major-commitments">
-                  <summary>Enter planned non-major courses (optional)</summary>
-                  <p>These courses use space in a term even though EconPlanner does not place them.</p>
-                  <div className="apple-mini-fields">
-                    {planningSlots.filter(slot => !slot.isSummer).map(slot => (
-                      <label key={slot.id}>
-                        <span>{slot.label}</span>
-                        <input
-                          type="number"
-                          min="0"
-                          max={slot.termKey === "Spring" ? "1" : "4"}
-                          step="1"
-                          value={formData.reservedCourseUnits?.[slot.id] ?? ""}
-                          onChange={event => setFormData(current => ({
-                            ...current,
-                            reservedCourseUnits: {
-                              ...(current.reservedCourseUnits || {}),
-                              [slot.id]: event.target.value === "" ? 0 : Number(event.target.value)
-                            }
-                          }))}
-                        />
-                      </label>
-                    ))}
-                  </div>
-                </details>
-              )}
               {!formData.isTransferStudent && (
                 <>
-                  <div className="apple-planning-heading">
-                    <h2>{standingQuestion}</h2>
-                    <p>{standingHelp}</p>
-                  </div>
-                  <div className="apple-standing-segmented" role="group" aria-label="Class standing">
-                    {[
-                      ["freshman", "Freshman"],
-                      ["sophomore", "Sophomore"],
-                      ["junior", "Junior"],
-                      ["senior", "Senior"]
-                    ].map(([value, label]) => (
-                      <button
-                        type="button"
-                        className={formData.academicStanding === value ? "is-selected" : ""}
-                        aria-pressed={formData.academicStanding === value}
-                        key={value}
-                        onClick={() => setFormData(current => ({
-                          ...current,
-                          academicStanding: value,
-                          planningPace: value === "senior" && current.planningPace === PLANNING_PACES.EARLY
-                            ? PLANNING_PACES.STANDARD
-                            : current.planningPace,
-                          projectedSeniorStandingConfirmation: null
-                        }))}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                  <fieldset className="transfer-graduation-fieldset planning-pace-fieldset">
-                    <legend>How quickly do you want this plan to finish?</legend>
-                    <div className="transfer-graduation-options">
+                  <section
+                    className="planning-timeline-panel"
+                    aria-labelledby="planning-timeline-heading"
+                  >
+                    <p className="planning-timeline-eyebrow">Planning timeline</p>
+                    <div className="apple-planning-heading">
+                      <h2 id="planning-timeline-heading">{standingQuestion}</h2>
+                      <p>{standingHelp}</p>
+                    </div>
+                    <div className="apple-standing-segmented" role="group" aria-label="Class standing">
                       {[
-                        [PLANNING_PACES.STANDARD, "Standard pace"],
-                        ...(planningContext.standardRemainingYears > 1
-                          ? [[PLANNING_PACES.EARLY, "One year early"]]
-                          : []),
-                        [PLANNING_PACES.EXTENDED, "One extra year"]
+                        ["freshman", "Freshman"],
+                        ["sophomore", "Sophomore"],
+                        ["junior", "Junior"],
+                        ["senior", "Senior"]
                       ].map(([value, label]) => (
                         <button
                           type="button"
+                          className={formData.academicStanding === value ? "is-selected" : ""}
+                          aria-pressed={formData.academicStanding === value}
                           key={value}
-                          className={formData.planningPace === value ? "is-selected" : ""}
-                          aria-pressed={formData.planningPace === value}
                           onClick={() => setFormData(current => ({
                             ...current,
-                            planningPace: value,
+                            academicStanding: value,
+                            planningPace: value === "senior" && current.planningPace === PLANNING_PACES.EARLY
+                              ? PLANNING_PACES.STANDARD
+                              : current.planningPace,
                             projectedSeniorStandingConfirmation: null
                           }))}
                         >
@@ -3699,10 +3712,36 @@ export default function Page() {
                         </button>
                       ))}
                     </div>
-                    <p className="standing-help">
-                      Standard pace follows your current class year. The early option needs senior-standing confirmation; the extra-year option keeps senior standing beginning in your fourth college year.
-                    </p>
-                  </fieldset>
+                    <fieldset className="transfer-graduation-fieldset planning-pace-fieldset">
+                      <legend>How quickly do you want this plan to finish?</legend>
+                      <div className="transfer-graduation-options">
+                        {[
+                          [PLANNING_PACES.STANDARD, "Standard pace"],
+                          ...(planningContext.standardRemainingYears > 1
+                            ? [[PLANNING_PACES.EARLY, "One year early"]]
+                            : []),
+                          [PLANNING_PACES.EXTENDED, "One extra year"]
+                        ].map(([value, label]) => (
+                          <button
+                            type="button"
+                            key={value}
+                            className={formData.planningPace === value ? "is-selected" : ""}
+                            aria-pressed={formData.planningPace === value}
+                            onClick={() => setFormData(current => ({
+                              ...current,
+                              planningPace: value,
+                              projectedSeniorStandingConfirmation: null
+                            }))}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="standing-help">
+                        Standard pace follows your current class year. The early option needs senior-standing confirmation; the extra-year option keeps senior standing beginning in your fourth college year.
+                      </p>
+                    </fieldset>
+                  </section>
                   <button
                     type="button"
                     className="transfer-student-trigger"
@@ -3898,6 +3937,36 @@ export default function Page() {
               </div>
             </div>
           </section>
+
+          {planningSlots.length > 0 && (
+            <section className="intake-card non-major-intake-card">
+              <details className="non-major-commitments">
+                <summary>Enter planned non-major courses (optional)</summary>
+                <p>These courses use space in a term even though EconPlanner does not place them.</p>
+                <div className="apple-mini-fields">
+                  {planningSlots.filter(slot => !slot.isSummer).map(slot => (
+                    <label key={slot.id}>
+                      <span>{slot.label}</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max={slot.termKey === "Spring" ? "1" : "4"}
+                        step="1"
+                        value={formData.reservedCourseUnits?.[slot.id] ?? ""}
+                        onChange={event => setFormData(current => ({
+                          ...current,
+                          reservedCourseUnits: {
+                            ...(current.reservedCourseUnits || {}),
+                            [slot.id]: event.target.value === "" ? 0 : Number(event.target.value)
+                          }
+                        }))}
+                      />
+                    </label>
+                  ))}
+                </div>
+              </details>
+            </section>
+          )}
 
           <section className="intake-card course-intake-card">
             <div className="section-heading course-heading">

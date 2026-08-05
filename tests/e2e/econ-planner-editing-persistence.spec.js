@@ -235,6 +235,9 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   const advisorAttention = page.locator(".advisor-attention");
   await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
   const advisorBeforeEdit = await advisorAttention.innerText();
+  const eco214PlacementBeforeEdit = advisorAttention.locator(".projected-placement-list li", { hasText: "ECO 214" });
+  await expect(eco214PlacementBeforeEdit).toHaveCount(1);
+  await expect(eco214PlacementBeforeEdit).not.toHaveAttribute("data-term", "Winter 2028");
 
   const originalSession = await savedSession(page);
   const originalSignatures = savedPlanSignatures(originalSession);
@@ -248,6 +251,9 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   await expect(page.getByRole("combobox", { name: "Move ECO 214 to another term" })).toHaveValue("winter-2028");
   await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
   expect(await advisorAttention.innerText()).not.toBe(advisorBeforeEdit);
+  const eco214PlacementAfterEdit = advisorAttention.locator(".projected-placement-list li", { hasText: "ECO 214" });
+  await expect(eco214PlacementAfterEdit).toHaveCount(1);
+  await expect(eco214PlacementAfterEdit).toHaveAttribute("data-term", "Winter 2028");
 
   const editedSession = await savedSession(page);
   const editedSignatures = savedPlanSignatures(editedSession);
