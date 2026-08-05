@@ -3135,18 +3135,21 @@ export default function Page() {
           color: #fff;
         }
         main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(3, max-content);
           gap: .35rem;
+          justify-content: start;
           margin-top: .35rem;
+          font-size: 11px;
         }
         main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options button {
+          width: 14ch;
           min-height: 1.8rem !important;
           padding: .2rem .35rem;
           font-size: 11px;
         }
         @media (max-width: 30rem) {
           main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(2, max-content);
           }
         }
         main.apple-layout-preview .apple-mini-fields {
@@ -3193,11 +3196,17 @@ export default function Page() {
           max-width: 100%;
           order: 1;
         }
-        main.apple-layout-preview .apple-plan-details-fields .apple-plan-creation-field { order: 4; }
-        main.apple-layout-preview .apple-plan-details-fields .apple-expected-graduation-field { order: 2; }
-        main.apple-layout-preview .apple-plan-details-fields .apple-planning-start-field { order: 3; }
+        main.apple-layout-preview .apple-plan-details-fields .apple-horizon-detail-pair {
+          display: flex;
+          flex: 0 1 auto;
+          gap: .65rem;
+          max-width: 100%;
+          order: 2;
+        }
+        main.apple-layout-preview .apple-plan-details-fields .apple-plan-creation-field { order: 3; }
         main.apple-layout-preview .apple-plan-details-fields .apple-compact-detail-field {
           flex: 0 1 10.5rem;
+          max-width: 10.5rem;
         }
         main.apple-layout-preview .apple-plan-details-fields .apple-expected-graduation-field > span {
           font-size: 12px;
@@ -3497,9 +3506,7 @@ export default function Page() {
           main.apple-layout-preview .apple-heading-row { align-items: flex-start; }
           main.apple-layout-preview .apple-help-button span { display: none; }
           main.apple-layout-preview .apple-mini-fields { grid-template-columns: 1fr; }
-          main.apple-layout-preview .apple-plan-details-fields .apple-compact-detail-field { flex-basis: 100%; }
-          main.apple-layout-preview .apple-plan-details-fields .apple-expected-graduation-field,
-          main.apple-layout-preview .apple-plan-details-fields .apple-planning-start-field { flex: 1 1 calc(50% - .325rem); }
+          main.apple-layout-preview .apple-plan-details-fields .apple-compact-detail-field { flex-basis: 10rem; }
           main.apple-layout-preview .apple-course-toolbar { grid-template-columns: 1fr; gap: .2rem; }
           main.apple-layout-preview .apple-clear-button { justify-self: start; }
           main.apple-layout-preview .course-row { grid-template-columns: 1fr; gap: .35rem; }
@@ -3878,14 +3885,16 @@ export default function Page() {
                     onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))}
                   />
                 </label>
-                <label className="apple-compact-detail-field apple-expected-graduation-field">
-                  <span>Expected graduation</span>
-                  <input type="text" value={planningContext.expectedGraduationTerm || "To be confirmed"} readOnly />
-                </label>
-                <label className="apple-compact-detail-field apple-planning-start-field">
-                  <span>Planning starts</span>
-                  <input type="text" value={planningStart} readOnly />
-                </label>
+                <div className="apple-horizon-detail-pair">
+                  <label className="apple-compact-detail-field apple-expected-graduation-field">
+                    <span>Expected graduation</span>
+                    <input type="text" value={planningContext.expectedGraduationTerm || "To be confirmed"} readOnly />
+                  </label>
+                  <label className="apple-compact-detail-field apple-planning-start-field">
+                    <span>Planning starts</span>
+                    <input type="text" value={planningStart} readOnly />
+                  </label>
+                </div>
               </div>
             </div>
           </section>
