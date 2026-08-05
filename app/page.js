@@ -3119,19 +3119,35 @@ export default function Page() {
         }
         main.apple-layout-preview .apple-standing-segmented button {
           width: 100%;
-          min-height: 0 !important;
+          min-height: 2.25rem !important;
           margin: 0;
-          padding: .1rem .35rem;
+          padding: .4rem .5rem;
           border: 1px solid #d9dadd;
           border-radius: .4rem;
           background: #fff;
           color: #111;
-          font-size: 11px;
+          font-size: 13px;
+          font-weight: 600;
         }
         main.apple-layout-preview .apple-standing-segmented button.is-selected {
           border-color: #0b5cad;
           background: #0b5cad;
           color: #fff;
+        }
+        main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: .35rem;
+          margin-top: .35rem;
+        }
+        main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options button {
+          min-height: 1.8rem !important;
+          padding: .2rem .35rem;
+          font-size: 11px;
+        }
+        @media (max-width: 30rem) {
+          main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
         }
         main.apple-layout-preview .apple-mini-fields {
           display: grid;
@@ -3166,6 +3182,42 @@ export default function Page() {
           color: #111;
           font-size: 11px;
           line-height: 1.1 !important;
+        }
+        main.apple-layout-preview .apple-plan-details-fields {
+          display: flex;
+          flex-wrap: wrap;
+          gap: .65rem;
+        }
+        main.apple-layout-preview .apple-plan-details-fields .apple-student-name-field {
+          flex: 0 1 28ch;
+          max-width: 100%;
+          order: 1;
+        }
+        main.apple-layout-preview .apple-plan-details-fields .apple-plan-creation-field { order: 4; }
+        main.apple-layout-preview .apple-plan-details-fields .apple-expected-graduation-field { order: 2; }
+        main.apple-layout-preview .apple-plan-details-fields .apple-planning-start-field { order: 3; }
+        main.apple-layout-preview .apple-plan-details-fields .apple-compact-detail-field {
+          flex: 0 1 10.5rem;
+        }
+        main.apple-layout-preview .apple-plan-details-fields .apple-expected-graduation-field > span {
+          font-size: 12px;
+        }
+        main.apple-layout-preview button.transfer-student-trigger {
+          width: auto;
+          min-height: 1.8rem !important;
+          margin: .65rem 0 0;
+          padding: .25rem .55rem;
+          border: 1px solid #0b5cad;
+          border-radius: .4rem;
+          background: #fff;
+          color: #0b47c8;
+          font-size: 11px;
+          font-weight: 600;
+          text-decoration: none;
+        }
+        main.apple-layout-preview button.transfer-student-trigger:hover {
+          border-color: #0b47c8;
+          background: #e4f1ff;
         }
         main.apple-layout-preview .non-major-commitments { margin: 1rem 0; padding: .8rem; border: 1px solid #d8e0ea; border-radius: .65rem; }
         main.apple-layout-preview .non-major-commitments summary { cursor: pointer; font-weight: 700; }
@@ -3445,6 +3497,9 @@ export default function Page() {
           main.apple-layout-preview .apple-heading-row { align-items: flex-start; }
           main.apple-layout-preview .apple-help-button span { display: none; }
           main.apple-layout-preview .apple-mini-fields { grid-template-columns: 1fr; }
+          main.apple-layout-preview .apple-plan-details-fields .apple-compact-detail-field { flex-basis: 100%; }
+          main.apple-layout-preview .apple-plan-details-fields .apple-expected-graduation-field,
+          main.apple-layout-preview .apple-plan-details-fields .apple-planning-start-field { flex: 1 1 calc(50% - .325rem); }
           main.apple-layout-preview .apple-course-toolbar { grid-template-columns: 1fr; gap: .2rem; }
           main.apple-layout-preview .apple-clear-button { justify-self: start; }
           main.apple-layout-preview .course-row { grid-template-columns: 1fr; gap: .35rem; }
@@ -3655,7 +3710,7 @@ export default function Page() {
                       transferEntryAcademicYear: ""
                     }))}
                   >
-                    Are you a transfer student? Choose your graduation year instead.
+                    Transfer students: Change graduation year
                   </button>
                 </>
               )}
@@ -3805,8 +3860,8 @@ export default function Page() {
                   </div>
                 </fieldset>
               )}
-              <div className="apple-mini-fields">
-                <label>
+              <div className="apple-mini-fields apple-plan-details-fields">
+                <label className="apple-student-name-field">
                   <span>Student name (optional)</span>
                   <input
                     type="text"
@@ -3815,7 +3870,7 @@ export default function Page() {
                     onChange={event => setFormData(current => ({ ...current, displayName: event.target.value }))}
                   />
                 </label>
-                <label>
+                <label className="apple-compact-detail-field apple-plan-creation-field">
                   <span>Plan creation date</span>
                   <input
                     type="date"
@@ -3823,11 +3878,11 @@ export default function Page() {
                     onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))}
                   />
                 </label>
-                <label>
+                <label className="apple-compact-detail-field apple-expected-graduation-field">
                   <span>Expected graduation</span>
                   <input type="text" value={planningContext.expectedGraduationTerm || "To be confirmed"} readOnly />
                 </label>
-                <label>
+                <label className="apple-compact-detail-field apple-planning-start-field">
                   <span>Planning starts</span>
                   <input type="text" value={planningStart} readOnly />
                 </label>
