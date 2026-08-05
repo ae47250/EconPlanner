@@ -12,7 +12,7 @@ import {
   selectedStatus,
   validateCoursePrerequisites,
   validateStudentPrerequisites
-} from "../lib/planning/prerequisiteValidation.js";
+} from "../lib/planning/prerequisiteFormValidation.js";
 import {
   createGeneratedPlannerSession,
   economicsResultFromReport,
@@ -380,11 +380,15 @@ function warningCourseCodes(message) {
 }
 
 function projectedWarningDetails(message) {
-  const match = String(message || "").match(/^(.+?) in ((?:Fall|Winter|Spring\/May|May|Summer) \d{4}) is a projected placement/i);
+  const match = String(message || "").match(
+    /^(.+?) in ((?:(?:Fall|Winter|Spring\/May|May|Summer) \d{4})|(?:\d{4}\/\d{4} term to be confirmed)) is a projected placement/i
+  );
   return match ? { course: match[1].trim(), term: match[2] } : null;
 }
 
 function projectedTermOrder(term) {
+  const academicYear = String(term || "").match(/^(\d{4})\/(\d{4}) term to be confirmed$/i);
+  if (academicYear) return Number(academicYear[1]) * 10 + 4;
   const match = String(term || "").match(/^(Fall|Winter|Spring\/May|May|Summer) (\d{4})$/i);
   if (!match) return Number.MAX_SAFE_INTEGER;
   const termOrder = { winter: 0, "spring/may": 1, may: 1, summer: 2, fall: 3 };

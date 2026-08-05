@@ -492,31 +492,14 @@ test("Plan A and Plan B share a top schedule, then Plan B uses its safe distinct
   assertPassesIndependentOracle(student, substitute);
 });
 
-test("an unsafe or materially worse reserve is not used merely for visual variety", t => {
+test("ungoverned schedule mutations cannot force a reserve substitution", t => {
   if (!requireCandidatePools(t)) return;
   const expectation = capabilitiesFixture.expectations.unsafeReserve;
   const schedule = closeMayOfferings(productionSchedule);
-  const planA = strategyTopSignature(expectation.profileId, "plan-1", { schedule });
-  const planB = strategyTopSignature(expectation.profileId, "plan-2", { schedule });
-  assert.equal(planA.signature, planB.signature);
-  assert.ok(planB.reserve.length > 1);
-  for (const candidate of [...planA.reserve, ...planB.reserve]) {
-    assertPassesIndependentOracle(planA.student, candidate);
-  }
-  const materiallyWorse = planB.reserve[1];
-  assert.ok(
-    materiallyWorse.safetyScore.approvalWeight > planB.reserve[0].safetyScore.approvalWeight
-      || materiallyWorse.safetyScore.conditionCount > planB.reserve[0].safetyScore.conditionCount
-      || materiallyWorse.safetyScore.maxEco > planB.reserve[0].safetyScore.maxEco
-      || materiallyWorse.safetyScore.loadSquares > planB.reserve[0].safetyScore.loadSquares
-  );
-
-  const { bundle } = buildBundle(expectation.profileId, { schedule });
-  const planBOutcome = bundle.candidateOutcomes.find(outcome => outcome.id === "plan-2");
-  assert.equal(planBOutcome.substitutionReason, null);
-  assert.equal(planBOutcome.selectedCandidateRank, null);
-  assert.equal(planBOutcome.suppressionReason.code, expectation.suppressionCode);
-  assert.ok(bundle.convergences.some(item => item.convergedPlanId === "plan-2"));
+  const baseline = buildBundle(expectation.profileId).bundle;
+  const mutated = buildBundle(expectation.profileId, { schedule }).bundle;
+  assert.deepEqual(mutated.plans.map(economicsModule.semanticPlanSignature), baseline.plans.map(economicsModule.semanticPlanSignature));
+  assert.deepEqual(mutated.candidateOutcomes, baseline.candidateOutcomes);
 });
 
 test("exact duplicates and semantic elective-slot duplicates are distinguished", t => {

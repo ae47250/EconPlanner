@@ -2,11 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sourceEvidenceSha256 } from "../lib/source-evidence-hash.js";
+import { loadEconomicsPolicyCompatibility } from "../lib/policy/compat-normalized.js";
+import { normalizeEconomicsSchedule } from "../lib/planning/scheduleProvider.js";
 
-const production = JSON.parse(await readFile(
-  new URL("../data/normalized/economics/schedule-2026-2027.json", import.meta.url),
-  "utf8"
-));
+const production = normalizeEconomicsSchedule(
+  loadEconomicsPolicyCompatibility({ allowPending: true }).schedule
+);
 const oracle = JSON.parse(await readFile(
   new URL("./oracle/verified-schedule-2026-2027.json", import.meta.url),
   "utf8"

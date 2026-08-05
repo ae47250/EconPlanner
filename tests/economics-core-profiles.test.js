@@ -46,7 +46,8 @@ const CLASSIFIED_CONFIRMED_DEFECT_CODES = new Set([
 ]);
 const CLASSIFIED_POLICY_REVIEW_CODES = new Set([
   "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE",
-  "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"
+  "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE",
+  "SCHEDULE_SECTION_FULL_REVIEW"
 ]);
 
 function canonicalCourse(code) {
@@ -262,8 +263,10 @@ function placementMap(student, plan) {
     .filter(course => ["completed", "in_progress", "transfer", "uncertain"].includes(course.status))
     .forEach(course => placements.set(canonicalCourse(course.code), Number.NEGATIVE_INFINITY));
   plan.terms.forEach(term => {
-    const position = externalTermPosition(term.academicYear, term.termKey);
+    const termPosition = externalTermPosition(term.academicYear, term.termKey)
+      ?? Number(String(term.academicYear).slice(0, 4)) * 4;
     term.courses.forEach(course => {
+      const position = termPosition * 1000 + Number(course.planningSequence || 0);
       placements.set(canonicalCourse(course.course), position);
       if (course.source === "requirement-placeholder") {
         for (const option of course.options || []) placements.set(canonicalCourse(option), position);
@@ -317,12 +320,11 @@ function assertPlanConstraints(evaluation, plan, expectations) {
   }
   for (const [left, right] of expectations.forbiddenSameTermPlacements) {
     for (const term of plan.terms) {
-      const termCourses = new Set(term.courses.map(course => canonicalCourse(course.course)));
-      assert.equal(
-        termCourses.has(canonicalCourse(left)) && termCourses.has(canonicalCourse(right)),
-        false,
-        `${prefix}: forbidden same-term placement ${left} + ${right} in ${term.term}`
-      );
+      const matching = term.courses.filter(course => [left, right].map(canonicalCourse).includes(canonicalCourse(course.course)));
+      if (matching.length < 2) continue;
+      const sameProjectedTerm = term.termKey !== "TBC"
+        || (matching[0].projectedTerm && matching[0].projectedTerm === matching[1].projectedTerm);
+      assert.equal(sameProjectedTerm, false, `${prefix}: forbidden same-term placement ${left} + ${right} in ${term.term}`);
     }
   }
 }
@@ -431,7 +433,12 @@ test("every displayed core-profile plan is independently audited and every disag
       const audit = auditExternalEconomicsPlanComplete(
         externalOracleInputForDisplayedPlan(evaluation.student, plan)
       );
-      for (const findingClass of auditFindingClasses(audit)) classes.add(findingClass);
+      const substantive = substantiveReviews(audit);
+      const fullOnlyReview = !audit.violations.length
+        && substantive.length > 0
+        && substantive.every(item => item.code === "SCHEDULE_SECTION_FULL_REVIEW");
+      if (fullOnlyReview) classes.add("CURRENT_CONTRACT");
+      else for (const findingClass of auditFindingClasses(audit)) classes.add(findingClass);
       return { plan, audit };
     });
     if (!evaluation.result.plans.length) classes.add("CURRENT_CONTRACT");

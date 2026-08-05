@@ -59,7 +59,7 @@ test("ECO 113 in progress does not unlock ECO 213", () => {
   assert.ok(result.issues.some(issue => issue.prerequisite === "ECO 113"));
 });
 
-test("completed target courses require completed prerequisites", () => {
+test("completed target courses are retained with a historical-evidence review", () => {
   const result = validateCoursePrerequisites({
     course: "ECO 214",
     targetStatus: "completed",
@@ -70,9 +70,11 @@ test("completed target courses require completed prerequisites", () => {
     prerequisites
   });
 
-  assert.equal(result.valid, false);
+  assert.equal(result.valid, true);
+  assert.equal(result.status, "REVIEW_REQUIRED");
   assert.deepEqual(result.conditionalApprovals, []);
-  assert.deepEqual(result.issues[0].options, ["MAT 113", "MAT 121"]);
+  assert.deepEqual(result.issues, []);
+  assert.equal(result.reviewFindings[0].reasonCode, "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW");
 });
 
 test("ECO 214 supports the same MAT 121 concurrency rule but not concurrent ECO 114", () => {

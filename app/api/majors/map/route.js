@@ -14,7 +14,6 @@ import {
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { compareRequirementSnapshots } from "../../../../lib/catalog/compare.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
-import { runShadowSafely } from "../../../../lib/decision-engine/shadow.js";
 
 export const runtime = "nodejs";
 
@@ -103,12 +102,19 @@ function electiveAdvisorAttention(results) {
 }
 
 function prerequisiteAdvisorAttention(validation) {
-  return validation.conditionalApprovals.map(item => ({
+  const approvals = validation.conditionalApprovals.map(item => ({
     code: `${item.code}_${item.course.replace(/\s/g, "_")}_${item.prerequisite.replace(/\s/g, "_")}`,
     title: "Concurrent enrollment approval",
     severity: "warning",
     message: item.message
   }));
+  const reviews = (validation.reviewFindings || []).map((finding, index) => ({
+    code: `HISTORY_REVIEW_${finding.subject?.course?.replace(/\s/g, "_") || index}`,
+    title: "Academic history review",
+    severity: "warning",
+    message: `${finding.subject?.course || "A recorded course"} is retained, but its historical prerequisite or transfer evidence requires advisor review.`
+  }));
+  return [...approvals, ...reviews];
 }
 
 function planAdvisorAttention(results) {
@@ -132,19 +138,6 @@ function planAdvisorAttention(results) {
   return [...new Map(notices.map(notice => [notice.message, notice])).values()];
 }
 
-async function shadowEconomicsPlans({ student, catalogYear, results, source }) {
-  const economics = results.find(result => result.program?.id === "economics-base");
-  if (!economics) return [];
-  return Promise.all((economics.economicsPlans || []).map(plan => runShadowSafely({
-    student,
-    plan,
-    productionValidation: plan.validation,
-    catalogYear,
-    context: { planningContext: economics.planningContext },
-    source
-  })));
-}
-
 function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = false } = {}) {
   return catalog.variants.filter(variant => !economicsOnly || variant.programId === "economics").map(variant => {
     const program = catalog.programs.find(item => item.id === variant.programId) || {
@@ -152,13 +145,19 @@ function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = f
       name: variant.label,
       sourceStatus: "DRAFT_REVIEW_REQUIRED"
     };
-    const mapping = mapStudentToProgram({ ...program, ...variant }, catalog.requirementsByProgram.get(program.id), student);
+    const mapping = mapStudentToProgram(
+      { ...program, ...variant },
+      catalog.requirementsByProgram.get(program.id),
+      student,
+      { policyBundle: catalog.policyBundle }
+    );
     if (mapping.risk.class === "INSUFFICIENT_INFORMATION") return mapping;
 
     const feasibility = analyzeFeasibility({
       student,
       mapping,
-      prerequisites: catalog.prerequisitesByProgram.get(program.id)
+      prerequisites: catalog.prerequisitesByProgram.get(program.id),
+      policyBundle: catalog.policyBundle
     });
     const riskReasons = [...new Set([...mapping.risk.reasons, ...feasibility.riskReasons])];
     const economicsPlanBundle = variant.programId === "economics"
@@ -167,7 +166,8 @@ function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = f
           mapping,
           schedule: catalog.economicsSchedule,
           prerequisites: catalog.prerequisitesByProgram.get(program.id),
-          courseCatalog: catalog.economicsCourses
+          courseCatalog: catalog.economicsCourses,
+          policyBundle: catalog.policyBundle
         })
       : null;
     const economicsPlanningGaps = economicsPlanBundle?.planningGaps || [];
@@ -219,14 +219,17 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
   const mapping = mapStudentToProgram(
     { ...program, ...variant },
     catalog.requirementsByProgram.get(program.id),
-    student
+    student,
+    { policyBundle: catalog.policyBundle }
   );
   const validation = validateGeneratedPlan(plan, {
     student,
     mapping,
     schedule: catalog.economicsSchedule,
     prerequisites: catalog.prerequisitesByProgram.get(program.id),
-    context: planningContext
+    context: planningContext,
+    policyBundle: catalog.policyBundle,
+    enforcePlanIntegrity: true
   });
   const validatedPlan = {
     ...plan,
@@ -316,7 +319,8 @@ export async function POST(request) {
     }
     const prerequisiteValidation = validateStudentPrerequisites(
       student.courses || [],
-      catalog.economicsPrerequisites
+      catalog.economicsPrerequisites,
+      { policyBundle: catalog.policyBundle }
     );
     if (!prerequisiteValidation.valid) {
       return jsonResponse({
@@ -340,14 +344,6 @@ export async function POST(request) {
       if (editedPlanResult.error) {
         return jsonResponse({ error: editedPlanResult.error }, 422);
       }
-      await runShadowSafely({
-        student,
-        plan: editedPlanResult.plan,
-        productionValidation: editedPlanResult.plan.validation,
-        catalogYear: catalogResolution.selectedCatalogYear,
-        context: { planningContext },
-        source: "major-map-edit-validation"
-      });
       if (!editedPlanResult.plan.validation.valid) {
         return jsonResponse({
           error: `That plan change cannot be saved. ${editedPlanResult.plan.validation.errors[0] || "It violates the Economics planning rules."}`,
@@ -383,12 +379,6 @@ export async function POST(request) {
 
     const economicsOnly = catalogResolution.catalogResolutionStatus === "economics_provisional_fallback";
     const results = mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly });
-    await shadowEconomicsPlans({
-      student,
-      catalogYear: catalogResolution.selectedCatalogYear,
-      results,
-      source: "major-map-generation"
-    });
     const advisorAttention = [
       ...catalogAdvisorAttention(catalogResolution, catalogReview, planningContext),
       ...electiveAdvisorAttention(results),
@@ -412,6 +402,8 @@ export async function POST(request) {
               : "entry_catalog_year_inferred_from_standing_and_plan_date")
           : "previous_approved_catalog_fallback",
         uncertainty: advisorAttention.length ? advisorAttention.map(notice => notice.message).join(" ") : null,
+        policyBundleVersion: catalog.policyBundleVersion,
+        policyBundleHash: catalog.policyBundleHash,
         availableCatalogYears: catalogYears,
         scope: economicsOnly ? "economics_only_provisional" : "catalog_snapshot"
       },

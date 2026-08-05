@@ -228,15 +228,17 @@ test("the August 5 owner confirmation is preserved in both governed provenance r
   assert.equal(entry.reviewedBy, "Project owner and Economics Department domain expert");
 });
 
-test("the compiled bundle does not switch runtime authority", async () => {
+test("the compiled bundle is the declared Economics runtime authority", async () => {
   const runtimePaths = [
     "lib/catalog/load.js", "lib/assignment/solve.js", "lib/planning/economics.js",
     "app/api/majors/map/route.js", "lib/reports/build-economics.js"
   ];
   for (const runtimePath of runtimePaths) {
     const contents = await readFile(new URL(runtimePath, repositoryRoot), "utf8");
-    assert.doesNotMatch(contents, /policy\/manifest|data\/compiled\/policy|load-bundle/iu, runtimePath);
+    if (runtimePath === "lib/catalog/load.js") assert.match(contents, /compat-normalized/iu, runtimePath);
+    assert.doesNotMatch(contents, /policy\/manifest/iu, runtimePath);
   }
-  await access(new URL("data/compiled/policy/active.json", repositoryRoot));
+  const active = await readJson("data/compiled/policy/active.json");
+  assert.equal(active.programs.ECONOMICS["2025-2026"].activationStatus, "ACTIVE");
   assert.ok(fileURLToPath(policyRoot).endsWith(`${process.platform === "win32" ? "\\" : "/"}policy${process.platform === "win32" ? "\\" : "/"}`));
 });

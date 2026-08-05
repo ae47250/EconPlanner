@@ -93,7 +93,7 @@ test("Explore First gives sophomores the introductory, intermediate, and statist
 
   assert.ok(firstYear.some(course => course.course === "ECO 114"));
   assert.ok(firstYear.some(course => course.course === "ECO 213"));
-  assert.ok(firstYear.some(course => course.course === "PSY 217"));
+  assert.ok(firstYear.some(course => ["ECO 257", "MAT 217", "PSY 217", "Statistics requirement"].includes(course.course)));
   assert.ok(!firstYear.some(course => String(course.requirementId).startsWith("eco-elective")));
 
   const mirrorStudent = {
@@ -106,7 +106,7 @@ test("Explore First gives sophomores the introductory, intermediate, and statist
   const mirrorFirstYear = mirror.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses);
   assert.ok(mirrorFirstYear.some(course => course.course === "ECO 113"));
   assert.ok(mirrorFirstYear.some(course => course.course === "ECO 214"));
-  assert.ok(mirrorFirstYear.some(course => course.course === "PSY 217"));
+  assert.ok(mirrorFirstYear.some(course => ["ECO 257", "MAT 217", "PSY 217", "Statistics requirement"].includes(course.course)));
 });
 
 test("Plan C is not considered for junior or senior students", () => {
@@ -147,7 +147,17 @@ test("generated plans cover every remaining academic year and suppress semantic 
         term.yearIndex === yearIndex && term.courses.length > 0
       ))));
     }
-    assert.ok(plan.terms.every(term => term.courses.length <= (["Spring", "May"].includes(term.termKey) ? 1 : 4)));
+    assert.ok(plan.terms.every(term => {
+      if (term.termKey !== "TBC") return term.courses.length <= (["Spring", "May"].includes(term.termKey) ? 1 : 4);
+      const projectedCounts = term.courses.reduce((counts, course) => {
+        const projectedTerm = course.projectedTerm || "TBC";
+        counts[projectedTerm] = (counts[projectedTerm] || 0) + 1;
+        return counts;
+      }, {});
+      return Object.entries(projectedCounts).every(([projectedTerm, count]) => (
+        count <= (["Spring", "May"].includes(projectedTerm) ? 1 : 4)
+      ));
+    }));
   }
   const signatures = bundle.plans.map(semanticPlanSignature);
   assert.equal(new Set(signatures).size, signatures.length);

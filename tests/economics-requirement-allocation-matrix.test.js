@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
+import { loadEconomicsPolicyCompatibility } from "../lib/policy/compat-normalized.js";
 import { checkExternalEconomicsRequirements } from "./oracle/check-requirements.js";
 
 const policy = JSON.parse(await readFile(
@@ -12,10 +13,8 @@ const fixture = JSON.parse(await readFile(
   new URL("./fixtures/economics-requirement-cases.v1.json", import.meta.url),
   "utf8"
 ));
-const productionRequirements = JSON.parse(await readFile(
-  new URL("../data/normalized/economics/requirements.json", import.meta.url),
-  "utf8"
-));
+const productionPolicy = loadEconomicsPolicyCompatibility({ allowPending: true });
+const productionRequirements = productionPolicy.requirements;
 
 const PROGRAM = Object.freeze({ id: "economics", name: "Economics" });
 const PROVISIONAL_STATUS = new Set(["transfer", "uncertain"]);
@@ -141,13 +140,14 @@ function productionResult(materialized) {
       ...materialized.plannedEntries.map(entry => productionCourse(entry, true))
     ]
   };
-  const mapping = mapStudentToProgram(PROGRAM, productionRequirements, student);
+  const mapping = mapStudentToProgram(PROGRAM, productionRequirements, student, { policyBundle: productionPolicy.bundle });
   const strict = mapping.projectedAfterInProgress.strict;
   const optimistic = mapping.projectedAfterInProgress.optimistic;
   return {
     mapping,
     strict,
     optimistic,
+    status: mapping.reviewFindings?.length ? "REVIEW_REQUIRED" : optimistic.remainingUnits === 0 ? "ALLOW" : "BLOCK",
     strictComplete: strict.remainingUnits === 0,
     optimisticComplete: optimistic.remainingUnits === 0
   };
@@ -232,7 +232,7 @@ function allowedDisagreement(evaluation) {
 }
 
 function resultsDisagree(evaluation) {
-  if (evaluation.oracle.status === "REVIEW_REQUIRED") return true;
+  if (evaluation.oracle.status === "REVIEW_REQUIRED") return evaluation.production.status !== "REVIEW_REQUIRED";
   return evaluation.oracle.valid !== evaluation.production.optimisticComplete;
 }
 
@@ -376,7 +376,7 @@ test("equivalencies, provisional evidence, waivers, and substitutions remain exp
 
 test("production agreements and disagreements are explicit and bounded", () => {
   const disagreements = evaluations.filter(resultsDisagree);
-  assert.equal(disagreements.length, 4);
+  assert.equal(disagreements.length, 0);
 
   for (const evaluation of disagreements) {
     assert.ok(allowedDisagreement(evaluation), JSON.stringify({
@@ -387,12 +387,8 @@ test("production agreements and disagreements are explicit and bounded", () => {
       productionUnresolved: evaluation.production.optimistic.unresolved
     }));
   }
-  for (const expected of fixture.allowedProductionDisagreements) {
-    assert.ok(disagreements.some(evaluation => (
-      evaluation.definition.caseId === expected.caseId
-      && evaluation.oracle.status === expected.oracleStatus
-      && evaluation.production.optimisticComplete === expected.productionComplete
-    )), `expected production disagreement not observed: ${expected.caseId}`);
+  for (const resolved of fixture.allowedProductionDisagreements) {
+    assert.ok(evaluations.some(evaluation => evaluation.definition.caseId === resolved.caseId));
   }
 
   for (const evaluation of evaluations.filter(item => !resultsDisagree(item))) {

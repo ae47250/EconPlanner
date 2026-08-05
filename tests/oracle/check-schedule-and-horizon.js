@@ -214,7 +214,7 @@ function checkOfferingSource({ policy, verifiedSchedule, term, termIndex, course
   });
 }
 
-function checkAvailability({ policy, course, path, violations, conditions, warnings }) {
+function checkAvailability({ policy, course, path, violations, conditions, warnings, reviewItems }) {
   const state = text(course.availability?.state || course.availability?.status).toLowerCase() || "unknown";
   if (state === "closed") {
     violations.push(finding(
@@ -223,6 +223,14 @@ function checkAvailability({ policy, course, path, violations, conditions, warni
       "SCHEDULE-AVAILABILITY-BEHAVIOR",
       `${path}.availability`,
       `${course.course} ${course.section || ""} is closed and cannot support the plan.`
+    ));
+  } else if (state === "full") {
+    reviewItems.push(finding(
+      policy,
+      "SCHEDULE_SECTION_FULL_REVIEW",
+      "SCHEDULE-AVAILABILITY-BEHAVIOR",
+      `${path}.availability`,
+      `${course.course} ${course.section || ""} is full and requires review under the unresolved FULL policy.`
     ));
   } else if (state === "waitlisted") {
     conditions.push(finding(
@@ -311,6 +319,23 @@ function capacityRule(policy, termKey) {
 
 function checkCapacity(policy, term, termIndex, violations) {
   const termKey = canonicalExternalTermKey(term.termKey);
+  if (termKey === "TBC") {
+    const projectedGroups = new Map();
+    for (const course of term.courses || []) {
+      const projectedTerm = canonicalExternalTermKey(course.projectedTerm);
+      if (!projectedTerm || projectedTerm === "TBC") continue;
+      projectedGroups.set(projectedTerm, [...(projectedGroups.get(projectedTerm) || []), course]);
+    }
+    for (const [projectedTerm, courses] of projectedGroups) {
+      checkCapacity(policy, {
+        ...term,
+        termKey: projectedTerm,
+        courses,
+        reservedOutsideCourseUnits: term.reservedOutsideCourseUnitsByProjectedTerm?.[projectedTerm] || 0
+      }, termIndex, violations);
+    }
+    return;
+  }
   const rule = capacityRule(policy, termKey);
   if (!rule) return;
   const reserved = Number(term.reservedOutsideCourseUnits || 0);
@@ -442,7 +467,7 @@ export function checkExternalEconomicsScheduleAndHorizon(input) {
         violations,
         preliminary
       });
-      checkAvailability({ policy, course, path, violations, conditions, warnings });
+      checkAvailability({ policy, course, path, violations, conditions, warnings, reviewItems });
     });
     checkMeetingConflicts(policy, term, termIndex, violations);
   });

@@ -5,6 +5,7 @@ import {
   evaluatePlanPrerequisites,
   evaluateStudentPrerequisites
 } from "../lib/planning/prerequisiteEvaluator.js";
+import { loadEconomicsPolicyCompatibility } from "../lib/policy/compat-normalized.js";
 import { checkExternalEconomicsPrerequisites } from "./oracle/check-prerequisites.js";
 
 const policy = JSON.parse(await readFile(
@@ -15,10 +16,8 @@ const fixture = JSON.parse(await readFile(
   new URL("./fixtures/economics-prerequisite-cases.v1.json", import.meta.url),
   "utf8"
 ));
-const productionPrerequisites = JSON.parse(await readFile(
-  new URL("../data/normalized/economics/prerequisites.json", import.meta.url),
-  "utf8"
-));
+const productionPolicy = loadEconomicsPolicyCompatibility({ allowPending: true });
+const productionPrerequisites = productionPolicy.prerequisites;
 
 const NIGHTLY = process.env.ECONOMICS_PREREQUISITE_MATRIX_NIGHTLY === "1";
 const REPORT = process.env.ECONOMICS_PREREQUISITE_MATRIX_REPORT === "1";
@@ -169,18 +168,36 @@ function approvalReason(rule) {
 }
 
 function approvalRecord(rule, dependent, prerequisite, anchor, oracleFormat) {
-  const productionPolicy = (productionPrerequisites[dependent]?.concurrentWithApproval || [])
+  const productionConcurrencyPolicy = (productionPrerequisites[dependent]?.concurrentWithApproval || [])
     .find(item => (item.options || []).includes(prerequisite));
   const productionCode = rule.ruleId === "CONCURRENT-INTERMEDIATE-ECO-461"
     ? "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL"
     : "CONCURRENT_MATH_INSTRUCTOR_APPROVAL";
+  if (!oracleFormat && rule.ruleId.startsWith("PERMISSION-")) {
+    const canonicalRule = productionPolicy.bundle.indexes.byRuleId[rule.ruleId];
+    const years = String(anchor.academicYear).match(/(\d{4})\D+(\d{4})/);
+    const termKey = String(anchor.termKey).toUpperCase() === "SPRING" ? "MAY" : String(anchor.termKey).toUpperCase();
+    const termId = `${termKey === "FALL" ? years[1] : years[2]}-${termKey}`;
+    return {
+      approvalId: `fixture-${rule.ruleId.toLowerCase()}`,
+      schemaVersion: "1.0.0",
+      ruleId: rule.ruleId,
+      status: "APPROVED",
+      scope: { course: dependent, termId, requirementId: null },
+      authority: "ECONOMICS_DEPARTMENT",
+      authorityBoundary: canonicalRule.authority.boundary,
+      evidenceRef: rule.sourceRefs[0],
+      effectiveDate: "2026-08-01",
+      expirationDate: null
+    };
+  }
   return {
     ...(oracleFormat
       ? { ruleId: rule.ruleId }
       : {
           code: productionCode,
-          policySource: productionPolicy?.policySource,
-          sourceRef: productionPolicy?.sourceRef
+          policySource: productionConcurrencyPolicy?.policySource,
+          sourceRef: productionConcurrencyPolicy?.sourceRef
         }),
     type: approvalType(rule, oracleFormat),
     authority: rule.approvalAuthority,
@@ -194,6 +211,14 @@ function approvalRecord(rule, dependent, prerequisite, anchor, oracleFormat) {
 
 function mutatedApproval(record, mutation, oracleFormat) {
   const value = structuredClone(record);
+  if (!oracleFormat && value.approvalId) {
+    if (mutation === "type" || mutation === "authority") value.authority = "REGISTRAR";
+    else if (mutation === "course") value.scope.course = "ECO 999";
+    else if (mutation === "prerequisite") value.ruleId = "PERMISSION-ECO-999";
+    else if (mutation === "term") value.scope.termId = "2099-WINTER";
+    else if (mutation === "source") value.evidenceRef = "unverified";
+    return value;
+  }
   if (mutation === "type") {
     value.type = oracleFormat
       ? (value.type === "INSTRUCTOR_APPROVAL" ? "DEPARTMENT_APPROVAL" : "INSTRUCTOR_APPROVAL")
@@ -328,11 +353,12 @@ function makeOracleCourse(course, anchor, approval, claim) {
   };
 }
 
-function makeProductionCourse(course, approval) {
+function makeProductionCourse(course, approval, prerequisiteClaims = []) {
   return {
     course,
     ...(course === "ECO 461" ? { residency: "hanover" } : {}),
-    ...(approval ? { approvalRequired: [approval] } : {})
+    ...(approval ? { approvalRequired: [approval] } : {}),
+    ...(prerequisiteClaims.length ? { prerequisiteClaims } : {})
   };
 }
 
@@ -545,6 +571,7 @@ function makeReviewOnlyCase(definition) {
   let completed = new Set();
   let planCourses = [];
   let productionRecords = [];
+  let productionClaims = [];
 
   if (definition.kind === "advanced-course-closure") {
     completed.add(definition.course);
@@ -561,6 +588,7 @@ function makeReviewOnlyCase(definition) {
       prerequisite: definition.prerequisite,
       authority: "not independently confirmed"
     };
+    productionClaims = [claim];
     planCourses = [makeOracleCourse(definition.course, anchor, null, claim)];
     productionRecords = directProductionRecords(completed, []);
   }
@@ -595,7 +623,7 @@ function makeReviewOnlyCase(definition) {
           ? [{
             ...anchor,
             absoluteStandingIndex: 2,
-            courses: [makeProductionCourse(definition.course, null)]
+            courses: [makeProductionCourse(definition.course, null, productionClaims)]
           }]
           : []
       }
@@ -629,10 +657,16 @@ function productionResult(input) {
     plan: input.plan,
     student: input.student,
     prerequisites: productionPrerequisites,
-    requireRecordedApprovals: true
+    requireRecordedApprovals: true,
+    policyBundle: productionPolicy.bundle
   });
   return {
     valid: studentResult.valid && planResult.valid,
+    status: studentResult.status === "REVIEW_REQUIRED" || planResult.status === "REVIEW_REQUIRED"
+      ? "REVIEW_REQUIRED"
+      : !studentResult.valid || !planResult.valid
+        ? "BLOCK"
+        : "ALLOW",
     studentResult,
     planResult
   };
@@ -673,7 +707,7 @@ function assertOracleOutcome(evaluation) {
 }
 
 function resultsDisagree(evaluation) {
-  if (evaluation.oracle.status === "REVIEW_REQUIRED") return true;
+  if (evaluation.oracle.status === "REVIEW_REQUIRED") return evaluation.production.status !== "REVIEW_REQUIRED";
   return evaluation.oracle.valid !== evaluation.production.valid;
 }
 
@@ -701,12 +735,11 @@ function assertProductionDisagreements(evaluations, suiteName) {
     }));
   }
   const scenarioIds = new Set(evaluations.map(item => item.matrixCase.scenarioId));
-  for (const expected of fixture.allowedProductionDisagreements.filter(item => scenarioIds.has(item.scenarioId))) {
-    assert.ok(disagreements.some(evaluation => (
-      evaluation.matrixCase.scenarioId === expected.scenarioId
-      && evaluation.oracle.status === expected.oracleStatus
-      && evaluation.production.valid === expected.productionValid
-    )), `${suiteName}: expected disagreement not observed for ${expected.scenarioId}`);
+  for (const resolved of fixture.allowedProductionDisagreements.filter(item => scenarioIds.has(item.scenarioId))) {
+    assert.ok(
+      evaluations.some(evaluation => evaluation.matrixCase.scenarioId === resolved.scenarioId),
+      `${suiteName}: missing classified legacy scenario ${resolved.scenarioId}`
+    );
   }
   return disagreements;
 }
@@ -774,14 +807,19 @@ test(`bounded pull-request prerequisite subset audits ${pullRequestCases.length}
   const evaluations = pullRequestCases.map(evaluateMatrixCase);
   evaluations.forEach(assertOracleOutcome);
   const disagreements = assertProductionDisagreements(evaluations, "pull-request");
-  assert.equal(disagreements.length, 113);
+  assert.equal(disagreements.length, 0);
   if (REPORT) {
     console.log(JSON.stringify({
       suite: "pull-request",
       confirmedEdges: edges.length,
       cases: evaluations.length,
       productionDisagreements: disagreements.length,
-      disagreementClasses: disagreementClassCounts(disagreements)
+      disagreementClasses: disagreementClassCounts(disagreements),
+      disagreementScenarios: disagreements.reduce((counts, evaluation) => {
+        const scenarioId = evaluation.matrixCase.scenarioId;
+        counts[scenarioId] = (counts[scenarioId] || 0) + 1;
+        return counts;
+      }, {})
     }, null, 2));
   }
 });
@@ -804,7 +842,7 @@ test(
     const evaluations = nightlyOnlyCases.map(evaluateMatrixCase);
     evaluations.forEach(assertOracleOutcome);
     const disagreements = assertProductionDisagreements(evaluations, "nightly-only");
-    assert.equal(disagreements.length, 5);
+    assert.equal(disagreements.length, 0);
     if (REPORT) {
       console.log(JSON.stringify({
         suite: "nightly-only",

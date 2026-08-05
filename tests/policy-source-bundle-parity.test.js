@@ -32,7 +32,7 @@ test("the bundle digest covers canonical payload bytes and active.json pins the 
   const pinned = active.programs.ECONOMICS["2025-2026"];
   assert.equal(pinned.bundleVersion, bundle.bundleVersion);
   assert.equal(pinned.contentHash, contentHash);
-  assert.equal(pinned.activationStatus, "PENDING_OWNER_APPROVAL");
+  assert.equal(pinned.activationStatus, "ACTIVE");
 });
 
 test("generated compatibility views are byte-stable semantic matches for current normalized runtime inputs", async () => {

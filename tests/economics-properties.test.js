@@ -15,6 +15,7 @@ import { buildRequirementAllocation } from "../lib/planning/requirementAllocatio
 import {
   meetingsConflict,
   normalizeEconomicsSchedule,
+  scheduleOfferingDecision,
   scheduleOfferings,
   selectConflictFreeOffering
 } from "../lib/planning/scheduleProvider.js";
@@ -624,7 +625,7 @@ fixedSeedProperty(
 );
 
 fixedSeedProperty(
-  "adding a conflict-free open section cannot reduce feasible section options",
+  "an ungoverned injected section cannot change authoritative section options",
   fc.record({
     profile: generatedProfileArbitrary,
     offeringCase: fc.constantFrom(...meetingCompleteOfferingCases)
@@ -656,11 +657,14 @@ fixedSeedProperty(
       provenance: { sourceType: "fictional-property-test" }
     });
     const after = eligibleOfferings(expandedSchedule, slot, offeringCase.course, selectedCourses);
-    propertyInvariant(after.length >= before.length, "Adding an open conflict-free section reduced eligible options.");
+    const injected = scheduleOfferings(expandedSchedule, slot, offeringCase.course)
+      .find(offering => offering.section?.startsWith("P"));
+    propertyInvariant(Boolean(injected), "The injected test section was not present in the supplied schedule.");
     propertyInvariant(
-      Boolean(selectConflictFreeOffering(expandedSchedule, slot, offeringCase.course, selectedCourses)),
-      "The added open conflict-free section could not be selected."
+      scheduleOfferingDecision(injected, slot).status === "BLOCK",
+      "An injected section was treated as bundle-authoritative."
     );
+    propertyInvariant(after.length >= before.length, "The local schedule view lost an existing option.");
   },
   { seedOffset: 6 }
 );

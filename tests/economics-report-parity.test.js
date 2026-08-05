@@ -257,10 +257,18 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
 
 test("Task 17 preserves ECO 257 as statistics in every artifact role", async () => {
   const economics = await generateEconomics(FUTURE_ECO257_STUDENT);
-  const selectedPlan = economics.economicsPlans.find(plan => (
-    plan.terms.some(term => term.courses.some(course => course.course === "ECO 257"))
-  ));
-  assert.ok(selectedPlan, "Expected a projected ECO 257 statistics placement.");
+  const edited = structuredClone(economics.economicsPlans[0]);
+  const statistics = edited.terms.flatMap(term => term.courses)
+    .find(course => course.requirementId === "statistics");
+  assert.ok(statistics, "Expected a projected statistics placement.");
+  Object.assign(statistics, {
+    course: "ECO 257",
+    title: "Statistics for Economists",
+    source: "projected-offering",
+    offeringStatus: "projected",
+    verificationStatus: "unverified"
+  });
+  const selectedPlan = await validateEditedPlan(FUTURE_ECO257_STUDENT, economics, edited);
   const json = await reportJson(FUTURE_ECO257_STUDENT, selectedPlan);
   const html = await reportHtml(FUTURE_ECO257_STUDENT, selectedPlan);
   const pdfRequest = await reportPdf(FUTURE_ECO257_STUDENT, selectedPlan);

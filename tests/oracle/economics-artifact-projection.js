@@ -126,9 +126,9 @@ function htmlScheduleTerms(html) {
         const label = decodeHtml(entry[2]);
         const identity = label.match(/^([A-Z]{2,5}\s+\d{3})(?:-([^\s]+))?$/);
         const note = decodeHtml(entry[4]);
-        const availability = note.match(/ - (open|closed|waitlisted|unknown)(?:\s|\(|$)/i);
+        const availability = note.match(/ - (open|full|closed|waitlisted|unknown)(?:\s|\(|$)/i);
         const approval = note.match(/ - ([^-]+?) approval for concurrent ([A-Z]{2,5}\s+\d{3})/i);
-        const title = note.split(/ - (?:open|closed|waitlisted|unknown)(?:\s|\(|$)| - [^-]+? approval for concurrent /i)[0].trim();
+        const title = note.split(/ - (?:open|full|closed|waitlisted|unknown)(?:\s|\(|$)| - [^-]+? approval for concurrent /i)[0].trim();
         courses.push({
           code: identity?.[1] || label || null,
           section: identity?.[2] || null,

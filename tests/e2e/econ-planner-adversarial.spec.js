@@ -10,7 +10,7 @@ const WCAG_AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 // Timing-sensitive tests use explicit request gates or browser events, never sleeps.
 
 const PROJECTED_MOVE_PROFILE = Object.freeze({
-  academicStanding: "sophomore",
+  academicStanding: "freshman",
   planCreationDate: "2026-07-30",
   courses: [
     "ECO 113", "ECO 114", "MAT 113", "MAT 217", "BUSN 323",
@@ -320,7 +320,7 @@ test("@pr timing-sensitive in-memory edit lock blocks duplicate clicks and relea
   await page.unroute("**/api/majors/map");
 
   const successfulMove = page.waitForResponse(response => isMapRequest(response.request(), "validate-plan"));
-  await page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("winter-2028");
+  await page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("term-to-confirm-2027/2028");
   expect((await successfulMove).status()).toBe(200);
   await expect(planEditStatus(page)).toContainText("Plan A was updated and remains valid.");
   const afterSuccess = planSignatures(await savedSession(page));
@@ -544,16 +544,16 @@ test("@nightly transfer validation and prerequisite dialog semantics survive nar
   await assertNoHorizontalOverflow(page, "narrow transfer validation");
 
   await page.getByRole("button", { name: "Use regular class-year choices" }).click();
-  const completed213 = page
+  const inProgress213 = page
     .getByRole("group", { name: "Status for ECO 213" })
-    .getByRole("button", { name: "Completed", exact: true });
-  await completed213.focus();
+    .getByRole("button", { name: "In progress", exact: true });
+  await inProgress213.focus();
   await page.keyboard.press("Enter");
   const dialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
   await expect(dialog).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
-  await expect(completed213).toBeFocused();
+  await expect(inProgress213).toBeFocused();
   await assertVisibleFocus(page, "ECO 213 after prerequisite dialog closes");
   await assertNoHorizontalOverflow(page, "narrow dialog recovery");
 });

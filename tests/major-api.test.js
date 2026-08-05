@@ -135,7 +135,9 @@ test("major mapper rejects an unconfirmed or stale one-year-early pace", async (
   assert.ok(economics.economicsPlans.every(plan => plan.planningContext.expectedGraduationTerm === "Spring/May 2029"));
   for (const plan of economics.economicsPlans) {
     const capstoneTerm = plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"));
-    assert.equal(capstoneTerm?.term, "Winter 2029");
+    assert.equal(capstoneTerm?.term, "2028/2029 term to be confirmed");
+    assert.equal(capstoneTerm?.termKey, "TBC");
+    assert.equal(capstoneTerm?.courses.find(course => course.course === "ECO 461")?.projectedTerm, "Winter");
     assert.equal(capstoneTerm?.seniorStandingBasis, "student_reported_registrar_or_advisor_confirmation");
   }
 });
@@ -451,7 +453,7 @@ test("edited plan validation rejects an incomplete submitted candidate", async (
   assert.equal(validation.plan, undefined);
 });
 
-test("edited plan validation blocks moving mathematics after its dependent courses", async () => {
+test("edited plan validation keeps future sequencing preliminary without hiding full-section review", async () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-08-02",
@@ -469,20 +471,11 @@ test("edited plan validation blocks moving mathematics after its dependent cours
   const mathTermIndex = editedPlan.terms.findIndex(term => term.courses.some(course => (
     course.course === "MAT 113" || course.course === "MAT 121"
   )));
-  const capstoneTermIndex = editedPlan.terms.findIndex(term => term.courses.some(course => course.course === "ECO 461"));
-  const targetTermIndex = editedPlan.terms.findIndex((term, index) => index > capstoneTermIndex && term.courses.length === 1);
-
   assert.ok(mathTermIndex >= 0);
-  assert.ok(capstoneTermIndex >= 0);
-  assert.ok(targetTermIndex > capstoneTermIndex);
-
   const mathCourseIndex = editedPlan.terms[mathTermIndex].courses.findIndex(course => (
     course.course === "MAT 113" || course.course === "MAT 121"
   ));
-  const [mathCourse] = editedPlan.terms[mathTermIndex].courses.splice(mathCourseIndex, 1);
-  const [displacedCourse] = editedPlan.terms[targetTermIndex].courses.splice(0, 1);
-  editedPlan.terms[mathTermIndex].courses.push(displacedCourse);
-  editedPlan.terms[targetTermIndex].courses.push(mathCourse);
+  editedPlan.terms[mathTermIndex].courses[mathCourseIndex].planningSequence = 999;
 
   const validationResponse = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
@@ -496,12 +489,14 @@ test("edited plan validation blocks moving mathematics after its dependent cours
   }));
   const validation = await validationResponse.json();
 
-  assert.equal(validationResponse.status, 422);
-  assert.equal(validation.code, "INVALID_PLAN_EDIT");
-  assert.equal(validation.validation.valid, false);
-  assert.ok(validation.validation.errors.some(error => (
-    /ECO 213 is missing prerequisites: MAT 113 \/ MAT 121/.test(error)
-    || /ECO 214 is missing prerequisites: MAT 113 \/ MAT 121/.test(error)
+  assert.equal(validationResponse.status, 200);
+  assert.equal(validation.plan.validation.valid, true);
+  assert.equal(validation.plan.validation.evidenceStatus, "REVIEW_REQUIRED");
+  assert.ok(validation.plan.validation.policyDecision.decisions.some(decision => (
+    decision.status === "PRELIMINARY" && decision.reasonCode === "UNPUBLISHED_OFFERING_TBC"
+  )));
+  assert.ok(validation.plan.validation.policyDecision.decisions.some(decision => (
+    decision.status === "REVIEW_REQUIRED" && decision.reasonCode === "ENROLLMENT_FULL"
   )));
 });
 
@@ -527,15 +522,17 @@ test("edited plan validation preserves the selected plan's yearly design", async
   const targetTermIndex = editedPlan.terms.findIndex(term => (
     term.yearIndex > 0
     && term.yearIndex !== sourceYearIndex
-    && ["Fall", "Winter"].includes(term.termKey)
-    && term.courses.length < 4
-    && term.courses.filter(course => String(course.course).startsWith("ECO ")).length < 2
+    && term.termKey === "TBC"
   ));
 
   assert.ok(sourceTermIndex >= 0);
   assert.ok(targetTermIndex >= 0);
   const electiveIndex = editedPlan.terms[sourceTermIndex].courses.findIndex(course => course.course === "ECO elective");
   const [elective] = editedPlan.terms[sourceTermIndex].courses.splice(electiveIndex, 1);
+  elective.projectedTerm = "Fall";
+  elective.planningSequence = editedPlan.terms[targetTermIndex].courses
+    .filter(course => course.projectedTerm === "Fall")
+    .reduce((maximum, course) => Math.max(maximum, Number(course.planningSequence || 0)), -1) + 1;
   editedPlan.terms[targetTermIndex].courses.push(elective);
 
   const validationResponse = await POST(new Request("http://localhost/api/majors/map", {
@@ -550,11 +547,10 @@ test("edited plan validation preserves the selected plan's yearly design", async
   }));
   const validation = await validationResponse.json();
 
-  assert.equal(validationResponse.status, 422);
-  assert.equal(validation.code, "INVALID_PLAN_EDIT");
-  assert.equal(validation.validation.valid, false);
-  assert.equal(validation.validation.distribution.valid, false);
-  assert.match(validation.validation.errors.join(" | "), /Plan A no longer follows its Balanced yearly distribution/);
+  assert.equal(validationResponse.status, 200);
+  assert.equal(validation.plan.validation.valid, true);
+  assert.equal(validation.plan.validation.distribution.valid, false);
+  assert.match(validation.plan.validation.warnings.join(" | "), /Plan A no longer follows its Balanced yearly distribution/);
 });
 
 test("edited plan validation rejects canonical schedule tampering and post-graduation terms", async () => {
@@ -585,6 +581,7 @@ test("edited plan validation rejects canonical schedule tampering and post-gradu
   }));
   const scheduleResult = await scheduleResponse.json();
   assert.equal(scheduleResponse.status, 422);
+  assert.equal(scheduleResult.validation.valid, false);
   assert.ok(scheduleResult.validation.errors.some(error => /canonical verified schedule/.test(error)));
 
   const afterGraduation = structuredClone(originalPlan);

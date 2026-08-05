@@ -125,11 +125,11 @@ for (const viewport of VIEWPORTS) {
       await page.keyboard.press("Space");
       await expect(transferRegion).toHaveCount(0);
 
-      const completed213 = courseStatus(page, "ECO 213", "Completed");
+      const inProgress213 = courseStatus(page, "ECO 213", "In progress");
       await page.evaluate(() => document.activeElement?.blur());
-      await tabTo(page, active => active.name === "Completed" && active.group === "Status for ECO 213");
-      await expect(completed213).toBeFocused();
-      await assertVisibleFocus(page, `${viewport.name} ECO 213 Completed button`);
+      await tabTo(page, active => active.name === "In progress" && active.group === "Status for ECO 213");
+      await expect(inProgress213).toBeFocused();
+      await assertVisibleFocus(page, `${viewport.name} ECO 213 In progress button`);
       await page.keyboard.press("Space");
 
       const dialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
@@ -144,7 +144,7 @@ for (const viewport of VIEWPORTS) {
       expect.soft(await dialog.evaluate(element => element.contains(document.activeElement)), "The inline non-modal dialog should allow backward keyboard exit").toBe(false);
       await page.keyboard.press("Escape");
       await expect(dialog).toHaveCount(0);
-      await expect(completed213).toBeFocused();
+      await expect(inProgress213).toBeFocused();
 
       await page.keyboard.press("Enter");
       await expect(dialog).toBeVisible();
@@ -153,7 +153,7 @@ for (const viewport of VIEWPORTS) {
       expect.soft(await dialog.evaluate(element => element.contains(document.activeElement)), "The inline non-modal dialog must not create a keyboard trap").toBe(false);
       await page.keyboard.press("Escape");
       await expect(dialog).toHaveCount(0);
-      await expect(completed213).toBeFocused();
+      await expect(inProgress213).toBeFocused();
     });
 
     test("plan comparison, advisor warnings, and selected-plan tabs remain accessible", async ({ page }) => {

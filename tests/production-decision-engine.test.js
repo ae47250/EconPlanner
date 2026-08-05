@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
 import {
+  auditStudentHistory,
   evaluateOffering,
   evaluatePlan,
   evaluatePrerequisites,
@@ -13,8 +14,7 @@ import {
 
 const bundle = await loadPolicyBundle({
   expectedVersion: "econ-2025-2026.1",
-  expectedHash: "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7",
-  allowPending: true
+  expectedHash: "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7"
 });
 const facts = normalizeStudentFacts({ planCreationDate: "2026-08-05", courses: [] });
 
@@ -34,7 +34,7 @@ function verifiedElectivePlan() {
 test("the approved CP2 bundle loads immutably with its exact digest", () => {
   assert.equal(bundle.bundleVersion, "econ-2025-2026.1");
   assert.equal(bundle.contentHash, "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7");
-  assert.equal(bundle.activationStatus, "PENDING_OWNER_APPROVAL");
+  assert.equal(bundle.activationStatus, "ACTIVE");
   assert.equal(Object.isFrozen(bundle), true);
   assert.equal(Object.isFrozen(bundle.rules), true);
 });
@@ -53,9 +53,16 @@ test("prerequisites distinguish prior evidence, missing evidence, and approved c
   assert.equal(prior.status, "ALLOW");
   const concurrent = evaluatePrerequisites({
     course: "ECO 213",
-    approvalRequired: [{ course: "ECO 213", prerequisite: "MAT 113", type: "INSTRUCTOR_APPROVAL" }]
-  }, {}, facts, bundle, { traceId: "fixture", availableCourses: new Set(["ECO 113"]), sameTermCourses: new Set(["ECO 213", "MAT 113"]) });
-  assert.equal(concurrent.status, "ALLOW");
+    approvalRequired: [{
+      course: "ECO 213",
+      prerequisite: "MAT 113",
+      type: "INSTRUCTOR_APPROVAL",
+      term: "Fall 2026",
+      reason: "concurrent_math",
+      policySource: "Economics Department policy"
+    }]
+  }, { term: "Fall 2026" }, facts, bundle, { traceId: "fixture", availableCourses: new Set(["ECO 113"]), sameTermCourses: new Set(["ECO 213", "MAT 113"]) });
+  assert.equal(concurrent.status, "CONDITIONAL");
 });
 
 test("offering evidence keeps FULL under review and future projections preliminary", () => {
@@ -78,6 +85,25 @@ test("completed advanced history is preserved as review rather than erased or in
   const recorded = evaluateRecordedCourse({ course: "ECO 331", status: "COMPLETED", prerequisiteEvidence: [] }, facts, bundle, { traceId: "fixture" });
   assert.equal(recorded.status, "REVIEW_REQUIRED");
   assert.deepEqual(recorded.ruleIds, ["HISTORY-COMPLETED-ADVANCED-PRESERVED"]);
+});
+
+test("unresolved equivalency scope remains a traceable non-enforcing review decision", () => {
+  const ruleId = "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE";
+  assert.equal(bundle.indexes.byRuleId[ruleId], undefined);
+  const audit = auditStudentHistory({
+    planCreationDate: "2026-08-05",
+    courses: [{ code: "ECO 113", status: "transfer", source: "transfer_equivalency" }]
+  }, bundle, { traceId: "review-fixture" });
+  const finding = audit.reviewFindings.find(decision => decision.reasonCode === "COURSE_EVIDENCE_SCOPE_REVIEW");
+  assert.ok(finding);
+  assert.equal(finding.status, "REVIEW_REQUIRED");
+  assert.deepEqual(finding.ruleIds, [ruleId]);
+  assert.deepEqual(finding.sourceRefs, ["ECONOMICS-REQUIREMENTS#Use-of-This-File"]);
+  assert.equal(finding.policyDisposition.disposition, "REVIEW_ONLY");
+  assert.equal(finding.policyDisposition.enforcement, "NON_ENFORCING");
+  assert.equal(finding.policyDisposition.status, "REVIEW_REQUIRED");
+  assert.equal(finding.provenance[0].sourceId, "ECONOMICS-REQUIREMENTS");
+  assert.ok(audit.decisions.every(decision => decision.status !== "ALLOW" && decision.status !== "BLOCK"));
 });
 
 test("whole-plan decision p95 stays below 100ms", () => {

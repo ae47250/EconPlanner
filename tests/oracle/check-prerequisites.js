@@ -74,7 +74,13 @@ function termLabel(termKey, academicYear) {
 
 function evidencePosition(entry) {
   if (entry.state === "completed") return Number.NEGATIVE_INFINITY;
-  return externalTermPosition(entry.academicYear, entry.termKey);
+  const termPosition = externalTermPosition(entry.academicYear, entry.termKey);
+  if (termPosition === null) return null;
+  if (entry.termKey !== "TBC") return termPosition;
+  const projectedRank = new Map([["Fall", 0], ["Winter", 1], ["Spring", 2], ["May", 2], ["Spring/May", 2]]);
+  return projectedRank.has(entry.projectedTerm)
+    ? termPosition + projectedRank.get(entry.projectedTerm) / 10
+    : termPosition + Math.floor(Number(entry.planningSequence || 0) / 100) / 10;
 }
 
 function collectEvidence(student, plan) {
@@ -427,7 +433,7 @@ function validateCapstone({
   violations
 }) {
   const winterRule = ruleById(policy, "CAPSTONE-WINTER-ONLY");
-  if (!winterRule.allowedTerms.map(canonicalExternalTermKey).includes(entry.termKey)) {
+  if (entry.termKey !== "TBC" && !winterRule.allowedTerms.map(canonicalExternalTermKey).includes(entry.termKey)) {
     violations.push(makeFinding(
       policy,
       winterRule.ruleId,

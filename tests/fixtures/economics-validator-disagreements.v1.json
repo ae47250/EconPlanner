@@ -161,10 +161,10 @@
       "mutationId": "CLOSED_SECTION",
       "baselineId": "full-sequence",
       "ruleId": "SCHEDULE-AVAILABILITY-BEHAVIOR",
-      "expectedProductionResult": "REJECT",
+      "expectedProductionResult": "ACCEPT",
       "expectedOracleResult": "REJECT",
-      "status": "AGREEMENT",
-      "followUp": "Keep closed sections from supporting feasible plans."
+      "status": "POLICY_REVIEW",
+      "followUp": "Keep raw Full sections under explicit review until the owner resolves the FULL policy."
     },
     {
       "id": "VAL-016-DIRECT-MEETING-CONFLICT",

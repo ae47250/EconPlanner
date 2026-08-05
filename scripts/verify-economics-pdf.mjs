@@ -209,6 +209,7 @@ async function prepareProfile(profile, defaultPreparedDate, htmlTemplate) {
   const economics = await generateEconomics(profile.student);
   const selectedPlan = structuredClone(economics.economicsPlans.find(plan => plan.id === profile.selectedPlanId));
   invariant(selectedPlan, `${profile.id}: selected plan ${profile.selectedPlanId} was not generated.`);
+  applySelectedPlanMutations(selectedPlan, profile.selectedPlanMutations || [], profile.id);
 
   const report = await requestReportJson(profile.student, selectedPlan, preparedDate);
   let html = await requestReportHtml(profile.student, selectedPlan, preparedDate);
@@ -231,6 +232,26 @@ async function prepareProfile(profile, defaultPreparedDate, htmlTemplate) {
   invariant(htmlProjection.selectedPlanId === profile.selectedPlanId, `${profile.id}: HTML selected a different plan.`);
 
   return { profile, economics, selectedPlan, report, html, projection: htmlProjection, preparedDate };
+}
+
+function applySelectedPlanMutations(selectedPlan, mutations, profileId) {
+  for (const mutation of mutations) {
+    const matches = selectedPlan.terms.flatMap(term => term.courses)
+      .filter(course => course.requirementId === mutation.requirementId);
+    invariant(matches.length === 1, `${profileId}: expected one ${mutation.requirementId} placement to mutate.`);
+    const previousCourse = matches[0].course;
+    Object.assign(matches[0], structuredClone(mutation.replacement), {
+      requirementId: mutation.requirementId
+    });
+    for (const container of [selectedPlan, selectedPlan.feasibility]) {
+      if (!container) continue;
+      for (const field of ["warnings", "studentMessages"]) {
+        container[field] = (container[field] || []).map(message => (
+          String(message).replaceAll(previousCourse, mutation.replacement.course)
+        ));
+      }
+    }
+  }
 }
 
 async function generateEconomics(student) {
@@ -601,6 +622,10 @@ function validateFixture(value) {
     invariant(["report-route", "rendered-html"].includes(profile.executionMode), `${profile.id}: invalid executionMode.`);
     invariant(profile.selectedPlanId, `${profile.id}: selectedPlanId is required.`);
     invariant(profile.expectations, `${profile.id}: expectations are required.`);
+    for (const mutation of profile.selectedPlanMutations || []) {
+      invariant(mutation.requirementId, `${profile.id}: selected-plan mutation requirementId is required.`);
+      invariant(mutation.replacement?.course, `${profile.id}: selected-plan mutation course is required.`);
+    }
   }
 }
 

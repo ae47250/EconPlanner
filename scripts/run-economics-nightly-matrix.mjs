@@ -9,7 +9,7 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { performance } from "node:perf_hooks";
 import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
-import { runDecisionEngineShadow } from "../lib/decision-engine/shadow.js";
+import { buildDecisionComparisonRecord } from "../lib/decision-engine/shadow.js";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import {
   buildEconomicsTermPlans,
@@ -42,6 +42,10 @@ const DEFAULT_SEEDS = Object.freeze([
   20270323,
   20270429
 ]);
+const CP4_FROZEN_CONVERGENCE_PROFILES = Object.freeze([
+  "fictional-econ-20260805-c014e0de",
+  "fictional-econ-20270117-a6a8df79"
+]);
 const PROGRAM = Object.freeze({ id: "economics", name: "Economics" });
 const METRIC_SCHEMA_VERSION = 2;
 const STRATEGY_NAMES = Object.freeze({
@@ -60,7 +64,8 @@ const CLASSIFIED_ORACLE_VIOLATIONS = new Set([
 ]);
 const CLASSIFIED_ORACLE_REVIEWS = new Set([
   "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE",
-  "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"
+  "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE",
+  "SCHEDULE_SECTION_FULL_REVIEW"
 ]);
 
 function gitValue(args) {
@@ -434,10 +439,10 @@ async function runMatrix(configuration) {
         }
       },
       completion: {
-        targetAvailability: decisionShadowRecords.length ? "MEASURED_SHADOW" : "NOT_MEASURED",
+        targetAvailability: decisionShadowRecords.length ? "MEASURED_AUTHORITY" : "NOT_MEASURED",
         targetReasonCode: decisionShadowRecords.length ? null : "NO_DISPLAYED_PLANS_EVALUATED_IN_SHADOW",
         shadowDecision: {
-          authority: "LEGACY_PRODUCTION_REMAINS_AUTHORITATIVE",
+          authority: "PRODUCTION_DECISION_ENGINE",
           profilesWithCompletePlan: profileResults.filter(result => (result.decisionShadow || []).some(record => record.completionStatus === "COMPLETE")).length,
           displayedCompletePlans: decisionShadowRecords.filter(record => record.completionStatus === "COMPLETE").length,
           evidenceStatuses: countBy(decisionShadowRecords, record => record.evidenceStatus)
@@ -478,8 +483,8 @@ async function runMatrix(configuration) {
         classified: null
       },
       productionDecisionEngine: {
-        availability: "MEASURED_SHADOW",
-        authority: "LEGACY_PRODUCTION_REMAINS_AUTHORITATIVE",
+        availability: "MEASURED_AUTHORITY",
+        authority: "PRODUCTION_DECISION_ENGINE",
         decisions: decisionShadowRecords.length,
         unexpectedDisagreements: decisionShadowRecords.filter(record => record.unexpected).length,
         classifications: countBy(decisionShadowRecords, record => record.classification),
@@ -531,6 +536,8 @@ async function runMatrix(configuration) {
     failures
   };
 
+  if (isFrozenCp4Cohort(configuration, summary)) assertFrozenCp4AuthoritySummary(summary);
+
   await writeJson(configuration.output, summary);
   if (failures.length) {
     for (const failure of failures) {
@@ -569,6 +576,58 @@ function countBy(items, selector) {
   return Object.fromEntries(Object.entries(counts).sort(([left], [right]) => left.localeCompare(right)));
 }
 
+function isFrozenCp4Cohort(configuration, summary) {
+  return configuration.shardIndex === 1
+    && configuration.shardTotal === 1
+    && summary.selection.totalProfilesAcrossAllShards === 368
+    && configuration.seeds.length === DEFAULT_SEEDS.length
+    && configuration.seeds.every((seed, index) => seed === DEFAULT_SEEDS[index]);
+}
+
+export function assertFrozenCp4AuthoritySummary(summary) {
+  const evidenceStatuses = summary.metrics?.completion?.shadowDecision?.evidenceStatuses || {};
+  invariant(summary.metrics?.profilesTested === 368, "CP4_FROZEN_PROFILE_COUNT", "CP4 frozen cohort must contain 368 profiles.");
+  invariant(summary.metrics?.profilesWithPlans >= 186, "CP4_FROZEN_COVERAGE_REGRESSION", "CP4 frozen cohort coverage fell below 186 complete-plan profiles.");
+  invariant(summary.metrics?.acceptedPlanCount === 439, "CP4_FROZEN_PLAN_COUNT", "CP4 frozen cohort must contain 439 displayed plans.");
+  invariant(evidenceStatuses.PRELIMINARY === 193 && evidenceStatuses.REVIEW_REQUIRED === 246,
+    "CP4_FROZEN_EVIDENCE_COUNTS", "CP4 frozen cohort evidence must contain 193 PRELIMINARY and 246 REVIEW_REQUIRED plans.");
+  invariant(summary.metrics?.productionDecisionEngine?.unexpectedDisagreements === 0,
+    "CP4_UNEXPECTED_ENGINE_DISAGREEMENT", "CP4 frozen cohort contains an unexpected Production Decision Engine disagreement.");
+  invariant(summary.metrics?.oracleDisagreementCount === 0 && summary.metrics?.unclassifiedOracleDisagreementCount === 0,
+    "CP4_ORACLE_DISAGREEMENT", "CP4 frozen cohort contains a Production Decision Engine versus Oracle disagreement.");
+  const decisionRecords = (summary.profiles || []).flatMap(profile => profile.decisionShadow || []);
+  invariant(decisionRecords.length === summary.metrics.acceptedPlanCount,
+    "CP4_OBSERVABILITY_PLAN_COUNT", "Every displayed CP4 plan must have one authoritative observability record.");
+  const observedEvidenceStatuses = countBy(decisionRecords, record => record.evidenceStatus);
+  invariant(observedEvidenceStatuses.PRELIMINARY === 193 && observedEvidenceStatuses.REVIEW_REQUIRED === 246,
+    "CP4_OBSERVABILITY_EVIDENCE_DRIFT", "Authoritative observability records do not match the frozen evidence counts.");
+  invariant(!decisionRecords.some(record => (record.reasonCodes || []).includes("PLANNING_CONTEXT_REQUIRED")),
+    "CP4_OBSERVABILITY_CONTEXT_OMITTED", "A valid generated plan was evaluated without its planning context.");
+  const reviewFindings = decisionRecords.flatMap(record => record.reviewFindings || []);
+  invariant(decisionRecords.filter(record => record.evidenceStatus === "REVIEW_REQUIRED")
+    .every(record => record.reviewFindings?.length),
+  "CP4_REVIEW_WITHOUT_FINDING", "Every REVIEW_REQUIRED plan must expose its controlling review finding.");
+  invariant(reviewFindings.every(finding => finding.ruleIds?.length && finding.sourceRefs?.length),
+    "CP4_UNTRACEABLE_REVIEW", "Every CP4 review-only finding must include a stable rule ID and source reference.");
+  const convergences = (summary.profiles || []).flatMap(profile => (
+    (profile.strategyConvergences || []).map(item => ({ profileId: profile.profileId, ...item }))
+  ));
+  invariant(convergences.length === 2
+    && CP4_FROZEN_CONVERGENCE_PROFILES.every(profileId => convergences.some(item => (
+      item.profileId === profileId
+      && item.keptLabel === "Plan A"
+      && item.convergedLabel === "Plan C"
+      && item.code === "PLANS_CONVERGED"
+    ))), "CP4_FROZEN_CONVERGENCE_DRIFT", "The two Explore-First semantic convergences must remain documented.");
+  return Object.freeze({
+    profiles: 368,
+    profilesWithPlans: summary.metrics.profilesWithPlans,
+    displayedPlans: 439,
+    evidenceStatuses: { PRELIMINARY: 193, REVIEW_REQUIRED: 246 },
+    convergenceProfiles: [...CP4_FROZEN_CONVERGENCE_PROFILES]
+  });
+}
+
 export function characterizeDisplayedPlan(plan, shadow = null) {
   const distribution = plan?.validation?.distribution || validatePreferredDistribution(plan);
   const strategy = STRATEGY_NAMES[plan?.distribution?.strategy] || "UNKNOWN";
@@ -583,13 +642,13 @@ export function characterizeDisplayedPlan(plan, shadow = null) {
     planId: plan?.id || null,
     label: plan?.label || null,
     targetCompletionStatus: shadow?.completionStatus || null,
-    targetCompletionAvailability: shadow ? "MEASURED_SHADOW" : "NOT_MEASURED",
+    targetCompletionAvailability: shadow ? "MEASURED_AUTHORITY" : "NOT_MEASURED",
     targetCompletionReasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_COMPLETION_CONTRACT_NOT_IMPLEMENTED",
     legacyValidatedDisplayedPlan: isLegacyValidatedDisplayedPlan(plan),
     legacyValidationProxyAvailability: "PROXY",
     legacyValidationProxyBasis: "LEGACY_DISPLAYED_PLAN_VALIDATION_AND_UNSCHEDULED_COUNT",
     targetEvidenceStatus: shadow?.evidenceStatus || null,
-    targetEvidenceAvailability: shadow ? "MEASURED_SHADOW" : "NOT_MEASURED",
+    targetEvidenceAvailability: shadow ? "MEASURED_AUTHORITY" : "NOT_MEASURED",
     targetEvidenceReasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_EVIDENCE_CONTRACT_NOT_IMPLEMENTED",
     legacyFeasibilityStatus: plan?.feasibilityStatus || null,
     strategy,
@@ -606,7 +665,7 @@ export function characterizeDisplayedPlan(plan, shadow = null) {
       ...(Array.isArray(distribution?.errors) ? distribution.errors : [])
     ])],
     productionDecisionEngine: {
-      availability: shadow ? "MEASURED_SHADOW" : "NOT_MEASURED",
+      availability: shadow ? "MEASURED_AUTHORITY" : "NOT_MEASURED",
       reasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
       status: shadow?.engineStatus || null,
       classification: shadow?.classification || null,
@@ -637,7 +696,8 @@ async function evaluateProfile({ profile, manifest, verifiedSchedule, requiremen
     mapping,
     schedule,
     prerequisites,
-    collectDiagnostics: true
+    collectDiagnostics: true,
+    policyBundle
   });
   const signatures = planBundle.plans.map(plan => semanticPlanSignature(plan));
   invariant(
@@ -707,13 +767,21 @@ async function evaluateProfile({ profile, manifest, verifiedSchedule, requiremen
       classification: "KNOWN_POLICY_REVIEW"
     })));
     const canonicalOracle = oracleEvaluateCanonicalPlan(canonicalPolicy, student, plan);
-    const shadow = await runDecisionEngineShadow({
+    invariant(
+      plan.validation.policyBundleHash === policyBundle.contentHash,
+      "POLICY_BUNDLE_MISMATCH",
+      `${profile.profileId}/${plan.id} was not validated with the requested policy bundle.`
+    );
+    const shadow = buildDecisionComparisonRecord({
       student,
       plan,
       productionValidation: plan.validation,
-      bundle: policyBundle,
+      engine: plan.validation.policyDecision,
       oracle: canonicalOracle,
-      source: "nightly-generated-profile"
+      source: "nightly-generated-profile",
+      mode: "AUTHORITATIVE_REUSED",
+      latencyMs: plan.validation.policyDecisionLatencyMs,
+      scheduleReleaseId: policyBundle.releaseRefs?.schedule || null
     });
     invariant(!shadow.unexpected, "UNEXPECTED_DECISION_SHADOW_DISAGREEMENT", `${profile.profileId}/${plan.id}: ${shadow.classification}`);
     decisionShadow.push({
