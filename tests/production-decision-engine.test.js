@@ -1,0 +1,89 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
+import {
+  evaluateOffering,
+  evaluatePlan,
+  evaluatePrerequisites,
+  evaluateRecordedCourse,
+  evaluateRequirementAllocation,
+  evaluateTermLoad,
+  normalizeStudentFacts
+} from "../lib/decision-engine/index.js";
+
+const bundle = await loadPolicyBundle({
+  expectedVersion: "econ-2025-2026.1",
+  expectedHash: "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7",
+  allowPending: true
+});
+const facts = normalizeStudentFacts({ planCreationDate: "2026-08-05", courses: [] });
+
+function verifiedElectivePlan() {
+  return {
+    id: "engine-fixture",
+    terms: [{
+      academicYear: "2026-2027",
+      termKey: "Fall",
+      term: "Fall 2026",
+      courses: [{ course: "ECO 234", section: "A", requirementId: "eco-elective-1", source: "verified-offering" }]
+    }],
+    unscheduled: []
+  };
+}
+
+test("the approved CP2 bundle loads immutably with its exact digest", () => {
+  assert.equal(bundle.bundleVersion, "econ-2025-2026.1");
+  assert.equal(bundle.contentHash, "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7");
+  assert.equal(bundle.activationStatus, "PENDING_OWNER_APPROVAL");
+  assert.equal(Object.isFrozen(bundle), true);
+  assert.equal(Object.isFrozen(bundle.rules), true);
+});
+
+test("requirement allocation enforces ECO 257 statistics-only without an elective override", () => {
+  assert.equal(evaluateRequirementAllocation("ECO 257", "statistics", facts, bundle, { traceId: "fixture" }).status, "ALLOW");
+  const elective = evaluateRequirementAllocation("ECO 257", "eco-elective-1", facts, bundle, { traceId: "fixture" });
+  assert.equal(elective.status, "BLOCK");
+  assert.deepEqual(elective.ruleIds, ["ELECTIVE-ECO-257-STATISTICS-ONLY"]);
+});
+
+test("prerequisites distinguish prior evidence, missing evidence, and approved concurrency", () => {
+  const missing = evaluatePrerequisites("ECO 213", {}, facts, bundle, { traceId: "fixture", availableCourses: new Set(), sameTermCourses: new Set() });
+  assert.equal(missing.status, "BLOCK");
+  const prior = evaluatePrerequisites("ECO 213", {}, facts, bundle, { traceId: "fixture", availableCourses: new Set(["ECO 113", "MAT 113"]), sameTermCourses: new Set() });
+  assert.equal(prior.status, "ALLOW");
+  const concurrent = evaluatePrerequisites({
+    course: "ECO 213",
+    approvalRequired: [{ course: "ECO 213", prerequisite: "MAT 113", type: "INSTRUCTOR_APPROVAL" }]
+  }, {}, facts, bundle, { traceId: "fixture", availableCourses: new Set(["ECO 113"]), sameTermCourses: new Set(["ECO 213", "MAT 113"]) });
+  assert.equal(concurrent.status, "ALLOW");
+});
+
+test("offering evidence keeps FULL under review and future projections preliminary", () => {
+  const full = evaluateOffering({ course: "ECO 113", section: "A", source: "verified-offering" }, { academicYear: "2026-2027", termKey: "Fall" }, bundle.indexes.offeringByTerm, bundle, { traceId: "fixture" });
+  assert.equal(full.status, "REVIEW_REQUIRED");
+  assert.equal(full.offeringEvidence.enrollmentState, "FULL");
+  const projected = evaluateOffering({ course: "ECO 213", source: "projected-offering" }, { academicYear: "2027-2028", termKey: "Fall" }, bundle.indexes.offeringByTerm, bundle, { traceId: "fixture" });
+  assert.equal(projected.status, "PRELIMINARY");
+});
+
+test("term capacity is hard while a heavier Economics load is only a soft warning", () => {
+  const heavy = evaluateTermLoad({ termKey: "Fall", academicYear: "2026-2027", courses: [{ course: "ECO 221" }, { course: "ECO 222" }, { course: "ECO 223" }] }, {}, bundle, { traceId: "fixture" });
+  assert.equal(heavy.status, "ALLOW");
+  assert.equal(heavy.classification, "SOFT");
+  const overCapacity = evaluateTermLoad({ termKey: "Fall", academicYear: "2026-2027", courses: Array.from({ length: 5 }, (_, index) => ({ course: `ECO ${220 + index}` })) }, {}, bundle, { traceId: "fixture" });
+  assert.equal(overCapacity.status, "BLOCK");
+});
+
+test("completed advanced history is preserved as review rather than erased or inferred", () => {
+  const recorded = evaluateRecordedCourse({ course: "ECO 331", status: "COMPLETED", prerequisiteEvidence: [] }, facts, bundle, { traceId: "fixture" });
+  assert.equal(recorded.status, "REVIEW_REQUIRED");
+  assert.deepEqual(recorded.ruleIds, ["HISTORY-COMPLETED-ADVANCED-PRESERVED"]);
+});
+
+test("whole-plan decision p95 stays below 100ms", () => {
+  const samples = [];
+  for (let index = 0; index < 250; index += 1) samples.push(evaluatePlan(verifiedElectivePlan(), facts, {}, bundle).latencyMs);
+  const sorted = samples.toSorted((left, right) => left - right);
+  const p95 = sorted[Math.ceil(sorted.length * 0.95) - 1];
+  assert.ok(p95 < 100, `whole-plan decision p95 was ${p95}ms`);
+});

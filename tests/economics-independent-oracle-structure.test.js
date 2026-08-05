@@ -33,9 +33,10 @@ function auditFixture(value) {
 test("independent oracle files have no prohibited production imports", async () => {
   const files = await Promise.all([
     readFile(new URL("./oracle/audit-external-plan.js", import.meta.url), "utf8"),
-    readFile(new URL("./oracle/plan-signature.js", import.meta.url), "utf8")
+    readFile(new URL("./oracle/plan-signature.js", import.meta.url), "utf8"),
+    readFile(new URL("./oracle/load-canonical-policy.js", import.meta.url), "utf8")
   ]);
-  const prohibited = /(?:from\s+|import\s*\()[^;\n]*(?:lib[\\/](?:planning|assignment|requirements)|normalizeEconomicsSchedule|scheduleProvider|data[\\/]normalized[\\/]economics[\\/]schedule)/i;
+  const prohibited = /(?:from\s+|import\s*\()[^;\n]*(?:lib[\\/](?:decision-engine|planning|assignment|requirements)|normalizeEconomicsSchedule|scheduleProvider|data[\\/]normalized[\\/]economics[\\/]schedule)/i;
 
   for (const source of files) assert.equal(prohibited.test(source), false);
 });

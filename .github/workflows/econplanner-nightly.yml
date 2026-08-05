@@ -144,6 +144,9 @@ jobs:
           --log test-results/nightly-deterministic/policy-compiler.log --timeout-ms 120000
           -- node --test tests/policy-hub-schema.test.js tests/policy-compiler.test.js
           tests/policy-bundle-determinism.test.js tests/policy-source-bundle-parity.test.js
+          tests/policy-source-to-bundle.test.js tests/production-decision-engine.test.js
+          tests/decision-engine-shadow.test.js tests/decision-engine-oracle-differential.test.js
+          tests/architecture-boundaries.test.js
       - id: prerequisite_normal
         continue-on-error: true
         env:
@@ -175,6 +178,9 @@ jobs:
           -- node --test
           tests/economics-policy-manifest.test.js tests/economics-schedule-drift.test.js
           tests/economics-independent-oracle-structure.test.js tests/economics-oracle-requirements.test.js
+          tests/policy-source-to-bundle.test.js tests/production-decision-engine.test.js
+          tests/decision-engine-shadow.test.js tests/decision-engine-oracle-differential.test.js
+          tests/architecture-boundaries.test.js
           tests/economics-oracle-prerequisites.test.js tests/economics-oracle-schedule-capacity.test.js
           tests/economics-requirement-allocation-matrix.test.js tests/economics-validator-disagreements.test.js
           tests/economics-plan-editing-api.test.js tests/major-api.test.js tests/economics-report.test.js
