@@ -1,0 +1,209 @@
+{
+  "catalogYear": "2025-2026",
+  "id": "economics-major",
+  "requirementSlots": [
+    {
+      "id": "cognate",
+      "kind": "choice",
+      "label": "MAT 113 / MAT 121",
+      "options": [
+        "MAT 113",
+        "MAT 121"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-113",
+      "kind": "exact",
+      "label": "ECO 113",
+      "options": [
+        "ECO 113"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-114",
+      "kind": "exact",
+      "label": "ECO 114",
+      "options": [
+        "ECO 114"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-213",
+      "kind": "exact",
+      "label": "ECO 213",
+      "options": [
+        "ECO 213"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-214",
+      "kind": "exact",
+      "label": "ECO 214",
+      "options": [
+        "ECO 214"
+      ],
+      "units": 1
+    },
+    {
+      "id": "eco-461",
+      "kind": "exact",
+      "label": "ECO 461",
+      "options": [
+        "ECO 461"
+      ],
+      "residency": "hanover",
+      "units": 1
+    },
+    {
+      "conditionalCourses": {
+        "ECO 321": {
+          "assignedCode": "BUSN 323",
+          "slotId": "finance"
+        }
+      },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 461",
+        "ECO 307"
+      ],
+      "id": "eco-elective-1",
+      "kind": "elective",
+      "label": "ECO elective 1",
+      "maxLevel100": 1,
+      "subject": "ECO",
+      "units": 1
+    },
+    {
+      "conditionalCourses": {
+        "ECO 321": {
+          "assignedCode": "BUSN 323",
+          "slotId": "finance"
+        }
+      },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 461",
+        "ECO 307"
+      ],
+      "id": "eco-elective-2",
+      "kind": "elective",
+      "label": "ECO elective 2",
+      "maxLevel100": 1,
+      "subject": "ECO",
+      "units": 1
+    },
+    {
+      "conditionalCourses": {
+        "ECO 321": {
+          "assignedCode": "BUSN 323",
+          "slotId": "finance"
+        }
+      },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 461",
+        "ECO 307"
+      ],
+      "id": "eco-elective-3",
+      "kind": "elective",
+      "label": "ECO elective 3",
+      "maxLevel100": 1,
+      "subject": "ECO",
+      "units": 1
+    },
+    {
+      "conditionalCourses": {
+        "ECO 321": {
+          "assignedCode": "BUSN 323",
+          "slotId": "finance"
+        }
+      },
+      "confirmedSpecialTopicsElectives": [
+        "ECO 260"
+      ],
+      "excludedCourses": [
+        "ECO 113",
+        "ECO 114",
+        "ECO 213",
+        "ECO 214",
+        "ECO 257",
+        "ECO 461",
+        "ECO 307"
+      ],
+      "id": "eco-elective-4",
+      "kind": "elective",
+      "label": "ECO elective 4",
+      "maxLevel100": 1,
+      "subject": "ECO",
+      "units": 1
+    },
+    {
+      "id": "finance",
+      "kind": "choice",
+      "label": "ECO 321 / BUSN 323",
+      "options": [
+        "ECO 321",
+        "BUSN 323"
+      ],
+      "preferredOptions": [
+        "BUSN 323",
+        "ECO 321"
+      ],
+      "units": 1
+    },
+    {
+      "capstonePrerequisiteOptions": [
+        "MAT 217",
+        "ECO 257",
+        "PSY 217"
+      ],
+      "id": "statistics",
+      "kind": "choice",
+      "label": "MAT 217 / ECO 257 / PSY 217",
+      "options": [
+        "MAT 217",
+        "ECO 257",
+        "PSY 217"
+      ],
+      "units": 1
+    }
+  ],
+  "rules": {
+    "max100LevelElectives": 1,
+    "noDoubleCountUnlessExplicit": true,
+    "totalCognateCourses": 1,
+    "totalMajorCourses": 11
+  },
+  "sourceRefs": [
+    "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+    "data/raw/economics/Econ_Course_Offerings.md",
+    "data/raw/economics/Term_Structure.md",
+    "data/raw/economics/Department_Confirmed_Planning_Policies.md"
+  ],
+  "sourceStatus": "APPROVED_LOCAL_SOURCE"
+}

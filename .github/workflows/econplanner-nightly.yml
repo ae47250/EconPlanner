@@ -136,6 +136,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Prepare result directories
         run: mkdir -p test-results/econplanner-nightly/phases test-results/econplanner-nightly/logs test-results/nightly-deterministic
+      - id: policy_compile
+        continue-on-error: true
+        run: >-
+          node scripts/run-econplanner-phase.mjs --phase policy-compiler
+          --output test-results/econplanner-nightly/phases/policy-compiler.json
+          --log test-results/nightly-deterministic/policy-compiler.log --timeout-ms 120000
+          -- node --test tests/policy-hub-schema.test.js tests/policy-compiler.test.js
+          tests/policy-bundle-determinism.test.js tests/policy-source-bundle-parity.test.js
       - id: prerequisite_normal
         continue-on-error: true
         env:
@@ -246,7 +254,7 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const steps = JSON.parse(process.env.OUTCOMES);
-          const ids = ["prerequisite_normal", "prerequisite_optional", "exhaustive", "prerequisite_summary", "properties", "ranking1", "ranking2", "ranking3", "unit", "pdf_dry"];
+          const ids = ["policy_compile", "prerequisite_normal", "prerequisite_optional", "exhaustive", "prerequisite_summary", "properties", "ranking1", "ranking2", "ranking3", "unit", "pdf_dry"];
           const failed = ids.filter(id => steps[id]?.outcome !== "success");
           if (failed.length) throw new Error(`Required phases failed: ${failed.join(", ")}`);
           NODE

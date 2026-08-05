@@ -1,0 +1,642 @@
+{
+  "catalogYear": "2025-2026",
+  "courses": [
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "busn-323",
+      "code": "BUSN 323",
+      "electiveEligibility": "finance_requirement_only",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Business finance option",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "eco-113",
+      "code": "ECO 113",
+      "electiveEligibility": "required_course",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Fall",
+          "Winter",
+          "Summer"
+        ]
+      },
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Principles of Microeconomics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "eco-114",
+      "code": "ECO 114",
+      "electiveEligibility": "required_course",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Fall",
+          "Winter"
+        ]
+      },
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Principles of Macroeconomics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "eco-160",
+      "code": "ECO 160",
+      "electiveEligibility": "eligible_subject_to_topic_and_100_level_limit",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Special Topics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "eco-161",
+      "code": "ECO 161",
+      "electiveEligibility": "eligible_subject_to_100_level_limit",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Winter"
+        ]
+      },
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Foundations of Economics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-213",
+      "code": "ECO 213",
+      "electiveEligibility": "required_course",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Fall"
+        ]
+      },
+      "prerequisites": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121"
+          ]
+        ],
+        "concurrentWithApproval": [
+          {
+            "approval": "instructor",
+            "lastResortOnly": true,
+            "options": [
+              "MAT 113",
+              "MAT 121"
+            ],
+            "policySource": "department-approved"
+          }
+        ]
+      },
+      "studentSelectable": true,
+      "title": "Intermediate Microeconomics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-214",
+      "code": "ECO 214",
+      "electiveEligibility": "required_course",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Winter"
+        ]
+      },
+      "prerequisites": {
+        "all": [
+          "ECO 114"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121"
+          ]
+        ],
+        "concurrentWithApproval": [
+          {
+            "approval": "instructor",
+            "lastResortOnly": true,
+            "options": [
+              "MAT 113",
+              "MAT 121"
+            ],
+            "policySource": "department-approved"
+          }
+        ]
+      },
+      "studentSelectable": true,
+      "title": "Intermediate Macroeconomics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-221",
+      "code": "ECO 221",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Winter"
+        ]
+      },
+      "prerequisites": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Environmental Economics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-222",
+      "code": "ECO 222",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {
+        "2026-2027": [
+          "May"
+        ]
+      },
+      "prerequisites": {
+        "all": [
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Economics of the European Union",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-223",
+      "code": "ECO 223",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114",
+            "ECO 161"
+          ]
+        ]
+      },
+      "studentSelectable": true,
+      "title": "Economics: Poverty & Discrimination",
+      "titleAliases": [
+        "Economics: Poverty and Discrimination"
+      ],
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-224",
+      "code": "ECO 224",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Introduction to Sustainability",
+      "units": 1
+    },
+    {
+      "aliases": [
+        "PHI 234"
+      ],
+      "apEligible": false,
+      "canonicalId": "eco-234",
+      "code": "ECO 234",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Fall"
+        ]
+      },
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Rational Choices",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "eco-257",
+      "code": "ECO 257",
+      "electiveEligibility": "statistics_requirement",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114"
+          ]
+        ]
+      },
+      "studentSelectable": true,
+      "title": "Quantitative Methods for Business/Economics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "eco-260",
+      "code": "ECO 260",
+      "electiveEligibility": "eligible_subject_to_topic",
+      "offeringEvidence": {
+        "2026-2027": [
+          "May"
+        ]
+      },
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Special Topics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-307",
+      "code": "ECO 307",
+      "electiveEligibility": "excluded_half_unit",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Directed Study",
+      "units": 0.5
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-315",
+      "code": "ECO 315",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114"
+          ]
+        ]
+      },
+      "studentSelectable": true,
+      "title": "U.S. Economic History",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-316",
+      "code": "ECO 316",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "History of Economic Thought",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-321",
+      "code": "ECO 321",
+      "electiveEligibility": "eligible_only_when_busn_323_satisfies_finance",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Winter"
+        ]
+      },
+      "prerequisites": {
+        "all": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Money & Financial Markets",
+      "titleAliases": [
+        "Money and Financial Markets"
+      ],
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-331",
+      "code": "ECO 331",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [
+          "ECO 213"
+        ],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Labor Economics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-333",
+      "code": "ECO 333",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Fall"
+        ]
+      },
+      "prerequisites": {
+        "all": [
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "International Trade & Finance",
+      "titleAliases": [
+        "International Trade and Finance"
+      ],
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-335",
+      "code": "ECO 335",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [
+          "ECO 213",
+          "ECO 257"
+        ],
+        "any": [
+          [
+            "MAT 121"
+          ]
+        ]
+      },
+      "studentSelectable": true,
+      "title": "Managerial Economics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-337",
+      "code": "ECO 337",
+      "electiveEligibility": "eligible",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114"
+          ]
+        ]
+      },
+      "studentSelectable": true,
+      "title": "Economic Development",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-357",
+      "code": "ECO 357",
+      "electiveEligibility": "eligible_with_department_permission",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "any": [],
+        "permission": "department"
+      },
+      "studentSelectable": true,
+      "title": "Internship",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "eco-360",
+      "code": "ECO 360",
+      "electiveEligibility": "eligible_subject_to_topic",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Special Topics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-370",
+      "code": "ECO 370",
+      "electiveEligibility": "eligible_subject_to_approval",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Directed Study",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-461",
+      "code": "ECO 461",
+      "electiveEligibility": "required_capstone",
+      "offeringEvidence": {
+        "2026-2027": [
+          "Winter"
+        ]
+      },
+      "prerequisites": {
+        "all": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "any": [
+          [
+            "ECO 257",
+            "MAT 217",
+            "PSY 217"
+          ]
+        ]
+      },
+      "recurringOfferingRule": {
+        "status": "UNCONFIRMED_FUTURE_PATTERN",
+        "term": "Winter"
+      },
+      "residency": "hanover",
+      "studentSelectable": false,
+      "title": "Senior Seminar: Econometrics",
+      "titleAliases": [
+        "Senior Seminar - Econometrics",
+        "Econometrics"
+      ],
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": false,
+      "canonicalId": "eco-471",
+      "code": "ECO 471",
+      "electiveEligibility": "excluded_from_automatic_plans",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [
+          "ECO 213",
+          "ECO 214",
+          "ECO 321"
+        ],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Senior Thesis",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "mat-113",
+      "code": "MAT 113",
+      "electiveEligibility": "not_economics_elective",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Mathematics cognate",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "mat-121",
+      "code": "MAT 121",
+      "electiveEligibility": "not_economics_elective",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Calculus I",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "mat-217",
+      "code": "MAT 217",
+      "electiveEligibility": "not_economics_elective",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Applied Statistics",
+      "units": 1
+    },
+    {
+      "aliases": [],
+      "apEligible": true,
+      "canonicalId": "psy-217",
+      "code": "PSY 217",
+      "electiveEligibility": "not_economics_elective",
+      "offeringEvidence": {},
+      "prerequisites": {
+        "all": [],
+        "any": []
+      },
+      "studentSelectable": true,
+      "title": "Statistical Analysis",
+      "units": 1
+    }
+  ],
+  "sourceRefs": [
+    "https://catalog.hanover.edu/programs/economics.php",
+    "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+    "data/normalized/economics/schedule-2026-2027.json"
+  ],
+  "sourceStatus": "APPROVED_LOCAL_SOURCE"
+}

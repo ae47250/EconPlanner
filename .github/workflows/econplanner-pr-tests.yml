@@ -37,6 +37,14 @@ jobs:
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Compile and verify the deterministic policy bundle
+        run: >-
+          node --test
+          tests/policy-hub-schema.test.js
+          tests/policy-compiler.test.js
+          tests/policy-bundle-determinism.test.js
+          tests/policy-source-bundle-parity.test.js
+
       - name: Run bounded deterministic regression suite
         shell: bash
         run: |

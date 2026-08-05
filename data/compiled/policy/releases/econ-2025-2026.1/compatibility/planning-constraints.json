@@ -1,0 +1,39 @@
+{
+  "advisingPreferences": [
+    "Prefer no more than two Economics courses in Fall or Winter; graduation need may override this preference up to the normal four-course total load."
+  ],
+  "futureSchedulePolicy": "Use projected or Term to be confirmed placements when an exact annual offering is not verified, and label the plan PRELIMINARY_ONLY.",
+  "hardRules": [
+    "ECO 213 and ECO 214 cannot be scheduled in May",
+    "ECO 461 is senior Winter only",
+    "ECO 461 must be completed at Hanover College",
+    "MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only as a last resort with the ECO course instructor's approval; every other prerequisite must be completed first",
+    "When exactly one of ECO 213 or ECO 214 is already completed, the other may be concurrent with ECO 461 only with Economics Department approval and after all other ECO 461 prerequisites are completed",
+    "A generated plan never adds courses to the regular term containing the plan-creation date; current-term courses must be recorded as In Progress",
+    "A prerequisite currently In Progress becomes available for a dependent course only after the current term"
+  ],
+  "offeringPatterns": {
+    "ECO 213 / ECO 214": "One is normally offered in Fall and the other in Winter; the verified annual schedule determines the order."
+  },
+  "terms": {
+    "Fall": {
+      "graduationMaxEconomicsCourses": 4,
+      "maxTotalCourses": 4,
+      "preferredMaxEconomicsCourses": 2
+    },
+    "May": {
+      "maxEconomicsCourses": 1,
+      "maxTotalCourses": 1
+    },
+    "Summer": {
+      "maxEconomicsCourses": 1,
+      "maxTotalCourses": 1,
+      "planningNote": "No Summer Economics offering is verified; a Summer course cannot support a fully verified plan."
+    },
+    "Winter": {
+      "graduationMaxEconomicsCourses": 4,
+      "maxTotalCourses": 4,
+      "preferredMaxEconomicsCourses": 2
+    }
+  }
+}
