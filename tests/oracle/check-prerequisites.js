@@ -388,13 +388,31 @@ function validateNormalRule({ policy, entries, claims, approvals, usedApprovals,
 }
 
 function seniorEligible(entry, student, expectedContext) {
-  if (sameText(entry.projectedStanding, "Senior")) return true;
   if (entry.state === "inProgress" && sameText(student?.academicStanding, "Senior")) return true;
   const year = parseExternalAcademicYear(entry.academicYear);
-  return entry.termKey === "Winter"
-    && year.valid
-    && Number.isInteger(expectedContext?.expectedGraduationYear)
-    && year.endYear === expectedContext.expectedGraduationYear;
+  if (!year.valid) return false;
+  const rawEntryAcademicYearStart = expectedContext?.entryAcademicYearStart;
+  const entryAcademicYearStart = Number(rawEntryAcademicYearStart);
+  const hasCanonicalEntryYear = rawEntryAcademicYearStart !== null
+    && rawEntryAcademicYearStart !== undefined
+    && rawEntryAcademicYearStart !== ""
+    && Number.isInteger(entryAcademicYearStart);
+  const reachesFourthCollegeYear = hasCanonicalEntryYear
+    && year.startYear - entryAcademicYearStart >= 3;
+  const confirmation = expectedContext?.projectedSeniorStandingConfirmation;
+  const confirmedAcademicYear = confirmation?.status === "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION"
+    ? String(confirmation.academicYear || "")
+    : null;
+  const matchesConfirmedAcademicYear = confirmedAcademicYear === `${year.startYear}/${year.endYear}`
+    && confirmedAcademicYear === expectedContext?.projectedSeniorStandingAcademicYear;
+
+  if (hasCanonicalEntryYear) {
+    return reachesFourthCollegeYear || matchesConfirmedAcademicYear;
+  }
+
+  // Older independent fixtures do not contain the v4 horizon fields. Their
+  // explicit projected-standing value remains the only available evidence.
+  return sameText(entry.projectedStanding, "Senior");
 }
 
 function validateCapstone({

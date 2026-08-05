@@ -31,15 +31,9 @@ const ROOT = process.cwd();
 const FIXTURE_PATH = path.join(ROOT, "tests", "fixtures", "pdf-layout-profiles.v1.json");
 const TEMPLATE_PATH = path.join(ROOT, "templates", "econplannertemplate.html");
 const FAILURE_ARTIFACT_ROOT = path.join(ROOT, "output", "economics-pdf-verification");
-const ALLOWED_ARGUMENTS = new Set(["--dry-run", "--live"]);
-const args = new Set(process.argv.slice(2).filter(argument => argument !== "--"));
-
-for (const argument of args) {
-  invariant(ALLOWED_ARGUMENTS.has(argument), `Unknown argument: ${argument}`);
-}
-invariant(!(args.has("--dry-run") && args.has("--live")), "Choose either --dry-run or --live, not both.");
-
-const liveRequested = args.has("--live");
+const cli = parseCliArguments(process.argv.slice(2));
+const liveRequested = cli.mode === "live";
+const outputPath = cli.output ? path.resolve(ROOT, cli.output) : null;
 const fixture = JSON.parse(await readFile(FIXTURE_PATH, "utf8"));
 const template = await readFile(TEMPLATE_PATH, "utf8");
 const poppler = {
@@ -48,6 +42,9 @@ const poppler = {
 };
 
 const summary = {
+  schemaVersion: 2,
+  kind: "econplanner-nightly-pdf",
+  generatedAt: new Date().toISOString(),
   command: "pnpm run verify:pdf:economics",
   classification: "external-contract-test",
   fixtureVersion: fixture.fixtureVersion,
@@ -58,8 +55,21 @@ const summary = {
     pdftotext: Boolean(poppler.pdftotext),
     pdftoppm: Boolean(poppler.pdftoppm)
   },
+  local: {
+    configuration: "NOT_APPLICABLE",
+    attempted: true,
+    status: "NOT_ATTEMPTED"
+  },
+  hosted: {
+    configuration: liveRequested ? "NOT_CONFIGURED" : "NOT_APPLICABLE",
+    attempted: false,
+    status: "SKIPPED",
+    gateStatus: liveRequested ? "AMBER" : "GREEN"
+  },
   retainedArtifacts: []
 };
+
+const verificationStartedAt = performance.now();
 
 try {
   validateFixture(fixture);
@@ -88,6 +98,14 @@ try {
 
   await validateInvalidSelectedPlans(fixture, preparedProfiles);
   summary.eco257.invalidElective = "rejected-before-hosted-call";
+  summary.local = {
+    ...summary.local,
+    status: "PASSED",
+    durationMs: roundDuration(performance.now() - verificationStartedAt),
+    profiles: summary.profiles.length,
+    textParity: "PASSED",
+    invalidSelectedPlanChecks: "PASSED"
+  };
   console.log("[ECO 257] PASS invalid elective fixture rejected with 422 SELECTED_PLAN_INVALID before PDF service access");
 
   if (!liveRequested) {
@@ -96,6 +114,12 @@ try {
       status: "skipped",
       reason: "Use --live with explicitly configured PDF_CREATION_* test credentials."
     };
+    summary.hosted = {
+      configuration: "NOT_APPLICABLE",
+      attempted: false,
+      status: "SKIPPED",
+      gateStatus: "GREEN"
+    };
   } else {
     const configuration = liveConfiguration(process.env);
     if (!configuration.valid) {
@@ -103,6 +127,13 @@ try {
         requested: true,
         status: "skipped",
         reason: `Missing or invalid configuration: ${configuration.missing.join(", ")}`
+      };
+      summary.hosted = {
+        configuration: "NOT_CONFIGURED",
+        attempted: false,
+        status: "SKIPPED",
+        gateStatus: "AMBER",
+        missingConfiguration: configuration.missing
       };
     } else if (!poppler.pdftotext || !poppler.pdftoppm) {
       summary.live = {
@@ -113,7 +144,20 @@ try {
           !poppler.pdftoppm ? "pdftoppm" : null
         ].filter(Boolean).join(", ")}`
       };
+      summary.hosted = {
+        configuration: "CONFIGURED",
+        attempted: false,
+        status: "SKIPPED",
+        gateStatus: "AMBER",
+        missingTools: [!poppler.pdftotext ? "pdftotext" : null, !poppler.pdftoppm ? "pdftoppm" : null].filter(Boolean)
+      };
     } else {
+      summary.hosted = {
+        configuration: "CONFIGURED",
+        attempted: true,
+        status: "NOT_ATTEMPTED",
+        gateStatus: "RED"
+      };
       const liveResults = [];
       for (const profile of fixture.profiles) {
         const result = await runLiveProfile(profile, preparedProfiles.get(profile.id), poppler);
@@ -121,6 +165,18 @@ try {
         console.log(`[live] PASS ${profile.id}: ${result.pageCount} pages, ${result.pdfBytes} bytes`);
       }
       summary.live = { requested: true, status: "pass", profiles: liveResults };
+      summary.hosted = {
+        configuration: "CONFIGURED",
+        attempted: true,
+        status: "PASSED",
+        gateStatus: "GREEN",
+        profiles: liveResults,
+        durationMs: liveResults.reduce((sum, profile) => sum + profile.durationMs, 0),
+        pdfBytes: liveResults.reduce((sum, profile) => sum + profile.pdfBytes, 0),
+        pages: liveResults.reduce((sum, profile) => sum + profile.pageCount, 0),
+        textParity: "PASSED",
+        clipping: "PASSED"
+      };
     }
   }
 
@@ -132,7 +188,20 @@ try {
   if (summary.retainedArtifacts.length) {
     console.error(`[artifacts] Retained failure evidence: ${summary.retainedArtifacts.join(", ")}`);
   }
+  summary.failure = { message: safeErrorMessage(error), evidence: summary.retainedArtifacts };
+  if (summary.hosted.attempted) {
+    summary.hosted.status = "FAILED";
+    summary.hosted.gateStatus = "RED";
+  } else {
+    summary.local.status = "FAILED";
+  }
   process.exitCode = 1;
+} finally {
+  summary.durationMs = roundDuration(performance.now() - verificationStartedAt);
+  if (outputPath) {
+    await mkdir(path.dirname(outputPath), { recursive: true });
+    await writeFile(outputPath, `${JSON.stringify(summary, null, 2)}\n`);
+  }
 }
 
 async function prepareProfile(profile, defaultPreparedDate, htmlTemplate) {
@@ -296,6 +365,7 @@ async function runLiveProfile(profile, prepared, tools) {
   try {
     let pdf;
     let headers;
+    let httpResult;
     if (profile.executionMode === "report-route" && !profile.layoutMutations) {
       const response = await handleEconomicsReportRequest(jsonRequest("http://localhost/api/reports/economics", {
         student: profile.student,
@@ -304,6 +374,7 @@ async function runLiveProfile(profile, prepared, tools) {
         format: "pdf"
       }), { environment: process.env });
       invariant(response.status === 200, `${profile.id}: hosted route returned HTTP ${response.status}.`);
+      httpResult = { status: response.status, contentType: response.headers.get("content-type") };
       headers = verifyHttpHeaders(response.headers);
       pdf = new Uint8Array(await response.arrayBuffer());
     } else {
@@ -313,6 +384,7 @@ async function runLiveProfile(profile, prepared, tools) {
       );
       headers = verifyDiagnosticHeaders(result.diagnostics);
       pdf = result.pdf;
+      httpResult = { status: 200, transport: "pdf-creation-client" };
     }
 
     const pdfPath = path.join(workDirectory, `${safeFileName(profile.id)}.pdf`);
@@ -331,6 +403,7 @@ async function runLiveProfile(profile, prepared, tools) {
       pageCount: headers.pageCount,
       pdfBytes: pdf.byteLength,
       durationMs: benchmark.durationMs,
+      httpResult,
       textProjection: "pass",
       clippingBounds: "pass",
       renderedPages: inspection.renderedPages
@@ -604,6 +677,33 @@ function safeFileName(value) {
 
 function safeErrorMessage(error) {
   return String(error?.message || "Unknown verification failure").replace(/[\r\n]+/g, " ");
+}
+
+function parseCliArguments(argv) {
+  let requestedMode = null;
+  let output = null;
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    if (argument === "--") continue;
+    if (argument === "--dry-run" || argument === "--live") {
+      const nextMode = argument.slice(2);
+      invariant(!requestedMode || requestedMode === nextMode, "Choose either --dry-run or --live, not both.");
+      requestedMode = nextMode;
+      continue;
+    }
+    if (argument === "--output") {
+      output = argv[index + 1];
+      invariant(output && !output.startsWith("--"), "--output requires a path.");
+      index += 1;
+      continue;
+    }
+    invariant(false, `Unknown argument: ${argument}`);
+  }
+  return { mode: requestedMode || "dry-run", output };
+}
+
+function roundDuration(value) {
+  return Math.round(Number(value) * 100) / 100;
 }
 
 function invariant(condition, message) {

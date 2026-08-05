@@ -11,7 +11,7 @@
 ## Confirmed policies
 
 1. PSY 217 is a valid statistics prerequisite for ECO 461, alongside ECO 257 and MAT 217.
-2. A student graduating one academic year early has senior standing for ECO 461 in the student's final Winter.
+2. A compressed graduation plan may treat the student's final academic year as senior standing for ECO 461 only when the student reports that the Registrar or advisor confirmed senior standing for that exact academic year. Normal plans reach senior standing in the fourth college year. An extended five-year plan remains senior in both the fourth and fifth years, so ECO 461 should use the earliest otherwise-valid senior Winter.
 3. MAT 113 or MAT 121 may be taken concurrently with ECO 213 or ECO 214 with approval from the ECO 213 or ECO 214 instructor. The applicable introductory Economics prerequisite must still be completed first.
 4. When exactly one of ECO 213 or ECO 214 is already completed, the other may be taken concurrently with ECO 461 with explicit Economics Department approval. The concurrent intermediate's own prerequisites must be satisfied, and the statistics prerequisite must be completed before ECO 461.
 5. ECO 213 and ECO 214 are normally separated by the annual offering pattern: one is offered in Fall and the other in Winter. This is an offering pattern, not a prohibition against enrolling in both during one term if a future verified schedule were to offer both.

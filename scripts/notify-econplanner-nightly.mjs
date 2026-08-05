@@ -1,7 +1,8 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 
-const SUPPORTED_STATUSES = new Set(["started", "succeeded", "failed"]);
+const SUPPORTED_STATUSES = new Set(["started", "succeeded", "warning", "failed"]);
 const DEFAULT_PINGRAM_API_URL = "https://api.pingram.io";
 export const DEFAULT_NOTIFICATION_SUBJECT_PREFIX = "EconPlanner Nightly";
 export const MAX_NOTIFICATION_SUBJECT_PREFIX_LENGTH = 120;
@@ -10,6 +11,7 @@ const MAX_FAILURE_SUMMARY_LENGTH = 300;
 const SUBJECT_LABELS = Object.freeze({
   started: "Started",
   succeeded: "Passed",
+  warning: "Warning",
   failed: "Failed",
   test: "Test",
 });
@@ -152,6 +154,10 @@ function normalizeInput(input = {}) {
     shard: safeText(input.shard),
     failureSummary: safeText(input.failureSummary, MAX_FAILURE_SUMMARY_LENGTH),
     failedTests: normalizeNonNegativeInteger(input.failedTests, "failedTests"),
+    gateStatus: safeText(input.gateStatus),
+    topRegressions: (input.topRegressions || []).slice(0, 5).map(item => safeText(item, 200)),
+    artifactsUrl: normalizeHttpUrl(input.artifactsUrl, "artifactsUrl"),
+    summaryUrl: normalizeHttpUrl(input.summaryUrl, "summaryUrl"),
   };
 }
 
@@ -180,13 +186,18 @@ export function buildNightlyNotificationContent(input, options = {}) {
     ["Shard", notification.shard],
     ["Failure summary", notification.failureSummary],
     ["Failed tests", notification.failedTests === undefined ? "" : String(notification.failedTests)],
+    ["Quality gate", notification.gateStatus],
   ].filter(([, value]) => value !== "");
 
   const htmlRows = rows
     .map(([label, value]) => `<tr><th align="left">${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>`)
     .join("");
   const runUrl = escapeHtml(notification.runUrl);
-  const artifactsUrl = escapeHtml(`${notification.runUrl}#artifacts`);
+  const artifactsUrl = escapeHtml(notification.artifactsUrl || `${notification.runUrl}#artifacts`);
+  const summaryUrl = escapeHtml(notification.summaryUrl || notification.runUrl);
+  const regressions = notification.topRegressions.length
+    ? `<h2>Top regressions</h2><ol>${notification.topRegressions.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ol>`
+    : "";
 
   return {
     notification,
@@ -194,8 +205,10 @@ export function buildNightlyNotificationContent(input, options = {}) {
     html: [
       `<h1>EconPlanner nightly ${escapeHtml(notification.status)}</h1>`,
       `<table>${htmlRows}</table>`,
+      regressions,
       `<p><a href="${runUrl}">View job-by-job test results</a></p>`,
       `<p><a href="${artifactsUrl}">Download detailed result files</a> from the Artifacts section. GitHub sign-in may be required.</p>`,
+      `<p><a href="${summaryUrl}">View the nightly summary</a>.</p>`,
     ].join(""),
   };
 }
@@ -375,12 +388,22 @@ function githubRunUrl(env) {
 
 export async function runCli(argv = process.argv.slice(2), env = process.env) {
   const args = readArguments(argv);
-  return notifyEconPlannerNightly({
-    status: args.status,
+  const aggregate = args["aggregate-summary"]
+    ? JSON.parse(await readFile(path.resolve(args["aggregate-summary"]), "utf8"))
+    : null;
+  const runUrl = args["run-url"] || githubRunUrl(env);
+  const topRegressions = aggregate
+    ? [...(aggregate.gates?.red || []), ...(aggregate.gates?.amber || [])].slice(0, 5).map(item => item.code)
+    : [];
+  const status = aggregate
+    ? ({ GREEN: "succeeded", AMBER: "warning", RED: "failed" }[aggregate.gateStatus] || args.status)
+    : args.status;
+  const result = await notifyEconPlannerNightly({
+    status,
     repository: args.repository || env.GITHUB_REPOSITORY,
     branch: args.branch || env.GITHUB_REF_NAME,
     workflowName: args["workflow-name"] || env.GITHUB_WORKFLOW,
-    runUrl: args["run-url"] || githubRunUrl(env),
+    runUrl,
     startTime: args["start-time"] || env.ECONPLANNER_NIGHTLY_START_TIME || new Date().toISOString(),
     durationSeconds: args["duration-seconds"],
     failedPhase: args["failed-phase"],
@@ -389,7 +412,24 @@ export async function runCli(argv = process.argv.slice(2), env = process.env) {
     shard: args.shard,
     failureSummary: args["failure-summary"],
     failedTests: args["failed-tests"],
+    gateStatus: aggregate?.gateStatus,
+    topRegressions,
+    artifactsUrl: args["artifacts-url"] || (runUrl ? `${runUrl}#artifacts` : ""),
+    summaryUrl: args["summary-url"] || runUrl,
   }, { env });
+  const delivery = {
+    schemaVersion: 2,
+    kind: "econplanner-notification-delivery",
+    generatedAt: new Date().toISOString(),
+    gateStatus: aggregate?.gateStatus || null,
+    ...result
+  };
+  if (args["delivery-output"]) {
+    const output = path.resolve(args["delivery-output"]);
+    await mkdir(path.dirname(output), { recursive: true });
+    await writeFile(output, `${JSON.stringify(delivery, null, 2)}\n`);
+  }
+  return delivery;
 }
 
 function safeErrorResult(error) {
@@ -414,7 +454,23 @@ if (isMain) {
     const result = await runCli();
     process.stdout.write(`${JSON.stringify(result)}\n`);
   } catch (error) {
-    process.stderr.write(`${JSON.stringify(safeErrorResult(error))}\n`);
+    const failure = {
+      schemaVersion: 2,
+      kind: "econplanner-notification-delivery",
+      generatedAt: new Date().toISOString(),
+      ...safeErrorResult(error)
+    };
+    try {
+      const output = readArguments(process.argv.slice(2))["delivery-output"];
+      if (output) {
+        const target = path.resolve(output);
+        await mkdir(path.dirname(target), { recursive: true });
+        await writeFile(target, `${JSON.stringify(failure, null, 2)}\n`);
+      }
+    } catch {
+      // The original validation or delivery error remains authoritative.
+    }
+    process.stderr.write(`${JSON.stringify(failure)}\n`);
     process.exitCode = 1;
   }
 }

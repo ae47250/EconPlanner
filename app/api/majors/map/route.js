@@ -264,6 +264,13 @@ export async function POST(request) {
         planningContext
       }, 422);
     }
+    if (!planningContext.planningValidation.valid) {
+      return jsonResponse({
+        error: planningContext.planningValidation.errors[0],
+        code: "INVALID_PLANNING_PACE",
+        planningContext
+      }, 422);
+    }
     const catalogYears = await availableCatalogYears();
     const requestedCatalogYear = planningContext.entryCatalogYear;
 

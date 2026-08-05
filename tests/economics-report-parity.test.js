@@ -13,6 +13,7 @@ import {
   projectReportHtmlArtifact,
   projectReportJsonArtifact,
   projectSelectedPlanArtifact,
+  projectionMetrics,
   projectionMismatches
 } from "./oracle/economics-artifact-projection.js";
 
@@ -242,6 +243,16 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
     html: projectionMismatches(expected, projections.html),
     pdfRequest: projectionMismatches(expected, projections.pdfRequest)
   }, { html: [], pdfRequest: [] });
+  const metricProjection = Object.fromEntries(Object.entries({ expected, ...projections }).map(([name, projection]) => [
+    name,
+    projectionMetrics(projection)
+  ]));
+  assert.deepEqual(metricProjection.expected, metricProjection.json);
+  assert.deepEqual(metricProjection.expected, metricProjection.html);
+  assert.deepEqual(metricProjection.expected, metricProjection.pdfRequest);
+  if (process.env.ECONPLANNER_PARITY_METRICS === "1") {
+    console.log(JSON.stringify({ event: "ECONPLANNER_REPORT_PARITY_METRICS", projections: metricProjection }));
+  }
 });
 
 test("Task 17 preserves ECO 257 as statistics in every artifact role", async () => {

@@ -78,7 +78,7 @@ function buildStrategy(profileId, variantId, {
   };
 }
 
-function buildBundle(profileId, { schedule = productionSchedule, nodeLimit } = {}) {
+function buildBundle(profileId, { schedule = productionSchedule, nodeLimit, collectDiagnostics = false } = {}) {
   const student = studentFor(profileId);
   const mapping = mappingFor(student);
   const bundle = economicsModule.buildEconomicsTermPlans({
@@ -86,10 +86,68 @@ function buildBundle(profileId, { schedule = productionSchedule, nodeLimit } = {
     mapping,
     schedule,
     prerequisites: productionPrerequisites,
+    collectDiagnostics,
     ...(Number.isInteger(nodeLimit) ? { nodeLimit } : {})
   });
   return { student, mapping, bundle };
 }
+
+test("opt-in nightly diagnostics do not change production planner output", () => {
+  const withoutDiagnostics = buildBundle("safe-reserve-two-remaining").bundle;
+  const withDiagnostics = buildBundle("safe-reserve-two-remaining", { collectDiagnostics: true }).bundle;
+  const { metricsDiagnostics, ...productionShape } = withDiagnostics;
+  assert.deepEqual(productionShape, withoutDiagnostics);
+  assert.ok(metricsDiagnostics.strategyAttempts.length > 0);
+  assert.ok(metricsDiagnostics.searchAttempts.length >= metricsDiagnostics.strategyAttempts.length);
+  for (const attempt of metricsDiagnostics.strategyAttempts) {
+    assert.equal(attempt.attempted, true);
+    assert.ok(Number.isFinite(attempt.durationMs));
+    assert.ok(Number.isInteger(attempt.nodesVisited));
+    assert.ok(Array.isArray(attempt.validationErrors));
+  }
+  for (const search of metricsDiagnostics.searchAttempts) {
+    assert.ok(["preferred-distribution", "distribution-relaxed", "annual-coverage-relaxed"].includes(search.innerSearchStage));
+    assert.equal(typeof search.domainSizes, "object");
+    assert.ok(Array.isArray(search.emptyDomains));
+  }
+});
+
+test("nightly diagnostics retain the standard and selected early strategy attempts", () => {
+  const student = {
+    ...studentFor("verified-five-remaining"),
+    academicStanding: "freshman"
+  };
+  const standardBundle = economicsModule.buildEconomicsTermPlans({
+    student,
+    mapping: mappingFor(student),
+    schedule: productionSchedule,
+    prerequisites: productionPrerequisites,
+    collectDiagnostics: true
+  });
+  const earlyGraduationYear = resolvePlanningContext(student).expectedGraduationYear - 1;
+  const earlyStudent = {
+    ...student,
+    planningPace: "one_year_early",
+    projectedSeniorStandingConfirmation: {
+      status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+      academicYear: `${earlyGraduationYear - 1}/${earlyGraduationYear}`
+    }
+  };
+  const earlyBundle = economicsModule.buildEconomicsTermPlans({
+    student: earlyStudent,
+    mapping: mappingFor(earlyStudent),
+    schedule: productionSchedule,
+    prerequisites: productionPrerequisites,
+    collectDiagnostics: true
+  });
+  const strategies = new Set([
+    ...standardBundle.metricsDiagnostics.strategyAttempts,
+    ...earlyBundle.metricsDiagnostics.strategyAttempts
+  ].map(attempt => attempt.strategyId));
+  assert.deepEqual(strategies, new Set(["plan-1", "plan-2", "plan-3", "plan-c2"]));
+  assert.ok(standardBundle.metricsDiagnostics.strategyAttempts.every(attempt => attempt.strategyId !== "plan-c2"));
+  assert.ok(earlyBundle.metricsDiagnostics.strategyAttempts.every(attempt => attempt.strategyId === "plan-c2"));
+});
 
 function staleCondition(plan, course, term) {
   return (plan.feasibility?.enrollmentConditions || []).some(condition => (

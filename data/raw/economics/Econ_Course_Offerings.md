@@ -48,7 +48,7 @@ Never place the following courses in May Term:
 
 - ECO 461 is the senior seminar / capstone.
 - Senior-seminar and capstone requirements must be completed at Hanover; transfer, AP, and equivalency credit do not satisfy the requirement.
-- ECO 461 can only be taken with senior standing; a student graduating one year early has senior standing in the final Winter.
+- ECO 461 can only be taken with senior standing. A compressed plan may use the final Winter only when the student reports Registrar or advisor confirmation of senior standing for that exact academic year. A five-year plan reaches senior standing in the fourth college year and may place ECO 461 in the earliest otherwise-valid Winter in year four or five.
 - ECO 461 is offered in Winter term only.
 - ECO 461 normally has one Winter offering per academic year; verify future schedules before treating a later offering as confirmed.
 - Never place ECO 461 in Fall or May Term.

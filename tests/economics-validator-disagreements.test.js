@@ -82,6 +82,9 @@ function planningContext({ startYear, remainingYears, standing }) {
   const expectedGraduationYear = startYear + remainingYears;
   return {
     startYear,
+    entryAcademicYearStart: startYear - STANDING_INDEX[standing],
+    planningPace: "standard",
+    projectedSeniorStandingBasis: "college_year_progression",
     remainingYears,
     expectedGraduationYear,
     expectedGraduationTerm: `Spring/May ${expectedGraduationYear}`,

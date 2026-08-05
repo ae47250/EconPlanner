@@ -2,9 +2,18 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   buildPlanningSlots,
+  PLANNING_PACES,
+  PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
   resolvePlanningContext,
   transferPlanningOptions
 } from "../lib/planning/horizon.js";
+
+function seniorConfirmation(academicYear) {
+  return {
+    status: PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
+    academicYear
+  };
+}
 
 test("Fall freshman planning excludes the running Fall and maps through Spring/May 2030", () => {
   const context = resolvePlanningContext({
@@ -158,30 +167,36 @@ test("transfer planning offers four standard graduation years and a fifth-year o
 
 test("transfer graduation year derives one- through five-year horizons", () => {
   const expected = new Map([
-    [2027, { remainingYears: 1, standing: "senior" }],
-    [2028, { remainingYears: 2, standing: "junior" }],
-    [2029, { remainingYears: 3, standing: "sophomore" }],
+    [2027, { remainingYears: 1, pace: PLANNING_PACES.EARLY }],
+    [2028, { remainingYears: 2, pace: PLANNING_PACES.EARLY }],
+    [2029, { remainingYears: 3, pace: PLANNING_PACES.EARLY }],
     [2030, { remainingYears: 4, standing: "freshman" }],
-    [2031, { remainingYears: 5, standing: "freshman" }]
+    [2031, { remainingYears: 5, standing: "freshman", pace: PLANNING_PACES.EXTENDED }]
   ]);
 
   for (const [graduationYear, result] of expected) {
+    const compressed = graduationYear < 2030;
     const context = resolvePlanningContext({
       isTransferStudent: true,
       transferExpectedGraduationYear: String(graduationYear),
       transferEntryAcademicYear: "2026-2027",
-      planCreationDate: "2027-01-10"
+      planCreationDate: "2027-01-10",
+      ...(compressed ? {
+        projectedSeniorStandingConfirmation: seniorConfirmation(`${graduationYear - 1}/${graduationYear}`)
+      } : {})
     });
 
     assert.equal(context.transferValidation.valid, true);
+    assert.equal(context.planningValidation.valid, true);
     assert.equal(context.remainingYears, result.remainingYears);
-    assert.equal(context.effectiveStanding, result.standing);
+    assert.equal(context.effectiveStanding, "freshman");
+    assert.equal(context.planningPace, result.pace || PLANNING_PACES.STANDARD);
     assert.equal(context.expectedGraduationTerm, `Spring/May ${graduationYear}`);
     assert.equal(context.entryCatalogYear, "2026-2027");
   }
 });
 
-test("five-year transfer planning delays senior standing until the final academic year", () => {
+test("five-year transfer planning treats the fourth and fifth college years as senior years", () => {
   const context = resolvePlanningContext({
     isTransferStudent: true,
     transferExpectedGraduationYear: "2031",
@@ -191,9 +206,82 @@ test("five-year transfer planning delays senior standing until the final academi
   const slots = buildPlanningSlots(context);
 
   assert.equal(context.isFiveYearTransferPlan, true);
-  assert.equal(slots.find(slot => slot.label === "Winter 2030").absoluteStandingIndex, 2);
+  assert.equal(slots.find(slot => slot.label === "Winter 2030").absoluteStandingIndex, 3);
   assert.equal(slots.find(slot => slot.label === "Winter 2031").absoluteStandingIndex, 3);
   assert.equal(slots.at(-1).label, "Spring/May 2031");
+});
+
+test("regular standard, early, and extended paces resolve one authoritative horizon", () => {
+  const expectedStandardYears = new Map([
+    ["freshman", 4],
+    ["sophomore", 3],
+    ["junior", 2],
+    ["senior", 1]
+  ]);
+
+  for (const [academicStanding, remainingYears] of expectedStandardYears) {
+    const context = resolvePlanningContext({
+      academicStanding,
+      planningPace: PLANNING_PACES.STANDARD,
+      planCreationDate: "2026-07-26"
+    });
+    assert.equal(context.remainingYears, remainingYears);
+    assert.equal(context.requiresProjectedSeniorStandingConfirmation, false);
+    assert.equal(context.planningValidation.valid, true);
+  }
+
+  const extended = resolvePlanningContext({
+    academicStanding: "freshman",
+    planningPace: PLANNING_PACES.EXTENDED,
+    planCreationDate: "2026-07-26"
+  });
+  assert.equal(extended.remainingYears, 5);
+  assert.equal(extended.expectedGraduationTerm, "Spring/May 2031");
+  const extendedSlots = buildPlanningSlots(extended);
+  assert.equal(extendedSlots.find(slot => slot.label === "Winter 2030").absoluteStandingIndex, 3);
+  assert.equal(extendedSlots.find(slot => slot.label === "Winter 2031").absoluteStandingIndex, 3);
+});
+
+test("early regular planning requires an exact final-year senior-standing confirmation", () => {
+  const missing = resolvePlanningContext({
+    academicStanding: "freshman",
+    planningPace: PLANNING_PACES.EARLY,
+    planCreationDate: "2026-07-26"
+  });
+  const stale = resolvePlanningContext({
+    academicStanding: "freshman",
+    planningPace: PLANNING_PACES.EARLY,
+    planCreationDate: "2026-07-26",
+    projectedSeniorStandingConfirmation: seniorConfirmation("2027/2028")
+  });
+  const confirmed = resolvePlanningContext({
+    academicStanding: "freshman",
+    planningPace: PLANNING_PACES.EARLY,
+    planCreationDate: "2026-07-26",
+    projectedSeniorStandingConfirmation: seniorConfirmation("2028/2029")
+  });
+
+  assert.equal(missing.remainingYears, 3);
+  assert.equal(missing.planningValidation.valid, false);
+  assert.equal(stale.planningValidation.valid, false);
+  assert.equal(confirmed.planningValidation.valid, true);
+  assert.equal(confirmed.expectedGraduationTerm, "Spring/May 2029");
+  const seniorWinter = buildPlanningSlots(confirmed).find(slot => slot.label === "Winter 2029");
+  assert.equal(seniorWinter.absoluteStandingIndex, 3);
+  assert.equal(seniorWinter.seniorStandingBasis, "student_reported_registrar_or_advisor_confirmation");
+});
+
+test("one-year-early pace is invalid when fewer than two standard years remain", () => {
+  const context = resolvePlanningContext({
+    academicStanding: "senior",
+    planningPace: PLANNING_PACES.EARLY,
+    planCreationDate: "2026-07-26",
+    projectedSeniorStandingConfirmation: seniorConfirmation("2026/2027")
+  });
+
+  assert.equal(context.remainingYears, 1);
+  assert.equal(context.planningValidation.valid, false);
+  assert.match(context.planningValidation.errors[0], /unavailable/);
 });
 
 test("transfer planning rejects missing or out-of-range graduation and entry years", () => {

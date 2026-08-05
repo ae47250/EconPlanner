@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./nightly-observability.js";
 
 const UI_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_SESSION_KEY = "econ-planner-generated-session";
@@ -52,10 +52,12 @@ async function seedStudent(page, profile = PROJECTED_MOVE_PROFILE, displayName =
       notes: ""
     }));
     window.localStorage.setItem(storageKey, JSON.stringify({
-      schemaVersion: 4,
+      schemaVersion: 5,
       formData: {
         displayName: name,
         academicStanding: student.academicStanding,
+        planningPace: "standard",
+        projectedSeniorStandingConfirmation: null,
         planCreationDate: student.planCreationDate,
         planCreationDateEdited: true,
         isTransferStudent: false,
@@ -323,7 +325,7 @@ test("@pr timing-sensitive in-memory edit lock blocks duplicate clicks and relea
   await expect(planEditStatus(page)).toContainText("Plan A was updated and remains valid.");
   const afterSuccess = planSignatures(await savedSession(page));
   expect(afterSuccess["plan-1"]).not.toBe(initialSignatures["plan-1"]);
-  for (const planId of ["plan-2", "plan-3", "plan-c2"]) {
+  for (const planId of ["plan-2", "plan-3"]) {
     expect(afterSuccess[planId]).toBe(initialSignatures[planId]);
   }
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(1);

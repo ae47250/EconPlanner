@@ -158,6 +158,19 @@ test("nightly subjects use Started, Passed, and Failed labels", () => {
   assert.equal(buildNotificationSubject("failed", "Economics QA"), "Economics QA — Failed");
 });
 
+test("warning subject and AMBER content expose top regressions", () => {
+  assert.match(buildNotificationSubject("warning", "Economics QA"), /Warning$/);
+  const content = buildNightlyNotificationContent({
+    ...fictionalInput,
+    status: "warning",
+    gateStatus: "AMBER",
+    topRegressions: ["HOSTED_PDF_NOT_CONFIGURED", "PERFORMANCE_OUTSIDE_BASELINE"]
+  });
+  assert.match(content.html, /Quality gate/);
+  assert.match(content.html, /AMBER/);
+  assert.match(content.html, /HOSTED_PDF_NOT_CONFIGURED/);
+});
+
 test("standalone diagnostic subject uses the same prefix and Test label", () => {
   const payload = buildDiagnosticEmailPayload({
     ...fictionalLiveEnv,
@@ -367,7 +380,7 @@ test("standalone diagnostic mock mode preserves email delivery behavior without 
   assert.equal(requestCount, 0);
 });
 
-test("workflows use the non-secret subject variable without changing notification counts or triggers", () => {
+test("workflows use the non-secret subject variable with one start and one aggregate final notification", () => {
   const nightly = fs.readFileSync(new URL("../.github/workflows/econplanner-nightly.yml", import.meta.url), "utf8");
   const diagnostic = fs.readFileSync(new URL("../.github/workflows/econplanner-pingram-test.yml", import.meta.url), "utf8");
   const variableReference = "ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX: ${{ vars.ECONPLANNER_NOTIFICATION_SUBJECT_PREFIX }}";
@@ -375,7 +388,8 @@ test("workflows use the non-secret subject variable without changing notificatio
   assert.equal(nightly.split(variableReference).length - 1, 2);
   assert.equal(nightly.split("node scripts/notify-econplanner-nightly.mjs").length - 1, 2);
   assert.equal(nightly.split("--status started").length - 1, 1);
-  assert.equal(nightly.split("--status \"${{ steps.outcome.outputs.status }}\"").length - 1, 1);
+  assert.equal(nightly.split("--aggregate-summary test-results/econplanner-nightly/draft/econplanner-nightly-aggregate.json").length - 1, 1);
+  assert.equal(nightly.split("--delivery-output").length - 1, 2);
   assert.equal(diagnostic.split(variableReference).length - 1, 1);
   assert.match(diagnostic, /^on:\r?\n  workflow_dispatch:/m);
   assert.doesNotMatch(diagnostic, /^  (schedule|push|pull_request):/m);

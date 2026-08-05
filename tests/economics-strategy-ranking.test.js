@@ -11,7 +11,11 @@ import {
   semanticPlanSignature,
   validateGeneratedPlan
 } from "../lib/planning/economics.js";
-import { buildEarlyGraduationContext, resolvePlanningContext } from "../lib/planning/horizon.js";
+import {
+  PLANNING_PACES,
+  PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
+  resolvePlanningContext
+} from "../lib/planning/horizon.js";
 import { auditExternalEconomicsPlanComplete } from "./oracle/audit-external-plan.js";
 
 const fixture = JSON.parse(await readFile(
@@ -86,14 +90,23 @@ function strategyResult(profileId, variantId, {
   planningMode = null,
   schedule = productionSchedule
 } = {}) {
-  const student = profileStudent(profileId);
-  const mapping = mappingFor(student);
+  let student = profileStudent(profileId);
   const variant = variantsById.get(variantId);
   assert.ok(variant, `Unknown plan variant ${variantId}.`);
-  const normalContext = resolvePlanningContext(student);
-  const planningContext = variantId === EARLY_GRADUATION_VARIANT.id
-    ? buildEarlyGraduationContext(normalContext)
-    : normalContext;
+  if (variantId === EARLY_GRADUATION_VARIANT.id) {
+    const normalContext = resolvePlanningContext(student);
+    const expectedGraduationYear = normalContext.expectedGraduationYear - 1;
+    student = {
+      ...student,
+      planningPace: PLANNING_PACES.EARLY,
+      projectedSeniorStandingConfirmation: {
+        status: PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
+        academicYear: `${expectedGraduationYear - 1}/${expectedGraduationYear}`
+      }
+    };
+  }
+  const mapping = mappingFor(student);
+  const planningContext = resolvePlanningContext(student);
   assert.ok(planningContext, `${profileId}/${variantId} has no planning context.`);
   const selected = buildEconomicsTermPlan({
     student,

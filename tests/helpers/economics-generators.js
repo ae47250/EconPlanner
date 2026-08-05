@@ -1,7 +1,11 @@
 import fc from "fast-check";
 
+export const ECONOMICS_GENERATOR_VERSION = 2;
+
 export const ECONOMICS_GENERATOR_AXES = Object.freeze({
   standing: Object.freeze(["freshman", "sophomore", "junior", "senior"]),
+  planningPace: Object.freeze(["standard", "one_year_early", "one_year_extended"]),
+  seniorStandingConfirmationState: Object.freeze(["confirmed", "missing", "stale"]),
   planDate: Object.freeze(["2026-07-30", "2026-09-15", "2027-02-15"]),
   transferStatus: Object.freeze(["regular", "transfer"]),
   graduationHorizon: Object.freeze([1, 2, 3, 4, 5]),
@@ -301,6 +305,31 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
   const normalizedSeed = normalizeSeed(seed);
   const academicYearStart = activeAcademicYearStart(axes.planDate);
   const transfer = axes.transferStatus === "transfer";
+  const standingIndex = ["freshman", "sophomore", "junior", "senior"].indexOf(axes.standing);
+  const standardRemainingYears = Math.max(1, 4 - Math.max(0, standingIndex));
+  const regularEarly = !transfer
+    && axes.planningPace === "one_year_early"
+    && standardRemainingYears > 1;
+  const regularRemainingYears = axes.planningPace === "one_year_extended"
+    ? standardRemainingYears + 1
+    : regularEarly
+      ? standardRemainingYears - 1
+      : standardRemainingYears;
+  const expectedGraduationYear = transfer
+    ? academicYearStart + axes.graduationHorizon
+    : academicYearStart + regularRemainingYears;
+  const transferEntryYearStart = academicYearStart - 1;
+  const compressedTransfer = transfer && expectedGraduationYear < transferEntryYearStart + 4;
+  const requiresSeniorConfirmation = regularEarly || compressedTransfer;
+  const projectedSeniorStandingConfirmation = requiresSeniorConfirmation
+    && axes.seniorStandingConfirmationState !== "missing"
+    ? {
+        status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+        academicYear: axes.seniorStandingConfirmationState === "stale"
+          ? `${expectedGraduationYear - 2}/${expectedGraduationYear - 1}`
+          : `${expectedGraduationYear - 1}/${expectedGraduationYear}`
+      }
+    : null;
   const profile = {
     seed: normalizedSeed,
     profileId: profileIdentifier(normalizedSeed, axes),
@@ -310,12 +339,14 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
     axes: structuredClone(axes),
     student: {
       academicStanding: axes.standing,
+      planningPace: transfer ? "standard" : axes.planningPace,
       planDate: axes.planDate,
       isTransferStudent: transfer,
-      expectedGraduationYear: academicYearStart + axes.graduationHorizon,
+      expectedGraduationYear,
+      ...(projectedSeniorStandingConfirmation ? { projectedSeniorStandingConfirmation } : {}),
       ...(transfer ? {
-        transferExpectedGraduationYear: academicYearStart + axes.graduationHorizon,
-        transferEntryAcademicYear: `${academicYearStart - 1}-${academicYearStart}`
+        transferExpectedGraduationYear: expectedGraduationYear,
+        transferEntryAcademicYear: `${transferEntryYearStart}-${transferEntryYearStart + 1}`
       } : {}),
       courses: buildCourses(axes, manifest, normalizedSeed),
       reservedCapacity: {
@@ -573,6 +604,8 @@ export function generateInvalidEconomicsNeighbors({ seed, manifest, verifiedSche
   const normalizedSeed = normalizeSeed(seed);
   const common = {
     standing: "sophomore",
+    planningPace: "standard",
+    seniorStandingConfirmationState: "confirmed",
     planDate: "2026-07-30",
     transferStatus: "regular",
     graduationHorizon: 3,

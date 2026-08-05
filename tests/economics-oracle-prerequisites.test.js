@@ -225,8 +225,8 @@ test("capstone rules include final-Winter senior standing and never infer concur
     "CAPSTONE-STATISTICS-BEFORE"
   ]);
   assert.equal(
-    fixtureById("prereq-valid-integrated-strict-capstone").expectedContext.oneAcademicYearEarly,
-    true
+    fixtureById("prereq-valid-integrated-strict-capstone").expectedContext.planningPace,
+    "one_year_early"
   );
   const strict = checkExternalEconomicsPrerequisites(externalInput(
     fixtureById("prereq-valid-integrated-strict-capstone")

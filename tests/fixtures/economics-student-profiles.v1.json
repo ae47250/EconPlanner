@@ -35,11 +35,19 @@
     {
       "id": "F-EMPTY-NORMAL-AND-EARLY",
       "group": "freshman",
-      "student": { "academicStanding": "freshman", "courses": [] },
-      "coverage": ["no_completed_courses", "normal_graduation", "one_year_early_request"],
+      "student": {
+        "academicStanding": "freshman",
+        "planningPace": "one_year_early",
+        "projectedSeniorStandingConfirmation": {
+          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          "academicYear": "2028/2029"
+        },
+        "courses": []
+      },
+      "coverage": ["no_completed_courses", "one_year_early_request"],
       "expectations": {
-        "displayedPlanCount": { "min": 4, "max": 4 },
-        "requiredDisplayedStrategies": ["plan-1", "plan-2", "plan-3", "plan-c2"],
+        "displayedPlanCount": { "min": 1, "max": 1 },
+        "requiredDisplayedStrategies": ["plan-c2"],
         "expectedWarningsContaining": ["projected placement"],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
@@ -51,10 +59,10 @@
         "academicStanding": "freshman",
         "courses": [{ "code": "ECO 113", "status": "completed" }]
       },
-      "coverage": ["one_principle_completed", "mathematics_missing", "explore_first"],
+      "coverage": ["one_principle_completed", "mathematics_missing", "explore_first", "normal_graduation"],
       "expectations": {
-        "displayedPlanCount": { "min": 3, "max": 4 },
-        "requiredDisplayedStrategies": ["plan-1", "plan-3", "plan-c2"],
+        "displayedPlanCount": { "min": 2, "max": 3 },
+        "requiredDisplayedStrategies": ["plan-1", "plan-3"],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
     },
@@ -73,7 +81,7 @@
       },
       "coverage": ["one_principle_in_progress", "running_term_exclusion"],
       "expectations": {
-        "displayedPlanCount": { "min": 1, "max": 4 },
+        "displayedPlanCount": { "min": 1, "max": 3 },
         "forbiddenPlannedCourses": ["ECO 113"],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
@@ -90,7 +98,7 @@
       },
       "coverage": ["one_principle_completed", "mathematics_completed", "explore_first"],
       "expectations": {
-        "displayedPlanCount": { "min": 3, "max": 4 },
+        "displayedPlanCount": { "min": 2, "max": 3 },
         "requiredDisplayedStrategies": ["plan-1", "plan-3"],
         "strategyAssertions": [{
           "strategyId": "plan-3",
@@ -114,7 +122,7 @@
       },
       "coverage": ["both_principles_completed", "mathematics_completed", "statistics_completed"],
       "expectations": {
-        "displayedPlanCount": { "min": 2, "max": 4 },
+        "displayedPlanCount": { "min": 2, "max": 3 },
         "forbiddenPlannedCourses": ["MAT 217"],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
@@ -124,6 +132,11 @@
       "group": "sophomore",
       "student": {
         "academicStanding": "sophomore",
+        "planningPace": "one_year_early",
+        "projectedSeniorStandingConfirmation": {
+          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          "academicYear": "2027/2028"
+        },
         "courses": [
           { "code": "ECO 113", "status": "completed" },
           { "code": "ECO 114", "status": "completed" },
@@ -132,7 +145,7 @@
       },
       "coverage": ["one_year_early_request", "both_principles_completed", "mathematics_completed"],
       "expectations": {
-        "displayedPlanCount": { "min": 2, "max": 4 },
+        "displayedPlanCount": { "min": 0, "max": 1 },
         "candidateStrategyStatuses": { "plan-c2": ["PRELIMINARY_ONLY", "NOT_FEASIBLE"] },
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
@@ -154,7 +167,6 @@
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 2 },
         "forbiddenDisplayedStrategies": ["plan-3"],
-        "candidateStrategyStatuses": { "plan-c2": ["CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY"] },
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
@@ -182,10 +194,18 @@
     {
       "id": "J-IMPOSSIBLE-ONE-YEAR-EARLY",
       "group": "junior",
-      "student": { "academicStanding": "junior", "courses": [] },
+      "student": {
+        "academicStanding": "junior",
+        "planningPace": "one_year_early",
+        "projectedSeniorStandingConfirmation": {
+          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          "academicYear": "2026/2027"
+        },
+        "courses": []
+      },
       "coverage": ["no_completed_courses", "impossible_one_year_early_request"],
       "expectations": {
-        "displayedPlanCount": { "min": 1, "max": 2 },
+        "displayedPlanCount": { "min": 0, "max": 0 },
         "candidateStrategyStatuses": { "plan-c2": ["NOT_FEASIBLE"] },
         "forbiddenDisplayedStrategies": ["plan-c2", "plan-3"],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
@@ -276,6 +296,10 @@
         "isTransferStudent": true,
         "transferExpectedGraduationYear": "2027",
         "transferEntryAcademicYear": "2025-2026",
+        "projectedSeniorStandingConfirmation": {
+          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          "academicYear": "2026/2027"
+        },
         "courses": [
           { "code": "ECO 113", "status": "completed" },
           { "code": "ECO 114", "status": "completed" },

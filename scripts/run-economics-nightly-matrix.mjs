@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -16,10 +18,12 @@ import {
 } from "../lib/planning/horizon.js";
 import { auditExternalEconomicsPlanComplete } from "../tests/oracle/audit-external-plan.js";
 import {
+  ECONOMICS_GENERATOR_VERSION,
   auditGeneratedFictionalProfile,
   generateFictionalEconomicsProfiles,
   generateInvalidEconomicsNeighbors,
-  pairwiseCoverageReport
+  pairwiseCoverageReport,
+  shrinkFictionalEconomicsProfile
 } from "../tests/helpers/economics-generators.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -34,6 +38,7 @@ const DEFAULT_SEEDS = Object.freeze([
   20270429
 ]);
 const PROGRAM = Object.freeze({ id: "economics", name: "Economics" });
+const METRIC_SCHEMA_VERSION = 2;
 const APPROVAL_TYPES = Object.freeze({
   "CONCURRENT-INTERMEDIATE-ECO-461": "DEPARTMENT_APPROVAL",
   "CONCURRENT-MATH-ECO-213": "INSTRUCTOR_APPROVAL",
@@ -47,14 +52,16 @@ const CLASSIFIED_ORACLE_REVIEWS = new Set([
   "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"
 ]);
 
-const options = parseArguments(process.argv.slice(2));
-
-if (options.mode === "playwright-summary") {
-  await summarizePlaywright(options);
-} else if (options.mode === "prerequisite-summary") {
-  await summarizePrerequisites(options);
-} else {
-  await runMatrix(options);
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+if (isMain) {
+  const options = parseArguments(process.argv.slice(2));
+  if (options.mode === "playwright-summary") {
+    await summarizePlaywright(options);
+  } else if (options.mode === "prerequisite-summary") {
+    await summarizePrerequisites(options);
+  } else {
+    await runMatrix(options);
+  }
 }
 
 async function runMatrix(configuration) {
@@ -82,12 +89,31 @@ async function runMatrix(configuration) {
     return { ...generated, coverage };
   });
 
-  const allProfiles = generatedBySeed.flatMap(({ seed, profiles }) => (
+  let allProfiles = generatedBySeed.flatMap(({ seed, profiles }) => (
     profiles.map(profile => ({ seed, profile }))
   ));
+  if (configuration.profileFile) {
+    const profile = JSON.parse(await readFile(configuration.profileFile, "utf8"));
+    assertFictionalProfileFile(profile);
+    allProfiles = [{ seed: profile.seed, profile }];
+  }
+  if (configuration.profileId) {
+    allProfiles = allProfiles.filter(({ profile }) => profile.profileId === configuration.profileId);
+    invariant(allProfiles.length === 1, "PROFILE_NOT_FOUND", `Could not find exactly one generated profile named ${configuration.profileId}.`);
+  }
   const selectedProfiles = allProfiles.filter((_entry, index) => (
     index % configuration.shardTotal === configuration.shardIndex - 1
   ));
+  const allEffectiveProfiles = allProfiles.map(({ profile }) => {
+    const student = plannerStudent(profile);
+    return {
+      axes: effectivePlannerAxes(profile, student),
+      plannerInputHash: canonicalPlannerInputHash(student),
+      profileId: profile.profileId
+    };
+  });
+  const effectivePairwiseCoverage = effectivePairwiseCoverageReport(allEffectiveProfiles);
+  const duplicatePlannerInputs = duplicateInputGroups(allEffectiveProfiles);
   const profileResults = [];
   const failures = [];
   const reviewItems = [];
@@ -96,10 +122,19 @@ async function runMatrix(configuration) {
   let unclassifiedOracleDisagreementCount = 0;
   let acceptedPlanCount = 0;
   let profilesWithPlans = 0;
+  let explainedNoPlanCount = 0;
   let eco257StatisticsCount = 0;
+  const noPlanReasons = new Map();
 
   for (const { seed, profile } of selectedProfiles) {
+    const hashingStartedAt = performance.now();
+    const effectiveStudent = plannerStudent(profile);
+    const effectiveAxes = effectivePlannerAxes(profile, effectiveStudent);
+    const canonicalInput = JSON.stringify(stableValue(effectiveStudent));
+    const plannerInputHash = createHash("sha256").update(canonicalInput).digest("hex");
+    const hashingDurationMs = roundDuration(performance.now() - hashingStartedAt);
     const profileStartedAt = performance.now();
+    const heapUsedBefore = process.memoryUsage().heapUsed;
     try {
       const result = evaluateProfile({
         profile,
@@ -110,14 +145,45 @@ async function runMatrix(configuration) {
         schedule
       });
       const durationMs = roundDuration(performance.now() - profileStartedAt);
+      const heapUsedAfter = process.memoryUsage().heapUsed;
+      if (result.noPlan) {
+        invariant(result.noPlan.reason !== "UNEXPLAINED", "UNEXPLAINED_NO_PLAN", `${profile.profileId} produced no plan without stable evidence.`);
+        invariant(
+          result.noPlan.conclusion !== "PROVEN_INFEASIBLE" || result.noPlan.attempts.every(attempt => attempt.exhaustive),
+          "INCOMPLETE_SEARCH_LABELED_INFEASIBLE",
+          `${profile.profileId} was labeled infeasible after an incomplete search.`
+        );
+        explainedNoPlanCount += 1;
+        noPlanReasons.set(result.noPlan.reason, (noPlanReasons.get(result.noPlan.reason) || 0) + 1);
+      }
       profileResults.push({
         seed,
         profileId: profile.profileId,
         sequenceIndex: profile.sequenceIndex,
+        axes: profile.axes,
+        effectiveAxes,
+        plannerInputHash,
+        metricsOverhead: {
+          hashingAndCanonicalSerializationMs: hashingDurationMs,
+          canonicalPlannerInputBytes: Buffer.byteLength(canonicalInput)
+        },
         durationMs,
+        memory: {
+          heapUsedBeforeBytes: heapUsedBefore,
+          heapUsedAfterBytes: heapUsedAfter,
+          heapDeltaBytes: heapUsedAfter - heapUsedBefore,
+          processMaxRssBytes: Number(process.resourceUsage().maxRSS || 0) * 1024
+        },
+        outcome: result.planCount > 0 ? "PLANS_PRODUCED" : "NO_PLAN",
         plans: result.planCount,
+        planSignatures: result.planSignatures,
         solverNodes: result.solverNodes,
         maximumSolverNodes: Math.max(0, ...result.solverNodes),
+        solverDiagnostics: result.solverDiagnostics,
+        candidateOutcomes: result.candidateOutcomes,
+        planningGaps: result.planningGaps,
+        noPlan: result.noPlan,
+        replay: replayEvidence(seed, profile, configuration),
         oracleReviews: result.oracleReviews.length,
         classifiedOracleFindings: result.oracleFindings.length
       });
@@ -141,7 +207,8 @@ async function runMatrix(configuration) {
         profileId: profile.profileId,
         durationMs,
         plans: result.planCount,
-        solverNodes: result.solverNodes
+        solverNodes: result.solverNodes,
+        noPlanReason: result.noPlan?.reason || null
       }));
     } catch (error) {
       const durationMs = roundDuration(performance.now() - profileStartedAt);
@@ -154,7 +221,20 @@ async function runMatrix(configuration) {
         classification: error.code || "UNCLASSIFIED_NIGHTLY_FAILURE",
         message: safeErrorMessage(error),
         axes: profile.axes,
-        minimizedCounterexample: null
+        fictionalProfile: profile,
+        plannerInputHash,
+        metricsOverhead: {
+          hashingAndCanonicalSerializationMs: hashingDurationMs,
+          canonicalPlannerInputBytes: Buffer.byteLength(canonicalInput)
+        },
+        replay: replayEvidence(seed, profile, configuration),
+        minimizedCounterexample: minimizeCounterexample(profile, error.code, {
+          manifest,
+          verifiedSchedule,
+          requirements,
+          prerequisites,
+          schedule
+        }, configuration.output)
       };
       if (["ORACLE_DISAGREEMENT", "UNCLASSIFIED_ORACLE_REVIEW"].includes(failure.classification)) {
         oracleDisagreementCount += 1;
@@ -186,10 +266,33 @@ async function runMatrix(configuration) {
 
   const durations = profileResults.map(result => result.durationMs);
   const nodeCounts = profileResults.flatMap(result => result.solverNodes);
+  const attemptNodeCounts = profileResults.flatMap(result => (
+    result.solverDiagnostics?.strategyAttempts || []
+  ).map(attempt => attempt.nodesVisited));
+  const attemptDurations = profileResults.flatMap(result => (
+    result.solverDiagnostics?.strategyAttempts || []
+  ).map(attempt => attempt.durationMs));
+  const processUsage = process.resourceUsage();
   const summary = {
-    schemaVersion: 1,
+    schemaVersion: METRIC_SCHEMA_VERSION,
     kind: "econplanner-nightly-generated-matrix",
     generatedAt: new Date().toISOString(),
+    dataClassification: "fictional-test-only",
+    provenance: {
+      repository: process.env.GITHUB_REPOSITORY || null,
+      commitSha: process.env.GITHUB_SHA || null,
+      branch: process.env.GITHUB_REF_NAME || null,
+      workflowName: process.env.GITHUB_WORKFLOW || null,
+      workflowRunId: numericEnvironmentValue("GITHUB_RUN_ID"),
+      workflowAttempt: numericEnvironmentValue("GITHUB_RUN_ATTEMPT"),
+      os: `${os.platform()} ${os.release()}`,
+      nodeVersion: process.version,
+      pnpmVersion: process.env.PNPM_VERSION || null,
+      generatorVersion: ECONOMICS_GENERATOR_VERSION,
+      oraclePolicyVersion: manifest.policy?.version ?? null,
+      scheduleVersion: schedule.schemaVersion ?? null,
+      metricSchemaVersion: METRIC_SCHEMA_VERSION
+    },
     selection: {
       mode: "fixed-seed-pairwise",
       seeds: configuration.seeds,
@@ -204,23 +307,45 @@ async function runMatrix(configuration) {
         seed: item.seed,
         requiredPairs: item.coverage.requiredPairs,
         missingPairs: item.coverage.missingPairs.length
-      }))
+      })),
+      effectivePairwiseCoverage,
+      duplicatePlannerInputs
     },
     metrics: {
       totalRuntimeMs: roundDuration(performance.now() - startedAt),
       profilesTested: selectedProfiles.length,
       profilesWithPlans,
+      profilesWithoutPlans: selectedProfiles.length - profilesWithPlans,
       acceptedPlanCount,
       p50ProfileDurationMs: percentile(durations, 0.5),
+      p90ProfileDurationMs: percentile(durations, 0.9),
       p95ProfileDurationMs: percentile(durations, 0.95),
+      p99ProfileDurationMs: percentile(durations, 0.99),
       worstProfileDurationMs: durations.length ? Math.max(...durations) : 0,
       worstProfileId: [...profileResults].sort((left, right) => right.durationMs - left.durationMs)[0]?.profileId || null,
       solverNodeCounts: {
         observations: nodeCounts.length,
         total: nodeCounts.reduce((sum, value) => sum + value, 0),
         p50: percentile(nodeCounts, 0.5),
+        p90: percentile(nodeCounts, 0.9),
         p95: percentile(nodeCounts, 0.95),
+        p99: percentile(nodeCounts, 0.99),
         maximum: nodeCounts.length ? Math.max(...nodeCounts) : 0
+      },
+      solverAttempts: {
+        observations: attemptNodeCounts.length,
+        nodes: distributionSummary(attemptNodeCounts),
+        durationMs: distributionSummary(attemptDurations),
+        nodeLimitHits: profileResults.reduce((count, result) => count + (
+          result.solverDiagnostics?.strategyAttempts || []
+        ).filter(attempt => attempt.terminationReason === "NODE_LIMIT").length, 0),
+        solutionBudgetHits: profileResults.reduce((count, result) => count + (
+          result.solverDiagnostics?.searchAttempts || []
+        ).filter(attempt => attempt.solutionBudgetHit).length, 0)
+      },
+      processMemory: {
+        maxRssBytes: Number(processUsage.maxRSS || 0) * 1024,
+        heapUsedBytes: process.memoryUsage().heapUsed
       },
       failureCount: failures.length,
       oracleDisagreementCount: oracleDisagreementCount + classifiedOracleFindings.length,
@@ -231,6 +356,19 @@ async function runMatrix(configuration) {
       acceptedEco257ElectivePlacements: 0,
       oracleReviewCount: reviewItems.length
     },
+    noPlan: {
+      total: selectedProfiles.length - profilesWithPlans,
+      explained: explainedNoPlanCount,
+      unexplained: selectedProfiles.length - profilesWithPlans - explainedNoPlanCount,
+      reasons: Object.fromEntries([...noPlanReasons].sort(([left], [right]) => left.localeCompare(right)))
+    },
+    dimensions: buildDimensionSummary(profileResults),
+    highRiskCombinations: buildHighRiskCombinationSummary(profileResults),
+    artifactCompleteness: {
+      complete: profileResults.length + failures.length === selectedProfiles.length,
+      expectedProfiles: selectedProfiles.length,
+      recordedProfiles: profileResults.length + failures.length
+    },
     profiles: profileResults,
     classifiedOracleFindings,
     oracleReviews: reviewItems,
@@ -239,8 +377,13 @@ async function runMatrix(configuration) {
 
   await writeJson(configuration.output, summary);
   if (failures.length) {
+    for (const failure of failures) {
+      if (failure.minimizedCounterexample?.fictionalProfile && failure.minimizedCounterexample.profileFile) {
+        await writeJson(path.resolve(ROOT, failure.minimizedCounterexample.profileFile), failure.minimizedCounterexample.fictionalProfile);
+      }
+    }
     await writeJson(failurePath(configuration.output), {
-      schemaVersion: 1,
+      schemaVersion: METRIC_SCHEMA_VERSION,
       kind: "econplanner-nightly-failure-evidence",
       shard: summary.selection.shard,
       seeds: configuration.seeds,
@@ -263,7 +406,13 @@ function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, pr
 
   const student = plannerStudent(profile);
   const mapping = mapStudentToProgram(PROGRAM, requirements, student);
-  const bundle = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const bundle = buildEconomicsTermPlans({
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    collectDiagnostics: true
+  });
   const signatures = bundle.plans.map(plan => semanticPlanSignature(plan));
   invariant(
     new Set(signatures).size === signatures.length,
@@ -332,9 +481,16 @@ function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, pr
     })));
   }
 
+  const noPlan = bundle.plans.length === 0 ? classifyNoPlan(bundle) : null;
+
   return {
     planCount: bundle.plans.length,
+    planSignatures: signatures,
     solverNodes,
+    solverDiagnostics: bundle.metricsDiagnostics || { strategyAttempts: [], searchAttempts: [] },
+    candidateOutcomes: bundle.candidateOutcomes || [],
+    planningGaps: bundle.planningGaps || [],
+    noPlan,
     oracleReviews,
     oracleFindings,
     eco257StatisticsCount
@@ -344,6 +500,8 @@ function evaluateProfile({ profile, manifest, verifiedSchedule, requirements, pr
 function plannerStudent(profile) {
   const student = {
     academicStanding: profile.student.academicStanding,
+    planningPace: profile.student.planningPace || "standard",
+    projectedSeniorStandingConfirmation: profile.student.projectedSeniorStandingConfirmation || null,
     planCreationDate: profile.student.planDate,
     isTransferStudent: profile.student.isTransferStudent,
     ...(profile.student.isTransferStudent ? {
@@ -381,6 +539,231 @@ function plannerStudent(profile) {
       .map(slot => [slot.id, Number(profile.student.reservedCapacity?.[slot.scheduleTerm] || 0)])
   );
   return student;
+}
+
+function effectivePlannerAxes(profile, student) {
+  const declared = profile.axes || {};
+  const statuses = new Set((student.courses || []).map(course => course.status));
+  const reservedValues = Object.values(student.reservedCourseUnits || {});
+  const planningContext = resolvePlanningContext(student);
+  const seniorStandingConfirmationState = !planningContext.requiresProjectedSeniorStandingConfirmation
+    ? "not_required"
+    : planningContext.projectedSeniorStandingConfirmation
+      ? "confirmed"
+      : student.projectedSeniorStandingConfirmation
+        ? "stale"
+        : "missing";
+  return {
+    standing: student.academicStanding ?? null,
+    planningPace: student.isTransferStudent ? null : student.planningPace ?? null,
+    seniorStandingConfirmationState,
+    planDate: student.planCreationDate ?? null,
+    transferStatus: student.isTransferStudent ? "transfer" : "regular",
+    graduationHorizon: student.isTransferStudent ? declared.graduationHorizon ?? null : null,
+    courseStatus: statuses.has(declared.courseStatus) ? declared.courseStatus : null,
+    completedPathway: (student.courses || []).length ? declared.completedPathway ?? null : null,
+    reservedCapacity: reservedValues.length ? Math.max(...reservedValues) : null,
+    availabilityState: null,
+    approvalState: null
+  };
+}
+
+function stableValue(value) {
+  if (Array.isArray(value)) return value.map(stableValue);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.keys(value).sort().map(key => [key, stableValue(value[key])]));
+}
+
+function assertFictionalProfileFile(profile) {
+  invariant(profile?.fictional === true, "NON_FICTIONAL_PROFILE_FILE", "Replay profile files must be explicitly fictional.");
+  const forbiddenKeys = /^(email|student_?id|real_?name|phone|address|transcript|date_?of_?birth)$/iu;
+  let piiFinding = null;
+  function visit(value, key = "profile") {
+    if (piiFinding) return;
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => visit(item, `${key}[${index}]`));
+      return;
+    }
+    if (!value || typeof value !== "object") {
+      if (typeof value === "string" && (/@/u.test(value) || /\b\d{3}[-.) ]+\d{3}[- ]+\d{4}\b/u.test(value))) piiFinding = key;
+      return;
+    }
+    for (const [childKey, childValue] of Object.entries(value)) {
+      if (forbiddenKeys.test(childKey)) {
+        piiFinding = `${key}.${childKey}`;
+        return;
+      }
+      visit(childValue, `${key}.${childKey}`);
+    }
+  }
+  visit(profile);
+  invariant(!piiFinding, "PROFILE_FILE_PII", `Replay profile files must not contain personal-data field ${piiFinding}.`);
+  const displayName = profile.student?.displayName;
+  invariant(!displayName || /^Fictional\b/u.test(displayName), "PROFILE_FILE_PII", "Replay display names must begin with Fictional.");
+}
+
+function canonicalPlannerInputHash(student) {
+  const canonical = JSON.stringify(stableValue(student));
+  return createHash("sha256").update(canonical).digest("hex");
+}
+
+function effectivePairwiseCoverageReport(profiles) {
+  const axisNames = [...new Set(profiles.flatMap(profile => Object.keys(profile.axes || {})))].sort();
+  const values = Object.fromEntries(axisNames.map(name => [
+    name,
+    [...new Set(profiles.map(profile => profile.axes?.[name]).filter(value => value !== null && value !== undefined))]
+      .sort((left, right) => String(left).localeCompare(String(right)))
+  ]));
+  const covered = new Set();
+  for (const profile of profiles) {
+    for (let leftIndex = 0; leftIndex < axisNames.length; leftIndex += 1) {
+      const leftName = axisNames[leftIndex];
+      const leftValue = profile.axes?.[leftName];
+      if (leftValue === null || leftValue === undefined) continue;
+      for (let rightIndex = leftIndex + 1; rightIndex < axisNames.length; rightIndex += 1) {
+        const rightName = axisNames[rightIndex];
+        const rightValue = profile.axes?.[rightName];
+        if (rightValue === null || rightValue === undefined) continue;
+        covered.add(JSON.stringify([leftName, leftValue, rightName, rightValue]));
+      }
+    }
+  }
+  const required = [];
+  for (let leftIndex = 0; leftIndex < axisNames.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < axisNames.length; rightIndex += 1) {
+      const leftName = axisNames[leftIndex];
+      const rightName = axisNames[rightIndex];
+      for (const leftValue of values[leftName]) {
+        for (const rightValue of values[rightName]) {
+          required.push([leftName, leftValue, rightName, rightValue]);
+        }
+      }
+    }
+  }
+  const missingPairs = required.filter(pair => !covered.has(JSON.stringify(pair)));
+  return {
+    axes: Object.fromEntries(axisNames.map(name => [name, {
+      values: values[name],
+      consumed: values[name].length > 0
+    }])),
+    requiredPairs: required.length,
+    coveredPairs: required.length - missingPairs.length,
+    missingPairs
+  };
+}
+
+function duplicateInputGroups(profiles) {
+  const groups = new Map();
+  for (const profile of profiles) {
+    const entries = groups.get(profile.plannerInputHash) || [];
+    entries.push(profile.profileId);
+    groups.set(profile.plannerInputHash, entries);
+  }
+  return [...groups.entries()]
+    .filter(([, profileIds]) => profileIds.length > 1)
+    .map(([plannerInputHash, profileIds]) => ({ plannerInputHash, profileIds: [...profileIds].sort() }))
+    .sort((left, right) => left.plannerInputHash.localeCompare(right.plannerInputHash));
+}
+
+function classifyNoPlan(bundle) {
+  const diagnostics = bundle.metricsDiagnostics || {};
+  const attempts = diagnostics.strategyAttempts || [];
+  const searchAttempts = diagnostics.searchAttempts || [];
+  const evidence = {
+    attempts,
+    searchAttempts,
+    candidateOutcomes: bundle.candidateOutcomes || [],
+    planningGaps: bundle.planningGaps || []
+  };
+  if (diagnostics.invalidInput) {
+    return { conclusion: "UNKNOWN", reason: "INVALID_INPUT", ...evidence };
+  }
+  if (!attempts.length) {
+    return { conclusion: "UNKNOWN", reason: "UNEXPLAINED", ...evidence };
+  }
+  const incomplete = attempts.filter(attempt => !attempt.exhaustive && !attempt.solutionFound);
+  if (incomplete.length) {
+    return { conclusion: "UNKNOWN", reason: "SEARCH_INCOMPLETE", ...evidence };
+  }
+  if ((bundle.planningGaps || []).some(gap => /REVIEW|APPROVAL|POLICY/iu.test(`${gap.code || ""} ${gap.reason || ""} ${gap.message || ""}`))) {
+    return { conclusion: "UNKNOWN", reason: "POLICY_REVIEW_REQUIRED", ...evidence };
+  }
+  const allCountCapacity = searchAttempts.length > 0
+    && searchAttempts.every(attempt => attempt.failure === "COUNT_CAPACITY");
+  if (allCountCapacity) {
+    return { conclusion: "PROVEN_INFEASIBLE", reason: "COUNT_CAPACITY", ...evidence };
+  }
+  const missingOffering = (bundle.planningGaps || []).some(gap => (
+    /missing offering|no (?:verified )?offering|not offered/iu.test(`${gap.code || ""} ${gap.reason || ""} ${gap.message || ""}`)
+  ));
+  if (missingOffering) {
+    return { conclusion: "PROVEN_INFEASIBLE", reason: "MISSING_OFFERING", ...evidence };
+  }
+  const emptyDomains = [...new Set(searchAttempts.flatMap(attempt => attempt.emptyDomains || []))];
+  if (emptyDomains.length) {
+    return { conclusion: "PROVEN_INFEASIBLE", reason: "EMPTY_DOMAIN", emptyDomains, ...evidence };
+  }
+  if (attempts.every(attempt => attempt.exhaustive)) {
+    return { conclusion: "PROVEN_INFEASIBLE", reason: "NO_COMPLETE_ASSIGNMENT", ...evidence };
+  }
+  return { conclusion: "UNKNOWN", reason: "OTHER_CLASSIFIED", classificationId: "NO_RETAINED_VALID_PLAN", ...evidence };
+}
+
+function replayEvidence(seed, profile, configuration) {
+  const output = `test-results/replay/${safeText(profile.profileId, 160)}.json`;
+  return {
+    seed,
+    profileId: profile.profileId,
+    command: [
+      "node",
+      "scripts/run-economics-nightly-matrix.mjs",
+      "--seeds",
+      String(seed),
+      "--profile-id",
+      profile.profileId,
+      "--shard",
+      "1/1",
+      "--output",
+      output
+    ],
+    sourceMode: configuration.profileFile ? "profile-file" : "generated-profile"
+  };
+}
+
+function minimizeCounterexample(profile, classification, inputs, output) {
+  if (!classification) return null;
+  for (const candidate of shrinkFictionalEconomicsProfile(profile, inputs)) {
+    try {
+      evaluateProfile({ profile: candidate, ...inputs });
+    } catch (error) {
+      if ((error.code || "UNCLASSIFIED_NIGHTLY_FAILURE") === classification) {
+        const profileFile = relativeToRoot(path.join(
+          path.dirname(output),
+          `${safeText(candidate.profileId, 120)}.minimized.json`
+        ));
+        return {
+          seed: candidate.seed,
+          profileId: candidate.profileId,
+          axes: candidate.axes,
+          fictionalProfile: candidate,
+          profileFile,
+          replay: {
+            command: [
+              "node",
+              "scripts/run-economics-nightly-matrix.mjs",
+              "--profile-file",
+              profileFile,
+              "--shard",
+              "1/1",
+              "--output",
+              `test-results/replay/${safeText(candidate.profileId, 120)}.json`
+            ]
+          }
+        };
+      }
+    }
+  }
+  return null;
 }
 
 function auditPlan(student, plan, policy, verifiedSchedule) {
@@ -502,7 +885,14 @@ async function summarizePlaywright(configuration) {
   const executions = reports.flatMap(({ input, report }, reportIndex) => (
     collectPlaywrightExecutions(report.suites || [], [], { input, reportIndex })
   ));
+  const attachmentRecords = (await Promise.all(executions.flatMap(item => (
+    item.attachments.map(attachment => readPlaywrightAttachment(item.input, attachment))
+  )))).filter(Boolean);
+  const observations = attachmentRecords.filter(item => item.kind === "econplanner-browser-test-observation");
+  const parity = attachmentRecords.filter(item => item.kind === "econplanner-api-ui-parity");
+  const axeResults = attachmentRecords.filter(item => Array.isArray(item.violations));
   const failed = executions.filter(item => !["passed", "skipped"].includes(item.status));
+  const baselineComparableExecutions = executions.filter(item => !/econ-planner-parity\.spec\.js$/u.test(item.file || ""));
   const errorText = item => item.errors.map(error => error.message || error.value || String(error)).join("\n");
   const titleMatches = (item, pattern) => pattern.test(item.title) || pattern.test(errorText(item));
   const metric = pattern => failed.filter(item => titleMatches(item, pattern)).length;
@@ -516,13 +906,14 @@ async function summarizePlaywright(configuration) {
     .filter(([, statuses]) => statuses.size > 1)
     .map(([title, statuses]) => ({ title, statuses: [...statuses].sort() }));
   const summary = {
-    schemaVersion: 1,
-    kind: "econplanner-nightly-playwright-summary",
+    schemaVersion: METRIC_SCHEMA_VERSION,
+    kind: "econplanner-nightly-browser",
     generatedAt: new Date().toISOString(),
     inputReports: configuration.inputs.map(relativeToRoot),
     metrics: {
       totalRuntimeMs: executions.reduce((sum, item) => sum + item.durationMs, 0),
       testExecutions: executions.length,
+      baselineComparableTestExecutions: baselineComparableExecutions.length,
       passed: executions.filter(item => item.status === "passed").length,
       failed: failed.length,
       skipped: executions.filter(item => item.status === "skipped").length,
@@ -537,8 +928,32 @@ async function summarizePlaywright(configuration) {
       mat113DetachmentFailureCount: failed.filter(item => (
         /MAT 113/iu.test(errorText(item)) && /detached|not attached|element.*attachment/iu.test(errorText(item))
       )).length,
-      flakeObservationCount: flakeObservations.length
+      flakeObservationCount: flakeObservations.length,
+      retryCount: executions.reduce((sum, item) => sum + Number(item.retry || 0), 0),
+      consoleErrorCount: observations.reduce((sum, item) => sum + (item.consoleErrors?.length || 0), 0),
+      pageErrorCount: observations.reduce((sum, item) => sum + (item.pageErrors?.length || 0), 0),
+      networkErrorCount: observations.reduce((sum, item) => sum + (item.networkErrors?.length || 0), 0),
+      apiRequestCount: observations.reduce((sum, item) => sum + Number(item.requestCounts?.api || 0), 0),
+      pdfRequestCount: observations.reduce((sum, item) => sum + Number(item.requestCounts?.pdf || 0), 0),
+      successfulDuplicateRequestCount: observations.reduce((sum, item) => sum + (
+        item.successfulDuplicateRequests || []
+      ).reduce((count, request) => count + Math.max(0, Number(request.count || 0) - 1), 0), 0),
+      axeFindingCount: axeResults.reduce((sum, item) => sum + item.violations.length, 0),
+      moderateOrMinorAccessibilityFindings: axeResults.reduce((sum, item) => sum + item.violations.filter(violation => (
+        ["minor", "moderate"].includes(violation.impact)
+      )).length, 0),
+      seriousOrCriticalAccessibilityFindings: axeResults.reduce((sum, item) => sum + item.violations.filter(violation => (
+        ["serious", "critical"].includes(violation.impact)
+      )).length, 0),
+      materialParityMismatchCount: parity.reduce((sum, item) => sum
+        + Number(item.materialMissingCount || 0)
+        + Number(item.materialExtraCount || 0), 0)
     },
+    observations,
+    parity,
+    accessibility: axeResults.map(item => ({
+      violations: item.violations.map(violation => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes?.length || 0 }))
+    })),
     flakeObservations,
     failures: failed.map(item => ({
       title: item.title,
@@ -572,8 +987,8 @@ async function summarizePrerequisites(configuration) {
     "The optional matrix reported an accepted wrong approval identity."
   );
   const summary = {
-    schemaVersion: 1,
-    kind: "econplanner-nightly-prerequisite-summary",
+    schemaVersion: METRIC_SCHEMA_VERSION,
+    kind: "econplanner-nightly-prerequisites",
     generatedAt: new Date().toISOString(),
     metrics: {
       normalPrerequisiteCasesExecuted: normal.cases,
@@ -653,9 +1068,12 @@ function collectPlaywrightExecutions(suites, parents, source) {
           output.push({
             ...source,
             title: [...suiteParents, spec.title, test.projectName].filter(Boolean).join(" > "),
+            file: spec.file || null,
             status: result.status || test.status || "unknown",
             durationMs: Number(result.duration || 0),
-            errors: result.errors || []
+            retry: Number(result.retry || 0),
+            errors: result.errors || [],
+            attachments: result.attachments || []
           });
         }
       }
@@ -674,7 +1092,9 @@ function parseArguments(args) {
     output: path.join(ROOT, "test-results", "economics-nightly-matrix", "summary.json"),
     inputs: [],
     normalLog: null,
-    optionalLog: null
+    optionalLog: null,
+    profileId: null,
+    profileFile: null
   };
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
@@ -696,6 +1116,10 @@ function parseArguments(args) {
       result.normalLog = path.resolve(ROOT, requiredValue(args, ++index, argument));
     } else if (argument === "--optional-log") {
       result.optionalLog = path.resolve(ROOT, requiredValue(args, ++index, argument));
+    } else if (argument === "--profile-id") {
+      result.profileId = requiredValue(args, ++index, argument);
+    } else if (argument === "--profile-file") {
+      result.profileFile = resolveSafeProfileInput(requiredValue(args, ++index, argument));
     } else {
       throw new Error(`Unknown argument: ${argument}`);
     }
@@ -704,6 +1128,7 @@ function parseArguments(args) {
     && result.shardIndex >= 1 && result.shardIndex <= result.shardTotal,
   "INVALID_SHARD", "--shard must use INDEX/TOTAL with 1 <= INDEX <= TOTAL.");
   invariant(result.seeds.length > 0, "INVALID_SEEDS", "At least one fixed seed is required.");
+  invariant(!(result.profileId && result.profileFile), "AMBIGUOUS_PROFILE_REPLAY", "Choose --profile-id or --profile-file, not both.");
   if (result.mode === "playwright-summary") {
     invariant(result.inputs.length > 0, "MISSING_PLAYWRIGHT_INPUT", "At least one --input report is required.");
   }
@@ -731,6 +1156,102 @@ function resolveSafeOutput(value) {
   const allowedRoot = path.join(ROOT, "test-results") + path.sep;
   invariant(output.startsWith(allowedRoot), "UNSAFE_OUTPUT_PATH", "Nightly output must stay under test-results/.");
   return output;
+}
+
+async function readPlaywrightAttachment(reportPath, attachment) {
+  if (!attachment?.name?.endsWith(".json") && attachment?.contentType !== "application/json") return null;
+  try {
+    if (attachment.body) return JSON.parse(Buffer.from(attachment.body, "base64").toString("utf8"));
+    if (!attachment.path) return null;
+    const candidates = [
+      path.resolve(path.dirname(reportPath), attachment.path),
+      path.resolve(ROOT, attachment.path),
+      path.resolve(attachment.path)
+    ];
+    for (const candidate of candidates) {
+      try {
+        return JSON.parse(await readFile(candidate, "utf8"));
+      } catch {
+        // Try the next Playwright attachment path convention.
+      }
+    }
+  } catch {
+    // Malformed evidence remains visible in the source report and is not counted as a passing observation.
+  }
+  return null;
+}
+
+function resolveSafeProfileInput(value) {
+  const input = path.resolve(ROOT, value);
+  const allowedRoots = [
+    path.join(ROOT, "test-results") + path.sep,
+    path.join(ROOT, "tests", "fixtures") + path.sep
+  ];
+  invariant(allowedRoots.some(root => input.startsWith(root)), "UNSAFE_PROFILE_INPUT", "Replay profile files must stay under test-results/ or tests/fixtures/.");
+  return input;
+}
+
+function numericEnvironmentValue(name) {
+  const value = Number(process.env[name]);
+  return Number.isSafeInteger(value) ? value : null;
+}
+
+function distributionSummary(values) {
+  const numbers = values.map(Number).filter(Number.isFinite);
+  return {
+    observations: numbers.length,
+    total: numbers.reduce((sum, value) => sum + value, 0),
+    p50: percentile(numbers, 0.5),
+    p90: percentile(numbers, 0.9),
+    p95: percentile(numbers, 0.95),
+    p99: percentile(numbers, 0.99),
+    maximum: numbers.length ? Math.max(...numbers) : 0
+  };
+}
+
+function buildDimensionSummary(profileResults) {
+  function summarize(field) {
+    const dimensions = new Map();
+    for (const result of profileResults) {
+      for (const [name, rawValue] of Object.entries(result[field] || {})) {
+        const value = rawValue === null || rawValue === undefined ? "NOT_CONSUMED" : String(rawValue);
+        const byValue = dimensions.get(name) || new Map();
+        const current = byValue.get(value) || { profiles: 0, profilesWithPlans: 0, noPlans: 0, acceptedPlans: 0 };
+        current.profiles += 1;
+        current.profilesWithPlans += result.plans > 0 ? 1 : 0;
+        current.noPlans += result.plans > 0 ? 0 : 1;
+        current.acceptedPlans += result.plans;
+        byValue.set(value, current);
+        dimensions.set(name, byValue);
+      }
+    }
+    return Object.fromEntries([...dimensions.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([name, byValue]) => [
+      name,
+      Object.fromEntries([...byValue.entries()].sort(([left], [right]) => left.localeCompare(right)))
+    ]));
+  }
+  return { declared: summarize("axes"), effective: summarize("effectiveAxes") };
+}
+
+function buildHighRiskCombinationSummary(profileResults) {
+  const definitions = [
+    ["TRANSFER_SHORT_HORIZON", result => result.axes?.transferStatus === "transfer" && Number(result.axes?.graduationHorizon) <= 2],
+    ["SENIOR", result => result.axes?.standing === "senior"],
+    ["MAX_RESERVED_CAPACITY", result => Number(result.axes?.reservedCapacity) === 2],
+    ["IN_PROGRESS_PATHWAY", result => result.axes?.courseStatus === "in_progress"],
+    ["CLOSED_AVAILABILITY_DECLARED", result => result.axes?.availabilityState === "closed"],
+    ["APPROVAL_DECLARED", result => result.axes?.approvalState !== "not-required"]
+  ];
+  return definitions.map(([id, matches]) => {
+    const rows = profileResults.filter(matches);
+    return {
+      id,
+      profiles: rows.length,
+      profilesWithPlans: rows.filter(row => row.plans > 0).length,
+      noPlans: rows.filter(row => row.plans === 0).length,
+      acceptedPlans: rows.reduce((sum, row) => sum + row.plans, 0)
+    };
+  });
 }
 
 function percentile(values, fraction) {
@@ -786,3 +1307,14 @@ function invariant(condition, code, message) {
   error.code = code;
   throw error;
 }
+
+export {
+  canonicalPlannerInputHash,
+  assertFictionalProfileFile,
+  classifyNoPlan,
+  duplicateInputGroups,
+  effectivePairwiseCoverageReport,
+  effectivePlannerAxes,
+  plannerStudent,
+  stableValue
+};

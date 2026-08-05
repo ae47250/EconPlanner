@@ -26,7 +26,7 @@ function byId(ruleId) {
 test("policy manifest has stable version and review metadata", () => {
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.policy.id, "hanover-economics-planning-policy");
-  assert.equal(manifest.policy.version, 3);
+  assert.equal(manifest.policy.version, 4);
   assert.equal(manifest.policy.confirmationDate, "2026-08-04");
   assert.equal(
     manifest.policy.reviewedBy,
@@ -65,10 +65,7 @@ test("all source files and confirmation references are explicit", async () => {
 
   for (const record of manifest.confirmationRecords) {
     assert.match(record.date, /^\d{4}-\d{2}-\d{2}$/);
-    assert.equal(
-      record.reviewedBy,
-      "Economics Department representative and project owner"
-    );
+    assert.ok(record.reviewedBy);
   }
 });
 

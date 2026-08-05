@@ -32,6 +32,31 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
+test("early-plan reports identify the selected pace and student-reported senior-standing basis", async () => {
+  const student = {
+    ...fixture.student,
+    academicStanding: "junior",
+    planningPace: "one_year_early",
+    planCreationDate: "2026-07-28",
+    projectedSeniorStandingConfirmation: {
+      status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+      academicYear: "2026/2027"
+    }
+  };
+  const report = await buildEconomicsReportFromStudent(student, "2026-07-28");
+  const html = renderEconomicsHtml(report, template);
+
+  assert.equal(report.student.planningPace, "one_year_early");
+  assert.equal(report.student.projectedSeniorStandingAcademicYear, "2026/2027");
+  assert.equal(
+    report.student.projectedSeniorStandingBasis,
+    "student_reported_registrar_or_advisor_confirmation"
+  );
+  assert.match(report.inputSummary, /student reports Registrar or advisor confirmation/);
+  assert.match(html, /data-planning-pace="one_year_early"/);
+  assert.match(html, /data-senior-standing-basis="student_reported_registrar_or_advisor_confirmation"/);
+});
+
 test("Economics report API returns canonical JSON or populated HTML", async () => {
   const jsonResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
     method: "POST",
@@ -168,7 +193,11 @@ test("transfer reports use the selected graduation and Hanover entry years", asy
     isTransferStudent: true,
     transferExpectedGraduationYear: "2027",
     transferEntryAcademicYear: "2025-2026",
-    planCreationDate: "2026-07-28"
+    planCreationDate: "2026-07-28",
+    projectedSeniorStandingConfirmation: {
+      status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+      academicYear: "2026/2027"
+    }
   }, "2026-07-28");
 
   assert.equal(report.student.academicStanding, "Transfer plan");

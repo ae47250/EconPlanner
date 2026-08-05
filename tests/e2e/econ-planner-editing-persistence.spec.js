@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./nightly-observability.js";
 
 const UI_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_SESSION_KEY = "econ-planner-generated-session";
@@ -54,10 +54,12 @@ async function seedStudent(page, profile) {
       notes: ""
     }));
     window.localStorage.setItem(storageKey, JSON.stringify({
-      schemaVersion: 4,
+      schemaVersion: 5,
       formData: {
         displayName: "Task 16 Student",
         academicStanding: student.academicStanding,
+        planningPace: "standard",
+        projectedSeniorStandingConfirmation: null,
         planCreationDate: student.planCreationDate,
         planCreationDateEdited: true,
         isTransferStudent: false,
@@ -244,7 +246,7 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   const editedSession = await savedSession(page);
   const editedSignatures = savedPlanSignatures(editedSession);
   expect(editedSignatures["plan-1"]).not.toBe(originalSignatures["plan-1"]);
-  for (const planId of ["plan-2", "plan-3", "plan-c2"]) {
+  for (const planId of ["plan-2", "plan-3"]) {
     expect(editedSignatures[planId]).toBe(originalSignatures[planId]);
   }
   expect(editedSession.selectedPlanId).toBe("plan-1");

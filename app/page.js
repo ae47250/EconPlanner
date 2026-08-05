@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import {
   buildPlanningSlots,
+  PLANNING_PACES,
+  PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
   resolvePlanningContext,
   transferPlanningOptions
 } from "../lib/planning/horizon.js";
@@ -23,7 +25,7 @@ import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
-const PLANNER_STORAGE_VERSION = 4;
+const PLANNER_STORAGE_VERSION = 5;
 const COURSE_CATALOG = economicsCourseData.courses || [];
 const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
   (course.aliases || []).map(alias => [alias, course.code])
@@ -192,6 +194,8 @@ function migrateSavedCourses(savedCourses = []) {
 function plannerInputSignature(formData) {
   return JSON.stringify({
     academicStanding: formData.academicStanding,
+    planningPace: formData.planningPace,
+    projectedSeniorStandingConfirmation: formData.projectedSeniorStandingConfirmation,
     planCreationDate: formData.planCreationDate,
     isTransferStudent: formData.isTransferStudent,
     transferExpectedGraduationYear: formData.transferExpectedGraduationYear,
@@ -206,6 +210,8 @@ function plannerInputSignature(formData) {
 const initialForm = {
   displayName: "",
   academicStanding: "freshman",
+  planningPace: PLANNING_PACES.STANDARD,
+  projectedSeniorStandingConfirmation: null,
   planCreationDate: "",
   planCreationDateEdited: false,
   isTransferStudent: false,
@@ -1496,7 +1502,8 @@ export default function Page() {
     const next = {
       ...current,
       planCreationDate,
-      planCreationDateEdited: true
+      planCreationDateEdited: true,
+      projectedSeniorStandingConfirmation: null
     };
     if (!current.isTransferStudent) return next;
 
@@ -1931,6 +1938,11 @@ export default function Page() {
 
     if (formData.isTransferStudent && !planningContext.transferValidation.valid) {
       setStatus(planningContext.transferValidation.errors[0]);
+      return;
+    }
+
+    if (!planningContext.planningValidation.valid) {
+      setStatus(planningContext.planningValidation.errors[0]);
       return;
     }
 
@@ -2592,7 +2604,7 @@ export default function Page() {
         .transfer-graduation-fieldset legend, .transfer-entry-year > span { color: #171a1c; font-weight: 700; }
         .transfer-graduation-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin-top: .4rem; }
         .transfer-graduation-options button { width: 100%; min-height: 2rem; margin: 0; padding: .35rem; border: 1px solid var(--planner-border); border-radius: .4rem; background: #fff; color: #171a1c; }
-        .transfer-graduation-options button.is-selected { border-color: #3699ef; background: #3699ef; color: #fff; }
+        .transfer-graduation-options button.is-selected { border-color: #0b5cad; background: #0b5cad; color: #fff; }
         .transfer-other-year { display: flex; align-items: center; gap: .5rem; margin-top: .55rem; }
         .transfer-other-year label { display: flex; align-items: center; gap: .3rem; cursor: pointer; }
         .transfer-other-year input[type="radio"] { margin: 0; }
@@ -3303,7 +3315,11 @@ export default function Page() {
                         value={formData.academicStanding}
                         onChange={event => setFormData(current => ({
                           ...current,
-                          academicStanding: event.target.value
+                          academicStanding: event.target.value,
+                          planningPace: event.target.value === "senior" && current.planningPace === PLANNING_PACES.EARLY
+                            ? PLANNING_PACES.STANDARD
+                            : current.planningPace,
+                          projectedSeniorStandingConfirmation: null
                         }))}
                       >
                         <option value="freshman">Freshman</option>
@@ -3386,12 +3402,48 @@ export default function Page() {
                         className={formData.academicStanding === value ? "is-selected" : ""}
                         aria-pressed={formData.academicStanding === value}
                         key={value}
-                        onClick={() => setFormData(current => ({ ...current, academicStanding: value }))}
+                        onClick={() => setFormData(current => ({
+                          ...current,
+                          academicStanding: value,
+                          planningPace: value === "senior" && current.planningPace === PLANNING_PACES.EARLY
+                            ? PLANNING_PACES.STANDARD
+                            : current.planningPace,
+                          projectedSeniorStandingConfirmation: null
+                        }))}
                       >
                         {label}
                       </button>
                     ))}
                   </div>
+                  <fieldset className="transfer-graduation-fieldset planning-pace-fieldset">
+                    <legend>How quickly do you want this plan to finish?</legend>
+                    <div className="transfer-graduation-options">
+                      {[
+                        [PLANNING_PACES.STANDARD, "Standard pace"],
+                        ...(planningContext.standardRemainingYears > 1
+                          ? [[PLANNING_PACES.EARLY, "One year early"]]
+                          : []),
+                        [PLANNING_PACES.EXTENDED, "One extra year"]
+                      ].map(([value, label]) => (
+                        <button
+                          type="button"
+                          key={value}
+                          className={formData.planningPace === value ? "is-selected" : ""}
+                          aria-pressed={formData.planningPace === value}
+                          onClick={() => setFormData(current => ({
+                            ...current,
+                            planningPace: value,
+                            projectedSeniorStandingConfirmation: null
+                          }))}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="standing-help">
+                      Standard pace follows your current class year. The early option needs senior-standing confirmation; the extra-year option keeps senior standing beginning in your fourth college year.
+                    </p>
+                  </fieldset>
                   <button
                     type="button"
                     className="transfer-student-trigger"
@@ -3400,6 +3452,8 @@ export default function Page() {
                     onClick={() => setFormData(current => ({
                       ...current,
                       isTransferStudent: true,
+                      planningPace: PLANNING_PACES.STANDARD,
+                      projectedSeniorStandingConfirmation: null,
                       transferExpectedGraduationYear: "",
                       transferEntryAcademicYear: ""
                     }))}
@@ -3425,6 +3479,8 @@ export default function Page() {
                       onClick={() => setFormData(current => ({
                         ...current,
                         isTransferStudent: false,
+                        planningPace: PLANNING_PACES.STANDARD,
+                        projectedSeniorStandingConfirmation: null,
                         transferExpectedGraduationYear: "",
                         transferEntryAcademicYear: ""
                       }))}
@@ -3443,7 +3499,8 @@ export default function Page() {
                           aria-pressed={Number(formData.transferExpectedGraduationYear) === year}
                           onClick={() => setFormData(current => ({
                             ...current,
-                            transferExpectedGraduationYear: String(year)
+                            transferExpectedGraduationYear: String(year),
+                            projectedSeniorStandingConfirmation: null
                           }))}
                         >
                           Spring/May {year}
@@ -3458,7 +3515,8 @@ export default function Page() {
                           checked={Number(formData.transferExpectedGraduationYear) === transferOptions.otherGraduationYear}
                           onChange={() => setFormData(current => ({
                             ...current,
-                            transferExpectedGraduationYear: String(transferOptions.otherGraduationYear)
+                            transferExpectedGraduationYear: String(transferOptions.otherGraduationYear),
+                            projectedSeniorStandingConfirmation: null
                           }))}
                         />
                         Other
@@ -3473,11 +3531,13 @@ export default function Page() {
                           : transferOptions.otherGraduationYear || ""}
                         onFocus={() => setFormData(current => ({
                           ...current,
-                          transferExpectedGraduationYear: String(transferOptions.otherGraduationYear)
+                          transferExpectedGraduationYear: String(transferOptions.otherGraduationYear),
+                          projectedSeniorStandingConfirmation: null
                         }))}
                         onChange={event => setFormData(current => ({
                           ...current,
-                          transferExpectedGraduationYear: event.target.value
+                          transferExpectedGraduationYear: event.target.value,
+                          projectedSeniorStandingConfirmation: null
                         }))}
                       />
                       <span>Five-year maximum</span>
@@ -3489,7 +3549,8 @@ export default function Page() {
                       value={formData.transferEntryAcademicYear}
                       onChange={event => setFormData(current => ({
                         ...current,
-                        transferEntryAcademicYear: event.target.value
+                        transferEntryAcademicYear: event.target.value,
+                        projectedSeniorStandingConfirmation: null
                       }))}
                     >
                       <option value="">Choose an academic year</option>
@@ -3507,6 +3568,45 @@ export default function Page() {
                   )}
                   <p className="transfer-advisor-note">Hanover's Registrar decides how transfer credits apply. Confirm your catalog year and course equivalencies with your advisor or the Registrar.</p>
                 </section>
+              )}
+              {planningContext.requiresProjectedSeniorStandingConfirmation && (
+                <fieldset className="transfer-graduation-fieldset senior-standing-confirmation">
+                  <legend>
+                    Has the Registrar or your advisor confirmed that you will have senior standing by Winter {planningContext.expectedGraduationYear}?
+                  </legend>
+                  <p>
+                    ECO 461 is senior-only. EconPlanner cannot generate this compressed schedule until that standing is confirmed for {planningContext.projectedSeniorStandingAcademicYear}.
+                  </p>
+                  <div className="transfer-graduation-options">
+                    <button
+                      type="button"
+                      className={planningContext.projectedSeniorStandingConfirmation ? "is-selected" : ""}
+                      aria-pressed={Boolean(planningContext.projectedSeniorStandingConfirmation)}
+                      onClick={() => setFormData(current => ({
+                        ...current,
+                        projectedSeniorStandingConfirmation: {
+                          status: PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
+                          academicYear: planningContext.projectedSeniorStandingAcademicYear
+                        }
+                      }))}
+                    >
+                      Yes, it is confirmed
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={!planningContext.projectedSeniorStandingConfirmation}
+                      onClick={() => {
+                        setFormData(current => ({
+                          ...current,
+                          projectedSeniorStandingConfirmation: null
+                        }));
+                        setStatus("Choose standard pace or one extra year until the Registrar or your advisor confirms senior standing for the compressed schedule.");
+                      }}
+                    >
+                      Not yet or not sure
+                    </button>
+                  </div>
+                </fieldset>
               )}
               <div className="apple-mini-fields">
                 <label>

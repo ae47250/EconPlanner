@@ -10,8 +10,9 @@ import {
   validateGeneratedPlan
 } from "../lib/planning/economics.js";
 import {
-  buildEarlyGraduationContext,
   buildPlanningSlots,
+  PLANNING_PACES,
+  PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
   resolvePlanningContext
 } from "../lib/planning/horizon.js";
 import { validateStudentPrerequisites } from "../lib/planning/prerequisiteValidation.js";
@@ -40,6 +41,19 @@ function upcomingStudent(standing, codes) {
     academicStanding: standing,
     planCreationDate: "2026-07-30",
     courses: completed(codes)
+  };
+}
+
+function earlyUpcomingStudent(standing, codes) {
+  const standingIndex = ["freshman", "sophomore", "junior", "senior"].indexOf(standing);
+  const expectedGraduationYear = 2026 + Math.max(1, 4 - standingIndex - 1);
+  return {
+    ...upcomingStudent(standing, codes),
+    planningPace: PLANNING_PACES.EARLY,
+    projectedSeniorStandingConfirmation: {
+      status: PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
+      academicYear: `${expectedGraduationYear - 1}/${expectedGraduationYear}`
+    }
   };
 }
 
@@ -82,7 +96,7 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
     ["ECO 113", "ECO 114", "MAT 113"]
   ];
   const statuses = profiles.map(codes => {
-    const { mapping, result } = bundle(upcomingStudent("sophomore", codes));
+    const { mapping, result } = bundle(earlyUpcomingStudent("sophomore", codes));
     return {
       remaining: mapping.strict.remainingUnits,
       outcome: result.candidateOutcomes.find(item => item.id === "plan-c2"),
@@ -104,7 +118,7 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
 });
 
 test("junior C-2 rejects numerical fits until verified-year elective capacity makes nine courses schedulable", () => {
-  const tenStudent = upcomingStudent("junior", ["ECO 113", "ECO 114"]);
+  const tenStudent = earlyUpcomingStudent("junior", ["ECO 113", "ECO 114"]);
   const tenRemaining = bundle(tenStudent);
   assert.equal(tenRemaining.mapping.strict.remainingUnits, 10);
   assert.equal(tenRemaining.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
@@ -113,7 +127,7 @@ test("junior C-2 rejects numerical fits until verified-year elective capacity ma
     mapping: tenRemaining.mapping,
     schedule,
     prerequisites,
-    planningContext: buildEarlyGraduationContext(resolvePlanningContext(tenStudent)),
+    planningContext: resolvePlanningContext(tenStudent),
     planVariant: { id: "plan-c2", label: "Plan C-2", strategy: "early-graduation", description: "" },
     planningMode: "graduation_priority"
   });
@@ -121,7 +135,7 @@ test("junior C-2 rejects numerical fits until verified-year elective capacity ma
   assert.equal(tenPlan.feasibility.search.complete, true);
   assert.equal(tenPlan.feasibility.search.terminationReason, "COUNT_CAPACITY");
 
-  const baseProfile = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
+  const baseProfile = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const threeUsable = bundle(baseProfile);
   assert.equal(threeUsable.mapping.strict.remainingUnits, 9);
   assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "plan-c2").status, "NOT_FEASIBLE");
@@ -135,7 +149,7 @@ test("junior C-2 rejects numerical fits until verified-year elective capacity ma
 });
 
 test("J+3 C-2 uses verified ECO 321 for Finance and never invents a verified-year BUSN 323 placeholder", () => {
-  const student = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
+  const student = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const verifiedElectiveSchedule = structuredClone(schedule);
   const fourthElective = extraOpenElective("ECO 315", "A");
   fourthElective.days = "Wed";
@@ -179,9 +193,9 @@ test("J+3 C-2 uses verified ECO 321 for Finance and never invents a verified-yea
 });
 
 test("node-limited plans are search-incomplete rather than declared infeasible", () => {
-  const student = upcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
+  const student = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
-  const context = buildEarlyGraduationContext(resolvePlanningContext(student));
+  const context = resolvePlanningContext(student);
   const plan = buildEconomicsTermPlan({
     student,
     mapping,
@@ -248,18 +262,42 @@ test("the solver backtracks from a conflicting Fall placement to a valid Winter 
   assert.ok(plan.feasibility.search.completionAttempts > 1);
 });
 
-test("one-year-early final Winter carries senior standing for ECO 461", () => {
-  const context = buildEarlyGraduationContext(resolvePlanningContext(upcomingStudent("junior", [])));
+test("one-year-early final Winter carries confirmed senior standing for ECO 461", () => {
+  const context = resolvePlanningContext(earlyUpcomingStudent("junior", []));
   const finalWinter = buildPlanningSlots(context).find(slot => slot.termKey === "Winter");
   assert.equal(context.remainingYears, 1);
+  assert.equal(context.planningValidation.valid, true);
   assert.equal(finalWinter.absoluteStandingIndex, 3);
+  assert.equal(finalWinter.seniorStandingBasis, "student_reported_registrar_or_advisor_confirmation");
+});
+
+test("five-year regular plans use year-four ECO 461 and reserve year five as a fallback", () => {
+  const student = {
+    ...upcomingStudent("freshman", []),
+    planningPace: PLANNING_PACES.EXTENDED
+  };
+  const preferred = bundle(student).result;
+  assert.equal(preferred.context.expectedGraduationTerm, "Spring/May 2031");
+  assert.ok(preferred.plans.length > 0);
+  assert.ok(preferred.plans.every(plan => (
+    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.term === "Winter 2030"
+  )));
+
+  const fallback = bundle({
+    ...student,
+    reservedCourseUnits: { "winter-2030": 4 }
+  }).result;
+  assert.ok(fallback.plans.length > 0);
+  assert.ok(fallback.plans.every(plan => (
+    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.term === "Winter 2031"
+  )));
 });
 
 test("transfer plans keep the selected graduation target and omit C-2", () => {
   const student = {
     isTransferStudent: true,
     transferExpectedGraduationYear: "2030",
-    transferEntryAcademicYear: "2025-2026",
+    transferEntryAcademicYear: "2026-2027",
     planCreationDate: "2027-01-10",
     courses: []
   };
@@ -275,6 +313,9 @@ test("transfer plans keep the selected graduation target and omit C-2", () => {
   }).result;
   assert.equal(fiveYear.plans[0].distribution.targetYears.length, 5);
   assert.equal(fiveYear.plans[0].terms.at(-1).term, "Spring/May 2031");
+  assert.ok(fiveYear.plans.every(plan => (
+    plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"))?.term === "Winter 2030"
+  )));
 });
 
 test("PSY 217 unlocks ECO 461, while concurrent statistics remains blocked", () => {

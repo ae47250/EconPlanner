@@ -66,6 +66,80 @@ test("major mapper validates transfer graduation and Hanover entry years", async
   assert.match(data.error, /2027 through 2031/);
 });
 
+test("major mapper rejects an unconfirmed or stale one-year-early pace", async () => {
+  for (const projectedSeniorStandingConfirmation of [
+    undefined,
+    {
+      status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+      academicYear: "2027/2028"
+    }
+  ]) {
+    const response = await POST(new Request("http://localhost/api/majors/map", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        student: {
+          academicStanding: "freshman",
+          planningPace: "one_year_early",
+          planCreationDate: "2026-07-26",
+          projectedSeniorStandingConfirmation,
+          courses: []
+        }
+      })
+    }));
+    const data = await response.json();
+    assert.equal(response.status, 422);
+    assert.equal(data.code, "INVALID_PLANNING_PACE");
+    assert.match(data.error, /Registrar or your advisor/);
+  }
+
+  const compressedTransferResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        isTransferStudent: true,
+        transferExpectedGraduationYear: "2027",
+        transferEntryAcademicYear: "2026-2027",
+        planCreationDate: "2027-01-10",
+        courses: []
+      }
+    })
+  }));
+  const compressedTransfer = await compressedTransferResponse.json();
+  assert.equal(compressedTransferResponse.status, 422);
+  assert.equal(compressedTransfer.code, "INVALID_PLANNING_PACE");
+  assert.match(compressedTransfer.error, /Registrar or your advisor/);
+
+  const confirmedResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "freshman",
+        planningPace: "one_year_early",
+        planCreationDate: "2026-07-26",
+        projectedSeniorStandingConfirmation: {
+          status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          academicYear: "2028/2029"
+        },
+        courses: []
+      }
+    })
+  }));
+  const confirmed = await confirmedResponse.json();
+  const economics = confirmed.programs.find(result => result.program?.id === "economics-base");
+  assert.equal(confirmedResponse.status, 200);
+  assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2029");
+  assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.id === "plan-c2"));
+  assert.ok(economics.economicsPlans.every(plan => plan.planningContext.expectedGraduationTerm === "Spring/May 2029"));
+  for (const plan of economics.economicsPlans) {
+    const capstoneTerm = plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"));
+    assert.equal(capstoneTerm?.term, "Winter 2029");
+    assert.equal(capstoneTerm?.seniorStandingBasis, "student_reported_registrar_or_advisor_confirmation");
+  }
+});
+
 test("major mapper uses transfer entry catalog and keeps the selected graduation target", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
@@ -91,7 +165,7 @@ test("major mapper uses transfer entry catalog and keeps the selected graduation
   assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "plan-c2"));
 });
 
-test("major mapper returns standing-limited candidate outcomes and distinct plans", async () => {
+test("major mapper returns only the selected planning horizon", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -107,9 +181,9 @@ test("major mapper returns standing-limited candidate outcomes and distinct plan
   const economics = data.programs.find(result => result.program?.id === "economics-base");
 
   assert.equal(response.status, 200);
-  assert.ok(economics.economicsPlans.length >= 2 && economics.economicsPlans.length <= 4);
-  assert.equal(economics.economicsCandidateOutcomes.length, 4);
-  assert.ok(economics.economicsPlans.some(plan => plan.id === "plan-c2"));
+  assert.ok(economics.economicsPlans.length >= 1 && economics.economicsPlans.length <= 3);
+  assert.equal(economics.economicsCandidateOutcomes.length, 3);
+  assert.ok(economics.economicsPlans.every(plan => plan.id !== "plan-c2"));
   assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
 });
 
@@ -332,7 +406,7 @@ test("major mapper reports instructor approval for current concurrent math", asy
   assert.match(notice.message, /MAT 113/);
   assert.match(notice.message, /ECO 213 instructor/);
   assert.ok(economics.economicsPlans.length > 0);
-  assert.equal(economics.economicsCandidateOutcomes.length, 4);
+  assert.equal(economics.economicsCandidateOutcomes.length, 3);
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
 });
 
@@ -531,4 +605,16 @@ test("edited plan validation rejects canonical schedule tampering and post-gradu
   const horizonResult = await horizonResponse.json();
   assert.equal(horizonResponse.status, 422);
   assert.ok(horizonResult.validation.errors.some(error => /graduation planning horizon/.test(error)));
+
+  const forgedStanding = structuredClone(originalPlan);
+  forgedStanding.terms[0].absoluteStandingIndex = 3;
+  forgedStanding.terms[0].seniorStandingBasis = "student_reported_registrar_or_advisor_confirmation";
+  const standingResponse = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ action: "validate-plan", student, plan: forgedStanding, plans: [forgedStanding] })
+  }));
+  const standingResult = await standingResponse.json();
+  assert.equal(standingResponse.status, 422);
+  assert.ok(standingResult.validation.errors.some(error => /authoritative projected standing/.test(error)));
 });

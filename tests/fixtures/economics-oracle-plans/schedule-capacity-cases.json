@@ -24,6 +24,8 @@
     },
     "expectedContext": {
       "startYear": 2026,
+      "entryAcademicYearStart": 2023,
+      "planningPace": "standard",
       "remainingYears": 1,
       "expectedGraduationYear": 2027,
       "expectedGraduationTerm": "Spring/May 2027"

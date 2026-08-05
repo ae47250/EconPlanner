@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./nightly-observability.js";
 
 const OVERFLOW_VIEWPORTS = [
   { name: "original mobile", width: 390, height: 844, repetitions: 5 },
@@ -41,7 +41,7 @@ function courseStatus(page, code, status) {
 
 async function selectRequirementChoice(page, code) {
   const choice = page.getByRole("checkbox", { name: new RegExp(`^${code}\\b`) });
-  await choice.check({ force: true });
+  await choice.evaluate(element => element.click());
   await expect(choice).toBeChecked();
 }
 
@@ -68,7 +68,7 @@ async function installLongContentResponse(page) {
     const data = await upstream.json();
     const economics = data.programs?.find(program => program.program?.id === "economics-base");
     const firstPlan = economics.economicsPlans?.[0];
-    const selectedPlan = economics.economicsPlans?.find(plan => plan.label === "Plan C-2");
+    const selectedPlan = economics.economicsPlans?.find(plan => plan.label === "Plan C");
     if (firstPlan) firstPlan.description = LONG_PLAN_DESCRIPTION;
     if (selectedPlan) {
       const firstCourse = selectedPlan.terms?.flatMap(term => term.courses || [])[0];
@@ -251,6 +251,39 @@ test("standing, term, graduation, course status, and prerequisite controls stay 
   await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
 });
 
+test("planning pace requires and resets exact senior-standing confirmation", async ({ page }) => {
+  await setPlanDate(page, "2026-07-31");
+  const pace = page.getByRole("group", { name: "How quickly do you want this plan to finish?" });
+  await expect(pace.getByRole("button", { name: "Standard pace" })).toHaveAttribute("aria-pressed", "true");
+
+  await pace.getByRole("button", { name: "One year early" }).click();
+  const confirmation = page.getByRole("group", {
+    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2029?"
+  });
+  await expect(confirmation).toBeVisible();
+  await confirmation.getByRole("button", { name: "Yes, it is confirmed" }).click();
+  await expect(confirmation.getByRole("button", { name: "Yes, it is confirmed" })).toHaveAttribute("aria-pressed", "true");
+
+  await setStanding(page, "Sophomore");
+  const updatedConfirmation = page.getByRole("group", {
+    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2028?"
+  });
+  await expect(updatedConfirmation.getByRole("button", { name: "Yes, it is confirmed" })).toHaveAttribute("aria-pressed", "false");
+
+  await updatedConfirmation.getByRole("button", { name: "Yes, it is confirmed" }).click();
+  await setPlanDate(page, "2026-09-01");
+  await expect(page.getByRole("group", {
+    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2028?"
+  }).getByRole("button", { name: "Yes, it is confirmed" })).toHaveAttribute("aria-pressed", "false");
+
+  await pace.getByRole("button", { name: "One extra year" }).click();
+  await expect(page.getByText(/Has the Registrar or your advisor confirmed/)).toHaveCount(0);
+  await expect(page.getByLabel("Expected graduation", { exact: true })).toHaveValue("Spring/May 2030");
+
+  await setStanding(page, "Senior");
+  await expect(pace.getByRole("button", { name: "One year early" })).toHaveCount(0);
+});
+
 test("transfer students choose graduation and Hanover entry years instead of class standing", async ({ page }) => {
   await setPlanDate(page, "2027-01-10");
   await page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." }).click();
@@ -262,8 +295,17 @@ test("transfer students choose graduation and Hanover entry years instead of cla
   }
   await expect(page.getByLabel("Other expected graduation year")).toHaveValue("2031");
 
+  await page.getByRole("button", { name: "Spring/May 2027" }).click();
+  await page.getByLabel("When did you first enroll at Hanover?").selectOption("2026-2027");
+  const compressedConfirmation = page.getByRole("group", {
+    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2027?"
+  });
+  await expect(compressedConfirmation).toBeVisible();
+  await compressedConfirmation.getByRole("button", { name: "Yes, it is confirmed" }).click();
+
   await page.getByRole("button", { name: "Spring/May 2030" }).click();
   await page.getByLabel("When did you first enroll at Hanover?").selectOption("2025-2026");
+  await expect(page.getByText(/Has the Registrar or your advisor confirmed/)).toHaveCount(0);
   await expect(page.getByLabel("Expected graduation", { exact: true })).toHaveValue("Spring/May 2030");
 
   await setPlanDate(page, "2030-09-01");
@@ -297,14 +339,14 @@ test("generation is single-flight and distinct plans support compare, history, r
   expect(generationRequests).toBe(1);
 
   const cards = page.locator("article[data-plan-id]");
-  await expect(cards).toHaveCount(4);
+  await expect(cards).toHaveCount(3);
   const displayedPlanIds = new Set(await cards.evaluateAll(items => items.map(item => item.dataset.planId)));
-  expect(displayedPlanIds).toEqual(new Set(["plan-1", "plan-2", "plan-3", "plan-c2"]));
+  expect(displayedPlanIds).toEqual(new Set(["plan-1", "plan-2", "plan-3"]));
   const originalSchedules = Object.fromEntries(await cards.evaluateAll(items => items.map(item => [
     item.dataset.planId,
     item.querySelector("tbody")?.innerText || ""
   ])));
-  expect(new Set(Object.values(originalSchedules)).size).toBe(4);
+  expect(new Set(Object.values(originalSchedules)).size).toBe(3);
 
   for (const card of await cards.all()) {
     const exactRows = card.locator("tbody tr").filter({ hasNotText: "Term to be confirmed" });
@@ -345,7 +387,6 @@ test("generation is single-flight and distinct plans support compare, history, r
   expect(editedSchedules["plan-1"]).toBe(originalSchedules["plan-1"]);
   expect(editedSchedules["plan-2"]).toBe(originalSchedules["plan-2"]);
   expect(editedSchedules["plan-3"]).toBe(originalSchedules["plan-3"]);
-  expect(editedSchedules["plan-c2"]).toBe(originalSchedules["plan-c2"]);
 
   await page.getByRole("button", { name: "Review selected Plan B" }).click();
   await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
@@ -547,7 +588,7 @@ test("comparison entry, dialog, and long content stay inside every target viewpo
       await page.getByRole("button", { name: /Generate my plans/ }).click();
       expect((await generationResponse).status()).toBe(200);
       await expect(page.getByRole("heading", { name: "Compare your plans" })).toBeVisible({ timeout: 15000 });
-      await expect(page.locator("article[data-plan-id]")).toHaveCount(4);
+      await expect(page.locator("article[data-plan-id]")).toHaveCount(3);
       await assertNoHorizontalOverflow(page, `${label} comparison entry`);
 
       const studentName = page.getByText(LONG_STUDENT_NAME, { exact: true });
@@ -558,8 +599,8 @@ test("comparison entry, dialog, and long content stay inside every target viewpo
       await assertLongTextWraps(planDescription, `${label} fictional plan description`);
       await assertNoHorizontalOverflow(page, `${label} long content`);
 
-      await page.getByRole("button", { name: "Choose Plan C-2" }).click();
-      await expect(page.getByRole("heading", { name: "Review Plan C-2" })).toBeVisible();
+      await page.getByRole("button", { name: "Choose Plan C" }).click();
+      await expect(page.getByRole("heading", { name: "Review Plan C" })).toBeVisible();
       const courseTitle = page.getByText(LONG_COURSE_TITLE, { exact: true });
       const planWarning = page.getByText(LONG_PLAN_WARNING, { exact: true });
       const approvalMessage = page.getByText(LONG_APPROVAL_MESSAGE, { exact: true });

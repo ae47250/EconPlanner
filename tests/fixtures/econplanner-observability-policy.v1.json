@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "kind": "econplanner-observability-policy",
+  "policyVersion": 1,
+  "metricSchemaVersion": 2,
+  "ownerReview": {
+    "status": "APPROVED",
+    "approvedBy": "PROJECT_OWNER",
+    "approvedOn": "2026-08-04",
+    "scope": "Rule-to-critical-family registry and baseline artifact hashes"
+  },
+  "gateValues": ["GREEN", "AMBER", "RED"],
+  "executionValues": ["NOT_ATTEMPTED", "PASSED", "FAILED", "SKIPPED", "TIMED_OUT"],
+  "configurationValues": ["CONFIGURED", "NOT_CONFIGURED", "NOT_APPLICABLE"],
+  "criticalRuleFamilies": [
+    "MAJOR_REQUIREMENTS_AND_ALLOCATION",
+    "PREREQUISITES_ORDER_AND_CONCURRENCY",
+    "PERMISSIONS_AND_APPROVAL_IDENTITY",
+    "ECO357_DEPARTMENT_PERMISSION",
+    "ECO461_CAPSTONE_RULES",
+    "COMPLETED_REPEAT_AND_DUPLICATE_COURSES",
+    "DOUBLE_COUNTING_INCLUDING_ECO321",
+    "ECO257_STATISTICS_ONLY",
+    "ELECTIVE_LIMITS_AND_CROSSLIST_COUNT_ONCE",
+    "TERM_ECONOMICS_AND_TOTAL_LOAD_CAPACITY",
+    "GRADUATION_HORIZON_AND_COURSE_TIMING",
+    "OFFERING_SECTION_AVAILABILITY_AND_CONFLICTS",
+    "SCHEDULE_EVIDENCE_INTEGRITY",
+    "FUTURE_PLACEHOLDER_AND_PROJECTION_VALIDITY",
+    "REQUIRED_WARNINGS_APPROVALS_AND_REVIEW_STATES",
+    "FEASIBILITY_AND_NO_PLAN_TRUTHFULNESS",
+    "ORACLE_DISAGREEMENT_CLASSIFICATION",
+    "SOURCE_AUTHORITY_EFFECTIVE_DATE_AND_RULE_IDENTITY",
+    "MATERIAL_UI_HTML_AND_PDF_PARITY"
+  ],
+  "layerValues": ["IMPLEMENTED", "NOT_APPLICABLE", "MISSING"],
+  "layers": [
+    "requirement_mapping",
+    "planner_pruning",
+    "production_validator",
+    "independent_oracle",
+    "ui_parity",
+    "html",
+    "pdf"
+  ],
+  "ruleGroups": [
+    {
+      "group": "requirements",
+      "ruleIds": ["REQ-MAJOR-COURSE-COUNT", "REQ-COGNATE-COURSE-COUNT", "REQ-ECO-113", "REQ-ECO-114", "REQ-ECO-213", "REQ-ECO-214", "REQ-STATISTICS", "REQ-FINANCE", "REQ-ECO-461", "REQ-COGNATE", "REQ-ECO-ELECTIVES"],
+      "criticalFamilies": ["MAJOR_REQUIREMENTS_AND_ALLOCATION"],
+      "implementationRefs": ["lib/assignment/solve.js", "lib/planning/requirementAllocation.js", "lib/validateCoursePlan.js", "tests/oracle/check-requirements.js"],
+      "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js"],
+      "negativeTests": ["tests/economics-validator-disagreements.test.js"],
+      "layers": { "requirement_mapping": "IMPLEMENTED", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "prerequisites",
+      "ruleIds": ["PREREQ-ECO-213", "PREREQ-ECO-214", "PREREQ-ECO-221", "PREREQ-ECO-222", "PREREQ-ECO-223", "PREREQ-ECO-257", "PREREQ-ECO-315", "PREREQ-ECO-316", "PREREQ-ECO-321", "PREREQ-ECO-331", "PREREQ-ECO-333", "PREREQ-ECO-335", "PREREQ-ECO-337", "PREREQ-ECO-357", "PREREQ-ECO-461", "PREREQ-ECO-471"],
+      "criticalFamilies": ["PREREQUISITES_ORDER_AND_CONCURRENCY"],
+      "implementationRefs": ["lib/planning/prerequisiteEvaluator.js", "lib/planning/termSolver.js", "lib/validateCoursePlan.js", "tests/oracle/check-prerequisites.js"],
+      "positiveTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
+      "negativeTests": ["tests/economics-oracle-prerequisites.test.js", "tests/economics-validator-disagreements.test.js"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "concurrency-and-permissions",
+      "ruleIds": ["CONCURRENT-MATH-ECO-213", "CONCURRENT-MATH-ECO-214", "CONCURRENT-INTERMEDIATE-ECO-461", "PERMISSION-ECO-357"],
+      "criticalFamilies": ["PERMISSIONS_AND_APPROVAL_IDENTITY", "ECO357_DEPARTMENT_PERMISSION"],
+      "implementationRefs": ["lib/planning/prerequisiteEvaluator.js", "lib/validateCoursePlan.js", "tests/oracle/check-prerequisites.js"],
+      "positiveTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
+      "negativeTests": ["tests/economics-validator-disagreements.test.js"],
+      "knownGapCodes": ["PRODUCTION_PERMISSION_GAP"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "electives",
+      "ruleIds": ["ELECTIVE-MAX-ONE-100-LEVEL", "ELECTIVE-ECO-260-COUNTS", "ELECTIVE-ECO-257-STATISTICS-ONLY", "ELECTIVE-CROSSLIST-ECO-234-PHI-234", "ELECTIVE-NO-DOUBLE-COUNT"],
+      "criticalFamilies": ["ECO257_STATISTICS_ONLY", "ELECTIVE_LIMITS_AND_CROSSLIST_COUNT_ONCE", "DOUBLE_COUNTING_INCLUDING_ECO321"],
+      "implementationRefs": ["lib/planning/requirementAllocation.js", "lib/planning/termSolver.js", "lib/validateCoursePlan.js", "tests/oracle/check-requirements.js"],
+      "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js"],
+      "negativeTests": ["tests/economics-validator-disagreements.test.js"],
+      "layers": { "requirement_mapping": "IMPLEMENTED", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "capstone",
+      "ruleIds": ["CAPSTONE-WINTER-ONLY", "CAPSTONE-SENIOR-STANDING", "CAPSTONE-EARLY-GRADUATE-STANDING", "CAPSTONE-HANOVER-RESIDENCY", "CAPSTONE-STATISTICS-BEFORE"],
+      "criticalFamilies": ["ECO461_CAPSTONE_RULES"],
+      "implementationRefs": ["lib/planning/termSolver.js", "lib/planning/economics.js", "lib/validateCoursePlan.js", "tests/oracle/check-schedule-and-horizon.js"],
+      "positiveTests": ["tests/economics-planning-profile-matrix.test.js"],
+      "negativeTests": ["tests/economics-validator-disagreements.test.js"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "planning",
+      "ruleIds": ["CAPACITY-FALL", "CAPACITY-WINTER", "CAPACITY-MAY", "PLANNING-CURRENT-TERM-EXCLUDED", "PLANNING-IN-PROGRESS-UNLOCKS-LATER", "PLANNING-ECO-LOAD-PREFERENCE", "PLANNING-INTERMEDIATE-OFFERING-SEPARATION", "PLANNING-MAY-COURSE-EXCLUSIONS", "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"],
+      "criticalFamilies": ["TERM_ECONOMICS_AND_TOTAL_LOAD_CAPACITY", "GRADUATION_HORIZON_AND_COURSE_TIMING", "FUTURE_PLACEHOLDER_AND_PROJECTION_VALIDITY"],
+      "implementationRefs": ["lib/planning/horizon.js", "lib/planning/termSolver.js", "lib/planning/economics.js", "lib/validateCoursePlan.js", "tests/oracle/check-schedule-and-horizon.js"],
+      "positiveTests": ["tests/economics-planning.test.js", "tests/planning-horizon.test.js"],
+      "negativeTests": ["tests/economics-validator-disagreements.test.js"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "schedule-evidence",
+      "ruleIds": ["SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS", "SCHEDULE-EVIDENCE-PROVENANCE", "SCHEDULE-AVAILABILITY-BEHAVIOR"],
+      "criticalFamilies": ["OFFERING_SECTION_AVAILABILITY_AND_CONFLICTS", "SCHEDULE_EVIDENCE_INTEGRITY", "SOURCE_AUTHORITY_EFFECTIVE_DATE_AND_RULE_IDENTITY"],
+      "implementationRefs": ["lib/planning/scheduleProvider.js", "lib/planning/termSolver.js", "lib/validateCoursePlan.js", "tests/oracle/check-schedule-and-horizon.js"],
+      "positiveTests": ["tests/economics-schedule.test.js", "tests/economics-schedule-drift.test.js"],
+      "negativeTests": ["tests/economics-validator-disagreements.test.js"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "review-states",
+      "ruleIds": ["REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE", "REVIEW-ECO-335-MATH-EQUIVALENT", "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
+      "criticalFamilies": ["REQUIRED_WARNINGS_APPROVALS_AND_REVIEW_STATES"],
+      "implementationRefs": ["tests/oracle/economics-policy.v1.json", "tests/oracle/check-prerequisites.js"],
+      "positiveTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
+      "negativeTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
+      "knownGapCodes": ["PRODUCTION_ACCEPTS_UNREVIEWED_EVIDENCE", "PRODUCTION_HAS_NO_REVIEW_STATE"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "MISSING", "production_validator": "MISSING", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+    },
+    {
+      "group": "oracle-structure",
+      "ruleIds": ["ORACLE-STRUCTURE-INPUT", "ORACLE-STRUCTURE-TERM", "ORACLE-STRUCTURE-HORIZON", "ORACLE-STRUCTURE-COURSE"],
+      "criticalFamilies": ["GRADUATION_HORIZON_AND_COURSE_TIMING", "ORACLE_DISAGREEMENT_CLASSIFICATION"],
+      "implementationRefs": ["tests/oracle/audit-external-plan.js"],
+      "positiveTests": ["tests/economics-independent-oracle-structure.test.js"],
+      "negativeTests": ["tests/economics-independent-oracle-structure.test.js"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "NOT_APPLICABLE", "production_validator": "NOT_APPLICABLE", "independent_oracle": "IMPLEMENTED", "ui_parity": "NOT_APPLICABLE", "html": "NOT_APPLICABLE", "pdf": "NOT_APPLICABLE" }
+    }
+  ],
+  "syntheticCriticalEvents": [
+    { "code": "INVALID_DISPLAYED_PLAN", "criticalFamily": "MATERIAL_UI_HTML_AND_PDF_PARITY" },
+    { "code": "MATERIAL_ARTIFACT_PARITY_MISMATCH", "criticalFamily": "MATERIAL_UI_HTML_AND_PDF_PARITY" },
+    { "code": "UNEXPLAINED_NO_PLAN", "criticalFamily": "FEASIBILITY_AND_NO_PLAN_TRUTHFULNESS" },
+    { "code": "INCOMPLETE_SEARCH_LABELED_INFEASIBLE", "criticalFamily": "FEASIBILITY_AND_NO_PLAN_TRUTHFULNESS" },
+    { "code": "SEARCH_INCOMPLETE", "criticalFamily": "FEASIBILITY_AND_NO_PLAN_TRUTHFULNESS" },
+    { "code": "COMPLETED_COURSE_RESCHEDULED", "criticalFamily": "COMPLETED_REPEAT_AND_DUPLICATE_COURSES" },
+    { "code": "DUPLICATE_REQUIREMENT_OR_COURSE", "criticalFamily": "COMPLETED_REPEAT_AND_DUPLICATE_COURSES" },
+    { "code": "SUMMER_OR_TOTAL_CAPACITY_EXCEEDED", "criticalFamily": "TERM_ECONOMICS_AND_TOTAL_LOAD_CAPACITY" },
+    { "code": "INVALID_FUTURE_PLACEHOLDER", "criticalFamily": "FUTURE_PLACEHOLDER_AND_PROJECTION_VALIDITY" },
+    { "code": "REQUIRED_WARNING_MISSING", "criticalFamily": "REQUIRED_WARNINGS_APPROVALS_AND_REVIEW_STATES" },
+    { "code": "UNEXPECTED_ORACLE_DISAGREEMENT", "criticalFamily": "ORACLE_DISAGREEMENT_CLASSIFICATION" },
+    { "code": "UNCLASSIFIED_ORACLE_FINDING", "criticalFamily": "ORACLE_DISAGREEMENT_CLASSIFICATION" },
+    { "code": "SOURCE_IDENTITY_MISSING", "criticalFamily": "SOURCE_AUTHORITY_EFFECTIVE_DATE_AND_RULE_IDENTITY" }
+  ],
+  "criticalFindingCodes": [
+    "PRODUCTION_PERMISSION_GAP",
+    "PRODUCTION_ACCEPTS_UNREVIEWED_EVIDENCE",
+    "PRODUCTION_HAS_NO_REVIEW_STATE"
+  ],
+  "mandatoryArtifactKinds": [
+    "econplanner-nightly-generated-matrix",
+    "econplanner-nightly-prerequisites",
+    "econplanner-nightly-browser",
+    "econplanner-nightly-pdf",
+    "econplanner-nightly-phase"
+  ],
+  "mandatoryPhaseIds": [
+    "generated-profile-shard-1",
+    "generated-profile-shard-2",
+    "generated-profile-shard-3",
+    "generated-profile-shard-4",
+    "prerequisite-normal",
+    "prerequisite-optional",
+    "exhaustive-matrices",
+    "prerequisite-summary",
+    "properties",
+    "ranking-1",
+    "ranking-2",
+    "ranking-3",
+    "unit",
+    "pdf-dry-run",
+    "browser-1",
+    "browser-2",
+    "browser-3",
+    "browser-summary",
+    "lint",
+    "build",
+    "hygiene",
+    "hosted-pdf"
+  ],
+  "retentionDays": { "aggregate": 90, "comparison": 90, "summary": 90, "detail": 30, "failureEvidence": 30 },
+  "performancePolicy": { "calibrationRuns": 3, "timingOnlyRedEnabled": false, "comparisonMethod": "paired-median-mad-after-owner-approval" },
+  "cosmeticException": "Allowed only when academic validity, required warnings, source attribution, and student decisions cannot be affected."
+}

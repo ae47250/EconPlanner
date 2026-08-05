@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import { buildEconomicsTermPlans, semanticPlanSignature } from "../lib/planning/economics.js";
+import { resolvePlanningContext } from "../lib/planning/horizon.js";
 import { auditExternalEconomicsPlanComplete } from "./oracle/audit-external-plan.js";
 
 const fixture = JSON.parse(await readFile(new URL("./fixtures/economics-planning-profile-matrix.json", import.meta.url), "utf8"));
@@ -24,12 +25,23 @@ const CLASSIFIED_POLICY_REVIEW_CODES = new Set([
   "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE"
 ]);
 
-function generate(standing, profile) {
-  const student = {
+function generate(standing, profile, { early = false } = {}) {
+  let student = {
     academicStanding: standing,
     planCreationDate: fixture.planCreationDate,
     courses: profile.courses.map(code => ({ code, status: "completed" }))
   };
+  if (early) {
+    const earlyGraduationYear = resolvePlanningContext(student).expectedGraduationYear - 1;
+    student = {
+      ...student,
+      planningPace: "one_year_early",
+      projectedSeniorStandingConfirmation: {
+        status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+        academicYear: `${earlyGraduationYear - 1}/${earlyGraduationYear}`
+      }
+    };
+  }
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   return {
     student,
@@ -153,7 +165,7 @@ test("the 51-profile audit matrix returns only complete, distinct, bounded-searc
       const diagnostics = planAudits.map(({ plan, audit }) => auditDiagnostic(id, plan, audit)).join("\n");
       outcomes.push({ id, standing, profile, mapping, result, planAudits });
 
-      const limit = standing === "junior" ? 2 : 4;
+      const limit = standing === "junior" ? 2 : 3;
       assert.ok(result.plans.length <= limit, `${id} exceeds the standing-specific display limit\n${diagnostics}`);
       assert.equal(new Set(result.plans.map(semanticPlanSignature)).size, result.plans.length, `${id} has a semantic duplicate\n${diagnostics}`);
       assert.ok(result.plans.every(plan => plan.validation.valid), `${id} displayed an invalid production plan\n${diagnostics}`);
@@ -180,15 +192,20 @@ test("the 51-profile audit matrix returns only complete, distinct, bounded-searc
   }
 
   assert.equal(outcomes.length, 51);
-  assert.ok(outcomes.find(item => item.id === "FW5").result.plans.some(plan => plan.id === "plan-c2"));
-  assert.ok(outcomes.find(item => item.id === "SW5").result.plans.some(plan => plan.id === "plan-c2"));
+  assert.ok(outcomes.every(item => item.result.candidateOutcomes.every(outcome => outcome.id !== "plan-c2")));
 
-  const juniorP3 = outcomes.find(item => item.id === "JP3");
+  const juniorP3 = generate("junior", fixture.profiles.find(profile => profile.id === "P3"), { early: true });
   const juniorP3Early = juniorP3.result.candidateOutcomes.find(item => item.id === "plan-c2");
   assert.equal(juniorP3Early.status, "NOT_FEASIBLE");
   assert.equal(juniorP3Early.displayed, false);
   assert.equal(juniorP3Early.suppressionReason?.code, "NOT_FEASIBLE");
   assert.match(juniorP3Early.suppressionReason?.message || "", /4\/4\/1 capacity/);
+
+  for (const [standing, profileId] of [["freshman", "W5"], ["sophomore", "W5"]]) {
+    const early = generate(standing, fixture.profiles.find(profile => profile.id === profileId), { early: true });
+    assert.ok(early.result.candidateOutcomes.every(outcome => outcome.id === "plan-c2"));
+    assert.equal(early.result.context.planningPace, "one_year_early");
+  }
 
   const freshmanP8 = outcomes.find(item => item.id === "FP8");
   const freshmanP8PlanB = freshmanP8.result.candidateOutcomes.find(item => item.id === "plan-2");

@@ -75,7 +75,7 @@ test("Economics term planner keeps prerequisite courses in earlier terms", () =>
   assert.equal(plan.validation.valid, true);
 });
 
-test("dated freshman planning returns distinct feasible normal and one-year-early plans", () => {
+test("dated freshman planning returns only the selected standard horizon", () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-09-01",
@@ -84,17 +84,16 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
 
-  assert.ok(result.plans.length >= 2 && result.plans.length <= 4);
+  assert.ok(result.plans.length >= 2 && result.plans.length <= 3);
   assert.ok(result.plans.some(plan => plan.label === "Plan A"));
-  assert.ok(result.plans.some(plan => plan.label === "Plan C-2"));
-  assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Plan A", "Plan B", "Plan C", "Plan C-2"]);
+  assert.ok(result.plans.every(plan => plan.label !== "Plan C-2"));
+  assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Plan A", "Plan B", "Plan C"]);
   assert.equal(result.planSetValidation.valid, true);
   assert.equal(result.planSetValidation.uniquePlanCount, result.plans.length);
   const expectedDistributions = new Map([
     ["Plan A", [3, 3, 3, 3]],
     ["Plan B", [1, 2, 4, 5]],
-    ["Plan C", [3, 3, 3, 3]],
-    ["Plan C-2", [4, 4, 4]]
+    ["Plan C", [3, 3, 3, 3]]
   ]);
   for (const plan of result.plans) {
     assert.deepEqual(plan.distribution.targetYearCounts, expectedDistributions.get(plan.label));
@@ -124,8 +123,28 @@ test("dated freshman planning returns distinct feasible normal and one-year-earl
   assert.ok(result.plans.every(plan => plan.terms.every(term => !term.isSummer)));
   assert.ok(result.plans.every(plan => plan.terms.every(term => term.courses.length <= (term.term.startsWith("Spring/May") ? 1 : 4))));
 
-  assert.equal(result.plans.find(plan => plan.label === "Plan C-2").isEarlyGraduation, true);
-  assert.equal(result.plans.find(plan => plan.label === "Plan C-2").feasibilityStatus, "PRELIMINARY_ONLY");
+});
+
+test("confirmed one-year-early planning returns only the shortened horizon", () => {
+  const student = {
+    academicStanding: "freshman",
+    planningPace: "one_year_early",
+    planCreationDate: "2026-09-01",
+    projectedSeniorStandingConfirmation: {
+      status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+      academicYear: "2028/2029"
+    },
+    courses: []
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+
+  assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Plan C-2"]);
+  assert.equal(result.plans.length, 1);
+  assert.deepEqual(result.plans[0].distribution.targetYearCounts, [4, 4, 4]);
+  assert.equal(result.plans[0].isEarlyGraduation, true);
+  assert.equal(result.plans[0].planningContext.expectedGraduationTerm, "Spring/May 2029");
+  assert.equal(result.plans[0].feasibilityStatus, "PRELIMINARY_ONLY");
 });
 
 test("a proven prerequisite constraint records a validated distribution exception", () => {
@@ -225,9 +244,9 @@ test("standing-specific candidate limits show only distinct feasible results", (
   };
   const sophomoreMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, sophomore);
   const sophomorePlans = buildEconomicsTermPlans({ student: sophomore, mapping: sophomoreMapping, schedule, prerequisites });
-  assert.ok(sophomorePlans.plans.length <= 4);
-  assert.ok(sophomorePlans.candidateOutcomes.some(outcome => outcome.id === "plan-c2"));
-  assert.equal(sophomorePlans.candidateOutcomes.length, 4);
+  assert.ok(sophomorePlans.plans.length <= 3);
+  assert.ok(sophomorePlans.candidateOutcomes.every(outcome => outcome.id !== "plan-c2"));
+  assert.equal(sophomorePlans.candidateOutcomes.length, 3);
 
   const junior = {
     academicStanding: "junior",
@@ -518,6 +537,8 @@ test("an in-progress prerequisite unlocks a dependent course only after the curr
     termKey: "TBC",
     academicYear: "2026/2027",
     yearIndex: 0,
+    absoluteStandingIndex: 1,
+    seniorStandingBasis: null,
     isPlaceholder: true,
     inProgressPrerequisitesAvailable: true,
     courses: [{

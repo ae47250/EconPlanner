@@ -78,6 +78,9 @@ export function projectSelectedPlanArtifact(selectedPlan, { advisorNotices = [] 
   return {
     selectedPlanId: text(selectedPlan?.id) || null,
     graduationTarget: text(selectedPlan?.planningContext?.expectedGraduationTerm) || null,
+    planningPace: text(selectedPlan?.planningContext?.planningPace) || null,
+    projectedSeniorStandingAcademicYear: text(selectedPlan?.planningContext?.projectedSeniorStandingAcademicYear) || null,
+    projectedSeniorStandingBasis: text(selectedPlan?.planningContext?.projectedSeniorStandingBasis) || null,
     feasibilityStatus: text(selectedPlan?.feasibilityStatus) || null,
     terms: normalizedTerms(selectedPlan?.terms || []),
     warnings: selectedPlanWarnings(selectedPlan),
@@ -94,6 +97,9 @@ export function projectReportJsonArtifact(report) {
   return {
     selectedPlanId: text(report?.selectedPlan?.id) || null,
     graduationTarget: text(report?.student?.expectedGraduationTerm) || null,
+    planningPace: text(report?.student?.planningPace) || null,
+    projectedSeniorStandingAcademicYear: text(report?.student?.projectedSeniorStandingAcademicYear) || null,
+    projectedSeniorStandingBasis: text(report?.student?.projectedSeniorStandingBasis) || null,
     feasibilityStatus: text(report?.selectedPlan?.feasibilityStatus) || null,
     terms: normalizedTerms(report?.terms || []),
     warnings: selectedPlanWarnings(report?.selectedPlan),
@@ -166,9 +172,15 @@ export function projectReportHtmlArtifact(html) {
   const graduation = source.match(/data-graduation-target="([^"]+)"/i)
     || source.match(/Expected graduation(?: target)?:?\s*(Spring\/May\s+\d{4})/i);
   const status = decodeHtml(source).match(/Plan status:\s*([A-Z_ ]+?)\./i);
+  const planningPace = source.match(/data-planning-pace="([^"]+)"/i);
+  const seniorStandingAcademicYear = source.match(/data-senior-standing-academic-year="([^"]+)"/i);
+  const seniorStandingBasis = source.match(/data-senior-standing-basis="([^"]+)"/i);
   return {
     selectedPlanId: selectedPlanId ? decodeHtml(selectedPlanId[1]) : null,
     graduationTarget: graduation ? decodeHtml(graduation[1]) : null,
+    planningPace: planningPace ? decodeHtml(planningPace[1]) : null,
+    projectedSeniorStandingAcademicYear: seniorStandingAcademicYear ? decodeHtml(seniorStandingAcademicYear[1]) : null,
+    projectedSeniorStandingBasis: seniorStandingBasis ? decodeHtml(seniorStandingBasis[1]) : null,
     feasibilityStatus: status ? status[1].trim().toUpperCase().replaceAll(" ", "_") : null,
     terms: htmlScheduleTerms(source),
     warnings: htmlWarnings(source),
@@ -190,6 +202,24 @@ export function economics257Roles(projection) {
   return projection.terms.flatMap(term => term.courses)
     .filter(course => course.code === "ECO 257")
     .map(course => course.requirementRole);
+}
+
+export function projectionMetrics(projection) {
+  const terms = projection?.terms || [];
+  const courses = terms.flatMap(term => term.courses || []);
+  return {
+    selectedPlanId: projection?.selectedPlanId || null,
+    termCount: terms.length,
+    courseCount: courses.length,
+    warningCount: projection?.warnings?.length || 0,
+    approvalCount: courses.reduce((sum, course) => sum + (course.approvals?.length || 0), 0),
+    advisorAttentionCount: projection?.advisorAttention?.length || 0,
+    availabilityStateCounts: courses.reduce((counts, course) => {
+      const state = course.availabilityState || "not_reported";
+      counts[state] = (counts[state] || 0) + 1;
+      return counts;
+    }, {})
+  };
 }
 
 export function projectionMismatches(expected, actual, path = "artifact") {

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 3,
+    "version": 4,
     "confirmationDate": "2026-08-04",
     "reviewedBy": "Economics Department representative and project owner",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
@@ -30,6 +30,12 @@
       "date": "2026-08-04",
       "reviewedBy": "Economics Department representative and project owner",
       "summary": "Distinct future ECO elective placeholders represent separate planned requirement slots beyond the verified schedule horizon; they are not completed or verified courses, and neither actual courses nor placeholder slots may be reused."
+    },
+    {
+      "id": "PROJECT-OWNER-2026-08-04",
+      "date": "2026-08-04",
+      "reviewedBy": "Project owner",
+      "summary": "Planning pace uses college-year progression. A compressed plan may project senior standing only in its final academic year after the student reports Registrar or advisor confirmation; an extended plan reaches senior standing in college year four."
     }
   ],
   "sources": [
@@ -621,12 +627,14 @@
     {
       "ruleId": "CAPSTONE-EARLY-GRADUATE-STANDING",
       "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "confirmationRef": "PROJECT-OWNER-2026-08-04",
       "sourceRefs": [
         "DEPARTMENT-POLICIES#Confirmed policy 2"
       ],
       "course": "ECO 461",
-      "oneAcademicYearEarlyCountsAsSeniorInFinalWinter": true
+      "compressedPlanRequiresReportedRegistrarOrAdvisorConfirmation": true,
+      "confirmedStandingAppliesOnlyToFinalAcademicYear": true,
+      "extendedPlanSeniorStandingBeginsInFourthAcademicYear": true
     },
     {
       "ruleId": "CAPSTONE-HANOVER-RESIDENCY",

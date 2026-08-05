@@ -15,7 +15,13 @@
         "remainingYears": 2,
         "expectedGraduationYear": 2028,
         "expectedGraduationTerm": "Spring/May 2028",
-        "oneAcademicYearEarly": true
+        "planningPace": "one_year_early",
+        "entryAcademicYearStart": 2025,
+        "projectedSeniorStandingAcademicYear": "2027/2028",
+        "projectedSeniorStandingConfirmation": {
+          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          "academicYear": "2027/2028"
+        }
       },
       "terms": [
         {
@@ -23,6 +29,7 @@
           "term": "Winter 2028",
           "termKey": "Winter",
           "academicYear": "2027/2028",
+          "projectedStanding": "Senior",
           "courses": [
             { "course": "ECO 461", "institution": "Hanover College" }
           ]
