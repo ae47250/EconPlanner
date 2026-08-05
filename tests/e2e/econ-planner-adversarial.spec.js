@@ -530,7 +530,7 @@ test("@nightly navigation, reload, recoverable PDF failure, and obsolete session
 
 test("@nightly transfer validation and prerequisite dialog semantics survive narrow failure states", async ({ page }) => {
   await resetPlanner(page, { viewport: { width: 320, height: 700 } });
-  const transferTrigger = page.getByRole("button", { name: "Are you a transfer student? Choose your graduation year instead." });
+  const transferTrigger = page.getByRole("button", { name: "Transfer students: Change graduation year" });
   await transferTrigger.focus();
   await page.keyboard.press("Enter");
   const transferRegion = page.getByRole("region", { name: "Transfer student planning" });

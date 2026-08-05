@@ -106,7 +106,7 @@ for (const viewport of VIEWPORTS) {
       await scanWcagAa(page, `${viewport.name}-initial-input-page`);
 
       await page.evaluate(() => document.activeElement?.blur());
-      await tabTo(page, active => active.name === "Are you a transfer student? Choose your graduation year instead.");
+      await tabTo(page, active => active.name === "Transfer students: Change graduation year");
       await assertVisibleFocus(page, `${viewport.name} transfer-student trigger`);
       await page.keyboard.press("Enter");
 
