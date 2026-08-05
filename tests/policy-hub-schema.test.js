@@ -83,7 +83,7 @@ test("CP1 uses the required direct Ajv 8.20.0 dependency and compiles every Draf
   }, "approval fixture");
 });
 
-test("the manifest declares every handwritten CP1 input and keeps the release inactive", async () => {
+test("the manifest declares every handwritten policy input", async () => {
   validateOrExplain("policy/schema/policy-manifest.v1.schema.json", manifest, manifestPath);
   assert.equal(manifest.policyVersion, "econ-2025-2026.1");
   assert.equal(manifest.status, "DRAFT");
@@ -91,7 +91,6 @@ test("the manifest declares every handwritten CP1 input and keeps the release in
   assert.equal(new Set(manifest.inputs.map(input => input.id)).size, manifest.inputs.length);
   assert.equal(new Set(manifest.inputs.map(input => input.path)).size, manifest.inputs.length);
   for (const input of manifest.inputs) await access(new URL(input.path, repositoryRoot));
-  await assert.rejects(access(new URL("../data/compiled/policy/active.json", policyRoot)));
 });
 
 test("canonical sources have unique IDs, readable paths, matching hashes, and declared authority boundaries", async () => {
@@ -229,7 +228,7 @@ test("the August 5 owner confirmation is preserved in both governed provenance r
   assert.equal(entry.reviewedBy, "Project owner and Economics Department domain expert");
 });
 
-test("CP1 does not switch runtime authority or create compiler outputs", async () => {
+test("the compiled bundle does not switch runtime authority", async () => {
   const runtimePaths = [
     "lib/catalog/load.js", "lib/assignment/solve.js", "lib/planning/economics.js",
     "app/api/majors/map/route.js", "lib/reports/build-economics.js"
@@ -238,6 +237,6 @@ test("CP1 does not switch runtime authority or create compiler outputs", async (
     const contents = await readFile(new URL(runtimePath, repositoryRoot), "utf8");
     assert.doesNotMatch(contents, /policy\/manifest|data\/compiled\/policy|load-bundle/iu, runtimePath);
   }
-  await assert.rejects(access(new URL("data/compiled/policy/active.json", repositoryRoot)));
+  await access(new URL("data/compiled/policy/active.json", repositoryRoot));
   assert.ok(fileURLToPath(policyRoot).endsWith(`${process.platform === "win32" ? "\\" : "/"}policy${process.platform === "win32" ? "\\" : "/"}`));
 });

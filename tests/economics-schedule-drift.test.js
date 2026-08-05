@@ -175,6 +175,14 @@ test("text evidence hashing treats LF and CRLF as identical", () => {
   );
 });
 
+test("official catalog snapshot hashing is stable across LF and CRLF checkouts", () => {
+  const crlfEvidence = REPRESENTATIVE_TEXT_EVIDENCE.replaceAll("\n", "\r\n");
+  assert.equal(
+    sourceEvidenceSha256(Buffer.from(crlfEvidence), "catalog-snapshot.php"),
+    sourceEvidenceSha256(Buffer.from(REPRESENTATIVE_TEXT_EVIDENCE), "catalog-snapshot.php")
+  );
+});
+
 test("text evidence hashing treats LF and standalone CR as identical", () => {
   const crEvidence = REPRESENTATIVE_TEXT_EVIDENCE.replaceAll("\n", "\r");
   assert.equal(
