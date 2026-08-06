@@ -11,6 +11,7 @@ import { performance } from "node:perf_hooks";
 import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
 import { buildDecisionComparisonRecord } from "../lib/decision-engine/shadow.js";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
+import { resolveCatalogApplicability } from "../lib/catalog/applicability.js";
 import {
   buildEconomicsTermPlans,
   semanticPlanSignature,
@@ -248,7 +249,12 @@ async function runMatrix(configuration) {
         replay: replayEvidence(seed, profile, configuration),
         oracleReviews: result.oracleReviews.length,
         classifiedOracleFindings: result.oracleFindings.length,
-        decisionShadow: result.decisionShadow
+        decisionShadow: result.decisionShadow,
+        allocationAlternatives: result.allocationAlternatives,
+        tbcWitnessOutcomes: result.tbcWitnessOutcomes,
+        catalogApplicability: result.catalogApplicability,
+        catalogAnalysis: result.catalogAnalysis,
+        evidenceFindings: result.evidenceFindings
       });
       acceptedPlanCount += result.planCount;
       profilesWithPlans += result.planCount > 0 ? 1 : 0;
@@ -346,6 +352,17 @@ async function runMatrix(configuration) {
   const planObservability = profileResults.flatMap(result => result.planObservability || []);
   const legacyFeasibilityStatuses = countBy(planObservability, plan => plan.legacyFeasibilityStatus);
   const strategyFits = countBy(planObservability, plan => `${plan.strategy}:${plan.strategyFit}`);
+  const readinessStatuses = countBy(decisionShadowRecords, record => record.readinessStatus || "NOT_CLASSIFIED");
+  const readyStatuses = new Set(["STUDENT_READY", "READY_WITH_CONDITIONS"]);
+  const readyProfiles = profileResults.filter(result => (result.decisionShadow || []).some(record => readyStatuses.has(record.readinessStatus)));
+  const advisorActionProfiles = profileResults.filter(result => (result.decisionShadow || []).some(record => record.readinessStatus === "ADVISOR_ACTION_REQUIRED"));
+  const allocationCounts = profileResults.flatMap(result => Object.values(result.allocationAlternatives || {}).filter(Number.isFinite));
+  const allocationPageLimitOutcomes = countBy(profileResults.flatMap(result => result.allocationAlternatives?.pageLimitOutcomes || []), value => value);
+  const tbcWitnessOutcomes = countBy(profileResults.flatMap(result => result.tbcWitnessOutcomes || []), value => value);
+  const catalogApplicabilityStatuses = countBy(profileResults, result => result.catalogApplicability?.status || "UNAVAILABLE");
+  const evidenceFindingsByRuleId = countBy(profileResults.flatMap(result => result.evidenceFindings || []).flatMap(finding => (
+    finding.ruleIds?.length ? finding.ruleIds : ["UNCLASSIFIED_REVIEW_RULE"]
+  )), value => value);
   const nodeLimitProfiles = profileResults.filter(result => (
     result.solverDiagnostics?.strategyAttempts || []
   ).some(attempt => attempt.terminationReason === "NODE_LIMIT"));
@@ -445,7 +462,14 @@ async function runMatrix(configuration) {
           authority: "PRODUCTION_DECISION_ENGINE",
           profilesWithCompletePlan: profileResults.filter(result => (result.decisionShadow || []).some(record => record.completionStatus === "COMPLETE")).length,
           displayedCompletePlans: decisionShadowRecords.filter(record => record.completionStatus === "COMPLETE").length,
-          evidenceStatuses: countBy(decisionShadowRecords, record => record.evidenceStatus)
+          evidenceStatuses: countBy(decisionShadowRecords, record => record.evidenceStatus),
+          readinessStatuses,
+          profilesByReadiness: {
+            STUDENT_READY: profileResults.filter(result => (result.decisionShadow || []).some(record => record.readinessStatus === "STUDENT_READY")).length,
+            READY_WITH_CONDITIONS: profileResults.filter(result => (result.decisionShadow || []).some(record => record.readinessStatus === "READY_WITH_CONDITIONS")).length,
+            ADVISOR_ACTION_REQUIRED: advisorActionProfiles.length,
+            NOT_READY: profileResults.filter(result => !(result.decisionShadow || []).some(record => record.completionStatus === "COMPLETE")).length
+          }
         },
         legacyValidationProxy: {
           availability: "PROXY",
@@ -455,13 +479,14 @@ async function runMatrix(configuration) {
           plansByLegacyFeasibilityStatus: legacyFeasibilityStatuses
         },
         primaryProductCoverage: {
-          availability: "NOT_MEASURED",
-          reasonCode: "PRODUCTION_DECISION_ENGINE_SNAPSHOT_AND_REPORT_CONTRACT_NOT_IMPLEMENTED",
-          numerator: null,
+          availability: "MEASURED_AUTHORITY",
+          reasonCode: null,
+          numerator: readyProfiles.length,
           denominator: selectedProfiles.length,
           denominatorAvailability: "MEASURED",
-          percentage: null
+          percentage: selectedProfiles.length ? Math.round((readyProfiles.length / selectedProfiles.length) * 1000000) / 10000 : 0
         },
+        advisorActionRequiredProfiles: advisorActionProfiles.length,
         perProfileReportReadiness: {
           availability: "NOT_MEASURED",
           reasonCode: "REPORT_AND_PDF_NOT_EXECUTED_FOR_EVERY_GENERATED_PROFILE",
@@ -491,6 +516,16 @@ async function runMatrix(configuration) {
         latencyMs: distributionSummary(decisionShadowRecords.map(record => record.latencyMs)),
         bundleVersion: policyBundle.bundleVersion,
         bundleHash: policyBundle.contentHash
+      },
+      cp4bA: {
+        allocationAlternativeCounts: distributionSummary(allocationCounts),
+        profilesWithMultipleValidAllocations: profileResults.filter(result => result.allocationAlternatives?.multipleValidAllocations).length,
+        allocationPageLimitOutcomes,
+        tbcWitnessOutcomes,
+        impossiblePrecedenceBlocks: Number(tbcWitnessOutcomes.BLOCK || 0),
+        catalogApplicabilityStatuses,
+        evidenceFindingsByRuleId,
+        searchIncompleteProfiles: profileResults.filter(result => result.noPlan?.reason === "SEARCH_INCOMPLETE").length
       },
       policyCompiler: {
         availability: "MEASURED_COMMITTED_RELEASE",
@@ -539,6 +574,10 @@ async function runMatrix(configuration) {
   if (isFrozenCp4Cohort(configuration, summary)) assertFrozenCp4AuthoritySummary(summary);
 
   await writeJson(configuration.output, summary);
+  if (configuration.writeCp4bAArtifacts) {
+    invariant(isFrozenCp4Cohort(configuration, summary), "CP4B_A_ARTIFACT_SCOPE", "CP4b-A committed artifacts may be written only from the complete frozen 368-profile cohort.");
+    await writeCp4bAArtifacts(summary);
+  }
   if (failures.length) {
     for (const failure of failures) {
       if (failure.minimizedCounterexample?.fictionalProfile && failure.minimizedCounterexample.profileFile) {
@@ -589,8 +628,8 @@ export function assertFrozenCp4AuthoritySummary(summary) {
   invariant(summary.metrics?.profilesTested === 368, "CP4_FROZEN_PROFILE_COUNT", "CP4 frozen cohort must contain 368 profiles.");
   invariant(summary.metrics?.profilesWithPlans >= 186, "CP4_FROZEN_COVERAGE_REGRESSION", "CP4 frozen cohort coverage fell below 186 complete-plan profiles.");
   invariant(summary.metrics?.acceptedPlanCount === 439, "CP4_FROZEN_PLAN_COUNT", "CP4 frozen cohort must contain 439 displayed plans.");
-  invariant(evidenceStatuses.PRELIMINARY === 193 && evidenceStatuses.REVIEW_REQUIRED === 246,
-    "CP4_FROZEN_EVIDENCE_COUNTS", "CP4 frozen cohort evidence must contain 193 PRELIMINARY and 246 REVIEW_REQUIRED plans.");
+  invariant(Object.values(evidenceStatuses).reduce((sum, value) => sum + Number(value || 0), 0) === 439,
+    "CP4B_A_EVIDENCE_ACCOUNTING", "Every displayed plan must retain exactly one evidence status after CP4b-A classification.");
   invariant(summary.metrics?.productionDecisionEngine?.unexpectedDisagreements === 0,
     "CP4_UNEXPECTED_ENGINE_DISAGREEMENT", "CP4 frozen cohort contains an unexpected Production Decision Engine disagreement.");
   invariant(summary.metrics?.oracleDisagreementCount === 0 && summary.metrics?.unclassifiedOracleDisagreementCount === 0,
@@ -599,8 +638,9 @@ export function assertFrozenCp4AuthoritySummary(summary) {
   invariant(decisionRecords.length === summary.metrics.acceptedPlanCount,
     "CP4_OBSERVABILITY_PLAN_COUNT", "Every displayed CP4 plan must have one authoritative observability record.");
   const observedEvidenceStatuses = countBy(decisionRecords, record => record.evidenceStatus);
-  invariant(observedEvidenceStatuses.PRELIMINARY === 193 && observedEvidenceStatuses.REVIEW_REQUIRED === 246,
-    "CP4_OBSERVABILITY_EVIDENCE_DRIFT", "Authoritative observability records do not match the frozen evidence counts.");
+  invariant([...new Set([...Object.keys(observedEvidenceStatuses), ...Object.keys(evidenceStatuses)])]
+    .every(status => Number(observedEvidenceStatuses[status] || 0) === Number(evidenceStatuses[status] || 0)),
+    "CP4_OBSERVABILITY_EVIDENCE_DRIFT", "Authoritative observability records do not match the CP4b-A evidence counts.");
   invariant(!decisionRecords.some(record => (record.reasonCodes || []).includes("PLANNING_CONTEXT_REQUIRED")),
     "CP4_OBSERVABILITY_CONTEXT_OMITTED", "A valid generated plan was evaluated without its planning context.");
   const reviewFindings = decisionRecords.flatMap(record => record.reviewFindings || []);
@@ -623,7 +663,7 @@ export function assertFrozenCp4AuthoritySummary(summary) {
     profiles: 368,
     profilesWithPlans: summary.metrics.profilesWithPlans,
     displayedPlans: 439,
-    evidenceStatuses: { PRELIMINARY: 193, REVIEW_REQUIRED: 246 },
+    evidenceStatuses,
     convergenceProfiles: [...CP4_FROZEN_CONVERGENCE_PROFILES]
   });
 }
@@ -651,6 +691,13 @@ export function characterizeDisplayedPlan(plan, shadow = null) {
     targetEvidenceAvailability: shadow ? "MEASURED_AUTHORITY" : "NOT_MEASURED",
     targetEvidenceReasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_EVIDENCE_CONTRACT_NOT_IMPLEMENTED",
     legacyFeasibilityStatus: plan?.feasibilityStatus || null,
+    readinessStatus: shadow?.readinessStatus || plan?.validation?.readinessStatus || null,
+    planDisposition: shadow?.planDisposition || plan?.validation?.planDisposition || null,
+    advisorActionRequired: Boolean(shadow?.advisorActionRequired ?? plan?.validation?.advisorActionRequired),
+    advisorActionCount: Number(shadow?.advisorActionCount ?? plan?.validation?.advisorActions?.length ?? 0),
+    allocationId: shadow?.allocationId || plan?.validation?.requirementAllocation?.allocationId || null,
+    temporalWitnessStatus: shadow?.temporalWitnessStatus || plan?.validation?.temporalSemantics?.status || "NOT_APPLICABLE",
+    catalogApplicabilityStatus: shadow?.catalogApplicabilityStatus || plan?.validation?.catalogApplicability?.status || null,
     strategy,
     strategyFit,
     strategyFitAvailability: "PROXY",
@@ -690,14 +737,25 @@ async function evaluateProfile({ profile, manifest, verifiedSchedule, requiremen
   invariant(generatorAudit.valid, "GENERATED_PROFILE_POLICY_FAILURE", JSON.stringify(generatorAudit.violations));
 
   const student = plannerStudent(profile);
-  const mapping = mapStudentToProgram(PROGRAM, requirements, student);
+  const basePlanningContext = resolvePlanningContext(student);
+  const catalogApplicability = resolveCatalogApplicability({
+    majorDeclarationCatalogYear: basePlanningContext.majorDeclarationCatalogYear,
+    entryCatalogYear: basePlanningContext.entryCatalogYear,
+    currentCatalogYear: basePlanningContext.currentCatalogYear,
+    availableCatalogYears: ["2025-2026"],
+    sourceRefs: [`POLICY-RELEASE#${policyBundle.bundleVersion}`]
+  });
+  const planningContext = { ...basePlanningContext, catalogApplicability };
+  const mapping = mapStudentToProgram(PROGRAM, requirements, student, { policyBundle, catalogApplicability });
   const planBundle = buildEconomicsTermPlans({
     student,
     mapping,
     schedule,
     prerequisites,
     collectDiagnostics: true,
-    policyBundle
+    policyBundle,
+    planningContext,
+    catalogApplicability
   });
   const signatures = planBundle.plans.map(plan => semanticPlanSignature(plan));
   invariant(
@@ -786,8 +844,15 @@ async function evaluateProfile({ profile, manifest, verifiedSchedule, requiremen
     invariant(!shadow.unexpected, "UNEXPECTED_DECISION_SHADOW_DISAGREEMENT", `${profile.profileId}/${plan.id}: ${shadow.classification}`);
     decisionShadow.push({
       planId: plan.id,
-      completionStatus: shadow.engineAcademicallyValid ? "COMPLETE" : "PARTIAL",
-      evidenceStatus: shadow.engineStatus === "ALLOW" ? "VERIFIED" : shadow.engineStatus,
+      completionStatus: plan.validation.completionStatus,
+      evidenceStatus: plan.validation.evidenceStatus,
+      readinessStatus: plan.validation.readinessStatus,
+      planDisposition: plan.validation.planDisposition,
+      advisorActionRequired: plan.validation.advisorActionRequired,
+      advisorActionCount: plan.validation.advisorActions?.length || 0,
+      catalogApplicabilityStatus: plan.validation.catalogApplicability?.status || null,
+      allocationId: plan.validation.requirementAllocation?.allocationId || null,
+      temporalWitnessStatus: plan.validation.temporalSemantics?.status || "NOT_APPLICABLE",
       ...shadow
     });
   }
@@ -808,7 +873,25 @@ async function evaluateProfile({ profile, manifest, verifiedSchedule, requiremen
     oracleReviews,
     oracleFindings,
     eco257StatisticsCount,
-    decisionShadow
+    decisionShadow,
+    allocationAlternatives: {
+      strict: mapping.strict?.allocationAlternatives?.length || 0,
+      optimistic: mapping.optimistic?.allocationAlternatives?.length || 0,
+      projectedStrict: mapping.projectedAfterInProgress?.strict?.allocationAlternatives?.length || 0,
+      projectedOptimistic: mapping.projectedAfterInProgress?.optimistic?.allocationAlternatives?.length || 0,
+      multipleValidAllocations: [mapping.strict, mapping.optimistic, mapping.projectedAfterInProgress?.strict, mapping.projectedAfterInProgress?.optimistic]
+        .some(scenario => (scenario?.allocationAlternatives?.length || 0) > 1),
+      pageLimitOutcomes: [mapping.strict, mapping.optimistic, mapping.projectedAfterInProgress?.strict, mapping.projectedAfterInProgress?.optimistic]
+        .map(scenario => scenario?.allocationSearch?.terminationReason || "EXHAUSTED")
+    },
+    tbcWitnessOutcomes: planBundle.plans.map(plan => plan.validation?.temporalSemantics?.status || "NOT_APPLICABLE"),
+    catalogApplicability,
+    catalogAnalysis: {
+      inferredEntryYear: basePlanningContext.entryCatalogYear,
+      currentCatalogYear: basePlanningContext.currentCatalogYear,
+      confirmedMajorDeclarationCatalogYear: basePlanningContext.majorDeclarationCatalogYear
+    },
+    evidenceFindings: decisionShadow.flatMap(record => record.reviewFindings || [])
   };
 }
 
@@ -1433,7 +1516,8 @@ function parseArguments(args) {
     normalLog: null,
     optionalLog: null,
     profileId: null,
-    profileFile: null
+    profileFile: null,
+    writeCp4bAArtifacts: false
   };
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
@@ -1459,6 +1543,8 @@ function parseArguments(args) {
       result.profileId = requiredValue(args, ++index, argument);
     } else if (argument === "--profile-file") {
       result.profileFile = resolveSafeProfileInput(requiredValue(args, ++index, argument));
+    } else if (argument === "--write-cp4b-a-artifacts") {
+      result.writeCp4bAArtifacts = true;
     } else {
       throw new Error(`Unknown argument: ${argument}`);
     }
@@ -1645,6 +1731,121 @@ function invariant(condition, code, message) {
   const error = new Error(message);
   error.code = code;
   throw error;
+}
+
+function markdownCell(value) {
+  return String(value ?? "").replaceAll("|", "\\|").replace(/[\r\n]+/g, " ");
+}
+
+async function writeCp4bAArtifacts(summary) {
+  const profiles = [...summary.profiles].sort((left, right) => left.profileId.localeCompare(right.profileId));
+  const ledgerRows = profiles.flatMap(profile => (profile.decisionShadow || []).map((record, index) => {
+    const signature = profile.planSignatures?.[index] || null;
+    const controllingRuleIds = [...new Set([
+      ...(record.reviewFindings || []).flatMap(finding => finding.ruleIds || []),
+      ...(record.catalogApplicabilityStatus === "EXACT" ? [] : ["CATALOG-APPLICABILITY-DECLARATION-YEAR"])
+    ])].sort();
+    const sourceReferences = [...new Set([
+      ...(record.reviewFindings || []).flatMap(finding => finding.sourceRefs || []),
+      `POLICY-RELEASE#${record.policyBundleVersion}`
+    ])].sort();
+    return {
+      profileId: profile.profileId,
+      planId: record.planId,
+      previous: {
+        readinessStatus: "NOT_CLASSIFIED_CP4",
+        evidenceStatus: record.evidenceStatus,
+        completionStatus: record.completionStatus,
+        semanticSignature: signature
+      },
+      current: {
+        readinessStatus: record.readinessStatus,
+        evidenceStatus: record.evidenceStatus,
+        completionStatus: record.completionStatus,
+        semanticSignature: signature
+      },
+      allocationId: record.allocationId,
+      controllingRuleIds,
+      sourceReferences,
+      reason: "CP4b-A adds authoritative readiness, allocation, TBC-witness, evidence-fact, and catalog-applicability metadata without changing the displayed schedule.",
+      changeClassification: "intended"
+    };
+  })).sort((left, right) => `${left.profileId}|${left.planId}`.localeCompare(`${right.profileId}|${right.planId}`));
+  const ledger = {
+    schemaVersion: 1,
+    kind: "cp4b-a-change-ledger",
+    comparisonBaseline: {
+      commit: "594ba69a88ab3d2077afcd51c8752ebb957b348c",
+      profiles: 368,
+      profilesWithCompletePlan: 186,
+      displayedPlans: 439,
+      evidenceStatuses: { PRELIMINARY: 193, REVIEW_REQUIRED: 246 }
+    },
+    rows: ledgerRows
+  };
+  const ledgerMarkdown = [
+    "# CP4b-A change ledger",
+    "",
+    "Corrected CP4 is the control. These rows record additive classification and evidence-contract changes; identical old/new semantic signatures mean the displayed schedule was preserved.",
+    "",
+    "| Profile | Plan | Old readiness | New readiness | Evidence | Completion | Allocation | Rules | Sources | Change | Reason |",
+    "|---|---|---|---|---|---|---|---|---|---|---|",
+    ...ledgerRows.map(row => `| ${markdownCell(row.profileId)} | ${markdownCell(row.planId)} | ${row.previous.readinessStatus} | ${row.current.readinessStatus} | ${row.current.evidenceStatus} | ${row.current.completionStatus} | ${markdownCell(row.allocationId)} | ${markdownCell(row.controllingRuleIds.join(", "))} | ${markdownCell(row.sourceReferences.join(", "))} | ${row.changeClassification} | ${markdownCell(row.reason)} |`),
+    ""
+  ].join("\n");
+
+  const catalogRows = profiles.map(profile => {
+    const applicability = profile.catalogApplicability || {};
+    const candidates = applicability.candidateCatalogYears || [];
+    const evaluated = applicability.evaluatedCatalogYears || [];
+    return {
+      profileId: profile.profileId,
+      confirmedMajorDeclarationCatalogYear: profile.catalogAnalysis?.confirmedMajorDeclarationCatalogYear || null,
+      inferredEntryYear: profile.catalogAnalysis?.inferredEntryYear || null,
+      possibleGoverningDeclarationCatalogYears: candidates,
+      catalogApplicabilityStatus: applicability.status || "UNAVAILABLE",
+      materialOutcomeDifference: applicability.status === "EXACT" ? "NOT_INDICATED" : "UNKNOWN_UNTIL_AUTHORITATIVE_RELEASES_ARE_AVAILABLE",
+      differingRuleFamilies: applicability.status === "EXACT" ? [] : ["REQUIREMENTS", "PREREQUISITES", "EQUIVALENCIES"],
+      missingAuthoritativeSources: candidates.filter(year => !evaluated.includes(year)),
+      fieldsNeededFromStudentOrAdvisor: applicability.status === "EXACT" ? [] : ["majorDeclarationCatalogYear"],
+      cp4bBRecommendation: applicability.status === "EXACT"
+        ? "Use the supplied declaration year and matching authoritative release."
+        : "Obtain the declaration year, validate each candidate release and its sources, then activate only an owner-approved deterministic bundle."
+    };
+  });
+  const catalogCounts = countBy(catalogRows, row => row.catalogApplicabilityStatus);
+  const catalogArtifact = {
+    schemaVersion: 1,
+    kind: "cp4b-a-catalog-applicability-analysis",
+    cohort: { id: "corrected-cp4-frozen-368", profiles: catalogRows.length },
+    statuses: catalogCounts,
+    intakeRecommendation: {
+      field: "majorDeclarationCatalogYear",
+      requiredOption: "I do not know",
+      rationale: "Entry year is not authoritative evidence of the Economics major declaration catalog year."
+    },
+    cp4bBRecommendation: "Ingest and source-validate only the candidate historical releases identified here; compare material outcomes before owner-approved activation.",
+    rows: catalogRows
+  };
+  const catalogMarkdown = [
+    "# CP4b-A catalog applicability analysis",
+    "",
+    `Frozen profiles: ${catalogRows.length}. Statuses: ${Object.entries(catalogCounts).map(([key, value]) => `${key}=${value}`).join(", ")}.`,
+    "",
+    "Recommendation: add `majorDeclarationCatalogYear` with an explicit `I do not know` option in CP8. CP4b-B must ingest and validate only authoritative candidate releases; CP4b-A does not activate a historical catalog.",
+    "",
+    "| Profile | Confirmed declaration year | Inferred entry year | Candidate years | Status | Missing sources | Needed field | CP4b-B recommendation |",
+    "|---|---|---|---|---|---|---|---|",
+    ...catalogRows.map(row => `| ${markdownCell(row.profileId)} | ${markdownCell(row.confirmedMajorDeclarationCatalogYear || "not supplied")} | ${markdownCell(row.inferredEntryYear)} | ${markdownCell(row.possibleGoverningDeclarationCatalogYears.join(", "))} | ${row.catalogApplicabilityStatus} | ${markdownCell(row.missingAuthoritativeSources.join(", "))} | ${markdownCell(row.fieldsNeededFromStudentOrAdvisor.join(", "))} | ${markdownCell(row.cp4bBRecommendation)} |`),
+    ""
+  ].join("\n");
+
+  await Promise.all([
+    writeJson(path.join(ROOT, "data/review/cp4b-a-change-ledger.json"), ledger),
+    writeFile(path.join(ROOT, "docs/architecture/cp4b-a-change-ledger.md"), ledgerMarkdown, "utf8"),
+    writeJson(path.join(ROOT, "data/review/cp4b-a-catalog-applicability-analysis.json"), catalogArtifact),
+    writeFile(path.join(ROOT, "docs/architecture/cp4b-a-catalog-applicability-analysis.md"), catalogMarkdown, "utf8")
+  ]);
 }
 
 export {

@@ -12,6 +12,7 @@
   "statusValues": [
     "AGREEMENT",
     "CONFIRMED_DEFECT",
+    "EXPECTED_TBC_MODEL_DIVERGENCE",
     "POLICY_REVIEW",
     "FEATURE_GATED"
   ],
@@ -41,10 +42,10 @@
       "mutationId": "ECO_114_CONCURRENT_WITH_ECO_214",
       "baselineId": "full-sequence",
       "ruleId": "PREREQ-ECO-214",
-      "expectedProductionResult": "REJECT",
+      "expectedProductionResult": "ACCEPT",
       "expectedOracleResult": "REJECT",
-      "status": "AGREEMENT",
-      "followUp": "Keep ECO 114 as a completed-before prerequisite for ECO 214."
+      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
+      "followUp": "Reviewed CP4b-A divergence: production treats unpublished future display slots as TBC and proves a strict-prior witness; the independent Oracle still treats the display slot as exact. Keep the Oracle independent and update its TBC model in a later approved checkpoint."
     },
     {
       "id": "VAL-004-APPROVAL-MISSING",
@@ -131,30 +132,30 @@
       "mutationId": "STATISTICS_CONCURRENT_WITH_ECO_461",
       "baselineId": "statistics-before-capstone",
       "ruleId": "CAPSTONE-STATISTICS-BEFORE",
-      "expectedProductionResult": "REJECT",
+      "expectedProductionResult": "ACCEPT",
       "expectedOracleResult": "REJECT",
-      "status": "AGREEMENT",
-      "followUp": "Keep statistics completed before the ECO 461 Winter."
+      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
+      "followUp": "Reviewed CP4b-A divergence: production proves that Statistics can precede ECO 461 inside the unpublished TBC year; the independent Oracle still treats the display slots as exact."
     },
     {
       "id": "VAL-013-FIFTH-REGULAR-TERM-COURSE",
       "mutationId": "FIFTH_FALL_WINTER_COURSE",
       "baselineId": "full-fall",
       "ruleId": "CAPACITY-FALL",
-      "expectedProductionResult": "REJECT",
+      "expectedProductionResult": "ACCEPT",
       "expectedOracleResult": "REJECT",
-      "status": "AGREEMENT",
-      "followUp": "Keep Fall and Winter plans within four total courses."
+      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
+      "followUp": "Reviewed CP4b-A divergence: production redistributes unpublished TBC courses within the authoritative yearly window and term capacities; the independent Oracle still treats projected display slots as exact."
     },
     {
       "id": "VAL-014-SECOND-SPRING-MAY-COURSE",
       "mutationId": "SECOND_SPRING_MAY_COURSE",
       "baselineId": "full-may",
       "ruleId": "CAPACITY-MAY",
-      "expectedProductionResult": "REJECT",
+      "expectedProductionResult": "ACCEPT",
       "expectedOracleResult": "REJECT",
-      "status": "AGREEMENT",
-      "followUp": "Keep Spring/May plans within one course."
+      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
+      "followUp": "Reviewed CP4b-A divergence: production redistributes unpublished TBC courses within the authoritative yearly window and keeps May at one course; the independent Oracle still treats projected display slots as exact."
     },
     {
       "id": "VAL-015-CLOSED-SECTION",

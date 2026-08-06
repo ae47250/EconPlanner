@@ -13,6 +13,7 @@ import {
 } from "../../../../lib/planning/economics.js";
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { compareRequirementSnapshots } from "../../../../lib/catalog/compare.js";
+import { resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
 
 export const runtime = "nodejs";
@@ -85,6 +86,15 @@ function catalogAdvisorAttention(resolution, catalogReview, planningContext) {
       findings: catalogReview.comparisonFindings
     });
   }
+  if (planningContext.catalogApplicability?.status !== "EXACT") {
+    notices.push({
+      code: "CATALOG_APPLICABILITY_REVIEW",
+      title: "Major declaration catalog year needed",
+      severity: "warning",
+      message: "The entry year is not automatically the governing Economics major catalog year. An advisor or Registrar must confirm the major declaration catalog year before this plan can be student-ready.",
+      advisorAction: planningContext.catalogApplicability?.advisorAction || null
+    });
+  }
   return notices;
 }
 
@@ -138,7 +148,11 @@ function planAdvisorAttention(results) {
   return [...new Map(notices.map(notice => [notice.message, notice])).values()];
 }
 
-function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = false } = {}) {
+function mapCatalogPrograms(catalog, student, catalogReview, {
+  economicsOnly = false,
+  planningContext = null,
+  catalogApplicability = null
+} = {}) {
   return catalog.variants.filter(variant => !economicsOnly || variant.programId === "economics").map(variant => {
     const program = catalog.programs.find(item => item.id === variant.programId) || {
       id: variant.programId,
@@ -146,10 +160,10 @@ function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = f
       sourceStatus: "DRAFT_REVIEW_REQUIRED"
     };
     const mapping = mapStudentToProgram(
-      { ...program, ...variant },
+      { ...program, ...variant, catalogYear: catalog.catalogYear },
       catalog.requirementsByProgram.get(program.id),
       student,
-      { policyBundle: catalog.policyBundle }
+      { policyBundle: catalog.policyBundle, catalogApplicability }
     );
     if (mapping.risk.class === "INSUFFICIENT_INFORMATION") return mapping;
 
@@ -167,7 +181,9 @@ function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = f
           schedule: catalog.economicsSchedule,
           prerequisites: catalog.prerequisitesByProgram.get(program.id),
           courseCatalog: catalog.economicsCourses,
-          policyBundle: catalog.policyBundle
+          policyBundle: catalog.policyBundle,
+          planningContext,
+          catalogApplicability
         })
       : null;
     const economicsPlanningGaps = economicsPlanBundle?.planningGaps || [];
@@ -204,6 +220,7 @@ function mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly = f
       economicsCandidateOutcomes: economicsPlanBundle?.candidateOutcomes || [],
       economicsPlanConvergences: economicsPlanBundle?.convergences || [],
       earlyGraduationContext: economicsPlanBundle?.earlyGraduationContext || null,
+      catalogApplicability,
       catalogReview: variant.programId === "economics" ? catalogReview : null
     };
   });
@@ -234,6 +251,13 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
   const validatedPlan = {
     ...plan,
     validation,
+    readinessStatus: validation.readinessStatus,
+    planDisposition: validation.planDisposition,
+    advisorActionRequired: validation.advisorActionRequired,
+    advisorActions: validation.advisorActions,
+    conditions: validation.conditions,
+    temporalSemantics: validation.temporalSemantics,
+    catalogApplicability: validation.catalogApplicability,
     distribution: validation.distribution.applicable
       ? {
           ...plan.distribution,
@@ -289,10 +313,10 @@ export async function POST(request) {
       }, 422);
     }
     const catalogYears = await availableCatalogYears();
-    const requestedCatalogYear = planningContext.entryCatalogYear;
+    const requestedCatalogYear = planningContext.majorDeclarationCatalogYear || planningContext.entryCatalogYear;
 
     if (!requestedCatalogYear) {
-      return jsonResponse({ error: "The entry catalog year could not be inferred from the student standing and plan date.", availableCatalogYears: catalogYears }, 400);
+      return jsonResponse({ error: "A usable compatibility catalog year could not be determined from the supplied declaration year or student entry context.", availableCatalogYears: catalogYears }, 400);
     }
     const catalogResolution = resolveEconomicsCatalogYear(requestedCatalogYear, catalogYears);
     if (catalogResolution.catalogResolutionStatus === "unavailable") {
@@ -317,6 +341,14 @@ export async function POST(request) {
         availableCatalogYears: catalogYears
       }, 422);
     }
+    const catalogApplicability = resolveCatalogApplicability({
+      majorDeclarationCatalogYear: planningContext.majorDeclarationCatalogYear,
+      entryCatalogYear: planningContext.entryCatalogYear,
+      currentCatalogYear: planningContext.currentCatalogYear,
+      availableCatalogYears: catalogYears,
+      sourceRefs: [`POLICY-RELEASE#${catalog.policyBundleVersion}`]
+    });
+    const authoritativePlanningContext = { ...planningContext, catalogApplicability };
     const prerequisiteValidation = validateStudentPrerequisites(
       student.courses || [],
       catalog.economicsPrerequisites,
@@ -337,7 +369,7 @@ export async function POST(request) {
       const editedPlanResult = validateEditedEconomicsPlan({
         catalog,
         student,
-        planningContext,
+        planningContext: authoritativePlanningContext,
         plan: body.plan,
         plans: body.plans
       });
@@ -378,9 +410,13 @@ export async function POST(request) {
     }
 
     const economicsOnly = catalogResolution.catalogResolutionStatus === "economics_provisional_fallback";
-    const results = mapCatalogPrograms(catalog, student, catalogReview, { economicsOnly });
+    const results = mapCatalogPrograms(catalog, student, catalogReview, {
+      economicsOnly,
+      planningContext: authoritativePlanningContext,
+      catalogApplicability
+    });
     const advisorAttention = [
-      ...catalogAdvisorAttention(catalogResolution, catalogReview, planningContext),
+      ...catalogAdvisorAttention(catalogResolution, catalogReview, authoritativePlanningContext),
       ...electiveAdvisorAttention(results),
       ...prerequisiteAdvisorAttention(prerequisiteValidation),
       ...planAdvisorAttention(results)
@@ -395,12 +431,22 @@ export async function POST(request) {
         comparisonStatus: catalogReview.comparisonStatus,
         comparisonFindings: catalogReview.comparisonFindings,
         advisorAttention,
-        evaluatedCatalogYears: [catalogResolution.selectedCatalogYear],
+        catalogApplicability,
+        governingMajorCatalogYear: catalogApplicability.governingMajorCatalogYear,
+        candidateCatalogYears: catalogApplicability.candidateCatalogYears,
+        evaluatedCatalogYears: catalogApplicability.evaluatedCatalogYears,
         basis: catalogResolution.catalogResolutionStatus === "exact"
           ? (planningContext.isTransferStudent
               ? "transfer_hanover_entry_academic_year"
               : "entry_catalog_year_inferred_from_standing_and_plan_date")
           : "previous_approved_catalog_fallback",
+        applicabilityBasis: catalogApplicability.basis,
+        compatibilitySelectionBasis: catalogResolution.catalogResolutionStatus === "exact"
+          ? (planningContext.isTransferStudent
+              ? "transfer_hanover_entry_academic_year"
+              : "entry_catalog_year_inferred_from_standing_and_plan_date")
+          : "previous_approved_catalog_fallback",
+        selectionAuthority: catalogApplicability.status === "EXACT" ? "GOVERNING" : "COMPATIBILITY_PROJECTION_NOT_GOVERNING",
         uncertainty: advisorAttention.length ? advisorAttention.map(notice => notice.message).join(" ") : null,
         policyBundleVersion: catalog.policyBundleVersion,
         policyBundleHash: catalog.policyBundleHash,
