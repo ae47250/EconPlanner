@@ -491,9 +491,9 @@ test("an in-progress prerequisite unlocks a dependent course only after the curr
   const futureTerm = {
     term: "Term to be confirmed",
     termKey: "TBC",
-    academicYear: "2026/2027",
-    yearIndex: 0,
-    absoluteStandingIndex: 1,
+    academicYear: "2027/2028",
+    yearIndex: 1,
+    absoluteStandingIndex: 2,
     seniorStandingBasis: null,
     isPlaceholder: true,
     inProgressPrerequisitesAvailable: true,

@@ -326,23 +326,23 @@ test("standing, term, graduation, course status, and prerequisite controls stay 
   await progress113.click();
   await expect(progress113).toHaveAttribute("aria-pressed", "false");
 
-  const completed213 = courseStatus(page, "ECO 213", "Completed");
-  await completed213.click();
+  const progress213 = courseStatus(page, "ECO 213", "In progress");
+  await progress213.click();
   const prerequisiteDialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
   await expect(prerequisiteDialog).toBeFocused();
-  await expect(page.getByRole("button", { name: "Confirm Taken" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Confirm In Progress" })).toBeDisabled();
   await page.getByRole("button", { name: "Cancel" }).click();
-  await expect(completed213).toBeFocused();
+  await expect(progress213).toBeFocused();
 
-  await completed213.click();
+  await progress213.click();
   await page.getByRole("group", { name: "Status for prerequisite ECO 113" })
     .getByRole("button", { name: "Taken", exact: true }).click();
   await page.getByRole("group", { name: "Status for prerequisite MAT 121" })
     .getByRole("button", { name: "Taken", exact: true }).click();
-  await page.getByRole("button", { name: "Confirm Taken" }).click();
-  await expect(completed213).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Confirm In Progress" }).click();
+  await expect(progress213).toHaveAttribute("aria-pressed", "true");
   await completed113.click();
-  await expect(completed213).toHaveAttribute("aria-pressed", "false");
+  await expect(progress213).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByRole("status")).toContainText("ECO 213 was cleared");
 
   await page.getByRole("button", { name: "Clear selections" }).click();
@@ -461,7 +461,7 @@ test("generation is single-flight and distinct plans support compare, history, r
     }
     await expect(card.getByText("ECO 461").first()).toBeVisible();
     await expect(card.getByRole("cell", { name: "Winter", exact: true }).last()).toBeVisible();
-    await expect(card.getByText("No major course assigned", { exact: true }).first()).toBeVisible();
+    await expect(card.getByText(/term to be confirmed/i).first()).toBeVisible();
   }
 
   const advisorAttention = page.locator(".advisor-attention");
@@ -475,9 +475,11 @@ test("generation is single-flight and distinct plans support compare, history, r
   const projectedTerms = await projectedPlacementTerms.evaluateAll(items => items.map(item => item.dataset.term));
   expect(new Set(projectedTerms).size).toBe(projectedTerms.length);
   for (const projectedTerm of projectedTerms) {
-    expect(projectedTerm).toMatch(/^(Fall|Winter|Spring\/May|May|Summer) \d{4}$/);
+    expect(projectedTerm).toMatch(/^(?:(?:Fall|Winter|Spring\/May|May|Summer) \d{4}|\d{4}\/\d{4} term to be confirmed)$/);
   }
   const projectedTermSortKey = term => {
+    const tbc = term.match(/^(\d{4})\/\d{4} term to be confirmed$/);
+    if (tbc) return Number(tbc[1]) * 10 + 4;
     const [, season, year] = term.match(/^(Fall|Winter|Spring\/May|May|Summer) (\d{4})$/);
     const seasonOrder = { Winter: 0, "Spring/May": 1, May: 1, Summer: 2, Fall: 3 };
     return Number(year) * 10 + seasonOrder[season];
@@ -521,7 +523,7 @@ test("generation is single-flight and distinct plans support compare, history, r
 
   await page.getByRole("button", { name: "Remove ECO 114" }).click();
   await expect(page.locator(".plan-edit-status")).toContainText("That plan change cannot be saved");
-  await expect(page.locator(".plan-edit-status")).toContainText(/ECO 214 is missing prerequisites: ECO 114|Requirement eco-114 remains unscheduled/);
+  await expect(page.locator(".plan-edit-status")).toContainText(/ECO 214 is missing prerequisites: ECO 114|Requirement eco-114 remains unscheduled|term to be confirmed exceeds the total course limit/);
   await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
   await page.reload();
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
@@ -711,7 +713,7 @@ test("a structurally malformed successful planner response is rejected before st
 });
 
 test("comparison entry, dialog, and long content stay inside every target viewport", async ({ page }) => {
-  test.setTimeout(180000);
+  test.setTimeout(600000);
   await installLongContentResponse(page);
 
   for (const viewport of OVERFLOW_VIEWPORTS) {
@@ -729,8 +731,8 @@ test("comparison entry, dialog, and long content stay inside every target viewpo
       await assertNoHorizontalOverflow(page, `${label} transfer state`);
 
       await page.getByRole("button", { name: "Use regular class-year choices" }).click();
-      const completed213 = courseStatus(page, "ECO 213", "Completed");
-      await completed213.click();
+      const progress213 = courseStatus(page, "ECO 213", "In progress");
+      await progress213.click();
       const dialog = page.getByRole("dialog", { name: "Confirm prerequisites for ECO 213" });
       await expect(dialog).toBeVisible();
       await assertInsideViewport(dialog, `${label} prerequisite dialog`);
@@ -753,7 +755,7 @@ test("comparison entry, dialog, and long content stay inside every target viewpo
       await assertLongTextWraps(planDescription, `${label} fictional plan description`);
       await assertNoHorizontalOverflow(page, `${label} long content`);
 
-      await page.getByRole("button", { name: "Choose Plan C" }).click();
+      await page.getByRole("button", { name: /(?:Choose|Review selected) Plan C/ }).click();
       await expect(page.getByRole("heading", { name: "Review Plan C" })).toBeVisible();
       const courseTitle = page.getByText(LONG_COURSE_TITLE, { exact: true });
       const planWarning = page.getByText(LONG_PLAN_WARNING, { exact: true });

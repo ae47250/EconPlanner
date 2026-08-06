@@ -20,6 +20,11 @@ test("major mapper returns every captured program and Economics schedule", async
   assert.equal(data.catalog.requestedCatalogYear, "2025-2026");
   assert.equal(data.catalog.catalogResolutionStatus, "exact");
   assert.equal(data.catalog.comparisonStatus, "not_applicable");
+  assert.equal(data.catalog.catalogApplicability.status, "AMBIGUOUS");
+  assert.equal(data.catalog.governingMajorCatalogYear, null);
+  assert.ok(data.catalog.advisorAttention.some(item => item.code === "CATALOG_APPLICABILITY_REVIEW"));
+  assert.ok(economics.economicsPlans.every(plan => plan.readinessStatus === "ADVISOR_ACTION_REQUIRED"));
+  assert.ok(economics.economicsPlans.every(plan => plan.validation.approved === false));
   assert.equal(economics.annualSchedule.academicYear, "2026-2027");
   assert.ok(economics.annualSchedule.terms.May.some(course => course.section === "S"));
 });
@@ -64,6 +69,27 @@ test("major mapper validates transfer graduation and Hanover entry years", async
   assert.equal(response.status, 422);
   assert.equal(data.code, "INVALID_TRANSFER_PLANNING_INPUT");
   assert.match(data.error, /2027 through 2031/);
+});
+
+test("an available supplied major declaration year becomes the exact governing catalog", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "freshman",
+        planCreationDate: "2025-09-01",
+        majorDeclarationCatalogYear: "2025-2026",
+        courses: []
+      }
+    })
+  }));
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(data.catalog.catalogApplicability.status, "EXACT");
+  assert.equal(data.catalog.governingMajorCatalogYear, "2025-2026");
+  assert.equal(data.catalog.selectionAuthority, "GOVERNING");
+  assert.ok(!data.catalog.advisorAttention.some(item => item.code === "CATALOG_APPLICABILITY_REVIEW"));
 });
 
 test("major mapper rejects an unconfirmed or stale one-year-early pace", async () => {

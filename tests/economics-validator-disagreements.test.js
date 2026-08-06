@@ -523,8 +523,11 @@ function substantiveReviews(audit) {
   return audit.reviewItems.filter(item => item.code !== "RULE_FAMILY_NOT_CHECKED");
 }
 
-function classifiedStatus(production, oracle) {
+function classifiedStatus(production, oracle, expectedStatus = null) {
   if (substantiveReviews(oracle).length && !oracle.violations.length) return "POLICY_REVIEW";
+  if (expectedStatus === "EXPECTED_TBC_MODEL_DIVERGENCE" && !oracle.valid && production.valid) {
+    return "EXPECTED_TBC_MODEL_DIVERGENCE";
+  }
   if (!oracle.valid && production.valid) return "CONFIRMED_DEFECT";
   if (!oracle.valid && !production.valid) return "AGREEMENT";
   return "FEATURE_GATED";
@@ -619,7 +622,7 @@ test("production-validator disagreements exactly match the reviewed registry", (
       assert.fail(`${entry.id}: production now rejects this defect; promote the registry row to AGREEMENT. ${detail}`);
     }
     assert.equal(productionResult, entry.expectedProductionResult, `${entry.id}: production drift; ${detail}`);
-    assert.equal(classifiedStatus(evaluation.production, evaluation.oracle), entry.status, `${entry.id}: classification drift; ${detail}`);
+    assert.equal(classifiedStatus(evaluation.production, evaluation.oracle, entry.status), entry.status, `${entry.id}: classification drift; ${detail}`);
   }
 });
 

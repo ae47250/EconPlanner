@@ -49,13 +49,31 @@ function profile(id, hash, plans = 1) {
       unexpected: false,
       completionStatus: "COMPLETE",
       evidenceStatus: "PRELIMINARY",
+      readinessStatus: "READY_WITH_CONDITIONS",
+      planDisposition: "COMPLETE_READY_WITH_CONDITIONS",
+      advisorActionRequired: false,
       latencyMs: 2,
       policyBundleVersion: "econ-2025-2026.1",
       policyBundleHash: "sha256:fixture"
     }] : [],
+    allocationAlternatives: { strict: plans ? 2 : 0, optimistic: plans ? 2 : 0, projectedStrict: plans ? 2 : 0, projectedOptimistic: plans ? 2 : 0, multipleValidAllocations: Boolean(plans), pageLimitOutcomes: ["EXHAUSTED"] },
+    tbcWitnessOutcomes: plans ? ["PRELIMINARY"] : [],
+    catalogApplicability: { status: "EXACT" },
+    evidenceFindings: [],
     noPlan: plans ? null : { conclusion: "PROVEN_INFEASIBLE", reason: "COUNT_CAPACITY", attempts: [{ exhaustive: true }] }
   };
 }
+
+test("CP4b-A shard aggregation reports readiness, allocations, TBC witnesses, and catalog applicability", () => {
+  const merged = mergeGeneratedShards([shard(1, [profile("p1", "h1")]), shard(2, [profile("p2", "h2", 0)])]);
+  assert.equal(merged.coverage.completion.primaryProductCoverage.numerator, 1);
+  assert.equal(merged.coverage.completion.shadowDecision.readinessStatuses.READY_WITH_CONDITIONS, 1);
+  assert.equal(merged.coverage.completion.advisorActionRequiredProfiles, 0);
+  assert.equal(merged.cp4bA.profilesWithMultipleValidAllocations, 1);
+  assert.equal(merged.cp4bA.allocationAlternativeCounts.maximum, 2);
+  assert.equal(merged.cp4bA.tbcWitnessOutcomes.PRELIMINARY, 1);
+  assert.equal(merged.cp4bA.catalogApplicabilityStatuses.EXACT, 2);
+});
 
 function shard(index, profiles) {
   return {

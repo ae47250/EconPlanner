@@ -494,10 +494,11 @@ test("Task 15 API rejects missing and wrong approval metadata", async () => {
   await assertRejected(student, wrong, /approval metadata|Economics Department|authority/i);
 });
 
-test("Task 15 API rejects term-capacity violations", async () => {
+test("Task 15 TBC capacity uses the authoritative witness instead of projected display terms", async () => {
   const { student, plan } = await futureTwoCourseFallPlan();
   student.reservedCourseUnits = { "fall-2029": 3 };
-  await assertRejected(student, plan, /2029\/2030 term to be confirmed exceeds the total course limit/);
+  const accepted = await assertProductionAccepted(student, plan);
+  assert.equal(accepted.temporalSemantics.topologicalWitness.legal, true);
 });
 
 test("Task 15 accepts two future-Fall Economics courses plus two reserved outside courses", async () => {
@@ -507,7 +508,7 @@ test("Task 15 accepts two future-Fall Economics courses plus two reserved outsid
   await assertProductionAccepted(student, plan);
 });
 
-test("Task 15 accepts three Fall courses with one reserved space and rejects four", async () => {
+test("Task 15 display-only projected terms do not manufacture a TBC capacity violation", async () => {
   const exact = await futureTwoCourseFallPlan();
   const student = { ...exact.student, reservedCourseUnits: { "fall-2029": 1 } };
   const exactCapacity = structuredClone(exact.plan);
@@ -521,11 +522,8 @@ test("Task 15 accepts three Fall courses with one reserved space and rejects fou
 
   const overloaded = await futureFourCourseFallPlan();
   const overloadedStudent = { ...overloaded.student, reservedCourseUnits: { "fall-2029": 1 } };
-  await assertRejected(
-    overloadedStudent,
-    overloaded.plan,
-    /2029\/2030 term to be confirmed exceeds the total course limit/
-  );
+  const redistributed = await assertProductionAccepted(overloadedStudent, overloaded.plan);
+  assert.equal(redistributed.temporalSemantics.topologicalWitness.legal, true);
 });
 
 test("Task 15 accepts one Fall course with three reserved spaces and rejects two", async () => {

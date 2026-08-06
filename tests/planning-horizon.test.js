@@ -196,6 +196,20 @@ test("transfer graduation year derives one- through five-year horizons", () => {
   }
 });
 
+test("major declaration catalog year is preserved separately from inferred entry year", () => {
+  const unknown = resolvePlanningContext({ academicStanding: "junior", planCreationDate: "2026-09-01" });
+  const supplied = resolvePlanningContext({
+    academicStanding: "junior",
+    planCreationDate: "2026-09-01",
+    majorDeclarationCatalogYear: "2025-2026"
+  });
+  assert.equal(unknown.majorDeclarationCatalogYear, null);
+  assert.equal(unknown.majorDeclarationCatalogYearBasis, "NOT_PROVIDED");
+  assert.equal(supplied.majorDeclarationCatalogYear, "2025-2026");
+  assert.equal(supplied.majorDeclarationCatalogYearBasis, "STUDENT_OR_ADVISOR_PROVIDED");
+  assert.notEqual(supplied.entryCatalogYear, supplied.majorDeclarationCatalogYear);
+});
+
 test("five-year transfer planning treats the fourth and fifth college years as senior years", () => {
   const context = resolvePlanningContext({
     isTransferStudent: true,
