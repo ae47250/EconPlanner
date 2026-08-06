@@ -42,26 +42,12 @@ function sortResults(results) {
 }
 
 function catalogAdvisorAttention(planningContext) {
-  const notices = [];
   const applicability = planningContext.catalogApplicability;
-  if (applicability?.advisorNotice) {
-    notices.push({
-      code: applicability.advisorNotice.reasonCode,
-      title: "Economics catalog confirmation",
-      severity: "warning",
-      message: `The planner used the ${applicability.appliedMajorCatalogYear.replace("-", "/")} Economics-major requirements conditionally. Confirm that this student may use them.`,
-      findings: applicability.materialDifferences,
-      advisorNotice: applicability.advisorNotice
-    });
-  }
-  if (applicability?.advisorAction) notices.push({
-    code: applicability.advisorAction.reasonCode,
-    title: "Economics catalog decision required",
-    severity: "warning",
-    message: "The catalog comparison contains a material conflict that the planner may not resolve automatically.",
-    advisorAction: applicability.advisorAction
-  });
-  return notices;
+  return (applicability?.advisorNotifications || []).map(notice => ({
+    ...notice,
+    findings: notice.materialDifferences || [],
+    advisorNotice: notice
+  }));
 }
 
 function electiveAdvisorAttention(results) {
@@ -224,6 +210,10 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     conditions: validation.conditions,
     temporalSemantics: validation.temporalSemantics,
     catalogApplicability: validation.catalogApplicability,
+    publicationStatus: validation.publicationStatus,
+    notices: validation.notices,
+    studentNotices: validation.studentNotices,
+    advisorNotifications: validation.advisorNotifications,
     distribution: validation.distribution.applicable
       ? {
           ...plan.distribution,
@@ -324,9 +314,9 @@ export async function POST(request) {
     const catalogResolution = {
       requestedCatalogYear,
       selectedCatalogYear: catalogApplicability.appliedMajorCatalogYear,
-      catalogResolutionStatus: catalogApplicability.status === CATALOG_APPLICABILITY_STATUS.EXACT_DECLARATION_CATALOG
-        ? "exact"
-        : "latest_flexible_conditional_fallback"
+      catalogResolutionStatus: catalogApplicability.status === CATALOG_APPLICABILITY_STATUS.OWNER_DESIGNATED_MATCH
+        ? "owner_designated_matches_incoming"
+        : "owner_designated_flexible_requirements"
     };
 
     let catalog;
@@ -432,9 +422,7 @@ export async function POST(request) {
             : "entry_catalog_year_inferred_from_standing_and_plan_date",
         applicabilityBasis: catalogApplicability.basis,
         compatibilitySelectionBasis: catalogApplicability.basis,
-        selectionAuthority: catalogApplicability.status === CATALOG_APPLICABILITY_STATUS.EXACT_DECLARATION_CATALOG
-          ? "GOVERNING_EXACT_DECLARATION_CATALOG"
-          : "OWNER_APPROVED_CONDITIONAL_PLANNING_FALLBACK",
+        selectionAuthority: "OWNER_DESIGNATED_MOST_FLEXIBLE_ECONOMICS_MAJOR_REQUIREMENT_SET",
         uncertainty: advisorAttention.length ? advisorAttention.map(notice => notice.message).join(" ") : null,
         policyBundleVersion: catalog.policyBundleVersion,
         policyBundleHash: catalog.policyBundleHash,

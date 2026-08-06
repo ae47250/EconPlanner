@@ -449,6 +449,7 @@ export function auditExternalEconomicsPlanComplete(input) {
     reviewItems,
     enrollmentConditions: scheduleAndHorizon.enrollmentConditions,
     preliminaryFindings: scheduleAndHorizon.preliminaryFindings,
+    projectionFindings: scheduleAndHorizon.projectionFindings,
     checkedRuleFamilies,
     uncheckedRuleFamilies: [],
     scheduleAndHorizonValidation: scheduleAndHorizon

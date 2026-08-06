@@ -13,7 +13,6 @@ import {
 } from "../lib/planning/economics.js";
 import {
   PLANNING_PACES,
-  PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
   resolvePlanningContext
 } from "../lib/planning/horizon.js";
 import { auditExternalEconomicsPlanComplete } from "./oracle/audit-external-plan.js";
@@ -94,15 +93,9 @@ function strategyResult(profileId, variantId, {
   const variant = variantsById.get(variantId);
   assert.ok(variant, `Unknown plan variant ${variantId}.`);
   if (variantId === EARLY_GRADUATION_VARIANT.id) {
-    const normalContext = resolvePlanningContext(student);
-    const expectedGraduationYear = normalContext.expectedGraduationYear - 1;
     student = {
       ...student,
-      planningPace: PLANNING_PACES.EARLY,
-      projectedSeniorStandingConfirmation: {
-        status: PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
-        academicYear: `${expectedGraduationYear - 1}/${expectedGraduationYear}`
-      }
+      planningPace: PLANNING_PACES.EARLY
     };
   }
   const mapping = mappingFor(student);
@@ -449,7 +442,7 @@ test("Plan C uses standing-appropriate portable foundations and a safe prerequis
     assert.equal(sophomore.selected.planningContext.expectedGraduationTerm, "Spring/May 2029");
     if (statistics.course.source === "requirement-placeholder") {
       assert.equal(sophomore.selected.feasibilityStatus, "PRELIMINARY_ONLY");
-      assert.ok(sophomore.selected.validation.warnings.some(warning => /Schedule confirmation required/.test(warning)));
+      assert.equal(sophomore.selected.validation.warnings.some(warning => /Schedule confirmation required/.test(warning)), true);
     }
   }
 

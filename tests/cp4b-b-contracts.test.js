@@ -49,46 +49,45 @@ test("governed historical releases preserve the authoritative flexibility sequen
   assert.ok(records.every(record => record.collegeWideBoundary.changedByFlexibleMajorRule === false));
 });
 
-test("unknown declaration year uses latest flexible requirements conditionally without advisor-action readiness", () => {
+test("owner-designated requirements apply while the incoming catalog remains audit metadata", () => {
   const applicability = resolveCatalogApplicability({
     majorDeclarationCatalogYear: UNKNOWN_DECLARATION_CATALOG_YEAR,
     entryCatalogYear: "2023-2024",
     currentCatalogYear: "2026-2027",
     availableCatalogYears: YEARS
   });
-  assert.equal(applicability.status, CATALOG_APPLICABILITY_STATUS.LATEST_FLEXIBLE_FALLBACK);
+  assert.equal(applicability.status, CATALOG_APPLICABILITY_STATUS.OWNER_DESIGNATED_SAC_PETITION);
   assert.equal(applicability.submittedDeclarationCatalogYear, UNKNOWN_DECLARATION_CATALOG_YEAR);
-  assert.deepEqual(applicability.evaluatedCatalogYears, YEARS);
+  assert.deepEqual(applicability.evaluatedCatalogYears, ["2023-2024", "2025-2026"]);
   assert.equal(applicability.appliedMajorCatalogYear, "2025-2026");
   assert.equal(applicability.latestAvailableCatalogYear, "2025-2026");
-  assert.equal(applicability.requiresAdvisorConfirmation, true);
+  assert.equal(applicability.requiresAdvisorConfirmation, false);
   assert.equal(applicability.advisorAction, null);
-  assert.equal(applicability.advisorNotice.reasonCode, "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED");
+  assert.equal(applicability.advisorNotice.reasonCode, "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE");
+  assert.equal(applicability.advisorNotice.blocking, false);
+  assert.equal(applicability.advisorNotice.readinessImpact, "NONE");
+  assert.equal(applicability.advisorNotice.sacPetitionRequired, true);
   assert.ok(applicability.materialDifferences.some(item => item.code === "PSY_217_STATISTICS_OPTION_ADDED"));
   assert.ok(applicability.materialDifferences.some(item => item.code === "BUSN_323_MONEY_FINANCE_OPTION_ADDED"));
   assert.ok(applicability.materialDifferences.some(item => item.code === "ECONOMICS_COMPREHENSIVE_EVALUATION_CHANGED"));
 });
 
-test("known older catalog preserves both evaluations and supports explicit approval", () => {
-  const fallback = resolveCatalogApplicability({
+test("known older catalog preserves both evaluations and cannot override the owner designation", () => {
+  const applicability = resolveCatalogApplicability({
     majorDeclarationCatalogYear: "2023-2024",
     currentCatalogYear: "2026-2027",
     availableCatalogYears: YEARS
   });
-  assert.equal(fallback.status, "LATEST_FLEXIBLE_FALLBACK");
-  assert.equal(fallback.originalCatalogYear, "2023-2024");
-  assert.deepEqual(fallback.evaluatedCatalogYears, ["2023-2024", "2025-2026"]);
-  assert.equal(fallback.evaluations.length, 2);
-  const approved = resolveCatalogApplicability({
-    majorDeclarationCatalogYear: "2023-2024",
-    availableCatalogYears: YEARS,
-    latestFlexibleApprovalStatus: "APPROVED"
-  });
-  assert.equal(approved.status, "LATEST_FLEXIBLE_APPROVED");
-  assert.equal(approved.requiresAdvisorConfirmation, false);
+  assert.equal(applicability.status, CATALOG_APPLICABILITY_STATUS.OWNER_DESIGNATED_SAC_PETITION);
+  assert.equal(applicability.originalCatalogYear, "2023-2024");
+  assert.deepEqual(applicability.evaluatedCatalogYears, ["2023-2024", "2025-2026"]);
+  assert.equal(applicability.evaluations.length, 2);
+  assert.equal(applicability.appliedMajorCatalogYear, "2025-2026");
+  assert.equal(applicability.declarationCatalogMayOverride, false);
+  assert.equal(applicability.automaticNewestSelectionPermitted, false);
 });
 
-test("a stricter latest record produces a material conflict instead of silent selection", () => {
+test("even a differing incoming record remains metadata under the explicit owner designation", () => {
   const records = structuredClone(catalogPolicyRecords());
   const latest = records.find(record => record.catalogYear === "2025-2026");
   latest.requirements.statisticsOptions = ["ECO 257"];
@@ -97,9 +96,10 @@ test("a stricter latest record produces a material conflict instead of silent se
     availableCatalogYears: YEARS,
     catalogRecords: records
   });
-  assert.equal(applicability.status, "AMBIGUOUS_MATERIAL_CONFLICT");
-  assert.equal(applicability.appliedMajorCatalogYear, "2024-2025");
-  assert.equal(applicability.advisorAction.reasonCode, "AMBIGUOUS_MATERIAL_CATALOG_CONFLICT");
+  assert.equal(applicability.status, CATALOG_APPLICABILITY_STATUS.OWNER_DESIGNATED_SAC_PETITION);
+  assert.equal(applicability.appliedMajorCatalogYear, "2025-2026");
+  assert.equal(applicability.advisorAction, null);
+  assert.equal(applicability.advisorNotice.category, "ADMINISTRATIVE_FOLLOW_UP");
 });
 
 test("missing 2026-2027 is preserved and never invented", () => {
@@ -107,9 +107,10 @@ test("missing 2026-2027 is preserved and never invented", () => {
     majorDeclarationCatalogYear: "2026-2027",
     availableCatalogYears: YEARS
   });
-  assert.equal(applicability.status, "LATEST_FLEXIBLE_FALLBACK");
+  assert.equal(applicability.status, CATALOG_APPLICABILITY_STATUS.OWNER_DESIGNATED_INCOMING_UNKNOWN);
   assert.equal(applicability.requestedUnavailableCatalogYear, "2026-2027");
   assert.equal(applicability.appliedMajorCatalogYear, "2025-2026");
+  assert.equal(applicability.advisorNotice.code, "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
   assert.ok(!loadCatalogPolicyReleases().releases.some(release => release.catalogYear === "2026-2027"));
 });
 
@@ -135,9 +136,9 @@ test("catalog intake validation preserves unknown and rejects unsupported values
   assert.equal(validateSubmittedCatalogYear("2022-2023", YEARS).valid, false);
   const applicability = resolveCatalogApplicability({majorDeclarationCatalogYear: "I_DO_NOT_KNOW", availableCatalogYears: YEARS});
   const resolution = resolveInputResolution({catalogApplicability: applicability});
-  assert.equal(resolution.status, "RESOLVED_WITH_AUTHORIZED_DEFAULT");
-  assert.equal(resolution.planningCanContinueConditionally, true);
-  assert.equal(resolution.safeDefaultsApplied[0].kind, "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT");
+  assert.equal(resolution.status, "COMPLETE");
+  assert.equal(resolution.planningCanContinueConditionally, false);
+  assert.equal(resolution.safeDefaultsApplied[0].kind, "OWNER_DESIGNATED_POLICY_NOT_STUDENT_FACT");
 });
 
 test("recoverable and contradictory input problems remain structured and blocked", () => {
@@ -146,8 +147,9 @@ test("recoverable and contradictory input problems remain structured and blocked
     planningContext: {projectedSeniorStandingAcademicYear: "2028/2029"},
     issueCode: "INVALID_PLANNING_PACE"
   });
-  assert.equal(recoverable.status, "RECOVERABLE_MISSING_INFORMATION");
+  assert.equal(recoverable.status, "UNSUPPORTED_INPUT");
   assert.equal(recoverable.answerCount, 1);
+  assert.deepEqual(recoverable.blockingFields, ["planningPace"]);
   assert.equal(recoverable.planningMustRemainBlocked, true);
   const contradictory = resolveInputResolution({issueCode: "INVALID_STUDENT_PREREQUISITES", issues: [{course: "ECO 461"}]});
   assert.equal(contradictory.status, "CONTRADICTORY_INFORMATION");
@@ -169,7 +171,7 @@ test("FULL remains review-required in the active production bundle", () => {
   assert.equal(bundle.indexes.byRuleId["SCHEDULE-AVAILABILITY-BEHAVIOR"].effect.FULL, "REVIEW_REQUIRED");
 });
 
-test("API preserves unknown input, applies latest flexible catalog, and emits one canonical notice", async () => {
+test("API preserves unknown declaration metadata, applies the designated catalog, and emits one SAC notice", async () => {
   const response = await POST(requestFor({
     academicStanding: "senior",
     planCreationDate: "2026-09-01",
@@ -180,8 +182,8 @@ test("API preserves unknown input, applies latest flexible catalog, and emits on
   assert.equal(response.status, 200);
   assert.equal(body.catalog.submittedDeclarationCatalogYear, "I_DO_NOT_KNOW");
   assert.equal(body.catalog.appliedMajorCatalogYear, "2025-2026");
-  assert.equal(body.inputResolution.planningCanContinueConditionally, true);
-  assert.equal(body.catalog.advisorAttention.filter(item => item.code === "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED").length, 1);
+  assert.equal(body.inputResolution.planningCanContinueConditionally, false);
+  assert.equal(body.catalog.advisorAttention.filter(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE").length, 1);
 });
 
 test("API evaluates a known older catalog and rejects a submitted unsupported year", async () => {
@@ -213,7 +215,8 @@ test("minimal accessible intake is present and the browser contains no selection
   assert.match(source, /htmlFor="major-declaration-catalog-year"/);
   assert.match(source, /id="major-declaration-catalog-year"/);
   assert.match(source, /value="I_DO_NOT_KNOW">I do not know/);
-  assert.match(source, /Economics-major requirements normally depend on when you declared the major/);
+  assert.match(source, /owner-designated 2025–2026 flexible requirements/);
+  assert.doesNotMatch(source, /projectedSeniorStandingConfirmation/);
   assert.doesNotMatch(source, /resolveCatalogApplicability/);
 });
 
@@ -227,6 +230,7 @@ test("catalog policy compilation is byte-identical across three clean outputs an
       await compileCatalogPolicies({repositoryRoot: ROOT, outputRoot});
       outputs.push(await Promise.all([
         readFile(path.join(outputRoot, "catalog-releases.json"), "utf8"),
+        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.2", "bundle.json"), "utf8"),
         ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.2"]
           .map(version => readFile(path.join(outputRoot, "releases", version, "bundle.json"), "utf8"))
       ]));

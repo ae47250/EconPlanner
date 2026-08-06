@@ -3,17 +3,9 @@ import assert from "node:assert/strict";
 import {
   buildPlanningSlots,
   PLANNING_PACES,
-  PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
   resolvePlanningContext,
   transferPlanningOptions
 } from "../lib/planning/horizon.js";
-
-function seniorConfirmation(academicYear) {
-  return {
-    status: PROJECTED_SENIOR_STANDING_CONFIRMATION_STATUS,
-    academicYear
-  };
-}
 
 test("Fall freshman planning excludes the running Fall and maps through Spring/May 2030", () => {
   const context = resolvePlanningContext({
@@ -175,15 +167,11 @@ test("transfer graduation year derives one- through five-year horizons", () => {
   ]);
 
   for (const [graduationYear, result] of expected) {
-    const compressed = graduationYear < 2030;
     const context = resolvePlanningContext({
       isTransferStudent: true,
       transferExpectedGraduationYear: String(graduationYear),
       transferEntryAcademicYear: "2026-2027",
-      planCreationDate: "2027-01-10",
-      ...(compressed ? {
-        projectedSeniorStandingConfirmation: seniorConfirmation(`${graduationYear - 1}/${graduationYear}`)
-      } : {})
+      planCreationDate: "2027-01-10"
     });
 
     assert.equal(context.transferValidation.valid, true);
@@ -240,7 +228,7 @@ test("regular standard, early, and extended paces resolve one authoritative hori
       planCreationDate: "2026-07-26"
     });
     assert.equal(context.remainingYears, remainingYears);
-    assert.equal(context.requiresProjectedSeniorStandingConfirmation, false);
+    assert.equal(context.acceleratedPlanAssumesSeniorStanding, false);
     assert.equal(context.planningValidation.valid, true);
   }
 
@@ -256,41 +244,32 @@ test("regular standard, early, and extended paces resolve one authoritative hori
   assert.equal(extendedSlots.find(slot => slot.label === "Winter 2031").absoluteStandingIndex, 3);
 });
 
-test("early regular planning requires an exact final-year senior-standing confirmation", () => {
-  const missing = resolvePlanningContext({
-    academicStanding: "freshman",
-    planningPace: PLANNING_PACES.EARLY,
-    planCreationDate: "2026-07-26"
-  });
-  const stale = resolvePlanningContext({
+test("early regular planning assumes senior standing in the final year without a confirmation input", () => {
+  const context = resolvePlanningContext({
     academicStanding: "freshman",
     planningPace: PLANNING_PACES.EARLY,
     planCreationDate: "2026-07-26",
-    projectedSeniorStandingConfirmation: seniorConfirmation("2027/2028")
-  });
-  const confirmed = resolvePlanningContext({
-    academicStanding: "freshman",
-    planningPace: PLANNING_PACES.EARLY,
-    planCreationDate: "2026-07-26",
-    projectedSeniorStandingConfirmation: seniorConfirmation("2028/2029")
+    projectedSeniorStandingConfirmation: {
+      status: "STALE_LEGACY_INPUT_IS_IGNORED",
+      academicYear: "2027/2028"
+    }
   });
 
-  assert.equal(missing.remainingYears, 3);
-  assert.equal(missing.planningValidation.valid, false);
-  assert.equal(stale.planningValidation.valid, false);
-  assert.equal(confirmed.planningValidation.valid, true);
-  assert.equal(confirmed.expectedGraduationTerm, "Spring/May 2029");
-  const seniorWinter = buildPlanningSlots(confirmed).find(slot => slot.label === "Winter 2029");
+  assert.equal(context.remainingYears, 3);
+  assert.equal(context.planningValidation.valid, true);
+  assert.equal(context.acceleratedPlanAssumesSeniorStanding, true);
+  assert.equal(context.expectedGraduationTerm, "Spring/May 2029");
+  assert.ok(!Object.hasOwn(context, "projectedSeniorStandingConfirmation"));
+  const seniorWinter = buildPlanningSlots(context).find(slot => slot.label === "Winter 2029");
   assert.equal(seniorWinter.absoluteStandingIndex, 3);
-  assert.equal(seniorWinter.seniorStandingBasis, "student_reported_registrar_or_advisor_confirmation");
+  assert.equal(seniorWinter.seniorStandingBasis, "accelerated_plan_assumes_senior_standing_in_final_year");
 });
 
 test("one-year-early pace is invalid when fewer than two standard years remain", () => {
   const context = resolvePlanningContext({
     academicStanding: "senior",
     planningPace: PLANNING_PACES.EARLY,
-    planCreationDate: "2026-07-26",
-    projectedSeniorStandingConfirmation: seniorConfirmation("2026/2027")
+    planCreationDate: "2026-07-26"
   });
 
   assert.equal(context.remainingYears, 1);

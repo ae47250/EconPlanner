@@ -18,10 +18,7 @@
         "planningPace": "one_year_early",
         "entryAcademicYearStart": 2025,
         "projectedSeniorStandingAcademicYear": "2027/2028",
-        "projectedSeniorStandingConfirmation": {
-          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
-          "academicYear": "2027/2028"
-        }
+        "acceleratedPlanAssumesSeniorStanding": true
       },
       "terms": [
         {

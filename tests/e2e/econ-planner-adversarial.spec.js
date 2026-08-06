@@ -320,7 +320,7 @@ test("@pr timing-sensitive in-memory edit lock blocks duplicate clicks and relea
   await page.unroute("**/api/majors/map");
 
   const successfulMove = page.waitForResponse(response => isMapRequest(response.request(), "validate-plan"));
-  await page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("term-to-confirm-2027/2028");
+  await page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("winter-2028");
   expect((await successfulMove).status()).toBe(200);
   await expect(planEditStatus(page)).toContainText("Plan A was updated and remains valid.");
   const afterSuccess = planSignatures(await savedSession(page));

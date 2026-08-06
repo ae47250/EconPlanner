@@ -167,7 +167,7 @@ function concreteCourse(code) {
   return /^[A-Z]{2,5}\s+\d{3}[A-Z]?$/u.test(upper(code));
 }
 
-function checkOfferingSource({ policy, verifiedSchedule, term, termIndex, course, courseIndex, violations, preliminary }) {
+function checkOfferingSource({ policy, verifiedSchedule, term, termIndex, course, courseIndex, violations, projections }) {
   const path = `$.plan.terms[${termIndex}].courses[${courseIndex}]`;
   const source = text(course.source);
   const verifiedYear = normalizeYear(term.academicYear) === normalizeYear(verifiedSchedule?.academicYear);
@@ -205,12 +205,12 @@ function checkOfferingSource({ policy, verifiedSchedule, term, termIndex, course
     ));
     return;
   }
-  preliminary.push({
-    code: "SCHEDULE_FUTURE_OFFERING_PRELIMINARY",
-    ruleId: "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY",
+  projections.push({
+    code: "SCHEDULE_FUTURE_PLANNING_PROJECTION",
+    ruleId: "FUTURE-UNPUBLISHED-SCHEDULE-PLANNING-PROJECTION",
     objectPath: path,
-    message: `${course.course} is explicitly unverified and makes the plan preliminary.`,
-    sourceReference: sourceFor(policy, "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY")
+    message: `${course.course} is an explicit planning projection for an unpublished schedule year.`,
+    sourceReference: "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY"
   });
 }
 
@@ -415,14 +415,12 @@ function checkHorizon({ policy, plan, expectedContext, requirementAllocation, vi
   }
 }
 
-function result({ violations, warnings, reviewItems, conditions, preliminary }) {
+function result({ violations, warnings, reviewItems, conditions, projections }) {
   const status = violations.length
     ? "NOT_FEASIBLE"
     : reviewItems.length
       ? "POLICY_REVIEW"
-      : preliminary.length
-        ? "PRELIMINARY_ONLY"
-        : conditions.length
+      : conditions.length
           ? "CONDITIONALLY_FEASIBLE"
           : "VERIFIED_FEASIBLE";
   return {
@@ -433,7 +431,8 @@ function result({ violations, warnings, reviewItems, conditions, preliminary }) 
     warnings,
     reviewItems,
     enrollmentConditions: conditions,
-    preliminaryFindings: preliminary,
+    preliminaryFindings: [],
+    projectionFindings: projections,
     checkedRuleFamilies: ["SCHEDULE", "CAPACITY", "GRADUATION_RULES"].map(
       family => ({ family, status: "CHECKED" })
     ),
@@ -450,7 +449,7 @@ export function checkExternalEconomicsScheduleAndHorizon(input) {
   const warnings = [];
   const reviewItems = [];
   const conditions = [];
-  const preliminary = [];
+  const projections = [];
 
   (plan.terms || []).forEach((term, termIndex) => {
     checkCapacity(policy, term, termIndex, violations);
@@ -465,7 +464,7 @@ export function checkExternalEconomicsScheduleAndHorizon(input) {
         course,
         courseIndex,
         violations,
-        preliminary
+        projections
       });
       checkAvailability({ policy, course, path, violations, conditions, warnings, reviewItems });
     });
@@ -478,5 +477,5 @@ export function checkExternalEconomicsScheduleAndHorizon(input) {
     requirementAllocation: args.requirementAllocation,
     violations
   });
-  return result({ violations, warnings, reviewItems, conditions, preliminary });
+  return result({ violations, warnings, reviewItems, conditions, projections });
 }

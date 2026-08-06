@@ -12,6 +12,7 @@ const MANIFESTS = [
 ];
 const EXPECTED_YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 const FLEXIBILITY_RULE_ID = "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK";
+const PLANNING_FLEXIBILITY_POLICY_PATH = "policy/rules/planning-flexibility.json";
 const ACTIVE_BUNDLE_VERSION = "econ-2025-2026.1";
 const ACTIVE_BUNDLE_HASH = "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7";
 
@@ -153,6 +154,93 @@ function historicalSourceReport(provenance, releases) {
     `## Compiled releases\n\n${releases.map(release => `- ${release.catalogYear}: \`${release.bundleVersion}\` (\`${release.contentHash}\`), pending owner approval.`).join("\n")}\n`;
 }
 
+function validatePlanningFlexibilityPolicy(policy) {
+  if (policy?.policyVersion !== "econ-planning-flexibility.2" || policy?.status !== "OWNER_APPROVED") {
+    fail("owner-approved planning flexibility policy is missing");
+  }
+  const senior = policy.acceleratedSeniorStanding;
+  if (senior?.requiresStudentConfirmation !== false || senior?.readinessImpact !== "NONE") {
+    fail("accelerated senior-standing policy must be nonblocking and require no confirmation");
+  }
+  const projection = policy.futureScheduleProjection;
+  if (projection?.publishedScheduleAuthority !== "AUTHORITATIVE"
+    || projection?.unpublishedScheduleEffect !== "ALLOW_ACADEMICALLY_VALID_PLANNING_PROJECTION"
+    || projection?.readinessImpact !== "NONE") {
+    fail("future schedule projection policy is incomplete");
+  }
+  if (projection.futureOfferingLikelihoodExtension?.currentLikelihoodDataAvailable !== false
+    || projection.futureOfferingLikelihoodExtension?.probabilitiesMayBeInferredWithoutData !== false) {
+    fail("future offering likelihoods may not be invented without owner-supplied data");
+  }
+  const designation = policy.mostFlexibleEconomicsMajorRequirementSet;
+  if (designation?.catalogYear !== "2025-2026"
+    || designation?.selectionMethod !== "OWNER_DESIGNATION"
+    || designation?.automaticNewestSelectionPermitted !== false
+    || designation?.declarationCatalogMayOverride !== false) {
+    fail("owner-designated Economics requirement set is incomplete");
+  }
+  if (policy.boundaries?.catalog2026_2027CreatedOrActivated !== false) {
+    fail("the planning flexibility policy may not create or activate a 2026-2027 catalog");
+  }
+}
+
+function planningFlexibilityContract(bundle) {
+  const policy = bundle.policy;
+  return `# CP4b-B follow-up planning-flexibility contract\n\n` +
+    `Compiled policy: \`${bundle.bundleVersion}\` (\`${bundle.contentHash}\`).\n\n` +
+    `- Accelerated one-year-early plans assume senior standing in the final planning year; no student confirmation is requested and readiness is unchanged by the assumption alone.\n` +
+    `- Published schedules remain authoritative. Later unpublished schedules use academically checked placements with \`PLANNING_PROJECTION\` provenance and one informational notice.\n` +
+    `- Economics planning uses the owner-designated ${policy.mostFlexibleEconomicsMajorRequirementSet.catalogYear} requirement set. Incoming catalog years remain comparison and degree-audit metadata.\n` +
+    `- Material incoming-catalog differences create a nonblocking SAC petition notification, not a substantive advisor action.\n` +
+    `- A future owner-supplied Excel history may support informational offering likelihoods only when data coverage and method are disclosed. No likelihood data or probability is present in this release.\n` +
+    `- No 2026-2027 catalog is compiled or activated, and the active Decision Engine mapping is unchanged.\n`;
+}
+
+async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
+  const policy = await readJson(root, PLANNING_FLEXIBILITY_POLICY_PATH);
+  validatePlanningFlexibilityPolicy(policy);
+  const payload = {
+    schemaVersion: "1.0.0",
+    bundleVersion: policy.policyVersion,
+    activationStatus: "OWNER_APPROVED",
+    activeRuntimeMappingChanged: false,
+    policy,
+    provenance: {
+      sourcePath: PLANNING_FLEXIBILITY_POLICY_PATH,
+      sourceRefs: policy.sourceRefs
+    }
+  };
+  const contentHash = `sha256:${canonicalSha256(payload)}`;
+  const bundle = {...payload, contentHash};
+  const outputRoot = path.join(compiledRoot, "planning-flexibility", policy.policyVersion);
+  const compileReport = {
+    schemaVersion: "1.0.0",
+    bundleVersion: policy.policyVersion,
+    contentHash,
+    activationStatus: "OWNER_APPROVED",
+    activeRuntimeMappingChanged: false,
+    inputs: [PLANNING_FLEXIBILITY_POLICY_PATH],
+    validation: {
+      acceleratedSeniorStandingNonblocking: "PASS",
+      futureScheduleProjectionNonblocking: "PASS",
+      publishedScheduleAuthorityPreserved: "PASS",
+      ownerDesignationFixedTo2025_2026: "PASS",
+      automaticNewestSelectionDisabled: "PASS",
+      futureLikelihoodsNotInvented: "PASS",
+      catalog2026_2027Invented: false,
+      collegeWidePolicyChanged: false
+    },
+    determinism: {canonicalFormat: "UTF-8 JSON with canonical key and ID-array ordering", requiredCleanCompilations: 3}
+  };
+  await Promise.all([
+    writeImmutable(path.join(outputRoot, "bundle.json"), canonicalJson(bundle)),
+    writeImmutable(path.join(outputRoot, "bundle.sha256"), `${contentHash.slice(7)}\n`),
+    writeImmutable(path.join(outputRoot, "compile-report.json"), canonicalJson(compileReport)),
+    writeImmutable(path.join(outputRoot, "architecture-contract.md"), planningFlexibilityContract(bundle))
+  ]);
+  return bundle;
+}
+
 export async function compileCatalogPolicies({ repositoryRoot = REPOSITORY_ROOT, outputRoot } = {}) {
   const root = path.resolve(repositoryRoot);
   const compiledRoot = path.resolve(outputRoot || path.join(root, "data/compiled/policy"));
@@ -247,7 +335,8 @@ export async function compileCatalogPolicies({ repositoryRoot = REPOSITORY_ROOT,
     writeImmutable(path.join(compiledRoot, "catalog-releases.json"), canonicalJson(registry)),
     writeImmutable(path.join(compiledRoot, "historical-catalog-source-report.md"), historicalSourceReport(provenance, releases))
   ]);
-  return {registry, compiledRoot};
+  const planningFlexibility = await compilePlanningFlexibilityPolicy(root, compiledRoot);
+  return {registry, planningFlexibility, compiledRoot};
 }
 
 function parseArguments(argv) {

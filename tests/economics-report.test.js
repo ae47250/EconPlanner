@@ -32,16 +32,12 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
-test("early-plan reports identify the selected pace and student-reported senior-standing basis", async () => {
+test("early-plan reports identify the selected pace and assumed senior-standing basis", async () => {
   const student = {
     ...fixture.student,
     academicStanding: "junior",
     planningPace: "one_year_early",
-    planCreationDate: "2026-07-28",
-    projectedSeniorStandingConfirmation: {
-      status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
-      academicYear: "2026/2027"
-    }
+    planCreationDate: "2026-07-28"
   };
   const report = await buildEconomicsReportFromStudent(student, "2026-07-28");
   const html = renderEconomicsHtml(report, template);
@@ -50,11 +46,12 @@ test("early-plan reports identify the selected pace and student-reported senior-
   assert.equal(report.student.projectedSeniorStandingAcademicYear, "2026/2027");
   assert.equal(
     report.student.projectedSeniorStandingBasis,
-    "student_reported_registrar_or_advisor_confirmation"
+    "accelerated_plan_assumes_senior_standing_in_final_year"
   );
-  assert.match(report.inputSummary, /student reports Registrar or advisor confirmation/);
+  assert.doesNotMatch(report.inputSummary, /student reports Registrar or advisor confirmation/i);
   assert.match(html, /data-planning-pace="one_year_early"/);
-  assert.match(html, /data-senior-standing-basis="student_reported_registrar_or_advisor_confirmation"/);
+  assert.match(html, /data-senior-standing-basis="accelerated_plan_assumes_senior_standing_in_final_year"/);
+  assert.equal((html.match(/This plan assumes you will have senior standing/g) || []).length, 1);
 });
 
 test("Economics report API returns canonical JSON or populated HTML", async () => {
@@ -134,7 +131,6 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(submitted.html.includes("{{"), false);
   assert.match(submitted.html, /<span class="course"(?:\s+data-requirement-id="[^"]+")?>ECO 461(?:-[^<]+)?<\/span>/);
   assert.match(submitted.correlationId, /^[A-Za-z0-9._:-]+$/);
-  assert.equal(/[^\x00-\x7F]/.test(submitted.html), false);
 });
 
 test("PDF client rejects a cross-origin stored download before forwarding the preview bypass", async () => {

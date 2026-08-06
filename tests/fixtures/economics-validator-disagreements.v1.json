@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "registryVersion": 1,
+  "registryVersion": 2,
   "policyVersion": 4,
   "authorship": "handwritten-curated-mutations",
-  "reviewedOn": "2026-08-03",
+  "reviewedOn": "2026-08-06",
   "reviewer": "Economics Department / EconPlanner testing review",
   "resultValues": [
     "ACCEPT",
@@ -42,10 +42,10 @@
       "mutationId": "ECO_114_CONCURRENT_WITH_ECO_214",
       "baselineId": "full-sequence",
       "ruleId": "PREREQ-ECO-214",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
-      "followUp": "Reviewed CP4b-A divergence: production treats unpublished future display slots as TBC and proves a strict-prior witness; the independent Oracle still treats the display slot as exact. Keep the Oracle independent and update its TBC model in a later approved checkpoint."
+      "status": "AGREEMENT",
+      "followUp": "Resolved in the CP4b-B follow-up: exact future projected terms preserve strict prerequisite ordering in both production and the independent Oracle."
     },
     {
       "id": "VAL-004-APPROVAL-MISSING",
@@ -132,30 +132,30 @@
       "mutationId": "STATISTICS_CONCURRENT_WITH_ECO_461",
       "baselineId": "statistics-before-capstone",
       "ruleId": "CAPSTONE-STATISTICS-BEFORE",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
-      "followUp": "Reviewed CP4b-A divergence: production proves that Statistics can precede ECO 461 inside the unpublished TBC year; the independent Oracle still treats the display slots as exact."
+      "status": "AGREEMENT",
+      "followUp": "Resolved in the CP4b-B follow-up: exact future projected terms require Statistics before ECO 461 in both production and the independent Oracle."
     },
     {
       "id": "VAL-013-FIFTH-REGULAR-TERM-COURSE",
       "mutationId": "FIFTH_FALL_WINTER_COURSE",
       "baselineId": "full-fall",
       "ruleId": "CAPACITY-FALL",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
-      "followUp": "Reviewed CP4b-A divergence: production redistributes unpublished TBC courses within the authoritative yearly window and term capacities; the independent Oracle still treats projected display slots as exact."
+      "status": "AGREEMENT",
+      "followUp": "Resolved in the CP4b-B follow-up: exact future projected terms enforce Fall and Winter load limits in both production and the independent Oracle."
     },
     {
       "id": "VAL-014-SECOND-SPRING-MAY-COURSE",
       "mutationId": "SECOND_SPRING_MAY_COURSE",
       "baselineId": "full-may",
       "ruleId": "CAPACITY-MAY",
-      "expectedProductionResult": "ACCEPT",
+      "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "EXPECTED_TBC_MODEL_DIVERGENCE",
-      "followUp": "Reviewed CP4b-A divergence: production redistributes unpublished TBC courses within the authoritative yearly window and keeps May at one course; the independent Oracle still treats projected display slots as exact."
+      "status": "AGREEMENT",
+      "followUp": "Resolved in the CP4b-B follow-up: exact future projected terms enforce the one-course May limit in both production and the independent Oracle."
     },
     {
       "id": "VAL-015-CLOSED-SECTION",

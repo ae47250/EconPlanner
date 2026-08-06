@@ -44,10 +44,6 @@ const DEFAULT_SEEDS = Object.freeze([
   20270323,
   20270429
 ]);
-const CP4_FROZEN_CONVERGENCE_PROFILES = Object.freeze([
-  "fictional-econ-20260805-c014e0de",
-  "fictional-econ-20270117-a6a8df79"
-]);
 const PROGRAM = Object.freeze({ id: "economics", name: "Economics" });
 const METRIC_SCHEMA_VERSION = 2;
 const STRATEGY_NAMES = Object.freeze({
@@ -258,7 +254,13 @@ async function runMatrix(configuration) {
         evidenceFindings: result.evidenceFindings,
         ordinaryHanoverCourseEvidence: result.ordinaryHanoverCourseEvidence,
         inputResolution: result.inputResolution,
-        fullEnrollmentEvidence: result.fullEnrollmentEvidence
+        fullEnrollmentEvidence: result.fullEnrollmentEvidence,
+        studentNoticeCodes: result.studentNoticeCodes,
+        advisorNotificationCodes: result.advisorNotificationCodes,
+        advisorActionCount: result.advisorActionCount,
+        publicationStatuses: result.publicationStatuses,
+        planningProjectionPlanCount: result.planningProjectionPlanCount,
+        acceleratedAssumptionPlanCount: result.acceleratedAssumptionPlanCount
       });
       acceptedPlanCount += result.planCount;
       profilesWithPlans += result.planCount > 0 ? 1 : 0;
@@ -366,6 +368,8 @@ async function runMatrix(configuration) {
   const allocationPageLimitOutcomes = countBy(profileResults.flatMap(result => result.allocationAlternatives?.pageLimitOutcomes || []), value => value);
   const tbcWitnessOutcomes = countBy(profileResults.flatMap(result => result.tbcWitnessOutcomes || []), value => value);
   const catalogApplicabilityStatuses = countBy(profileResults, result => result.catalogApplicability?.status || "UNAVAILABLE");
+  const studentNoticeCodes = countBy(profileResults.flatMap(result => result.studentNoticeCodes || []), value => value);
+  const advisorNotificationCodes = countBy(profileResults.flatMap(result => result.advisorNotificationCodes || []), value => value);
   const evidenceFindingsByRuleId = countBy(profileResults.flatMap(result => result.evidenceFindings || []).flatMap(finding => (
     finding.ruleIds?.length ? finding.ruleIds : ["UNCLASSIFIED_REVIEW_RULE"]
   )), value => value);
@@ -551,7 +555,21 @@ async function runMatrix(configuration) {
         profilesHelpedByPsy217: 0,
         profilesHelpedByBusn323: 0,
         profilesHelpedByComprehensiveEvaluationRemoval: 0,
-        productionFullPolicy: "REVIEW_REQUIRED"
+        productionFullPolicy: "REVIEW_REQUIRED",
+        followup: {
+          designatedRequirementSetYear: "2025-2026",
+          studentNoticeCodes,
+          advisorNotificationCodes,
+          advisorNotificationProfiles: profileResults.filter(result => result.advisorNotificationCodes?.length).length,
+          substantiveAdvisorActionProfiles: profileResults.filter(result => result.advisorActionCount > 0).length,
+          substantiveAdvisorActions: profileResults.reduce((sum, result) => sum + Number(result.advisorActionCount || 0), 0),
+          sacPetitionNotificationProfiles: profileResults.filter(result => result.advisorNotificationCodes?.includes("FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")).length,
+          unknownIncomingYearNotificationProfiles: profileResults.filter(result => result.advisorNotificationCodes?.includes("FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN")).length,
+          planningProjectionProfiles: profileResults.filter(result => result.planningProjectionPlanCount > 0).length,
+          planningProjectionPlans: profileResults.reduce((sum, result) => sum + Number(result.planningProjectionPlanCount || 0), 0),
+          acceleratedAssumptionProfiles: profileResults.filter(result => result.acceleratedAssumptionPlanCount > 0).length,
+          acceleratedAssumptionPlans: profileResults.reduce((sum, result) => sum + Number(result.acceleratedAssumptionPlanCount || 0), 0)
+        }
       },
       policyCompiler: {
         availability: "MEASURED_COMMITTED_RELEASE",
@@ -608,6 +626,10 @@ async function runMatrix(configuration) {
     invariant(isFrozenCp4Cohort(configuration, summary), "CP4B_B_ARTIFACT_SCOPE", "CP4b-B committed artifacts may be written only from the complete frozen 368-profile cohort.");
     await writeCp4bBArtifacts(summary);
   }
+  if (configuration.writeCp4bBFollowupArtifacts) {
+    invariant(isFrozenCp4Cohort(configuration, summary), "CP4B_B_FOLLOWUP_ARTIFACT_SCOPE", "CP4b-B follow-up artifacts may be written only from the complete frozen 368-profile cohort.");
+    await writeCp4bBFollowupArtifacts(summary);
+  }
   if (failures.length) {
     for (const failure of failures) {
       if (failure.minimizedCounterexample?.fictionalProfile && failure.minimizedCounterexample.profileFile) {
@@ -657,8 +679,8 @@ export function assertFrozenCp4AuthoritySummary(summary) {
   const evidenceStatuses = summary.metrics?.completion?.shadowDecision?.evidenceStatuses || {};
   invariant(summary.metrics?.profilesTested === 368, "CP4_FROZEN_PROFILE_COUNT", "CP4 frozen cohort must contain 368 profiles.");
   invariant(summary.metrics?.profilesWithPlans >= 186, "CP4_FROZEN_COVERAGE_REGRESSION", "CP4 frozen cohort coverage fell below 186 complete-plan profiles.");
-  invariant(summary.metrics?.acceptedPlanCount === 439, "CP4_FROZEN_PLAN_COUNT", "CP4 frozen cohort must contain 439 displayed plans.");
-  invariant(Object.values(evidenceStatuses).reduce((sum, value) => sum + Number(value || 0), 0) === 439,
+  invariant(summary.metrics?.acceptedPlanCount >= 439, "CP4_FROZEN_PLAN_COUNT", "CP4 frozen cohort must retain at least the 439 previously displayed plans.");
+  invariant(Object.values(evidenceStatuses).reduce((sum, value) => sum + Number(value || 0), 0) === summary.metrics?.acceptedPlanCount,
     "CP4B_A_EVIDENCE_ACCOUNTING", "Every displayed plan must retain exactly one evidence status after CP4b-A classification.");
   invariant(summary.metrics?.productionDecisionEngine?.unexpectedDisagreements === 0,
     "CP4_UNEXPECTED_ENGINE_DISAGREEMENT", "CP4 frozen cohort contains an unexpected Production Decision Engine disagreement.");
@@ -682,19 +704,18 @@ export function assertFrozenCp4AuthoritySummary(summary) {
   const convergences = (summary.profiles || []).flatMap(profile => (
     (profile.strategyConvergences || []).map(item => ({ profileId: profile.profileId, ...item }))
   ));
-  invariant(convergences.length === 2
-    && CP4_FROZEN_CONVERGENCE_PROFILES.every(profileId => convergences.some(item => (
-      item.profileId === profileId
-      && item.keptLabel === "Plan A"
-      && item.convergedLabel === "Plan C"
-      && item.code === "PLANS_CONVERGED"
-    ))), "CP4_FROZEN_CONVERGENCE_DRIFT", "The two Explore-First semantic convergences must remain documented.");
+  invariant(convergences.every(item => (
+    item.profileId
+    && item.keptLabel
+    && item.convergedLabel
+    && item.code === "PLANS_CONVERGED"
+  )), "CP4_FROZEN_CONVERGENCE_DRIFT", "Every reported semantic convergence must retain its profile and plan identities.");
   return Object.freeze({
     profiles: 368,
     profilesWithPlans: summary.metrics.profilesWithPlans,
-    displayedPlans: 439,
+    displayedPlans: summary.metrics.acceptedPlanCount,
     evidenceStatuses,
-    convergenceProfiles: [...CP4_FROZEN_CONVERGENCE_PROFILES]
+    convergenceProfiles: [...new Set(convergences.map(item => item.profileId))].sort()
   });
 }
 
@@ -967,6 +988,20 @@ async function evaluateProfile({ profile, manifest, verifiedSchedule, requiremen
       evidence: "Canonical Hanover course identity in the active policy bundle"
     }))
     .sort((left, right) => left.course.localeCompare(right.course));
+  const studentNoticeCodes = [...new Set(planBundle.plans.flatMap(plan => (
+    (plan.studentNotices || []).map(notice => notice.code)
+  )))].sort();
+  const advisorNotificationCodes = [...new Set(planBundle.plans.flatMap(plan => (
+    (plan.advisorNotifications || []).map(notice => notice.code)
+  )))].sort();
+  const advisorActionIds = new Set(planBundle.plans.flatMap(plan => (
+    (plan.advisorActions || []).map(action => action.actionId || JSON.stringify(stableValue(action)))
+  )));
+  const publicationStatuses = countBy(planBundle.plans, plan => plan.publicationStatus || "UNCLASSIFIED");
+  const planningProjectionPlanCount = planBundle.plans.filter(plan => plan.publicationStatus === "PLANNING_PROJECTION").length;
+  const acceleratedAssumptionPlanCount = planBundle.plans.filter(plan => (
+    plan.studentNotices?.some(notice => notice.code === "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED")
+  )).length;
 
   return {
     planCount: planBundle.plans.length,
@@ -1003,7 +1038,13 @@ async function evaluateProfile({ profile, manifest, verifiedSchedule, requiremen
     evidenceFindings: decisionShadow.flatMap(record => record.reviewFindings || []),
     ordinaryHanoverCourseEvidence,
     inputResolution,
-    fullEnrollmentEvidence
+    fullEnrollmentEvidence,
+    studentNoticeCodes,
+    advisorNotificationCodes,
+    advisorActionCount: advisorActionIds.size,
+    publicationStatuses,
+    planningProjectionPlanCount,
+    acceleratedAssumptionPlanCount
   };
 }
 
@@ -1011,7 +1052,6 @@ function plannerStudent(profile) {
   const student = {
     academicStanding: profile.student.academicStanding,
     planningPace: profile.student.planningPace || "standard",
-    projectedSeniorStandingConfirmation: profile.student.projectedSeniorStandingConfirmation || null,
     planCreationDate: profile.student.planDate,
     isTransferStudent: profile.student.isTransferStudent,
     ...(profile.student.isTransferStudent ? {
@@ -1055,18 +1095,10 @@ function effectivePlannerAxes(profile, student) {
   const declared = profile.axes || {};
   const statuses = new Set((student.courses || []).map(course => course.status));
   const reservedValues = Object.values(student.reservedCourseUnits || {});
-  const planningContext = resolvePlanningContext(student);
-  const seniorStandingConfirmationState = !planningContext.requiresProjectedSeniorStandingConfirmation
-    ? "not_required"
-    : planningContext.projectedSeniorStandingConfirmation
-      ? "confirmed"
-      : student.projectedSeniorStandingConfirmation
-        ? "stale"
-        : "missing";
   return {
     standing: student.academicStanding ?? null,
     planningPace: student.isTransferStudent ? null : student.planningPace ?? null,
-    seniorStandingConfirmationState,
+    seniorStandingConfirmationState: declared.seniorStandingConfirmationState ?? null,
     planDate: student.planCreationDate ?? null,
     transferStatus: student.isTransferStudent ? "transfer" : "regular",
     graduationHorizon: student.isTransferStudent ? declared.graduationHorizon ?? null : null,
@@ -1630,7 +1662,8 @@ function parseArguments(args) {
     profileId: null,
     profileFile: null,
     writeCp4bAArtifacts: false,
-    writeCp4bBArtifacts: false
+    writeCp4bBArtifacts: false,
+    writeCp4bBFollowupArtifacts: false
   };
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
@@ -1660,6 +1693,8 @@ function parseArguments(args) {
       result.writeCp4bAArtifacts = true;
     } else if (argument === "--write-cp4b-b-artifacts") {
       result.writeCp4bBArtifacts = true;
+    } else if (argument === "--write-cp4b-b-followup-artifacts") {
+      result.writeCp4bBFollowupArtifacts = true;
     } else {
       throw new Error(`Unknown argument: ${argument}`);
     }
@@ -2294,6 +2329,326 @@ async function writeCp4bBArtifacts(summary) {
     writeFile(path.join(ROOT, "docs/architecture/cp4b-b-full-policy-decision-packet.md"), fullMarkdown, "utf8"),
     writeJson(path.join(ROOT, "data/review/cp4b-b-no-plan-rescue-ledger.json"), rescueLedger),
     writeFile(path.join(ROOT, "docs/architecture/cp4b-b-no-plan-rescue-ledger.md"), rescueMarkdown, "utf8")
+  ]);
+}
+
+function followupOutcomeChanged(previous, current) {
+  return Number(previous?.plans || 0) !== Number(current?.plans || 0)
+    || profileCompletion(previous) !== profileCompletion(current)
+    || profileReadiness(previous) !== profileReadiness(current)
+    || (previous?.noPlan?.reason || null) !== (current?.noPlan?.reason || null)
+    || JSON.stringify(previous?.planSignatures || []) !== JSON.stringify(current?.planSignatures || [])
+    || previous?.catalogApplicability?.status !== current?.catalogApplicability?.status;
+}
+
+function followupAttribution(previous, current) {
+  const seniorStanding = previous?.noPlan?.reason === "INVALID_INPUT"
+    || current?.studentNoticeCodes?.includes("ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED");
+  const futureSchedules = Boolean(current?.planningProjectionPlanCount)
+    && JSON.stringify(previous?.planSignatures || []) !== JSON.stringify(current?.planSignatures || []);
+  const flexibleCatalog = previous?.catalogApplicability?.status !== current?.catalogApplicability?.status
+    || current?.advisorNotificationCodes?.some(code => code.startsWith("FLEXIBLE_MAJOR_REQUIREMENTS_"));
+  const mechanisms = [
+    seniorStanding ? "SENIOR_STANDING" : null,
+    futureSchedules ? "FUTURE_SCHEDULES" : null,
+    flexibleCatalog ? "FLEXIBLE_CATALOG" : null
+  ].filter(Boolean);
+  const key = mechanisms.length
+    ? mechanisms.join("+")
+    : followupOutcomeChanged(previous, current) ? "UNRELATED_DRIFT" : "NO_OUTCOME_CHANGE";
+  return {mechanisms, key};
+}
+
+function followupRow(previous, current) {
+  const attribution = followupAttribution(previous, current);
+  const oldCompletion = profileCompletion(previous);
+  const newCompletion = profileCompletion(current);
+  const oldReadiness = profileReadiness(previous);
+  const newReadiness = profileReadiness(current);
+  const oldStrategyConvergences = previous?.strategyConvergences || [];
+  const newStrategyConvergences = current?.strategyConvergences || [];
+  const convergenceChanged = JSON.stringify(oldStrategyConvergences) !== JSON.stringify(newStrategyConvergences);
+  const classifications = [
+    attribution.mechanisms.length ? "INTENDED_CORRECTION" : null,
+    Number(previous?.plans || 0) === 0 && Number(current?.plans || 0) > 0 ? "COVERAGE_GAIN" : null,
+    oldReadiness !== newReadiness ? "READINESS_CORRECTION" : null,
+    oldCompletion === "COMPLETE" && newCompletion !== "COMPLETE" ? "REGRESSION" : null,
+    attribution.mechanisms.length > 1 ? "OVERLAP" : null,
+    convergenceChanged ? "DUPLICATE_CONVERGENCE_CHANGE" : null,
+    attribution.key === "UNRELATED_DRIFT" ? "UNRELATED_DRIFT" : null
+  ].filter(Boolean);
+  const reasons = [
+    attribution.mechanisms.includes("SENIOR_STANDING") ? "Removed the obsolete accelerated-plan senior-standing confirmation gate and recorded the final-year assumption." : null,
+    attribution.mechanisms.includes("FUTURE_SCHEDULES") ? "Replaced ordinary unpublished-schedule TBC windows with exact-term planning projections that do not affect readiness." : null,
+    attribution.mechanisms.includes("FLEXIBLE_CATALOG") ? "Applied the owner-designated 2025-2026 Economics requirement set and separated SAC administration from academic readiness." : null,
+    convergenceChanged ? "Exact-term planning changed whether strategy schedules are semantically distinct; all retained plans remain independently validated." : null,
+    attribution.key === "UNRELATED_DRIFT" ? "The outcome changed outside the three approved follow-up mechanisms and requires separate review." : null
+  ].filter(Boolean);
+  const applicability = current?.catalogApplicability || {};
+  return {
+    profileId: current.profileId,
+    oldPlanCount: Number(previous?.plans || 0),
+    newPlanCount: Number(current?.plans || 0),
+    oldCompletionStatus: oldCompletion,
+    newCompletionStatus: newCompletion,
+    oldReadinessStatus: oldReadiness,
+    newReadinessStatus: newReadiness,
+    oldNoPlanReason: previous?.noPlan?.reason || null,
+    newNoPlanReason: current?.noPlan?.reason || null,
+    incomingCatalogYear: applicability.studentIncomingCatalogYear || applicability.incomingCatalogYear || null,
+    appliedFlexibleRequirementSetYear: applicability.appliedMajorCatalogYear || null,
+    materialCatalogDifference: Boolean(applicability.materialDifferences?.length),
+    materialCatalogDifferenceCodes: (applicability.materialDifferences || []).map(item => item.code).filter(Boolean),
+    sacNotice: current?.advisorNotificationCodes?.includes("FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE") || false,
+    unknownIncomingYearNotice: current?.advisorNotificationCodes?.includes("FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN") || false,
+    seniorStandingNotice: current?.studentNoticeCodes?.includes("ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED") || false,
+    futureProjectionNotice: current?.studentNoticeCodes?.includes("FUTURE_SCHEDULE_PROJECTION_NOTICE") || false,
+    advisorNotificationCodes: current?.advisorNotificationCodes || [],
+    substantiveAdvisorActionCount: Number(current?.advisorActionCount || 0),
+    oldStrategyConvergences,
+    newStrategyConvergences,
+    controllingPolicyIds: [...new Set([
+      ...(applicability.ruleIds || []),
+      ...(current?.decisionShadow || []).flatMap(record => record.ruleIds || [])
+    ])].sort(),
+    attribution: attribution.key,
+    exactReasonForChange: reasons.join(" ") || "No material outcome change.",
+    classifications,
+    oldPlanSignatures: previous?.planSignatures || [],
+    newPlanSignatures: current?.planSignatures || []
+  };
+}
+
+async function writeCp4bBFollowupArtifacts(summary) {
+  const baselinePath = path.join(ROOT, "test-results/cp4b-b-followup-baseline.json");
+  const heldoutPath = path.join(ROOT, "test-results/cp4b-b-followup-heldout.json");
+  const [baseline, heldout] = await Promise.all([
+    readJson(relativeToRoot(baselinePath)),
+    readJson(relativeToRoot(heldoutPath))
+  ]);
+  invariant(baseline.metrics?.profilesTested === 368, "CP4B_B_FOLLOWUP_BASELINE_COUNT", "The saved CP4b-B follow-up baseline must contain 368 profiles.");
+  invariant(heldout.metrics?.failureCount === 0, "CP4B_B_FOLLOWUP_HELDOUT_FAILURE", "The held-out cohort must pass before follow-up artifacts are written.");
+  const previousById = new Map((baseline.profiles || []).map(profile => [profile.profileId, profile]));
+  const currentProfiles = [...(summary.profiles || [])].sort((left, right) => left.profileId.localeCompare(right.profileId));
+  const rows = currentProfiles.map(current => {
+    const previous = previousById.get(current.profileId);
+    invariant(previous, "CP4B_B_FOLLOWUP_PROFILE_MISSING", `Baseline profile ${current.profileId} is missing.`);
+    return followupRow(previous, current);
+  });
+  const baselineInvalidIds = new Set((baseline.profiles || [])
+    .filter(profile => profile.noPlan?.reason === "INVALID_INPUT")
+    .map(profile => profile.profileId));
+  invariant(baselineInvalidIds.size === 93, "CP4B_B_FOLLOWUP_INVALID_BASELINE", `Expected 93 baseline invalid-input profiles, found ${baselineInvalidIds.size}.`);
+  const invalidRows = rows.filter(row => baselineInvalidIds.has(row.profileId));
+  const completeLosses = rows.filter(row => row.oldCompletionStatus === "COMPLETE" && row.newCompletionStatus !== "COMPLETE");
+  invariant(!completeLosses.length, "CP4B_B_FOLLOWUP_COMPLETE_LOSS", `Previously complete profiles lost all complete plans: ${completeLosses.map(row => row.profileId).join(", ")}`);
+  const materialDifferenceRows = rows.filter(row => row.materialCatalogDifference);
+  const materialMovedOutOfAdvisorAction = materialDifferenceRows.filter(row => (
+    row.oldReadinessStatus === "ADVISOR_ACTION_REQUIRED" && row.newReadinessStatus !== "ADVISOR_ACTION_REQUIRED"
+  ));
+  const counts = {
+    profiles: rows.length,
+    changedProfiles: rows.filter((row, index) => followupOutcomeChanged(previousById.get(row.profileId), currentProfiles[index])).length,
+    attribution: countBy(rows, row => row.attribution),
+    classifications: countBy(rows.flatMap(row => row.classifications), value => value),
+    plansBefore: baseline.metrics.acceptedPlanCount,
+    plansAfter: summary.metrics.acceptedPlanCount,
+    planChange: summary.metrics.acceptedPlanCount - baseline.metrics.acceptedPlanCount,
+    completePlanProfilesBefore: baseline.metrics.profilesWithPlans,
+    completePlanProfilesAfter: summary.metrics.profilesWithPlans,
+    completePlanProfileGain: summary.metrics.profilesWithPlans - baseline.metrics.profilesWithPlans,
+    completeIncumbentGains: rows.filter(row => row.oldCompletionStatus !== "COMPLETE" && row.newCompletionStatus === "COMPLETE").length,
+    completeIncumbentLosses: completeLosses.length,
+    readinessBefore: countBy(rows, row => row.oldReadinessStatus),
+    readinessAfter: countBy(rows, row => row.newReadinessStatus),
+    baselineInvalidProfiles: invalidRows.length,
+    baselineInvalidNoLongerInvalid: invalidRows.filter(row => row.newNoPlanReason !== "INVALID_INPUT").length,
+    baselineInvalidNowComplete: invalidRows.filter(row => row.newCompletionStatus === "COMPLETE").length,
+    baselineInvalidStillWithoutPlanForOtherReason: invalidRows.filter(row => row.newCompletionStatus !== "COMPLETE" && row.newNoPlanReason !== "INVALID_INPUT").length,
+    materialDifferenceProfiles: materialDifferenceRows.length,
+    materialDifferenceProfilesMovedOutOfAdvisorAction: materialMovedOutOfAdvisorAction.length,
+    sacNotificationProfiles: rows.filter(row => row.sacNotice).length,
+    unknownIncomingYearNotificationProfiles: rows.filter(row => row.unknownIncomingYearNotice).length,
+    substantiveAdvisorActionProfiles: rows.filter(row => row.substantiveAdvisorActionCount > 0).length,
+    substantiveAdvisorActions: rows.reduce((sum, row) => sum + row.substantiveAdvisorActionCount, 0)
+  };
+  const ledger = {
+    schemaVersion: 1,
+    kind: "cp4b-b-followup-v1-catalog-readiness-change-ledger",
+    baseline: {artifact: "test-results/cp4b-b-followup-baseline.json", commit: "dba222e8486778d0fed5adb0867c913437556758"},
+    current: {artifact: "test-results/cp4b-b-followup-final-frozen.json", startingCommit: "dba222e8486778d0fed5adb0867c913437556758"},
+    ownerDesignatedRequirementSet: "2025-2026",
+    policyRuleId: "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
+    counts,
+    rows
+  };
+  const ledgerMarkdown = [
+    "# CP4b-B follow-up v1 catalog and readiness ledger",
+    "",
+    `Profiles: ${counts.profiles}. Complete-plan profiles: ${counts.completePlanProfilesBefore} -> ${counts.completePlanProfilesAfter}. Accepted plans: ${counts.plansBefore} -> ${counts.plansAfter}. Complete incumbent losses: ${counts.completeIncumbentLosses}.`,
+    `Readiness before: ${Object.entries(counts.readinessBefore).map(([key, value]) => `${key}=${value}`).join(", ")}.`,
+    `Readiness after: ${Object.entries(counts.readinessAfter).map(([key, value]) => `${key}=${value}`).join(", ")}.`,
+    `Attribution: ${Object.entries(counts.attribution).map(([key, value]) => `${key}=${value}`).join(", ")}.`,
+    "",
+    "| Profile | Plans | Completion | Readiness | No-plan reason | Incoming | Applied | SAC | Senior notice | Projection notice | Actions | Attribution |",
+    "|---|---:|---|---|---|---|---|---|---|---|---:|---|",
+    ...rows.map(row => `| ${markdownCell(row.profileId)} | ${row.oldPlanCount} -> ${row.newPlanCount} | ${row.oldCompletionStatus} -> ${row.newCompletionStatus} | ${row.oldReadinessStatus} -> ${row.newReadinessStatus} | ${markdownCell(row.oldNoPlanReason)} -> ${markdownCell(row.newNoPlanReason)} | ${markdownCell(row.incomingCatalogYear)} | ${markdownCell(row.appliedFlexibleRequirementSetYear)} | ${row.sacNotice} | ${row.seniorStandingNotice} | ${row.futureProjectionNotice} | ${row.substantiveAdvisorActionCount} | ${row.attribution} |`),
+    ""
+  ].join("\n");
+
+  const invalidReport = {
+    schemaVersion: 1,
+    kind: "cp4b-b-followup-v1-invalid-input-recovery",
+    counts: {
+      baselineInvalidProfiles: invalidRows.length,
+      noLongerInvalid: counts.baselineInvalidNoLongerInvalid,
+      nowComplete: counts.baselineInvalidNowComplete,
+      remainWithoutPlanForAnotherReason: counts.baselineInvalidStillWithoutPlanForOtherReason,
+      remainInvalid: invalidRows.filter(row => row.newNoPlanReason === "INVALID_INPUT").length
+    },
+    rows: invalidRows
+  };
+  const invalidMarkdown = [
+    "# CP4b-B follow-up v1 invalid-input recovery",
+    "",
+    `The saved baseline contained ${invalidRows.length} profiles blocked by the projected-senior-standing confirmation gate. ${counts.baselineInvalidNoLongerInvalid} are no longer invalid; ${counts.baselineInvalidNowComplete} now receive complete plans; ${counts.baselineInvalidStillWithoutPlanForOtherReason} remain without a plan for another classified reason.`,
+    "",
+    "| Profile | Old reason | New reason | Plans | Completion | Senior notice |",
+    "|---|---|---|---:|---|---|",
+    ...invalidRows.map(row => `| ${markdownCell(row.profileId)} | ${markdownCell(row.oldNoPlanReason)} | ${markdownCell(row.newNoPlanReason)} | ${row.oldPlanCount} -> ${row.newPlanCount} | ${row.newCompletionStatus} | ${row.seniorStandingNotice} |`),
+    ""
+  ].join("\n");
+
+  const oldNoPlanIds = new Set((baseline.profiles || []).filter(profile => profile.plans === 0).map(profile => profile.profileId));
+  const rescueRows = rows.filter(row => oldNoPlanIds.has(row.profileId)).map(row => ({
+    ...row,
+    rescueStatus: row.newCompletionStatus === "COMPLETE"
+      ? "RESCUED_WITH_COMPLETE_PLAN"
+      : row.newNoPlanReason === "SEARCH_INCOMPLETE"
+        ? "POTENTIAL_CP5_SEARCH_RESCUE_NOT_STARTED"
+        : "NO_COMPLETE_PLAN_AFTER_APPROVED_FOLLOWUP"
+  }));
+  const rescueLedger = {
+    schemaVersion: 1,
+    kind: "cp4b-b-followup-v1-no-plan-rescue-ledger",
+    counts: {
+      baselineNoPlanProfiles: rescueRows.length,
+      rescuedWithCompletePlan: rescueRows.filter(row => row.rescueStatus === "RESCUED_WITH_COMPLETE_PLAN").length,
+      remainingNoPlanReasons: countBy(rescueRows.filter(row => row.newCompletionStatus !== "COMPLETE"), row => row.newNoPlanReason || "UNCLASSIFIED"),
+      rescueStatuses: countBy(rescueRows, row => row.rescueStatus)
+    },
+    rows: rescueRows
+  };
+  const rescueMarkdown = [
+    "# CP4b-B follow-up v1 no-plan rescue ledger",
+    "",
+    `Baseline no-plan profiles: ${rescueRows.length}. Rescued with complete plans: ${rescueLedger.counts.rescuedWithCompletePlan}. Remaining reasons: ${Object.entries(rescueLedger.counts.remainingNoPlanReasons).map(([key, value]) => `${key}=${value}`).join(", ")}.`,
+    "",
+    "| Profile | Old reason | New reason | Plans | Rescue status | Attribution |",
+    "|---|---|---|---:|---|---|",
+    ...rescueRows.map(row => `| ${markdownCell(row.profileId)} | ${markdownCell(row.oldNoPlanReason)} | ${markdownCell(row.newNoPlanReason)} | ${row.oldPlanCount} -> ${row.newPlanCount} | ${row.rescueStatus} | ${row.attribution} |`),
+    ""
+  ].join("\n");
+
+  const fullChanged = baseline.metrics.cp4bB?.fullAffectedProfiles !== summary.metrics.cp4bB?.fullAffectedProfiles
+    || baseline.metrics.cp4bB?.fullAffectedPlans !== summary.metrics.cp4bB?.fullAffectedPlans;
+  const fullReconciliation = {
+    schemaVersion: 1,
+    kind: "cp4b-b-followup-v1-full-policy-reconciliation",
+    policy: {ruleId: "SCHEDULE-AVAILABILITY-BEHAVIOR", fullDisposition: "REVIEW_REQUIRED", changed: false},
+    reconciliationChanged: fullChanged,
+    baseline: {
+      affectedProfiles: baseline.metrics.cp4bB?.fullAffectedProfiles || 0,
+      affectedPlans: baseline.metrics.cp4bB?.fullAffectedPlans || 0
+    },
+    current: {
+      affectedProfiles: summary.metrics.cp4bB?.fullAffectedProfiles || 0,
+      affectedPlans: summary.metrics.cp4bB?.fullAffectedPlans || 0
+    },
+    substantiveAdvisorActionProfiles: counts.substantiveAdvisorActionProfiles,
+    sourcePacket: "data/review/cp4b-b-full-policy-decision-packet.json"
+  };
+
+  const verification = {
+    schemaVersion: 1,
+    kind: "cp4b-b-followup-v1-verification-summary",
+    frozen: {
+      selection: summary.selection,
+      metrics: summary.metrics,
+      failures: summary.failures.length,
+      unclassifiedOracleDisagreements: summary.metrics.unclassifiedOracleDisagreementCount,
+      unexpectedDecisionEngineDisagreements: summary.metrics.productionDecisionEngine.unexpectedDisagreements
+    },
+    heldout: {
+      selection: heldout.selection,
+      metrics: heldout.metrics,
+      failures: heldout.failures.length,
+      unclassifiedOracleDisagreements: heldout.metrics.unclassifiedOracleDisagreementCount,
+      unexpectedDecisionEngineDisagreements: heldout.metrics.productionDecisionEngine.unexpectedDisagreements
+    },
+    performanceComparison: {
+      baseline: {
+        totalRuntimeMs: baseline.metrics.totalRuntimeMs,
+        profileP50Ms: baseline.metrics.p50ProfileDurationMs,
+        profileP95Ms: baseline.metrics.p95ProfileDurationMs,
+        profileMaximumMs: baseline.metrics.worstProfileDurationMs,
+        decisionEngine: baseline.metrics.productionDecisionEngine.latencyMs
+      },
+      current: {
+        totalRuntimeMs: summary.metrics.totalRuntimeMs,
+        profileP50Ms: summary.metrics.p50ProfileDurationMs,
+        profileP95Ms: summary.metrics.p95ProfileDurationMs,
+        profileMaximumMs: summary.metrics.worstProfileDurationMs,
+        decisionEngine: summary.metrics.productionDecisionEngine.latencyMs
+      }
+    },
+    policyCompilation: {
+      source: "policy/rules/planning-flexibility.json",
+      bundle: "data/compiled/policy/planning-flexibility/econ-planning-flexibility.2/bundle.json",
+      digest: "data/compiled/policy/planning-flexibility/econ-planning-flexibility.2/bundle.sha256",
+      compileReport: "data/compiled/policy/planning-flexibility/econ-planning-flexibility.2/compile-report.json"
+    },
+    reportAndPdfParity: {
+      contractTests: ["tests/economics-report-parity.test.js", "tests/economics-report.test.js"],
+      localPdfVerificationScript: "scripts/verify-economics-pdf.mjs",
+      hostedPdfChecksRun: false,
+      reason: "The established report verification boundary is local-only for this checkpoint."
+    },
+    architectureContracts: [
+      "data/compiled/policy/planning-flexibility/econ-planning-flexibility.2/architecture-contract.md",
+      "policy/rules/planning-flexibility.json"
+    ],
+    fullPolicyReconciliation: fullReconciliation,
+    acceptance: {
+      completeIncumbentLosses: counts.completeIncumbentLosses,
+      baselineInvalidRemainingInvalid: invalidRows.filter(row => row.newNoPlanReason === "INVALID_INPUT").length,
+      catalogSet: "2025-2026",
+      catalog2026_2027CreatedOrActivated: false,
+      fullPolicyChanged: false,
+      legacyRetired: false,
+      cp5Started: false
+    }
+  };
+  const heldoutSummary = {
+    schemaVersion: 1,
+    kind: "cp4b-b-followup-v1-heldout-summary",
+    selection: heldout.selection,
+    metrics: heldout.metrics,
+    noPlan: heldout.noPlan,
+    artifactCompleteness: heldout.artifactCompleteness,
+    failures: heldout.failures
+  };
+
+  await Promise.all([
+    writeJson(path.join(ROOT, "data/review/cp4b-b-followup-v1-catalog-readiness-ledger.json"), ledger),
+    writeFile(path.join(ROOT, "docs/architecture/cp4b-b-followup-v1-catalog-readiness-ledger.md"), ledgerMarkdown, "utf8"),
+    writeJson(path.join(ROOT, "data/review/cp4b-b-followup-v1-invalid-input-recovery.json"), invalidReport),
+    writeFile(path.join(ROOT, "docs/architecture/cp4b-b-followup-v1-invalid-input-recovery.md"), invalidMarkdown, "utf8"),
+    writeJson(path.join(ROOT, "data/review/cp4b-b-followup-v1-no-plan-rescue-ledger.json"), rescueLedger),
+    writeFile(path.join(ROOT, "docs/architecture/cp4b-b-followup-v1-no-plan-rescue-ledger.md"), rescueMarkdown, "utf8"),
+    writeJson(path.join(ROOT, "data/review/cp4b-b-followup-v1-full-policy-reconciliation.json"), fullReconciliation),
+    writeJson(path.join(ROOT, "data/review/cp4b-b-followup-v1-heldout-summary.json"), heldoutSummary),
+    writeJson(path.join(ROOT, "data/review/cp4b-b-followup-v1-verification-summary.json"), verification)
   ]);
 }
 

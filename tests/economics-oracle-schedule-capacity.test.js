@@ -239,7 +239,7 @@ test("4/4/1 capacity includes reserved outside-course units", () => {
   }
 });
 
-test("future offerings are preliminary and verified-year projected sources are rejected", () => {
+test("future planning projections are academically valid while published-year conflicts remain authoritative", () => {
   for (const fixture of fixtures.offeringCases) {
     const graduationYear = fixture.academicYear === "2026/2027" ? 2027 : 2028;
     const input = projectedInput({ ...fixture, graduationYear });

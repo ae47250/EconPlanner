@@ -7,7 +7,7 @@
   "profiles": [
     {
       "id": "long-four-year-waitlist-layout",
-      "description": "Fictional four-year layout stress profile with twelve planned courses, many warnings, and one waitlist presentation condition.",
+      "description": "Fictional four-year layout profile with twelve planned courses, one future-projection notice, and one waitlist presentation condition.",
       "executionMode": "rendered-html",
       "selectedPlanId": "plan-1",
       "student": {
@@ -38,9 +38,11 @@
       "expectations": {
         "minimumAcademicYears": 4,
         "minimumCourses": 12,
-        "minimumWarnings": 10,
+        "minimumWarnings": 4,
+        "minimumAdvisorNotices": 1,
+        "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
         "minimumApprovals": 0,
-        "requiredAvailabilityStates": ["open", "unknown", "waitlisted"],
+        "requiredAvailabilityStates": ["open", "waitlisted"],
         "requiredCourseRoles": [
           { "course": "ECO 257", "role": "statistics" }
         ]
@@ -67,7 +69,7 @@
         "minimumCourses": 8,
         "minimumWarnings": 8,
         "minimumApprovals": 1,
-        "requiredAvailabilityStates": ["open", "unknown"],
+        "requiredAvailabilityStates": ["open"],
         "requiredCourseRoles": []
       }
     },
@@ -109,9 +111,11 @@
       "expectations": {
         "minimumAcademicYears": 1,
         "minimumCourses": 2,
-        "minimumWarnings": 1,
+        "minimumWarnings": 0,
+        "minimumAdvisorNotices": 1,
+        "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
         "minimumApprovals": 0,
-        "requiredAvailabilityStates": ["unknown"],
+        "requiredAvailabilityStates": [],
         "requiredCourseRoles": [
           { "course": "ECO 257", "role": "statistics" }
         ]

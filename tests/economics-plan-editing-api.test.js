@@ -370,12 +370,19 @@ async function futureFourCourseFallPlan() {
   const { student, economics } = await generated("flexibleFourYearPlan");
   const plan = structuredClone(economics.economicsPlans.find(item => item.label === "Plan B"));
   assert.ok(plan, "Plan B is required for the future four-course Fall capacity fixture.");
-  const finalYear = plan.terms.find(term => term.academicYear === "2029/2030");
-  assert.ok(finalYear);
-  const winterElective = finalYear.courses.find(course => course.projectedTerm === "Winter" && String(course.requirementId).startsWith("eco-elective"));
-  const springElective = finalYear.courses.find(course => course.projectedTerm === "Spring" && String(course.requirementId).startsWith("eco-elective"));
-  assert.ok(winterElective && springElective);
-  Object.assign(winterElective, { projectedTerm: "Fall", planningSequence: 2 });
+  const fall = plan.terms.find(term => term.academicYear === "2029/2030" && term.termKey === "Fall");
+  assert.ok(fall);
+  const winterCourse = moveCourse(plan, (course, term) => (
+    term.academicYear === "2029/2030"
+      && term.termKey === "Winter"
+      && course.course !== "ECO 461"
+  ), term => term === fall);
+  const springElective = moveCourse(plan, (course, term) => (
+    term.academicYear === "2029/2030"
+      && ["Spring", "May", "Spring/May"].includes(term.termKey)
+      && String(course.requirementId).startsWith("eco-elective")
+  ), term => term === fall);
+  Object.assign(winterCourse, { projectedTerm: "Fall", planningSequence: 2 });
   Object.assign(springElective, { projectedTerm: "Fall", planningSequence: 3 });
   useExplicitProjectedCapstoneSource(plan);
   return { student, plan };
@@ -494,36 +501,37 @@ test("Task 15 API rejects missing and wrong approval metadata", async () => {
   await assertRejected(student, wrong, /approval metadata|Economics Department|authority/i);
 });
 
-test("Task 15 TBC capacity uses the authoritative witness instead of projected display terms", async () => {
+test("Task 15 exact future terms enforce reserved-space capacity", async () => {
   const { student, plan } = await futureTwoCourseFallPlan();
   student.reservedCourseUnits = { "fall-2029": 3 };
-  const accepted = await assertProductionAccepted(student, plan);
-  assert.equal(accepted.temporalSemantics.topologicalWitness.legal, true);
+  await assertRejected(student, plan, /Fall 2029 exceeds the total course limit/);
 });
 
 test("Task 15 accepts two future-Fall Economics courses plus two reserved outside courses", async () => {
   const { student, plan } = await futureTwoCourseFallPlan();
   student.reservedCourseUnits = { "fall-2029": 2 };
-  assert.equal(plan.terms.find(term => term.academicYear === "2029/2030").courses.filter(course => course.projectedTerm === "Fall").length, 2);
+  assert.equal(plan.terms.find(term => term.academicYear === "2029/2030" && term.termKey === "Fall").courses.length, 2);
   await assertProductionAccepted(student, plan);
 });
 
-test("Task 15 display-only projected terms do not manufacture a TBC capacity violation", async () => {
+test("Task 15 exact future-term edits preserve valid capacity and reject overloads", async () => {
   const exact = await futureTwoCourseFallPlan();
   const student = { ...exact.student, reservedCourseUnits: { "fall-2029": 1 } };
   const exactCapacity = structuredClone(exact.plan);
-  const finalYear = exactCapacity.terms.find(term => term.academicYear === "2029/2030");
-  const moved = finalYear.courses.find(course => course.projectedTerm === "Spring" && String(course.requirementId).startsWith("eco-elective"));
-  assert.ok(moved);
+  const fall = exactCapacity.terms.find(term => term.academicYear === "2029/2030" && term.termKey === "Fall");
+  const moved = moveCourse(exactCapacity, (course, term) => (
+    term.academicYear === "2029/2030"
+      && ["Spring", "May", "Spring/May"].includes(term.termKey)
+      && String(course.requirementId).startsWith("eco-elective")
+  ), term => term === fall);
   Object.assign(moved, { projectedTerm: "Fall", planningSequence: 2 });
   useExplicitProjectedCapstoneSource(exactCapacity);
   const accepted = await assertProductionAccepted(student, exactCapacity);
-  assert.equal(accepted.terms.find(term => term.academicYear === "2029/2030").courses.filter(course => course.projectedTerm === "Fall").length, 3);
+  assert.equal(accepted.terms.find(term => term.academicYear === "2029/2030" && term.termKey === "Fall").courses.length, 3);
 
   const overloaded = await futureFourCourseFallPlan();
   const overloadedStudent = { ...overloaded.student, reservedCourseUnits: { "fall-2029": 1 } };
-  const redistributed = await assertProductionAccepted(overloadedStudent, overloaded.plan);
-  assert.equal(redistributed.temporalSemantics.topologicalWitness.legal, true);
+  await assertRejected(overloadedStudent, overloaded.plan, /Fall 2029 exceeds the total course limit/);
 });
 
 test("Task 15 accepts one Fall course with three reserved spaces and rejects two", async () => {

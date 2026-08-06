@@ -555,10 +555,10 @@ function diagnostic(entry, evaluation) {
 
 test("Task 10 registry is complete, stable, and contains no hidden mutation skips", () => {
   assert.equal(registry.schemaVersion, 1);
-  assert.equal(registry.registryVersion, 1);
+  assert.equal(registry.registryVersion, 2);
   assert.equal(registry.policyVersion, oraclePolicy.policy.version);
   assert.equal(registry.authorship, "handwritten-curated-mutations");
-  assert.equal(registry.reviewedOn, "2026-08-03");
+  assert.equal(registry.reviewedOn, "2026-08-06");
   assert.ok(registry.reviewer);
   assert.equal(registry.mutations.length, 24);
 

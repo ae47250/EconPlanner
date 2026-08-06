@@ -116,10 +116,13 @@ function termId(term) {
 }
 
 export function oracleEvaluateOffering(policy, course, term) {
-  if (["future-placeholder", "projected-offering", "recurring-rule-unconfirmed", "requirement-placeholder"].includes(course.source)) {
+  if (course.source === "requirement-placeholder") {
     return { status: "PRELIMINARY", ruleIds: ["PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"], reasonCode: "UNPUBLISHED_OFFERING_TBC" };
   }
   const releaseTerm = policy.schedule.terms.find(candidate => candidate.termId === termId(term));
+  if (!releaseTerm && ["future-placeholder", "projected-offering", "recurring-rule-unconfirmed"].includes(course.source)) {
+    return { status: "ALLOW", ruleIds: ["FUTURE-UNPUBLISHED-SCHEDULE-PLANNING-PROJECTION"], reasonCode: "FUTURE_SCHEDULE_PLANNING_PROJECTION" };
+  }
   if (!releaseTerm) return { status: "UNKNOWN", ruleIds: [], reasonCode: "SCHEDULE_TERM_NOT_COVERED" };
   const section = releaseTerm.sections.find(candidate => (candidate.course === course.course || candidate.crossListedAs.includes(course.course))
     && (!course.section || candidate.sectionId.endsWith(`-${course.section}`)));

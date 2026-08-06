@@ -316,12 +316,20 @@ function validateProfileExpectations(profile, projection) {
   const courses = projection.terms.flatMap(term => term.courses);
   const years = new Set(projection.terms.map(term => term.academicYear));
   const approvals = courses.flatMap(course => course.approvals);
+  const advisorNoticeCodes = new Set((projection.advisorAttention || []).map(notice => notice.code));
   const expectations = profile.expectations;
 
   invariant(years.size >= expectations.minimumAcademicYears, `${profile.id}: too few academic years.`);
   invariant(courses.length >= expectations.minimumCourses, `${profile.id}: too few planned courses.`);
   invariant(projection.warnings.length >= expectations.minimumWarnings, `${profile.id}: too few warnings.`);
+  invariant(
+    (projection.advisorAttention || []).length >= (expectations.minimumAdvisorNotices || 0),
+    `${profile.id}: too few advisor notices.`
+  );
   invariant(approvals.length >= expectations.minimumApprovals, `${profile.id}: too few approvals.`);
+  for (const code of expectations.requiredAdvisorNoticeCodes || []) {
+    invariant(advisorNoticeCodes.has(code), `${profile.id}: missing advisor notice ${code}.`);
+  }
   for (const status of expectations.requiredAvailabilityStates) {
     invariant(courses.some(course => course.availabilityState === status), `${profile.id}: missing ${status} availability.`);
   }

@@ -1,0 +1,24 @@
+{
+  "activationStatus": "OWNER_APPROVED",
+  "activeRuntimeMappingChanged": false,
+  "bundleVersion": "econ-planning-flexibility.1",
+  "contentHash": "sha256:9c13f8baa63b4d01e2d22df8de2a73d43f35fdc2ab0bf0cada11a55e9484b831",
+  "determinism": {
+    "canonicalFormat": "UTF-8 JSON with canonical key and ID-array ordering",
+    "requiredCleanCompilations": 3
+  },
+  "inputs": [
+    "policy/rules/planning-flexibility.json"
+  ],
+  "schemaVersion": "1.0.0",
+  "validation": {
+    "acceleratedSeniorStandingNonblocking": "PASS",
+    "automaticNewestSelectionDisabled": "PASS",
+    "catalog2026_2027Invented": false,
+    "collegeWidePolicyChanged": false,
+    "futureLikelihoodsNotInvented": "PASS",
+    "futureScheduleProjectionNonblocking": "PASS",
+    "ownerDesignationFixedTo2025_2026": "PASS",
+    "publishedScheduleAuthorityPreserved": "PASS"
+  }
+}

@@ -235,25 +235,27 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   const advisorAttention = page.locator(".advisor-attention");
   await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
   const advisorBeforeEdit = await advisorAttention.innerText();
-  const eco214PlacementBeforeEdit = advisorAttention.locator(".projected-placement-list li", { hasText: "ECO 214" });
-  await expect(eco214PlacementBeforeEdit).toHaveCount(1);
-  await expect(eco214PlacementBeforeEdit).toHaveAttribute("data-term", "2028/2029 term to be confirmed");
+  await expect(advisorAttention.getByText(/Courses later in your plan are best estimates/)).toHaveCount(1);
+  const eco214TermBeforeEdit = page.locator('.term-card[data-academic-year="2028/2029"][data-term-key="Winter"]', { hasText: "ECO 214" });
+  await expect(eco214TermBeforeEdit).toHaveCount(1);
+  await expect(eco214TermBeforeEdit).toHaveAttribute("data-publication-status", "PLANNING_PROJECTION");
 
   const originalSession = await savedSession(page);
   const originalSignatures = savedPlanSignatures(originalSession);
   expect(originalSession.selectedPlanId).toBe("plan-1");
 
   const moveResponse = await editResponse(page, () => (
-    page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("term-to-confirm-2027/2028")
+    page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("winter-2028")
   ));
   expect(moveResponse.status()).toBe(200);
   await expect(statusMessage(page, "Plan A was updated and remains valid")).toBeVisible();
-  await expect(page.getByRole("combobox", { name: "Move ECO 214 to another term" })).toHaveValue("term-to-confirm-2027/2028");
+  await expect(page.getByRole("combobox", { name: "Move ECO 214 to another term" })).toHaveValue("winter-2028");
   await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
   expect(await advisorAttention.innerText()).not.toBe(advisorBeforeEdit);
-  const eco214PlacementAfterEdit = advisorAttention.locator(".projected-placement-list li", { hasText: "ECO 214" });
-  await expect(eco214PlacementAfterEdit).toHaveCount(1);
-  await expect(eco214PlacementAfterEdit).toHaveAttribute("data-term", "2027/2028 term to be confirmed");
+  await expect(advisorAttention.getByText(/Courses later in your plan are best estimates/)).toHaveCount(1);
+  const eco214TermAfterEdit = page.locator('.term-card[data-academic-year="2027/2028"][data-term-key="Winter"]', { hasText: "ECO 214" });
+  await expect(eco214TermAfterEdit).toHaveCount(1);
+  await expect(eco214TermAfterEdit).toHaveAttribute("data-publication-status", "PLANNING_PROJECTION");
 
   const editedSession = await savedSession(page);
   const editedSignatures = savedPlanSignatures(editedSession);
@@ -281,8 +283,15 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   await expect(statusMessage(page, "That plan change cannot be saved")).toBeVisible();
   await waitForSavedPlanSignature(page, "plan-1", signatureBeforeRemoval);
 
-  await expect(page.getByRole("combobox", { name: "Move ECO 213 to another term" })
-    .locator('option[value="spring-2029"]')).toHaveCount(0);
+  const mayMove = page.getByRole("combobox", { name: "Move ECO 213 to another term" });
+  await expect(mayMove.locator('option[value="spring-2029"]')).toHaveCount(1);
+  const mayResponse = await editResponse(page, () => mayMove.selectOption("spring-2029"));
+  expect(mayResponse.status()).toBe(422);
+  const mayData = await mayResponse.json();
+  expect(mayData.validation.policyDecision.decisions.some(decision => (
+    decision.reasonCode === "INTERMEDIATE_NOT_OFFERED_IN_MAY"
+  ))).toBe(true);
+  await waitForSavedPlanSignature(page, "plan-1", signatureBeforeRemoval);
 
   const offeringResponse = await editResponse(page, () => (
     page.getByRole("combobox", { name: "Move ECO 213 to another term" }).selectOption("winter-2027")
@@ -290,7 +299,7 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   expect(offeringResponse.status()).toBe(422);
   const offeringData = await offeringResponse.json();
   expect(offeringData.validation.errors.some(error => (
-    /ECO 213 cannot use a projected offering in an academic year with a verified schedule/.test(error)
+    /ECO 213 is not verified in the 2026\/2027 Winter offering/.test(error)
   ))).toBe(true);
   expect(offeringData.validation.policyDecision.decisions.some(decision => (
     decision.reasonCode === "NOT_OFFERED_IN_COMPLETE_SCHEDULE"
@@ -414,7 +423,7 @@ test("@pr interrupted, failed, and simultaneous edit requests never persist an i
     }
     await route.continue();
   });
-  const failedResponse = await editResponse(page, () => move.selectOption("term-to-confirm-2027/2028"));
+  const failedResponse = await editResponse(page, () => move.selectOption("winter-2028"));
   expect(failedResponse.status()).toBe(503);
   await expect(statusMessage(page, "Plan editing is temporarily unavailable")).toBeVisible();
   await waitForSavedPlanSignature(page, "plan-1", originalSignature);
@@ -428,7 +437,7 @@ test("@pr interrupted, failed, and simultaneous edit requests never persist an i
     await route.continue();
   });
   const interruptedRequest = page.waitForEvent("requestfailed", request => isMapRequest(request, "validate-plan"));
-  await move.selectOption("term-to-confirm-2027/2028");
+  await move.selectOption("winter-2028");
   await interruptedRequest;
   await expect(statusMessage(page, /Failed to fetch|could not be validated/i)).toBeVisible();
   await waitForSavedPlanSignature(page, "plan-1", originalSignature);

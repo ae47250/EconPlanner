@@ -54,15 +54,18 @@ test("API and selected-plan UI retain material academic content", async ({ page 
     courses: [...document.querySelectorAll(".term-card .plan-course-summary > strong")].map(item => item.textContent.trim()),
     terms: [...document.querySelectorAll(".term-card")].map(item => `${item.dataset.academicYear}|${item.dataset.termKey}`),
     warnings: [...document.querySelectorAll(".plan-notes[role='status']:not(.planning-gaps) li")].map(item => item.textContent.trim()),
+    advisorNotices: [...document.querySelectorAll(".advisor-attention-item > p")].map(item => item.textContent.trim()),
     approvals: [...document.querySelectorAll("[aria-label='Plan feasibility details'] li")].map(item => item.textContent.trim()),
     reviewItems: [...document.querySelectorAll(".planning-gaps li")].map(item => item.textContent.trim()),
     sourceLabels: [...document.querySelectorAll(".plan-source-note")].map(item => item.textContent.trim()),
     pageText: document.body.innerText
   }));
   const expectedApprovals = (selectedPlan.feasibility?.requiredApprovals || []).map(item => item.message);
+  const expectedNotices = (selectedPlan.studentNotices || []).map(item => item.message);
+  const expectedNoticeMessages = new Set(expectedNotices);
   const expectedReview = [...(selectedPlan.unscheduled || []), ...(economics.planningGaps || [])]
     .map(item => `${item.course ? `${item.course}: ` : ""}${item.reason || item.message}`);
-  const expectedSource = `Verified course schedule: ${String(selectedPlan.academicYear).replace("-", "/")}.`;
+  const expectedSource = `Published course schedule: ${String(selectedPlan.academicYear).replace("-", "/")}. Later unpublished schedules are shown as planning projections.`;
   const parity = {
     schemaVersion: 2,
     kind: "econplanner-api-ui-parity",
@@ -75,7 +78,8 @@ test("API and selected-plan UI retain material academic content", async ({ page 
       missing: displayed.pageText.includes(feasibilityLabel(selectedPlan.feasibilityStatus)) ? [] : [selectedPlan.feasibilityStatus],
       extra: []
     },
-    warnings: difference(selectedPlan.studentMessages || [], displayed.warnings),
+    warnings: difference((selectedPlan.studentMessages || []).filter(message => !expectedNoticeMessages.has(message)), displayed.warnings),
+    advisorNotices: difference(expectedNotices, displayed.advisorNotices.filter(value => expectedNoticeMessages.has(value))),
     approvals: difference(expectedApprovals, displayed.approvals.filter(value => expectedApprovals.includes(value))),
     reviewItems: difference(expectedReview, displayed.reviewItems),
     sourceLabels: {

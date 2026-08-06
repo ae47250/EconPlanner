@@ -219,7 +219,7 @@ Critical reminders:
 - If ECO 213 is completed/current, do not schedule ECO 113. If ECO 214 is completed/current, do not schedule ECO 114.
 - 2026/2027 ECO placement must follow the canonical schedule data exactly.
 - For academic years after 2026/2027, do not name specific ECO electives such as ECO 221 or ECO 333 unless the student provides current offering information. Use ECO elective instead.
-- For academic years after 2026/2027, do not display only ECO 213 or only ECO 214. Use "ECO 213 or ECO 214" and later "ECO 214 or ECO 213" because the exact future schedule is unknown.
+- For academic years after 2026/2027, academically valid specific-term placements are planning projections, not published offerings. Keep prerequisites, course sequence, term limits, and ECO 461's Winter rule authoritative.
 - Schedule ECO 213 and ECO 214 as soon as feasible after MAT 113 or MAT 121 and the appropriate introductory courses are complete.
 - For freshman plans, schedule MAT 113 or MAT 121 no later than the end of sophomore year. Do not rely on concurrent math enrollment with ECO 213 or ECO 214 unless no better plan is feasible.
 - MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only when the matching course-instructor approval is explicitly recorded; never infer approval just to make a plan fit.
@@ -242,7 +242,7 @@ Critical reminders:
 - ECO 471 requires senior standing and may only be scheduled in senior year.
 - The statistics option must be completed no later than Fall senior year and is recommended by the end of junior year.
 - Completing ECO 213 and ECO 214 by the end of junior year is recommended when feasible, not stated as mandatory.
-- Always include a global note that offerings should be confirmed with the official schedule and that the student can keep chatting with EconMapper (me) about the plan.`;
+- Include this future-schedule notice once when later unpublished years are used: "Courses later in your plan are best estimates because those schedules have not been published yet. Use this plan as a guide and update it with your advisor when new schedules become available."`;
 }
 
 function buildUserPrompt(studentInput) {
@@ -299,7 +299,7 @@ async function callPlannerModel(client, messages, model) {
   return { plan: parsed, usage: completion.usage || null };
 }
 
-function mergeAdvisorChecks(plan, validation) {
+function mergeAdvisorChecks(plan, _validation) {
   return {
     ...plan,
     advisorChecks: []
@@ -331,9 +331,6 @@ function explainValidationError(error) {
   }
   if (/should be written as ECO elective/i.test(text)) {
     return "The draft named a specific future ECO elective even though that future schedule is not known.";
-  }
-  if (/ECO 213.*or ECO 214|ECO 214.*or ECO 213/i.test(text)) {
-    return "The draft named ECO 213 or ECO 214 too specifically in a future year where the exact schedule is unknown.";
   }
   return text;
 }

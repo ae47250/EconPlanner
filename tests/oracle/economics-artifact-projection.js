@@ -58,11 +58,12 @@ function normalizedTerms(terms = []) {
 }
 
 function selectedPlanWarnings(plan = {}) {
+  const noticeMessages = new Set((plan.studentNotices || []).map(notice => text(notice.message)));
   return uniqueSorted([
     ...(plan.warnings || []),
     ...(plan.studentMessages || []),
     ...(plan.feasibility?.warnings || [])
-  ].map(text));
+  ].map(text).filter(message => !noticeMessages.has(message)));
 }
 
 function advisorAttention(report = {}) {
