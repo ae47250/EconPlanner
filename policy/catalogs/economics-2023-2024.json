@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "recordId": "ECONOMICS-CATALOG-2023-2024",
+  "policyVersion": "econ-catalog-2023-2024.1",
+  "catalogYear": "2023-2024",
+  "program": "ECONOMICS",
+  "publicationStatus": "AUTHORITATIVE_PUBLISHED",
+  "activationStatus": "PENDING_OWNER_APPROVAL",
+  "effective": {"from": "2023-08-01", "through": "2024-07-31"},
+  "supersededBy": "ECONOMICS-CATALOG-2024-2025",
+  "authority": {"owner": "Hanover College", "boundary": "PUBLISHED_ECONOMICS_MAJOR_REQUIREMENTS"},
+  "sourceRefs": [
+    "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+    "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+    "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]"
+  ],
+  "courseIdentities": [
+    {"code": "ECO 113", "title": "Principles of Microeconomics"},
+    {"code": "ECO 114", "title": "Principles of Macroeconomics"},
+    {"code": "ECO 213", "title": "Intermediate Microeconomics"},
+    {"code": "ECO 214", "title": "Intermediate Macroeconomics"},
+    {"code": "ECO 257", "title": "Quantitative Methods for Business/Economics"},
+    {"code": "MAT 217", "title": "Applied Statistics"},
+    {"code": "ECO 321", "title": "Money & Financial Markets"},
+    {"code": "ECO 461", "title": "Senior Seminar: Econometrics"},
+    {"code": "MAT 113", "title": "Mathematics cognate"},
+    {"code": "MAT 121", "title": "Calculus I"}
+  ],
+  "requirements": {
+    "core": ["ECO 113", "ECO 114", "ECO 213", "ECO 214"],
+    "statisticsOptions": ["ECO 257", "MAT 217"],
+    "moneyFinanceOptions": ["ECO 321"],
+    "capstone": ["ECO 461"],
+    "economicsElectives": {"count": 4, "max100Level": 1, "excludedCourses": ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "ECO 461", "ECO 307"]},
+    "cognateOptions": ["MAT 113", "MAT 121"],
+    "majorCourseCount": 11,
+    "cognateCourseCount": 1
+  },
+  "prerequisites": {
+    "ECO 213": {"all": ["ECO 113"], "any": [["MAT 113", "MAT 121", "READY_FOR_CALCULUS_PLACEMENT"]]},
+    "ECO 214": {"all": ["ECO 114"], "any": [["MAT 113", "MAT 121", "READY_FOR_CALCULUS_PLACEMENT"]]},
+    "ECO 257": {"all": [], "any": [["ECO 113", "ECO 114"]]},
+    "ECO 321": {"all": ["ECO 113", "ECO 114"], "any": []},
+    "ECO 461": {"all": ["ECO 213", "ECO 214"], "any": [["ECO 257", "MAT 217"]]}
+  },
+  "concurrency": [],
+  "permissions": [],
+  "allocation": {"ECO 257": ["statistics"], "ECO 321": ["money-finance"], "doubleCounting": "NOT_PERMITTED_UNLESS_EXPLICIT"},
+  "nonCourseMilestones": [{"id": "ECONOMICS-COMPREHENSIVE-EVALUATION", "status": "REQUIRED", "completionStandard": "PASSING_GRADE"}],
+  "substitutions": [],
+  "exceptions": [],
+  "collegeWideBoundary": {"mode": "PRESERVE_CONTROLLING_COLLEGE_POLICY", "changedByFlexibleMajorRule": false, "families": ["GRADUATION", "RESIDENCY", "GENERAL_EDUCATION", "GRADE", "INSTITUTION_WIDE"]}
+}

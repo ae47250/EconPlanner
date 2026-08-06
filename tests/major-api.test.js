@@ -18,13 +18,13 @@ test("major mapper returns every captured program and Economics schedule", async
   assert.equal(data.catalog.basis, "entry_catalog_year_inferred_from_standing_and_plan_date");
   assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
   assert.equal(data.catalog.requestedCatalogYear, "2025-2026");
-  assert.equal(data.catalog.catalogResolutionStatus, "exact");
-  assert.equal(data.catalog.comparisonStatus, "not_applicable");
-  assert.equal(data.catalog.catalogApplicability.status, "AMBIGUOUS");
-  assert.equal(data.catalog.governingMajorCatalogYear, null);
-  assert.ok(data.catalog.advisorAttention.some(item => item.code === "CATALOG_APPLICABILITY_REVIEW"));
-  assert.ok(economics.economicsPlans.every(plan => plan.readinessStatus === "ADVISOR_ACTION_REQUIRED"));
-  assert.ok(economics.economicsPlans.every(plan => plan.validation.approved === false));
+  assert.equal(data.catalog.catalogResolutionStatus, "latest_flexible_conditional_fallback");
+  assert.equal(data.catalog.comparisonStatus, "no_change");
+  assert.equal(data.catalog.catalogApplicability.status, "LATEST_FLEXIBLE_FALLBACK");
+  assert.equal(data.catalog.governingMajorCatalogYear, "2025-2026");
+  assert.ok(data.catalog.advisorAttention.some(item => item.code === "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED"));
+  assert.ok(economics.economicsPlans.some(plan => plan.readinessStatus === "READY_WITH_CONDITIONS"));
+  assert.ok(economics.economicsPlans.every(plan => plan.readinessStatus !== "STUDENT_READY"));
   assert.equal(economics.annualSchedule.academicYear, "2026-2027");
   assert.ok(economics.annualSchedule.terms.May.some(course => course.section === "S"));
 });
@@ -86,10 +86,10 @@ test("an available supplied major declaration year becomes the exact governing c
   }));
   const data = await response.json();
   assert.equal(response.status, 200);
-  assert.equal(data.catalog.catalogApplicability.status, "EXACT");
+  assert.equal(data.catalog.catalogApplicability.status, "EXACT_DECLARATION_CATALOG");
   assert.equal(data.catalog.governingMajorCatalogYear, "2025-2026");
-  assert.equal(data.catalog.selectionAuthority, "GOVERNING");
-  assert.ok(!data.catalog.advisorAttention.some(item => item.code === "CATALOG_APPLICABILITY_REVIEW"));
+  assert.equal(data.catalog.selectionAuthority, "GOVERNING_EXACT_DECLARATION_CATALOG");
+  assert.ok(!data.catalog.advisorAttention.some(item => item.code === "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED"));
 });
 
 test("major mapper rejects an unconfirmed or stale one-year-early pace", async () => {
@@ -271,8 +271,9 @@ test("major mapper uses the inferred entry catalog and reports an unavailable ne
   assert.equal(response.status, 200);
   assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
   assert.equal(data.catalog.comparisonCatalogYear, "2026-2027");
-  assert.equal(data.catalog.comparisonStatus, "unavailable");
+  assert.equal(data.catalog.comparisonStatus, "no_change");
   assert.deepEqual(data.catalog.evaluatedCatalogYears, ["2025-2026"]);
+  assert.ok(data.catalog.candidateCatalogYears.includes("2026-2027"));
 });
 
 test("missing 2026-2027 entry catalog uses 2025-2026 and returns Advisor Attention", async () => {
@@ -292,9 +293,10 @@ test("missing 2026-2027 entry catalog uses 2025-2026 and returns Advisor Attenti
   assert.equal(response.status, 200);
   assert.equal(data.catalog.requestedCatalogYear, "2026-2027");
   assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
-  assert.equal(data.catalog.catalogResolutionStatus, "previous_year_fallback");
-  assert.equal(data.catalog.advisorAttention[0].code, "CATALOG_PREVIOUS_YEAR_FALLBACK");
-  assert.match(data.catalog.advisorAttention[0].message, /2026\/2027 Economics catalog was unavailable/);
+  assert.equal(data.catalog.catalogResolutionStatus, "latest_flexible_conditional_fallback");
+  assert.equal(data.catalog.advisorAttention[0].code, "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED");
+  assert.equal(data.catalog.catalogApplicability.latestAvailableCatalogYear, "2025-2026");
+  assert.ok(data.catalog.catalogApplicability.candidateCatalogYears.includes("2026-2027"));
 });
 
 test("missing historical entry catalog uses an Economics-only provisional fallback", async () => {
@@ -314,12 +316,12 @@ test("missing historical entry catalog uses an Economics-only provisional fallba
   assert.equal(response.status, 200);
   assert.equal(data.catalog.requestedCatalogYear, "2023-2024");
   assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
-  assert.equal(data.catalog.catalogResolutionStatus, "economics_provisional_fallback");
+  assert.equal(data.catalog.catalogResolutionStatus, "latest_flexible_conditional_fallback");
   assert.equal(data.catalog.scope, "economics_only_provisional");
   assert.equal(data.programs.length, 1);
   assert.equal(data.programs[0].program.id, "economics-base");
-  const notice = data.catalog.advisorAttention.find(item => item.code === "ECONOMICS_PROVISIONAL_CATALOG_FALLBACK");
-  assert.match(notice.message, /does not apply to any other major/);
+  const notice = data.catalog.advisorAttention.find(item => item.code === "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED");
+  assert.match(notice.message, /used the 2025\/2026 Economics-major requirements conditionally/);
 });
 
 test("major mapper returns graduation-priority senior plans and advisor warnings", async () => {

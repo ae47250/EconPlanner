@@ -1,0 +1,20 @@
+Source title: Hanover College Academic Catalog 2025-2026
+Source URL: https://catalog.hanover.edu/programs/economics.php
+Retrieved: 2026-08-06
+Authority: Hanover College official published academic catalog
+
+[ECONOMICS-MAJOR]
+Locator: Degree Program: Economics, Major requirements
+Evidence transcription:
+Major requirements: ECO 113, ECO 114, ECO 213, ECO 214; one Statistics course from ECO 257, MAT 217, or PSY 217; one Money/Finance course from ECO 321 or BUSN 323; ECO 461; and four additional Economics courses, with no more than one at the 100 level. The cognate is MAT 113 or MAT 121. No Economics Department comprehensive examination or evaluation is listed.
+
+[ECONOMICS-PREREQUISITES]
+Locator: Economics course descriptions
+Evidence transcription:
+The catalog-specific prerequisite snapshot preserves the published ECO 213, ECO 214, ECO 257, ECO 321, and ECO 461 requirements and keeps requirement credit separate from prerequisite satisfaction.
+
+[COLLEGE-WIDE-BOUNDARY]
+Locator: College-wide degree requirements
+Evidence transcription:
+College-wide graduation, residency, grade, and institution-wide requirements remain controlled by their College authority. They are outside the scope of the Economics Department flexible-major fallback.
+

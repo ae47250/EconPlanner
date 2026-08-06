@@ -250,6 +250,28 @@ test("planning timeline is visually and semantically grouped", async ({ page }) 
   }
 });
 
+test("optional declaration catalog intake is accessible, responsive, and submitted unchanged", async ({ page }) => {
+  const catalogSelect = page.getByLabel("When did you declare the Economics major? (optional)");
+  await expect(catalogSelect).toBeVisible();
+  await catalogSelect.selectOption("I_DO_NOT_KNOW");
+  await expect(catalogSelect).toHaveValue("I_DO_NOT_KNOW");
+  await expect(page.getByText(/uses the latest available flexible Economics requirements/)).toBeVisible();
+
+  await page.setViewportSize({width: 320, height: 700});
+  const bounds = await catalogSelect.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    return {left: rect.left, right: rect.right, viewport: document.documentElement.clientWidth, page: document.documentElement.scrollWidth};
+  });
+  expect(bounds.left).toBeGreaterThanOrEqual(0);
+  expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+  expect(bounds.page).toBe(bounds.viewport);
+
+  const generation = page.waitForRequest(request => isGenerationRequest(request));
+  await page.getByRole("button", {name: "Generate My Plan"}).click();
+  const request = await generation;
+  expect(requestBody(request).student.majorDeclarationCatalogYear).toBe("I_DO_NOT_KNOW");
+});
+
 test("planned non-major courses have their own card before course selection", async ({ page }) => {
   const nonMajorCard = page.locator(".non-major-intake-card");
   const courseCard = page.locator(".course-intake-card");

@@ -1,0 +1,4405 @@
+{
+  "schemaVersion": 1,
+  "kind": "cp4b-b-invalid-input-recovery-report",
+  "counts": {
+    "baselineInvalidProfiles": 93,
+    "trulyInvalidProfiles": 0,
+    "recoverableWithOneAnswer": 93,
+    "recoverableWithSeveralAnswers": 0,
+    "eligibleForConditionalPlanning": 0,
+    "rescuedByLatestFlexibleFallback": 0,
+    "remainBlocked": 93,
+    "blockingFields": {
+      "projectedSeniorStandingConfirmation": 93
+    }
+  },
+  "rows": [
+    {
+      "profileId": "fictional-econ-20260803-116fe842",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-355bb41c",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-8fe807c5",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-ad266c41",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-b0d7b654",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-c59385ca",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-d2e1518b",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-e1eb5dd8",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-eba5a7c6",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260803-f0ced3c8",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-371b6efc",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-78d97f0d",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-78df3c2d",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-7cf91bd6",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-81b26392",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-8afa94f8",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-a00e312c",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-c7b158f7",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-cf42e0bd",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-d13baf94",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-e7935c1e",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260804-eb6b200d",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-0152877d",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-162b11f0",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-38d7a09f",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-60870ac0",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-8badcdce",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-a68743e9",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-b074fc6a",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260805-ded3dd5a",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-01d66233",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-27d2fb65",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-5b4f9a60",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-5b693a0c",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-6094e684",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-6d69063e",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-77b9bb4b",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-901adb94",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-be2da1a4",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-fba93fa9",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20260806-fd97d282",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-26f5072f",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-2a8c4e3f",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-3c7e5ecd",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-3e75a34b",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-4851f46d",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-55ac54fc",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-6a54628e",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-7616504c",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-7befffd3",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-97b06ee7",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-a4c82a38",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-d41f6b06",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-e67f4eab",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270117-fc3f37b8",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-150f09fd",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-21c1d2e4",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-232bcdee",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-2ee8884f",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-40f7eb7f",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-42bf31a8",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-4ce9be1f",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-545e70bd",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-66207d06",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-bd3ea292",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270219-fedbd6cf",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-1c262010",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-2e4f00f2",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-50824b32",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-572ff8b0",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-5889e8b1",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-7786d9e4",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-922da71b",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-a0caa3cc",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-d8aed3ec",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-e3e54bdd",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-e8adf849",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270323-fe3477dd",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-084bbda0",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-0c63f9f1",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-184f4ab6",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-1f048290",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-24d0d759",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-377801f0",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-3ec03697",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-60c19237",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-7c37af9c",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-94ca2b10",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2026/2027?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-a0bfe9a7",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-c2f0bbf4",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2028/2029?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-d8cdc73f",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-edfc0fb2",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by 2027/2028?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    },
+    {
+      "profileId": "fictional-econ-20270429-fdbdf2aa",
+      "previousCategory": "INVALID_INPUT",
+      "currentNoPlanCategory": "INVALID_INPUT",
+      "status": "RECOVERABLE_MISSING_INFORMATION",
+      "blockingFields": [
+        "projectedSeniorStandingConfirmation"
+      ],
+      "answerCount": 1,
+      "questions": [
+        {
+          "field": "projectedSeniorStandingConfirmation",
+          "prompt": "Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year?"
+        }
+      ],
+      "safeDefaultsApplied": [
+        {
+          "field": "majorDeclarationCatalogYear",
+          "value": "2025-2026",
+          "kind": "CONDITIONAL_PLANNING_BASIS_NOT_STUDENT_FACT",
+          "reasonCode": "LATEST_FLEXIBLE_MAJOR_CATALOG_AUTHORIZED_DEFAULT",
+          "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+        }
+      ],
+      "planningCanContinueConditionally": false,
+      "advisorActionRequired": false,
+      "planningMustRemainBlocked": true,
+      "missingCatalogYearIsOnlyBlocker": false,
+      "latestFlexibleFallbackEligible": true,
+      "ruleIds": [
+        "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"
+      ],
+      "sourceRefs": [
+        "CATALOG-2023-2024-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2023-2024-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2024-2025-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "CATALOG-2024-2025-ECONOMICS#[PSY-217-IDENTITY]",
+        "CATALOG-2025-2026-ECONOMICS#[COLLEGE-WIDE-BOUNDARY]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-MAJOR]",
+        "CATALOG-2025-2026-ECONOMICS#[ECONOMICS-PREREQUISITES]",
+        "OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+        "POLICY-RELEASE#econ-2025-2026.1"
+      ],
+      "issueCode": "INVALID_PLANNING_PACE",
+      "issueDetails": [],
+      "oneStudentAnswerCouldUnblock": true,
+      "severalAnswersNeeded": false,
+      "provisionalPlanPossible": false,
+      "rescuedByLatestFlexibleFallback": false
+    }
+  ]
+}

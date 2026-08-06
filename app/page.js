@@ -194,6 +194,7 @@ function migrateSavedCourses(savedCourses = []) {
 function plannerInputSignature(formData) {
   return JSON.stringify({
     academicStanding: formData.academicStanding,
+    majorDeclarationCatalogYear: formData.majorDeclarationCatalogYear,
     planningPace: formData.planningPace,
     projectedSeniorStandingConfirmation: formData.projectedSeniorStandingConfirmation,
     planCreationDate: formData.planCreationDate,
@@ -210,6 +211,7 @@ function plannerInputSignature(formData) {
 const initialForm = {
   displayName: "",
   academicStanding: "freshman",
+  majorDeclarationCatalogYear: "",
   planningPace: PLANNING_PACES.STANDARD,
   projectedSeniorStandingConfirmation: null,
   planCreationDate: "",
@@ -1817,7 +1819,6 @@ export default function Page() {
         if (parsed.formData && Array.isArray(parsed.formData.courses)) {
           const {
             entryCatalogYear: _entryCatalogYear,
-            majorDeclarationCatalogYear: _majorDeclarationCatalogYear,
             summerStandingConfirmed: _summerStandingConfirmed,
             ...savedFormData
           } = parsed.formData;
@@ -2819,6 +2820,7 @@ export default function Page() {
         .planning-field { display: grid; gap: .25rem; }
         .planning-field label, .planning-label { color: var(--planner-muted); }
         .planning-field input, .planning-field select { width: 100%; box-sizing: border-box; }
+        .catalog-year-intake { max-width: 38rem; margin-top: .85rem; }
         .standing-help { margin: .25rem 0 0; color: var(--planner-muted); }
         .date-display { display: flex; align-items: baseline; gap: .4rem; min-height: 1.5rem; }
         .date-display strong { font-weight: 400; }
@@ -3871,6 +3873,26 @@ export default function Page() {
                   <p className="transfer-advisor-note">Hanover's Registrar decides how transfer credits apply. Confirm your catalog year and course equivalencies with your advisor or the Registrar.</p>
                 </section>
               )}
+              <div className="planning-field catalog-year-intake">
+                <label htmlFor="major-declaration-catalog-year">When did you declare the Economics major? (optional)</label>
+                <select
+                  id="major-declaration-catalog-year"
+                  value={formData.majorDeclarationCatalogYear}
+                  onChange={event => setFormData(current => ({
+                    ...current,
+                    majorDeclarationCatalogYear: event.target.value
+                  }))}
+                >
+                  <option value="">Not provided</option>
+                  <option value="2023-2024">2023–2024</option>
+                  <option value="2024-2025">2024–2025</option>
+                  <option value="2025-2026">2025–2026</option>
+                  <option value="I_DO_NOT_KNOW">I do not know</option>
+                </select>
+                <p className="standing-help">
+                  Economics-major requirements normally depend on when you declared the major. When that year is unknown, the planner uses the latest available flexible Economics requirements and asks your advisor to confirm them.
+                </p>
+              </div>
               {planningContext.requiresProjectedSeniorStandingConfirmation && (
                 <fieldset className="transfer-graduation-fieldset senior-standing-confirmation">
                   <legend>

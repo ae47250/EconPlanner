@@ -174,12 +174,16 @@ test("explicit evidence facts stay scoped while broad fallback remains review-on
 
 test("catalog applicability never treats inferred entry year as exact authority", () => {
   const ambiguous = resolveCatalogApplicability({ entryCatalogYear: "2025-2026", currentCatalogYear: "2026-2027", availableCatalogYears: ["2025-2026"] });
-  assert.equal(ambiguous.status, "AMBIGUOUS");
-  assert.equal(ambiguous.governingMajorCatalogYear, null);
+  assert.equal(ambiguous.status, "LATEST_FLEXIBLE_FALLBACK");
+  assert.equal(ambiguous.governingMajorCatalogYear, "2025-2026");
   assert.deepEqual(ambiguous.candidateCatalogYears, ["2025-2026", "2026-2027"]);
+  assert.equal(ambiguous.advisorAction, null);
+  assert.equal(ambiguous.advisorNotice.reasonCode, "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED");
   const exact = resolveCatalogApplicability({ majorDeclarationCatalogYear: "2025-2026", entryCatalogYear: "2024-2025", availableCatalogYears: ["2025-2026"] });
-  assert.equal(exact.status, "EXACT");
+  assert.equal(exact.status, "EXACT_DECLARATION_CATALOG");
   assert.equal(exact.governingMajorCatalogYear, "2025-2026");
   const unavailable = resolveCatalogApplicability({ majorDeclarationCatalogYear: "2026-2027", availableCatalogYears: ["2025-2026"] });
-  assert.equal(unavailable.status, "UNAVAILABLE");
+  assert.equal(unavailable.status, "LATEST_FLEXIBLE_FALLBACK");
+  assert.equal(unavailable.requestedUnavailableCatalogYear, "2026-2027");
+  assert.equal(unavailable.appliedMajorCatalogYear, "2025-2026");
 });

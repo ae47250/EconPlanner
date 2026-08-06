@@ -230,7 +230,7 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
   }
   assert.equal(expected.feasibilityStatus, "PRELIMINARY_ONLY");
   assert.equal(expected.terms.flatMap(term => term.courses).filter(course => course.requirementRole).length, 8);
-  assert.equal(expected.warnings.length, 15);
+  assert.equal(expected.warnings.length, 11);
   assert.equal(expected.advisorAttention.length, 1);
   assert.ok(expected.terms.some(term => term.courses.some(course => course.approvals.length > 0)));
 
