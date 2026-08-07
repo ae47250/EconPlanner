@@ -78,7 +78,7 @@ try {
   const preparedProfiles = new Map();
   for (const profile of fixture.profiles) {
     const prepared = await prepareProfile(profile, fixture.preparedDate, template);
-    validateProfileExpectations(profile, prepared.projection);
+    validateProfileExpectations(profile, prepared);
     preparedProfiles.set(profile.id, prepared);
     summary.profiles.push({
       id: profile.id,
@@ -87,7 +87,10 @@ try {
       academicYears: new Set(prepared.projection.terms.map(term => term.academicYear)).size,
       courses: prepared.projection.terms.flatMap(term => term.courses).length,
       warnings: prepared.projection.warnings.length,
-      approvals: prepared.projection.terms.flatMap(term => term.courses.flatMap(course => course.approvals)).length
+      approvals: prepared.projection.terms.flatMap(term => term.courses.flatMap(course => course.approvals)).length,
+      planType: prepared.report.student.planType,
+      planningPace: prepared.projection.planningPace,
+      htmlBytes: Buffer.byteLength(prepared.html, "utf8")
     });
     console.log(`[projection] PASS ${profile.id}`);
   }
@@ -312,7 +315,8 @@ function findCourse(terms, expected, courseField) {
   ));
 }
 
-function validateProfileExpectations(profile, projection) {
+function validateProfileExpectations(profile, prepared) {
+  const { projection, report, html } = prepared;
   const courses = projection.terms.flatMap(term => term.courses);
   const years = new Set(projection.terms.map(term => term.academicYear));
   const approvals = courses.flatMap(course => course.approvals);
@@ -327,6 +331,22 @@ function validateProfileExpectations(profile, projection) {
     `${profile.id}: too few advisor notices.`
   );
   invariant(approvals.length >= expectations.minimumApprovals, `${profile.id}: too few approvals.`);
+  if (expectations.minimumHtmlBytes) {
+    invariant(Buffer.byteLength(html, "utf8") >= expectations.minimumHtmlBytes, `${profile.id}: HTML is too small for its layout-pressure fixture.`);
+  }
+  if (expectations.requiredPlanType) {
+    invariant(report.student?.planType === expectations.requiredPlanType, `${profile.id}: unexpected report plan type.`);
+  }
+  if (expectations.requiredPlanningPace) {
+    invariant(projection.planningPace === expectations.requiredPlanningPace, `${profile.id}: unexpected planning pace.`);
+  }
+  for (const [field, expectedValue] of Object.entries(expectations.requiredStudentFields || {})) {
+    invariant(report.student?.[field] === expectedValue, `${profile.id}: unexpected report student field ${field}.`);
+  }
+  const renderedText = normalizedHtmlText(html);
+  for (const requiredText of expectations.requiredHtmlText || []) {
+    invariant(renderedText.includes(normalizedText(requiredText)), `${profile.id}: HTML is missing required text: ${requiredText}`);
+  }
   for (const code of expectations.requiredAdvisorNoticeCodes || []) {
     invariant(advisorNoticeCodes.has(code), `${profile.id}: missing advisor notice ${code}.`);
   }
@@ -419,7 +439,14 @@ async function runLiveProfile(profile, prepared, tools) {
     const pdfPath = path.join(workDirectory, `${safeFileName(profile.id)}.pdf`);
     await writeFile(pdfPath, pdf);
     verifyPdfBytes(pdf, headers.sha256);
-    const inspection = await inspectWithPoppler(pdfPath, workDirectory, prepared.projection, headers.pageCount, tools);
+    const inspection = await inspectWithPoppler(
+      pdfPath,
+      workDirectory,
+      prepared.projection,
+      headers.pageCount,
+      profile.expectations,
+      tools
+    );
     Object.assign(benchmark, {
       status: "pass",
       durationMs: Date.now() - startedAt,
@@ -487,13 +514,21 @@ function verifyPdfBytes(pdf, expectedSha256) {
   invariant(actualSha256 === expectedSha256, "PDF SHA-256 does not match the integrity header.");
 }
 
-async function inspectWithPoppler(pdfPath, workDirectory, projection, expectedPageCount, tools) {
+async function inspectWithPoppler(pdfPath, workDirectory, projection, expectedPageCount, expectations, tools) {
   const textPath = path.join(workDirectory, "extracted.txt");
   const bboxPath = path.join(workDirectory, "bounding-boxes.html");
   runCommand(tools.pdftotext, ["-layout", "-enc", "UTF-8", pdfPath, textPath], "pdftotext");
   runCommand(tools.pdftotext, ["-bbox-layout", "-enc", "UTF-8", pdfPath, bboxPath], "pdftotext bbox");
   const extractedText = await readFile(textPath, "utf8");
   compareExtractedText(extractedText, projection);
+  const pageText = extractedText.split("\f").filter((value, index, values) => (
+    normalizedText(value) || index < values.length - 1
+  ));
+  invariant(pageText.every(value => normalizedText(value).length >= 10), "PDF contains an unintended blank page.");
+  invariant(
+    expectedPageCount >= (expectations.minimumPdfPages || 1),
+    `PDF has ${expectedPageCount} pages; expected at least ${expectations.minimumPdfPages || 1}.`
+  );
   detectOutOfBoundsText(await readFile(bboxPath, "utf8"));
 
   const pagePrefix = path.join(workDirectory, "page");
@@ -617,7 +652,7 @@ function validateFixture(value) {
   invariant(value?.fixtureVersion === "pdf-layout-profiles.v1", "Unexpected fixture version.");
   invariant(value?.dataClassification === "fictional-test-only", "Fixture is not marked fictional-test-only.");
   invariant(value?.externalContractTest === true, "Fixture is not marked as an external contract test.");
-  invariant(Array.isArray(value.profiles) && value.profiles.length >= 3, "At least three fictional profiles are required.");
+  invariant(Array.isArray(value.profiles) && value.profiles.length >= 5, "At least five fictional profiles are required.");
   invariant(Array.isArray(value.invalidSelectedPlanCases) && value.invalidSelectedPlanCases.length > 0, "An invalid selected-plan fixture is required.");
   invariant(!/@/.test(JSON.stringify(value)), "Fixture contains an email-like value.");
   const forbiddenKeys = /^(student_?id|email|transcript|real_?name|schedule)$/i;
@@ -702,6 +737,16 @@ function normalizedTerm(value) {
 
 function normalizedText(value) {
   return String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+function normalizedHtmlText(value) {
+  return normalizedText(String(value || "")
+    .replace(/<[^>]+>/g, " ")
+    .replaceAll("&amp;", "&")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'"));
 }
 
 function safeFileName(value) {
