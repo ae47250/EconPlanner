@@ -167,7 +167,7 @@ test("no-plan precedence never certifies an incomplete search as infeasible", ()
   assert.equal(exhaustive.reason, "COUNT_CAPACITY");
 });
 
-test("the CP4 frozen-cohort authority gate rejects blanket context reviews and unexplained convergence loss", () => {
+test("the CP4 frozen-cohort authority gate rejects blanket context reviews and malformed convergence records", () => {
   const records = Array.from({ length: 439 }, (_, index) => ({
     evidenceStatus: index < 246 ? "REVIEW_REQUIRED" : "PRELIMINARY",
     reasonCodes: index < 246 ? ["ENROLLMENT_FULL"] : ["UNPUBLISHED_OFFERING_TBC"],
@@ -206,6 +206,23 @@ test("the CP4 frozen-cohort authority gate rejects blanket context reviews and u
       "fictional-econ-20270117-a6a8df79"
     ]
   });
+  const intentionalAdditionalConvergence = structuredClone(summary);
+  intentionalAdditionalConvergence.profiles.push({
+    profileId: "fictional-econ-approved-policy-convergence",
+    decisionShadow: [],
+    strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Plan A", convergedLabel: "Plan C" }]
+  });
+  assert.deepEqual(assertFrozenCp4AuthoritySummary(intentionalAdditionalConvergence).convergenceProfiles, [
+    "fictional-econ-20260805-c014e0de",
+    "fictional-econ-20270117-a6a8df79",
+    "fictional-econ-approved-policy-convergence"
+  ]);
+  const resolvedHistoricalConvergences = structuredClone(summary);
+  for (const profile of resolvedHistoricalConvergences.profiles) profile.strategyConvergences = [];
+  assert.deepEqual(assertFrozenCp4AuthoritySummary(resolvedHistoricalConvergences).convergenceProfiles, []);
+  const malformedConvergence = structuredClone(summary);
+  malformedConvergence.profiles[0].strategyConvergences[0].code = "UNCLASSIFIED";
+  assert.throws(() => assertFrozenCp4AuthoritySummary(malformedConvergence), { code: "CP4_FROZEN_CONVERGENCE_DRIFT" });
   const blanket = structuredClone(summary);
   blanket.profiles[0].decisionShadow[0].reasonCodes = ["PLANNING_CONTEXT_REQUIRED"];
   assert.throws(() => assertFrozenCp4AuthoritySummary(blanket), { code: "CP4_OBSERVABILITY_CONTEXT_OMITTED" });

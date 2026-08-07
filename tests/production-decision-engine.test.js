@@ -65,12 +65,13 @@ test("prerequisites distinguish prior evidence, missing evidence, and approved c
   assert.equal(concurrent.status, "CONDITIONAL");
 });
 
-test("offering evidence keeps FULL under review and future projections preliminary", () => {
+test("offering evidence keeps FULL under review and ordinary future projections nonblocking", () => {
   const full = evaluateOffering({ course: "ECO 113", section: "A", source: "verified-offering" }, { academicYear: "2026-2027", termKey: "Fall" }, bundle.indexes.offeringByTerm, bundle, { traceId: "fixture" });
   assert.equal(full.status, "REVIEW_REQUIRED");
   assert.equal(full.offeringEvidence.enrollmentState, "FULL");
   const projected = evaluateOffering({ course: "ECO 213", source: "projected-offering" }, { academicYear: "2027-2028", termKey: "Fall" }, bundle.indexes.offeringByTerm, bundle, { traceId: "fixture" });
-  assert.equal(projected.status, "PRELIMINARY");
+  assert.equal(projected.status, "ALLOW");
+  assert.equal(projected.reasonCode, "FUTURE_SCHEDULE_PLANNING_PROJECTION");
 });
 
 test("term capacity is hard while a heavier Economics load is only a soft warning", () => {

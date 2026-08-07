@@ -172,14 +172,21 @@ test("explicit evidence facts stay scoped while broad fallback remains review-on
   assert.ok(fallback.decisions.every(decision => decision.status === "REVIEW_REQUIRED"));
 });
 
-test("catalog applicability never treats inferred entry year as exact authority", () => {
+test("catalog applicability always applies the owner-designated flexible set and preserves incoming metadata", () => {
   const ambiguous = resolveCatalogApplicability({ entryCatalogYear: "2025-2026", currentCatalogYear: "2026-2027", availableCatalogYears: ["2025-2026"] });
-  assert.equal(ambiguous.status, "AMBIGUOUS");
-  assert.equal(ambiguous.governingMajorCatalogYear, null);
-  assert.deepEqual(ambiguous.candidateCatalogYears, ["2025-2026", "2026-2027"]);
+  assert.equal(ambiguous.status, "OWNER_DESIGNATED_REQUIREMENTS_MATCH_INCOMING_CATALOG");
+  assert.equal(ambiguous.governingMajorCatalogYear, "2025-2026");
+  assert.deepEqual(ambiguous.candidateCatalogYears, ["2025-2026"]);
+  assert.equal(ambiguous.advisorAction, null);
+  assert.equal(ambiguous.advisorNotice, null);
   const exact = resolveCatalogApplicability({ majorDeclarationCatalogYear: "2025-2026", entryCatalogYear: "2024-2025", availableCatalogYears: ["2025-2026"] });
-  assert.equal(exact.status, "EXACT");
+  assert.equal(exact.status, "OWNER_DESIGNATED_REQUIREMENTS_SAC_PETITION_NOTICE");
   assert.equal(exact.governingMajorCatalogYear, "2025-2026");
+  assert.equal(exact.incomingCatalogYear, "2024-2025");
+  assert.equal(exact.advisorNotice.reasonCode, "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE");
   const unavailable = resolveCatalogApplicability({ majorDeclarationCatalogYear: "2026-2027", availableCatalogYears: ["2025-2026"] });
-  assert.equal(unavailable.status, "UNAVAILABLE");
+  assert.equal(unavailable.status, "OWNER_DESIGNATED_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
+  assert.equal(unavailable.requestedUnavailableCatalogYear, "2026-2027");
+  assert.equal(unavailable.appliedMajorCatalogYear, "2025-2026");
+  assert.equal(unavailable.advisorNotice.reasonCode, "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
 });

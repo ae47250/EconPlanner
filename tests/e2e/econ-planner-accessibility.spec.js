@@ -6,6 +6,12 @@ const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "mobile", width: 390, height: 844 }
 ];
+const FOLLOWUP_NOTICE_MESSAGES = [
+  "This plan assumes you will have senior standing in your final year so you can take ECO 461. Please check this with your advisor as you get closer to that year.",
+  "Courses later in your plan are best estimates because those schedules have not been published yet. Use this plan as a guide and update it with your advisor when new schedules become available.",
+  "This plan uses the department’s current, more flexible Economics major requirements (2025–2026) instead of the student’s incoming catalog requirements (2024–2025). Please help the student submit the routine SAC petition so the newer requirements are recorded for the degree audit. The department treats this petition as a formality.",
+  "This plan uses the department’s current, more flexible Economics major requirements (2025–2026). The student’s incoming catalog year is not known, so the advisor should confirm it for degree-audit records."
+];
 
 async function resetPlanner(page, viewport) {
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -161,7 +167,16 @@ for (const viewport of VIEWPORTS) {
       await resetPlanner(page, viewport);
       await page.route("**/api/majors/map", async route => {
         await new Promise(resolve => setTimeout(resolve, 300));
-        await route.continue();
+        const response = await route.fetch();
+        const data = await response.json();
+        data.catalog = data.catalog || {};
+        data.catalog.advisorAttention = FOLLOWUP_NOTICE_MESSAGES.map((message, index) => ({
+          code: `CP4B_B_ACCESSIBILITY_NOTICE_${index + 1}`,
+          title: "Planning information",
+          severity: "info",
+          message
+        }));
+        await route.fulfill({ response, json: data });
       });
       await generatePlans(page);
 
@@ -169,6 +184,9 @@ for (const viewport of VIEWPORTS) {
       const advisorAttention = page.locator(".advisor-attention");
       await expect(advisorAttention.getByRole("heading", { name: "Advisor Attention" })).toBeVisible();
       await expect(advisorAttention).toHaveAttribute("aria-live", "polite");
+      for (const message of FOLLOWUP_NOTICE_MESSAGES) {
+        await expect(advisorAttention.getByText(message, { exact: true })).toBeVisible();
+      }
       await scanWcagAa(page, `${viewport.name}-plan-comparison`);
       await scanWcagAa(page, `${viewport.name}-advisor-warnings`);
 

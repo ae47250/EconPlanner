@@ -1,0 +1,40 @@
+{
+  "activeRuntimeBundle": {
+    "bundleVersion": "econ-2025-2026.1",
+    "contentHash": "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7",
+    "mappingPath": "active.json"
+  },
+  "activeRuntimeMappingChanged": false,
+  "latestAuthoritativePublishedCatalogYear": "2025-2026",
+  "program": "ECONOMICS",
+  "releases": [
+    {
+      "activationStatus": "PENDING_OWNER_APPROVAL",
+      "bundleVersion": "econ-catalog-2023-2024.1",
+      "catalogYear": "2023-2024",
+      "contentHash": "sha256:d03b85e6c4a59e84627d20d9aa2c169bbb6a3a33a6bead38d656bb77d2737e91",
+      "publicationStatus": "AUTHORITATIVE_PUBLISHED",
+      "releasePath": "releases/econ-catalog-2023-2024.1/bundle.json"
+    },
+    {
+      "activationStatus": "PENDING_OWNER_APPROVAL",
+      "bundleVersion": "econ-catalog-2024-2025.1",
+      "catalogYear": "2024-2025",
+      "contentHash": "sha256:a51d46da65f84acd98c960e83e3a7a3ef78efc8156f48456641130f2aa47c60f",
+      "publicationStatus": "AUTHORITATIVE_PUBLISHED",
+      "releasePath": "releases/econ-catalog-2024-2025.1/bundle.json"
+    },
+    {
+      "activationStatus": "PENDING_OWNER_APPROVAL",
+      "bundleVersion": "econ-catalog-2025-2026.2",
+      "catalogYear": "2025-2026",
+      "contentHash": "sha256:eedc9610b75a312809d9fc0aabe794165db5ea2198b73c718281f047a36a27ce",
+      "publicationStatus": "AUTHORITATIVE_PUBLISHED",
+      "releasePath": "releases/econ-catalog-2025-2026.2/bundle.json"
+    }
+  ],
+  "schemaVersion": "1.0.0",
+  "unavailableCatalogYears": [
+    "2026-2027"
+  ]
+}

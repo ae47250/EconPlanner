@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "records": [
+    {
+      "ruleId": "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK",
+      "policyVersion": "econ-catalog-flexibility.1",
+      "status": "OWNER_APPROVED",
+      "family": "CATALOG_APPLICABILITY",
+      "classification": "CONDITIONAL_PLANNING",
+      "authority": {
+        "kind": "ECONOMICS_DEPARTMENT_DOMAIN_POLICY",
+        "owner": "Economics Department",
+        "boundary": "ECONOMICS_MAJOR_REQUIREMENTS_ONLY",
+        "excluded": [
+          "COLLEGE_WIDE_GRADUATION",
+          "COLLEGE_WIDE_RESIDENCY",
+          "GENERAL_EDUCATION",
+          "COLLEGE_WIDE_GRADE_RULES",
+          "INSTITUTION_WIDE_REQUIREMENTS"
+        ]
+      },
+      "confirmation": {
+        "date": "2026-08-06",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "source": "Explicit owner confirmation in the CP4b-B Codex task"
+      },
+      "sourceRefs": ["OWNER-CONFIRMATION-CP4B-B#CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK"],
+      "effective": {"from": "2026-08-06", "through": null},
+      "effect": {
+        "unknownDeclarationYear": "USE_LATEST_AUTHORITATIVE_PUBLISHED_ECONOMICS_CATALOG_CONDITIONALLY",
+        "knownOlderCatalog": "EVALUATE_ORIGINAL_AND_LATEST_FLEXIBLE_PRESERVE_BOTH",
+        "missingRequestedLatestCatalog": "USE_LATEST_PUBLISHED_FALLBACK_WITH_AVAILABILITY_CONDITION",
+        "readinessWhenOtherwiseComplete": "READY_WITH_CONDITIONS",
+        "materialConflict": "ADVISOR_ACTION_REQUIRED",
+        "formalCatalogChangeImplied": false,
+        "crossCatalogMixingPermitted": false,
+        "stricterLatestRuleMayBeSilentlyApplied": false
+      },
+      "knownFlexibleDifferences": [
+        "PSY_217_STATISTICS_OPTION",
+        "BUSN_323_MONEY_FINANCE_OPTION",
+        "ECONOMICS_COMPREHENSIVE_EVALUATION_REMOVED"
+      ],
+      "noticeReasonCode": "LATEST_FLEXIBLE_MAJOR_RULES_APPLIED",
+      "responsibleAuthority": "ECONOMICS_DEPARTMENT_OR_AUTHORIZED_ADVISOR"
+    }
+  ]
+}

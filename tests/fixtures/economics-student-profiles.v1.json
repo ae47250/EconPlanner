@@ -38,17 +38,13 @@
       "student": {
         "academicStanding": "freshman",
         "planningPace": "one_year_early",
-        "projectedSeniorStandingConfirmation": {
-          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
-          "academicYear": "2028/2029"
-        },
         "courses": []
       },
       "coverage": ["no_completed_courses", "one_year_early_request"],
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 1 },
         "requiredDisplayedStrategies": ["plan-c2"],
-        "expectedWarningsContaining": ["projected placement"],
+        "expectedWarningsContaining": [],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
     },

@@ -1,6 +1,6 @@
 import fc from "fast-check";
 
-export const ECONOMICS_GENERATOR_VERSION = 2;
+export const ECONOMICS_GENERATOR_VERSION = 3;
 
 export const ECONOMICS_GENERATOR_AXES = Object.freeze({
   standing: Object.freeze(["freshman", "sophomore", "junior", "senior"]),
@@ -319,17 +319,6 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
     ? academicYearStart + axes.graduationHorizon
     : academicYearStart + regularRemainingYears;
   const transferEntryYearStart = academicYearStart - 1;
-  const compressedTransfer = transfer && expectedGraduationYear < transferEntryYearStart + 4;
-  const requiresSeniorConfirmation = regularEarly || compressedTransfer;
-  const projectedSeniorStandingConfirmation = requiresSeniorConfirmation
-    && axes.seniorStandingConfirmationState !== "missing"
-    ? {
-        status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
-        academicYear: axes.seniorStandingConfirmationState === "stale"
-          ? `${expectedGraduationYear - 2}/${expectedGraduationYear - 1}`
-          : `${expectedGraduationYear - 1}/${expectedGraduationYear}`
-      }
-    : null;
   const profile = {
     seed: normalizedSeed,
     profileId: profileIdentifier(normalizedSeed, axes),
@@ -343,7 +332,6 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
       planDate: axes.planDate,
       isTransferStudent: transfer,
       expectedGraduationYear,
-      ...(projectedSeniorStandingConfirmation ? { projectedSeniorStandingConfirmation } : {}),
       ...(transfer ? {
         transferExpectedGraduationYear: expectedGraduationYear,
         transferEntryAcademicYear: `${transferEntryYearStart}-${transferEntryYearStart + 1}`

@@ -1,0 +1,20 @@
+Source title: Hanover College Academic Catalog 2023-2024
+Source URL: https://www.hanover.edu/wp-content/uploads/2023/08/Academic_Catalog_23_24.pdf
+Retrieved: 2026-08-06
+Authority: Hanover College official published academic catalog
+
+[ECONOMICS-MAJOR]
+Locator: printed pages 88-89, PDF pages 91-92, section "Economics"
+Evidence transcription:
+Major requirements: ECO 113, ECO 114, ECO 213, ECO 214; one Statistics course from ECO 257 or MAT 217; ECO 321; ECO 461; and four additional Economics courses, with no more than one at the 100 level. The cognate is MAT 113 or MAT 121. A passing grade on the comprehensive evaluation is required.
+
+[ECONOMICS-PREREQUISITES]
+Locator: printed pages 89-90, PDF pages 92-93, Economics course descriptions
+Evidence transcription:
+ECO 213 requires ECO 113 and MAT 113, MAT 121, or ready-for-calculus placement. ECO 214 requires ECO 114 and MAT 113, MAT 121, or ready-for-calculus placement. ECO 257 requires ECO 113 or ECO 114. ECO 321 requires ECO 113 and ECO 114. ECO 461 requires ECO 213, ECO 214, and ECO 257 or MAT 217.
+
+[COLLEGE-WIDE-BOUNDARY]
+Locator: printed pages 6-7, PDF pages 9-10, degree requirements
+Evidence transcription:
+College-wide major residency, major GPA, D-range, and comprehensive-evaluation rules are controlled by the College catalog. They are recorded as authority boundaries here and are not changed by the Economics Department flexible-major fallback.
+

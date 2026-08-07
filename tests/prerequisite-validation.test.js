@@ -74,7 +74,7 @@ test("completed target courses are retained with a historical-evidence review", 
   assert.equal(result.status, "REVIEW_REQUIRED");
   assert.deepEqual(result.conditionalApprovals, []);
   assert.deepEqual(result.issues, []);
-  assert.equal(result.reviewFindings[0].reasonCode, "COURSE_HISTORY_EVIDENCE_FACT_REQUIRED");
+  assert.equal(result.reviewFindings[0].reasonCode, "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW");
 });
 
 test("ECO 214 supports the same MAT 121 concurrency rule but not concurrent ECO 114", () => {

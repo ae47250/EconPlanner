@@ -1,0 +1,99 @@
+# CP4b-B invalid-input recovery report
+
+Baseline invalid profiles: 93. One-answer recoverable: 93. Several-answer recoverable: 0. Truly invalid: 0. Remain blocked pending answers: 93.
+
+| Profile | Classification | Blocking fields | Questions | Conditional planning | Advisor action | Blocked |
+|---|---|---|---|---|---|---|
+| fictional-econ-20260803-116fe842 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260803-355bb41c | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260803-8fe807c5 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260803-ad266c41 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260803-b0d7b654 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260803-c59385ca | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260803-d2e1518b | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260803-e1eb5dd8 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260803-eba5a7c6 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260803-f0ced3c8 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260804-371b6efc | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260804-78d97f0d | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260804-78df3c2d | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260804-7cf91bd6 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260804-81b26392 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260804-8afa94f8 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260804-a00e312c | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260804-c7b158f7 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260804-cf42e0bd | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20260804-d13baf94 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260804-e7935c1e | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260804-eb6b200d | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20260805-0152877d | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260805-162b11f0 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20260805-38d7a09f | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260805-60870ac0 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260805-8badcdce | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20260805-a68743e9 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20260805-b074fc6a | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260805-ded3dd5a | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20260806-01d66233 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260806-27d2fb65 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260806-5b4f9a60 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260806-5b693a0c | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260806-6094e684 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20260806-6d69063e | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20260806-77b9bb4b | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260806-901adb94 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260806-be2da1a4 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20260806-fba93fa9 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20260806-fd97d282 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270117-26f5072f | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270117-2a8c4e3f | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20270117-3c7e5ecd | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270117-3e75a34b | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270117-4851f46d | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270117-55ac54fc | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270117-6a54628e | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20270117-7616504c | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270117-7befffd3 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270117-97b06ee7 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270117-a4c82a38 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270117-d41f6b06 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270117-e67f4eab | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20270117-fc3f37b8 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270219-150f09fd | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270219-21c1d2e4 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20270219-232bcdee | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270219-2ee8884f | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270219-40f7eb7f | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270219-42bf31a8 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270219-4ce9be1f | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20270219-545e70bd | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20270219-66207d06 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270219-bd3ea292 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270219-fedbd6cf | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20270323-1c262010 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270323-2e4f00f2 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270323-50824b32 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270323-572ff8b0 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270323-5889e8b1 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270323-7786d9e4 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270323-922da71b | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270323-a0caa3cc | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270323-d8aed3ec | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270323-e3e54bdd | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20270323-e8adf849 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |
+| fictional-econ-20270323-fe3477dd | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270429-084bbda0 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270429-0c63f9f1 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270429-184f4ab6 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270429-1f048290 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270429-24d0d759 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270429-377801f0 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20270429-3ec03697 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270429-60c19237 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270429-7c37af9c | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270429-94ca2b10 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2026/2027? | false | false | true |
+| fictional-econ-20270429-a0bfe9a7 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270429-c2f0bbf4 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2028/2029? | false | false | true |
+| fictional-econ-20270429-d8cdc73f | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270429-edfc0fb2 | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by 2027/2028? | false | false | true |
+| fictional-econ-20270429-fdbdf2aa | RECOVERABLE_MISSING_INFORMATION | projectedSeniorStandingConfirmation | Will the Registrar or your advisor confirm senior standing by the compressed plan's senior year? | false | false | true |

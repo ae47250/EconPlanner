@@ -118,26 +118,25 @@ test("dated freshman planning returns only the selected standard horizon", () =>
   assert.ok(result.candidateOutcomes.every(outcome => outcome.candidatePool?.retainedDistinctSchedules >= 1));
   assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(result.plans.find(plan => !plan.isEarlyGraduation).terms.some(term => (
-    term.term === "2029/2030 term to be confirmed" && term.termKey === "TBC"
+    term.academicYear === "2029/2030"
+    && ["Fall", "Winter", "Spring/May"].includes(term.termKey)
+    && term.publicationStatus === "PLANNING_PROJECTION"
   )));
+  assert.ok(result.plans.every(plan => plan.terms.every(term => term.termKey !== "TBC")));
   assert.equal(result.plans[0].terms[0].displayTerm, "Winter");
   assert.equal(result.plans[0].terms[0].academicYear, "2026/2027");
   assert.ok(result.plans.every(plan => plan.terms.every(term => !term.isSummer)));
   assert.ok(result.plans.every(plan => plan.terms.every(term => (
-    term.termKey === "TBC" || term.courses.length <= (term.term.startsWith("Spring/May") ? 1 : 4)
+    term.courses.length <= (term.term.startsWith("Spring/May") ? 1 : 4)
   ))));
 
 });
 
-test("confirmed one-year-early planning returns only the shortened horizon", () => {
+test("one-year-early planning needs no confirmation and returns only the shortened horizon", () => {
   const student = {
     academicStanding: "freshman",
     planningPace: "one_year_early",
     planCreationDate: "2026-09-01",
-    projectedSeniorStandingConfirmation: {
-      status: "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
-      academicYear: "2028/2029"
-    },
     courses: []
   };
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
@@ -149,6 +148,7 @@ test("confirmed one-year-early planning returns only the shortened horizon", () 
   assert.equal(result.plans[0].isEarlyGraduation, true);
   assert.equal(result.plans[0].planningContext.expectedGraduationTerm, "Spring/May 2029");
   assert.equal(result.plans[0].feasibilityStatus, "PRELIMINARY_ONLY");
+  assert.equal(result.plans[0].studentNotices.filter(notice => notice.code === "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED").length, 1);
 });
 
 test("a proven prerequisite constraint records a validated distribution exception", () => {
@@ -267,7 +267,7 @@ test("standing-specific candidate limits show only distinct feasible results", (
   )));
 });
 
-test("named courses are not placed from a different academic year's schedule", () => {
+test("unpublished academic years use exact-term planning projections without borrowing published evidence", () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2027-09-01",
@@ -277,11 +277,12 @@ test("named courses are not placed from a different academic year's schedule", (
   const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
 
   assert.ok(result.plans.every(plan => plan.terms.every(term => (
-    term.termKey === "TBC"
-      && term.isPlaceholder === true
-      && term.courses.every(course => course.termToBeConfirmed === true && course.projectedTerm)
+    ["Fall", "Winter", "Spring", "May", "Spring/May"].includes(term.termKey)
+      && term.publicationStatus === "PLANNING_PROJECTION"
+      && term.courses.every(course => course.scheduleProvenance === "PLANNING_PROJECTION")
   ))));
-  assert.ok(result.plans.every(plan => plan.feasibilityStatus === "PRELIMINARY_ONLY"));
+  assert.ok(result.plans.every(plan => plan.feasibilityStatus === "VERIFIED_FEASIBLE"));
+  assert.ok(result.plans.every(plan => plan.studentNotices.filter(notice => notice.code === "FUTURE_SCHEDULE_PROJECTION_NOTICE").length === 1));
 });
 
 test("generated-plan validation rejects a fabricated course", () => {
@@ -835,6 +836,7 @@ test("verified schedule facts and the graduation horizon are authoritative", () 
   assert.ok(horizonValidation.errors.some(error => /authoritative graduation planning horizon/.test(error)));
   assert.ok(plan.terms.some(term => (
     term.academicYear === `${result.context.expectedGraduationYear - 1}/${result.context.expectedGraduationYear}`
-    && term.termKey === "TBC"
-  )), "the final academic year must remain present as a term-to-be-confirmed control");
+    && ["Fall", "Winter", "Spring/May"].includes(term.termKey)
+    && term.publicationStatus === "PLANNING_PROJECTION"
+  )), "the final academic year must remain present with exact projected terms");
 });

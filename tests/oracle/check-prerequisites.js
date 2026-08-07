@@ -405,15 +405,14 @@ function seniorEligible(entry, student, expectedContext) {
     && Number.isInteger(entryAcademicYearStart);
   const reachesFourthCollegeYear = hasCanonicalEntryYear
     && year.startYear - entryAcademicYearStart >= 3;
-  const confirmation = expectedContext?.projectedSeniorStandingConfirmation;
-  const confirmedAcademicYear = confirmation?.status === "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION"
-    ? String(confirmation.academicYear || "")
-    : null;
-  const matchesConfirmedAcademicYear = confirmedAcademicYear === `${year.startYear}/${year.endYear}`
-    && confirmedAcademicYear === expectedContext?.projectedSeniorStandingAcademicYear;
+  const isAcceleratedPlan = expectedContext?.acceleratedPlanAssumesSeniorStanding === true
+    || sameText(expectedContext?.planningPace, "one_year_early");
+  const matchesAcceleratedFinalYear = isAcceleratedPlan
+    && year.endYear === Number(expectedContext?.expectedGraduationYear)
+    && `${year.startYear}/${year.endYear}` === expectedContext?.projectedSeniorStandingAcademicYear;
 
   if (hasCanonicalEntryYear) {
-    return reachesFourthCollegeYear || matchesConfirmedAcademicYear;
+    return reachesFourthCollegeYear || matchesAcceleratedFinalYear;
   }
 
   // Older independent fixtures do not contain the v4 horizon fields. Their

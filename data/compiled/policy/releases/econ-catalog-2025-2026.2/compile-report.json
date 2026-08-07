@@ -1,0 +1,31 @@
+{
+  "activationStatus": "PENDING_OWNER_APPROVAL",
+  "activeRuntimeMappingChanged": false,
+  "bundleVersion": "econ-catalog-2025-2026.2",
+  "contentHash": "sha256:eedc9610b75a312809d9fc0aabe794165db5ea2198b73c718281f047a36a27ce",
+  "determinism": {
+    "canonicalFormat": "UTF-8 JSON with canonical key and ID-array ordering",
+    "requiredCleanCompilations": 3
+  },
+  "inputs": [
+    "policy/catalogs/economics-2025-2026.json",
+    "policy/rules/catalog-flexibility.json",
+    "policy/provenance/catalog-sources.json"
+  ],
+  "previousActiveBundle": {
+    "bundleVersion": "econ-2025-2026.1",
+    "contentHash": "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7"
+  },
+  "schemaVersion": "1.0.0",
+  "validation": {
+    "collegeWideBoundary": "PASS",
+    "eco257StatisticsOnly": "PASS",
+    "historicalDifferences": "PASS",
+    "manifest": "PASS",
+    "requiredRuleFamilies": "PASS",
+    "sourceAnchors": "PASS",
+    "sourceDigests": "PASS",
+    "sourceReferences": "PASS",
+    "unavailableCatalogInvented": false
+  }
+}

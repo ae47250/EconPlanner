@@ -376,7 +376,18 @@ test("equivalencies, provisional evidence, waivers, and substitutions remain exp
 
 test("production agreements and disagreements are explicit and bounded", () => {
   const disagreements = evaluations.filter(resultsDisagree);
-  assert.equal(disagreements.length, 0);
+  assert.equal(
+    disagreements.length,
+    0,
+    JSON.stringify(disagreements.map(evaluation => ({
+      caseId: evaluation.definition.caseId,
+      oracleStatus: evaluation.oracle.status,
+      productionStatus: evaluation.production.status,
+      productionStrictComplete: evaluation.production.strictComplete,
+      productionOptimisticComplete: evaluation.production.optimisticComplete,
+      productionReviewCodes: evaluation.production.mapping.reviewFindings?.map(item => item.code) || []
+    })))
+  );
 
   for (const evaluation of disagreements) {
     assert.ok(allowedDisagreement(evaluation), JSON.stringify({

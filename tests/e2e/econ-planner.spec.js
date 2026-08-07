@@ -250,6 +250,28 @@ test("planning timeline is visually and semantically grouped", async ({ page }) 
   }
 });
 
+test("optional declaration catalog intake is accessible, responsive, and submitted unchanged", async ({ page }) => {
+  const catalogSelect = page.getByLabel("When did you declare the Economics major? (optional)");
+  await expect(catalogSelect).toBeVisible();
+  await catalogSelect.selectOption("I_DO_NOT_KNOW");
+  await expect(catalogSelect).toHaveValue("I_DO_NOT_KNOW");
+  await expect(page.getByText(/uses the department’s owner-designated 2025–2026 flexible requirements/)).toBeVisible();
+
+  await page.setViewportSize({width: 320, height: 700});
+  const bounds = await catalogSelect.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    return {left: rect.left, right: rect.right, viewport: document.documentElement.clientWidth, page: document.documentElement.scrollWidth};
+  });
+  expect(bounds.left).toBeGreaterThanOrEqual(0);
+  expect(bounds.right).toBeLessThanOrEqual(bounds.viewport);
+  expect(bounds.page).toBe(bounds.viewport);
+
+  const generation = page.waitForRequest(request => isGenerationRequest(request));
+  await page.getByRole("button", {name: "Generate My Plan"}).click();
+  const request = await generation;
+  expect(requestBody(request).student.majorDeclarationCatalogYear).toBe("I_DO_NOT_KNOW");
+});
+
 test("planned non-major courses have their own card before course selection", async ({ page }) => {
   const nonMajorCard = page.locator(".non-major-intake-card");
   const courseCard = page.locator(".course-intake-card");
@@ -354,30 +376,20 @@ test("standing, term, graduation, course status, and prerequisite controls stay 
   await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
 });
 
-test("planning pace requires and resets exact senior-standing confirmation", async ({ page }) => {
+test("accelerated planning assumes final-year senior standing without a confirmation control", async ({ page }) => {
   await setPlanDate(page, "2026-07-31");
   const pace = page.getByRole("group", { name: "How quickly do you want this plan to finish?" });
   await expect(pace.getByRole("button", { name: "Standard pace" })).toHaveAttribute("aria-pressed", "true");
 
   await pace.getByRole("button", { name: "One year early" }).click();
-  const confirmation = page.getByRole("group", {
-    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2029?"
-  });
-  await expect(confirmation).toBeVisible();
-  await confirmation.getByRole("button", { name: "Yes, it is confirmed" }).click();
-  await expect(confirmation.getByRole("button", { name: "Yes, it is confirmed" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText(/The early option assumes senior standing in the final planning year/)).toBeVisible();
+  await expect(page.getByText(/Has the Registrar or your advisor confirmed/)).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Yes, it is confirmed" })).toHaveCount(0);
 
   await setStanding(page, "Sophomore");
-  const updatedConfirmation = page.getByRole("group", {
-    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2028?"
-  });
-  await expect(updatedConfirmation.getByRole("button", { name: "Yes, it is confirmed" })).toHaveAttribute("aria-pressed", "false");
-
-  await updatedConfirmation.getByRole("button", { name: "Yes, it is confirmed" }).click();
   await setPlanDate(page, "2026-09-01");
-  await expect(page.getByRole("group", {
-    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2028?"
-  }).getByRole("button", { name: "Yes, it is confirmed" })).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByText(/Has the Registrar or your advisor confirmed/)).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Yes, it is confirmed" })).toHaveCount(0);
 
   await pace.getByRole("button", { name: "One extra year" }).click();
   await expect(page.getByText(/Has the Registrar or your advisor confirmed/)).toHaveCount(0);
@@ -400,11 +412,8 @@ test("transfer students choose graduation and Hanover entry years instead of cla
 
   await page.getByRole("button", { name: "Spring/May 2027" }).click();
   await page.getByLabel("When did you first enroll at Hanover?").selectOption("2026-2027");
-  const compressedConfirmation = page.getByRole("group", {
-    name: "Has the Registrar or your advisor confirmed that you will have senior standing by Winter 2027?"
-  });
-  await expect(compressedConfirmation).toBeVisible();
-  await compressedConfirmation.getByRole("button", { name: "Yes, it is confirmed" }).click();
+  await expect(page.getByText(/Has the Registrar or your advisor confirmed/)).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Yes, it is confirmed" })).toHaveCount(0);
 
   await page.getByRole("button", { name: "Spring/May 2030" }).click();
   await page.getByLabel("When did you first enroll at Hanover?").selectOption("2025-2026");
@@ -455,43 +464,26 @@ test("generation is single-flight and distinct plans support compare, history, r
   expect(displayedTermCounts[0]).toBeGreaterThan(0);
 
   for (const card of await cards.all()) {
-    const exactRows = card.locator("tbody tr").filter({ hasNotText: "Term to be confirmed" });
-    for (const row of await exactRows.allInnerTexts()) {
+    for (const row of await card.locator("tbody tr").allInnerTexts()) {
       expect(row.includes("ECO 213") && row.includes("ECO 214")).toBe(false);
     }
     await expect(card.getByText("ECO 461").first()).toBeVisible();
     await expect(card.getByRole("cell", { name: "Winter", exact: true }).last()).toBeVisible();
-    await expect(card.getByText(/term to be confirmed/i).first()).toBeVisible();
+    await expect(card.getByText(/term to be confirmed/i)).toHaveCount(0);
   }
 
   const advisorAttention = page.locator(".advisor-attention");
   await expect(advisorAttention.getByRole("heading", { name: "Graduation planning assumptions" })).toHaveCount(1);
   await expect(advisorAttention.getByRole("heading", { name: "Published 2026/2027 schedule checks" })).toBeVisible();
-  await expect(advisorAttention.getByRole("heading", { name: "Projected placement" })).toBeVisible();
+  await expect(advisorAttention.getByRole("heading", { name: "Projected placement" })).toHaveCount(0);
   await expect(advisorAttention.getByText("Graduation planning assumption", { exact: true })).toHaveCount(0);
-  await expect(advisorAttention.getByText(/ECO 213 and ECO 214 tend to be offered in different terms/)).toBeVisible();
-  const projectedPlacementTerms = advisorAttention.locator(".projected-placement-list li");
-  await expect(projectedPlacementTerms.first()).toBeVisible();
-  const projectedTerms = await projectedPlacementTerms.evaluateAll(items => items.map(item => item.dataset.term));
-  expect(new Set(projectedTerms).size).toBe(projectedTerms.length);
-  for (const projectedTerm of projectedTerms) {
-    expect(projectedTerm).toMatch(/^(?:(?:Fall|Winter|Spring\/May|May|Summer) \d{4}|\d{4}\/\d{4} term to be confirmed)$/);
-  }
-  const projectedTermSortKey = term => {
-    const tbc = term.match(/^(\d{4})\/\d{4} term to be confirmed$/);
-    if (tbc) return Number(tbc[1]) * 10 + 4;
-    const [, season, year] = term.match(/^(Fall|Winter|Spring\/May|May|Summer) (\d{4})$/);
-    const seasonOrder = { Winter: 0, "Spring/May": 1, May: 1, Summer: 2, Fall: 3 };
-    return Number(year) * 10 + seasonOrder[season];
-  };
-  expect(projectedTerms).toEqual(
-    [...projectedTerms].sort((left, right) => projectedTermSortKey(left) - projectedTermSortKey(right))
-  );
+  await expect(advisorAttention.getByText(/ECO 213 and ECO 214 tend to be offered in different terms/)).toHaveCount(0);
+  await expect(advisorAttention.getByText(/Courses later in your plan are best estimates/)).toHaveCount(1);
   const selectedCompareCard = page.locator("article.comparison-plan-card.is-selected");
   await expect(selectedCompareCard).toHaveCount(1);
   const selectedComparePlanId = await selectedCompareCard.getAttribute("data-plan-id");
   await expect(advisorAttention).toHaveAttribute("data-plan-id", selectedComparePlanId);
-  await expect(advisorAttention.getByText(/Warnings shown for Plan/)).toBeVisible();
+  await expect(advisorAttention.getByText(/Information and warnings shown for Plan/)).toBeVisible();
   const selectedAvailability = page.locator(".schedule-availability");
   await expect(selectedAvailability.getByText("ECO 114", { exact: false })).toHaveCount(3);
   await expect(selectedAvailability.getByText("ECO 213", { exact: false })).toHaveCount(0);
@@ -523,7 +515,7 @@ test("generation is single-flight and distinct plans support compare, history, r
 
   await page.getByRole("button", { name: "Remove ECO 114" }).click();
   await expect(page.locator(".plan-edit-status")).toContainText("That plan change cannot be saved");
-  await expect(page.locator(".plan-edit-status")).toContainText(/ECO 214 is missing prerequisites: ECO 114|Requirement eco-114 remains unscheduled|term to be confirmed exceeds the total course limit/);
+  await expect(page.locator(".plan-edit-status")).toContainText(/ECO 214 is missing prerequisites: ECO 114|Requirement eco-114 remains unscheduled/);
   await expect(page.getByRole("button", { name: "Remove ECO 114" })).toBeVisible();
   await page.reload();
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
