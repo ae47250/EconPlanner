@@ -11,7 +11,7 @@
       "executionMode": "rendered-html",
       "selectedPlanId": "plan-1",
       "student": {
-        "displayName": "Fictional Long Layout Student",
+        "displayName": "Fictional Zoë & José — LongValueABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
         "academicStanding": "freshman",
         "planCreationDate": "2026-07-30",
         "courses": []
@@ -42,6 +42,11 @@
         "minimumAdvisorNotices": 1,
         "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
         "minimumApprovals": 0,
+        "minimumHtmlBytes": 18000,
+        "minimumPdfPages": 3,
+        "requiredPlanType": "standard",
+        "requiredPlanningPace": "standard",
+        "requiredHtmlText": ["Fictional Zoë & José", "Plan warnings", "Advisor attention"],
         "requiredAvailabilityStates": ["open", "waitlisted"],
         "requiredCourseRoles": [
           { "course": "ECO 257", "role": "statistics" }
@@ -69,6 +74,89 @@
         "minimumCourses": 8,
         "minimumWarnings": 8,
         "minimumApprovals": 1,
+        "requiredAvailabilityStates": ["open"],
+        "requiredCourseRoles": []
+      }
+    },
+    {
+      "id": "accelerated-one-year-early-plan",
+      "description": "Fictional accelerated plan that exercises the actual one-year-early planning and senior-standing notice path.",
+      "executionMode": "report-route",
+      "selectedPlanId": "plan-c2",
+      "student": {
+        "displayName": "Fictional Accelerated Student",
+        "academicStanding": "junior",
+        "planningPace": "one_year_early",
+        "planCreationDate": "2026-07-30",
+        "projectedSeniorStandingConfirmation": {
+          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          "academicYear": "2026/2027"
+        },
+        "courses": [
+          { "code": "ECO 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 114", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 214", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "MAT 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "MAT 217", "status": "completed", "units": 1, "source": "manual_code" }
+        ]
+      },
+      "expectations": {
+        "minimumAcademicYears": 1,
+        "minimumCourses": 7,
+        "minimumWarnings": 0,
+        "minimumAdvisorNotices": 0,
+        "minimumApprovals": 0,
+        "minimumPdfPages": 2,
+        "requiredPlanType": "standard",
+        "requiredPlanningPace": "one_year_early",
+        "requiredHtmlText": ["One year early", "senior standing", "Fictional Accelerated Student"],
+        "requiredAvailabilityStates": ["open"],
+        "requiredCourseRoles": []
+      }
+    },
+    {
+      "id": "transfer-one-year-plan",
+      "description": "Fictional transfer student with a one-year horizon and completed transfer-supported coursework.",
+      "executionMode": "report-route",
+      "selectedPlanId": "plan-1",
+      "student": {
+        "displayName": "Fictional Transfer Student",
+        "isTransferStudent": true,
+        "transferExpectedGraduationYear": "2027",
+        "transferEntryAcademicYear": "2025-2026",
+        "planCreationDate": "2026-07-30",
+        "projectedSeniorStandingConfirmation": {
+          "status": "STUDENT_REPORTED_REGISTRAR_OR_ADVISOR_CONFIRMATION",
+          "academicYear": "2026/2027"
+        },
+        "courses": [
+          { "code": "ECO 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 114", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "MAT 113", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 213", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 214", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "MAT 217", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "BUSN 323", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 161", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 260", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "PHI 234", "status": "completed", "units": 1, "source": "manual_code" },
+          { "code": "ECO 321", "status": "completed", "units": 1, "source": "manual_code" }
+        ]
+      },
+      "expectations": {
+        "minimumAcademicYears": 1,
+        "minimumCourses": 1,
+        "minimumWarnings": 0,
+        "minimumAdvisorNotices": 0,
+        "minimumApprovals": 0,
+        "minimumPdfPages": 1,
+        "requiredPlanType": "transfer",
+        "requiredPlanningPace": "one_year_early",
+        "requiredStudentFields": {
+          "transferEntryAcademicYear": "2025-2026",
+          "expectedGraduationTerm": "Spring/May 2027"
+        },
+        "requiredHtmlText": ["Transfer plan", "Spring/May 2027", "Fictional Transfer Student"],
         "requiredAvailabilityStates": ["open"],
         "requiredCourseRoles": []
       }
@@ -115,6 +203,10 @@
         "minimumAdvisorNotices": 1,
         "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
         "minimumApprovals": 0,
+        "minimumPdfPages": 1,
+        "requiredPlanType": "standard",
+        "requiredPlanningPace": "standard",
+        "requiredHtmlText": ["ECO 257", "Statistics requirement"],
         "requiredAvailabilityStates": [],
         "requiredCourseRoles": [
           { "course": "ECO 257", "role": "statistics" }

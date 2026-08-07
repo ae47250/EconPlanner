@@ -44,11 +44,20 @@ export async function handleEconomicsReportRequest(request, dependencies = {}) {
         code: error.code,
         status: error.status,
         correlationId: error.diagnostics?.correlationId || null,
-        upstreamStatus: error.diagnostics?.upstreamStatus || null
+        upstreamStatus: error.diagnostics?.upstreamStatus || null,
+        upstreamCode: error.diagnostics?.upstreamCode || null,
+        requestId: error.diagnostics?.requestId || null,
+        phase: error.diagnostics?.phase || null,
+        attemptCount: error.diagnostics?.attemptCount || null,
+        elapsedAdmissionMs: error.diagnostics?.elapsedAdmissionMs ?? null,
+        retryFailure: error.diagnostics?.retryFailure || null
       }));
       return Response.json(
         { error: error.message, code: error.code },
-        { status: error.status, headers: { "Cache-Control": "no-store" } }
+        {
+          status: error.status,
+          headers: { "Cache-Control": "no-store", ...error.responseHeaders }
+        }
       );
     }
     const selectedPlanInvalid = /selected Economics plan no longer passes server validation/i.test(error?.message || "");

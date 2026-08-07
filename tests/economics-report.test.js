@@ -94,6 +94,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
     fetchImpl: async (url, options) => {
       if (url.pathname === "/api/v1/pdfs") {
         assert.equal(url.href, "https://pdf-creator.example/api/v1/pdfs");
+        assert.equal(options.redirect, "error");
         assert.equal(options.headers.Authorization, `Bearer ${"a".repeat(43)}`);
         assert.equal(options.headers["x-vercel-protection-bypass"], "preview-bypass");
         submitted = JSON.parse(options.body);
@@ -112,6 +113,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
         });
       }
       assert.equal(url.href, "https://pdf-creator.example/reports/r30_00000000-0000-4000-8000-000000000001/download");
+      assert.equal(options.redirect, "error");
       assert.equal(options.headers["x-vercel-protection-bypass"], "preview-bypass");
       assert.equal(options.headers.Authorization, undefined);
       return new Response(pdf, { headers: { "content-type": "application/pdf" } });
@@ -124,7 +126,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(submitted.storeResult, true);
   assert.equal(submitted.storeHtml, true);
   assert.equal(submitted.retentionDays, 30);
-  assert.match(submitted.idempotencyKey, /^econplanner:[0-9a-f]{64}$/);
+  assert.match(submitted.idempotencyKey, /^econplanner:[A-Za-z0-9._:-]{8,128}$/);
   assert.match(submitted.html, /^<!doctype html>/i);
   assert.equal(/<script\b/i.test(submitted.html), false);
   assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
@@ -181,6 +183,78 @@ test("Economics PDF API returns stable disabled and configuration errors", async
   }), { environment: { PDF_CREATION_ENABLED: "true" } });
   assert.equal(missing.status, 503);
   assert.equal((await missing.json()).code, "PDF_CREATION_NOT_CONFIGURED");
+});
+
+test("PDF rollback flag leaves planner JSON and HTML reports available", async () => {
+  const disabledEnvironment = { PDF_CREATION_ENABLED: "false" };
+  const jsonResponse = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "json" })
+  }), { environment: disabledEnvironment });
+  const json = await jsonResponse.json();
+  assert.equal(jsonResponse.status, 200);
+  assert.equal(json.selectedPlan.id, "plan-1");
+
+  const htmlResponse = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "html" })
+  }), { environment: disabledEnvironment });
+  const html = await htmlResponse.text();
+  assert.equal(htmlResponse.status, 200);
+  assert.match(html, /data-selected-plan-id="plan-1"/);
+  assert.match(html, /Economics Major Course Plan/);
+});
+
+test("Economics PDF API returns rate limiting without retrying or logging secrets and report contents", async () => {
+  const apiKey = "qualification-api-key-".padEnd(43, "x");
+  const bypassToken = "qualification-preview-bypass";
+  const logs = [];
+  const originalConsoleError = console.error;
+  let attempts = 0;
+  console.error = value => { logs.push(String(value)); };
+  let response;
+  try {
+    response = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf" })
+    }), {
+      environment: {
+        PDF_CREATION_ENABLED: "true",
+        PDF_CREATION_API_URL: "https://pdf-creator.example",
+        PDF_CREATION_API_KEY: apiKey,
+        PDF_CREATION_BYPASS_TOKEN: bypassToken
+      },
+      fetchImpl: async () => {
+        attempts += 1;
+        return Response.json({
+          error: { code: "rate_limited", message: "Caller limit reached.", requestId: "request-rate-1" }
+        }, { status: 429, headers: { "Retry-After": "60", "X-Request-Id": "request-rate-1" } });
+      },
+      randomUUIDImpl: (() => {
+        const values = ["operation-rate-limit", "correlation-rate-limit"];
+        return () => values.shift();
+      })()
+    });
+  } finally {
+    console.error = originalConsoleError;
+  }
+
+  assert.equal(response.status, 429);
+  assert.equal(response.headers.get("retry-after"), "60");
+  const body = await response.json();
+  assert.equal(body.code, "PDF_CREATION_RATE_LIMITED");
+  assert.match(body.error, /try again in about a minute/i);
+  assert.equal(attempts, 1);
+  assert.equal(logs.length, 1);
+  assert.match(logs[0], /"upstreamCode":"rate_limited"/);
+  assert.match(logs[0], /"attemptCount":1/);
+  assert.doesNotMatch(logs[0], new RegExp(apiKey));
+  assert.doesNotMatch(logs[0], new RegExp(bypassToken));
+  assert.doesNotMatch(logs[0], new RegExp(fixture.student.displayName));
+  assert.doesNotMatch(logs[0], /<!doctype html>/i);
 });
 
 test("transfer reports use the selected graduation and Hanover entry years", async () => {
