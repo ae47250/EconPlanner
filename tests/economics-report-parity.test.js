@@ -194,14 +194,15 @@ async function changedElectiveArtifacts() {
 
 test("Task 17 keeps a non-default selected plan selected in JSON, HTML, and the mocked PDF request", async () => {
   const economics = await generateEconomics(PROJECTED_STUDENT);
-  const selectedPlan = structuredClone(economics.economicsPlans.find(plan => plan.id === "plan-2"));
+  const defaultPlanId = economics.economicsPlans[0].id;
+  const selectedPlan = structuredClone(economics.economicsPlans.find(plan => plan.id !== defaultPlanId));
   assert.ok(selectedPlan);
   const json = await reportJson(PROJECTED_STUDENT, selectedPlan);
   const html = await reportHtml(PROJECTED_STUDENT, selectedPlan);
   const pdfRequest = await reportPdf(PROJECTED_STUDENT, selectedPlan);
 
-  assert.equal(json.selectedPlan.id, "plan-2");
-  assert.notEqual(json.selectedPlan.id, economics.economicsPlans[0].id);
+  assert.equal(json.selectedPlan.id, selectedPlan.id);
+  assert.notEqual(json.selectedPlan.id, defaultPlanId);
   const expected = projectSelectedPlanArtifact(selectedPlan, {
     advisorNotices: json.catalog?.advisorAttention || []
   });

@@ -56,6 +56,30 @@
       "supersedes": null
     },
     {
+      "sourceId": "HANOVER-CP5A-OFFICIAL-EVIDENCE",
+      "sourceType": "OFFICIAL_SOURCES_REVIEW",
+      "authority": "Hanover College",
+      "authorityBoundary": "COURSE_LOAD_GENERAL_DEGREE_AND_CATALOG_COURSE_CLAIMS",
+      "path": "data/raw/economics/CP5A_Official_Policy_Evidence.md",
+      "retrievedOn": "2026-08-08",
+      "reviewer": "Codex source review for CP5A",
+      "sha256": "5b5fedcdeea9251d88b273eea30951836a71f8b33a776187b6a10e24888adef8",
+      "effective": {"from": "2025-08-01", "through": null},
+      "supersedes": null
+    },
+    {
+      "sourceId": "ECON-MAJOR-DECLARATION",
+      "sourceType": "DEPARTMENT_FORM",
+      "authority": "Economics Department",
+      "authorityBoundary": "DECLARATION_FORM_COGNATE_AND_RELEVANT_HS_W2_LABELS",
+      "path": "data/raw/economics/ECON Major Declaration.doc",
+      "reviewedOn": "2026-08-08",
+      "reviewer": "Codex visual review for CP5A",
+      "sha256": "1bbeb9813637b9d065efc9cbf57cf4062cf471201616699d14c90cde94c23f48",
+      "effective": {"from": "2025-08-01", "through": null},
+      "supersedes": null
+    },
+    {
       "sourceId": "SCHEDULE-2026-2027-FALL",
       "sourceType": "SCHEDULE_SCREENSHOT",
       "authority": "Verified department schedule source",

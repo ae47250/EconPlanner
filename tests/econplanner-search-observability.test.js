@@ -40,6 +40,10 @@ function profile({ id, plans, firstSolutionNode, nodeLimit = false }) {
         exhaustive: !nodeLimit,
         solutionFound: Boolean(plans),
         firstSolutionNode,
+        firstFinalValidatorPlanNode: plans ? firstSolutionNode + 4 : null,
+        timeToFirstFinalValidatorPlanMs: plans ? 3.5 : null,
+        firstIncumbentSignature: plans ? `signature-${id}` : null,
+        incumbentPreservedAtLimit: Boolean(plans && nodeLimit),
         terminationReason: nodeLimit ? "NODE_LIMIT" : "EXHAUSTED",
         finalValidSchedules: plans,
         completeSchedulesExamined: plans
@@ -72,7 +76,7 @@ function shard(index, profiles, overrides = {}) {
   };
 }
 
-test("CP0 reports solver evidence without inventing future completion metrics", () => {
+test("CP5A reports first-final-validator and incumbent-preservation evidence", () => {
   const merged = mergeGeneratedShards([
     shard(1, [profile({ id: "complete", plans: 1, firstSolutionNode: 17, nodeLimit: true })]),
     shard(2, [profile({ id: "incomplete", plans: 0, firstSolutionNode: null, nodeLimit: true })])
@@ -96,10 +100,13 @@ test("CP0 reports solver evidence without inventing future completion metrics", 
   });
   assert.equal(merged.solver.firstSolverSolutionNodes.observations, 1);
   assert.equal(merged.solver.firstSolverSolutionNodes.p50, 17);
-  assert.equal(merged.solver.timeToFirstCompletePlanMs.value, null);
+  assert.equal(merged.solver.timeToFirstCompletePlanMs.availability, "MEASURED_FINAL_VALIDATOR");
+  assert.equal(merged.solver.timeToFirstCompletePlanMs.p50, 3.5);
+  assert.equal(merged.solver.nodesToFirstCompleteApprovedPlan.p50, 21);
   assert.equal(merged.solver.limitBehavior.nodeLimitProfiles, 2);
   assert.equal(merged.solver.limitBehavior.nodeLimitProfilesWithLegacyValidatedDisplayedPlan, 1);
-  assert.equal(merged.solver.limitBehavior.exactIncumbentPreservation.availability, "NOT_MEASURED");
+  assert.equal(merged.solver.limitBehavior.exactIncumbentPreservation.availability, "MEASURED");
+  assert.equal(merged.solver.limitBehavior.exactIncumbentPreservation.preservedProfiles, 1);
   assert.equal(merged.strategies.availability, "PROXY");
   assert.equal(merged.moveDestinations.availability, "NOT_MEASURED");
   assert.equal(merged.productionDecisionEngine.availability, "NOT_MEASURED");

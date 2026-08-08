@@ -9,6 +9,7 @@ import {
   distributionSummary,
   evaluateGates,
   mergeGeneratedShards,
+  ordinaryProductCoverage,
   percentile,
   ruleCoverageSummary,
   sourceEvidenceSummary,
@@ -101,6 +102,93 @@ function shard(index, profiles) {
     highRiskCombinations: []
   };
 }
+
+function ordinaryShard(profiles, historyCoverage = []) {
+  const value = shard(1, profiles);
+  value.selection = {
+    ...value.selection,
+    shard: { index: 1, total: 1 },
+    cohort: { id: "ordinary-on-time-v1", category: "ordinary-on-time" },
+    historyCoverage
+  };
+  return value;
+}
+
+test("ordinary coverage uses resolved standing, preserves hard histories, and reports zero denominators as N/A", () => {
+  const historyCoverage = [{
+    standing: "freshman",
+    normalRemainingYears: 4,
+    profileCount: 2,
+    historyCategories: ["no-economics-history", "foundations-completed"],
+    justification: "Includes a deliberately difficult no-history freshman."
+  }];
+  const rows = [
+    { ...profile("ordinary-freshman-hard", "ordinary-h1", 0), cohortCategory: "ordinary-on-time", resolvedEffectiveStanding: "freshman", historyCategory: "no-economics-history" },
+    { ...profile("ordinary-freshman-progress", "ordinary-h2", 3), cohortCategory: "ordinary-on-time", resolvedEffectiveStanding: "freshman", historyCategory: "foundations-completed" }
+  ];
+  const coverage = ordinaryProductCoverage(rows, [], historyCoverage);
+
+  assert.equal(coverage.availability, "MEASURED_AUTHORITY");
+  assert.equal(coverage.schemaVersion, 1);
+  assert.equal(coverage.metricId, "ordinary-on-time-plan-coverage-v1");
+  assert.equal(coverage.role, "PRIMARY_PRODUCT_KPI");
+  assert.deepEqual(coverage.overall, {
+    numerator: 1,
+    denominator: 2,
+    zeroPlanCount: 1,
+    percentage: 50,
+    planCountDistribution: { zero: 1, one: 0, two: 0, threePlus: 1 }
+  });
+  assert.equal(coverage.byStanding.freshman.normalRemainingYears, 4);
+  assert.deepEqual(coverage.byStanding.freshman.historyCategories, historyCoverage[0].historyCategories);
+  assert.equal(coverage.byStanding.sophomore.denominator, 0);
+  assert.equal(coverage.byStanding.sophomore.percentage, null);
+});
+
+test("aggregate adds a versioned ordinary product KPI without changing pairwise readiness meaning", () => {
+  const ordinary = {
+    ...profile("ordinary-freshman", "ordinary-hash", 3),
+    cohortCategory: "ordinary-on-time",
+    declaredStanding: "freshman",
+    resolvedEffectiveStanding: "freshman",
+    effectiveRemainingYears: 4,
+    expectedGraduationYear: 2030,
+    historyCategory: "no-economics-history"
+  };
+  const aggregate = buildAggregate({
+    shards: [
+      shard(1, [profile("stress-1", "stress-h1")]),
+      shard(2, [profile("stress-2", "stress-h2", 0)]),
+      ordinaryShard([ordinary], [{
+        standing: "freshman",
+        normalRemainingYears: 4,
+        profileCount: 1,
+        historyCategories: ["no-economics-history"],
+        justification: "Deliberately difficult starting history."
+      }])
+    ],
+    prerequisite: { schemaVersion: 2, kind: "econplanner-nightly-prerequisites", metrics: {}, normal: {}, optional: {} },
+    browser: { schemaVersion: 2, kind: "econplanner-nightly-browser", metrics: {} },
+    pdf: { schemaVersion: 2, kind: "econplanner-nightly-pdf", hosted: { configuration: "CONFIGURED", status: "PASSED" }, local: { status: "PASSED" } },
+    phases: [],
+    baseline,
+    observabilityPolicy,
+    oraclePolicy,
+    mutationRegistry,
+    provenance: { startedAt: "2026-08-04T00:00:00Z", completedAt: "2026-08-04T00:00:01Z" }
+  });
+
+  assert.equal(aggregate.coverage.productKpi.schemaVersion, 1);
+  assert.equal(aggregate.coverage.productKpi.metricId, "ordinary-on-time-plan-coverage-v1");
+  assert.equal(aggregate.coverage.productKpi.cohortId, "ordinary-on-time-v1");
+  assert.equal(aggregate.coverage.productKpi.overall.numerator, 1);
+  assert.equal(aggregate.coverage.productKpi.overall.denominator, 1);
+  assert.equal(aggregate.coverage.completion.primaryProductCoverage.numerator, 1);
+  assert.equal(aggregate.coverage.completion.primaryProductCoverage.denominator, 2);
+  assert.equal(aggregate.coverage.stressPairwise.profiles.tested, 2);
+  assert.equal(aggregate.coverage.stressPairwise.profiles.withPlans, 1);
+  assert.equal(aggregate.artifactCompleteness.ordinaryOnTimeCohort.missing, false);
+});
 
 test("the observability registry exactly maps all 53 confirmed, 3 review, and 4 structural rules", async () => {
   assert.deepEqual(validateObservabilityPolicy(observabilityPolicy, oraclePolicy, mutationRegistry), {

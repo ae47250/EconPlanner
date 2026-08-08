@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "kind": "CP5A_FINAL_ACCEPTANCE_COMPARISON",
+  "repository": "https://github.com/ae47250/EconPlanner.git",
+  "checkout": "C:\\Users\\eiriksson\\Documents\\EconPlanner\\EconMajorCoursePlanner",
+  "branch": "codex/cp5a-plan-coverage",
+  "head": "4b58b558628bfe4c1ef84231fedcb4aa1ff77265",
+  "originMain": "4b58b558628bfe4c1ef84231fedcb4aa1ff77265",
+  "policyBundleHash": "sha256:233ee6d7405d16af0303e42059bbda1a3860edcd9a95335b21c829bbfea72387",
+  "measurementNotes": [
+    "Exact-main and accepted branch campaign values were measured on the same machine with four parallel shards.",
+    "Playwright cleanup removed the ignored acceptance-run raw files after their aggregates were captured. The comparable generator-v3 branch was rerun and its four raw shards are preserved beside this file.",
+    "Exact-main coverage by group is reconstructed exactly from the same-input branch profile outcomes and the 14 measured rescue identities because there were zero complete-incumbent losses. Exact-main group plan-count distributions and accepted-plan counts are not claimed because later search can change the number of plans for already-covered profiles.",
+    "Accepted performance values below come from the final acceptance campaign, not the later metrics-recovery rerun."
+  ],
+  "comparableFrozenCohort": {
+    "generatorVersion": 3,
+    "profiles": 368,
+    "exactMain": {
+      "profilesWithPlans": 217,
+      "coveragePercentage": 58.97,
+      "profilesWithoutPlans": 151,
+      "acceptedPlans": 500,
+      "planCountDistribution": {
+        "zero": 151,
+        "one": 58,
+        "two": 35,
+        "threePlus": 124
+      },
+      "noPlanReasons": {
+        "COUNT_CAPACITY": 102,
+        "NO_COMPLETE_ASSIGNMENT": 26,
+        "SEARCH_INCOMPLETE": 12,
+        "INVALID_INPUT": 11
+      },
+      "runtimeMs": {
+        "total": 1727072.83,
+        "p50": 1252.5,
+        "p90": 17881.36,
+        "p95": 22661.02,
+        "p99": 37953.56,
+        "worst": 58626.37
+      }
+    },
+    "cp5aBranch": {
+      "profilesWithPlans": 231,
+      "coveragePercentage": 62.77,
+      "profilesWithoutPlans": 137,
+      "acceptedPlans": 544,
+      "planCountDistribution": {
+        "zero": 137,
+        "one": 59,
+        "two": 31,
+        "threePlus": 141
+      },
+      "noPlanReasons": {
+        "COUNT_CAPACITY": 112,
+        "NO_COMPLETE_ASSIGNMENT": 14,
+        "SEARCH_INCOMPLETE": 0,
+        "INVALID_INPUT": 11
+      },
+      "runtimeMs": {
+        "total": 776198.99,
+        "p50": 650.3,
+        "p90": 5612.3,
+        "p95": 8083.62,
+        "p99": 24641.14,
+        "worst": 30154.25
+      },
+      "standing": {
+        "freshman": { "total": 93, "withPlan": 74, "coveragePercentage": 79.57, "zero": 19, "distribution": { "zero": 19, "one": 21, "two": 5, "threePlus": 48 }, "acceptedPlans": 175, "meanPlans": 1.88, "medianPlans": 3, "exactMainWithPlan": 69, "exactMainCoveragePercentage": 74.19, "incumbentLosses": 0 },
+        "sophomore": { "total": 93, "withPlan": 62, "coveragePercentage": 66.67, "zero": 31, "distribution": { "zero": 31, "one": 16, "two": 2, "threePlus": 44 }, "acceptedPlans": 152, "meanPlans": 1.63, "medianPlans": 1, "exactMainWithPlan": 60, "exactMainCoveragePercentage": 64.52, "incumbentLosses": 0 },
+        "junior": { "total": 92, "withPlan": 55, "coveragePercentage": 59.78, "zero": 37, "distribution": { "zero": 37, "one": 7, "two": 19, "threePlus": 29 }, "acceptedPlans": 132, "meanPlans": 1.43, "medianPlans": 2, "exactMainWithPlan": 53, "exactMainCoveragePercentage": 57.61, "incumbentLosses": 0 },
+        "senior": { "total": 90, "withPlan": 40, "coveragePercentage": 44.44, "zero": 50, "distribution": { "zero": 50, "one": 15, "two": 5, "threePlus": 20 }, "acceptedPlans": 85, "meanPlans": 0.94, "medianPlans": 0, "exactMainWithPlan": 35, "exactMainCoveragePercentage": 38.89, "incumbentLosses": 0 }
+      },
+      "transferStatus": {
+        "nonTransfer": { "total": 179, "withPlan": 105, "coveragePercentage": 58.66, "zero": 74, "distribution": { "zero": 74, "one": 38, "two": 17, "threePlus": 50 }, "acceptedPlans": 222, "meanPlans": 1.24, "medianPlans": 1, "exactMainWithPlan": 104, "exactMainCoveragePercentage": 58.1, "incumbentLosses": 0 },
+        "transfer": { "total": 189, "withPlan": 126, "coveragePercentage": 66.67, "zero": 63, "distribution": { "zero": 63, "one": 21, "two": 14, "threePlus": 91 }, "acceptedPlans": 322, "meanPlans": 1.7, "medianPlans": 2, "exactMainWithPlan": 113, "exactMainCoveragePercentage": 59.79, "incumbentLosses": 0 }
+      },
+      "planningPace": {
+        "oneYearEarly": { "total": 128, "withPlan": 68, "coveragePercentage": 53.13, "zero": 60, "distribution": { "zero": 60, "one": 32, "two": 4, "threePlus": 32 }, "acceptedPlans": 136, "meanPlans": 1.06, "medianPlans": 1, "exactMainWithPlan": 65, "exactMainCoveragePercentage": 50.78, "incumbentLosses": 0 },
+        "standard": { "total": 120, "withPlan": 73, "coveragePercentage": 60.83, "zero": 47, "distribution": { "zero": 47, "one": 8, "two": 14, "threePlus": 51 }, "acceptedPlans": 189, "meanPlans": 1.58, "medianPlans": 2, "exactMainWithPlan": 71, "exactMainCoveragePercentage": 59.17, "incumbentLosses": 0 },
+        "oneYearExtended": { "total": 120, "withPlan": 90, "coveragePercentage": 75, "zero": 30, "distribution": { "zero": 30, "one": 19, "two": 13, "threePlus": 58 }, "acceptedPlans": 219, "meanPlans": 1.83, "medianPlans": 2, "exactMainWithPlan": 81, "exactMainCoveragePercentage": 67.5, "incumbentLosses": 0 }
+      },
+      "graduationHorizonYears": {
+        "1": { "total": 73, "withPlan": 22, "coveragePercentage": 30.14, "zero": 51, "distribution": { "zero": 51, "one": 9, "two": 3, "threePlus": 10 }, "acceptedPlans": 45, "meanPlans": 0.62, "medianPlans": 0, "exactMainWithPlan": 22, "exactMainCoveragePercentage": 30.14, "incumbentLosses": 0 },
+        "2": { "total": 75, "withPlan": 41, "coveragePercentage": 54.67, "zero": 34, "distribution": { "zero": 34, "one": 4, "two": 4, "threePlus": 33 }, "acceptedPlans": 111, "meanPlans": 1.48, "medianPlans": 1, "exactMainWithPlan": 40, "exactMainCoveragePercentage": 53.33, "incumbentLosses": 0 },
+        "3": { "total": 74, "withPlan": 50, "coveragePercentage": 67.57, "zero": 24, "distribution": { "zero": 24, "one": 11, "two": 2, "threePlus": 37 }, "acceptedPlans": 126, "meanPlans": 1.7, "medianPlans": 2, "exactMainWithPlan": 48, "exactMainCoveragePercentage": 64.86, "incumbentLosses": 0 },
+        "4": { "total": 72, "withPlan": 59, "coveragePercentage": 81.94, "zero": 13, "distribution": { "zero": 13, "one": 14, "two": 5, "threePlus": 40 }, "acceptedPlans": 144, "meanPlans": 2, "medianPlans": 3, "exactMainWithPlan": 57, "exactMainCoveragePercentage": 79.17, "incumbentLosses": 0 },
+        "5": { "total": 74, "withPlan": 59, "coveragePercentage": 79.73, "zero": 15, "distribution": { "zero": 15, "one": 21, "two": 17, "threePlus": 21 }, "acceptedPlans": 118, "meanPlans": 1.59, "medianPlans": 2, "exactMainWithPlan": 50, "exactMainCoveragePercentage": 67.57, "incumbentLosses": 0 }
+      }
+    },
+    "delta": {
+      "profilesWithPlans": 14,
+      "coveragePoints": 3.8,
+      "acceptedPlans": 44,
+      "completeIncumbentLosses": 0,
+      "totalRuntimePercentage": -55.06,
+      "p95RuntimePercentage": -64.33
+    }
+  },
+  "correctedCohort": {
+    "generatorVersion": 4,
+    "profiles": 368,
+    "profilesWithPlans": 250,
+    "coveragePercentage": 67.93,
+    "profilesWithoutPlans": 118,
+    "acceptedPlans": 589,
+    "planCountDistribution": { "zero": 118, "one": 61, "two": 39, "threePlus": 150 },
+    "noPlanReasons": { "COUNT_CAPACITY": 94, "NO_COMPLETE_ASSIGNMENT": 13, "SEARCH_INCOMPLETE": 0, "INVALID_INPUT": 11 },
+    "changedInputHashes": 241,
+    "changedInputReason": "Generator v4 removes the artificial default May reservation; explicit May commitments remain separate.",
+    "plannerSearchGainProfiles": 14,
+    "generatorIncrementalGainProfiles": 19,
+    "generatorIncrementalLossProfiles": 0,
+    "exactMainCompleteIncumbentLosses": 0
+  },
+  "heldOutCorrectedCohort": {
+    "generatorVersion": 4,
+    "profiles": 184,
+    "profilesWithPlans": 128,
+    "coveragePercentage": 69.57,
+    "profilesWithoutPlans": 56,
+    "acceptedPlans": 302,
+    "planCountDistribution": { "zero": 56, "one": 29, "two": 24, "threePlus": 75 },
+    "noPlanReasons": { "COUNT_CAPACITY": 43, "NO_COMPLETE_ASSIGNMENT": 4, "SEARCH_INCOMPLETE": 0, "INVALID_INPUT": 9 },
+    "failureCount": 0,
+    "oracleDisagreementCount": 0
+  },
+  "explicitTrueMayCommitmentCohort": {
+    "profiles": 43,
+    "unreservedProfilesWithPlans": 26,
+    "explicitMayCommitmentProfilesWithPlans": 23,
+    "profilesLostBecauseCommitmentConsumedMay": 3,
+    "profilesGained": 0,
+    "unsupportedMayPlacements": 0,
+    "plannerPlacementsIntoReservedMay": 0
+  },
+  "acceptedSearchAndRankingMetrics": {
+    "searchIncompleteProfiles": 0,
+    "unsupportedMayPlacements": 0,
+    "failureCount": 0,
+    "decisionEngineUnexpectedDisagreements": 0,
+    "oracleDisagreements": 0,
+    "firstFinalValidTimeAndNodes": "MEASURED_FINAL_VALIDATOR",
+    "incumbentPreservation": "MEASURED_AND_REGRESSION_TESTED",
+    "orderingTrace": "MEASURED_BOUNDED_TRACE_24_DECISIONS_PER_SEARCH_ATTEMPT",
+    "recoveryRerun": {
+      "normalSearchAttempts": 1709,
+      "rescueEntries": 1380,
+      "rescueInnerAttempts": 1390,
+      "rescueSuccesses": 286,
+      "finalValidCandidatesAfterFirst": 20504,
+      "nodeLimitHits": 4,
+      "solutionBudgetHits": 606,
+      "firstFinalValidTimeMs": { "observations": 615, "p50": 53.13, "p90": 2084.96, "p95": 2714.7, "p99": 11712.56, "maximum": 15004.67 },
+      "nodesToFirstFinalValid": { "observations": 615, "p50": 760, "p90": 25017, "p95": 28373, "p99": 145099, "maximum": 187082 },
+      "profileRuntimeMs": { "total": 822868.87, "p50": 743.51, "p90": 6223.36, "p95": 7663.6, "p99": 26422.91, "maximum": 31065.56, "worstProfileId": "fictional-econ-20260806-b71e26ab" },
+      "dependencyTraceDecisions": 27248,
+      "legalPlacementDomain": { "p50": 2, "p90": 7, "p95": 10, "p99": 18, "maximum": 26 },
+      "mostDeadEnds": { "requirement": "eco-214", "count": 1342984 }
+    }
+  },
+  "acceptedMayRankingAllocationAndNoticeMetrics": {
+    "profilesWithMayPlannerCourse": 96,
+    "freshmenWithTwoDistinctMayTerms": 31,
+    "sophomoresWithTwoDistinctMayTerms": 21,
+    "exactNamedMayPlacements": 142,
+    "ownerApprovedHistoricalNamedMayPlacements": 0,
+    "catalogNamedMayPlacements": 0,
+    "genericMayPlaceholders": 285,
+    "unsupportedMayPlacements": 0,
+    "annualDistributionCounts": { "1/2/1": 27, "2/1/1": 37, "2/2/0": 135, "other": 1770 },
+    "veryLowHistoricalSelections": 0,
+    "eco257StatisticsPlacements": 389,
+    "eco257ElectivePlacements": 0,
+    "prerequisiteNoticeCodes": { "inProgressSuccessPending": 178, "plannedEarlierSuccessPending": 2017 },
+    "degreeDesignationCodes": { "HS": 401, "W2": 401 },
+    "allocationAlternativeObservations": 1472,
+    "profilesWithMultipleValidAllocations": 136,
+    "allocationPageLimitOutcomes": { "EXHAUSTED": 1472 },
+    "impossiblePrecedenceBlocks": 0
+  },
+  "rescuedComparableProfileIds": [
+    "fictional-econ-20260805-22dbfb5d",
+    "fictional-econ-20260806-ee436830",
+    "fictional-econ-20270117-dfe8573e",
+    "fictional-econ-20270219-2dad22b9",
+    "fictional-econ-20260803-92ef198a",
+    "fictional-econ-20260805-7f8b9990",
+    "fictional-econ-20260806-24188e58",
+    "fictional-econ-20260806-e5e3cc76",
+    "fictional-econ-20270219-4e3fc484",
+    "fictional-econ-20270219-6080441c",
+    "fictional-econ-20270429-fd300c91",
+    "fictional-econ-20260804-6f58f566",
+    "fictional-econ-20260804-c7be4897",
+    "fictional-econ-20270429-a76ff91a"
+  ],
+  "rescuedComparableProfileMechanism": {
+    "classification": "SOFT_PREFERENCE_RESCUE",
+    "profiles": 14,
+    "preferredDistributionSearchSucceeded": 0,
+    "softPreferenceRescueSucceeded": 14,
+    "meaning": "The same solver and final validators retained all hard rules while relaxing only soft exploration order and distribution preferences."
+  },
+  "durableRawArtifacts": [
+    "raw/branch-v3-shard-1.json",
+    "raw/branch-v3-shard-2.json",
+    "raw/branch-v3-shard-3.json",
+    "raw/branch-v3-shard-4.json",
+    "branch-v3-recovery-merged.json"
+  ],
+  "durableArtifactSha256": {
+    "raw/branch-v3-shard-1.json": "b201898234415cdb25517714885982dc26a2957999e5b364985374d68213d92e",
+    "raw/branch-v3-shard-2.json": "1b3219043f4a62bae0e3c8af50372f47648586ac0517ed1e56c72562568af632",
+    "raw/branch-v3-shard-3.json": "5b59a7a3bf23caf908bc966e6f069907ad869ddcb2fc2f47dd412c76d2b46a52",
+    "raw/branch-v3-shard-4.json": "82d37d0b4f37a8929f605ace601c12ecac9029d6a4f48ee595e20e4531fed641",
+    "branch-v3-recovery-merged.json": "ed8b20dae9ebe270999a83706c488083c2779b580dbd109e2fa97811c1265ca1"
+  }
+}

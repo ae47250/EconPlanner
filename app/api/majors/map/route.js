@@ -15,6 +15,7 @@ import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
 import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../../lib/catalog/input-resolution.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
+import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequisiteEvaluator.js";
 
 export const runtime = "nodejs";
 
@@ -214,6 +215,7 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     notices: validation.notices,
     studentNotices: validation.studentNotices,
     advisorNotifications: validation.advisorNotifications,
+    degreeRequirementInformation: validation.degreeRequirementInformation,
     distribution: validation.distribution.applicable
       ? {
           ...plan.distribution,
@@ -225,6 +227,18 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
         }
       : plan.distribution
   };
+  validatedPlan.prerequisiteNotices = buildPrerequisiteStatusNotices({
+    plan: validatedPlan,
+    student,
+    prerequisites: catalog.prerequisitesByProgram.get(program.id)
+  });
+  validatedPlan.studentMessages = [...new Set([
+    ...(validation.warnings || []),
+    ...(validation.studentNotices || []).map(notice => notice.message),
+    ...validatedPlan.prerequisiteNotices.map(notice => notice.message),
+    ...(validatedPlan.advisorChecks || []).map(item => item.reason).filter(Boolean),
+    ...(validatedPlan.terms || []).flatMap(term => (term.courses || []).map(course => course.studentHistoricalOfferingMessage).filter(Boolean))
+  ])];
   validatedPlan.feasibilityStatus = classifyFeasibility(validatedPlan, student);
   validatedPlan.feasibility = buildFeasibilityDetails(
     validatedPlan,

@@ -16,6 +16,7 @@ const schemaPaths = [
   "policy/schema/policy-manifest.v1.schema.json",
   "policy/schema/schedule-release.v1.schema.json",
   "policy/schema/offering-pattern.v1.schema.json",
+  "policy/schema/historical-offering.v1.schema.json",
   "policy/schema/approval-instance.v1.schema.json",
   "policy/schema/message-catalog.v1.schema.json"
 ];
@@ -61,7 +62,7 @@ const messageKeys = new Set(Object.keys(messages.messages));
 
 test("CP1 uses the required direct Ajv 8.20.0 dependency and compiles every Draft 2020-12 schema", () => {
   assert.equal(ajvPackage.version, "8.20.0");
-  assert.equal(schemas.size, 6);
+  assert.equal(schemas.size, 7);
   for (const schema of schemas.values()) assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
 
   const approvalSchema = "policy/schema/approval-instance.v1.schema.json";
@@ -86,7 +87,7 @@ test("CP1 uses the required direct Ajv 8.20.0 dependency and compiles every Draf
 test("the manifest declares every handwritten policy input", async () => {
   validateOrExplain("policy/schema/policy-manifest.v1.schema.json", manifest, manifestPath);
   assert.equal(manifest.policyVersion, "econ-2025-2026.1");
-  assert.equal(manifest.status, "DRAFT");
+  assert.equal(manifest.status, "ACTIVE");
   assert.deepEqual(manifest.catalogApplicability, ["2025-2026"]);
   assert.equal(new Set(manifest.inputs.map(input => input.id)).size, manifest.inputs.length);
   assert.equal(new Set(manifest.inputs.map(input => input.path)).size, manifest.inputs.length);
@@ -199,6 +200,10 @@ test("offering patterns project only unpublished years and exact schedules prese
   assert.equal(pattern.projectionGranularity, "ACADEMIC_YEAR_TBC");
   assert.equal(pattern.projectionPolicy.universalSameTermProhibition, false);
   assert.equal(pattern.projectionPolicy.activeExactScheduleOverrides, true);
+  const eco222 = patterns.patterns.find(entry => entry.patternId === "CATALOG-ECO-222-SPRING");
+  assert.equal(eco222.evidenceType, "OFFICIAL_CATALOG_STATEMENT");
+  assert.deepEqual(eco222.approvedRecurringTerms, ["MAY"]);
+  assert.equal(eco222.projectionPolicy.probabilityEmitted, false);
 
   const schedule = await readJson("policy/schedules/2026-2027.json");
   assert.equal(schedule.releaseStatus, "ACTIVE");
@@ -211,6 +216,32 @@ test("offering patterns project only unpublished years and exact schedules prese
     assert.equal(section.offeringExistence, "OFFERED");
     assert.ok(section.enrollmentState);
     assert.ok(section.sourceRefs.length > 0);
+  }
+});
+
+test("historical offering evidence stays neutral until owner-approved data activates", async () => {
+  const history = await readJson("policy/historical-offerings/economics.json");
+  assert.equal(history.activationStatus, "INACTIVE_NO_APPROVED_DATA");
+  assert.equal(history.ownerApproval.approved, false);
+  assert.deepEqual(history.records, []);
+  assert.deepEqual(history.reviewCandidates, []);
+  assert.equal(history.method.veryLowPriorityRule.minimumCompleteYears, 6);
+  assert.equal(history.method.veryLowPriorityRule.maximumYearsOffered, 1);
+  assert.equal(history.method.otherThresholdsActive, false);
+});
+
+test("normal course load and conditional overload ceilings remain separate policy facts", () => {
+  for (const [ruleId, normal, conditional] of [
+    ["CAPACITY-FALL", 4, 5.25],
+    ["CAPACITY-WINTER", 4, 5.25],
+    ["CAPACITY-MAY", 1, 1.25]
+  ]) {
+    const effect = rulesById.get(ruleId).effect;
+    assert.equal(effect.normalCourseUnits, normal, ruleId);
+    assert.equal(effect.conditionalMaximumCourseUnits, conditional, ruleId);
+    assert.equal(effect.conditionalRequirements.advisorApproval, "APPROVED", ruleId);
+    assert.equal(effect.conditionalRequirements.academicProbationStatus, "NOT_ON_ACADEMIC_PROBATION", ruleId);
+    assert.equal(effect.missingOrUnsupportedDisposition, "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY", ruleId);
   }
 });
 

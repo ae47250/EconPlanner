@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "cohortId": "ordinary-on-time-v1",
+  "purpose": "Measure whether valid, non-transfer Economics students with normal time remaining and neutral planning constraints receive at least one authoritative complete plan.",
+  "neutralConstraints": {
+    "planningPace": "standard",
+    "transferStatus": "regular",
+    "reservedCapacity": {
+      "Fall": 0,
+      "Winter": 0,
+      "May": 0
+    },
+    "explicitMayCommitment": false,
+    "availabilityState": "open",
+    "approvalState": "not-required"
+  },
+  "standingDesign": [
+    {
+      "standing": "freshman",
+      "normalRemainingYears": 4,
+      "profileCount": 6,
+      "justification": "Covers new and partially progressed first-year students without assuming every freshman has already completed both foundations.",
+      "historyCategories": [
+        "no-economics-history",
+        "micro-foundation-completed",
+        "macro-foundation-completed",
+        "split-foundations-in-progress",
+        "foundations-completed",
+        "statistics-in-progress"
+      ]
+    },
+    {
+      "standing": "sophomore",
+      "normalRemainingYears": 3,
+      "profileCount": 6,
+      "justification": "Includes a late-start student plus foundation, intermediate, statistics, and elective progress that is realistic by the second year.",
+      "historyCategories": [
+        "no-economics-history",
+        "foundations-completed",
+        "micro-intermediate-in-progress",
+        "macro-intermediate-in-progress",
+        "statistics-completed",
+        "micro-elective-in-progress"
+      ]
+    },
+    {
+      "standing": "junior",
+      "normalRemainingYears": 2,
+      "profileCount": 6,
+      "justification": "Intentionally retains difficult late-start and foundations-only cases alongside distinct intermediate and statistics histories.",
+      "historyCategories": [
+        "no-economics-history",
+        "foundations-completed",
+        "micro-intermediate-completed",
+        "macro-intermediate-completed",
+        "intermediates-in-progress",
+        "statistics-completed"
+      ]
+    },
+    {
+      "standing": "senior",
+      "normalRemainingYears": 1,
+      "profileCount": 6,
+      "justification": "Preserves genuinely difficult one-year cases from no history through advanced progress rather than selecting only near-complete seniors.",
+      "historyCategories": [
+        "no-economics-history",
+        "foundations-completed",
+        "micro-intermediate-completed",
+        "macro-intermediate-completed",
+        "intermediates-completed",
+        "advanced-micro-elective-completed"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "profileId": "ordinary-on-time-v1-freshman-no-history",
+      "seed": 2026080801,
+      "standing": "freshman",
+      "planDate": "2026-07-30",
+      "historyCategory": "no-economics-history",
+      "courses": []
+    },
+    {
+      "profileId": "ordinary-on-time-v1-freshman-micro-foundation",
+      "seed": 2026080802,
+      "standing": "freshman",
+      "planDate": "2026-09-15",
+      "historyCategory": "micro-foundation-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-freshman-macro-foundation",
+      "seed": 2026080803,
+      "standing": "freshman",
+      "planDate": "2026-09-15",
+      "historyCategory": "macro-foundation-completed",
+      "courses": [
+        { "course": "ECO 114", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-freshman-split-foundations",
+      "seed": 2026080804,
+      "standing": "freshman",
+      "planDate": "2027-02-15",
+      "historyCategory": "split-foundations-in-progress",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 114", "status": "in_progress" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-freshman-foundations-completed",
+      "seed": 2026080805,
+      "standing": "freshman",
+      "planDate": "2027-02-15",
+      "historyCategory": "foundations-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 114", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-freshman-statistics-in-progress",
+      "seed": 2026080806,
+      "standing": "freshman",
+      "planDate": "2027-02-15",
+      "historyCategory": "statistics-in-progress",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 257", "status": "in_progress" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-sophomore-no-history",
+      "seed": 2026080811,
+      "standing": "sophomore",
+      "planDate": "2026-07-30",
+      "historyCategory": "no-economics-history",
+      "courses": []
+    },
+    {
+      "profileId": "ordinary-on-time-v1-sophomore-foundations-completed",
+      "seed": 2026080812,
+      "standing": "sophomore",
+      "planDate": "2026-09-15",
+      "historyCategory": "foundations-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 114", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-sophomore-micro-in-progress",
+      "seed": 2026080813,
+      "standing": "sophomore",
+      "planDate": "2026-09-15",
+      "historyCategory": "micro-intermediate-in-progress",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 213", "status": "in_progress" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-sophomore-macro-in-progress",
+      "seed": 2026080814,
+      "standing": "sophomore",
+      "planDate": "2027-02-15",
+      "historyCategory": "macro-intermediate-in-progress",
+      "courses": [
+        { "course": "ECO 114", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 214", "status": "in_progress" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-sophomore-statistics-completed",
+      "seed": 2026080815,
+      "standing": "sophomore",
+      "planDate": "2026-07-30",
+      "historyCategory": "statistics-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 257", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-sophomore-elective-in-progress",
+      "seed": 2026080816,
+      "standing": "sophomore",
+      "planDate": "2027-02-15",
+      "historyCategory": "micro-elective-in-progress",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 221", "status": "in_progress" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-junior-no-history",
+      "seed": 2026080821,
+      "standing": "junior",
+      "planDate": "2026-07-30",
+      "historyCategory": "no-economics-history",
+      "courses": []
+    },
+    {
+      "profileId": "ordinary-on-time-v1-junior-foundations-completed",
+      "seed": 2026080822,
+      "standing": "junior",
+      "planDate": "2026-09-15",
+      "historyCategory": "foundations-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 114", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-junior-micro-completed",
+      "seed": 2026080823,
+      "standing": "junior",
+      "planDate": "2026-07-30",
+      "historyCategory": "micro-intermediate-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 213", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-junior-macro-completed",
+      "seed": 2026080824,
+      "standing": "junior",
+      "planDate": "2026-09-15",
+      "historyCategory": "macro-intermediate-completed",
+      "courses": [
+        { "course": "ECO 114", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 214", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-junior-intermediates-in-progress",
+      "seed": 2026080825,
+      "standing": "junior",
+      "planDate": "2027-02-15",
+      "historyCategory": "intermediates-in-progress",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 114", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 213", "status": "completed" },
+        { "course": "ECO 214", "status": "in_progress" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-junior-statistics-completed",
+      "seed": 2026080826,
+      "standing": "junior",
+      "planDate": "2027-02-15",
+      "historyCategory": "statistics-completed",
+      "courses": [
+        { "course": "ECO 114", "status": "completed" },
+        { "course": "ECO 257", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-senior-no-history",
+      "seed": 2026080831,
+      "standing": "senior",
+      "planDate": "2026-07-30",
+      "historyCategory": "no-economics-history",
+      "courses": []
+    },
+    {
+      "profileId": "ordinary-on-time-v1-senior-foundations-completed",
+      "seed": 2026080832,
+      "standing": "senior",
+      "planDate": "2026-07-30",
+      "historyCategory": "foundations-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 114", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-senior-micro-completed",
+      "seed": 2026080833,
+      "standing": "senior",
+      "planDate": "2026-09-15",
+      "historyCategory": "micro-intermediate-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 213", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-senior-macro-completed",
+      "seed": 2026080834,
+      "standing": "senior",
+      "planDate": "2026-09-15",
+      "historyCategory": "macro-intermediate-completed",
+      "courses": [
+        { "course": "ECO 114", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 214", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-senior-intermediates-completed",
+      "seed": 2026080835,
+      "standing": "senior",
+      "planDate": "2027-02-15",
+      "historyCategory": "intermediates-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "ECO 114", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 213", "status": "completed" },
+        { "course": "ECO 214", "status": "completed" }
+      ]
+    },
+    {
+      "profileId": "ordinary-on-time-v1-senior-advanced-elective",
+      "seed": 2026080836,
+      "standing": "senior",
+      "planDate": "2027-02-15",
+      "historyCategory": "advanced-micro-elective-completed",
+      "courses": [
+        { "course": "ECO 113", "status": "completed" },
+        { "course": "MAT 113", "status": "completed" },
+        { "course": "ECO 213", "status": "completed" },
+        { "course": "ECO 331", "status": "completed" }
+      ]
+    }
+  ]
+}

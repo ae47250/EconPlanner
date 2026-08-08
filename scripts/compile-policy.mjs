@@ -12,6 +12,7 @@ const SCHEMA_PATHS = [
   "policy/schema/policy-manifest.v1.schema.json",
   "policy/schema/schedule-release.v1.schema.json",
   "policy/schema/offering-pattern.v1.schema.json",
+  "policy/schema/historical-offering.v1.schema.json",
   "policy/schema/approval-instance.v1.schema.json",
   "policy/schema/message-catalog.v1.schema.json"
 ];
@@ -152,7 +153,7 @@ function validateCompatibilityTargets({ courses, requirements, rules, schedule, 
   }
 }
 
-function validateCriticalConflicts({ rules, schedule, unresolved, offeringPatterns }) {
+function validateCriticalConflicts({ rules, schedule, unresolved, offeringPatterns, historicalOfferings }) {
   const unresolvedIds = new Set(unresolved.questions.map(question => question.ruleId));
   for (const rule of rules) if (unresolvedIds.has(rule.ruleId)) fail(`${rule.ruleId} is both active and unresolved`);
 
@@ -164,6 +165,15 @@ function validateCriticalConflicts({ rules, schedule, unresolved, offeringPatter
   if (new Set(sectionIds).size !== sectionIds.length) fail("duplicate schedule section ID");
   const patternIds = offeringPatterns.patterns.map(pattern => pattern.patternId);
   if (new Set(patternIds).size !== patternIds.length) fail("duplicate offering-pattern ID");
+  const activeHistoricalRecords = historicalOfferings.records.filter(record => record.activationStatus === "ACTIVE_OWNER_APPROVED");
+  if (historicalOfferings.activationStatus === "ACTIVE_OWNER_APPROVED" && historicalOfferings.ownerApproval.approved !== true) {
+    fail("historical offerings cannot activate without owner approval");
+  }
+  if (activeHistoricalRecords.some(record => record.ownerApproval?.approved !== true)) {
+    fail("an active historical offering record lacks owner approval");
+  }
+  const historicalCourses = activeHistoricalRecords.map(record => record.courseIdentity);
+  if (new Set(historicalCourses).size !== historicalCourses.length) fail("duplicate active historical-offering course identity");
   const activeIds = new Set(rules.map(rule => rule.ruleId));
   for (const rule of rules) {
     const activeSuperseded = rule.supersedes.filter(ruleId => activeIds.has(ruleId));
@@ -264,12 +274,13 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   const courses = inputById.courses;
   const requirements = inputById.requirements;
   const offeringPatterns = inputById["offering-patterns"];
+  const historicalOfferings = inputById["historical-offerings"];
 
   validateReferences({ rules, provenance, messages, unresolved });
   await validateSourceEvidence(resolvedRepositoryRoot, provenance);
   if (new Set(courses.courses.map(course => course.code)).size !== courses.courses.length) fail("duplicate course code");
   if (schedule.releaseStatus !== "ACTIVE") fail(`schedule ${schedule.releaseId} is not active`);
-  validateCriticalConflicts({ rules, schedule, unresolved, offeringPatterns });
+  validateCriticalConflicts({ rules, schedule, unresolved, offeringPatterns, historicalOfferings });
 
   const compatibilityTargets = {};
   for (const [outputName, sourcePath] of Object.entries(COMPATIBILITY_TARGETS)) compatibilityTargets[outputName] = await readJson(resolvedRepositoryRoot, sourcePath);
@@ -291,18 +302,28 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
       prerequisiteClosure: prerequisiteClosure(rules),
       offeringByTerm: offeringIndex(schedule),
       offeringPatternsById: Object.fromEntries(offeringPatterns.patterns.map(pattern => [pattern.patternId, pattern])),
+      historicalOfferingByCourse: Object.fromEntries(historicalOfferings.records
+        .filter(record => record.activationStatus === "ACTIVE_OWNER_APPROVED" && record.ownerApproval?.approved === true)
+        .map(record => [record.courseIdentity, record])),
       messagesByRule,
       dependencyGraph
     },
     messages: messages.messages,
     provenance: {
       authorityHierarchy: provenance.authorityHierarchy,
-      sources: provenance.sources
+      sources: provenance.sources,
+      historicalOfferingContract: {
+        activationStatus: historicalOfferings.activationStatus,
+        ownerApproval: historicalOfferings.ownerApproval,
+        method: historicalOfferings.method,
+        conflicts: historicalOfferings.conflicts
+      }
     },
     unresolved: unresolved.questions
   };
   const contentHash = `sha256:${canonicalSha256(bundleWithoutHash)}`;
   const bundle = { ...bundleWithoutHash, contentHash };
+  const activationStatus = manifest.status === "ACTIVE" ? "ACTIVE" : "PENDING_OWNER_APPROVAL";
 
   await mkdir(path.join(releaseRoot, "compatibility"), { recursive: true });
   const compatibility = [];
@@ -317,14 +338,15 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
     bundleVersion: manifest.policyVersion,
     contentHash,
     manifestStatus: manifest.status,
-    activationStatus: "PENDING_OWNER_APPROVAL",
+    activationStatus,
     inputs: manifest.inputs.map(input => input.path),
     counts: {
       activeRules: rules.length,
       courses: courses.courses.length,
       scheduleSections: schedule.terms.flatMap(term => term.sections).length,
       sources: provenance.sources.length,
-      unresolvedReviewRecords: unresolved.questions.length
+      unresolvedReviewRecords: unresolved.questions.length,
+      historicalOfferingRecords: historicalOfferings.records.length
     },
     validation: {
       schemas: "PASS",
@@ -348,7 +370,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
         bundleVersion: manifest.policyVersion,
         contentHash,
         releasePath: `releases/${manifest.policyVersion}/bundle.json`,
-        activationStatus: "PENDING_OWNER_APPROVAL"
+        activationStatus
       }]))
     }
   };

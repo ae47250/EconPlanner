@@ -1,6 +1,18 @@
+import { readFile } from "node:fs/promises";
 import fc from "fast-check";
+import { resolvePlanningContext } from "../../lib/planning/horizon.js";
 
-export const ECONOMICS_GENERATOR_VERSION = 3;
+export const ECONOMICS_GENERATOR_VERSION = 4;
+export const ECONOMICS_GENERATOR_LEGACY_VERSION = 3;
+export const ORDINARY_ON_TIME_COHORT_ID = "ordinary-on-time-v1";
+
+const ORDINARY_ON_TIME_FIXTURE = new URL("../fixtures/economics-ordinary-cohort.v1.json", import.meta.url);
+const ORDINARY_REMAINING_YEARS = Object.freeze({
+  freshman: 4,
+  sophomore: 3,
+  junior: 2,
+  senior: 1
+});
 
 export const ECONOMICS_GENERATOR_AXES = Object.freeze({
   standing: Object.freeze(["freshman", "sophomore", "junior", "senior"]),
@@ -301,7 +313,14 @@ function profileIdentifier(seed, axes) {
   return `fictional-econ-${normalizeSeed(seed)}-${stableHash(signature)}`;
 }
 
-function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = null }) {
+function buildProfile({
+  seed,
+  axes,
+  manifest,
+  verifiedSchedule,
+  sequenceIndex = null,
+  generatorVersion = ECONOMICS_GENERATOR_VERSION
+}) {
   const normalizedSeed = normalizeSeed(seed);
   const academicYearStart = activeAcademicYearStart(axes.planDate);
   const transfer = axes.transferStatus === "transfer";
@@ -340,7 +359,9 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
       reservedCapacity: {
         Fall: axes.reservedCapacity,
         Winter: axes.reservedCapacity,
-        May: Math.min(1, axes.reservedCapacity)
+        May: generatorVersion === ECONOMICS_GENERATOR_LEGACY_VERSION
+          ? Math.min(1, axes.reservedCapacity)
+          : 0
       }
     },
     scenario: {
@@ -360,8 +381,12 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
     },
     verifiedSchedulePattern: verifiedIntermediatePattern(verifiedSchedule),
     generation: {
+      generatorVersion,
       selectionMode: "seeded-pairwise-greedy",
       prerequisiteSource: "independent-policy-manifest",
+      mayReservationPolicy: generatorVersion === ECONOMICS_GENERATOR_LEGACY_VERSION
+        ? "LEGACY_DERIVED_FROM_FALL_WINTER_RESERVATION"
+        : "EXPLICIT_COMMITMENT_ONLY",
       shrinkable: true
     }
   };
@@ -390,6 +415,17 @@ export function auditGeneratedFictionalProfile(profile, manifest, verifiedSchedu
 
   if (profile?.fictional !== true || !profile?.profileId || !Number.isSafeInteger(profile?.seed)) {
     violations.push({ ruleId: "GENERATOR-FICTIONAL-IDENTITY", message: "A fictional marker, seed, and profile ID are required." });
+  }
+
+  const generatorVersion = Number(profile?.generation?.generatorVersion || ECONOMICS_GENERATOR_LEGACY_VERSION);
+  const mayReservation = Number(profile?.student?.reservedCapacity?.May || 0);
+  if (generatorVersion >= ECONOMICS_GENERATOR_VERSION
+      && mayReservation > 0
+      && profile?.scenario?.trueMayCommitment?.explicit !== true) {
+    violations.push({
+      ruleId: "GENERATOR-EXPLICIT-MAY-COMMITMENT",
+      message: "May reservation requires an explicit true-May commitment scenario."
+    });
   }
 
   for (const [index, course] of canonicalCourses.entries()) {
@@ -521,8 +557,12 @@ export function generateFictionalEconomicsProfiles({
   seed,
   manifest,
   verifiedSchedule,
-  maximumProfiles = 100
+  maximumProfiles = 100,
+  generatorVersion = ECONOMICS_GENERATOR_VERSION
 }) {
+  if (![ECONOMICS_GENERATOR_LEGACY_VERSION, ECONOMICS_GENERATOR_VERSION].includes(generatorVersion)) {
+    throw new RangeError(`Unsupported Economics generator version ${generatorVersion}.`);
+  }
   const normalizedSeed = normalizeSeed(seed);
   const axesRows = buildPairwiseAxes(normalizedSeed);
   if (axesRows.length > maximumProfiles) {
@@ -533,13 +573,190 @@ export function generateFictionalEconomicsProfiles({
     axes,
     manifest,
     verifiedSchedule,
-    sequenceIndex: index
+    sequenceIndex: index,
+    generatorVersion
   }));
   return {
     seed: normalizedSeed,
+    generatorVersion,
     selectionMode: "seeded-pairwise-greedy",
     profiles,
     coverage: pairwiseCoverageReport(profiles)
+  };
+}
+
+function ordinaryPlanningContext(profile) {
+  return resolvePlanningContext({
+    academicStanding: profile?.student?.academicStanding,
+    planningPace: profile?.student?.planningPace,
+    planCreationDate: profile?.student?.planDate,
+    isTransferStudent: profile?.student?.isTransferStudent,
+    transferExpectedGraduationYear: profile?.student?.transferExpectedGraduationYear,
+    transferEntryAcademicYear: profile?.student?.transferEntryAcademicYear
+  });
+}
+
+export function auditOrdinaryOnTimeEconomicsProfile(profile, manifest, verifiedSchedule) {
+  const violations = [];
+  const expectedRemainingYears = ORDINARY_REMAINING_YEARS[profile?.student?.academicStanding];
+  const context = ordinaryPlanningContext(profile);
+  const reservedCapacity = profile?.student?.reservedCapacity || {};
+  const policyAudit = auditGeneratedFictionalProfile(profile, manifest, verifiedSchedule);
+  const courses = profile?.student?.courses || [];
+
+  function require(condition, ruleId, message) {
+    if (!condition) violations.push({ ruleId, message });
+  }
+
+  require(profile?.cohort?.id === ORDINARY_ON_TIME_COHORT_ID,
+    "ORDINARY-COHORT-ID", `Profile must belong to ${ORDINARY_ON_TIME_COHORT_ID}.`);
+  require(profile?.cohort?.category === "ordinary-on-time",
+    "ORDINARY-COHORT-CATEGORY", "Profile must use the ordinary-on-time category.");
+  require(Boolean(profile?.cohort?.historyCategory),
+    "ORDINARY-HISTORY-CATEGORY", "A documented history category is required.");
+  require(profile?.student?.isTransferStudent === false && profile?.axes?.transferStatus === "regular",
+    "ORDINARY-NON-TRANSFER", "Ordinary profiles must be regular non-transfer students.");
+  require(profile?.student?.planningPace === "standard" && profile?.axes?.planningPace === "standard",
+    "ORDINARY-STANDARD-PACE", "Ordinary profiles must use standard planning pace.");
+  require(context.effectiveStanding === profile?.student?.academicStanding,
+    "ORDINARY-EFFECTIVE-STANDING", "Resolved standing must match declared standing.");
+  require(context.standardRemainingYears === expectedRemainingYears
+      && context.remainingYears === expectedRemainingYears,
+    "ORDINARY-NORMAL-HORIZON", "Resolved remaining years must match the normal standing horizon.");
+  require(context.expectedGraduationYear === context.startYear + expectedRemainingYears
+      && profile?.student?.expectedGraduationYear === context.expectedGraduationYear,
+    "ORDINARY-EXPECTED-GRADUATION", "Expected graduation year must match the normal standing horizon.");
+  require(context.planningValidation.valid && context.transferValidation.valid,
+    "ORDINARY-VALID-PLANNING-CONTEXT", "Planning and transfer context must be valid.");
+  require(["Fall", "Winter", "May"].every(term => Number(reservedCapacity[term] || 0) === 0),
+    "ORDINARY-ZERO-RESERVATIONS", "Ordinary profiles may not reserve Fall, Winter, or May capacity.");
+  require(profile?.scenario?.trueMayCommitment?.explicit !== true,
+    "ORDINARY-NO-MAY-COMMITMENT", "Ordinary profiles may not include an explicit May commitment.");
+  require(profile?.axes?.availabilityState === "open" && profile?.scenario?.availability?.state === "open",
+    "ORDINARY-OPEN-AVAILABILITY", "Ordinary profiles must use the neutral open availability state.");
+  require(profile?.axes?.approvalState === "not-required" && !profile?.scenario?.approval,
+    "ORDINARY-NO-APPROVAL-MUTATION", "Ordinary profiles may not include an approval scenario.");
+  require(courses.every(course => course.status !== "transfer"
+      && !String(course.source || "").toLowerCase().includes("transfer")),
+    "ORDINARY-NO-TRANSFER-HISTORY", "Ordinary profiles may not include transfer course history.");
+  require(policyAudit.valid,
+    "ORDINARY-POLICY-AUDIT", "Ordinary history must satisfy the independent policy audit.");
+
+  return {
+    valid: violations.length === 0,
+    cohortId: ORDINARY_ON_TIME_COHORT_ID,
+    historyCategory: profile?.cohort?.historyCategory || null,
+    declaredStanding: profile?.student?.academicStanding || null,
+    resolvedEffectiveStanding: context.effectiveStanding,
+    effectiveRemainingYears: context.remainingYears,
+    expectedGraduationYear: context.expectedGraduationYear,
+    violations
+  };
+}
+
+function ordinaryProfileFromFixture(specification, index, manifest, verifiedSchedule) {
+  const expectedRemainingYears = ORDINARY_REMAINING_YEARS[specification.standing];
+  if (!expectedRemainingYears) throw new Error(`Unknown ordinary standing ${specification.standing}.`);
+  const profile = buildProfile({
+    seed: specification.seed,
+    axes: {
+      standing: specification.standing,
+      planningPace: "standard",
+      seniorStandingConfirmationState: "confirmed",
+      planDate: specification.planDate,
+      transferStatus: "regular",
+      graduationHorizon: expectedRemainingYears,
+      courseStatus: "completed",
+      completedPathway: "none",
+      reservedCapacity: 0,
+      availabilityState: "open",
+      approvalState: "not-required"
+    },
+    manifest,
+    verifiedSchedule,
+    sequenceIndex: index,
+    generatorVersion: ECONOMICS_GENERATOR_VERSION
+  });
+  profile.profileId = specification.profileId;
+  profile.kind = "valid-fictional-ordinary-profile";
+  profile.axes.historyCategory = specification.historyCategory;
+  profile.student.courses = (specification.courses || []).map(course => ({
+    course: canonicalizeGeneratedCourse(course.course, manifest),
+    units: Number(course.units || 1),
+    status: course.status,
+    source: "fictional-ordinary-cohort",
+    origin: "frozen-ordinary-history",
+    ...(canonicalizeGeneratedCourse(course.course, manifest) !== String(course.course).trim().toUpperCase()
+      ? { submittedCourse: String(course.course).trim().toUpperCase() }
+      : {})
+  }));
+  if (profile.student.courses.some(course => course.course === "ECO 257")) {
+    profile.requirementHints.statistics.course = "ECO 257";
+  }
+  profile.cohort = {
+    id: ORDINARY_ON_TIME_COHORT_ID,
+    category: "ordinary-on-time",
+    fixtureSchemaVersion: 1,
+    historyCategory: specification.historyCategory
+  };
+  profile.generation = {
+    ...profile.generation,
+    selectionMode: "frozen-ordinary-on-time-v1",
+    fixtureSchemaVersion: 1,
+    shrinkable: false
+  };
+  profile.policyAudit = auditGeneratedFictionalProfile(profile, manifest, verifiedSchedule);
+  profile.ordinaryAudit = auditOrdinaryOnTimeEconomicsProfile(profile, manifest, verifiedSchedule);
+  if (!profile.ordinaryAudit.valid) {
+    throw new Error(`Ordinary profile ${profile.profileId} failed its cohort audit: ${JSON.stringify(profile.ordinaryAudit.violations)}`);
+  }
+  return profile;
+}
+
+export async function loadOrdinaryOnTimeEconomicsProfiles({
+  manifest,
+  verifiedSchedule,
+  fixtureUrl = ORDINARY_ON_TIME_FIXTURE
+}) {
+  const fixture = JSON.parse(await readFile(fixtureUrl, "utf8"));
+  if (fixture.schemaVersion !== 1 || fixture.cohortId !== ORDINARY_ON_TIME_COHORT_ID) {
+    throw new Error(`Ordinary cohort fixture must be ${ORDINARY_ON_TIME_COHORT_ID} schema version 1.`);
+  }
+  const profiles = (fixture.profiles || []).map((profile, index) => (
+    ordinaryProfileFromFixture(profile, index, manifest, verifiedSchedule)
+  ));
+  if (new Set(profiles.map(profile => profile.profileId)).size !== profiles.length) {
+    throw new Error("Ordinary cohort profile IDs must be unique.");
+  }
+  const historyCoverage = fixture.standingDesign.map(design => {
+    const standingProfiles = profiles.filter(profile => profile.student.academicStanding === design.standing);
+    const representedCategories = [...new Set(standingProfiles.map(profile => profile.cohort.historyCategory))].sort();
+    const expectedCategories = [...design.historyCategories].sort();
+    if (standingProfiles.length !== design.profileCount
+        || standingProfiles.length < 4
+        || JSON.stringify(representedCategories) !== JSON.stringify(expectedCategories)
+        || design.normalRemainingYears !== ORDINARY_REMAINING_YEARS[design.standing]) {
+      throw new Error(`Ordinary cohort standing design does not match profiles for ${design.standing}.`);
+    }
+    return {
+      standing: design.standing,
+      normalRemainingYears: design.normalRemainingYears,
+      profileCount: standingProfiles.length,
+      historyCategories: representedCategories,
+      justification: design.justification
+    };
+  });
+  if (historyCoverage.length !== Object.keys(ORDINARY_REMAINING_YEARS).length) {
+    throw new Error("Ordinary cohort must document freshman, sophomore, junior, and senior histories.");
+  }
+  return {
+    schemaVersion: fixture.schemaVersion,
+    cohortId: fixture.cohortId,
+    purpose: fixture.purpose,
+    neutralConstraints: structuredClone(fixture.neutralConstraints),
+    selectionMode: "frozen-ordinary-on-time-v1",
+    profiles,
+    historyCoverage
   };
 }
 
@@ -565,13 +782,43 @@ export function shrinkFictionalEconomicsProfile(profile, { manifest, verifiedSch
       seed: profile.seed,
       axes,
       manifest,
-      verifiedSchedule
+      verifiedSchedule,
+      generatorVersion: Number(profile?.generation?.generatorVersion || ECONOMICS_GENERATOR_VERSION)
     });
     candidate.generation.shrinkOf = profile.profileId;
     candidate.generation.shrunkAxis = name;
     candidates.push(candidate);
   }
   return candidates;
+}
+
+export function generateLegacyV3FictionalEconomicsProfiles(options) {
+  return generateFictionalEconomicsProfiles({
+    ...options,
+    generatorVersion: ECONOMICS_GENERATOR_LEGACY_VERSION
+  });
+}
+
+export function withExplicitMayCommitment(profile, reservedUnits = 1) {
+  const units = Number(reservedUnits);
+  if (!Number.isFinite(units) || units <= 0 || units > 1.25) {
+    throw new RangeError("A true-May commitment must be greater than zero and no more than 1.25 course units.");
+  }
+  const committed = structuredClone(profile);
+  committed.student.reservedCapacity = {
+    ...(committed.student.reservedCapacity || {}),
+    May: units
+  };
+  committed.scenario = {
+    ...(committed.scenario || {}),
+    trueMayCommitment: {
+      explicit: true,
+      reservedUnits: units,
+      source: "fictional-heldout-scenario"
+    }
+  };
+  committed.profileId = `${profile.profileId}-explicit-may-${String(units).replace(".", "_")}`;
+  return committed;
 }
 
 function invalidNeighbor(base, mutationId, expectedViolationRuleId, mutate, manifest, verifiedSchedule) {

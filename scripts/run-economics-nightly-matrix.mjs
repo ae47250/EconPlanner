@@ -26,11 +26,14 @@ import { auditExternalEconomicsPlanComplete } from "../tests/oracle/audit-extern
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan } from "../tests/oracle/load-canonical-policy.js";
 import {
   ECONOMICS_GENERATOR_VERSION,
+  ORDINARY_ON_TIME_COHORT_ID,
   auditGeneratedFictionalProfile,
   generateFictionalEconomicsProfiles,
   generateInvalidEconomicsNeighbors,
+  loadOrdinaryOnTimeEconomicsProfiles,
   pairwiseCoverageReport,
-  shrinkFictionalEconomicsProfile
+  shrinkFictionalEconomicsProfile,
+  withExplicitMayCommitment
 } from "../tests/helpers/economics-generators.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -126,24 +129,36 @@ async function runMatrix(configuration) {
     loadCanonicalPolicy()
   ]);
 
-  const generatedBySeed = configuration.seeds.map(seed => {
-    const generated = generateFictionalEconomicsProfiles({
-      seed,
-      manifest,
-      verifiedSchedule
+  let generatedBySeed = [];
+  let cohortDefinition = null;
+  let allProfiles;
+  if (configuration.cohort === ORDINARY_ON_TIME_COHORT_ID) {
+    cohortDefinition = await loadOrdinaryOnTimeEconomicsProfiles({ manifest, verifiedSchedule });
+    allProfiles = cohortDefinition.profiles.map(profile => ({ seed: profile.seed, profile }));
+  } else {
+    generatedBySeed = configuration.seeds.map(seed => {
+      const generated = generateFictionalEconomicsProfiles({
+        seed,
+        manifest,
+        verifiedSchedule,
+        generatorVersion: configuration.generatorVersion
+      });
+      if (configuration.explicitMayCommitments) {
+        generated.profiles = generated.profiles.map(profile => withExplicitMayCommitment(profile, 1));
+        generated.coverage = pairwiseCoverageReport(generated.profiles);
+      }
+      const coverage = pairwiseCoverageReport(generated.profiles);
+      invariant(
+        coverage.missingPairs.length === 0,
+        "PAIRWISE_COVERAGE_INCOMPLETE",
+        `Seed ${seed} missed ${coverage.missingPairs.length} declared axis pairs.`
+      );
+      return { ...generated, coverage };
     });
-    const coverage = pairwiseCoverageReport(generated.profiles);
-    invariant(
-      coverage.missingPairs.length === 0,
-      "PAIRWISE_COVERAGE_INCOMPLETE",
-      `Seed ${seed} missed ${coverage.missingPairs.length} declared axis pairs.`
-    );
-    return { ...generated, coverage };
-  });
-
-  let allProfiles = generatedBySeed.flatMap(({ seed, profiles }) => (
-    profiles.map(profile => ({ seed, profile }))
-  ));
+    allProfiles = generatedBySeed.flatMap(({ seed, profiles }) => (
+      profiles.map(profile => ({ seed, profile }))
+    ));
+  }
   if (configuration.profileFile) {
     const profile = JSON.parse(await readFile(configuration.profileFile, "utf8"));
     assertFictionalProfileFile(profile);
@@ -164,7 +179,9 @@ async function runMatrix(configuration) {
       profileId: profile.profileId
     };
   });
-  const effectivePairwiseCoverage = effectivePairwiseCoverageReport(allEffectiveProfiles);
+  const effectivePairwiseCoverage = configuration.cohort === "pairwise"
+    ? effectivePairwiseCoverageReport(allEffectiveProfiles)
+    : null;
   const duplicatePlannerInputs = duplicateInputGroups(allEffectiveProfiles);
   const profileResults = [];
   const failures = [];
@@ -184,6 +201,7 @@ async function runMatrix(configuration) {
     const hashingStartedAt = performance.now();
     const effectiveStudent = plannerStudent(profile);
     const effectiveAxes = effectivePlannerAxes(profile, effectiveStudent);
+    const cohortFields = profileCohortFields(profile, effectiveStudent, configuration);
     const canonicalInput = JSON.stringify(stableValue(effectiveStudent));
     const plannerInputHash = createHash("sha256").update(canonicalInput).digest("hex");
     const hashingDurationMs = roundDuration(performance.now() - hashingStartedAt);
@@ -200,6 +218,13 @@ async function runMatrix(configuration) {
         policyBundle,
         canonicalPolicy
       });
+      if (configuration.cohort === ORDINARY_ON_TIME_COHORT_ID) {
+        invariant(
+          result.inputResolution?.status === "COMPLETE" && !result.inputResolution?.planningMustRemainBlocked,
+          "ORDINARY_INPUT_RESOLUTION_INCOMPLETE",
+          `${profile.profileId} did not resolve as a complete ordinary student input.`
+        );
+      }
       const durationMs = roundDuration(performance.now() - profileStartedAt);
       const heapUsedAfter = process.memoryUsage().heapUsed;
       if (result.noPlan) {
@@ -219,6 +244,7 @@ async function runMatrix(configuration) {
         sequenceIndex: profile.sequenceIndex,
         axes: profile.axes,
         effectiveAxes,
+        ...cohortFields,
         plannerInputHash,
         metricsOverhead: {
           hashingAndCanonicalSerializationMs: hashingDurationMs,
@@ -297,6 +323,8 @@ async function runMatrix(configuration) {
         classification: error.code || "UNCLASSIFIED_NIGHTLY_FAILURE",
         message: safeErrorMessage(error),
         axes: profile.axes,
+        effectiveAxes,
+        ...cohortFields,
         fictionalProfile: profile,
         plannerInputHash,
         metricsOverhead: {
@@ -324,7 +352,7 @@ async function runMatrix(configuration) {
   }
 
   let invalidEco257ElectiveAttempts = 0;
-  for (const seed of configuration.seeds) {
+  for (const seed of configuration.cohort === "pairwise" ? configuration.seeds : []) {
     const invalidNeighbors = generateInvalidEconomicsNeighbors({ seed, manifest, verifiedSchedule });
     for (const neighbor of invalidNeighbors) {
       invariant(
@@ -355,6 +383,28 @@ async function runMatrix(configuration) {
     .map(attempt => attempt.firstSolutionNode)
     .filter(value => value !== null && value !== undefined && value !== "" && Number.isFinite(Number(value)))
     .map(Number);
+  const firstFinalValidatorNodes = strategyAttempts
+    .map(attempt => attempt.firstFinalValidatorPlanNode)
+    .filter(value => value !== null && value !== undefined && Number.isFinite(Number(value)))
+    .map(Number);
+  const firstFinalValidatorTimes = strategyAttempts
+    .map(attempt => attempt.timeToFirstFinalValidatorPlanMs)
+    .filter(value => value !== null && value !== undefined && Number.isFinite(Number(value)))
+    .map(Number);
+  const searchAttempts = profileResults.flatMap(result => result.solverDiagnostics?.searchAttempts || []);
+  const orderingDecisions = searchAttempts.flatMap(attempt => (attempt.orderingTrace || []).map(decision => ({
+    ...decision,
+    rescue: Boolean(attempt.rescue)
+  })));
+  const deadEndsByRequirement = searchAttempts.reduce((counts, attempt) => {
+    for (const [requirementId, count] of Object.entries(attempt.deadEndsByRequirement || {})) {
+      counts[requirementId] = (counts[requirementId] || 0) + Number(count || 0);
+    }
+    return counts;
+  }, {});
+  const orderedDeadEnds = Object.entries(deadEndsByRequirement).sort((left, right) => (
+    right[1] - left[1] || left[0].localeCompare(right[0])
+  ));
   const planObservability = profileResults.flatMap(result => result.planObservability || []);
   const legacyFeasibilityStatuses = countBy(planObservability, plan => plan.legacyFeasibilityStatus);
   const strategyFits = countBy(planObservability, plan => `${plan.strategy}:${plan.strategyFit}`);
@@ -380,6 +430,8 @@ async function runMatrix(configuration) {
     result.planObservability || []
   ).some(plan => plan.legacyValidatedDisplayedPlan));
   const processUsage = process.resourceUsage();
+  const ordinaryProductCoverage = summarizeOrdinaryProductCoverage(profileResults, failures, cohortDefinition);
+  const selectionSeeds = [...new Set(allProfiles.map(({ seed }) => seed))];
   const summary = {
     schemaVersion: METRIC_SCHEMA_VERSION,
     kind: "econplanner-nightly-generated-matrix",
@@ -387,13 +439,21 @@ async function runMatrix(configuration) {
     dataClassification: "fictional-test-only",
     provenance: {
       ...runtimeProvenance(),
-      generatorVersion: ECONOMICS_GENERATOR_VERSION,
+      generatorVersion: configuration.generatorVersion,
+      cohortId: configuration.cohort === ORDINARY_ON_TIME_COHORT_ID
+        ? ORDINARY_ON_TIME_COHORT_ID
+        : configuration.explicitMayCommitments
+          ? `economics-generator-v${configuration.generatorVersion}-explicit-may`
+          : `economics-generator-v${configuration.generatorVersion}`,
+      explicitMayCommitments: configuration.explicitMayCommitments,
       oraclePolicyVersion: manifest.policy?.version ?? null,
       scheduleVersion: schedule.schemaVersion ?? null
     },
     selection: {
-      mode: "fixed-seed-pairwise",
-      seeds: configuration.seeds,
+      mode: configuration.cohort === ORDINARY_ON_TIME_COHORT_ID
+        ? "frozen-ordinary-on-time-v1"
+        : "fixed-seed-pairwise",
+      seeds: selectionSeeds,
       shard: {
         index: configuration.shardIndex,
         total: configuration.shardTotal,
@@ -407,7 +467,20 @@ async function runMatrix(configuration) {
         missingPairs: item.coverage.missingPairs.length
       })),
       effectivePairwiseCoverage,
-      duplicatePlannerInputs
+      duplicatePlannerInputs,
+      historyCoverage: cohortDefinition?.historyCoverage || [],
+      cohort: {
+        id: configuration.cohort === ORDINARY_ON_TIME_COHORT_ID
+          ? ORDINARY_ON_TIME_COHORT_ID
+          : configuration.explicitMayCommitments
+            ? `economics-generator-v${configuration.generatorVersion}-explicit-may`
+            : `economics-generator-v${configuration.generatorVersion}`,
+        category: configuration.cohort === ORDINARY_ON_TIME_COHORT_ID
+          ? "ordinary-on-time"
+          : "pairwise-stress",
+        generatorVersion: configuration.generatorVersion,
+        explicitMayCommitments: configuration.explicitMayCommitments
+      }
     },
     metrics: {
       totalRuntimeMs: roundDuration(performance.now() - startedAt),
@@ -415,6 +488,24 @@ async function runMatrix(configuration) {
       profilesWithPlans,
       profilesWithoutPlans: selectedProfiles.length - profilesWithPlans,
       acceptedPlanCount,
+      planCountDistribution: {
+        zero: profileResults.filter(result => result.plans === 0).length,
+        one: profileResults.filter(result => result.plans === 1).length,
+        two: profileResults.filter(result => result.plans === 2).length,
+        threePlus: profileResults.filter(result => result.plans >= 3).length
+      },
+      meanDistinctPlanCount: profileResults.length
+        ? Math.round(profileResults.reduce((sum, result) => sum + result.plans, 0) / profileResults.length * 10000) / 10000
+        : 0,
+      medianDistinctPlanCount: percentile(profileResults.map(result => result.plans), 0.5),
+      primaryPlanCoverage: {
+        numerator: profilesWithPlans,
+        denominator: selectedProfiles.length,
+        percentage: selectedProfiles.length
+          ? Math.round(profilesWithPlans / selectedProfiles.length * 1000000) / 10000
+          : 0
+      },
+      ordinaryProductCoverage,
       p50ProfileDurationMs: percentile(durations, 0.5),
       p90ProfileDurationMs: percentile(durations, 0.9),
       p95ProfileDurationMs: percentile(durations, 0.95),
@@ -446,22 +537,54 @@ async function runMatrix(configuration) {
           ...distributionSummary(firstSolverSolutionNodes)
         },
         timeToFirstCompletePlanMs: {
-          availability: "NOT_MEASURED",
-          reasonCode: "SOLVER_DOES_NOT_EMIT_FIRST_COMPLETE_SOLUTION_TIME",
-          value: null
+          availability: "MEASURED_FINAL_VALIDATOR",
+          ...distributionSummary(firstFinalValidatorTimes)
         },
         nodesToFirstCompleteApprovedPlan: {
-          availability: "NOT_MEASURED",
-          reasonCode: "FIRST_SOLUTION_NODE_PRECEDES_FINAL_VALIDATION",
-          value: null
+          availability: "MEASURED_FINAL_VALIDATOR",
+          ...distributionSummary(firstFinalValidatorNodes)
+        },
+        finalValidCandidatesAfterFirst: strategyAttempts.reduce((sum, attempt) => sum + Number(attempt.finalValidCandidatesAfterFirst || 0), 0),
+        normalSearch: {
+          attempts: searchAttempts.filter(attempt => !attempt.rescue).length,
+          nodes: distributionSummary(searchAttempts.filter(attempt => !attempt.rescue).map(attempt => attempt.nodesVisited)),
+          durationMs: distributionSummary(searchAttempts.filter(attempt => !attempt.rescue).map(attempt => attempt.durationMs))
+        },
+        rescueSearch: {
+          entries: strategyAttempts.filter(attempt => attempt.rescueTriggered).length,
+          innerAttempts: searchAttempts.filter(attempt => attempt.rescue).length,
+          successes: strategyAttempts.filter(attempt => attempt.rescueSucceeded).length,
+          nodes: distributionSummary(searchAttempts.filter(attempt => attempt.rescue).map(attempt => attempt.nodesVisited)),
+          durationMs: distributionSummary(searchAttempts.filter(attempt => attempt.rescue).map(attempt => attempt.durationMs))
+        },
+        dependencyAndFlexibility: {
+          availability: "MEASURED_BOUNDED_TRACE",
+          traceLimitPerSearchAttempt: 24,
+          decisionsRecorded: orderingDecisions.length,
+          legalPlacementCounts: distributionSummary(orderingDecisions.map(decision => decision.legalPlacementCount)),
+          eligibleTermCounts: distributionSummary(orderingDecisions.map(decision => decision.eligibleTermCount)),
+          eligibleSectionCounts: distributionSummary(orderingDecisions.map(decision => decision.eligibleSectionCount)),
+          selectedOrderingDecisions: orderingDecisions.filter(decision => decision.selectedOrderingRank === 1).length,
+          rescueMinimumDomainDecisions: orderingDecisions.filter(decision => decision.rescue && decision.selectedOrderingRank === 1).length,
+          fixedTermAnchors: orderingDecisions.filter(decision => decision.fixedTerm).length,
+          deadlineBoundAnchors: orderingDecisions.filter(decision => decision.deadlineBound).length,
+          selectedRequirements: countBy(orderingDecisions, decision => decision.requirementId),
+          rescueSelectionsByRequirement: countBy(orderingDecisions.filter(decision => decision.rescue), decision => decision.requirementId),
+          sourceTypes: countBy(orderingDecisions.flatMap(decision => decision.sourceTypes || []), value => value),
+          deadEndsByRequirement: Object.fromEntries(orderedDeadEnds),
+          mostDeadEnds: orderedDeadEnds.length ? { requirementId: orderedDeadEnds[0][0], count: orderedDeadEnds[0][1] } : null,
+          flexibleCourseMovement: {
+            availability: "NOT_MEASURED",
+            reasonCode: "BOUNDED_ORDERING_TRACE_DOES_NOT_INFER_A_COURSE_MOVE_WITHOUT_A_PAIRED_STATE_TRANSITION"
+          }
         },
         limitBehavior: {
           nodeLimitProfiles: nodeLimitProfiles.length,
           nodeLimitProfilesWithLegacyValidatedDisplayedPlan: nodeLimitProfilesWithLegacyValidatedDisplayedPlan.length,
           exactIncumbentPreservation: {
-            availability: "NOT_MEASURED",
-            reasonCode: "INCUMBENT_IDENTITY_AND_ALTERNATIVE_BUDGET_NOT_EMITTED",
-            value: null
+            availability: "MEASURED",
+            preservedProfiles: strategyAttempts.filter(attempt => attempt.incumbentPreservedAtLimit).length,
+            incumbentSignatures: [...new Set(strategyAttempts.map(attempt => attempt.firstIncumbentSignature).filter(Boolean))].sort()
           }
         }
       },
@@ -491,10 +614,13 @@ async function runMatrix(configuration) {
         primaryProductCoverage: {
           availability: "MEASURED_AUTHORITY",
           reasonCode: null,
+          measurementBasis: "PRODUCTION_DECISION_ENGINE_READINESS",
           numerator: readyProfiles.length,
           denominator: selectedProfiles.length,
           denominatorAvailability: "MEASURED",
-          percentage: selectedProfiles.length ? Math.round((readyProfiles.length / selectedProfiles.length) * 1000000) / 10000 : 0
+          percentage: selectedProfiles.length
+            ? Math.round((readyProfiles.length / selectedProfiles.length) * 1000000) / 10000
+            : 0
         },
         advisorActionRequiredProfiles: advisorActionProfiles.length,
         perProfileReportReadiness: {
@@ -509,6 +635,31 @@ async function runMatrix(configuration) {
         measurementBasis: "CURRENT_VALIDATOR_DISTRIBUTION_RESULT",
         displayedPlanFits: strategyFits,
         convergences: profileResults.reduce((sum, result) => sum + (result.strategyConvergences || []).length, 0)
+      },
+      cp5a: {
+        profilesWithMayPlannerCourse: profileResults.filter(result => (result.planObservability || []).some(plan => plan.mayPlacementCount > 0)).length,
+        freshmenWithTwoDistinctMayTerms: profileResults.filter(result => result.axes?.standing === "freshman"
+          && (result.planObservability || []).some(plan => plan.mayTermCount >= 2)).length,
+        sophomoresWithTwoDistinctMayTerms: profileResults.filter(result => result.axes?.standing === "sophomore"
+          && (result.planObservability || []).some(plan => plan.mayTermCount >= 2)).length,
+        exactNamedMayPlacements: planObservability.reduce((sum, plan) => sum + plan.exactNamedMayPlacements, 0),
+        ownerApprovedHistoricalNamedMayPlacements: planObservability.reduce((sum, plan) => sum + plan.historicalNamedMayPlacements, 0),
+        catalogNamedMayPlacements: planObservability.reduce((sum, plan) => sum + plan.catalogNamedMayPlacements, 0),
+        genericMayPlaceholders: planObservability.reduce((sum, plan) => sum + plan.genericMayPlaceholders, 0),
+        unsupportedMayPlacements: planObservability.reduce((sum, plan) => sum + plan.unsupportedMayPlacements, 0),
+        annualDistributionCounts: countBy(planObservability.flatMap(plan => plan.annualDistributions || []), value => (
+          ["1/2/1", "2/1/1", "2/2/0"].includes(value) ? value : "other"
+        )),
+        sourceMix: planObservability.reduce((totals, plan) => {
+          for (const [source, count] of Object.entries(plan.sourceMix || {})) {
+            totals[source] = Number(totals[source] || 0) + Number(count || 0);
+          }
+          return totals;
+        }, {}),
+        veryLowHistoricalSelections: planObservability.reduce((sum, plan) => sum + plan.veryLowHistoricalSelections, 0),
+        eco321Busn323PairedPlans: planObservability.filter(plan => plan.eco321Busn323Pair).length,
+        prerequisiteNoticeCodes: countBy(planObservability.flatMap(plan => plan.prerequisiteNoticeCodes || []), value => value),
+        degreeDesignationCodes: countBy(planObservability.flatMap(plan => plan.degreeDesignationCodes || []), value => value)
       },
       moveDestinations: {
         availability: "NOT_MEASURED",
@@ -640,7 +791,7 @@ async function runMatrix(configuration) {
       schemaVersion: METRIC_SCHEMA_VERSION,
       kind: "econplanner-nightly-failure-evidence",
       shard: summary.selection.shard,
-      seeds: configuration.seeds,
+      seeds: selectionSeeds,
       failures
     });
     process.exitCode = 1;
@@ -670,6 +821,8 @@ function countBy(items, selector) {
 function isFrozenCp4Cohort(configuration, summary) {
   return configuration.shardIndex === 1
     && configuration.shardTotal === 1
+    && configuration.generatorVersion === 3
+    && configuration.explicitMayCommitments === false
     && summary.selection.totalProfilesAcrossAllShards === 368
     && configuration.seeds.length === DEFAULT_SEEDS.length
     && configuration.seeds.every((seed, index) => seed === DEFAULT_SEEDS[index]);
@@ -729,6 +882,21 @@ export function characterizeDisplayedPlan(plan, shadow = null) {
       : distribution?.valid
         ? "ACCEPTABLE"
         : "MISMATCH";
+  const annualDistributions = [...new Set((plan?.terms || []).map(term => term.yearIndex))]
+    .sort((left, right) => left - right)
+    .map(yearIndex => {
+      const yearTerms = (plan?.terms || []).filter(term => term.yearIndex === yearIndex);
+      const count = key => yearTerms
+        .filter(term => key === "May" ? ["Spring", "May"].includes(term.termKey) : term.termKey === key)
+        .reduce((sum, term) => sum + (term.courses || []).length, 0);
+      return `${count("Fall")}/${count("Winter")}/${count("May")}`;
+    });
+  const placements = (plan?.terms || []).flatMap(term => (
+    (term.courses || []).map(course => ({ term, course }))
+  ));
+  const mayPlacements = placements.filter(({ term }) => ["Spring", "May"].includes(term.termKey));
+  const sourceMix = countBy(placements, ({ course }) => course.source || "UNCLASSIFIED");
+  const allocationAssignments = plan?.validation?.requirementAllocation?.assignments || [];
   return {
     planId: plan?.id || null,
     label: plan?.label || null,
@@ -762,6 +930,22 @@ export function characterizeDisplayedPlan(plan, shadow = null) {
       ...(Array.isArray(distribution?.warnings) ? distribution.warnings : []),
       ...(Array.isArray(distribution?.errors) ? distribution.errors : [])
     ])],
+    annualDistributions,
+    mayPlacementCount: mayPlacements.length,
+    mayTermCount: new Set(mayPlacements.map(({ term }) => `${term.academicYear}:${term.termKey}`)).size,
+    exactNamedMayPlacements: mayPlacements.filter(({ course }) => course.source === "verified-offering" && course.course !== "ECO elective").length,
+    historicalNamedMayPlacements: mayPlacements.filter(({ course }) => course.source === "historical-pattern" && course.course !== "ECO elective").length,
+    catalogNamedMayPlacements: mayPlacements.filter(({ course }) => course.source === "catalog-statement" && course.course !== "ECO elective").length,
+    genericMayPlaceholders: mayPlacements.filter(({ course }) => course.course === "ECO elective" || course.source === "requirement-placeholder").length,
+    unsupportedMayPlacements: mayPlacements.filter(({ course }) => ![
+      "verified-offering", "historical-pattern", "catalog-statement", "projected-offering", "requirement-placeholder"
+    ].includes(course.source)).length,
+    sourceMix,
+    veryLowHistoricalSelections: placements.filter(({ course }) => course.historicalPriority === "VERY_LOW").length,
+    prerequisiteNoticeCodes: (plan?.prerequisiteNotices || []).map(notice => notice.code).sort(),
+    degreeDesignationCodes: (plan?.degreeRequirementInformation?.items || []).map(item => item.code).sort(),
+    eco321Busn323Pair: allocationAssignments.some(item => item.slotId === "finance" && item.code === "BUSN 323")
+      && allocationAssignments.some(item => String(item.slotId).startsWith("eco-elective") && item.code === "ECO 321"),
     productionDecisionEngine: {
       availability: shadow ? "MEASURED_AUTHORITY" : "NOT_MEASURED",
       reasonCode: shadow ? null : "PRODUCTION_DECISION_ENGINE_NOT_IMPLEMENTED_UNTIL_CP3",
@@ -1093,20 +1277,36 @@ function plannerStudent(profile) {
 
 function effectivePlannerAxes(profile, student) {
   const declared = profile.axes || {};
+  const context = resolvePlanningContext(student);
   const statuses = new Set((student.courses || []).map(course => course.status));
   const reservedValues = Object.values(student.reservedCourseUnits || {});
   return {
-    standing: student.academicStanding ?? null,
-    planningPace: student.isTransferStudent ? null : student.planningPace ?? null,
+    standing: context.effectiveStanding ?? null,
+    planningPace: context.planningPace ?? null,
     seniorStandingConfirmationState: declared.seniorStandingConfirmationState ?? null,
     planDate: student.planCreationDate ?? null,
     transferStatus: student.isTransferStudent ? "transfer" : "regular",
-    graduationHorizon: student.isTransferStudent ? declared.graduationHorizon ?? null : null,
+    graduationHorizon: context.remainingYears ?? null,
     courseStatus: statuses.has(declared.courseStatus) ? declared.courseStatus : null,
     completedPathway: (student.courses || []).length ? declared.completedPathway ?? null : null,
     reservedCapacity: reservedValues.length ? Math.max(...reservedValues) : null,
     availabilityState: null,
-    approvalState: null
+    approvalState: null,
+    historyCategory: declared.historyCategory ?? null
+  };
+}
+
+function profileCohortFields(profile, student, configuration) {
+  const context = resolvePlanningContext(student);
+  return {
+    cohortCategory: configuration.cohort === ORDINARY_ON_TIME_COHORT_ID
+      ? "ordinary-on-time"
+      : "pairwise-stress",
+    historyCategory: profile?.cohort?.historyCategory || profile?.axes?.historyCategory || null,
+    declaredStanding: profile?.axes?.standing || profile?.student?.academicStanding || null,
+    resolvedEffectiveStanding: context.effectiveStanding,
+    effectiveRemainingYears: context.remainingYears,
+    expectedGraduationYear: context.expectedGraduationYear
   };
 }
 
@@ -1283,8 +1483,14 @@ function replayEvidence(seed, profile, configuration) {
     command: [
       "node",
       "scripts/run-economics-nightly-matrix.mjs",
+      ...(configuration.cohort === ORDINARY_ON_TIME_COHORT_ID
+        ? ["--cohort", ORDINARY_ON_TIME_COHORT_ID]
+        : []),
       "--seeds",
       String(seed),
+      "--generator-version",
+      String(configuration.generatorVersion),
+      ...(configuration.explicitMayCommitments ? ["--explicit-may-commitments"] : []),
       "--profile-id",
       profile.profileId,
       "--shard",
@@ -1298,6 +1504,7 @@ function replayEvidence(seed, profile, configuration) {
 
 async function minimizeCounterexample(profile, classification, inputs, output) {
   if (!classification) return null;
+  if (profile?.generation?.shrinkable === false) return null;
   for (const candidate of shrinkFictionalEconomicsProfile(profile, inputs)) {
     try {
       await evaluateProfile({ profile: candidate, ...inputs });
@@ -1652,6 +1859,7 @@ function collectPlaywrightExecutions(suites, parents, source) {
 function parseArguments(args) {
   const result = {
     mode: "matrix",
+    cohort: "pairwise",
     seeds: [...DEFAULT_SEEDS],
     shardIndex: 1,
     shardTotal: 1,
@@ -1661,6 +1869,8 @@ function parseArguments(args) {
     optionalLog: null,
     profileId: null,
     profileFile: null,
+    generatorVersion: ECONOMICS_GENERATOR_VERSION,
+    explicitMayCommitments: false,
     writeCp4bAArtifacts: false,
     writeCp4bBArtifacts: false,
     writeCp4bBFollowupArtifacts: false
@@ -1673,6 +1883,8 @@ function parseArguments(args) {
       result.mode = "prerequisite-summary";
     } else if (argument === "--seeds") {
       result.seeds = parseSeeds(requiredValue(args, ++index, argument));
+    } else if (argument === "--cohort") {
+      result.cohort = requiredValue(args, ++index, argument);
     } else if (argument === "--shard") {
       const [shardIndex, shardTotal] = requiredValue(args, ++index, argument).split("/").map(Number);
       result.shardIndex = shardIndex;
@@ -1689,6 +1901,10 @@ function parseArguments(args) {
       result.profileId = requiredValue(args, ++index, argument);
     } else if (argument === "--profile-file") {
       result.profileFile = resolveSafeProfileInput(requiredValue(args, ++index, argument));
+    } else if (argument === "--generator-version") {
+      result.generatorVersion = Number(requiredValue(args, ++index, argument));
+    } else if (argument === "--explicit-may-commitments") {
+      result.explicitMayCommitments = true;
     } else if (argument === "--write-cp4b-a-artifacts") {
       result.writeCp4bAArtifacts = true;
     } else if (argument === "--write-cp4b-b-artifacts") {
@@ -1703,6 +1919,11 @@ function parseArguments(args) {
     && result.shardIndex >= 1 && result.shardIndex <= result.shardTotal,
   "INVALID_SHARD", "--shard must use INDEX/TOTAL with 1 <= INDEX <= TOTAL.");
   invariant(result.seeds.length > 0, "INVALID_SEEDS", "At least one fixed seed is required.");
+  invariant(["pairwise", ORDINARY_ON_TIME_COHORT_ID].includes(result.cohort),
+    "INVALID_COHORT", `--cohort must be pairwise or ${ORDINARY_ON_TIME_COHORT_ID}.`);
+  invariant([3, 4].includes(result.generatorVersion), "INVALID_GENERATOR_VERSION", "--generator-version must be 3 or 4.");
+  invariant(!(result.cohort === ORDINARY_ON_TIME_COHORT_ID && result.explicitMayCommitments),
+    "ORDINARY_COHORT_MAY_STRESS", "The ordinary cohort cannot include explicit May commitments.");
   invariant(!(result.profileId && result.profileFile), "AMBIGUOUS_PROFILE_REPLAY", "Choose --profile-id or --profile-file, not both.");
   if (result.mode === "playwright-summary") {
     invariant(result.inputs.length > 0, "MISSING_PLAYWRIGHT_INPUT", "At least one --input report is required.");
@@ -1784,6 +2005,67 @@ function distributionSummary(values) {
   };
 }
 
+function summarizeOrdinaryProductCoverage(profileResults, failures, cohortDefinition) {
+  function coverage(rows, failedRows) {
+    const denominator = rows.length + failedRows.length;
+    const numerator = rows.filter(row => row.plans > 0).length;
+    return {
+      numerator,
+      denominator,
+      zeroPlanCount: rows.filter(row => row.plans === 0).length + failedRows.length,
+      percentage: denominator ? Math.round(numerator / denominator * 1000000) / 10000 : null,
+      planCountDistribution: {
+        zero: rows.filter(row => row.plans === 0).length + failedRows.length,
+        one: rows.filter(row => row.plans === 1).length,
+        two: rows.filter(row => row.plans === 2).length,
+        threePlus: rows.filter(row => row.plans >= 3).length
+      }
+    };
+  }
+
+  if (!cohortDefinition) {
+    return {
+      schemaVersion: 1,
+      metricId: "ordinary-on-time-plan-coverage-v1",
+      role: "PRIMARY_PRODUCT_KPI",
+      availability: "NOT_APPLICABLE",
+      reasonCode: "PAIRWISE_STRESS_COHORT",
+      cohortId: null,
+      measurementBasis: "FINAL_VALIDATOR_ACCEPTED_PLANS",
+      overall: coverage([], []),
+      byStanding: {},
+      historyCoverage: []
+    };
+  }
+
+  const ordinaryProfiles = profileResults.filter(row => row.cohortCategory === "ordinary-on-time");
+  const ordinaryFailures = failures.filter(row => row.cohortCategory === "ordinary-on-time");
+  const byStanding = Object.fromEntries(cohortDefinition.historyCoverage.map(design => [
+    design.standing,
+    {
+      ...coverage(
+        ordinaryProfiles.filter(row => row.resolvedEffectiveStanding === design.standing),
+        ordinaryFailures.filter(row => row.resolvedEffectiveStanding === design.standing)
+      ),
+      normalRemainingYears: design.normalRemainingYears,
+      historyCategories: design.historyCategories,
+      justification: design.justification
+    }
+  ]));
+  return {
+    schemaVersion: 1,
+    metricId: "ordinary-on-time-plan-coverage-v1",
+    role: "PRIMARY_PRODUCT_KPI",
+    availability: "MEASURED_AUTHORITY",
+    reasonCode: null,
+    cohortId: ORDINARY_ON_TIME_COHORT_ID,
+    measurementBasis: "FINAL_VALIDATOR_ACCEPTED_PLANS",
+    overall: coverage(ordinaryProfiles, ordinaryFailures),
+    byStanding,
+    historyCoverage: cohortDefinition.historyCoverage
+  };
+}
+
 function buildDimensionSummary(profileResults) {
   function summarize(field) {
     const dimensions = new Map();
@@ -1791,18 +2073,40 @@ function buildDimensionSummary(profileResults) {
       for (const [name, rawValue] of Object.entries(result[field] || {})) {
         const value = rawValue === null || rawValue === undefined ? "NOT_CONSUMED" : String(rawValue);
         const byValue = dimensions.get(name) || new Map();
-        const current = byValue.get(value) || { profiles: 0, profilesWithPlans: 0, noPlans: 0, acceptedPlans: 0 };
+        const current = byValue.get(value) || {
+          profiles: 0,
+          profilesWithPlans: 0,
+          noPlans: 0,
+          acceptedPlans: 0,
+          planCountDistribution: { zero: 0, one: 0, two: 0, threePlus: 0 },
+          planCounts: []
+        };
         current.profiles += 1;
         current.profilesWithPlans += result.plans > 0 ? 1 : 0;
         current.noPlans += result.plans > 0 ? 0 : 1;
         current.acceptedPlans += result.plans;
+        const planCountKey = result.plans === 0 ? "zero" : result.plans === 1 ? "one" : result.plans === 2 ? "two" : "threePlus";
+        current.planCountDistribution[planCountKey] += 1;
+        current.planCounts.push(result.plans);
         byValue.set(value, current);
         dimensions.set(name, byValue);
       }
     }
     return Object.fromEntries([...dimensions.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([name, byValue]) => [
       name,
-      Object.fromEntries([...byValue.entries()].sort(([left], [right]) => left.localeCompare(right)))
+      Object.fromEntries([...byValue.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([value, current]) => [
+        value,
+        {
+          profiles: current.profiles,
+          profilesWithPlans: current.profilesWithPlans,
+          noPlans: current.noPlans,
+          acceptedPlans: current.acceptedPlans,
+          coveragePercentage: current.profiles ? Math.round(current.profilesWithPlans / current.profiles * 1000000) / 10000 : 0,
+          planCountDistribution: current.planCountDistribution,
+          meanDistinctPlanCount: current.profiles ? Math.round(current.acceptedPlans / current.profiles * 10000) / 10000 : 0,
+          medianDistinctPlanCount: percentile(current.planCounts, 0.5)
+        }
+      ]))
     ]));
   }
   return { declared: summarize("axes"), effective: summarize("effectiveAxes") };

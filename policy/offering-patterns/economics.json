@@ -28,6 +28,31 @@
       "effective": {"from": "2026-08-01", "through": null},
       "review": {"reviewer": "Economics Department representative and project owner", "lastReviewDate": "2026-08-01"},
       "supersedes": ["LEGACY-INTERMEDIATE-SAME-TERM-PROHIBITION"]
+    },
+    {
+      "patternId": "CATALOG-ECO-222-SPRING",
+      "course": "ECO 222",
+      "authority": "Hanover College official catalog",
+      "authorityBoundary": "UNPUBLISHED_ECO_222_SPRING_PLANNING_PROJECTION",
+      "sourceRefs": ["OFFICIAL-CATALOG-ECONOMICS#ECO-222", "HANOVER-CP5A-OFFICIAL-EVIDENCE#Economics-course-statements"],
+      "evidenceType": "OFFICIAL_CATALOG_STATEMENT",
+      "hardExcludedTerms": [],
+      "approvedRecurringTerms": ["MAY"],
+      "yearsObserved": [],
+      "observationsByTerm": {},
+      "contradictoryYears": [],
+      "confidence": "CONFIRMED_PATTERN",
+      "projectionGranularity": "EXACT_TERM",
+      "projectionPolicy": {
+        "scheduleCoverage": ["UNAVAILABLE", "UNKNOWN"],
+        "normalTerms": ["MAY"],
+        "fallback": "GENERIC_ELECTIVE_OR_TERM_TO_CONFIRM",
+        "activeExactScheduleOverrides": true,
+        "probabilityEmitted": false
+      },
+      "effective": {"from": "2025-08-01", "through": null},
+      "review": {"reviewer": "CP5A official-source review", "lastReviewDate": "2026-08-08"},
+      "supersedes": []
     }
   ]
 }

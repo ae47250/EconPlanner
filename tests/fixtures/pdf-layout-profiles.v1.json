@@ -19,10 +19,9 @@
       "layoutMutations": {
         "availability": [
           {
-            "academicYear": "2026/2027",
-            "term": "Spring",
+            "academicYear": "2027/2028",
+            "term": "Spring/May 2028",
             "course": "ECO 222",
-            "section": "S",
             "value": {
               "status": "waitlisted",
               "seatsOpen": 0,
