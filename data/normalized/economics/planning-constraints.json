@@ -2,16 +2,25 @@
   "terms": {
     "Fall": {
       "maxTotalCourses": 4,
+      "normalCourseUnits": 4,
+      "conditionalMaximumCourseUnits": 5.25,
+      "conditionalRequirements": ["ADVISOR_APPROVAL", "NOT_ON_ACADEMIC_PROBATION"],
       "preferredMaxEconomicsCourses": 2,
       "graduationMaxEconomicsCourses": 4
     },
     "Winter": {
       "maxTotalCourses": 4,
+      "normalCourseUnits": 4,
+      "conditionalMaximumCourseUnits": 5.25,
+      "conditionalRequirements": ["ADVISOR_APPROVAL", "NOT_ON_ACADEMIC_PROBATION"],
       "preferredMaxEconomicsCourses": 2,
       "graduationMaxEconomicsCourses": 4
     },
     "May": {
       "maxTotalCourses": 1,
+      "normalCourseUnits": 1,
+      "conditionalMaximumCourseUnits": 1.25,
+      "conditionalRequirements": ["ADVISOR_APPROVAL", "NOT_ON_ACADEMIC_PROBATION"],
       "maxEconomicsCourses": 1
     },
     "Summer": {

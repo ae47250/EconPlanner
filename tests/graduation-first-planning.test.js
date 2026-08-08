@@ -102,7 +102,7 @@ test("sophomore C-2 evaluates 12, 11, 10, and 9 remaining through the full solve
     "PRELIMINARY_ONLY",
     "PRELIMINARY_ONLY",
     "PRELIMINARY_ONLY",
-    "PRELIMINARY_ONLY"
+    "CONDITIONALLY_FEASIBLE"
   ]);
   assert.equal(statuses[0].plan.feasibility.search.solutionFound, true);
   assert.ok(statuses[0].plan.feasibility.search.validSolutionCount > 0);

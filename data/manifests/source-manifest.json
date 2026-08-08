@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01T00:00:00.000Z",
+  "generatedAt": "2026-08-08T00:00:00.000Z",
   "entries": [
     {
       "role": "catalog_home",
@@ -310,6 +310,21 @@
       "source": "department-provided:Term_Structure.md",
       "path": "data/raw/economics/Term_Structure.md",
       "sha256": "2ef08b86aa2c4fa0f58fb213db21e3a99027bb833d0d4f52e23f51962f80acc3"
+    },
+    {
+      "role": "economics_declaration_evidence",
+      "source": "user-provided:ECON Major Declaration.doc",
+      "reviewedOn": "2026-08-08",
+      "path": "data/raw/economics/ECON Major Declaration.doc",
+      "sha256": "1bbeb9813637b9d065efc9cbf57cf4062cf471201616699d14c90cde94c23f48",
+      "notes": "One-page declaration form visually reviewed for cognate and relevant HS/W2 labels. Struck-through rows are not activated as historical frequency evidence."
+    },
+    {
+      "role": "official_policy_evidence_review",
+      "source": "official-hanover-sources:cp5a-policy-review",
+      "reviewedOn": "2026-08-08",
+      "path": "data/raw/economics/CP5A_Official_Policy_Evidence.md",
+      "sha256": "5b5fedcdeea9251d88b273eea30951836a71f8b33a776187b6a10e24888adef8"
     },
     {
       "role": "economics_source",

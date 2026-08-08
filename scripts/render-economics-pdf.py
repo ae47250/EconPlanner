@@ -95,6 +95,31 @@ def main():
     ]))
     story.append(requirement_table)
 
+    degree_information = report.get("degreeRequirementInformation") or {}
+    degree_items = degree_information.get("items", [])
+    if degree_items:
+        degree_story = [Paragraph("CCR/ACE information", heading)]
+        terminology = degree_information.get("terminology", {})
+        degree_story.append(Paragraph(
+            f"{escape(terminology.get('ccr', 'Core Curriculum Requirements (CCRs)'))} / {escape(terminology.get('ace', 'Areas of Competency and Engagement (ACEs)'))}",
+            body,
+        ))
+        for item in degree_items:
+            degree_story.append(Paragraph(
+                f"- <b>{escape(str(item.get('code', '')))}</b> {escape(str(item.get('detail', '')))}",
+                body,
+            ))
+        story.append(KeepTogether(degree_story))
+
+    prerequisite_notices = report.get("prerequisiteNotices", [])
+    if prerequisite_notices:
+        prerequisite_story = [Paragraph("Prerequisite completion information", heading)]
+        prerequisite_story.extend(
+            Paragraph(f"- {escape(str(item.get('message', '')))}", body)
+            for item in prerequisite_notices
+        )
+        story.append(KeepTogether(prerequisite_story))
+
     checks = [
         *(f"{item.get('label', item.get('requirementId', 'Requirement'))}: {item.get('reason', 'Remaining')}" for item in report.get("unresolved", [])),
         *(f"{item.get('course', 'Advisor check')}: {item.get('reason', '')}" for item in report.get("advisorChecks", [])),

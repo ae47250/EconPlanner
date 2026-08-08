@@ -1,5 +1,5 @@
 {
-  "activationStatus": "PENDING_OWNER_APPROVAL",
+  "activationStatus": "ACTIVE",
   "bundleVersion": "econ-2025-2026.1",
   "compatibility": [
     {
@@ -21,7 +21,7 @@
       "status": "MATCH"
     },
     {
-      "canonicalHash": "sha256:0dc785884c35d6466d7f06dc8513aa6b121d68f3f85970923c498f7c87d05843",
+      "canonicalHash": "sha256:7bc11aff51dc23afc14ef23755cf5f805e2d890c410143eb81893d408abb3e88",
       "output": "compatibility/planning-constraints.json",
       "source": "data/normalized/economics/planning-constraints.json",
       "status": "MATCH"
@@ -33,12 +33,13 @@
       "status": "MATCH"
     }
   ],
-  "contentHash": "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7",
+  "contentHash": "sha256:233ee6d7405d16af0303e42059bbda1a3860edcd9a95335b21c829bbfea72387",
   "counts": {
     "activeRules": 54,
     "courses": 31,
+    "historicalOfferingRecords": 0,
     "scheduleSections": 17,
-    "sources": 8,
+    "sources": 10,
     "unresolvedReviewRecords": 5
   },
   "determinism": {
@@ -55,10 +56,11 @@
     "policy/rules/terms-load-graduation.json",
     "policy/schedules/2026-2027.json",
     "policy/offering-patterns/economics.json",
+    "policy/historical-offerings/economics.json",
     "policy/messages/en-US.json",
     "policy/unresolved/policy-questions.json"
   ],
-  "manifestStatus": "DRAFT",
+  "manifestStatus": "ACTIVE",
   "performanceBudgetMs": 5000,
   "schemaVersion": "1.0.0",
   "validation": {

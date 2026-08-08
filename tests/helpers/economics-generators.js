@@ -1,6 +1,7 @@
 import fc from "fast-check";
 
-export const ECONOMICS_GENERATOR_VERSION = 3;
+export const ECONOMICS_GENERATOR_VERSION = 4;
+export const ECONOMICS_GENERATOR_LEGACY_VERSION = 3;
 
 export const ECONOMICS_GENERATOR_AXES = Object.freeze({
   standing: Object.freeze(["freshman", "sophomore", "junior", "senior"]),
@@ -301,7 +302,14 @@ function profileIdentifier(seed, axes) {
   return `fictional-econ-${normalizeSeed(seed)}-${stableHash(signature)}`;
 }
 
-function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = null }) {
+function buildProfile({
+  seed,
+  axes,
+  manifest,
+  verifiedSchedule,
+  sequenceIndex = null,
+  generatorVersion = ECONOMICS_GENERATOR_VERSION
+}) {
   const normalizedSeed = normalizeSeed(seed);
   const academicYearStart = activeAcademicYearStart(axes.planDate);
   const transfer = axes.transferStatus === "transfer";
@@ -340,7 +348,9 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
       reservedCapacity: {
         Fall: axes.reservedCapacity,
         Winter: axes.reservedCapacity,
-        May: Math.min(1, axes.reservedCapacity)
+        May: generatorVersion === ECONOMICS_GENERATOR_LEGACY_VERSION
+          ? Math.min(1, axes.reservedCapacity)
+          : 0
       }
     },
     scenario: {
@@ -360,8 +370,12 @@ function buildProfile({ seed, axes, manifest, verifiedSchedule, sequenceIndex = 
     },
     verifiedSchedulePattern: verifiedIntermediatePattern(verifiedSchedule),
     generation: {
+      generatorVersion,
       selectionMode: "seeded-pairwise-greedy",
       prerequisiteSource: "independent-policy-manifest",
+      mayReservationPolicy: generatorVersion === ECONOMICS_GENERATOR_LEGACY_VERSION
+        ? "LEGACY_DERIVED_FROM_FALL_WINTER_RESERVATION"
+        : "EXPLICIT_COMMITMENT_ONLY",
       shrinkable: true
     }
   };
@@ -390,6 +404,17 @@ export function auditGeneratedFictionalProfile(profile, manifest, verifiedSchedu
 
   if (profile?.fictional !== true || !profile?.profileId || !Number.isSafeInteger(profile?.seed)) {
     violations.push({ ruleId: "GENERATOR-FICTIONAL-IDENTITY", message: "A fictional marker, seed, and profile ID are required." });
+  }
+
+  const generatorVersion = Number(profile?.generation?.generatorVersion || ECONOMICS_GENERATOR_LEGACY_VERSION);
+  const mayReservation = Number(profile?.student?.reservedCapacity?.May || 0);
+  if (generatorVersion >= ECONOMICS_GENERATOR_VERSION
+      && mayReservation > 0
+      && profile?.scenario?.trueMayCommitment?.explicit !== true) {
+    violations.push({
+      ruleId: "GENERATOR-EXPLICIT-MAY-COMMITMENT",
+      message: "May reservation requires an explicit true-May commitment scenario."
+    });
   }
 
   for (const [index, course] of canonicalCourses.entries()) {
@@ -521,8 +546,12 @@ export function generateFictionalEconomicsProfiles({
   seed,
   manifest,
   verifiedSchedule,
-  maximumProfiles = 100
+  maximumProfiles = 100,
+  generatorVersion = ECONOMICS_GENERATOR_VERSION
 }) {
+  if (![ECONOMICS_GENERATOR_LEGACY_VERSION, ECONOMICS_GENERATOR_VERSION].includes(generatorVersion)) {
+    throw new RangeError(`Unsupported Economics generator version ${generatorVersion}.`);
+  }
   const normalizedSeed = normalizeSeed(seed);
   const axesRows = buildPairwiseAxes(normalizedSeed);
   if (axesRows.length > maximumProfiles) {
@@ -533,10 +562,12 @@ export function generateFictionalEconomicsProfiles({
     axes,
     manifest,
     verifiedSchedule,
-    sequenceIndex: index
+    sequenceIndex: index,
+    generatorVersion
   }));
   return {
     seed: normalizedSeed,
+    generatorVersion,
     selectionMode: "seeded-pairwise-greedy",
     profiles,
     coverage: pairwiseCoverageReport(profiles)
@@ -565,13 +596,43 @@ export function shrinkFictionalEconomicsProfile(profile, { manifest, verifiedSch
       seed: profile.seed,
       axes,
       manifest,
-      verifiedSchedule
+      verifiedSchedule,
+      generatorVersion: Number(profile?.generation?.generatorVersion || ECONOMICS_GENERATOR_VERSION)
     });
     candidate.generation.shrinkOf = profile.profileId;
     candidate.generation.shrunkAxis = name;
     candidates.push(candidate);
   }
   return candidates;
+}
+
+export function generateLegacyV3FictionalEconomicsProfiles(options) {
+  return generateFictionalEconomicsProfiles({
+    ...options,
+    generatorVersion: ECONOMICS_GENERATOR_LEGACY_VERSION
+  });
+}
+
+export function withExplicitMayCommitment(profile, reservedUnits = 1) {
+  const units = Number(reservedUnits);
+  if (!Number.isFinite(units) || units <= 0 || units > 1.25) {
+    throw new RangeError("A true-May commitment must be greater than zero and no more than 1.25 course units.");
+  }
+  const committed = structuredClone(profile);
+  committed.student.reservedCapacity = {
+    ...(committed.student.reservedCapacity || {}),
+    May: units
+  };
+  committed.scenario = {
+    ...(committed.scenario || {}),
+    trueMayCommitment: {
+      explicit: true,
+      reservedUnits: units,
+      source: "fictional-heldout-scenario"
+    }
+  };
+  committed.profileId = `${profile.profileId}-explicit-may-${String(units).replace(".", "_")}`;
+  return committed;
 }
 
 function invalidNeighbor(base, mutationId, expectedViolationRuleId, mutate, manifest, verifiedSchedule) {

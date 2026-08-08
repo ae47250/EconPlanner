@@ -147,7 +147,7 @@ test("one-year-early planning needs no confirmation and returns only the shorten
   assert.deepEqual(result.plans[0].distribution.targetYearCounts, [4, 4, 4]);
   assert.equal(result.plans[0].isEarlyGraduation, true);
   assert.equal(result.plans[0].planningContext.expectedGraduationTerm, "Spring/May 2029");
-  assert.equal(result.plans[0].feasibilityStatus, "PRELIMINARY_ONLY");
+  assert.equal(result.plans[0].feasibilityStatus, "CONDITIONALLY_FEASIBLE");
   assert.equal(result.plans[0].studentNotices.filter(notice => notice.code === "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED").length, 1);
 });
 
@@ -637,7 +637,7 @@ function upcomingSenior(codes) {
   };
 }
 
-test("graduation priority uses verified Economics offerings plus an explicit supporting placeholder", () => {
+test("standard planning may use more than two Economics courses when total load remains valid", () => {
   const student = upcomingSenior(["ECO 113", "ECO 114", "MAT 113", "ECO 214"]);
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
@@ -647,7 +647,7 @@ test("graduation priority uses verified Economics offerings plus an explicit sup
   assert.equal(result.planSetValidation.uniquePlanCount, 1);
 
   for (const plan of result.plans) {
-    assert.equal(plan.planningMode, "graduation_priority");
+    assert.equal(plan.planningMode, "standard");
     assert.equal(plan.validation.valid, true);
     const fall = plan.terms.find(term => term.term === "Fall 2026");
     const winter = plan.terms.find(term => term.term === "Winter 2027");

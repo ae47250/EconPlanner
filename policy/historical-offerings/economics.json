@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "econ-2025-2026.1",
+  "activationStatus": "INACTIVE_NO_APPROVED_DATA",
+  "ownerApproval": {
+    "approved": false,
+    "reviewer": null,
+    "approvedOn": null
+  },
+  "method": {
+    "methodId": "ECON-HISTORICAL-OFFERING-METHOD",
+    "version": "1.0.0",
+    "owner": "Economics Department",
+    "veryLowPriorityRule": {
+      "minimumCompleteYears": 6,
+      "maximumYearsOffered": 1
+    },
+    "otherThresholdsActive": false
+  },
+  "records": [],
+  "reviewCandidates": [],
+  "conflicts": []
+}

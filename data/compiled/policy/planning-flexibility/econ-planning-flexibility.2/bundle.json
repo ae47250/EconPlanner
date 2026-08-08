@@ -2,7 +2,7 @@
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
   "bundleVersion": "econ-planning-flexibility.2",
-  "contentHash": "sha256:6d49f1f70e8adc30f9b57a221fd94ea84ee249c9e753fe0b2fafbe462cbd63b9",
+  "contentHash": "sha256:2a3c3c70eeb79c01d51a752de7989d68df2722faa1c96a3dae584f4d23aac762",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -37,6 +37,8 @@
     },
     "futureScheduleProjection": {
       "futureOfferingLikelihoodExtension": {
+        "activationRequiresOwnerApproval": true,
+        "canonicalContract": "policy/historical-offerings/economics.json",
         "currentLikelihoodDataAvailable": false,
         "inputFormat": "OWNER_SUPPLIED_EXCEL_HISTORICAL_OFFERING_OBSERVATIONS",
         "probabilitiesMayBeInferredWithoutData": false,
@@ -46,7 +48,7 @@
           "OBSERVATION_PERIOD",
           "INFORMATIONAL_ONLY"
         ],
-        "status": "ARCHITECTURE_ONLY"
+        "status": "CONTRACT_IMPLEMENTED_INACTIVE_NO_APPROVED_DATA"
       },
       "notice": {
         "audience": [
@@ -64,6 +66,79 @@
       "readinessImpact": "NONE",
       "ruleId": "FUTURE-UNPUBLISHED-SCHEDULE-PLANNING-PROJECTION",
       "unpublishedScheduleEffect": "ALLOW_ACADEMICALLY_VALID_PLANNING_PROJECTION"
+    },
+    "generalDegreeDesignationInformation": {
+      "advisorActionStatus": "INFORMATION_ONLY",
+      "designations": {
+        "HS": {
+          "courses": [
+            "ECO 113",
+            "ECO 114",
+            "ECO 161"
+          ],
+          "differentDisciplinesRequired": true,
+          "economicsCoursesMayOnlyPartlySatisfy": true,
+          "requiredUnits": 2
+        },
+        "W2": {
+          "courses": [
+            "ECO 461"
+          ]
+        }
+      },
+      "feasibilityImpact": "NONE",
+      "generalDegreeCatalogYearsWithEvidence": [
+        "2025-2026"
+      ],
+      "latestCatalogInferencePermitted": false,
+      "readinessImpact": "NONE",
+      "relevantStatuses": [
+        "COMPLETED",
+        "IN_PROGRESS",
+        "PLANNED"
+      ],
+      "ruleId": "GENERAL-DEGREE-CCR-ACE-INFORMATION",
+      "separateFromEconomicsMajorCatalogSelection": true,
+      "sourceRefs": [
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#CCR-ACE",
+        "ECON-MAJOR-DECLARATION#Course-designations"
+      ],
+      "status": "INFORMATIONAL_ONLY",
+      "terminology": {
+        "ace": "Areas of Competency and Engagement (ACEs)",
+        "ccr": "Core Curriculum Requirements (CCRs)"
+      }
+    },
+    "mathematicsEquivalencyEvidenceContract": {
+      "activationStatus": "CONTRACT_ACTIVE_NO_APPROVED_EQUIVALENCIES",
+      "approvedEquivalencies": [],
+      "approvedScopes": [
+        "ECONOMICS_COGNATE",
+        "COURSE_PREREQUISITE",
+        "BOTH"
+      ],
+      "bothScopeRequires": [
+        "affectedCourse",
+        "affectedRule"
+      ],
+      "coursePrerequisiteScopeRequires": [
+        "affectedCourse",
+        "affectedRule"
+      ],
+      "crossScopeInferencePermitted": false,
+      "requiredEvidenceFields": [
+        "authority",
+        "source",
+        "approvalDate",
+        "reviewer",
+        "scope"
+      ],
+      "ruleId": "MATHEMATICS-EQUIVALENCY-SCOPE-CONTRACT",
+      "sourceRefs": [
+        "ECON-MAJOR-DECLARATION#Mathematics-cognate",
+        "OFFICIAL-CATALOG-ECONOMICS#Major"
+      ],
+      "unapprovedDisposition": "REVIEW_REQUIRED_NO_CREDIT"
     },
     "mostFlexibleEconomicsMajorRequirementSet": {
       "automaticNewestSelectionPermitted": false,
@@ -108,7 +183,35 @@
     "sourceRefs": [
       "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY"
     ],
-    "status": "OWNER_APPROVED"
+    "status": "OWNER_APPROVED",
+    "supportingCoursePlacement": {
+      "courses": [
+        "MAT 113",
+        "MAT 121",
+        "MAT 217",
+        "PSY 217",
+        "BUSN 323"
+      ],
+      "evidenceStatus": "PLANNING_PROJECTION",
+      "exactSectionsInvented": false,
+      "historicalFrequencyInvented": false,
+      "planningTerms": [
+        "FALL",
+        "WINTER"
+      ],
+      "ranking": {
+        "moveFlexiblePlacementsFirst": true,
+        "preferFrequentStatisticsOptionWhenEquallySafe": true,
+        "protectScarcePlacements": true,
+        "retainLessFrequentStatisticsOptionWhenNeededForValidity": true
+      },
+      "ruleId": "FUTURE-SUPPORTING-COURSE-PLACEMENT-FLEXIBILITY",
+      "scopeBoundaries": {
+        "cognateOptionsRemainCognateOnly": true,
+        "financeOptionsRemainFinanceOnlyUnlessAnExplicitAllocationRuleApplies": true,
+        "statisticsOptionsRemainStatisticsOnly": true
+      }
+    }
   },
   "provenance": {
     "sourcePath": "policy/rules/planning-flexibility.json",

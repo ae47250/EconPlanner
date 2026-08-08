@@ -15,11 +15,15 @@ test("the CP2 compiler validates and emits a complete release within its perform
 
   assert.ok(elapsedMs <= 5000, `compiler took ${elapsedMs.toFixed(2)}ms`);
   assert.equal(bundle.bundleVersion, "econ-2025-2026.1");
+  assert.equal(compileReport.activationStatus, "ACTIVE");
   assert.match(bundle.contentHash, /^sha256:[a-f0-9]{64}$/);
   assert.deepEqual(compileReport.validation.criticalConflicts, []);
   assert.equal(compileReport.validation.schemas, "PASS");
   assert.equal(compileReport.counts.activeRules, 54);
   assert.equal(compileReport.counts.unresolvedReviewRecords, 5);
+  assert.equal(compileReport.counts.historicalOfferingRecords, 0);
+  assert.deepEqual(bundle.indexes.historicalOfferingByCourse, {});
+  assert.equal(bundle.provenance.historicalOfferingContract.activationStatus, "INACTIVE_NO_APPROVED_DATA");
   assert.equal(compileReport.compatibility.length, 5);
   assert.ok(compileReport.compatibility.every(entry => entry.status === "MATCH"));
 

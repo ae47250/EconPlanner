@@ -230,27 +230,27 @@ test.beforeEach(async ({ page }) => {
 test("@pr selected-plan edits validate, preserve siblings, undo exactly, and reject invalid changes", async ({ page }) => {
   await seedStudent(page, PROJECTED_MOVE_PROFILE);
   await generatePlans(page);
-  await choosePlan(page, "Plan A");
+  await choosePlan(page, "Plan C");
 
   const advisorAttention = page.locator(".advisor-attention");
-  await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
+  await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-3");
   const advisorBeforeEdit = await advisorAttention.innerText();
   await expect(advisorAttention.getByText(/Courses later in your plan are best estimates/)).toHaveCount(1);
-  const eco214TermBeforeEdit = page.locator('.term-card[data-academic-year="2028/2029"][data-term-key="Winter"]', { hasText: "ECO 214" });
+  const eco214TermBeforeEdit = page.locator('.term-card[data-academic-year="2029/2030"][data-term-key="Fall"]', { hasText: "ECO 214" });
   await expect(eco214TermBeforeEdit).toHaveCount(1);
   await expect(eco214TermBeforeEdit).toHaveAttribute("data-publication-status", "PLANNING_PROJECTION");
 
   const originalSession = await savedSession(page);
   const originalSignatures = savedPlanSignatures(originalSession);
-  expect(originalSession.selectedPlanId).toBe("plan-1");
+  expect(originalSession.selectedPlanId).toBe("plan-3");
 
   const moveResponse = await editResponse(page, () => (
     page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("winter-2028")
   ));
   expect(moveResponse.status()).toBe(200);
-  await expect(statusMessage(page, "Plan A was updated and remains valid")).toBeVisible();
+  await expect(statusMessage(page, "Plan C was updated and remains valid")).toBeVisible();
   await expect(page.getByRole("combobox", { name: "Move ECO 214 to another term" })).toHaveValue("winter-2028");
-  await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-1");
+  await expect(advisorAttention).toHaveAttribute("data-plan-id", "plan-3");
   expect(await advisorAttention.innerText()).not.toBe(advisorBeforeEdit);
   await expect(advisorAttention.getByText(/Courses later in your plan are best estimates/)).toHaveCount(1);
   const eco214TermAfterEdit = page.locator('.term-card[data-academic-year="2027/2028"][data-term-key="Winter"]', { hasText: "ECO 214" });
@@ -259,29 +259,29 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
 
   const editedSession = await savedSession(page);
   const editedSignatures = savedPlanSignatures(editedSession);
-  expect(editedSignatures["plan-1"]).not.toBe(originalSignatures["plan-1"]);
-  for (const planId of ["plan-2", "plan-3"]) {
+  expect(editedSignatures["plan-3"]).not.toBe(originalSignatures["plan-3"]);
+  for (const planId of ["plan-1", "plan-2"]) {
     expect(editedSignatures[planId]).toBe(originalSignatures[planId]);
   }
-  expect(editedSession.selectedPlanId).toBe("plan-1");
+  expect(editedSession.selectedPlanId).toBe("plan-3");
 
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Review Plan A" })).toBeVisible();
-  await expect(page.getByRole("tab", { name: "Plan A" })).toHaveAttribute("aria-selected", "true");
-  await waitForSavedPlanSignature(page, "plan-1", editedSignatures["plan-1"]);
+  await expect(page.getByRole("heading", { name: "Review Plan C" })).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Plan C" })).toHaveAttribute("aria-selected", "true");
+  await waitForSavedPlanSignature(page, "plan-3", editedSignatures["plan-3"]);
 
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
-  await expect(statusMessage(page, "Plan A was restored")).toBeVisible();
-  await waitForSavedPlanSignature(page, "plan-1", originalSignatures["plan-1"]);
-  await expect(page.getByRole("tab", { name: "Plan A" })).toHaveAttribute("aria-selected", "true");
+  await expect(statusMessage(page, "Plan C was restored")).toBeVisible();
+  await waitForSavedPlanSignature(page, "plan-3", originalSignatures["plan-3"]);
+  await expect(page.getByRole("tab", { name: "Plan C" })).toHaveAttribute("aria-selected", "true");
 
-  const signatureBeforeRemoval = savedPlanSignatures(await savedSession(page))["plan-1"];
+  const signatureBeforeRemoval = savedPlanSignatures(await savedSession(page))["plan-3"];
   const removalResponse = await editResponse(page, () => (
     page.getByRole("button", { name: "Remove ECO 214" }).click()
   ));
   expect(removalResponse.status()).toBe(422);
   await expect(statusMessage(page, "That plan change cannot be saved")).toBeVisible();
-  await waitForSavedPlanSignature(page, "plan-1", signatureBeforeRemoval);
+  await waitForSavedPlanSignature(page, "plan-3", signatureBeforeRemoval);
 
   const mayMove = page.getByRole("combobox", { name: "Move ECO 213 to another term" });
   await expect(mayMove.locator('option[value="spring-2029"]')).toHaveCount(1);
@@ -291,7 +291,7 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   expect(mayData.validation.policyDecision.decisions.some(decision => (
     decision.reasonCode === "INTERMEDIATE_NOT_OFFERED_IN_MAY"
   ))).toBe(true);
-  await waitForSavedPlanSignature(page, "plan-1", signatureBeforeRemoval);
+  await waitForSavedPlanSignature(page, "plan-3", signatureBeforeRemoval);
 
   const offeringResponse = await editResponse(page, () => (
     page.getByRole("combobox", { name: "Move ECO 213 to another term" }).selectOption("winter-2027")
@@ -304,7 +304,7 @@ test("@pr selected-plan edits validate, preserve siblings, undo exactly, and rej
   expect(offeringData.validation.policyDecision.decisions.some(decision => (
     decision.reasonCode === "NOT_OFFERED_IN_COMPLETE_SCHEDULE"
   ))).toBe(true);
-  await waitForSavedPlanSignature(page, "plan-1", signatureBeforeRemoval);
+  await waitForSavedPlanSignature(page, "plan-3", signatureBeforeRemoval);
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
 });
 

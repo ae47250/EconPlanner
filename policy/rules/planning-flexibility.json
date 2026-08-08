@@ -47,10 +47,12 @@
       ]
     },
     "futureOfferingLikelihoodExtension": {
-      "status": "ARCHITECTURE_ONLY",
+      "status": "CONTRACT_IMPLEMENTED_INACTIVE_NO_APPROVED_DATA",
       "inputFormat": "OWNER_SUPPLIED_EXCEL_HISTORICAL_OFFERING_OBSERVATIONS",
       "currentLikelihoodDataAvailable": false,
       "probabilitiesMayBeInferredWithoutData": false,
+      "canonicalContract": "policy/historical-offerings/economics.json",
+      "activationRequiresOwnerApproval": true,
       "requiredFutureDisclosure": [
         "DATA_COVERAGE",
         "METHOD",
@@ -58,6 +60,107 @@
         "INFORMATIONAL_ONLY"
       ]
     }
+  },
+  "supportingCoursePlacement": {
+    "ruleId": "FUTURE-SUPPORTING-COURSE-PLACEMENT-FLEXIBILITY",
+    "courses": [
+      "MAT 113",
+      "MAT 121",
+      "MAT 217",
+      "PSY 217",
+      "BUSN 323"
+    ],
+    "planningTerms": [
+      "FALL",
+      "WINTER"
+    ],
+    "evidenceStatus": "PLANNING_PROJECTION",
+    "exactSectionsInvented": false,
+    "historicalFrequencyInvented": false,
+    "ranking": {
+      "protectScarcePlacements": true,
+      "moveFlexiblePlacementsFirst": true,
+      "preferFrequentStatisticsOptionWhenEquallySafe": true,
+      "retainLessFrequentStatisticsOptionWhenNeededForValidity": true
+    },
+    "scopeBoundaries": {
+      "statisticsOptionsRemainStatisticsOnly": true,
+      "cognateOptionsRemainCognateOnly": true,
+      "financeOptionsRemainFinanceOnlyUnlessAnExplicitAllocationRuleApplies": true
+    }
+  },
+  "generalDegreeDesignationInformation": {
+    "ruleId": "GENERAL-DEGREE-CCR-ACE-INFORMATION",
+    "status": "INFORMATIONAL_ONLY",
+    "generalDegreeCatalogYearsWithEvidence": [
+      "2025-2026"
+    ],
+    "separateFromEconomicsMajorCatalogSelection": true,
+    "terminology": {
+      "ccr": "Core Curriculum Requirements (CCRs)",
+      "ace": "Areas of Competency and Engagement (ACEs)"
+    },
+    "designations": {
+      "HS": {
+        "courses": [
+          "ECO 113",
+          "ECO 114",
+          "ECO 161"
+        ],
+        "requiredUnits": 2,
+        "differentDisciplinesRequired": true,
+        "economicsCoursesMayOnlyPartlySatisfy": true
+      },
+      "W2": {
+        "courses": [
+          "ECO 461"
+        ]
+      }
+    },
+    "relevantStatuses": [
+      "COMPLETED",
+      "IN_PROGRESS",
+      "PLANNED"
+    ],
+    "sourceRefs": [
+      "HANOVER-CP5A-OFFICIAL-EVIDENCE#CCR-ACE",
+      "ECON-MAJOR-DECLARATION#Course-designations"
+    ],
+    "readinessImpact": "NONE",
+    "feasibilityImpact": "NONE",
+    "advisorActionStatus": "INFORMATION_ONLY",
+    "latestCatalogInferencePermitted": false
+  },
+  "mathematicsEquivalencyEvidenceContract": {
+    "ruleId": "MATHEMATICS-EQUIVALENCY-SCOPE-CONTRACT",
+    "activationStatus": "CONTRACT_ACTIVE_NO_APPROVED_EQUIVALENCIES",
+    "approvedScopes": [
+      "ECONOMICS_COGNATE",
+      "COURSE_PREREQUISITE",
+      "BOTH"
+    ],
+    "requiredEvidenceFields": [
+      "authority",
+      "source",
+      "approvalDate",
+      "reviewer",
+      "scope"
+    ],
+    "coursePrerequisiteScopeRequires": [
+      "affectedCourse",
+      "affectedRule"
+    ],
+    "bothScopeRequires": [
+      "affectedCourse",
+      "affectedRule"
+    ],
+    "crossScopeInferencePermitted": false,
+    "approvedEquivalencies": [],
+    "unapprovedDisposition": "REVIEW_REQUIRED_NO_CREDIT",
+    "sourceRefs": [
+      "ECON-MAJOR-DECLARATION#Mathematics-cognate",
+      "OFFICIAL-CATALOG-ECONOMICS#Major"
+    ]
   },
   "mostFlexibleEconomicsMajorRequirementSet": {
     "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",

@@ -1,0 +1,172 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Sample Student - Economics Major Course Plan</title>
+<style>
+
+*{box-sizing:border-box}
+:root{color-scheme:light}
+html{background:#e9ecef}
+body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--page-bg);-webkit-font-smoothing:antialiased}
+.toolbar{position:sticky;top:0;z-index:20;display:flex;gap:.6rem;justify-content:flex-end;padding:.65rem max(1rem,calc((100vw - 980px)/2));background:rgba(17,24,39,.92);backdrop-filter:blur(10px)}
+.toolbar a,.toolbar button{appearance:none;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;padding:.55rem .9rem;font:600 13px/1 Arial,sans-serif;text-decoration:none;cursor:pointer}
+.toolbar a:hover,.toolbar button:hover{background:#fff;color:#111827}
+.sheet{width:min(960px,calc(100% - 32px));margin:32px auto 64px;background:var(--paper);box-shadow:0 20px 60px rgba(15,23,42,.16);overflow:hidden}
+.letterhead{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand-lockup{display:flex;align-items:center;gap:15px}
+.brand-mark{width:62px;height:70px;flex:none}
+.university-name{font-family:Georgia,"Times New Roman",serif;font-size:25px;font-weight:700;letter-spacing:.04em}
+.tagline{margin-top:5px;font-size:10.5px;font-weight:800;letter-spacing:.18em;color:var(--primary)}
+.office-copy{display:grid;text-align:right;gap:4px;font-size:12px;color:var(--muted)}
+.office-copy strong{color:var(--ink)}
+.report-header h1{margin:.15rem 0 .9rem;font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,4.4vw,46px);line-height:1.08;letter-spacing:-.025em}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--primary);margin-bottom:.55rem}
+.student-row{display:grid;grid-template-columns:1.15fr 1fr .8fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.student-row>div{padding:12px 16px 12px 0;display:grid;gap:3px}
+.student-row>div+div{padding-left:16px;border-left:1px solid var(--line)}
+.meta-label{text-transform:uppercase;letter-spacing:.11em;font-size:9px;font-weight:800;color:var(--muted)}
+.student-row strong{font-size:14px}
+.assumptions{margin:16px 0 10px;font-size:13.5px;line-height:1.55;color:var(--ink)}
+.plan-key{display:flex;flex-wrap:wrap;gap:.55rem 1.25rem;font-size:11.5px;color:var(--muted)}
+.plan-key b{color:var(--success)}
+.years{display:grid;gap:18px}
+.year-block{break-inside:avoid;page-break-inside:avoid}
+.year-heading{display:flex;align-items:center;justify-content:space-between}
+.year-heading h2{margin:0;font-size:18px;letter-spacing:-.01em}
+.year-heading h2 span{font-weight:500;color:var(--muted)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{padding:9px 12px;text-align:left;text-transform:uppercase;letter-spacing:.12em;font-size:9.5px;font-weight:800}
+td{padding:14px 12px;vertical-align:top;font-size:14px;line-height:1.42;font-weight:700}
+.course{display:inline}
+.course-requirement{display:block;margin-top:3px;font-size:10px;line-height:1.25;font-weight:700;color:var(--primary)}
+.verified{color:var(--success);font-weight:900}
+.dash{color:var(--muted);font-weight:500}
+.cell-note{display:block;margin-top:5px;font-size:10px;line-height:1.25;font-weight:600;color:var(--note);max-width:30ch}
+.verified-line{font-size:11.5px;line-height:1.5;color:var(--muted)}
+@media(max-width:680px){
+  .sheet{width:min(100% - 16px,960px);margin:8px auto 32px}
+  .letterhead{align-items:flex-start}
+  .office-copy{display:none}
+  .student-row{grid-template-columns:1fr}
+  .student-row>div,.student-row>div+div{padding:10px 0;border-left:0;border-top:1px solid var(--line)}
+  .student-row>div:first-child{border-top:0}
+  th,td{padding-left:9px;padding-right:9px}
+  td{font-size:12px}
+}
+@page{size:letter;margin:.42in}
+@media print{
+  html,body{background:#fff!important}
+  .toolbar{display:none!important}
+  .sheet{width:auto;margin:0;box-shadow:none;overflow:visible}
+  .year-block{break-inside:avoid;page-break-inside:avoid}
+}
+
+
+:root{--primary:#7c2cff;--accent:#00b5c8;--ink:#172033;--muted:#63708a;--line:#dce3ee;--paper:#fff;--page-bg:#09111f;--success:#0c9961;--note:#8a3b61}
+body{background:
+radial-gradient(circle at 12% 12%,rgba(124,44,255,.28),transparent 28%),
+radial-gradient(circle at 88% 20%,rgba(0,181,200,.22),transparent 28%),
+linear-gradient(160deg,#07101e,#101a2d 60%,#081221)}
+.sheet{position:relative;padding:0 50px 58px;border-radius:26px;box-shadow:0 35px 90px rgba(0,0,0,.45)}
+.sheet:before{content:"";position:absolute;inset:-2px;border-radius:28px;padding:2px;background:linear-gradient(120deg,#7c2cff,#00b5c8,#ffb15a,#7c2cff);background-size:300% 300%;animation:borderflow 10s ease infinite;pointer-events:none;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+@keyframes borderflow{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.letterhead{margin:0 -50px;padding:24px 50px;background:
+linear-gradient(110deg,rgba(124,44,255,.96),rgba(31,63,132,.96) 48%,rgba(0,181,200,.92));color:#fff;border-radius:24px 24px 0 0}
+.university-name{font-family:Arial,sans-serif;font-weight:900;letter-spacing:.12em;color:#fff}
+.tagline{color:#dffcff}
+.office-copy{color:#dce8ff}.office-copy strong{color:#fff}
+.report-header{padding:34px 0 28px}
+.report-header h1{font-family:Arial,sans-serif;font-weight:950;background:linear-gradient(90deg,#172033,#7c2cff 60%,#008ea0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.student-row{border:0;gap:10px}
+.student-row>div,.student-row>div+div{border:1px solid var(--line);padding:12px 14px;border-radius:13px;background:linear-gradient(180deg,#fff,#f8faff)}
+.spiffy-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat{position:relative;overflow:hidden;padding:13px 15px;border:1px solid var(--line);border-radius:14px;background:#f8faff}
+.stat:after{content:"";position:absolute;right:-18px;bottom:-28px;width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,rgba(124,44,255,.14),rgba(0,181,200,.09))}
+.stat b{display:block;font-size:19px;color:#32215c}.stat span{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:800}
+.year-block{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;transition:transform .22s ease,box-shadow .22s ease}
+.year-block:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(28,39,74,.12)}
+.year-block:after{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--primary),var(--accent))}
+.year-heading{padding:13px 17px 12px 20px;background:linear-gradient(90deg,#f6f1ff,#effbfd)}
+.year-heading h2{font-size:19px;color:#30204e}
+th{background:#17233b;color:#fff;border-right:1px solid rgba(255,255,255,.15)}
+td{border-right:1px solid var(--line);background:#fff}
+td:last-child{border-right:0}
+td:hover{background:#fbfaff}
+.verified-line{padding:10px 15px 10px 20px;background:#effaf5;border-top:1px solid #ccebdd;color:#346854}
+.sparkle{display:inline-block;animation:twinkle 2.2s ease-in-out infinite}
+@keyframes twinkle{50%{transform:rotate(16deg) scale(1.15);filter:drop-shadow(0 0 5px #fff)}}
+@media(max-width:680px){.sheet{padding:0 24px 38px}.letterhead{margin:0 -24px;padding:20px 24px}.spiffy-stats{grid-template-columns:1fr}}
+@media print{
+  body{background:#fff}
+  .sheet{padding:0;border-radius:0;box-shadow:none}
+  .sheet:before{display:none}
+  .letterhead{margin:0;padding-left:0;padding-right:0;border-radius:0;background:#fff;color:#172033;border-bottom:5px solid #7c2cff}
+  .university-name,.office-copy strong{color:#172033}.tagline,.office-copy{color:#63708a}
+  .year-block:hover{transform:none;box-shadow:none}
+}
+@media(prefers-reduced-motion:reduce){.sheet:before,.sparkle{animation:none}.year-block{transition:none}}
+
+</style>
+</head>
+<body class="">
+    <main class="sheet">
+      
+    <header class="letterhead">
+      <div class="brand-lockup">
+        
+        <svg class="brand-mark" viewBox="0 0 120 120" role="img" aria-label="Hanover College monogram">
+          <path d="M60 5 108 31 96 91 60 115 24 91 12 31Z" fill="#ffffff"/>
+          <path d="M60 14 97 35 87 84 60 103 33 84 23 35Z" fill="none" stroke="#7c2cff" stroke-width="3"/>
+          <text x="60" y="80" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="62" fill="#7c2cff">H</text>
+        </svg>
+        <div class="brand-copy">
+          <div class="university-name">HANOVER COLLEGE</div>
+          <div class="tagline">PLAN. MAP. ADVISE.</div>
+        </div>
+      </div>
+      <div class="office-copy">
+        <strong>Hanover Academic Advising</strong>
+        <span>EconMapper</span>
+      </div>
+    </header>
+      <section class="report-header">
+        <div class="eyebrow">ACADEMIC PLANNING REPORT</div>
+        <h1>Economics Major Course Plan</h1>
+        <div class="student-row">
+          <div><span class="meta-label">Student</span><strong data-field="student-name">Sample Student</strong></div>
+          <div><span class="meta-label">Planning horizon</span><strong data-field="planning-horizon">2026-2027</strong></div>
+          <div><span class="meta-label">Prepared</span><strong data-field="prepared-date">2026-08-08</strong></div>
+        </div>
+        <p class="assumptions" data-field="input-summary">5 course records entered; senior standing. Planning pace: standard. This is a planning aid, not a replacement for final registrar confirmation.</p>
+        <div class="plan-key">
+          <span>Planning aid - confirm requirements and availability with an academic advisor.</span>
+          <span>Verified offerings use the schedule evidence shown in the report.</span>
+        </div>
+        
+<div class="spiffy-stats" aria-label="Plan at a glance">
+  <div class="stat"><b data-field="remaining-years">1 years</b><span>Balanced planning horizon</span></div>
+  <div class="stat"><b data-field="course-count">7 courses</b><span>Major plus cognate map</span></div>
+  <div class="stat"><b data-field="eco461-target">Winter 2027</b><span>ECO 461 target term</span></div>
+</div>
+      </section>
+      
+      <div class="years" data-field="year-blocks">
+        <section class="year-block"><div class="year-heading"><h2>Plan details</h2></div><ul><li><strong>Plan ID:</strong> <span data-selected-plan-id="plan-1">plan-1</span></li><li><strong>Expected graduation:</strong> <span data-graduation-target="Spring/May 2027">Spring/May 2027</span></li><li><strong>Planning pace:</strong> <span data-planning-pace="standard">Standard pace</span></li><li><strong>Senior-standing basis:</strong> <span data-senior-standing-basis="college_year_progression">College-year progression</span></li></ul></section><section class="year-block" data-degree-requirement-information><div class="year-heading"><h2>CCR/ACE information</h2></div><p>Core Curriculum Requirements (CCRs) / Areas of Competency and Engagement (ACEs)</p><ul><li data-degree-designation-code="HS"><strong>HS</strong> — partly satisfied by ECO 113 and ECO 114. Hanover requires two HS units from different disciplines, so Economics courses provide only part of the requirement.</li><li data-degree-designation-code="W2"><strong>W2</strong> — planned through ECO 461.</li></ul></section><section class="year-block"><div class="year-heading"><h2>Economics schedule <span>- 2026/2027</span></h2></div><div class="table-wrap"><table><thead><tr><th>Fall</th><th>Winter</th><th>Spring/May</th></tr></thead><tbody><tr><td><span class="course" data-requirement-id="eco-213">ECO 213-A</span><span class="cell-note">Intermediate Microeconomics - open (8 seats open)</span><span class="course-requirement">Requirement: ECO 213 requirement</span><br><span class="course" data-requirement-id="eco-elective-1">ECO 234-A</span><span class="cell-note">Rational Choices - open (23 seats open)</span><span class="course-requirement">Requirement: ECO elective</span><br><span class="course" data-requirement-id="eco-elective-2">ECO 333-A</span><span class="cell-note">International Trade &amp; Finance - open (3 seats open)</span><span class="course-requirement">Requirement: ECO elective</span></td><td><span class="course" data-requirement-id="eco-elective-3">ECO 221-J</span><span class="cell-note">Environmental Economics - open (20 seats open)</span><span class="course-requirement">Requirement: ECO elective</span><br><span class="course" data-requirement-id="finance">ECO 321-J</span><span class="cell-note">Money &amp; Financial Markets - open (20 seats open)</span><span class="course-requirement">Requirement: Finance requirement</span><br><span class="course" data-requirement-id="eco-461">ECO 461-J</span><span class="cell-note">Senior Seminar - Econometrics - open (15 seats open)</span><span class="course-requirement">Requirement: ECO 461 requirement</span></td><td><span class="course" data-requirement-id="eco-elective-4">ECO 222-S</span><span class="cell-note">Economics of the European Union - open (15 seats open)</span><span class="course-requirement">Requirement: ECO elective</span></td></tr></tbody></table></div></section><p class="verified-line">Plan status: CONDITIONALLY FEASIBLE. Published offerings use the supplied 2026/2027 schedule; later placements are identified as planning projections.</p><section class="year-block"><div class="year-heading"><h2>Verification and conditions</h2></div><ul>
+    <li>Offerings: published</li>
+    <li>Meeting times: verified</li>
+    <li>Availability: stale</li>
+    
+    <li>ECO 213-A in Fall 2026: stale availability</li><li>ECO 234-A in Fall 2026: stale availability</li><li>ECO 333-A in Fall 2026: stale availability</li><li>ECO 221-J in Winter 2027: stale availability</li><li>ECO 321-J in Winter 2027: stale availability</li><li>ECO 461-J in Winter 2027: stale availability</li><li>ECO 222-S in Spring/May 2027: stale availability</li>
+  </ul></section><section class="year-block"><div class="year-heading"><h2>Requirement assignments</h2></div><div class="table-wrap"><table><thead><tr><th>Requirement</th><th>Strict</th><th>Optimistic</th><th>In progress</th><th>Evidence</th></tr></thead><tbody><tr><td>MAT 113 / MAT 121</td><td>MAT 113</td><td>MAT 113</td><td>MAT 113</td><td>VERIFIED</td></tr><tr><td>ECO 113</td><td>ECO 113</td><td>ECO 113</td><td>ECO 113</td><td>VERIFIED</td></tr><tr><td>ECO 114</td><td>ECO 114</td><td>ECO 114</td><td>ECO 114</td><td>VERIFIED</td></tr><tr><td>ECO 213</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td></tr><tr><td>ECO 214</td><td>ECO 214</td><td>ECO 214</td><td>ECO 214</td><td>VERIFIED</td></tr><tr><td>ECO 461</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td></tr><tr><td>ECO elective 1</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td></tr><tr><td>ECO elective 2</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td></tr><tr><td>ECO elective 3</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td></tr><tr><td>ECO elective 4</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td></tr><tr><td>ECO 321 / BUSN 323</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td><td>Advisor check</td></tr><tr><td>ECO 257 / MAT 217 / PSY 217</td><td>MAT 217</td><td>MAT 217</td><td>MAT 217</td><td>VERIFIED</td></tr></tbody></table></div></section><section class="year-block"><div class="year-heading"><h2>Plan warnings</h2></div><ul><li data-plan-warning>ECO 213 is planned for Fall 2026; ECO 461 in Winter 2027 depends on successful completion.</li><li data-plan-warning>Seat availability for ECO 213-A was last checked on an unknown date; confirm it before registration.</li><li data-plan-warning>Seat availability for ECO 221-J was last checked on an unknown date; confirm it before registration.</li><li data-plan-warning>Seat availability for ECO 222-S was last checked on an unknown date; confirm it before registration.</li><li data-plan-warning>Seat availability for ECO 234-A was last checked on an unknown date; confirm it before registration.</li><li data-plan-warning>Seat availability for ECO 321-J was last checked on an unknown date; confirm it before registration.</li><li data-plan-warning>Seat availability for ECO 333-A was last checked on an unknown date; confirm it before registration.</li><li data-plan-warning>Seat availability for ECO 461-J was last checked on an unknown date; confirm it before registration.</li><li data-plan-warning>This plan uses more than two Economics courses in Fall 2026; this is above the advising preference but remains within the recorded total-load capacity.</li><li data-plan-warning>This plan uses more than two Economics courses in Winter 2027; this is above the advising preference but remains within the recorded total-load capacity.</li></ul></section><section class="year-block"><div class="year-heading"><h2>Advisor attention</h2></div><ul><li data-advisor-attention-code="FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE" data-title="Routine SAC petition" data-severity="info">This plan uses the department’s current, more flexible Economics major requirements (2025–2026) instead of the student’s incoming catalog requirements (2023–2024). Please help the student submit the routine SAC petition so the newer requirements are recorded for the degree audit. The department treats this petition as a formality.</li></ul></section>
+      </div>
+
+      
+    </main>
+
+</body>
+</html>

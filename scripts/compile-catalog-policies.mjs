@@ -172,6 +172,24 @@ function validatePlanningFlexibilityPolicy(policy) {
     || projection.futureOfferingLikelihoodExtension?.probabilitiesMayBeInferredWithoutData !== false) {
     fail("future offering likelihoods may not be invented without owner-supplied data");
   }
+  const degreeInformation = policy.generalDegreeDesignationInformation;
+  if (degreeInformation?.status !== "INFORMATIONAL_ONLY"
+    || degreeInformation?.separateFromEconomicsMajorCatalogSelection !== true
+    || degreeInformation?.latestCatalogInferencePermitted !== false
+    || degreeInformation?.readinessImpact !== "NONE"
+    || degreeInformation?.feasibilityImpact !== "NONE"
+    || !degreeInformation?.designations?.HS?.differentDisciplinesRequired
+    || !degreeInformation?.designations?.W2?.courses?.includes("ECO 461")) {
+    fail("general-degree CCR/ACE information boundary is incomplete");
+  }
+  const equivalencyContract = policy.mathematicsEquivalencyEvidenceContract;
+  if (equivalencyContract?.activationStatus !== "CONTRACT_ACTIVE_NO_APPROVED_EQUIVALENCIES"
+    || equivalencyContract?.crossScopeInferencePermitted !== false
+    || equivalencyContract?.unapprovedDisposition !== "REVIEW_REQUIRED_NO_CREDIT"
+    || equivalencyContract?.approvedEquivalencies?.length !== 0
+    || !["ECONOMICS_COGNATE", "COURSE_PREREQUISITE", "BOTH"].every(scope => equivalencyContract.approvedScopes?.includes(scope))) {
+    fail("mathematics-equivalency scope contract is incomplete");
+  }
   const designation = policy.mostFlexibleEconomicsMajorRequirementSet;
   if (designation?.catalogYear !== "2025-2026"
     || designation?.selectionMethod !== "OWNER_DESIGNATION"
@@ -193,6 +211,8 @@ function planningFlexibilityContract(bundle) {
     `- Economics planning uses the owner-designated ${policy.mostFlexibleEconomicsMajorRequirementSet.catalogYear} requirement set. Incoming catalog years remain comparison and degree-audit metadata.\n` +
     `- Material incoming-catalog differences create a nonblocking SAC petition notification, not a substantive advisor action.\n` +
     `- A future owner-supplied Excel history may support informational offering likelihoods only when data coverage and method are disclosed. No likelihood data or probability is present in this release.\n` +
+    `- CCR/ACE information uses the student's supported general-degree catalog separately from the Economics major requirement set and has no readiness or feasibility effect.\n` +
+    `- Mathematics equivalencies require an explicit cognate, prerequisite, or both scope with complete approval evidence; no equivalencies are activated in this release.\n` +
     `- No 2026-2027 catalog is compiled or activated, and the active Decision Engine mapping is unchanged.\n`;
 }
 
@@ -227,6 +247,10 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
       ownerDesignationFixedTo2025_2026: "PASS",
       automaticNewestSelectionDisabled: "PASS",
       futureLikelihoodsNotInvented: "PASS",
+      generalDegreeDesignationInformationNonblocking: "PASS",
+      generalDegreeCatalogKeptSeparate: "PASS",
+      mathematicsEquivalencyCrossScopeInferenceDisabled: "PASS",
+      approvedMathematicsEquivalencies: 0,
       catalog2026_2027Invented: false,
       collegeWidePolicyChanged: false
     },

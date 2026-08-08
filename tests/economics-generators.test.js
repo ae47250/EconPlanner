@@ -4,14 +4,17 @@ import { readFile } from "node:fs/promises";
 import fc from "fast-check";
 import {
   ECONOMICS_GENERATOR_AXES,
+  ECONOMICS_GENERATOR_VERSION,
   auditGeneratedFictionalProfile,
   canonicalizeGeneratedCourse,
   fictionalEconomicsProfileArbitrary,
   generateFictionalEconomicsProfiles,
+  generateLegacyV3FictionalEconomicsProfiles,
   generateInvalidEconomicsNeighbors,
   independentPrerequisiteClosure,
   pairwiseCoverageReport,
-  shrinkFictionalEconomicsProfile
+  shrinkFictionalEconomicsProfile,
+  withExplicitMayCommitment
 } from "./helpers/economics-generators.js";
 
 const manifest = JSON.parse(await readFile(
@@ -48,6 +51,32 @@ test("the same seed reproduces the exact profile sequence", () => {
   const first = generateFictionalEconomicsProfiles({ seed: SEED_A, manifest, verifiedSchedule });
   const second = generateFictionalEconomicsProfiles({ seed: SEED_A, manifest, verifiedSchedule });
   assert.deepEqual(second, first);
+});
+
+test("generator v4 corrects derived May reservations while preserving one-to-one v3 replay IDs", () => {
+  const corrected = generateFictionalEconomicsProfiles({ seed: SEED_A, manifest, verifiedSchedule });
+  const legacy = generateLegacyV3FictionalEconomicsProfiles({ seed: SEED_A, manifest, verifiedSchedule });
+
+  assert.equal(corrected.generatorVersion, ECONOMICS_GENERATOR_VERSION);
+  assert.deepEqual(corrected.profiles.map(profile => profile.profileId), legacy.profiles.map(profile => profile.profileId));
+  assert.ok(corrected.profiles.every(profile => profile.student.reservedCapacity.May === 0));
+  assert.ok(legacy.profiles.some(profile => profile.student.reservedCapacity.May === 1));
+  assert.ok(corrected.profiles.every(profile => profile.generation.mayReservationPolicy === "EXPLICIT_COMMITMENT_ONLY"));
+});
+
+test("a real May reservation is represented only by an explicit held-out commitment", () => {
+  const generated = generateFictionalEconomicsProfiles({ seed: SEED_A, manifest, verifiedSchedule });
+  const explicit = withExplicitMayCommitment(generated.profiles[0], 1);
+
+  assert.equal(explicit.student.reservedCapacity.May, 1);
+  assert.equal(explicit.scenario.trueMayCommitment.explicit, true);
+  assert.equal(auditGeneratedFictionalProfile(explicit, manifest, verifiedSchedule).valid, true);
+
+  const implicit = structuredClone(explicit);
+  delete implicit.scenario.trueMayCommitment;
+  const audit = auditGeneratedFictionalProfile(implicit, manifest, verifiedSchedule);
+  assert.equal(audit.valid, false);
+  assert.ok(audit.violations.some(item => item.ruleId === "GENERATOR-EXPLICIT-MAY-COMMITMENT"));
 });
 
 test("different seeds create controlled variation with the same schema and complete coverage", () => {

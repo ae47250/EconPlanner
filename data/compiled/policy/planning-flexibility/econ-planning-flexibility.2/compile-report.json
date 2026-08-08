@@ -2,7 +2,7 @@
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
   "bundleVersion": "econ-planning-flexibility.2",
-  "contentHash": "sha256:6d49f1f70e8adc30f9b57a221fd94ea84ee249c9e753fe0b2fafbe462cbd63b9",
+  "contentHash": "sha256:2a3c3c70eeb79c01d51a752de7989d68df2722faa1c96a3dae584f4d23aac762",
   "determinism": {
     "canonicalFormat": "UTF-8 JSON with canonical key and ID-array ordering",
     "requiredCleanCompilations": 3
@@ -13,11 +13,15 @@
   "schemaVersion": "1.0.0",
   "validation": {
     "acceleratedSeniorStandingNonblocking": "PASS",
+    "approvedMathematicsEquivalencies": 0,
     "automaticNewestSelectionDisabled": "PASS",
     "catalog2026_2027Invented": false,
     "collegeWidePolicyChanged": false,
     "futureLikelihoodsNotInvented": "PASS",
     "futureScheduleProjectionNonblocking": "PASS",
+    "generalDegreeCatalogKeptSeparate": "PASS",
+    "generalDegreeDesignationInformationNonblocking": "PASS",
+    "mathematicsEquivalencyCrossScopeInferenceDisabled": "PASS",
     "ownerDesignationFixedTo2025_2026": "PASS",
     "publishedScheduleAuthorityPreserved": "PASS"
   }

@@ -293,7 +293,7 @@ test("missing historical entry catalog uses an Economics-only provisional fallba
   assert.match(notice.message, /routine SAC petition/);
 });
 
-test("major mapper returns graduation-priority senior plans and advisor warnings", async () => {
+test("major mapper retains a standard senior plan above the Economics load preference with advisor warnings", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -310,7 +310,7 @@ test("major mapper returns graduation-priority senior plans and advisor warnings
 
   assert.equal(response.status, 200);
   assert.equal(economics.economicsPlans.length, 1);
-  assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "graduation_priority"));
+  assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "standard"));
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
   assert.ok(data.catalog.advisorAttention.some(item => /more than two Economics courses/.test(item.message)));
   assert.ok(data.catalog.advisorAttention.some(item => /Schedule confirmation required/.test(item.message)));

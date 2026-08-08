@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
 import {
   auditStudentHistory,
@@ -12,9 +13,13 @@ import {
   normalizeStudentFacts
 } from "../lib/decision-engine/index.js";
 
+const activeReference = JSON.parse(await fs.readFile(new URL(
+  "../data/compiled/policy/active.json",
+  import.meta.url
+), "utf8")).programs.ECONOMICS["2025-2026"];
 const bundle = await loadPolicyBundle({
   expectedVersion: "econ-2025-2026.1",
-  expectedHash: "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7"
+  expectedHash: activeReference.contentHash
 });
 const facts = normalizeStudentFacts({ planCreationDate: "2026-08-05", courses: [] });
 
@@ -31,9 +36,9 @@ function verifiedElectivePlan() {
   };
 }
 
-test("the approved CP2 bundle loads immutably with its exact digest", () => {
+test("the active governed bundle loads immutably with its exact digest", () => {
   assert.equal(bundle.bundleVersion, "econ-2025-2026.1");
-  assert.equal(bundle.contentHash, "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7");
+  assert.equal(bundle.contentHash, activeReference.contentHash);
   assert.equal(bundle.activationStatus, "ACTIVE");
   assert.equal(Object.isFrozen(bundle), true);
   assert.equal(Object.isFrozen(bundle.rules), true);

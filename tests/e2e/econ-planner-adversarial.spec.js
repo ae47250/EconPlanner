@@ -283,7 +283,7 @@ test("@pr HTTP generation failure preserves inputs, accessible feedback, focus, 
 test("@pr timing-sensitive in-memory edit lock blocks duplicate clicks and releases after success, failure, and abort", async ({ page }) => {
   await seedStudent(page);
   await generatePlans(page);
-  await choosePlan(page, "Plan A");
+  await choosePlan(page, "Plan C");
 
   const initialSession = await savedSession(page);
   const initialSignatures = planSignatures(initialSession);
@@ -322,10 +322,10 @@ test("@pr timing-sensitive in-memory edit lock blocks duplicate clicks and relea
   const successfulMove = page.waitForResponse(response => isMapRequest(response.request(), "validate-plan"));
   await page.getByRole("combobox", { name: "Move ECO 214 to another term" }).selectOption("winter-2028");
   expect((await successfulMove).status()).toBe(200);
-  await expect(planEditStatus(page)).toContainText("Plan A was updated and remains valid.");
+  await expect(planEditStatus(page)).toContainText("Plan C was updated and remains valid.");
   const afterSuccess = planSignatures(await savedSession(page));
-  expect(afterSuccess["plan-1"]).not.toBe(initialSignatures["plan-1"]);
-  for (const planId of ["plan-2", "plan-3"]) {
+  expect(afterSuccess["plan-3"]).not.toBe(initialSignatures["plan-3"]);
+  for (const planId of ["plan-1", "plan-2"]) {
     expect(afterSuccess[planId]).toBe(initialSignatures[planId]);
   }
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(1);

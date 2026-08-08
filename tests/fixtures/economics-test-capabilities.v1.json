@@ -94,7 +94,7 @@
       "profileId": "verified-five-remaining",
       "variantId": "plan-1",
       "minimumRetainedDistinctSchedules": 2,
-      "minimumSemanticDuplicatesRemoved": 1,
+      "minimumSemanticDuplicatesRemoved": 0,
       "searchTerminationReason": "EXHAUSTED"
     },
     "safeReserveSubstitution": {

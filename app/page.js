@@ -454,12 +454,14 @@ function selectedPlanNotices(plan, schedule) {
 }
 
 function AdvisorAttention({ catalog, plan, schedule }) {
+  const degreeInformation = plan?.degreeRequirementInformation;
+  const degreeItems = degreeInformation?.items || [];
   const globalNotices = (catalog?.advisorAttention || []).filter(notice => !isFlattenedPlanNotice(notice));
   const notices = [...new Map([
     ...globalNotices,
     ...selectedPlanNotices(plan, schedule)
   ].map(notice => [notice.message, notice])).values()];
-  if (!notices.length) return null;
+  if (!notices.length && !degreeItems.length) return null;
   const planningNotices = notices.filter(notice => notice.title === "Graduation planning assumption");
   const otherNotices = notices.filter(notice => notice.title !== "Graduation planning assumption");
   const projectedNotices = planningNotices.filter(notice => /projected placement/i.test(notice.message || ""));
@@ -505,6 +507,17 @@ function AdvisorAttention({ catalog, plan, schedule }) {
     <section className="advisor-attention" aria-live="polite" data-plan-id={plan?.id || ""}>
       <h2>Advisor Attention</h2>
       {plan?.label && <p className="advisor-attention-scope">Information and warnings shown for {plan.label}.</p>}
+      {degreeItems.length > 0 && (
+        <div className="advisor-attention-item degree-requirement-information" data-degree-requirement-information>
+          <h3>CCR/ACE information</h3>
+          <p>{degreeInformation.terminology?.ccr} / {degreeInformation.terminology?.ace}</p>
+          <ul>
+            {degreeItems.map(item => (
+              <li key={item.code} data-degree-designation-code={item.code}><strong>{item.code}</strong> {item.detail}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {otherNotices.map(notice => (
         <div className={`advisor-attention-item is-${notice.severity || "warning"}`} key={notice.code}>
           {notice.title && notice.title !== "Advisor Attention" && <strong>{notice.title}</strong>}

@@ -69,6 +69,47 @@ test("the solver retains deterministic, prerequisite-valid complete schedules", 
   assert.equal(solved.search.terminationReason, "SOLUTION_BUDGET");
   assert.equal(solved.search.complete, false);
   assert.equal(new Set(solved.solutions.map(item => item.signature)).size, solved.solutions.length);
+  assert.ok(solved.search.orderingTrace.length > 0);
+  assert.ok(solved.search.orderingTrace.length <= 24);
+  for (const decision of solved.search.orderingTrace) {
+    assert.equal(decision.selectedOrderingRank, 1);
+    assert.equal(decision.requirementId, decision.candidateOrdering[0].requirementId);
+    assert.equal(decision.dependencyPriority, Math.min(...decision.candidateOrdering.map(candidate => candidate.dependencyPriority)));
+  }
+
+  const rescue = solveEconomicsTermPlan({
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    slots,
+    context: resolvePlanningContext(student),
+    distribution: { targetYearCounts: [3, 3, 3, 3], targetTermCounts: {} },
+    requireTargetDistribution: false,
+    solutionBudget: 1,
+    searchStrategy: "rescue"
+  });
+  for (const decision of rescue.search.orderingTrace) {
+    assert.equal(decision.legalPlacementCount, Math.min(...decision.candidateOrdering.map(candidate => candidate.legalPlacementCount)));
+  }
+
+  const continued = solveEconomicsTermPlan({
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    slots,
+    context: resolvePlanningContext(student),
+    distribution: { targetYearCounts: [3, 3, 3, 3], targetTermCounts: {} },
+    requireTargetDistribution: true,
+    solutionBudget: 3,
+    excludedSolutionSignatures: solved.solutions.map(item => item.signature)
+  });
+  assert.equal(continued.solutions.length, 3);
+  assert.equal(
+    continued.solutions.some(item => solved.solutions.some(previous => previous.signature === item.signature)),
+    false
+  );
 });
 
 test("Explore First gives sophomores the introductory, intermediate, and statistics sequence before electives", () => {

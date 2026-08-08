@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7",
+  "contentHash": "sha256:233ee6d7405d16af0303e42059bbda1a3860edcd9a95335b21c829bbfea72387",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -190,7 +190,7 @@
     "byRuleId": {
       "CAPACITY-FALL": {
         "authority": {
-          "boundary": "NORMAL_TERM_TOTAL_CAPACITY",
+          "boundary": "NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY",
           "kind": "COLLEGE_POLICY",
           "owner": "Hanover College"
         },
@@ -200,14 +200,21 @@
         },
         "confidence": "VERIFIED_SOURCE",
         "confirmation": {
-          "date": "2026-08-01",
-          "lastReviewDate": "2026-08-01",
-          "reviewer": "Economics Department representative and project owner"
+          "date": "2026-08-08",
+          "lastReviewDate": "2026-08-08",
+          "reviewer": "CP5A official-source review"
         },
         "dependencies": [],
         "disposition": "ENFORCE",
         "effect": {
-          "maxTotalCourses": 4
+          "conditionalMaximumCourseUnits": 5.25,
+          "conditionalRequirements": {
+            "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION",
+            "advisorApproval": "APPROVED"
+          },
+          "maxTotalCourses": 4,
+          "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+          "normalCourseUnits": 4
         },
         "effective": {
           "from": "2025-08-01",
@@ -229,7 +236,9 @@
         "reasonCode": "FALL_TOTAL_CAPACITY",
         "requiredEvidence": [],
         "requiredInputs": [
-          "termPlan"
+          "termPlan",
+          "advisorOverloadApproval",
+          "academicProbationStatus"
         ],
         "ruleId": "CAPACITY-FALL",
         "ruleType": "termLoad",
@@ -243,24 +252,31 @@
           "requirements": []
         },
         "sourceRefs": [
-          "TERM-STRUCTURE#Fall-Term"
+          "TERM-STRUCTURE#Fall-Term",
+          "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
         ],
         "status": "ACTIVE",
         "supersedes": [],
         "testRefs": {
-          "approval": [],
+          "approval": [
+            "fall-overload-approval-and-standing"
+          ],
           "negative": [
-            "fall-five-courses"
+            "fall-five-courses-without-evidence",
+            "fall-overload-on-probation"
           ],
           "positive": [
-            "schedule-capacity-matrix"
+            "schedule-capacity-matrix",
+            "fall-approved-overload"
           ],
-          "reviewState": []
+          "reviewState": [
+            "fall-overload-evidence-missing"
+          ]
         }
       },
       "CAPACITY-MAY": {
         "authority": {
-          "boundary": "MAY_TERM_TOTAL_CAPACITY",
+          "boundary": "NORMAL_AND_CONDITIONAL_MAY_TERM_TOTAL_CAPACITY",
           "kind": "COLLEGE_POLICY",
           "owner": "Hanover College"
         },
@@ -270,17 +286,24 @@
         },
         "confidence": "VERIFIED_SOURCE",
         "confirmation": {
-          "date": "2026-08-01",
-          "lastReviewDate": "2026-08-01",
-          "reviewer": "Economics Department representative and project owner"
+          "date": "2026-08-08",
+          "lastReviewDate": "2026-08-08",
+          "reviewer": "CP5A official-source review"
         },
         "dependencies": [
           "TERM-CANONICAL-MAY"
         ],
         "disposition": "ENFORCE",
         "effect": {
+          "conditionalMaximumCourseUnits": 1.25,
+          "conditionalRequirements": {
+            "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION",
+            "advisorApproval": "APPROVED"
+          },
           "maxEconomicsCourses": 1,
-          "maxTotalCourses": 1
+          "maxTotalCourses": 1,
+          "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+          "normalCourseUnits": 1
         },
         "effective": {
           "from": "2025-08-01",
@@ -302,7 +325,9 @@
         "reasonCode": "MAY_TOTAL_CAPACITY",
         "requiredEvidence": [],
         "requiredInputs": [
-          "termPlan"
+          "termPlan",
+          "advisorOverloadApproval",
+          "academicProbationStatus"
         ],
         "ruleId": "CAPACITY-MAY",
         "ruleType": "termLoad",
@@ -316,24 +341,30 @@
           "requirements": []
         },
         "sourceRefs": [
-          "TERM-STRUCTURE#May-Term"
+          "TERM-STRUCTURE#May-Term",
+          "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
         ],
         "status": "ACTIVE",
         "supersedes": [],
         "testRefs": {
-          "approval": [],
+          "approval": [
+            "may-overload-approval-and-standing"
+          ],
           "negative": [
-            "may-two-courses"
+            "may-two-full-courses"
           ],
           "positive": [
-            "schedule-capacity-matrix"
+            "schedule-capacity-matrix",
+            "may-approved-quarter-unit-overload"
           ],
-          "reviewState": []
+          "reviewState": [
+            "may-overload-evidence-missing"
+          ]
         }
       },
       "CAPACITY-WINTER": {
         "authority": {
-          "boundary": "NORMAL_TERM_TOTAL_CAPACITY",
+          "boundary": "NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY",
           "kind": "COLLEGE_POLICY",
           "owner": "Hanover College"
         },
@@ -343,14 +374,21 @@
         },
         "confidence": "VERIFIED_SOURCE",
         "confirmation": {
-          "date": "2026-08-01",
-          "lastReviewDate": "2026-08-01",
-          "reviewer": "Economics Department representative and project owner"
+          "date": "2026-08-08",
+          "lastReviewDate": "2026-08-08",
+          "reviewer": "CP5A official-source review"
         },
         "dependencies": [],
         "disposition": "ENFORCE",
         "effect": {
-          "maxTotalCourses": 4
+          "conditionalMaximumCourseUnits": 5.25,
+          "conditionalRequirements": {
+            "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION",
+            "advisorApproval": "APPROVED"
+          },
+          "maxTotalCourses": 4,
+          "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+          "normalCourseUnits": 4
         },
         "effective": {
           "from": "2025-08-01",
@@ -372,7 +410,9 @@
         "reasonCode": "WINTER_TOTAL_CAPACITY",
         "requiredEvidence": [],
         "requiredInputs": [
-          "termPlan"
+          "termPlan",
+          "advisorOverloadApproval",
+          "academicProbationStatus"
         ],
         "ruleId": "CAPACITY-WINTER",
         "ruleType": "termLoad",
@@ -386,19 +426,26 @@
           "requirements": []
         },
         "sourceRefs": [
-          "TERM-STRUCTURE#Winter-Term"
+          "TERM-STRUCTURE#Winter-Term",
+          "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
         ],
         "status": "ACTIVE",
         "supersedes": [],
         "testRefs": {
-          "approval": [],
+          "approval": [
+            "winter-overload-approval-and-standing"
+          ],
           "negative": [
-            "winter-five-courses"
+            "winter-five-courses-without-evidence",
+            "winter-overload-on-probation"
           ],
           "positive": [
-            "schedule-capacity-matrix"
+            "schedule-capacity-matrix",
+            "winter-approved-overload"
           ],
-          "reviewState": []
+          "reviewState": [
+            "winter-overload-evidence-missing"
+          ]
         }
       },
       "CAPSTONE-EARLY-GRADUATE-STANDING": {
@@ -4902,6 +4949,7 @@
       "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS": [],
       "TERM-CANONICAL-MAY": []
     },
+    "historicalOfferingByCourse": {},
     "messagesByRule": {
       "CAPACITY-FALL": {
         "advisor": "load.advisor",
@@ -5681,6 +5729,47 @@
       }
     },
     "offeringPatternsById": {
+      "CATALOG-ECO-222-SPRING": {
+        "approvedRecurringTerms": [
+          "MAY"
+        ],
+        "authority": "Hanover College official catalog",
+        "authorityBoundary": "UNPUBLISHED_ECO_222_SPRING_PLANNING_PROJECTION",
+        "confidence": "CONFIRMED_PATTERN",
+        "contradictoryYears": [],
+        "course": "ECO 222",
+        "effective": {
+          "from": "2025-08-01",
+          "through": null
+        },
+        "evidenceType": "OFFICIAL_CATALOG_STATEMENT",
+        "hardExcludedTerms": [],
+        "observationsByTerm": {},
+        "patternId": "CATALOG-ECO-222-SPRING",
+        "projectionGranularity": "EXACT_TERM",
+        "projectionPolicy": {
+          "activeExactScheduleOverrides": true,
+          "fallback": "GENERIC_ELECTIVE_OR_TERM_TO_CONFIRM",
+          "normalTerms": [
+            "MAY"
+          ],
+          "probabilityEmitted": false,
+          "scheduleCoverage": [
+            "UNAVAILABLE",
+            "UNKNOWN"
+          ]
+        },
+        "review": {
+          "lastReviewDate": "2026-08-08",
+          "reviewer": "CP5A official-source review"
+        },
+        "sourceRefs": [
+          "OFFICIAL-CATALOG-ECONOMICS#ECO-222",
+          "HANOVER-CP5A-OFFICIAL-EVIDENCE#Economics-course-statements"
+        ],
+        "supersedes": [],
+        "yearsObserved": []
+      },
       "PLANNING-INTERMEDIATE-OFFERING-SEPARATION": {
         "approvedRecurringTerms": [
           "FALL",
@@ -5979,6 +6068,25 @@
       "Unresolved conflict yields review or TBC, not an invented allow or block.",
       "Precedence uses authority, boundary, scope, dates, and supersession, never file order or most-restrictive-wins."
     ],
+    "historicalOfferingContract": {
+      "activationStatus": "INACTIVE_NO_APPROVED_DATA",
+      "conflicts": [],
+      "method": {
+        "methodId": "ECON-HISTORICAL-OFFERING-METHOD",
+        "otherThresholdsActive": false,
+        "owner": "Economics Department",
+        "version": "1.0.0",
+        "veryLowPriorityRule": {
+          "maximumYearsOffered": 1,
+          "minimumCompleteYears": 6
+        }
+      },
+      "ownerApproval": {
+        "approved": false,
+        "approvedOn": null,
+        "reviewer": null
+      }
+    },
     "sources": [
       {
         "authority": "Economics Department",
@@ -5993,6 +6101,21 @@
         "sha256": "9e249beba8ba9c4d4ab1ba9ba6c4045781f14959c293002863b436bcda6acd09",
         "sourceId": "DEPARTMENT-POLICIES",
         "sourceType": "DEPARTMENT_CONFIRMED",
+        "supersedes": null
+      },
+      {
+        "authority": "Economics Department",
+        "authorityBoundary": "DECLARATION_FORM_COGNATE_AND_RELEVANT_HS_W2_LABELS",
+        "effective": {
+          "from": "2025-08-01",
+          "through": null
+        },
+        "path": "data/raw/economics/ECON Major Declaration.doc",
+        "reviewedOn": "2026-08-08",
+        "reviewer": "Codex visual review for CP5A",
+        "sha256": "1bbeb9813637b9d065efc9cbf57cf4062cf471201616699d14c90cde94c23f48",
+        "sourceId": "ECON-MAJOR-DECLARATION",
+        "sourceType": "DEPARTMENT_FORM",
         "supersedes": null
       },
       {
@@ -6019,6 +6142,21 @@
         "sha256": "6da52642cf4fcaa8d9d10075cba1158347e831aacc98b21cf3fcc4b7ff06565f",
         "sourceId": "ECONOMICS-REQUIREMENTS",
         "sourceType": "CATALOG_DERIVED_DEPARTMENT_RECORD",
+        "supersedes": null
+      },
+      {
+        "authority": "Hanover College",
+        "authorityBoundary": "COURSE_LOAD_GENERAL_DEGREE_AND_CATALOG_COURSE_CLAIMS",
+        "effective": {
+          "from": "2025-08-01",
+          "through": null
+        },
+        "path": "data/raw/economics/CP5A_Official_Policy_Evidence.md",
+        "retrievedOn": "2026-08-08",
+        "reviewer": "Codex source review for CP5A",
+        "sha256": "5b5fedcdeea9251d88b273eea30951836a71f8b33a776187b6a10e24888adef8",
+        "sourceId": "HANOVER-CP5A-OFFICIAL-EVIDENCE",
+        "sourceType": "OFFICIAL_SOURCES_REVIEW",
         "supersedes": null
       },
       {
@@ -6097,7 +6235,7 @@
   "rules": [
     {
       "authority": {
-        "boundary": "NORMAL_TERM_TOTAL_CAPACITY",
+        "boundary": "NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY",
         "kind": "COLLEGE_POLICY",
         "owner": "Hanover College"
       },
@@ -6107,14 +6245,21 @@
       },
       "confidence": "VERIFIED_SOURCE",
       "confirmation": {
-        "date": "2026-08-01",
-        "lastReviewDate": "2026-08-01",
-        "reviewer": "Economics Department representative and project owner"
+        "date": "2026-08-08",
+        "lastReviewDate": "2026-08-08",
+        "reviewer": "CP5A official-source review"
       },
       "dependencies": [],
       "disposition": "ENFORCE",
       "effect": {
-        "maxTotalCourses": 4
+        "conditionalMaximumCourseUnits": 5.25,
+        "conditionalRequirements": {
+          "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION",
+          "advisorApproval": "APPROVED"
+        },
+        "maxTotalCourses": 4,
+        "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+        "normalCourseUnits": 4
       },
       "effective": {
         "from": "2025-08-01",
@@ -6136,7 +6281,9 @@
       "reasonCode": "FALL_TOTAL_CAPACITY",
       "requiredEvidence": [],
       "requiredInputs": [
-        "termPlan"
+        "termPlan",
+        "advisorOverloadApproval",
+        "academicProbationStatus"
       ],
       "ruleId": "CAPACITY-FALL",
       "ruleType": "termLoad",
@@ -6150,24 +6297,31 @@
         "requirements": []
       },
       "sourceRefs": [
-        "TERM-STRUCTURE#Fall-Term"
+        "TERM-STRUCTURE#Fall-Term",
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
       ],
       "status": "ACTIVE",
       "supersedes": [],
       "testRefs": {
-        "approval": [],
+        "approval": [
+          "fall-overload-approval-and-standing"
+        ],
         "negative": [
-          "fall-five-courses"
+          "fall-five-courses-without-evidence",
+          "fall-overload-on-probation"
         ],
         "positive": [
-          "schedule-capacity-matrix"
+          "schedule-capacity-matrix",
+          "fall-approved-overload"
         ],
-        "reviewState": []
+        "reviewState": [
+          "fall-overload-evidence-missing"
+        ]
       }
     },
     {
       "authority": {
-        "boundary": "MAY_TERM_TOTAL_CAPACITY",
+        "boundary": "NORMAL_AND_CONDITIONAL_MAY_TERM_TOTAL_CAPACITY",
         "kind": "COLLEGE_POLICY",
         "owner": "Hanover College"
       },
@@ -6177,17 +6331,24 @@
       },
       "confidence": "VERIFIED_SOURCE",
       "confirmation": {
-        "date": "2026-08-01",
-        "lastReviewDate": "2026-08-01",
-        "reviewer": "Economics Department representative and project owner"
+        "date": "2026-08-08",
+        "lastReviewDate": "2026-08-08",
+        "reviewer": "CP5A official-source review"
       },
       "dependencies": [
         "TERM-CANONICAL-MAY"
       ],
       "disposition": "ENFORCE",
       "effect": {
+        "conditionalMaximumCourseUnits": 1.25,
+        "conditionalRequirements": {
+          "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION",
+          "advisorApproval": "APPROVED"
+        },
         "maxEconomicsCourses": 1,
-        "maxTotalCourses": 1
+        "maxTotalCourses": 1,
+        "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+        "normalCourseUnits": 1
       },
       "effective": {
         "from": "2025-08-01",
@@ -6209,7 +6370,9 @@
       "reasonCode": "MAY_TOTAL_CAPACITY",
       "requiredEvidence": [],
       "requiredInputs": [
-        "termPlan"
+        "termPlan",
+        "advisorOverloadApproval",
+        "academicProbationStatus"
       ],
       "ruleId": "CAPACITY-MAY",
       "ruleType": "termLoad",
@@ -6223,24 +6386,30 @@
         "requirements": []
       },
       "sourceRefs": [
-        "TERM-STRUCTURE#May-Term"
+        "TERM-STRUCTURE#May-Term",
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
       ],
       "status": "ACTIVE",
       "supersedes": [],
       "testRefs": {
-        "approval": [],
+        "approval": [
+          "may-overload-approval-and-standing"
+        ],
         "negative": [
-          "may-two-courses"
+          "may-two-full-courses"
         ],
         "positive": [
-          "schedule-capacity-matrix"
+          "schedule-capacity-matrix",
+          "may-approved-quarter-unit-overload"
         ],
-        "reviewState": []
+        "reviewState": [
+          "may-overload-evidence-missing"
+        ]
       }
     },
     {
       "authority": {
-        "boundary": "NORMAL_TERM_TOTAL_CAPACITY",
+        "boundary": "NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY",
         "kind": "COLLEGE_POLICY",
         "owner": "Hanover College"
       },
@@ -6250,14 +6419,21 @@
       },
       "confidence": "VERIFIED_SOURCE",
       "confirmation": {
-        "date": "2026-08-01",
-        "lastReviewDate": "2026-08-01",
-        "reviewer": "Economics Department representative and project owner"
+        "date": "2026-08-08",
+        "lastReviewDate": "2026-08-08",
+        "reviewer": "CP5A official-source review"
       },
       "dependencies": [],
       "disposition": "ENFORCE",
       "effect": {
-        "maxTotalCourses": 4
+        "conditionalMaximumCourseUnits": 5.25,
+        "conditionalRequirements": {
+          "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION",
+          "advisorApproval": "APPROVED"
+        },
+        "maxTotalCourses": 4,
+        "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+        "normalCourseUnits": 4
       },
       "effective": {
         "from": "2025-08-01",
@@ -6279,7 +6455,9 @@
       "reasonCode": "WINTER_TOTAL_CAPACITY",
       "requiredEvidence": [],
       "requiredInputs": [
-        "termPlan"
+        "termPlan",
+        "advisorOverloadApproval",
+        "academicProbationStatus"
       ],
       "ruleId": "CAPACITY-WINTER",
       "ruleType": "termLoad",
@@ -6293,19 +6471,26 @@
         "requirements": []
       },
       "sourceRefs": [
-        "TERM-STRUCTURE#Winter-Term"
+        "TERM-STRUCTURE#Winter-Term",
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
       ],
       "status": "ACTIVE",
       "supersedes": [],
       "testRefs": {
-        "approval": [],
+        "approval": [
+          "winter-overload-approval-and-standing"
+        ],
         "negative": [
-          "winter-five-courses"
+          "winter-five-courses-without-evidence",
+          "winter-overload-on-probation"
         ],
         "positive": [
-          "schedule-capacity-matrix"
+          "schedule-capacity-matrix",
+          "winter-approved-overload"
         ],
-        "reviewState": []
+        "reviewState": [
+          "winter-overload-evidence-missing"
+        ]
       }
     },
     {

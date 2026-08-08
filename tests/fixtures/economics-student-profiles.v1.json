@@ -142,7 +142,7 @@
       "coverage": ["one_year_early_request", "both_principles_completed", "mathematics_completed"],
       "expectations": {
         "displayedPlanCount": { "min": 0, "max": 1 },
-        "candidateStrategyStatuses": { "plan-c2": ["PRELIMINARY_ONLY", "NOT_FEASIBLE"] },
+        "candidateStrategyStatuses": { "plan-c2": ["CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY", "NOT_FEASIBLE"] },
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
     },
