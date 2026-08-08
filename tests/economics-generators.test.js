@@ -5,13 +5,16 @@ import fc from "fast-check";
 import {
   ECONOMICS_GENERATOR_AXES,
   ECONOMICS_GENERATOR_VERSION,
+  ORDINARY_ON_TIME_COHORT_ID,
   auditGeneratedFictionalProfile,
+  auditOrdinaryOnTimeEconomicsProfile,
   canonicalizeGeneratedCourse,
   fictionalEconomicsProfileArbitrary,
   generateFictionalEconomicsProfiles,
   generateLegacyV3FictionalEconomicsProfiles,
   generateInvalidEconomicsNeighbors,
   independentPrerequisiteClosure,
+  loadOrdinaryOnTimeEconomicsProfiles,
   pairwiseCoverageReport,
   shrinkFictionalEconomicsProfile,
   withExplicitMayCommitment
@@ -62,6 +65,88 @@ test("generator v4 corrects derived May reservations while preserving one-to-one
   assert.ok(corrected.profiles.every(profile => profile.student.reservedCapacity.May === 0));
   assert.ok(legacy.profiles.some(profile => profile.student.reservedCapacity.May === 1));
   assert.ok(corrected.profiles.every(profile => profile.generation.mayReservationPolicy === "EXPLICIT_COMMITMENT_ONLY"));
+});
+
+test("ordinary-on-time-v1 freezes six materially different neutral histories per standing", async () => {
+  const cohort = await loadOrdinaryOnTimeEconomicsProfiles({ manifest, verifiedSchedule });
+  const expectedYears = { freshman: 4, sophomore: 3, junior: 2, senior: 1 };
+
+  assert.equal(cohort.cohortId, ORDINARY_ON_TIME_COHORT_ID);
+  assert.equal(cohort.profiles.length, 24);
+  assert.equal(cohort.historyCoverage.length, 4);
+  for (const design of cohort.historyCoverage) {
+    const profiles = cohort.profiles.filter(profile => profile.student.academicStanding === design.standing);
+    const courseSignatures = new Set(profiles.map(profile => JSON.stringify(
+      profile.student.courses.map(course => [course.course, course.status])
+    )));
+    assert.equal(design.profileCount, 6, design.standing);
+    assert.equal(design.normalRemainingYears, expectedYears[design.standing], design.standing);
+    assert.equal(design.historyCategories.length, 6, design.standing);
+    assert.equal(courseSignatures.size, 6, design.standing);
+    assert.ok(design.historyCategories.includes("no-economics-history"), design.standing);
+    assert.match(design.justification, /difficult|without assuming|late-start|late start|progress/iu, design.standing);
+  }
+
+  for (const profile of cohort.profiles) {
+    const audit = auditOrdinaryOnTimeEconomicsProfile(profile, manifest, verifiedSchedule);
+    assert.equal(audit.valid, true, profile.profileId);
+    assert.deepEqual(audit, profile.ordinaryAudit, profile.profileId);
+    assert.equal(audit.declaredStanding, audit.resolvedEffectiveStanding, profile.profileId);
+    assert.equal(audit.effectiveRemainingYears, expectedYears[audit.declaredStanding], profile.profileId);
+    assert.equal(profile.student.planningPace, "standard", profile.profileId);
+    assert.equal(profile.student.isTransferStudent, false, profile.profileId);
+    assert.deepEqual(profile.student.reservedCapacity, { Fall: 0, Winter: 0, May: 0 }, profile.profileId);
+    assert.equal(profile.axes.availabilityState, "open", profile.profileId);
+    assert.equal(profile.axes.approvalState, "not-required", profile.profileId);
+    assert.ok(profile.student.courses.every(course => course.status !== "transfer"), profile.profileId);
+  }
+});
+
+test("ordinary-on-time-v1 rejects non-ordinary and invalid denominator mutations", async () => {
+  const cohort = await loadOrdinaryOnTimeEconomicsProfiles({ manifest, verifiedSchedule });
+  const base = cohort.profiles.find(profile => profile.student.courses.length > 0);
+  const cases = [
+    ["transfer student", "ORDINARY-NON-TRANSFER", profile => {
+      profile.student.isTransferStudent = true;
+      profile.axes.transferStatus = "transfer";
+    }],
+    ["transfer history", "ORDINARY-NO-TRANSFER-HISTORY", profile => {
+      profile.student.courses[0].status = "transfer";
+    }],
+    ["nonstandard pace", "ORDINARY-STANDARD-PACE", profile => {
+      profile.student.planningPace = "one_year_extended";
+      profile.axes.planningPace = "one_year_extended";
+    }],
+    ["ordinary reservation", "ORDINARY-ZERO-RESERVATIONS", profile => {
+      profile.student.reservedCapacity.Fall = 1;
+    }],
+    ["synthetic May occupancy", "ORDINARY-ZERO-RESERVATIONS", profile => {
+      profile.student.reservedCapacity.May = 1;
+    }],
+    ["explicit May commitment", "ORDINARY-NO-MAY-COMMITMENT", profile => {
+      profile.scenario.trueMayCommitment = { explicit: true, reservedCourseUnits: 1 };
+    }],
+    ["availability stress", "ORDINARY-OPEN-AVAILABILITY", profile => {
+      profile.axes.availabilityState = "constrained";
+      profile.scenario.availability.state = "constrained";
+    }],
+    ["approval stress", "ORDINARY-NO-APPROVAL-MUTATION", profile => {
+      profile.axes.approvalState = "valid-instructor";
+      profile.scenario.approval = { status: "recorded" };
+    }],
+    ["invalid standing", "ORDINARY-EFFECTIVE-STANDING", profile => {
+      profile.student.academicStanding = "graduate";
+      profile.axes.standing = "graduate";
+    }]
+  ];
+
+  for (const [label, expectedRule, mutate] of cases) {
+    const profile = structuredClone(base);
+    mutate(profile);
+    const audit = auditOrdinaryOnTimeEconomicsProfile(profile, manifest, verifiedSchedule);
+    assert.equal(audit.valid, false, label);
+    assert.ok(audit.violations.some(violation => violation.ruleId === expectedRule), label);
+  }
 });
 
 test("a real May reservation is represented only by an explicit held-out commitment", () => {

@@ -119,6 +119,49 @@ jobs:
         if: ${{ steps.shard.outcome != 'success' }}
         run: exit 1
 
+  ordinary-on-time:
+    name: Ordinary on-time product cohort
+    needs: notify_start
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+      - run: pnpm install --frozen-lockfile
+      - id: ordinary
+        name: Run frozen ordinary-on-time-v1 cohort
+        continue-on-error: true
+        run: >-
+          node scripts/run-econplanner-phase.mjs
+          --phase ordinary-on-time-v1
+          --output test-results/econplanner-nightly/phases/ordinary-on-time-v1.json
+          --log test-results/econplanner-nightly/logs/ordinary-on-time-v1.log
+          --timeout-ms 1800000
+          --expect-artifact test-results/economics-ordinary-on-time/ordinary-on-time-v1.json
+          -- node scripts/run-economics-nightly-matrix.mjs
+          --cohort ordinary-on-time-v1
+          --shard 1/1
+          --output test-results/economics-ordinary-on-time/ordinary-on-time-v1.json
+      - name: Upload ordinary cohort metrics, phase record, log, and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: econplanner-nightly-ordinary-on-time
+          path: |
+            test-results/economics-ordinary-on-time/
+            test-results/econplanner-nightly/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce ordinary cohort result after evidence upload
+        if: ${{ steps.ordinary.outcome != 'success' }}
+        run: exit 1
+
   deterministic:
     name: Policy, oracle, mutation, property, unit, and local PDF phases
     needs: notify_start
@@ -432,7 +475,7 @@ jobs:
   final-reporting:
     name: Aggregate, compare, summarize, notify, and gate
     if: ${{ always() }}
-    needs: [notify_start, generated-matrix, deterministic, browser, quality, hosted-pdf]
+    needs: [notify_start, generated-matrix, ordinary-on-time, deterministic, browser, quality, hosted-pdf]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
