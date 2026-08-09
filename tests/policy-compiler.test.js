@@ -25,7 +25,7 @@ test("the CP2 compiler validates and emits a complete release within its perform
   assert.deepEqual(bundle.indexes.historicalOfferingByCourse, {});
   assert.equal(bundle.provenance.historicalOfferingContract.activationStatus, "INACTIVE_NO_APPROVED_DATA");
   assert.equal(compileReport.compatibility.length, 5);
-  assert.ok(compileReport.compatibility.every(entry => entry.status === "MATCH"));
+  assert.ok(compileReport.compatibility.every(entry => entry.status === "GENERATED"));
 
   for (const relativePath of [
     "bundle.json", "bundle.sha256", "compile-report.json", "policy-diff.md", "dependency-impact.md",
@@ -33,6 +33,35 @@ test("the CP2 compiler validates and emits a complete release within its perform
     "compatibility/planning-constraints.json", "compatibility/schedule-2026-2027.json"
   ]) {
     assert.ok((await readFile(path.join(releaseRoot, relativePath))).length > 0, relativePath);
+  }
+  for (const relativePath of ["courses.json", "requirements.json", "prerequisites.json", "planning-constraints.json", "schedule-2026-2027.json"]) {
+    assert.ok((await readFile(path.join(temporaryRoot, "normalized/economics", relativePath))).length > 0, relativePath);
+  }
+});
+
+test("compatibility generation is byte-deterministic across three clean outputs", async t => {
+  const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "econ-policy-determinism-"));
+  t.after(() => rm(temporaryRoot, { recursive: true, force: true }));
+  const outputNames = [
+    "bundle.json", "compile-report.json", "compatibility/courses.json", "compatibility/requirements.json",
+    "compatibility/prerequisites.json", "compatibility/planning-constraints.json", "compatibility/schedule-2026-2027.json"
+  ];
+  const roots = [];
+  for (let index = 0; index < 3; index += 1) {
+    const releaseRoot = path.join(temporaryRoot, `run-${index}`, "release");
+    await compilePolicy({ outputRoot: releaseRoot });
+    roots.push(releaseRoot);
+  }
+  for (const outputName of outputNames) {
+    const expected = await readFile(path.join(roots[0], outputName), "utf8");
+    for (const releaseRoot of roots.slice(1)) assert.equal(await readFile(path.join(releaseRoot, outputName), "utf8"), expected, outputName);
+  }
+  for (const outputName of ["courses.json", "requirements.json", "prerequisites.json", "planning-constraints.json", "schedule-2026-2027.json"]) {
+    const expected = await readFile(path.join(path.dirname(roots[0]), "normalized/economics", outputName), "utf8");
+    assert.equal(await readFile(path.join(roots[0], "compatibility", outputName), "utf8"), expected, `release/runtime ${outputName}`);
+    for (const releaseRoot of roots.slice(1)) {
+      assert.equal(await readFile(path.join(path.dirname(releaseRoot), "normalized/economics", outputName), "utf8"), expected, `runtime ${outputName}`);
+    }
   }
 });
 

@@ -12,7 +12,7 @@ Runtime activation: **not changed by CP2**. Compatibility files preserve the cur
 - MAY is the canonical internal term; "Spring/May" remains the display label.
 - Completed advanced history is preserved and missing historical evidence produces review.
 - Unsupported future exact terms remain preliminary/TBC.
-- FULL remains REVIEW_REQUIRED in the bundle; the legacy compatibility view retains its pre-CP2 representation until runtime migration.
+- FULL remains REVIEW_REQUIRED in the bundle; the generated compatibility view preserves the existing runtime representation.
 - Strategy fit remains ranking metadata and cannot invalidate an academically complete plan.
 
 ## Unresolved review records

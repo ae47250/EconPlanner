@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "econ-2025-2026.1",
+  "courses": {
+    "sourceStatus": "APPROVED_LOCAL_SOURCE",
+    "sourceRefs": [
+      "https://catalog.hanover.edu/programs/economics.php",
+      "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+      "data/normalized/economics/schedule-2026-2027.json"
+    ],
+    "order": ["ECO 113", "ECO 114", "ECO 160", "ECO 161", "MAT 113", "MAT 121", "ECO 213", "ECO 214", "ECO 221", "ECO 222", "ECO 223", "ECO 224", "ECO 234", "ECO 257", "ECO 260", "MAT 217", "PSY 217", "ECO 307", "ECO 315", "ECO 316", "ECO 321", "BUSN 323", "ECO 331", "ECO 333", "ECO 335", "ECO 337", "ECO 357", "ECO 360", "ECO 370", "ECO 461", "ECO 471"],
+    "apEligible": ["ECO 113", "ECO 114", "ECO 160", "ECO 161", "MAT 113", "MAT 121", "ECO 257", "ECO 260", "MAT 217", "PSY 217", "ECO 360"],
+    "notStudentSelectable": ["ECO 461"],
+    "metadataByCourse": {
+      "ECO 113": {"electiveEligibility": "required_course"},
+      "ECO 114": {"electiveEligibility": "required_course"},
+      "ECO 160": {"electiveEligibility": "eligible_subject_to_topic_and_100_level_limit"},
+      "ECO 161": {"electiveEligibility": "eligible_subject_to_100_level_limit"},
+      "MAT 113": {"electiveEligibility": "not_economics_elective"},
+      "MAT 121": {"electiveEligibility": "not_economics_elective"},
+      "ECO 213": {"electiveEligibility": "required_course"},
+      "ECO 214": {"electiveEligibility": "required_course"},
+      "ECO 221": {"electiveEligibility": "eligible"},
+      "ECO 222": {"electiveEligibility": "eligible"},
+      "ECO 223": {"electiveEligibility": "eligible", "titleAliases": ["Economics: Poverty and Discrimination"]},
+      "ECO 224": {"electiveEligibility": "eligible"},
+      "ECO 234": {"electiveEligibility": "eligible"},
+      "ECO 257": {"electiveEligibility": "statistics_requirement"},
+      "ECO 260": {"electiveEligibility": "eligible_subject_to_topic"},
+      "MAT 217": {"electiveEligibility": "not_economics_elective"},
+      "PSY 217": {"electiveEligibility": "not_economics_elective"},
+      "ECO 307": {"electiveEligibility": "excluded_half_unit"},
+      "ECO 315": {"electiveEligibility": "eligible"},
+      "ECO 316": {"electiveEligibility": "eligible"},
+      "ECO 321": {"electiveEligibility": "eligible_only_when_busn_323_satisfies_finance", "titleAliases": ["Money and Financial Markets"]},
+      "BUSN 323": {"electiveEligibility": "finance_requirement_only"},
+      "ECO 331": {"electiveEligibility": "eligible"},
+      "ECO 333": {"electiveEligibility": "eligible", "titleAliases": ["International Trade and Finance"]},
+      "ECO 335": {"electiveEligibility": "eligible"},
+      "ECO 337": {"electiveEligibility": "eligible"},
+      "ECO 357": {"electiveEligibility": "eligible_with_department_permission"},
+      "ECO 360": {"electiveEligibility": "eligible_subject_to_topic"},
+      "ECO 370": {"electiveEligibility": "eligible_subject_to_approval"},
+      "ECO 461": {"electiveEligibility": "required_capstone", "titleAliases": ["Senior Seminar - Econometrics", "Econometrics"], "residency": "hanover", "recurringOfferingRule": {"term": "Winter", "status": "UNCONFIRMED_FUTURE_PATTERN"}},
+      "ECO 471": {"electiveEligibility": "excluded_from_automatic_plans"}
+    },
+    "additionalOfferingEvidence": {"ECO 113": {"2026-2027": ["Summer"]}}
+  },
+  "requirements": {
+    "id": "economics-major",
+    "sourceStatus": "APPROVED_LOCAL_SOURCE",
+    "sourceRefs": [
+      "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+      "data/raw/economics/Econ_Course_Offerings.md",
+      "data/raw/economics/Term_Structure.md",
+      "data/raw/economics/Department_Confirmed_Planning_Policies.md"
+    ],
+    "slots": [
+      {"ruleId": "REQ-ECO-113", "id": "eco-113", "label": "ECO 113"},
+      {"ruleId": "REQ-ECO-114", "id": "eco-114", "label": "ECO 114"},
+      {"ruleId": "REQ-ECO-213", "id": "eco-213", "label": "ECO 213"},
+      {"ruleId": "REQ-ECO-214", "id": "eco-214", "label": "ECO 214"},
+      {"ruleId": "REQ-STATISTICS", "id": "statistics", "label": "MAT 217 / ECO 257 / PSY 217", "optionOrder": ["MAT 217", "ECO 257", "PSY 217"], "capstonePrerequisiteOptions": true},
+      {"ruleId": "REQ-FINANCE", "id": "finance", "label": "ECO 321 / BUSN 323", "preferredOptions": ["BUSN 323", "ECO 321"]},
+      {"ruleId": "REQ-ECO-461", "id": "eco-461", "label": "ECO 461"},
+      {"ruleId": "REQ-COGNATE", "id": "cognate", "label": "MAT 113 / MAT 121"}
+    ],
+    "electiveConditionalCourses": {"ECO 321": {"slotId": "finance", "assignedCode": "BUSN 323"}},
+    "electiveExclusionOrder": ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "ECO 461", "ECO 307"]
+  },
+  "prerequisites": {
+    "reasonByPermissionRule": {
+      "CONCURRENT-MATH-ECO-213": "concurrent_math",
+      "CONCURRENT-MATH-ECO-214": "concurrent_math",
+      "CONCURRENT-INTERMEDIATE-ECO-461": "concurrent_intermediate_with_capstone"
+    }
+  },
+  "planningConstraints": {
+    "summer": {"maxTotalCourses": 1, "maxEconomicsCourses": 1, "planningNote": "No Summer Economics offering is verified; a Summer course cannot support a fully verified plan."},
+    "hardRules": [
+      {"ruleIds": ["PLANNING-MAY-COURSE-EXCLUSIONS"], "text": "ECO 213 and ECO 214 cannot be scheduled in May"},
+      {"ruleIds": ["CAPSTONE-WINTER-ONLY", "CAPSTONE-SENIOR-STANDING"], "text": "ECO 461 is senior Winter only"},
+      {"ruleIds": ["CAPSTONE-HANOVER-RESIDENCY"], "text": "ECO 461 must be completed at Hanover College"},
+      {"ruleIds": ["CONCURRENT-MATH-ECO-213", "CONCURRENT-MATH-ECO-214"], "text": "MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only as a last resort with the ECO course instructor's approval; every other prerequisite must be completed first"},
+      {"ruleIds": ["CONCURRENT-INTERMEDIATE-ECO-461"], "text": "When exactly one of ECO 213 or ECO 214 is already completed, the other may be concurrent with ECO 461 only with Economics Department approval and after all other ECO 461 prerequisites are completed"},
+      {"ruleIds": ["PLANNING-CURRENT-TERM-EXCLUDED"], "text": "A generated plan never adds courses to the regular term containing the plan-creation date; current-term courses must be recorded as In Progress"},
+      {"ruleIds": ["PLANNING-IN-PROGRESS-UNLOCKS-LATER"], "text": "A prerequisite currently In Progress becomes available for a dependent course only after the current term"}
+    ],
+    "offeringPatternText": {"PLANNING-INTERMEDIATE-OFFERING-SEPARATION": "One is normally offered in Fall and the other in Winter; the verified annual schedule determines the order."},
+    "advisingPreferences": [{"ruleIds": ["PLANNING-ECO-LOAD-PREFERENCE"], "text": "Prefer no more than two Economics courses in Fall or Winter; graduation need may override this preference up to the normal four-course total load."}],
+    "futureSchedulePolicy": {"ruleIds": ["PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"], "text": "Use projected or Term to be confirmed placements when an exact annual offering is not verified, and label the plan PRELIMINARY_ONLY."}
+  },
+  "schedule": {
+    "verifiedOn": "2026-08-08",
+    "source": {"type": "user_provided_schedule_screenshots", "sectionCodeSMeans": "May", "sourceDocumentDate": null, "screenshotRetrievedOn": "2026-08-08", "repositoryIngestedOn": "2026-08-08", "repositoryIngestionEvidence": "Current registrar screenshots supplied by the project owner on August 8, 2026.", "humanVerifiedOn": "2026-08-08"},
+    "courseOfferingNotes": {"ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."},
+    "sections": {
+      "2026-FALL-ECO-113-A": {"instructor": "Dodge, Eric R.", "seatsOpen": 1, "capacity": 24},
+      "2026-FALL-ECO-114-A": {"instructor": "Eiriksson, Agust", "seatsOpen": 3, "capacity": 24},
+      "2026-FALL-ECO-114-B": {"instructor": "Eiriksson, Agust", "seatsOpen": 5, "capacity": 24},
+      "2026-FALL-ECO-114-C": {"instructor": "Jaradat, Hamzeh A.", "seatsOpen": 0, "capacity": 24},
+      "2026-FALL-ECO-213-A": {"instructor": "Dodge, Eric R.", "seatsOpen": 11, "capacity": 20},
+      "2026-FALL-ECO-234-A": {"instructor": "Bates, Jared G.", "seatsOpen": 23, "capacity": 24},
+      "2026-FALL-ECO-333-A": {"instructor": "Eiriksson, Agust", "seatsOpen": 3, "capacity": 24},
+      "2026-FALL-MAT-113-A": {"instructor": "Setser, Jennifer C.", "seatsOpen": 5, "capacity": 24},
+      "2026-FALL-MAT-121-A": {"instructor": "Nguyen, Duong", "seatsOpen": 15, "capacity": 24},
+      "2026-FALL-MAT-121-B": {"instructor": "Nguyen, Duong", "seatsOpen": 13, "capacity": 24},
+      "2026-FALL-MAT-217-A": {"instructor": "Nguyen, Duong", "seatsOpen": 0, "capacity": 24},
+      "2026-FALL-MAT-217-B": {"instructor": "Isom, April", "seatsOpen": 0, "capacity": 24},
+      "2026-FALL-BUSN-323-A": {"instructor": "Riddick Jr., John C.", "seatsOpen": 0, "capacity": 26},
+      "2027-WINTER-ECO-113-J": {"instructor": "Jaradat, Hamzeh A.", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-ECO-113-K": {"instructor": "Dodge, Eric R.", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-ECO-114-J": {"instructor": "Eiriksson, Agust", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-ECO-161-J": {"instructor": "Eiriksson, Agust", "seatsOpen": 20, "capacity": 20},
+      "2027-WINTER-ECO-214-J": {"instructor": "Eiriksson, Agust", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-ECO-221-J": {"instructor": "Dodge, Eric R.", "seatsOpen": 20, "capacity": 20},
+      "2027-WINTER-ECO-321-J": {"instructor": "Jaradat, Hamzeh A.", "seatsOpen": 20, "capacity": 20},
+      "2027-WINTER-ECO-461-J": {"instructor": "Dodge, Eric R.", "seatsOpen": 15, "capacity": 15},
+      "2027-WINTER-MAT-113-J": {"instructor": "Setser, Jennifer C.", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-MAT-121-J": {"instructor": "Jagels, Carl F.", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-MAT-217-J": {"instructor": "Jagels, Carl F.", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-MAT-217-K": {"instructor": "Wahl, Barbara J.", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-MAT-217-L": {"instructor": "Isom, April", "seatsOpen": 24, "capacity": 24},
+      "2027-WINTER-MAT-217-M": {"instructor": "Isom, April", "seatsOpen": 24, "capacity": 24},
+      "2027-MAY-ECO-222-S": {"instructor": "Eiriksson, Agust", "seatsOpen": 15, "capacity": 15},
+      "2027-MAY-ECO-260-S": {"instructor": "Dodge, Eric R.", "seatsOpen": 20, "capacity": 20},
+      "2027-MAY-MAT-217-S": {"instructor": "Wahl, Barbara J.", "seatsOpen": 18, "capacity": 18}
+    }
+  }
+}

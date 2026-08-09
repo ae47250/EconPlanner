@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { canonicalJson } from "../lib/policy/canonical-json.js";
+import { loadEconomicsPolicyCompatibility } from "../lib/policy/compat-normalized.js";
 
 const root = new URL("../", import.meta.url);
 const readJson = async relativePath => JSON.parse(await readFile(new URL(relativePath, root), "utf8"));
@@ -35,12 +36,15 @@ test("the bundle digest covers canonical payload bytes and active.json pins the 
   assert.equal(pinned.activationStatus, "ACTIVE");
 });
 
-test("generated compatibility views are byte-stable semantic matches for current normalized runtime inputs", async () => {
+test("generated compatibility views are field-complete semantic matches for current runtime inputs", async () => {
   const names = ["courses.json", "requirements.json", "prerequisites.json", "planning-constraints.json", "schedule-2026-2027.json"];
-  for (const name of names) {
+  const loaded = loadEconomicsPolicyCompatibility({ useCache: false });
+  const loaderKeys = ["courses", "requirements", "prerequisites", "planningConstraints", "schedule"];
+  for (const [index, name] of names.entries()) {
     const compiled = await readJson(`data/compiled/policy/releases/econ-2025-2026.1/compatibility/${name}`);
     const current = await readJson(`data/normalized/economics/${name}`);
     assert.equal(canonicalJson(compiled), canonicalJson(current), name);
+    assert.equal(canonicalJson(loaded[loaderKeys[index]]), canonicalJson(current), `loader ${name}`);
   }
 });
 

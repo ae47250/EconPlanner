@@ -2,7 +2,7 @@
 
 Bundle digest: `sha256:50c8d9eb3f9e81c3864edc47558f0d4ac25e59bfdabb8062d454b38a6d5baef9`
 
-CP2 adds compiled data only. Current catalog loading, planning, validation, editing, reports, and PDFs continue to use their existing runtime paths.
+Compatibility data is generated from canonical Knowledge Hub inputs. Current catalog loading, planning, validation, editing, reports, and PDFs continue to use their existing runtime paths.
 
 ## Declared rule dependencies
 

@@ -16,6 +16,7 @@
   "inputs": [
     {"id": "provenance", "path": "policy/provenance/sources.json", "schema": null},
     {"id": "courses", "path": "policy/courses/economics.json", "schema": null},
+    {"id": "compatibility-profile", "path": "policy/compatibility/economics.json", "schema": null},
     {"id": "requirements", "path": "policy/requirements/economics-2025-2026.json", "schema": "policy/schema/policy-record.v1.schema.json"},
     {"id": "prerequisites", "path": "policy/rules/prerequisites.json", "schema": "policy/schema/policy-record.v1.schema.json"},
     {"id": "requirement-allocation", "path": "policy/rules/requirement-allocation.json", "schema": "policy/schema/policy-record.v1.schema.json"},
