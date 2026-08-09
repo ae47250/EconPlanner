@@ -49,6 +49,14 @@ async function generate(page) {
   await expect(page.getByRole("heading", { name: /Compare your plans|Your feasible plan/ })).toBeVisible();
 }
 
+async function reviewBalanced(page) {
+  await resetPlanner(page);
+  await seedFreshman(page);
+  await generate(page);
+  await page.getByRole("button", { name: "Review selected Balanced" }).click();
+  await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
+}
+
 test("a freshman receives the Balanced and Explore First normal comparisons", async ({ page }) => {
   await resetPlanner(page);
   await seedFreshman(page);
@@ -79,4 +87,45 @@ test("One Year Early keeps normal comparisons and adds one accelerated plan", as
   await expect(page.locator('article[data-plan-id="explore-first"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="one-year-early"]')).toBeVisible();
   await expect(page.getByText("One Year Early:", { exact: true })).toBeVisible();
+});
+
+test("PDF download recovers cleanly after failed and aborted requests", async ({ page }) => {
+  await reviewBalanced(page);
+
+  const download = page.getByRole("button", { name: "Download PDF" });
+  await page.route("**/api/reports/economics", route => route.fulfill({
+    status: 503,
+    contentType: "application/json",
+    body: JSON.stringify({ error: "PDF creation is temporarily unavailable." })
+  }));
+  await download.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".pdf-download-status")).toContainText("temporarily unavailable");
+  await expect(download).toBeFocused();
+  await page.unroute("**/api/reports/economics");
+
+  await page.route("**/api/reports/economics", route => route.abort("aborted"));
+  const abortedRequest = page.waitForEvent("requestfailed", request => request.url().endsWith("/api/reports/economics"));
+  await download.click();
+  await abortedRequest;
+  await expect(page.locator(".pdf-download-status")).toContainText(/interrupted|could not connect/i);
+  await expect(page.locator(".pdf-download-status")).not.toContainText(/failed to fetch|aborterror/i);
+  await expect(download).toBeFocused();
+  await page.unroute("**/api/reports/economics");
+});
+
+test("a structurally malformed successful planner response is rejected before storage", async ({ page }) => {
+  await resetPlanner(page);
+  await seedFreshman(page);
+  await page.route("**/api/majors/map", route => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({ programs: [] })
+  }));
+
+  await page.getByRole("button", { name: /Generate my plans/ }).click();
+  await expect(page.getByRole("heading", { name: "Build your economics course plan" })).toBeVisible();
+  await expect(page.locator(".generate-card .status")).toContainText("invalid response");
+  await expect(page.locator("main.comparison-page")).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.sessionStorage.getItem("econ-planner-generated-session"))).toBeNull();
 });

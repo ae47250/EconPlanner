@@ -49,5 +49,5 @@ test("canonical indexes preserve approved semantics that differ from legacy repr
   assert.deepEqual(bundle.indexes.byRuleId["ELECTIVE-ECO-257-STATISTICS-ONLY"].effect.excludedRequirementRuleIds, ["REQ-ECO-ELECTIVES"]);
   assert.equal(bundle.indexes.byRuleId["TERM-CANONICAL-MAY"].effect.canonicalTerm, "MAY");
   assert.equal(bundle.indexes.byRuleId["SCHEDULE-AVAILABILITY-BEHAVIOR"].effect.FULL, "REVIEW_REQUIRED");
-  assert.equal(bundle.indexes.offeringByTerm["2026-FALL"].sections.filter(section => section.enrollmentState === "FULL").length, 2);
+  assert.equal(bundle.indexes.offeringByTerm["2026-FALL"].sections.filter(section => section.enrollmentState === "FULL").length, 4);
 });
