@@ -1023,13 +1023,8 @@ function PlanComparisonScreen({
   const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
-  const planBadges = {
-    balanced: "Balanced",
-    "explore-first": "Explore First",
-    "one-year-early": "One Year Early"
-  };
   const planBadge = plan => {
-    if (plan.planningMode !== "graduation_priority") return planBadges[plan.id] || "Validated";
+    if (plan.planningMode !== "graduation_priority") return plan.label || "Validated";
     const mayCourse = plan.terms
       ?.find(term => term.scheduleTerm === "May")
       ?.courses?.[0]?.course;

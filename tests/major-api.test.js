@@ -181,6 +181,10 @@ test("major mapper returns only the selected planning horizon", async () => {
   assert.equal(response.status, 200);
   assert.ok(economics.economicsPlans.length >= 1 && economics.economicsPlans.length <= 2);
   assert.equal(economics.economicsCandidateOutcomes.length, 2);
+  assert.ok(economics.economicsCandidateOutcomes.some(outcome => (
+    outcome.id === "explore-first" && outcome.label === "Explore the Major"
+  )));
+  assert.ok(economics.economicsPlans.filter(plan => plan.id === "explore-first").every(plan => plan.label === "Explore the Major"));
   assert.ok(economics.economicsPlans.every(plan => plan.id !== "one-year-early"));
   assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
 });

@@ -104,9 +104,17 @@ test("opt-in nightly diagnostics do not change production planner output", () =>
     assert.ok(Number.isFinite(attempt.durationMs));
     assert.ok(Number.isInteger(attempt.nodesVisited));
     assert.ok(Array.isArray(attempt.validationErrors));
+    assert.equal(attempt.perInvocationSolutionLimit, 100);
+    assert.ok(Array.isArray(attempt.rawSolutionsByStage));
+    assert.equal(
+      attempt.totalRawSolutionsAcrossAttemptChain,
+      attempt.rawSolutionsByStage.reduce((sum, stage) => sum + stage.rawSolutionsEncountered, 0)
+    );
   }
   for (const search of metricsDiagnostics.searchAttempts) {
-    assert.ok(["preferred-distribution", "distribution-relaxed", "annual-coverage-relaxed"].includes(search.innerSearchStage));
+    assert.ok(["preferred-distribution", "soft-preference-rescue", "same-solver-rescue", "final-validator-rescue"].includes(search.innerSearchStage));
+    assert.equal(search.solutionLimit, 100);
+    assert.ok(Number.isInteger(search.rawSolutionsEncountered));
     assert.equal(typeof search.domainSizes, "object");
     assert.ok(Array.isArray(search.emptyDomains));
   }

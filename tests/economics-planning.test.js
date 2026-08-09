@@ -75,7 +75,53 @@ test("Economics term planner keeps prerequisite courses in earlier terms", () =>
   assert.equal(plan.validation.valid, true);
 });
 
-test("default freshman planning returns Balanced and a materially distinct Explore First normal horizon", () => {
+test("accepted completed and in-progress allocations leave the solver only unresolved requirements", () => {
+  for (const status of ["completed", "in_progress"]) {
+    const student = {
+      academicStanding: "freshman",
+      planCreationDate: "2026-09-01",
+      courses: [{
+        code: "ECO 113",
+        status,
+        ...(status === "in_progress" ? { academicYear: "2026/2027", termKey: "Fall" } : {})
+      }]
+    };
+    const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+    assert.ok(!mapping.projectedAfterInProgress.strict.unresolved.some(item => item.requirementId === "eco-113"));
+    const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+    assert.ok(result.plans.length > 0);
+    assert.ok(result.plans.every(plan => plan.terms.every(term => (
+      term.courses.every(course => course.course !== "ECO 113")
+    ))));
+  }
+});
+
+test("unapproved transfer evidence stays review-bound and is never presented as verified credit", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-09-01",
+    courses: [{ code: "ECO 113", status: "transfer", source: "transfer_equivalency_unapproved" }]
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  assert.ok(mapping.projectedAfterInProgress.strict.unresolved.some(item => item.requirementId === "eco-113"));
+  assert.ok(mapping.projectedAfterInProgress.optimistic.assignments.some(item => (
+    item.slotId === "eco-113" && item.evidenceStatus === "PROVISIONAL"
+  )));
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites, collectDiagnostics: true });
+  assert.ok(!mapping.projectedAfterInProgress.strict.assignments.some(item => item.slotId === "eco-113"));
+  assert.ok(result.plans.length > 0);
+  assert.ok(result.plans.every(plan => (
+    plan.validation.evidenceStatus === "REVIEW_REQUIRED"
+    && plan.validation.readinessStatus === "ADVISOR_ACTION_REQUIRED"
+    && plan.validation.advisorActions.some(action => (
+      action.reasonCode === "COURSE_EVIDENCE_SCOPE_REVIEW"
+      || action.reasonCode === "COURSE_HISTORY_EVIDENCE_FACT_REQUIRED"
+    ))
+    && plan.terms.every(term => term.courses.every(course => course.course !== "ECO 113"))
+  )));
+});
+
+test("default freshman planning returns Balanced and a materially distinct Explore the Major normal horizon", () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-09-01",
@@ -87,20 +133,21 @@ test("default freshman planning returns Balanced and a materially distinct Explo
   assert.ok(result.plans.length >= 1 && result.plans.length <= 2);
   assert.ok(result.plans.some(plan => plan.label === "Balanced"));
   assert.ok(result.plans.every(plan => plan.label !== "One Year Early"));
-  assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Balanced", "Explore First"]);
+  assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Balanced", "Explore the Major"]);
   assert.equal(result.planSetValidation.valid, true);
   assert.equal(result.planSetValidation.uniquePlanCount, result.plans.length);
   for (const plan of result.plans) {
-    assert.deepEqual(plan.distribution.targetYearCounts, [3, 3, 3, 3]);
-    assert.deepEqual(plan.validation.distribution.actualYearCounts, [3, 3, 3, 3]);
+    const expected = plan.id === "explore-first" ? [2, 3, 3, 4] : [3, 3, 3, 3];
+    assert.deepEqual(plan.distribution.targetYearCounts, expected);
+    assert.deepEqual(plan.validation.distribution.actualYearCounts, expected);
     assert.equal(plan.validation.distribution.valid, true);
     assert.equal(plan.validation.distribution.exact, true);
   }
   assert.ok(result.plans.every(plan => plan.validation.valid));
-  const exploreFirst = result.plans.find(plan => plan.label === "Explore First");
-  assert.equal(exploreFirst.terms.filter(term => term.absoluteStandingIndex === 0)
-    .flatMap(term => term.courses)
-    .filter(course => ["ECO 113", "ECO 114"].includes(course.course)).length, 1);
+  const exploreFirst = result.plans.find(plan => plan.label === "Explore the Major");
+  const balanced = result.plans.find(plan => plan.label === "Balanced");
+  const yearZeroLoad = plan => plan.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses).length;
+  assert.ok(yearZeroLoad(exploreFirst) < yearZeroLoad(balanced));
   assert.ok(result.candidateOutcomes.every(outcome => outcome.candidatePool?.retainedDistinctSchedules >= 1));
   assert.equal(result.context.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(result.plans.find(plan => !plan.isEarlyGraduation).terms.some(term => (
@@ -128,9 +175,9 @@ test("selected One Year Early returns normal comparisons plus one separate short
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
 
-  assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Balanced", "Explore First", "One Year Early"]);
+  assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.label), ["Balanced", "Explore the Major", "One Year Early"]);
   assert.ok(result.plans.some(plan => plan.label === "Balanced" && plan.planningContext.expectedGraduationTerm === "Spring/May 2030"));
-  assert.ok(result.plans.some(plan => plan.label === "Explore First" && plan.planningContext.expectedGraduationTerm === "Spring/May 2030"));
+  assert.ok(result.plans.some(plan => plan.label === "Explore the Major" && plan.planningContext.expectedGraduationTerm === "Spring/May 2030"));
   const accelerated = result.plans.find(plan => plan.id === "one-year-early");
   assert.ok(accelerated);
   assert.deepEqual(accelerated.distribution.targetYearCounts, [4, 4, 4]);
@@ -338,7 +385,7 @@ test("verified-year planning uses verified named courses and rejects generic or 
 
 test("plan-set validation rejects duplicate placements", () => {
   const plan = { id: "balanced", label: "Balanced", terms: [{ term: "Fall", courses: [{ course: "ECO elective", requirementId: "eco-elective-1" }] }] };
-  const validation = validatePlanSet([plan, { ...plan, id: "explore-first", label: "Explore First" }, { ...plan, id: "one-year-early", label: "One Year Early" }]);
+  const validation = validatePlanSet([plan, { ...plan, id: "explore-first", label: "Explore the Major" }, { ...plan, id: "one-year-early", label: "One Year Early" }]);
 
   assert.equal(validation.valid, false);
   assert.equal(validation.uniquePlanCount, 1);

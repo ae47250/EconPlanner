@@ -60,34 +60,26 @@ test("One Year Early keeps normal plans intact and always reports its separate r
   }
 });
 
-test("Explore First keeps one introduction in Year 1 and one intermediate in Year 2 when that sequence is available", () => {
-  const freshman = bundle({ academicStanding: "freshman", planCreationDate: "2026-07-30", courses: [] })
-    .plans.find(plan => plan.id === "explore-first");
+test("Explore the Major is lighter at yearIndex zero while foundation sequencing remains soft", () => {
+  const freshmanBundle = bundle({ academicStanding: "freshman", planCreationDate: "2026-07-30", courses: [] });
+  const freshmanBalanced = freshmanBundle.plans.find(plan => plan.id === "balanced");
+  const freshman = freshmanBundle.plans.find(plan => plan.id === "explore-first");
   assert.ok(freshman);
   const freshmanCourses = plannedCourses(freshman);
-  const yearOneIntroductions = freshmanCourses.filter(({ term, course }) => (
-    term.absoluteStandingIndex === 0 && ["ECO 113", "ECO 114"].includes(course.course)
-  ));
-  assert.equal(yearOneIntroductions.length, 1);
+  const yearZeroLoad = plan => plannedCourses(plan).filter(({ term }) => term.yearIndex === 0).length;
+  assert.ok(yearZeroLoad(freshman) < yearZeroLoad(freshmanBalanced));
+  assert.equal(freshman.planningContext.expectedGraduationTerm, freshmanBalanced.planningContext.expectedGraduationTerm);
+  assert.equal(materialPlanDistance(freshmanBalanced, freshman).materiallyDifferent, true);
   assert.ok(freshmanCourses.some(({ term, course }) => (
-    term.absoluteStandingIndex === 0 && ["cognate", "statistics"].includes(course.requirementId)
+    term.yearIndex === 0
+    && (["ECO 113", "ECO 114"].includes(course.course) || ["cognate", "statistics"].includes(course.requirementId))
   )));
-  const yearTwoIntermediates = freshmanCourses.filter(({ term, course }) => (
-    term.absoluteStandingIndex === 1
-    && ["Fall", "Winter"].includes(term.termKey)
-    && ["ECO 213", "ECO 214"].includes(course.course)
-  ));
-  assert.equal(yearTwoIntermediates.length, 1);
 
-  const sophomore = bundle({ academicStanding: "sophomore", planCreationDate: "2026-07-30", courses: [] })
-    .plans.find(plan => plan.id === "explore-first");
+  const sophomoreBundle = bundle({ academicStanding: "sophomore", planCreationDate: "2026-07-30", courses: [] });
+  const sophomoreBalanced = sophomoreBundle.plans.find(plan => plan.id === "balanced");
+  const sophomore = sophomoreBundle.plans.find(plan => plan.id === "explore-first");
   assert.ok(sophomore);
-  const sophomoreYearTwoIntermediates = plannedCourses(sophomore).filter(({ term, course }) => (
-    term.absoluteStandingIndex === 1
-    && ["Fall", "Winter"].includes(term.termKey)
-    && ["ECO 213", "ECO 214"].includes(course.course)
-  ));
-  assert.equal(sophomoreYearTwoIntermediates.length, 1);
+  assert.ok(yearZeroLoad(sophomore) < yearZeroLoad(sophomoreBalanced));
 
   const withHistory = bundle({
     academicStanding: "sophomore",
@@ -96,6 +88,18 @@ test("Explore First keeps one introduction in Year 1 and one intermediate in Yea
   }).plans.find(plan => plan.id === "explore-first");
   assert.ok(withHistory);
   assert.equal(plannedCourses(withHistory).some(({ course }) => course.course === "ECO 113"), false);
+});
+
+test("Explore the Major label propagates into report JSON and HTML", () => {
+  const student = { academicStanding: "freshman", planCreationDate: "2026-07-30", courses: [] };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const planBundle = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const economicsPlan = planBundle.plans.find(plan => plan.id === "explore-first");
+  const report = buildEconomicsReport({ student, mapping, schedule, economicsPlan, planBundle, preparedDate: "2026-08-09" });
+  const html = renderEconomicsHtml(report, template);
+  assert.equal(report.selectedPlan.label, "Explore the Major");
+  assert.ok(report.candidateOutcomes.some(outcome => outcome.id === "explore-first" && outcome.label === "Explore the Major"));
+  assert.match(html, /data-field="plan-strategy">Explore the Major</);
 });
 
 test("generic elective identity does not create a strategy difference, but risk changes do", () => {
