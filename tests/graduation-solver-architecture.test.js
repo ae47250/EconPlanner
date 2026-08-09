@@ -111,7 +111,7 @@ test("the solver retains deterministic, prerequisite-valid complete schedules", 
   );
 });
 
-test("Explore First gives sophomores the introductory, intermediate, and statistics sequence before electives", () => {
+test("Explore the Major gives sophomores soft introductory, intermediate, and statistics priority", () => {
   const supportingSchedule = structuredClone(schedule);
   supportingSchedule.terms.Fall.push(
     verifiedSupportingOffering("MAT 217", "A", "waitlisted", {
@@ -152,7 +152,7 @@ test("Explore First gives sophomores the introductory, intermediate, and statist
   assert.equal(mirrorFirstYear.filter(course => ["ECO 213", "ECO 214"].includes(course.course)).length, 1);
 });
 
-test("Explore First is not considered for junior or senior students", () => {
+test("Explore the Major is not considered for junior or senior students", () => {
   for (const academicStanding of ["junior", "senior"]) {
     const student = { academicStanding, planCreationDate: "2026-07-30", courses: [] };
     const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);

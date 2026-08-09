@@ -6,6 +6,7 @@ import {
   EARLY_GRADUATION_VARIANT,
   PLAN_VARIANTS,
   buildEconomicsTermPlans,
+  explorePreferredYearTargets,
   materialPlanDistance,
   planDifferentiationMetrics
 } from "../lib/planning/economics.js";
@@ -36,8 +37,9 @@ function standardStudent(academicStanding, courses = []) {
   };
 }
 
-test("the planner exposes only Balanced and Explore First as normal strategy variants", () => {
+test("the planner exposes policy-backed Balanced and Explore the Major normal variants", () => {
   assert.deepEqual(PLAN_VARIANTS.map(item => item.id), ["balanced", "explore-first"]);
+  assert.deepEqual(PLAN_VARIANTS.map(item => item.label), ["Balanced", "Explore the Major"]);
   assert.equal(EARLY_GRADUATION_VARIANT.id, "one-year-early");
 
   const freshman = generate(standardStudent("freshman"));
@@ -49,26 +51,44 @@ test("the planner exposes only Balanced and Explore First as normal strategy var
   assert.ok(junior.plans.every(item => item.id === "balanced"));
 });
 
-test("Explore First keeps a feasible discovery sequence without duplicating requirements", () => {
+test("Explore the Major is lighter than and materially distinct from its Balanced baseline", () => {
   const result = generate(standardStudent("freshman"));
+  const balanced = result.plans.find(item => item.id === "balanced");
   const explore = result.plans.find(item => item.id === "explore-first");
+  assert.ok(balanced);
   assert.ok(explore);
 
-  const firstYear = explore.terms.filter(term => term.yearIndex === 0);
-  const introductions = firstYear.flatMap(term => term.courses)
-    .filter(course => ["ECO 113", "ECO 114"].includes(course.course));
-  assert.equal(introductions.length, 1);
-
-  const secondYearFallWinter = explore.terms
-    .filter(term => term.yearIndex === 1 && ["Fall", "Winter"].includes(term.termKey));
-  const intermediates = secondYearFallWinter.flatMap(term => term.courses)
-    .filter(course => ["ECO 213", "ECO 214"].includes(course.course));
-  assert.equal(intermediates.length, 1);
+  const yearZeroLoad = plan => plan.terms.filter(term => term.yearIndex === 0)
+    .flatMap(term => term.courses)
+    .filter(course => course.requirementId).length;
+  assert.ok(yearZeroLoad(explore) < yearZeroLoad(balanced));
+  assert.equal(explore.planningContext.expectedGraduationTerm, balanced.planningContext.expectedGraduationTerm);
+  assert.equal(materialPlanDistance(balanced, explore).materiallyDifferent, true);
 
   const assignedRequirements = explore.terms.flatMap(term => term.courses)
     .map(course => course.requirementId)
     .filter(Boolean);
   assert.equal(new Set(assignedRequirements).size, assignedRequirements.length);
+});
+
+test("Explore the Major preferred target backloads remainders without excluding stronger safe shapes", () => {
+  assert.deepEqual(explorePreferredYearTargets(10, 4, 3), [2, 2, 3, 3]);
+  assert.deepEqual(explorePreferredYearTargets(10, 4, 4), [2, 2, 3, 3]);
+  assert.ok(PLAN_VARIANTS.find(item => item.id === "explore-first").rankingPreferences.strongerSafeBackloadingRemainsEligible);
+});
+
+test("Explore the Major is truthfully suppressed when Balanced has zero first-year tracked load", () => {
+  const student = standardStudent("freshman", [
+    "ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 217", "ECO 321", "MAT 113",
+    "ECO 221", "ECO 222", "ECO 260", "ECO 311"
+  ]);
+  const result = generate(student);
+  const balanced = result.plans.find(plan => plan.id === "balanced");
+  const explore = result.candidateOutcomes.find(outcome => outcome.id === "explore-first");
+  assert.ok(balanced);
+  assert.equal(balanced.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses).length, 0);
+  assert.equal(explore.displayed, false);
+  assert.equal(explore.suppressionReason.code, "EXPLORE_NO_LIGHTER_FIRST_YEAR");
 });
 
 test("One Year Early is a separate shortened comparison with deterministic material metrics", () => {

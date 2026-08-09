@@ -47,6 +47,7 @@ async function generate(page) {
   const response = await responsePromise;
   expect(response.status()).toBe(200);
   await expect(page.getByRole("heading", { name: /Compare your plans|Your feasible plan/ })).toBeVisible();
+  return response.json();
 }
 
 async function reviewBalanced(page) {
@@ -57,7 +58,7 @@ async function reviewBalanced(page) {
   await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
 }
 
-test("a freshman receives the Balanced and Explore First normal comparisons", async ({ page }) => {
+test("a freshman receives the Balanced and Explore the Major normal comparisons", async ({ page }) => {
   await resetPlanner(page);
   await seedFreshman(page);
   await generate(page);
@@ -66,8 +67,8 @@ test("a freshman receives the Balanced and Explore First normal comparisons", as
   await expect(page.locator('article[data-plan-id="explore-first"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="one-year-early"]')).toHaveCount(0);
 
-  await page.getByRole("button", { name: "Choose Explore First" }).click();
-  await expect(page.getByRole("heading", { name: "Review Explore First" })).toBeVisible();
+  await page.getByRole("button", { name: "Choose Explore the Major" }).click();
+  await expect(page.getByRole("heading", { name: "Review Explore the Major" })).toBeVisible();
   await expect(page.locator(".plan-course-availability")).not.toHaveCount(0);
   await expect(page.locator(".plan-course-availability").first()).toHaveText(/(?:OPEN|FULL|Status unavailable)/);
 
@@ -78,15 +79,27 @@ test("a freshman receives the Balanced and Explore First normal comparisons", as
   await expect(availability).toContainText("as of August 8, 2026");
 });
 
-test("One Year Early keeps normal comparisons and adds one accelerated plan", async ({ page }) => {
+test("CP5 displays distinct Balanced, Explore the Major, and One Year Early plans", async ({ page }) => {
   await resetPlanner(page);
   await seedFreshman(page, "one_year_early");
-  await generate(page);
+  const payload = await generate(page);
+  const economics = payload.programs.find(result => result.program?.id === "economics-base");
 
   await expect(page.locator('article[data-plan-id="balanced"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="explore-first"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="one-year-early"]')).toBeVisible();
   await expect(page.getByText("One Year Early:", { exact: true })).toBeVisible();
+  await expect(page.locator("article[data-plan-id]" )).toHaveCount(3);
+
+  const displayedSchedules = await page.locator("article[data-plan-id] .compact-schedule tbody")
+    .evaluateAll(tables => tables.map(table => table.innerText));
+  expect(new Set(displayedSchedules).size).toBe(3);
+  expect(economics.economicsPlans).toHaveLength(3);
+  expect(new Set(economics.economicsPlans.map(plan => JSON.stringify(plan.terms))).size).toBe(3);
+  expect(economics.economicsCandidateOutcomes).toHaveLength(3);
+  expect(economics.economicsCandidateOutcomes.every(outcome => (
+    outcome.candidatePool?.complete === false
+  ))).toBe(true);
 });
 
 test("PDF download recovers cleanly after failed and aborted requests", async ({ page }) => {

@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import {
   createGeneratedPlannerSession,
   GENERATED_PLANNER_SESSION_VERSION,
@@ -12,7 +13,7 @@ import {
 function sampleReport() {
   const plans = ["balanced", "explore-first", "one-year-early"].map((id, index) => ({
     id,
-    label: ["Balanced", "Explore First", "One Year Early"][index],
+    label: ["Balanced", "Explore the Major", "One Year Early"][index],
     terms: [{ term: "Fall", courses: [{ course: `ECO ${index + 1}` }] }]
   }));
   return {
@@ -24,6 +25,12 @@ function sampleReport() {
     }]
   };
 }
+
+test("comparison badges use the policy-backed generated plan label", async () => {
+  const source = await readFile(new URL("../app/page.js", import.meta.url), "utf8");
+  assert.match(source, /return plan\.label \|\| "Validated"/);
+  assert.doesNotMatch(source, /"explore-first":\s*"Explore/);
+});
 
 test("generated planner session restores the exact selected plan for matching inputs", () => {
   const report = sampleReport();

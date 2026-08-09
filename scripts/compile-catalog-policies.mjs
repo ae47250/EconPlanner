@@ -13,6 +13,7 @@ const MANIFESTS = [
 const EXPECTED_YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 const FLEXIBILITY_RULE_ID = "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK";
 const PLANNING_FLEXIBILITY_POLICY_PATH = "policy/rules/planning-flexibility.json";
+const PLANNING_FLEXIBILITY_PROVENANCE_PATH = "policy/provenance/planning-flexibility.3.json";
 const ACTIVE_BUNDLE_VERSION = "econ-2025-2026.1";
 const ACTIVE_BUNDLE_HASH = "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7";
 
@@ -138,7 +139,8 @@ async function writeImmutable(filePath, contents) {
   await mkdir(path.dirname(filePath), { recursive: true });
   try {
     const existing = await readFile(filePath, "utf8");
-    if (existing !== contents) fail(`immutable output differs at ${filePath}`);
+    const normalizeLineEndings = value => value.replaceAll("\r\n", "\n");
+    if (normalizeLineEndings(existing) !== normalizeLineEndings(contents)) fail(`immutable output differs at ${filePath}`);
     return;
   } catch (error) {
     if (error?.code !== "ENOENT") throw error;
@@ -155,7 +157,7 @@ function historicalSourceReport(provenance, releases) {
 }
 
 function validatePlanningFlexibilityPolicy(policy) {
-  if (policy?.policyVersion !== "econ-planning-flexibility.2" || policy?.status !== "OWNER_APPROVED") {
+  if (policy?.policyVersion !== "econ-planning-flexibility.3" || policy?.status !== "OWNER_APPROVED") {
     fail("owner-approved planning flexibility policy is missing");
   }
   const senior = policy.acceleratedSeniorStanding;
@@ -197,6 +199,22 @@ function validatePlanningFlexibilityPolicy(policy) {
     || designation?.declarationCatalogMayOverride !== false) {
     fail("owner-designated Economics requirement set is incomplete");
   }
+  const strategyContract = policy.economicsPlanningStrategies;
+  const strategies = Object.fromEntries((strategyContract?.strategies || []).map(strategy => [strategy.id, strategy]));
+  if (strategyContract?.classification !== "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES"
+    || strategyContract?.feasibilityImpact !== "NONE"
+    || strategyContract?.stableSavedStateIds !== true
+    || !["balanced", "explore-first", "one-year-early"].every(id => strategies[id])) {
+    fail("owner-approved Economics strategy contract is incomplete");
+  }
+  if (strategies["explore-first"].publicLabel !== "Explore the Major"
+    || !strategies["explore-first"].eligibility?.effectiveStandings?.includes("freshman")
+    || !strategies["explore-first"].eligibility?.effectiveStandings?.includes("sophomore")
+    || strategies["explore-first"].eligibility?.effectiveStandings?.some(standing => ["junior", "senior"].includes(standing))
+    || strategies["explore-first"].rankingPreferences?.firstYearTargetFormula !== "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS"
+    || strategies["explore-first"].rankingPreferences?.exactTargetIsFeasibilityRule !== false) {
+    fail("Explore the Major strategy contract is incomplete or academicized");
+  }
   if (policy.boundaries?.catalog2026_2027CreatedOrActivated !== false) {
     fail("the planning flexibility policy may not create or activate a 2026-2027 catalog");
   }
@@ -204,7 +222,7 @@ function validatePlanningFlexibilityPolicy(policy) {
 
 function planningFlexibilityContract(bundle) {
   const policy = bundle.policy;
-  return `# CP4b-B follow-up planning-flexibility contract\n\n` +
+  return `# Owner-approved planning-flexibility contract\n\n` +
     `Compiled policy: \`${bundle.bundleVersion}\` (\`${bundle.contentHash}\`).\n\n` +
     `- Accelerated one-year-early plans assume senior standing in the final planning year; no student confirmation is requested and readiness is unchanged by the assumption alone.\n` +
     `- Published schedules remain authoritative. Later unpublished schedules use academically checked placements with \`PLANNING_PROJECTION\` provenance and one informational notice.\n` +
@@ -213,12 +231,20 @@ function planningFlexibilityContract(bundle) {
     `- A future owner-supplied Excel history may support informational offering likelihoods only when data coverage and method are disclosed. No likelihood data or probability is present in this release.\n` +
     `- CCR/ACE information uses the student's supported general-degree catalog separately from the Economics major requirement set and has no readiness or feasibility effect.\n` +
     `- Mathematics equivalencies require an explicit cognate, prerequisite, or both scope with complete approval evidence; no equivalencies are activated in this release.\n` +
+    `- Balanced, Explore the Major, and One Year Early use the strategy IDs, public labels, eligibility boundaries, definitions, and nonacademic ranking preferences in the compiled strategy contract.\n` +
+    `- Explore the Major remains limited to effective freshman and sophomore contexts, must be lighter than and materially distinct from its selected same-context Balanced baseline, and uses a soft nondecreasing backloaded target.\n` +
     `- No 2026-2027 catalog is compiled or activated, and the active Decision Engine mapping is unchanged.\n`;
 }
 
 async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
   const policy = await readJson(root, PLANNING_FLEXIBILITY_POLICY_PATH);
+  const provenance = await readJson(root, PLANNING_FLEXIBILITY_PROVENANCE_PATH);
   validatePlanningFlexibilityPolicy(policy);
+  if (provenance.policyVersion !== policy.policyVersion
+    || !provenance.sources?.some(source => source.sourceId === "OWNER-CONFIRMATION-CP5-2026-08-09"
+      && source.authorityBoundary === "ECONOMICS_PLANNING_STRATEGY_RANKING_ONLY")) {
+    fail("planning-flexibility owner-confirmation provenance is incomplete");
+  }
   const payload = {
     schemaVersion: "1.0.0",
     bundleVersion: policy.policyVersion,
@@ -227,7 +253,9 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
     policy,
     provenance: {
       sourcePath: PLANNING_FLEXIBILITY_POLICY_PATH,
-      sourceRefs: policy.sourceRefs
+      provenancePath: PLANNING_FLEXIBILITY_PROVENANCE_PATH,
+      sourceRefs: policy.sourceRefs,
+      sources: provenance.sources
     }
   };
   const contentHash = `sha256:${canonicalSha256(payload)}`;
@@ -239,7 +267,7 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
     contentHash,
     activationStatus: "OWNER_APPROVED",
     activeRuntimeMappingChanged: false,
-    inputs: [PLANNING_FLEXIBILITY_POLICY_PATH],
+    inputs: [PLANNING_FLEXIBILITY_POLICY_PATH, PLANNING_FLEXIBILITY_PROVENANCE_PATH],
     validation: {
       acceleratedSeniorStandingNonblocking: "PASS",
       futureScheduleProjectionNonblocking: "PASS",
@@ -251,6 +279,8 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
       generalDegreeCatalogKeptSeparate: "PASS",
       mathematicsEquivalencyCrossScopeInferenceDisabled: "PASS",
       approvedMathematicsEquivalencies: 0,
+      economicsStrategyContractOwnerApproved: "PASS",
+      strategyPreferencesNonacademicAndNonblocking: "PASS",
       catalog2026_2027Invented: false,
       collegeWidePolicyChanged: false
     },

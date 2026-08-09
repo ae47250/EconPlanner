@@ -13,6 +13,7 @@ import {
 import {compareCatalogPolicyRecords} from "../lib/catalog/compare.js";
 import {
   catalogPolicyRecords,
+  economicsPlanningStrategyContract,
   loadCatalogPolicyReleases
 } from "../lib/catalog/policy-releases.js";
 import {
@@ -25,6 +26,18 @@ import {compileCatalogPolicies} from "../scripts/compile-catalog-policies.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const YEARS = ["2023-2024", "2024-2025", "2025-2026"];
+
+test("compiled planning-flexibility.3 is the runtime strategy source of truth", () => {
+  const contract = economicsPlanningStrategyContract();
+  assert.equal(contract.classification, "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES");
+  assert.equal(contract.feasibilityImpact, "NONE");
+  assert.deepEqual(contract.strategies.map(strategy => strategy.id), ["balanced", "explore-first", "one-year-early"]);
+  const explore = contract.strategies.find(strategy => strategy.id === "explore-first");
+  assert.equal(explore.publicLabel, "Explore the Major");
+  assert.deepEqual(explore.eligibility.effectiveStandings, ["freshman", "sophomore"]);
+  assert.equal(explore.rankingPreferences.firstYearTargetFormula, "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS");
+  assert.equal(explore.rankingPreferences.exactTargetIsFeasibilityRule, false);
+});
 
 function requestFor(student) {
   return new Request("http://localhost/api/majors/map", {
@@ -230,7 +243,7 @@ test("catalog policy compilation is byte-identical across three clean outputs an
       await compileCatalogPolicies({repositoryRoot: ROOT, outputRoot});
       outputs.push(await Promise.all([
         readFile(path.join(outputRoot, "catalog-releases.json"), "utf8"),
-        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.2", "bundle.json"), "utf8"),
+        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.3", "bundle.json"), "utf8"),
         ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.2"]
           .map(version => readFile(path.join(outputRoot, "releases", version, "bundle.json"), "utf8"))
       ]));

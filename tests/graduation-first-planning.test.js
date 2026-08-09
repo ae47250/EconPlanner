@@ -375,6 +375,6 @@ test("normal strategy labels never include retired pacing names", () => {
     "ECO 221", "ECO 222", "ECO 234", "ECO 333"
   ]);
   const { result } = bundle(student);
-  assert.ok(result.plans.every(plan => ["Balanced", "Explore First", "One Year Early"].includes(plan.label)));
+  assert.ok(result.plans.every(plan => ["Balanced", "Explore the Major", "One Year Early"].includes(plan.label)));
   assert.equal(new Set(result.plans.map(plan => JSON.stringify(plan.terms))).size, result.plans.length);
 });
