@@ -158,6 +158,10 @@ test("all sixteen prerequisite records and four approval boundaries are canonica
     assert.ok(rule.authority.boundary, ruleId);
     assert.ok(rule.requiredEvidence.length > 0, ruleId);
   }
+  const capstoneConcurrency = rulesById.get("CONCURRENT-INTERMEDIATE-ECO-461");
+  assert.equal(capstoneConcurrency.condition.requiresCompletedBeforeTargetTerm, true);
+  assert.equal(capstoneConcurrency.condition.earlierPendingCoursesRequireSuccessfulCompletion, true);
+  assert.ok(capstoneConcurrency.sourceRefs.includes("OWNER-ECO461-CHRONOLOGY-2026-08-09#current-codex-thread"));
 });
 
 test("approved conflict dispositions are explicit and no unresolved record silently enforces", () => {
@@ -254,6 +258,20 @@ test("the August 5 owner confirmation is preserved in both governed provenance r
 
   const sourceManifest = await readJson("data/manifests/source-manifest.json");
   const entry = sourceManifest.entries.find(candidate => candidate.source === "codex-thread:owner-confirmation-2026-08-05#eco-257-statistics-only");
+  assert.ok(entry);
+  assert.equal(entry.contentSha256, createHash("sha256").update(entry.statement, "utf8").digest("hex"));
+  assert.equal(entry.reviewedBy, "Project owner and Economics Department domain expert");
+});
+
+test("the August 9 ECO 461 chronology clarification preserves its owner authority and source digest", async () => {
+  const source = provenance.sources.find(entry => entry.sourceId === "OWNER-ECO461-CHRONOLOGY-2026-08-09");
+  assert.equal(source.confirmedOn, "2026-08-09");
+  assert.equal(source.authorityBoundary, "ECO_461_INTERMEDIATE_CONCURRENCY_CHRONOLOGY");
+  assert.match(source.statement, /before the target ECO 461 term/);
+  assert.match(source.statement, /creates no new exception or alternate planning mode/);
+
+  const sourceManifest = await readJson("data/manifests/source-manifest.json");
+  const entry = sourceManifest.entries.find(candidate => candidate.source === "codex-thread:owner-confirmation-2026-08-09#eco-461-target-term-chronology");
   assert.ok(entry);
   assert.equal(entry.contentSha256, createHash("sha256").update(entry.statement, "utf8").digest("hex"));
   assert.equal(entry.reviewedBy, "Project owner and Economics Department domain expert");

@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 4,
-    "confirmationDate": "2026-08-04",
-    "reviewedBy": "Economics Department representative and project owner",
+    "version": 5,
+    "confirmationDate": "2026-08-09",
+    "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
       "CONFIRMED",
@@ -36,6 +36,12 @@
       "date": "2026-08-04",
       "reviewedBy": "Project owner",
       "summary": "Planning pace uses college-year progression. A compressed plan may project senior standing only in its final academic year after the student reports Registrar or advisor confirmation; an extended plan reaches senior standing in college year four."
+    },
+    {
+      "id": "PROJECT-OWNER-ECO461-CHRONOLOGY-2026-08-09",
+      "date": "2026-08-09",
+      "reviewedBy": "Project owner and Economics Department domain expert",
+      "summary": "For the existing ECO 461 concurrency exception, exactly one intermediate must be successfully completed before the target ECO 461 term. Eligible completed or accepted-transfer evidence, current in-progress work finishing before the target term, and earlier generated-term work may count; same-term, later, uncertain, or unaccepted evidence may not. Earlier pending work remains conditional on success."
     }
   ],
   "sources": [
@@ -510,7 +516,7 @@
     {
       "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
       "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "confirmationRef": "PROJECT-OWNER-ECO461-CHRONOLOGY-2026-08-09",
       "sourceRefs": [
         "DEPARTMENT-POLICIES#Confirmed policy 4"
       ],
@@ -520,6 +526,8 @@
         "ECO 214"
       ],
       "requiresCompletedFromOptions": 1,
+      "requiresCompletedBeforeTargetTerm": true,
+      "earlierPendingCoursesRequireSuccessfulCompletion": true,
       "maxConcurrent": 1,
       "statisticsMustBeCompletedBefore": true,
       "concurrentCoursePrerequisitesMustBeSatisfied": true,

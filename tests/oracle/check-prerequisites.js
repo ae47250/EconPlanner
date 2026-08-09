@@ -214,10 +214,6 @@ function hasEarlierEvidence(entries, course, dependentPosition) {
   ));
 }
 
-function hasCompletedEvidence(entries, course) {
-  return entries.some(entry => entry.state === "completed" && entry.course === upper(course));
-}
-
 function placeholderCoversGroup(entry, group) {
   if (entry.state !== "planned" || entry.source !== "requirement-placeholder") return false;
   const declaredGroup = PLACEHOLDER_OPTION_GROUPS.get(entry.course);
@@ -492,12 +488,12 @@ function validateCapstone({
 
   const concurrentCourse = concurrent[0].course;
   const otherCourse = intermediates.find(course => course !== concurrentCourse);
-  if (!hasCompletedEvidence(entries, otherCourse)) {
+  if (!prior.includes(otherCourse)) {
     violations.push(makeFinding(
       policy,
       concurrencyRule.ruleId,
       entry.objectPath,
-      `${otherCourse} must already be recorded as completed for the ECO 461 concurrency exception.`
+      `${otherCourse} must have legitimate completion evidence before the target ECO 461 term.`
     ));
     return;
   }
