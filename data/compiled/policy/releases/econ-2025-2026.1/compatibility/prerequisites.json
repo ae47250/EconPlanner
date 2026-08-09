@@ -156,6 +156,7 @@
     "concurrentWithApproval": [
       {
         "approval": "department",
+        "earlierPendingCoursesRequireSuccessfulCompletion": true,
         "maxConcurrent": 1,
         "options": [
           "ECO 213",
@@ -163,6 +164,7 @@
         ],
         "policySource": "department-confirmed-local-policy",
         "reason": "concurrent_intermediate_with_capstone",
+        "requiresCompletedBeforeTargetTerm": true,
         "requiresCompletedFromOptions": 1,
         "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4"
       }

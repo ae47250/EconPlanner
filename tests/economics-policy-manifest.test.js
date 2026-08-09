@@ -26,11 +26,11 @@ function byId(ruleId) {
 test("policy manifest has stable version and review metadata", () => {
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.policy.id, "hanover-economics-planning-policy");
-  assert.equal(manifest.policy.version, 4);
-  assert.equal(manifest.policy.confirmationDate, "2026-08-04");
+  assert.equal(manifest.policy.version, 5);
+  assert.equal(manifest.policy.confirmationDate, "2026-08-09");
   assert.equal(
     manifest.policy.reviewedBy,
-    "Economics Department representative and project owner"
+    "Project owner and Economics Department domain expert"
   );
 
   assert.deepEqual(manifest.policy.allowedStatuses, [
@@ -138,6 +138,8 @@ test("confirmed exceptions, permissions, capacity, electives, and capstone rules
     "CONCURRENT-MATH-ECO-214",
     "CONCURRENT-INTERMEDIATE-ECO-461"
   ]);
+  assert.equal(byId("CONCURRENT-INTERMEDIATE-ECO-461").requiresCompletedBeforeTargetTerm, true);
+  assert.equal(byId("CONCURRENT-INTERMEDIATE-ECO-461").earlierPendingCoursesRequireSuccessfulCompletion, true);
   assert.equal(byId("PERMISSION-ECO-357").approvalAuthority, "Economics Department");
   assert.equal(byId("CAPACITY-FALL").maxTotalCourses, 4);
   assert.equal(byId("CAPACITY-WINTER").maxTotalCourses, 4);

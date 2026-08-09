@@ -292,7 +292,18 @@
       "source": "department-confirmed:planning-policies-2026-08-01",
       "confirmedOn": "2026-08-01",
       "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
-      "sha256": "9e249beba8ba9c4d4ab1ba9ba6c4045781f14959c293002863b436bcda6acd09"
+      "sha256": "7c53cf0f775fe97e0530864d790a6256f43b09bc141707889b335c2f830bc410"
+    },
+    {
+      "role": "economics_policy_confirmation",
+      "source": "codex-thread:owner-confirmation-2026-08-09#eco-461-target-term-chronology",
+      "authority": "Economics Department domain policy",
+      "authorityBoundary": "ECO_461_INTERMEDIATE_CONCURRENCY_CHRONOLOGY",
+      "confirmedOn": "2026-08-09",
+      "reviewedBy": "Project owner and Economics Department domain expert",
+      "contentSha256": "eca7114a5c78267ec61604bbe4ee707a0aa3a3b5f13dad610390de427fc5b0af",
+      "supersedes": "Ambiguous use of already completed in the 2026-08-01 ECO 461 concurrency wording",
+      "statement": "For the existing ECO 461 concurrency exception, exactly one of ECO 213 or ECO 214 must be successfully completed before the target ECO 461 term. Eligible completed and accepted-transfer evidence, a current in-progress course finishing before the target term, and an earlier generated-term course may count. Same-term or later courses and uncertain or unaccepted history, equivalency, substitution, waiver, or prerequisite evidence do not count. Earlier in-progress or planned completion remains conditional on success. This clarifies the existing 2026-08-01 department-confirmed exception and creates no new exception or alternate planning mode."
     },
     {
       "role": "economics_policy_confirmation",

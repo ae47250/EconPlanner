@@ -3,8 +3,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { buildEconomicsTermPlan, buildEconomicsTermPlans, validateGeneratedPlan, validatePlanSet } from "../lib/planning/economics.js";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
-import { resolvePlanningContext } from "../lib/planning/horizon.js";
+import { buildPlanningSlots, resolvePlanningContext } from "../lib/planning/horizon.js";
+import { assessCoursePrerequisites } from "../lib/planning/prerequisiteEvaluator.js";
 import { validateStudentPrerequisites } from "../lib/planning/prerequisiteValidation.js";
+import { evaluatePrerequisites } from "../lib/decision-engine/prerequisites.js";
+import { normalizeStudentFacts } from "../lib/decision-engine/student-facts.js";
+import { resolveCatalogApplicability } from "../lib/catalog/applicability.js";
+import { runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
+import { generateFictionalEconomicsProfiles } from "./helpers/economics-generators.js";
 import {
   canonicalScheduleCode,
   normalizeEconomicsSchedule,
@@ -14,6 +20,8 @@ import {
 const schedule = JSON.parse(await readFile(new URL("../data/normalized/economics/schedule-2026-2027.json", import.meta.url), "utf8"));
 const prerequisites = JSON.parse(await readFile(new URL("../data/normalized/economics/prerequisites.json", import.meta.url), "utf8"));
 const requirements = JSON.parse(await readFile(new URL("../data/normalized/economics/requirements.json", import.meta.url), "utf8"));
+const oracleManifest = JSON.parse(await readFile(new URL("./oracle/economics-policy.v1.json", import.meta.url), "utf8"));
+const oracleSchedule = JSON.parse(await readFile(new URL("./oracle/verified-schedule-2026-2027.json", import.meta.url), "utf8"));
 
 function validCurrentCoursesForFuturePrerequisite(rule, focus) {
   const statuses = new Map();
@@ -676,6 +684,81 @@ function upcomingSenior(codes) {
   };
 }
 
+function generatedPlannerStudent(profile) {
+  const student = {
+    academicStanding: profile.student.academicStanding,
+    planningPace: profile.student.planningPace || "standard",
+    planCreationDate: profile.student.planDate,
+    isTransferStudent: profile.student.isTransferStudent,
+    ...(profile.student.isTransferStudent ? {
+      transferExpectedGraduationYear: profile.student.transferExpectedGraduationYear,
+      transferEntryAcademicYear: profile.student.transferEntryAcademicYear
+    } : {}),
+    courses: profile.student.courses.map(course => ({
+      code: course.submittedCourse || course.course,
+      status: course.status,
+      source: course.source,
+      units: course.units
+    }))
+  };
+  const context = resolvePlanningContext(student);
+  const inProgressAcademicYearStart = context.isSummer ? context.startYear - 1 : context.startYear;
+  const inProgressTermKey = context.isSummer
+    ? "Summer"
+    : context.startTerm === "Spring"
+      ? "Spring/May"
+      : context.startTerm;
+  student.courses = student.courses.map(course => course.status === "in_progress"
+    ? {
+        ...course,
+        academicYear: `${inProgressAcademicYearStart}/${inProgressAcademicYearStart + 1}`,
+        termKey: inProgressTermKey
+      }
+    : course);
+  student.reservedCourseUnits = Object.fromEntries(buildPlanningSlots(context)
+    .filter(slot => !slot.isSummer)
+    .map(slot => [slot.id, Number(profile.student.reservedCapacity?.[slot.scheduleTerm] || 0)]));
+  return student;
+}
+
+function generatedProfilePlanBundle(seed, profileId) {
+  const profile = generateFictionalEconomicsProfiles({
+    seed,
+    manifest: oracleManifest,
+    verifiedSchedule: oracleSchedule,
+    generatorVersion: 4
+  }).profiles.find(candidate => candidate.profileId === profileId);
+  assert.ok(profile, profileId);
+  const student = generatedPlannerStudent(profile);
+  const policyBundle = runtimePolicyBundle();
+  const basePlanningContext = resolvePlanningContext(student);
+  const catalogApplicability = resolveCatalogApplicability({
+    majorDeclarationCatalogYear: basePlanningContext.submittedMajorDeclarationCatalogYear,
+    entryCatalogYear: basePlanningContext.entryCatalogYear,
+    currentCatalogYear: basePlanningContext.currentCatalogYear,
+    availableCatalogYears: ["2023-2024", "2024-2025", "2025-2026"],
+    sourceRefs: [`POLICY-RELEASE#${policyBundle.bundleVersion}`]
+  });
+  const planningContext = { ...basePlanningContext, catalogApplicability };
+  const mapping = mapStudentToProgram(
+    { id: "economics", name: "Economics" },
+    requirements,
+    student,
+    { policyBundle, catalogApplicability }
+  );
+  const result = buildEconomicsTermPlans({
+    student,
+    mapping,
+    schedule,
+    prerequisites,
+    collectDiagnostics: true,
+    policyBundle,
+    planningContext,
+    catalogApplicability
+  });
+  return { student, mapping, result };
+}
+
 test("standard planning may use more than two Economics courses when total load remains valid", () => {
   const student = upcomingSenior(["ECO 113", "ECO 114", "MAT 113", "ECO 214"]);
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
@@ -703,7 +786,43 @@ test("standard planning may use more than two Economics courses when total load 
   }
 });
 
-test("one intermediate may share Winter with ECO 461, while both missing remains blocking", () => {
+test("current in-progress ECO 213 or ECO 214 follows target-term chronology for ECO 461", () => {
+  const cases = [
+    {
+      seed: 20260803,
+      profileId: "fictional-econ-20260803-d2e1518b",
+      inProgress: "ECO 213",
+      concurrent: "ECO 214",
+      readinessStatus: "ADVISOR_ACTION_REQUIRED"
+    },
+    {
+      seed: 20260804,
+      profileId: "fictional-econ-20260804-75d68fc4",
+      inProgress: "ECO 214",
+      concurrent: "ECO 213",
+      readinessStatus: "READY_WITH_CONDITIONS"
+    }
+  ];
+
+  for (const scenario of cases) {
+    const { student, result } = generatedProfilePlanBundle(scenario.seed, scenario.profileId);
+    assert.ok(student.courses.some(course => (
+      course.code === scenario.inProgress && course.status === "in_progress"
+    )), scenario.profileId);
+    assert.equal(result.plans.length, 1, scenario.profileId);
+    const plan = result.plans[0];
+    assert.equal(plan.validation.valid, true, scenario.profileId);
+    assert.equal(plan.validation.readinessStatus, scenario.readinessStatus, scenario.profileId);
+    const capstone = plan.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
+    assert.ok(capstone.approvalRequired.some(approval => (
+      approval.type === "department"
+      && approval.authority === "Economics Department"
+      && approval.prerequisite === scenario.concurrent
+    )), scenario.profileId);
+  }
+});
+
+test("a completed or earlier-generated intermediate may support one concurrent intermediate with ECO 461", () => {
   const approvedStudent = upcomingSenior(["ECO 113", "ECO 114", "MAT 113", "ECO 213"]);
   const approvedMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, approvedStudent);
   const approved = buildEconomicsTermPlans({ student: approvedStudent, mapping: approvedMapping, schedule, prerequisites });
@@ -713,11 +832,112 @@ test("one intermediate may share Winter with ECO 461, while both missing remains
     .find(course => course.course === "ECO 461");
   assert.ok(winter461.approvalRequired.some(item => item.type === "department" && item.prerequisite === "ECO 214"));
 
-  const blockedStudent = upcomingSenior(["ECO 113", "ECO 114", "MAT 113"]);
-  const blockedMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, blockedStudent);
-  const blocked = buildEconomicsTermPlans({ student: blockedStudent, mapping: blockedMapping, schedule, prerequisites });
-  assert.equal(blocked.plans.length, 0);
-  assert.ok(blocked.planningGaps.some(gap => gap.requirementId === "eco-461" || /ECO 461/.test(gap.message || "")));
+  const generatedStudent = upcomingSenior(["ECO 113", "ECO 114", "MAT 113"]);
+  const generatedMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, generatedStudent);
+  const generated = buildEconomicsTermPlans({ student: generatedStudent, mapping: generatedMapping, schedule, prerequisites });
+  assert.equal(generated.plans.length, 1);
+  const generatedPlan = generated.plans[0];
+  const fall = generatedPlan.terms.find(term => term.term === "Fall 2026");
+  const winter = generatedPlan.terms.find(term => term.term === "Winter 2027");
+  assert.ok(fall.courses.some(course => course.course === "ECO 213"));
+  assert.ok(winter.courses.some(course => course.course === "ECO 214"));
+  const generatedCapstone = winter.courses.find(course => course.course === "ECO 461");
+  assert.ok(generatedCapstone.approvalRequired.some(item => (
+    item.type === "department" && item.prerequisite === "ECO 214"
+  )));
+  assert.equal(generatedPlan.validation.valid, true);
+});
+
+test("planner and Decision Engine agree on strict before-target-term concurrency chronology", () => {
+  const term = { term: "Winter 2027", termKey: "Winter", academicYear: "2026-2027" };
+  const beforeTerm = new Set(["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 257"]);
+  const sameTerm = new Set(["ECO 214", "ECO 461"]);
+  const planner = assessCoursePrerequisites({
+    code: "ECO 461",
+    term,
+    beforeTerm,
+    sameTerm,
+    prerequisites
+  });
+  assert.equal(planner.valid, true);
+  assert.equal(planner.requiredApprovals.length, 1);
+  assert.equal(planner.requiredApprovals[0].prerequisite, "ECO 214");
+
+  const decision = evaluatePrerequisites({
+    course: "ECO 461",
+    approvalRequired: planner.requiredApprovals
+  }, term, normalizeStudentFacts({
+    academicStanding: "senior",
+    courses: [...beforeTerm].map(code => ({ code, status: "completed" }))
+  }), runtimePolicyBundle(), {
+    availableCourses: beforeTerm,
+    sameTermCourses: sameTerm,
+    evaluationDate: "2026-07-30"
+  });
+  assert.equal(decision.status, "CONDITIONAL");
+
+  const bothIntermediatesConcurrent = assessCoursePrerequisites({
+    code: "ECO 461",
+    term,
+    beforeTerm: new Set(["ECO 113", "ECO 114", "MAT 113", "ECO 257"]),
+    sameTerm: new Set(["ECO 213", "ECO 214", "ECO 461"]),
+    prerequisites
+  });
+  assert.equal(bothIntermediatesConcurrent.valid, false);
+
+  const statisticsConcurrent = assessCoursePrerequisites({
+    code: "ECO 461",
+    term,
+    beforeTerm: new Set(["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"]),
+    sameTerm: new Set(["ECO 257", "ECO 461"]),
+    prerequisites
+  });
+  assert.equal(statisticsConcurrent.valid, false);
+});
+
+test("concurrent ECO 461 approval rejects missing or mismatched identity fields", () => {
+  const student = upcomingSenior(["ECO 113", "ECO 114", "MAT 113", "ECO 213"]);
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const baseline = result.plans[0];
+  const mutations = [
+    ["missing", () => null],
+    ["authority", approval => ({ ...approval, authority: "Registrar" })],
+    ["course", approval => ({ ...approval, course: "ECO 214" })],
+    ["term", approval => ({ ...approval, term: "Fall 2026" })],
+    ["prerequisite", approval => ({ ...approval, prerequisite: "ECO 213" })],
+    ["rule identity", approval => ({ ...approval, reason: "unrelated_permission" })]
+  ];
+
+  for (const [label, mutate] of mutations) {
+    const plan = structuredClone(baseline);
+    const capstone = plan.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
+    const approval = capstone.approvalRequired[0];
+    const changed = mutate(approval);
+    if (changed) capstone.approvalRequired = [changed];
+    else delete capstone.approvalRequired;
+    const validation = validateGeneratedPlan(plan, {
+      student,
+      mapping,
+      schedule,
+      prerequisites,
+      context: result.context
+    });
+    assert.equal(validation.valid, false, label);
+  }
+});
+
+test("uncertain equivalency history does not enter the target-term prerequisite set", () => {
+  const student = upcomingSenior(["ECO 113", "ECO 114", "MAT 113"]);
+  student.courses.push({
+    equivalencyCode: "ECO 213",
+    status: "uncertain",
+    source: "unapproved_equivalency"
+  });
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  assert.equal(result.plans.length, 0);
+  assert.ok(result.planningGaps.some(gap => gap.requirementId === "eco-461" || /ECO 461/.test(gap.message || "")));
 });
 
 test("graduation overload is a warning, while a fifth total course remains blocking", () => {

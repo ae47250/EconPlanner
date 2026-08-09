@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:50c8d9eb3f9e81c3864edc47558f0d4ac25e59bfdabb8062d454b38a6d5baef9",
+  "contentHash": "sha256:fc151e1f824c7a29d166f0420623159a4700c4d660a9c70eb479c63cb16dab01",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -869,14 +869,16 @@
             "ECO 214"
           ],
           "dependentCourse": "ECO 461",
+          "earlierPendingCoursesRequireSuccessfulCompletion": true,
           "maxConcurrent": 1,
+          "requiresCompletedBeforeTargetTerm": true,
           "requiresCompletedFromOptions": 1,
           "statisticsMustBeCompletedBefore": true
         },
         "confidence": "CONFIRMED",
         "confirmation": {
           "date": "2026-08-01",
-          "lastReviewDate": "2026-08-01",
+          "lastReviewDate": "2026-08-09",
           "reviewer": "Economics Department representative and project owner"
         },
         "dependencies": [
@@ -931,7 +933,8 @@
           ]
         },
         "sourceRefs": [
-          "DEPARTMENT-POLICIES#Confirmed-policy-4"
+          "DEPARTMENT-POLICIES#Confirmed-policy-4",
+          "OWNER-ECO461-CHRONOLOGY-2026-08-09#current-codex-thread"
         ],
         "status": "ACTIVE",
         "supersedes": [],
@@ -940,10 +943,12 @@
             "approval-scope-match"
           ],
           "negative": [
-            "concurrent-both-intermediates"
+            "concurrent-both-intermediates",
+            "concurrent-intermediate-not-before-target-term"
           ],
           "positive": [
-            "concurrent-intermediate-approved"
+            "concurrent-intermediate-approved",
+            "concurrent-intermediate-before-target-term"
           ],
           "reviewState": []
         }
@@ -6421,7 +6426,7 @@
         },
         "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
         "reviewer": "Economics Department representative and project owner",
-        "sha256": "9e249beba8ba9c4d4ab1ba9ba6c4045781f14959c293002863b436bcda6acd09",
+        "sha256": "7c53cf0f775fe97e0530864d790a6256f43b09bc141707889b335c2f830bc410",
         "sourceId": "DEPARTMENT-POLICIES",
         "sourceType": "DEPARTMENT_CONFIRMED",
         "supersedes": null
@@ -6510,6 +6515,21 @@
         "sourceType": "OWNER_CONFIRMATION",
         "statement": "ECO 257 may satisfy the Statistics requirement only. ECO 257 must never count as an Economics elective. No advisor override permits elective treatment unless a future separately documented policy explicitly changes this rule.",
         "supersedes": "Ambiguous older prose suggesting ECO 257 might receive elective treatment"
+      },
+      {
+        "authority": "Economics Department domain policy",
+        "authorityBoundary": "ECO_461_INTERMEDIATE_CONCURRENCY_CHRONOLOGY",
+        "confirmedOn": "2026-08-09",
+        "effective": {
+          "from": "2026-08-09",
+          "through": null
+        },
+        "locator": "Current Codex thread, project-owner message dated 2026-08-09",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "sourceId": "OWNER-ECO461-CHRONOLOGY-2026-08-09",
+        "sourceType": "OWNER_CONFIRMATION",
+        "statement": "For the existing ECO 461 concurrency exception, exactly one of ECO 213 or ECO 214 must be successfully completed before the target ECO 461 term. Eligible completed and accepted-transfer evidence, a current in-progress course finishing before the target term, and an earlier generated-term course may count. Same-term or later courses and uncertain or unaccepted history, equivalency, substitution, waiver, or prerequisite evidence do not count. Earlier in-progress or planned completion remains conditional on success. This clarifies the existing 2026-08-01 department-confirmed exception and creates no new exception or alternate planning mode.",
+        "supersedes": "Ambiguous use of already completed in the 2026-08-01 ECO 461 concurrency wording"
       },
       {
         "authority": "Verified department schedule source",
@@ -7286,14 +7306,16 @@
           "ECO 214"
         ],
         "dependentCourse": "ECO 461",
+        "earlierPendingCoursesRequireSuccessfulCompletion": true,
         "maxConcurrent": 1,
+        "requiresCompletedBeforeTargetTerm": true,
         "requiresCompletedFromOptions": 1,
         "statisticsMustBeCompletedBefore": true
       },
       "confidence": "CONFIRMED",
       "confirmation": {
         "date": "2026-08-01",
-        "lastReviewDate": "2026-08-01",
+        "lastReviewDate": "2026-08-09",
         "reviewer": "Economics Department representative and project owner"
       },
       "dependencies": [
@@ -7348,7 +7370,8 @@
         ]
       },
       "sourceRefs": [
-        "DEPARTMENT-POLICIES#Confirmed-policy-4"
+        "DEPARTMENT-POLICIES#Confirmed-policy-4",
+        "OWNER-ECO461-CHRONOLOGY-2026-08-09#current-codex-thread"
       ],
       "status": "ACTIVE",
       "supersedes": [],
@@ -7357,10 +7380,12 @@
           "approval-scope-match"
         ],
         "negative": [
-          "concurrent-both-intermediates"
+          "concurrent-both-intermediates",
+          "concurrent-intermediate-not-before-target-term"
         ],
         "positive": [
-          "concurrent-intermediate-approved"
+          "concurrent-intermediate-approved",
+          "concurrent-intermediate-before-target-term"
         ],
         "reviewState": []
       }

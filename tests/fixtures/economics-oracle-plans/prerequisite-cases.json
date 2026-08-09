@@ -223,6 +223,76 @@
       ]
     },
     {
+      "fixtureId": "prereq-valid-in-progress-eco213-before-concurrent-eco214-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": {
+        "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "PSY 217"],
+        "inProgressCourses": [
+          { "course": "ECO 213", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027" }
+        ]
+      },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [
+            "ECO 214",
+            {
+              "course": "ECO 461",
+              "institution": "Hanover College",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+                  "type": "DEPARTMENT_APPROVAL",
+                  "authority": "Economics Department",
+                  "course": "ECO 461",
+                  "prerequisite": "ECO 214",
+                  "term": "Winter 2027",
+                  "reason": "ECO 214 is concurrent with ECO 461.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-valid-in-progress-eco214-before-concurrent-eco213-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
+      "student": {
+        "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "PSY 217"],
+        "inProgressCourses": [
+          { "course": "ECO 214", "term": "Fall 2026", "termKey": "Fall", "academicYear": "2026/2027" }
+        ]
+      },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [
+            "ECO 213",
+            {
+              "course": "ECO 461",
+              "institution": "Hanover College",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+                  "type": "DEPARTMENT_APPROVAL",
+                  "authority": "Economics Department",
+                  "course": "ECO 461",
+                  "prerequisite": "ECO 213",
+                  "term": "Winter 2027",
+                  "reason": "ECO 213 is concurrent with ECO 461.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "fixtureId": "prereq-valid-eco357-permission",
       "expectedStatus": "VALID_PREREQUISITES",
       "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"] },
@@ -342,9 +412,8 @@
       ]
     },
     {
-      "fixtureId": "prereq-invalid-capstone-other-intermediate-not-completed",
-      "expectedStatus": "INVALID_PREREQUISITES",
-      "expectedCodes": ["CONCURRENT-INTERMEDIATE-ECO-461"],
+      "fixtureId": "prereq-valid-earlier-generated-intermediate-capstone",
+      "expectedStatus": "VALID_PREREQUISITES",
       "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "PSY 217"] },
       "terms": [
         {
@@ -373,6 +442,41 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "fixtureId": "prereq-invalid-same-term-intermediate-is-not-before-capstone",
+      "expectedStatus": "INVALID_PREREQUISITES",
+      "expectedCodes": ["CONCURRENT-INTERMEDIATE-ECO-461"],
+      "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "PSY 217"] },
+      "terms": [
+        {
+          "slotId": "winter-2027", "term": "Winter 2027", "termKey": "Winter", "academicYear": "2026/2027",
+          "projectedStanding": "Senior",
+          "courses": [
+            "ECO 214",
+            {
+              "course": "ECO 461",
+              "institution": "Hanover College",
+              "approvalRequired": [
+                {
+                  "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
+                  "type": "DEPARTMENT_APPROVAL",
+                  "authority": "Economics Department",
+                  "course": "ECO 461",
+                  "prerequisite": "ECO 214",
+                  "term": "Winter 2027",
+                  "reason": "ECO 214 is concurrent with ECO 461.",
+                  "sourceRef": "DEPARTMENT-POLICIES#Confirmed policy 4"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotId": "fall-2027", "term": "Fall 2027", "termKey": "Fall", "academicYear": "2027/2028",
+          "courses": ["ECO 213"]
         }
       ]
     },

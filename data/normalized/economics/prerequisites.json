@@ -11,15 +11,15 @@
     ],
     "concurrentWithApproval": [
       {
+        "approval": "instructor",
+        "lastResortOnly": true,
         "options": [
           "MAT 113",
           "MAT 121"
         ],
-        "approval": "instructor",
         "policySource": "department-confirmed-local-policy",
-        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3",
         "reason": "concurrent_math",
-        "lastResortOnly": true
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3"
       }
     ]
   },
@@ -35,15 +35,15 @@
     ],
     "concurrentWithApproval": [
       {
+        "approval": "instructor",
+        "lastResortOnly": true,
         "options": [
           "MAT 113",
           "MAT 121"
         ],
-        "approval": "instructor",
         "policySource": "department-confirmed-local-policy",
-        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3",
         "reason": "concurrent_math",
-        "lastResortOnly": true
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3"
       }
     ]
   },
@@ -155,16 +155,18 @@
     ],
     "concurrentWithApproval": [
       {
+        "approval": "department",
+        "earlierPendingCoursesRequireSuccessfulCompletion": true,
+        "maxConcurrent": 1,
         "options": [
           "ECO 213",
           "ECO 214"
         ],
-        "approval": "department",
         "policySource": "department-confirmed-local-policy",
-        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4",
         "reason": "concurrent_intermediate_with_capstone",
+        "requiresCompletedBeforeTargetTerm": true,
         "requiresCompletedFromOptions": 1,
-        "maxConcurrent": 1
+        "sourceRef": "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4"
       }
     ]
   },

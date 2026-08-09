@@ -17,7 +17,7 @@
       "status": "GENERATED"
     },
     {
-      "canonicalHash": "sha256:af3a4e809f0aaa580b62d92cb9e697b5af5f9c3c0360c90dc3f58c2eef3afc3a",
+      "canonicalHash": "sha256:915b18c25dec2cb4cbf08e3fa0d33ab69a5dc0a31966724059560a5fd903faa3",
       "output": "compatibility/prerequisites.json",
       "runtimeOutput": "data/normalized/economics/prerequisites.json",
       "source": "canonical Knowledge Hub manifest inputs",
@@ -38,13 +38,13 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:50c8d9eb3f9e81c3864edc47558f0d4ac25e59bfdabb8062d454b38a6d5baef9",
+  "contentHash": "sha256:fc151e1f824c7a29d166f0420623159a4700c4d660a9c70eb479c63cb16dab01",
   "counts": {
     "activeRules": 54,
     "courses": 31,
     "historicalOfferingRecords": 0,
     "scheduleSections": 30,
-    "sources": 13,
+    "sources": 14,
     "unresolvedReviewRecords": 5
   },
   "determinism": {

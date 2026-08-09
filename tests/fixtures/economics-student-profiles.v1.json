@@ -277,10 +277,13 @@
           { "code": "ECO 321", "status": "completed" }
         ]
       },
-      "coverage": ["both_intermediates_missing", "senior_not_feasible"],
+      "coverage": ["both_intermediates_missing", "earlier_generated_intermediate", "one_intermediate_concurrent_with_eco461"],
       "expectations": {
-        "displayedPlanCount": { "min": 0, "max": 0 },
-        "candidateStrategyStatuses": { "balanced": ["NOT_FEASIBLE"] },
+        "displayedPlanCount": { "min": 1, "max": 1 },
+        "candidateStrategyStatuses": { "balanced": ["CONDITIONALLY_FEASIBLE"] },
+        "requiredApprovals": ["CONCURRENT-INTERMEDIATE-ECO-461"],
+        "requiredPrerequisiteOrder": [["ECO 213", "ECO 461"]],
+        "requiredSameTermPlacements": [["ECO 214", "ECO 461"]],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
