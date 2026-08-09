@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import Ajv2020 from "ajv/dist/2020.js";
 import { canonicalJson, canonicalSha256 } from "../lib/policy/canonical-json.js";
+import { buildCompatibilityRepresentations } from "../lib/policy/compatibility-projection.js";
 import { sourceEvidenceSha256 } from "../lib/source-evidence-hash.js";
 
 const SCRIPT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -16,13 +17,7 @@ const SCHEMA_PATHS = [
   "policy/schema/approval-instance.v1.schema.json",
   "policy/schema/message-catalog.v1.schema.json"
 ];
-const COMPATIBILITY_TARGETS = {
-  "courses.json": "data/normalized/economics/courses.json",
-  "requirements.json": "data/normalized/economics/requirements.json",
-  "prerequisites.json": "data/normalized/economics/prerequisites.json",
-  "planning-constraints.json": "data/normalized/economics/planning-constraints.json",
-  "schedule-2026-2027.json": "data/normalized/economics/schedule-2026-2027.json"
-};
+const NORMALIZED_COMPATIBILITY_PATH = "data/normalized/economics";
 
 function fail(message) {
   throw new Error(`Policy compilation failed: ${message}`);
@@ -37,6 +32,30 @@ function repositoryPath(repositoryRoot, relativePath) {
 
 async function readJson(repositoryRoot, relativePath) {
   return JSON.parse(await readFile(repositoryPath(repositoryRoot, relativePath), "utf8"));
+}
+
+async function writeCanonicalIfChanged(filePath, document) {
+  const bytes = canonicalJson(document);
+  try {
+    const currentBytes = await readFile(filePath, "utf8");
+    try {
+      if (canonicalJson(JSON.parse(currentBytes)) === bytes) return;
+    } catch {
+      // Replace a malformed generated file with the canonical projection below.
+    }
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  await writeFile(filePath, bytes);
+}
+
+async function writeTextIfChanged(filePath, bytes, equivalent = current => current === bytes) {
+  try {
+    if (equivalent(await readFile(filePath, "utf8"))) return;
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  await writeFile(filePath, bytes);
 }
 
 function createValidator(schemaEntries) {
@@ -99,58 +118,6 @@ function offeringIndex(schedule) {
     displayLabel: term.displayLabel,
     sections: term.sections
   }]));
-}
-
-function sameMembers(left, right) {
-  return JSON.stringify([...left].sort()) === JSON.stringify([...right].sort());
-}
-
-function validateCompatibilityTargets({ courses, requirements, rules, schedule, targets }) {
-  const legacyCourses = new Map(targets["courses.json"].courses.map(course => [course.code, course]));
-  for (const course of courses.courses) {
-    const legacy = legacyCourses.get(course.code);
-    if (!legacy || legacy.title !== course.title || legacy.units !== course.units) fail(`course compatibility drift for ${course.code}`);
-  }
-
-  const legacyPrerequisites = targets["prerequisites.json"];
-  for (const rule of rules.filter(candidate => candidate.ruleType === "coursePrerequisite")) {
-    const legacy = legacyPrerequisites[rule.condition.course];
-    if (!legacy || !sameMembers(rule.effect.allOf ?? [], legacy.all ?? [])) fail(`prerequisite allOf drift for ${rule.condition.course}`);
-    const canonicalGroups = (rule.effect.oneOfGroups ?? []).map(group => [...group].sort().join("|")).sort();
-    const legacyGroups = (legacy.any ?? []).map(group => [...group].sort().join("|")).sort();
-    if (!sameMembers(canonicalGroups, legacyGroups)) fail(`prerequisite oneOf drift for ${rule.condition.course}`);
-  }
-
-  const slotByRule = {
-    "REQ-ECO-113": "eco-113", "REQ-ECO-114": "eco-114", "REQ-ECO-213": "eco-213", "REQ-ECO-214": "eco-214",
-    "REQ-STATISTICS": "statistics", "REQ-FINANCE": "finance", "REQ-ECO-461": "eco-461", "REQ-COGNATE": "cognate"
-  };
-  const legacySlots = new Map(targets["requirements.json"].requirementSlots.map(slot => [slot.id, slot]));
-  for (const [ruleId, slotId] of Object.entries(slotByRule)) {
-    const rule = requirements.records.find(candidate => candidate.ruleId === ruleId);
-    if (!rule || !sameMembers(rule.effect.options, legacySlots.get(slotId)?.options ?? [])) fail(`requirement compatibility drift for ${ruleId}`);
-  }
-  const electiveRule = requirements.records.find(rule => rule.ruleId === "REQ-ECO-ELECTIVES");
-  const legacyElectiveCount = targets["requirements.json"].requirementSlots.filter(slot => slot.kind === "elective").length;
-  if (electiveRule.effect.slotCount !== legacyElectiveCount) fail("elective slot-count compatibility drift");
-
-  const termLabels = { FALL: "Fall", WINTER: "Winter", MAY: "May", SUMMER: "Summer" };
-  for (const term of schedule.terms) {
-    const legacySections = targets["schedule-2026-2027.json"].terms[termLabels[term.canonicalTerm]] ?? [];
-    const canonicalInventory = term.sections.map(section => `${section.course}|${section.title}|${section.units}`);
-    const legacyInventory = legacySections.map(section => `${section.course}|${section.title}|${section.units}`);
-    if (!sameMembers(canonicalInventory, legacyInventory)) fail(`schedule compatibility drift for ${term.termId}`);
-  }
-  const fullSections = schedule.terms.flatMap(term => term.sections).filter(section => section.enrollmentState === "FULL").length;
-  const legacyFullSections = Object.values(targets["schedule-2026-2027.json"].terms).flat().filter(section => section.availability?.rawStatus === "Full").length;
-  if (fullSections !== legacyFullSections) fail("FULL enrollment-state compatibility drift");
-
-  const capacityByTerm = Object.fromEntries(rules.filter(rule => rule.ruleType === "termLoad" && rule.condition.canonicalTerm).map(rule => [rule.condition.canonicalTerm, rule.effect]));
-  const legacyTerms = targets["planning-constraints.json"].terms;
-  for (const [canonicalTerm, label] of Object.entries(termLabels)) {
-    const canonicalCapacity = capacityByTerm[canonicalTerm];
-    if (canonicalCapacity && canonicalCapacity.maxTotalCourses !== legacyTerms[label]?.maxTotalCourses) fail(`term-capacity compatibility drift for ${canonicalTerm}`);
-  }
 }
 
 function validateCriticalConflicts({ rules, schedule, unresolved, offeringPatterns, historicalOfferings }) {
@@ -230,7 +197,7 @@ function policyDiff(bundle) {
     `- MAY is the canonical internal term; "Spring/May" remains the display label.\n` +
     `- Completed advanced history is preserved and missing historical evidence produces review.\n` +
     `- Unsupported future exact terms remain preliminary/TBC.\n` +
-    `- FULL remains REVIEW_REQUIRED in the bundle; the legacy compatibility view retains its pre-CP2 representation until runtime migration.\n` +
+    `- FULL remains REVIEW_REQUIRED in the bundle; the generated compatibility view preserves the existing runtime representation.\n` +
     `- Strategy fit remains ranking metadata and cannot invalidate an academically complete plan.\n\n` +
     `## Unresolved review records\n\n` +
     bundle.unresolved.map(question => `- ${question.ruleId}: ${question.requiredDisposition}`).join("\n") + "\n";
@@ -243,7 +210,7 @@ function dependencyImpact(bundle) {
     .join("\n");
   return `# Dependency impact: ${bundle.bundleVersion}\n\n` +
     `Bundle digest: \`${bundle.contentHash}\`\n\n` +
-    `CP2 adds compiled data only. Current catalog loading, planning, validation, editing, reports, and PDFs continue to use their existing runtime paths.\n\n` +
+    `Compatibility data is generated from canonical Knowledge Hub inputs. Current catalog loading, planning, validation, editing, reports, and PDFs continue to use their existing runtime paths.\n\n` +
     `## Declared rule dependencies\n\n| Rule | Depends on |\n|---|---|\n${rows || "| None | None |"}\n\n` +
     `## Future consumers\n\n- CP3 may load this exact bundle in shadow mode.\n- CP4 may replace normalized runtime reads only after differential approval.\n- UI, plan edits, reports, and PDFs are unchanged in CP2.\n`;
 }
@@ -253,6 +220,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   const manifest = await readJson(resolvedRepositoryRoot, MANIFEST_PATH);
   const releaseRoot = path.resolve(outputRoot ?? path.join(resolvedRepositoryRoot, "data/compiled/policy/releases", manifest.policyVersion));
   const activeRoot = outputRoot ? path.dirname(releaseRoot) : path.join(resolvedRepositoryRoot, "data/compiled/policy");
+  const normalizedRoot = outputRoot ? path.join(path.dirname(releaseRoot), "normalized/economics") : path.join(resolvedRepositoryRoot, NORMALIZED_COMPATIBILITY_PATH);
 
   const schemaEntries = await Promise.all(SCHEMA_PATHS.map(async schemaPath => [schemaPath, await readJson(resolvedRepositoryRoot, schemaPath)]));
   const schemas = new Map(schemaEntries);
@@ -275,6 +243,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   const requirements = inputById.requirements;
   const offeringPatterns = inputById["offering-patterns"];
   const historicalOfferings = inputById["historical-offerings"];
+  const compatibilityProfile = inputById["compatibility-profile"];
 
   validateReferences({ rules, provenance, messages, unresolved });
   await validateSourceEvidence(resolvedRepositoryRoot, provenance);
@@ -282,9 +251,15 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   if (schedule.releaseStatus !== "ACTIVE") fail(`schedule ${schedule.releaseId} is not active`);
   validateCriticalConflicts({ rules, schedule, unresolved, offeringPatterns, historicalOfferings });
 
-  const compatibilityTargets = {};
-  for (const [outputName, sourcePath] of Object.entries(COMPATIBILITY_TARGETS)) compatibilityTargets[outputName] = await readJson(resolvedRepositoryRoot, sourcePath);
-  validateCompatibilityTargets({ courses, requirements, rules, schedule, targets: compatibilityTargets });
+  const compatibilityTargets = buildCompatibilityRepresentations({
+    courses,
+    requirements,
+    rules,
+    schedule,
+    offeringPatterns,
+    provenance,
+    profile: compatibilityProfile
+  });
 
   const indexed = indexRules(rules);
   const dependencyGraph = Object.fromEntries(rules.map(rule => [rule.ruleId, [...rule.dependencies].sort()]));
@@ -325,12 +300,23 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   const bundle = { ...bundleWithoutHash, contentHash };
   const activationStatus = manifest.status === "ACTIVE" ? "ACTIVE" : "PENDING_OWNER_APPROVAL";
 
-  await mkdir(path.join(releaseRoot, "compatibility"), { recursive: true });
+  await Promise.all([
+    mkdir(path.join(releaseRoot, "compatibility"), { recursive: true }),
+    mkdir(normalizedRoot, { recursive: true })
+  ]);
   const compatibility = [];
-  for (const [outputName, sourcePath] of Object.entries(COMPATIBILITY_TARGETS)) {
-    const document = compatibilityTargets[outputName];
-    await writeFile(path.join(releaseRoot, "compatibility", outputName), canonicalJson(document));
-    compatibility.push({ output: `compatibility/${outputName}`, source: sourcePath, status: "MATCH", canonicalHash: `sha256:${canonicalSha256(document)}` });
+  for (const [outputName, document] of Object.entries(compatibilityTargets)) {
+    await Promise.all([
+      writeCanonicalIfChanged(path.join(releaseRoot, "compatibility", outputName), document),
+      writeCanonicalIfChanged(path.join(normalizedRoot, outputName), document)
+    ]);
+    compatibility.push({
+      output: `compatibility/${outputName}`,
+      runtimeOutput: `${NORMALIZED_COMPATIBILITY_PATH}/${outputName}`,
+      source: "canonical Knowledge Hub manifest inputs",
+      status: "GENERATED",
+      canonicalHash: `sha256:${canonicalSha256(document)}`
+    });
   }
 
   const compileReport = {
@@ -376,16 +362,16 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   };
 
   await Promise.all([
-    writeFile(path.join(releaseRoot, "bundle.json"), canonicalJson(bundle)),
-    writeFile(path.join(releaseRoot, "bundle.sha256"), `${contentHash.slice("sha256:".length)}\n`),
-    writeFile(path.join(releaseRoot, "compile-report.json"), canonicalJson(compileReport)),
-    writeFile(path.join(releaseRoot, "policy-diff.md"), policyDiff(bundle)),
-    writeFile(path.join(releaseRoot, "dependency-impact.md"), dependencyImpact(bundle))
+    writeCanonicalIfChanged(path.join(releaseRoot, "bundle.json"), bundle),
+    writeTextIfChanged(path.join(releaseRoot, "bundle.sha256"), `${contentHash.slice("sha256:".length)}\n`, current => current.trim() === contentHash.slice("sha256:".length)),
+    writeCanonicalIfChanged(path.join(releaseRoot, "compile-report.json"), compileReport),
+    writeTextIfChanged(path.join(releaseRoot, "policy-diff.md"), policyDiff(bundle)),
+    writeTextIfChanged(path.join(releaseRoot, "dependency-impact.md"), dependencyImpact(bundle))
   ]);
   await mkdir(activeRoot, { recursive: true });
-  await writeFile(path.join(activeRoot, "active.json"), canonicalJson(active));
+  await writeCanonicalIfChanged(path.join(activeRoot, "active.json"), active);
 
-  return { bundle, compileReport, releaseRoot, activePath: path.join(activeRoot, "active.json") };
+  return { bundle, compileReport, releaseRoot, normalizedRoot, activePath: path.join(activeRoot, "active.json") };
 }
 
 function parseArguments(argv) {
