@@ -1,6 +1,10 @@
 # Economics test-oracle policy
 
-`economics-policy.v1.json` is the independent policy source for EconPlanner tests. It records only rules supported by the raw Hanover Economics sources named in the manifest. It must not import or copy decisions at runtime from the production planner, normalized production data, or production validators.
+`policy/` and its provenance are the sole authority for the meaning of EconPlanner academic rules. `economics-policy.v1.json` is an independently maintained test specification derived from that authority; it is not a second academic-policy authority. The Oracle must implement confirmed meanings independently and must not import or copy decisions at runtime from the production Decision Engine, planner, normalized production data, or production validators.
+
+Oracle independence means independent implementation, not independent interpretation. When timing matters, the controlling policy must state the relevant boundary explicitly, such as completion before the target term, whether same-term work counts, and whether earlier pending work remains conditional on successful completion. Neither production nor the Oracle may infer a missing timing meaning from vague prose.
+
+If production and the Oracle disagree, inspect the controlling policy and provenance before changing either implementation. If those sources do not unambiguously determine the answer, stop with `SPECIFICATION / AUTHORITY CONFLICT — inspect controlling policy and provenance before changing either implementation.` Do not select an implementation automatically or create a student-facing status for this engineering conflict.
 
 The manifest separates confirmed rules from unresolved questions. A review-required entry is not permission for a test oracle to guess an answer or enforce one interpretation. Until written confirmation is available, the future oracle must return the entry's review status and explain what needs confirmation.
 

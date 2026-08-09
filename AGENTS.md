@@ -13,6 +13,8 @@
 - `scripts/compile-policy.mjs` and `scripts/compile-catalog-policies.mjs` compile canonical policy sources into `data/compiled/policy/`. Regenerate compiled artifacts with `pnpm run compile:policy` or `pnpm run compile:catalog-policy`; never hand-edit generated policy output.
 - `lib/decision-engine/` is the production Decision Engine. The active API, planner, and validators must consume the pinned compiled bundle through the established policy-loading path. UI and report wording must not create or alter academic policy.
 - `tests/oracle/` and its fixtures form the Independent Oracle. They verify production independently but are not academic-policy sources. Follow `tests/oracle/README.md` when evidence requires an Oracle update.
+- Oracle independence means independent implementation, not independent interpretation of academic policy. Canonical policy and its provenance are the sole authority for rule meaning; production and the Oracle must implement that meaning separately and neither may silently resolve ambiguous policy prose.
+- If production and the Oracle disagree and the controlling policy plus provenance do not unambiguously identify the correct meaning, stop with `SPECIFICATION / AUTHORITY CONFLICT — inspect controlling policy and provenance before changing either implementation.` This is an engineering validation failure, not a student-facing plan status.
 - Never change the Oracle merely to agree with production or silence a failure. Never change production merely to satisfy an obsolete or fictional fixture. Resolve disagreements from independently verified authoritative evidence, then correct the stale side and preserve regression coverage.
 
 ## Consistency, Verification, and Repair
