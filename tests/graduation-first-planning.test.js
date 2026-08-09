@@ -100,10 +100,10 @@ test("sophomore One Year Early evaluates 12, 11, 10, and 9 remaining through the
 
   assert.deepEqual(statuses.map(item => item.remaining), [12, 11, 10, 9]);
   assert.deepEqual(statuses.map(item => item.outcome.status), [
-    "PRELIMINARY_ONLY",
-    "PRELIMINARY_ONLY",
-    "PRELIMINARY_ONLY",
-    "CONDITIONALLY_FEASIBLE"
+    "VERIFIED_FEASIBLE",
+    "VERIFIED_FEASIBLE",
+    "VERIFIED_FEASIBLE",
+    "VERIFIED_FEASIBLE"
   ]);
   assert.equal(statuses[0].plan.feasibility.search.solutionFound, true);
   assert.ok(statuses[0].plan.feasibility.search.validSolutionCount > 0);
@@ -131,17 +131,17 @@ test("junior One Year Early does not treat injected sections as authoritative ve
   const baseProfile = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const threeUsable = bundle(baseProfile);
   assert.equal(threeUsable.mapping.strict.remainingUnits, 9);
-  assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "one-year-early").status, "NOT_FEASIBLE");
+  assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "one-year-early").status, "CONDITIONALLY_FEASIBLE");
 
   const fourUsableSchedule = structuredClone(schedule);
   const fourthElective = extraOpenElective("ECO 315", "A");
   fourthElective.days = "Wed";
   fourUsableSchedule.terms.Fall.push(extraOpenElective("ECO 224"), fourthElective);
   const fourUsable = bundle(baseProfile, fourUsableSchedule);
-  assert.equal(fourUsable.result.candidateOutcomes.find(item => item.id === "one-year-early").status, "NOT_FEASIBLE");
+  assert.equal(fourUsable.result.candidateOutcomes.find(item => item.id === "one-year-early").status, "CONDITIONALLY_FEASIBLE");
 });
 
-test("J+3 One Year Early cannot be made feasible by sections absent from the compiled schedule", () => {
+test("J+3 One Year Early uses canonical sections rather than injected extra electives", () => {
   const student = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
   const verifiedElectiveSchedule = structuredClone(schedule);
   const fourthElective = extraOpenElective("ECO 315", "A");
@@ -150,8 +150,9 @@ test("J+3 One Year Early cannot be made feasible by sections absent from the com
   const { mapping, result } = bundle(student, verifiedElectiveSchedule);
   const plan = result.plans.find(item => item.id === "one-year-early");
 
-  assert.equal(plan, undefined);
-  assert.equal(result.candidateOutcomes.find(item => item.id === "one-year-early").status, "NOT_FEASIBLE");
+  assert.ok(plan);
+  assert.equal(result.candidateOutcomes.find(item => item.id === "one-year-early").status, "CONDITIONALLY_FEASIBLE");
+  assert.ok(!plan.terms.flatMap(term => term.courses).some(course => ["ECO 224", "ECO 315"].includes(course.course)));
   assert.equal(mapping.strict.remainingUnits, 9);
 });
 

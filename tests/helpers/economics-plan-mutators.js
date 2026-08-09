@@ -223,7 +223,7 @@ const MUTATORS = Object.freeze({
   },
 
   CLOSED_SECTION(draft) {
-    replaceVerifiedSection(draft, "ECO 114", "A");
+    replaceVerifiedSection(draft, "ECO 114", "C");
   },
 
   DIRECT_MEETING_CONFLICT(draft) {

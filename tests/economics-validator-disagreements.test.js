@@ -209,7 +209,7 @@ function fullSequenceBaseline() {
       termKey: "Fall",
       standing: "sophomore",
       courses: [
-        verifiedCourse("Fall", "ECO 114", "C", "eco-114"),
+        verifiedCourse("Fall", "ECO 114", "A", "eco-114"),
         verifiedCourse("Fall", "ECO 234", "A", "eco-elective-1")
       ]
     }),

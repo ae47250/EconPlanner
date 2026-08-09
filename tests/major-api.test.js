@@ -314,8 +314,8 @@ test("major mapper retains a standard senior plan above the Economics load prefe
   assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "standard"));
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
   assert.ok(data.catalog.advisorAttention.some(item => /more than two Economics courses/.test(item.message)));
-  assert.ok(data.catalog.advisorAttention.some(item => /Schedule confirmation required/.test(item.message)));
-  assert.equal(economics.economicsPlans[0].feasibilityStatus, "PRELIMINARY_ONLY");
+  assert.ok(data.catalog.advisorAttention.some(item => /MAT 217 requires advisor review \(ENROLLMENT_FULL\)/.test(item.message)));
+  assert.equal(economics.economicsPlans[0].feasibilityStatus, "VERIFIED_FEASIBLE");
 });
 
 test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async () => {
@@ -451,7 +451,7 @@ test("edited plan validation rejects an incomplete submitted candidate", async (
   assert.equal(validation.plan, undefined);
 });
 
-test("edited plan validation keeps future sequencing nonblocking without hiding full-section review", async () => {
+test("edited plan validation keeps future sequencing nonblocking with open selected sections", async () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-08-02",
@@ -489,12 +489,12 @@ test("edited plan validation keeps future sequencing nonblocking without hiding 
 
   assert.equal(validationResponse.status, 200);
   assert.equal(validation.plan.validation.valid, true);
-  assert.equal(validation.plan.validation.evidenceStatus, "REVIEW_REQUIRED");
+  assert.equal(validation.plan.validation.evidenceStatus, "VERIFIED");
   assert.ok(validation.plan.validation.policyDecision.decisions.some(decision => (
     decision.status === "ALLOW" && decision.reasonCode === "FUTURE_SCHEDULE_PLANNING_PROJECTION"
   )));
   assert.ok(validation.plan.validation.policyDecision.decisions.some(decision => (
-    decision.status === "REVIEW_REQUIRED" && decision.reasonCode === "ENROLLMENT_FULL"
+    decision.status === "ALLOW" && decision.reasonCode === "ENROLLMENT_OPEN" && decision.subject?.course === "ECO 113"
   )));
 });
 

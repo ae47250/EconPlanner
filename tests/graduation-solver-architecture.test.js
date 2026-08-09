@@ -161,7 +161,7 @@ test("Explore First is not considered for junior or senior students", () => {
   }
 });
 
-test("preliminary plans expose approvals independently from the overall status", () => {
+test("conditional plans expose approvals independently from the overall status", () => {
   const student = {
     academicStanding: "senior",
     planCreationDate: "2026-07-30",
@@ -173,7 +173,7 @@ test("preliminary plans expose approvals independently from the overall status",
     item.course === "ECO 461" && item.prerequisite === "ECO 214"
   ));
 
-  assert.equal(plan.feasibility.overallStatus, "PRELIMINARY_ONLY");
+  assert.equal(plan.feasibility.overallStatus, "CONDITIONALLY_FEASIBLE");
   assert.equal(departmentApproval.authority, "Economics Department");
   assert.match(departmentApproval.sourceRef, /Department_Confirmed_Planning_Policies/);
   assert.equal(plan.feasibility.search.limit, 250000);

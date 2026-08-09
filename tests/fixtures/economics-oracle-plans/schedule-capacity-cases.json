@@ -67,8 +67,8 @@
               "capacity": 15
             },
             "provenance": {
-              "verificationDate": null,
-              "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png"
+              "verificationDate": "2026-08-08",
+              "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
             }
           }
         ]
