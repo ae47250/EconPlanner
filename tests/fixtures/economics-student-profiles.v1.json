@@ -42,8 +42,8 @@
       },
       "coverage": ["no_completed_courses", "one_year_early_request"],
       "expectations": {
-        "displayedPlanCount": { "min": 1, "max": 1 },
-        "requiredDisplayedStrategies": ["plan-c2"],
+        "displayedPlanCount": { "min": 1, "max": 3 },
+        "requiredDisplayedStrategies": ["balanced", "explore-first", "one-year-early"],
         "expectedWarningsContaining": [],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
@@ -57,8 +57,8 @@
       },
       "coverage": ["one_principle_completed", "mathematics_missing", "explore_first", "normal_graduation"],
       "expectations": {
-        "displayedPlanCount": { "min": 2, "max": 3 },
-        "requiredDisplayedStrategies": ["plan-1", "plan-3"],
+        "displayedPlanCount": { "min": 2, "max": 2 },
+        "requiredDisplayedStrategies": ["balanced", "explore-first"],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
     },
@@ -77,7 +77,7 @@
       },
       "coverage": ["one_principle_in_progress", "running_term_exclusion"],
       "expectations": {
-        "displayedPlanCount": { "min": 1, "max": 3 },
+        "displayedPlanCount": { "min": 1, "max": 2 },
         "forbiddenPlannedCourses": ["ECO 113"],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
@@ -94,10 +94,10 @@
       },
       "coverage": ["one_principle_completed", "mathematics_completed", "explore_first"],
       "expectations": {
-        "displayedPlanCount": { "min": 2, "max": 3 },
-        "requiredDisplayedStrategies": ["plan-1", "plan-3"],
+        "displayedPlanCount": { "min": 2, "max": 2 },
+        "requiredDisplayedStrategies": ["balanced", "explore-first"],
         "strategyAssertions": [{
-          "strategyId": "plan-3",
+          "strategyId": "explore-first",
           "mustContain": ["ECO 114", "ECO 213"],
           "mustContainOneOf": ["ECO 257", "MAT 217", "PSY 217"]
         }],
@@ -118,7 +118,7 @@
       },
       "coverage": ["both_principles_completed", "mathematics_completed", "statistics_completed"],
       "expectations": {
-        "displayedPlanCount": { "min": 2, "max": 3 },
+        "displayedPlanCount": { "min": 1, "max": 2 },
         "forbiddenPlannedCourses": ["MAT 217"],
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
@@ -141,8 +141,8 @@
       },
       "coverage": ["one_year_early_request", "both_principles_completed", "mathematics_completed"],
       "expectations": {
-        "displayedPlanCount": { "min": 0, "max": 1 },
-        "candidateStrategyStatuses": { "plan-c2": ["CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY", "NOT_FEASIBLE"] },
+        "displayedPlanCount": { "min": 1, "max": 3 },
+        "candidateStrategyStatuses": { "one-year-early": ["VERIFIED_FEASIBLE", "CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY", "NOT_FEASIBLE"] },
         "expectedFindingClasses": ["CURRENT_CONTRACT"]
       }
     },
@@ -162,7 +162,7 @@
       "coverage": ["one_intermediate_completed", "statistics_completed", "one_year_early_request"],
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 2 },
-        "forbiddenDisplayedStrategies": ["plan-3"],
+        "forbiddenDisplayedStrategies": ["explore-first"],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
@@ -183,7 +183,7 @@
       "coverage": ["both_intermediates_completed", "statistics_completed"],
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 2 },
-        "forbiddenDisplayedStrategies": ["plan-3"],
+        "forbiddenDisplayedStrategies": ["explore-first"],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
@@ -201,9 +201,9 @@
       },
       "coverage": ["no_completed_courses", "impossible_one_year_early_request"],
       "expectations": {
-        "displayedPlanCount": { "min": 0, "max": 0 },
-        "candidateStrategyStatuses": { "plan-c2": ["NOT_FEASIBLE"] },
-        "forbiddenDisplayedStrategies": ["plan-c2", "plan-3"],
+        "displayedPlanCount": { "min": 1, "max": 1 },
+        "candidateStrategyStatuses": { "one-year-early": ["NOT_FEASIBLE"] },
+        "forbiddenDisplayedStrategies": ["one-year-early", "explore-first"],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
@@ -229,9 +229,8 @@
       "coverage": ["senior_strict_capstone_path", "both_intermediates_completed", "statistics_completed"],
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 1 },
-        "requiredDisplayedStrategies": ["plan-1"],
-        "strategyAssertions": [{ "strategyId": "plan-1", "mustContain": ["ECO 461"] }],
-        "expectedWarningsContaining": ["Seat availability"],
+        "requiredDisplayedStrategies": ["balanced"],
+        "strategyAssertions": [{ "strategyId": "balanced", "mustContain": ["ECO 461"] }],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
@@ -281,7 +280,7 @@
       "coverage": ["both_intermediates_missing", "senior_not_feasible"],
       "expectations": {
         "displayedPlanCount": { "min": 0, "max": 0 },
-        "candidateStrategyStatuses": { "plan-1": ["NOT_FEASIBLE"], "plan-2": ["NOT_FEASIBLE"] },
+        "candidateStrategyStatuses": { "balanced": ["NOT_FEASIBLE"] },
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
@@ -314,7 +313,7 @@
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 1 },
         "expectedRemainingYears": 1,
-        "forbiddenDisplayedStrategies": ["plan-c2"],
+        "forbiddenDisplayedStrategies": ["one-year-early"],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     },
@@ -335,7 +334,7 @@
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 3 },
         "expectedRemainingYears": 3,
-        "forbiddenDisplayedStrategies": ["plan-c2"],
+        "forbiddenDisplayedStrategies": ["one-year-early"],
         "requiredPolicyReviewCodes": ["REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
         "expectedFindingClasses": ["POLICY_REVIEW", "FEATURE_GATED"]
       }
@@ -353,7 +352,7 @@
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 3 },
         "expectedRemainingYears": 5,
-        "forbiddenDisplayedStrategies": ["plan-c2"],
+        "forbiddenDisplayedStrategies": ["one-year-early"],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }
     }

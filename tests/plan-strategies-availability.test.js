@@ -1,0 +1,179 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { mapStudentToProgram } from "../lib/assignment/solve.js";
+import {
+  buildEconomicsTermPlans,
+  materialPlanDistance,
+  semanticPlanSignature
+} from "../lib/planning/economics.js";
+import { buildEconomicsReport } from "../lib/reports/economics.js";
+import { renderEconomicsHtml } from "../lib/reports/economics-html.js";
+
+const schedule = JSON.parse(await readFile(new URL("../data/normalized/economics/schedule-2026-2027.json", import.meta.url), "utf8"));
+const requirements = JSON.parse(await readFile(new URL("../data/normalized/economics/requirements.json", import.meta.url), "utf8"));
+const prerequisites = JSON.parse(await readFile(new URL("../data/normalized/economics/prerequisites.json", import.meta.url), "utf8"));
+const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
+
+function bundle(student) {
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  return buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+}
+
+function plannedCourses(plan) {
+  return plan.terms.flatMap(term => term.courses.map(course => ({ term, course })));
+}
+
+test("default planning exposes only the applicable normal strategies", () => {
+  const expected = new Map([
+    ["freshman", ["balanced", "explore-first"]],
+    ["sophomore", ["balanced", "explore-first"]],
+    ["junior", ["balanced"]],
+    ["senior", ["balanced"]]
+  ]);
+  for (const [standing, strategyIds] of expected) {
+    const result = bundle({ academicStanding: standing, planCreationDate: "2026-07-30", courses: [] });
+    assert.deepEqual(result.candidateOutcomes.map(outcome => outcome.id), strategyIds, standing);
+    assert.ok(result.candidateOutcomes.every(outcome => outcome.id !== "one-year-early"), standing);
+    assert.ok(result.plans.every(plan => plan.planningContext.planningPace === "standard"), standing);
+  }
+});
+
+test("One Year Early keeps normal plans intact and always reports its separate result", () => {
+  const horizons = new Map([
+    ["freshman", ["Spring/May 2030", "Spring/May 2029"]],
+    ["sophomore", ["Spring/May 2029", "Spring/May 2028"]],
+    ["junior", ["Spring/May 2028", "Spring/May 2027"]]
+  ]);
+  for (const [standing, [normalHorizon, earlyHorizon]] of horizons) {
+    const result = bundle({ academicStanding: standing, planningPace: "one_year_early", planCreationDate: "2026-07-30", courses: [] });
+    const earlyOutcome = result.candidateOutcomes.find(outcome => outcome.id === "one-year-early");
+    assert.ok(earlyOutcome, standing);
+    assert.equal(result.context.expectedGraduationTerm, normalHorizon, standing);
+    assert.equal(result.earlyGraduationContext.expectedGraduationTerm, earlyHorizon, standing);
+    assert.ok(result.plans.filter(plan => plan.id !== "one-year-early").every(plan => (
+      plan.planningContext.expectedGraduationTerm === normalHorizon
+    )), standing);
+    const earlyPlan = result.plans.find(plan => plan.id === "one-year-early");
+    if (earlyPlan) assert.equal(earlyPlan.planningContext.expectedGraduationTerm, earlyHorizon, standing);
+    assert.ok(["VERIFIED_FEASIBLE", "CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY", "SEARCH_INCOMPLETE", "NOT_FEASIBLE"].includes(earlyOutcome.status));
+  }
+});
+
+test("Explore First keeps one introduction in Year 1 and one intermediate in Year 2 when that sequence is available", () => {
+  const freshman = bundle({ academicStanding: "freshman", planCreationDate: "2026-07-30", courses: [] })
+    .plans.find(plan => plan.id === "explore-first");
+  assert.ok(freshman);
+  const freshmanCourses = plannedCourses(freshman);
+  const yearOneIntroductions = freshmanCourses.filter(({ term, course }) => (
+    term.absoluteStandingIndex === 0 && ["ECO 113", "ECO 114"].includes(course.course)
+  ));
+  assert.equal(yearOneIntroductions.length, 1);
+  assert.ok(freshmanCourses.some(({ term, course }) => (
+    term.absoluteStandingIndex === 0 && ["cognate", "statistics"].includes(course.requirementId)
+  )));
+  const yearTwoIntermediates = freshmanCourses.filter(({ term, course }) => (
+    term.absoluteStandingIndex === 1
+    && ["Fall", "Winter"].includes(term.termKey)
+    && ["ECO 213", "ECO 214"].includes(course.course)
+  ));
+  assert.equal(yearTwoIntermediates.length, 1);
+
+  const sophomore = bundle({ academicStanding: "sophomore", planCreationDate: "2026-07-30", courses: [] })
+    .plans.find(plan => plan.id === "explore-first");
+  assert.ok(sophomore);
+  const sophomoreYearTwoIntermediates = plannedCourses(sophomore).filter(({ term, course }) => (
+    term.absoluteStandingIndex === 1
+    && ["Fall", "Winter"].includes(term.termKey)
+    && ["ECO 213", "ECO 214"].includes(course.course)
+  ));
+  assert.equal(sophomoreYearTwoIntermediates.length, 1);
+
+  const withHistory = bundle({
+    academicStanding: "sophomore",
+    planCreationDate: "2026-07-30",
+    courses: [{ code: "ECO 113", status: "completed" }, { code: "ECO 213", status: "completed" }]
+  }).plans.find(plan => plan.id === "explore-first");
+  assert.ok(withHistory);
+  assert.equal(plannedCourses(withHistory).some(({ course }) => course.course === "ECO 113"), false);
+});
+
+test("generic elective identity does not create a strategy difference, but risk changes do", () => {
+  const base = {
+    planningContext: { expectedGraduationTerm: "Spring/May 2028", planningPace: "standard" },
+    feasibilityStatus: "VERIFIED_FEASIBLE",
+    feasibility: { verification: { offerings: "verified" }, requiredApprovals: [], enrollmentConditions: [] },
+    terms: [{
+      slotId: "fall-2026",
+      termKey: "Fall",
+      yearIndex: 0,
+      courses: [{
+        course: "ECO 222",
+        requirementId: "eco-elective-1",
+        section: "A",
+        source: "verified-offering",
+        availability: { status: "open", seatsOpen: 4, capacity: 20 },
+        meeting: { days: ["Mon"], startMinutes: 600, endMinutes: 660 }
+      }]
+    }]
+  };
+  const interchangeable = structuredClone(base);
+  interchangeable.terms[0].courses[0].course = "ECO 260";
+  interchangeable.terms[0].courses[0].section = "B";
+  assert.equal(semanticPlanSignature(base), semanticPlanSignature(interchangeable));
+  assert.equal(materialPlanDistance(base, interchangeable).materiallyDifferent, false);
+
+  const riskChanged = structuredClone(interchangeable);
+  riskChanged.terms[0].courses[0].availability.status = "full";
+  assert.notEqual(semanticPlanSignature(base), semanticPlanSignature(riskChanged));
+  assert.equal(materialPlanDistance(base, riskChanged).availability, 1);
+});
+
+test("report JSON and HTML preserve selected-section OPEN, FULL, unknown, and missing-date evidence", () => {
+  const economicsPlan = {
+    id: "balanced",
+    label: "Balanced",
+    planningContext: { planningPace: "standard", expectedGraduationTerm: "Spring/May 2027", remainingYears: 1 },
+    feasibilityStatus: "CONDITIONALLY_FEASIBLE",
+    terms: [{
+      term: "Fall 2026",
+      displayTerm: "Fall",
+      termKey: "Fall",
+      academicYear: "2026/2027",
+      courses: [
+        { course: "ECO 113", section: "A", title: "Microeconomics", source: "verified-offering", availability: { status: "open", seatsOpen: 4, capacity: 20 } },
+        { course: "ECO 114", section: "B", title: "Macroeconomics", source: "verified-offering", availability: { status: "full", seatsOpen: 0, capacity: 20 } },
+        { course: "ECO 161", section: "C", title: "Foundations", source: "verified-offering", availability: { status: "unknown", seatsOpen: null, capacity: null } }
+      ]
+    }],
+    validation: { warnings: [] },
+    advisorChecks: [],
+    studentNotices: [],
+    advisorNotifications: [],
+    prerequisiteNotices: []
+  };
+  const report = buildEconomicsReport({
+    student: { displayName: "Availability Fixture", academicStanding: "senior" },
+    mapping: { requirements: [] },
+    schedule: {
+      academicYear: "2026-2027",
+      availabilityAsOf: null,
+      terms: {
+        Fall: [
+          { course: "ECO 113", section: "A", availability: { status: "open", seatsOpen: 4, capacity: 20 } },
+          { course: "ECO 114", section: "B", availability: { status: "full", seatsOpen: 0, capacity: 20 } }
+        ]
+      }
+    },
+    economicsPlan
+  });
+  assert.equal(report.availabilityVerification.dateAvailable, false);
+  assert.equal(report.terms[0].courses[0].availabilityDisplayEligible, true);
+  assert.equal(report.terms[0].courses[1].availabilityDisplayEligible, true);
+  assert.equal(report.terms[0].courses[2].availabilityDisplayEligible, false);
+  const html = renderEconomicsHtml(report, template);
+  assert.match(html, /✓ OPEN/);
+  assert.match(html, /FULL/);
+  assert.match(html, /Status unavailable/);
+  assert.match(html, /verification date is unavailable/i);
+});

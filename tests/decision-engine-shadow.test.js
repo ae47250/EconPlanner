@@ -65,8 +65,8 @@ test("observability reuses the authoritative plan decision without dropping plan
 test("FULL is a named review state rather than an unexpected disagreement", async () => {
   const record = await runDecisionEngineShadow({
     student,
-    plan: plan({ course: "ECO 113", section: "A", requirementId: "eco-113", source: "verified-offering" }),
-    productionValidation: { valid: false, errors: ["ECO 113-A is closed in Fall 2026."] },
+    plan: plan({ course: "ECO 114", section: "C", requirementId: "eco-114", source: "verified-offering" }),
+    productionValidation: { valid: false, errors: ["ECO 114-C is full in Fall 2026."] },
     bundle,
     source: "test"
   });

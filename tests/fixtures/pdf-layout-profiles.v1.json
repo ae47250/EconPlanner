@@ -9,7 +9,7 @@
       "id": "long-four-year-waitlist-layout",
       "description": "Fictional four-year layout profile with twelve planned courses, one future-projection notice, and one waitlist presentation condition.",
       "executionMode": "rendered-html",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional Zoë & José — LongValueABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
         "academicStanding": "freshman",
@@ -56,7 +56,7 @@
       "id": "approval-heavy-final-year",
       "description": "Fictional final-year plan with a documented Economics Department concurrency approval and many warnings.",
       "executionMode": "report-route",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional Approval Layout Student",
         "academicStanding": "senior",
@@ -81,7 +81,7 @@
       "id": "accelerated-one-year-early-plan",
       "description": "Fictional accelerated plan that exercises the actual one-year-early planning and senior-standing notice path.",
       "executionMode": "report-route",
-      "selectedPlanId": "plan-c2",
+      "selectedPlanId": "one-year-early",
       "student": {
         "displayName": "Fictional Accelerated Student",
         "academicStanding": "junior",
@@ -117,7 +117,7 @@
       "id": "transfer-one-year-plan",
       "description": "Fictional transfer student with a one-year horizon and completed transfer-supported coursework.",
       "executionMode": "report-route",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional Transfer Student",
         "isTransferStudent": true,
@@ -165,7 +165,7 @@
       "description": "Fictional profile in which ECO 257 is the statistics requirement and never an Economics elective.",
       "executionMode": "report-route",
       "preparedDate": "2027-07-30",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional ECO 257 Statistics Student",
         "academicStanding": "senior",

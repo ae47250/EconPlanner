@@ -4,7 +4,6 @@ import { readFile } from "node:fs/promises";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import {
   buildEconomicsTermPlans,
-  PLAN_VARIANTS,
   semanticPlanSignature,
   validateGeneratedPlan
 } from "../lib/planning/economics.js";
@@ -129,13 +128,14 @@ test("Explore First gives sophomores the introductory, intermediate, and statist
   };
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const bundle = buildEconomicsTermPlans({ student, mapping, schedule: supportingSchedule, prerequisites });
-  const plan = bundle.plans.find(item => item.id === "plan-3");
+  const plan = bundle.plans.find(item => item.id === "explore-first");
   const firstYear = plan.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses);
 
   assert.ok(firstYear.some(course => course.course === "ECO 114"));
   assert.ok(firstYear.some(course => course.course === "ECO 213"));
   assert.ok(firstYear.some(course => ["ECO 257", "MAT 217", "PSY 217", "Statistics requirement"].includes(course.course)));
-  assert.ok(!firstYear.some(course => String(course.requirementId).startsWith("eco-elective")));
+  assert.equal(firstYear.filter(course => ["ECO 113", "ECO 114"].includes(course.course)).length, 1);
+  assert.equal(firstYear.filter(course => ["ECO 213", "ECO 214"].includes(course.course)).length, 1);
 
   const mirrorStudent = {
     ...student,
@@ -143,19 +143,21 @@ test("Explore First gives sophomores the introductory, intermediate, and statist
   };
   const mirrorMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, mirrorStudent);
   const mirror = buildEconomicsTermPlans({ student: mirrorStudent, mapping: mirrorMapping, schedule: supportingSchedule, prerequisites })
-    .plans.find(item => item.id === "plan-3");
+    .plans.find(item => item.id === "explore-first");
   const mirrorFirstYear = mirror.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses);
   assert.ok(mirrorFirstYear.some(course => course.course === "ECO 113"));
   assert.ok(mirrorFirstYear.some(course => course.course === "ECO 214"));
   assert.ok(mirrorFirstYear.some(course => ["ECO 257", "MAT 217", "PSY 217", "Statistics requirement"].includes(course.course)));
+  assert.equal(mirrorFirstYear.filter(course => ["ECO 113", "ECO 114"].includes(course.course)).length, 1);
+  assert.equal(mirrorFirstYear.filter(course => ["ECO 213", "ECO 214"].includes(course.course)).length, 1);
 });
 
-test("Plan C is not considered for junior or senior students", () => {
+test("Explore First is not considered for junior or senior students", () => {
   for (const academicStanding of ["junior", "senior"]) {
     const student = { academicStanding, planCreationDate: "2026-07-30", courses: [] };
     const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
     const bundle = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
-    assert.ok(!bundle.candidateOutcomes.some(item => item.id === PLAN_VARIANTS[2].id));
+    assert.ok(!bundle.candidateOutcomes.some(item => item.id === "explore-first"));
   }
 });
 

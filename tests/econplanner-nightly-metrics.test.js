@@ -277,11 +277,11 @@ test("the CP4 frozen-cohort authority gate rejects blanket context reviews and m
     profiles: [{
       profileId: "fictional-econ-20260805-c014e0de",
       decisionShadow: records.slice(0, 438),
-      strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Plan A", convergedLabel: "Plan C" }]
+      strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Balanced", convergedLabel: "Explore First" }]
     }, {
       profileId: "fictional-econ-20270117-a6a8df79",
       decisionShadow: records.slice(438),
-      strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Plan A", convergedLabel: "Plan C" }]
+      strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Balanced", convergedLabel: "Explore First" }]
     }]
   };
   assert.deepEqual(assertFrozenCp4AuthoritySummary(summary), {
@@ -298,7 +298,7 @@ test("the CP4 frozen-cohort authority gate rejects blanket context reviews and m
   intentionalAdditionalConvergence.profiles.push({
     profileId: "fictional-econ-approved-policy-convergence",
     decisionShadow: [],
-    strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Plan A", convergedLabel: "Plan C" }]
+    strategyConvergences: [{ code: "PLANS_CONVERGED", keptLabel: "Balanced", convergedLabel: "Explore First" }]
   });
   assert.deepEqual(assertFrozenCp4AuthoritySummary(intentionalAdditionalConvergence).convergenceProfiles, [
     "fictional-econ-20260805-c014e0de",

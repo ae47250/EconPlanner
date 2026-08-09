@@ -53,9 +53,9 @@ test("normal and conditional College load remain separate authoritative states",
   assert.equal(evaluateTermLoad({ ...base, courses: courses(5).concat({ course: "MAT 113", units: 0.5 }) }, {}, bundle, { traceId: "too-high" }).reasonCode, "TERM_CAPACITY_EXCEEDED");
 });
 
-test("the exact 2026-2027 May schedule retains ECO 222-S and ECO 260-S", () => {
+test("the exact 2026-2027 May schedule retains ECO, statistics, and supporting sections", () => {
   const may = runtimeEconomicsSchedule().terms.May;
-  assert.deepEqual(may.map(course => `${course.course}-${course.section}`).sort(), ["ECO 222-S", "ECO 260-S"]);
+  assert.deepEqual(may.map(course => `${course.course}-${course.section}`).sort(), ["ECO 222-S", "ECO 260-S", "MAT 217-S"]);
 });
 
 function prerequisitePlan(prerequisiteTerm, dependentTerm) {

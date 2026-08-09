@@ -236,10 +236,10 @@ function auditFindingClasses(audit) {
 
 function featureGateApplies(profile, result) {
   if (profile.student.isTransferStudent) {
-    return !result.candidateOutcomes.some(outcome => outcome.id === "plan-c2");
+    return !result.candidateOutcomes.some(outcome => outcome.id === "one-year-early");
   }
   if (["junior", "senior"].includes(profile.student.academicStanding)) {
-    return !result.candidateOutcomes.some(outcome => outcome.id === "plan-3");
+    return !result.candidateOutcomes.some(outcome => outcome.id === "explore-first");
   }
   return false;
 }

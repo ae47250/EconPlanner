@@ -193,26 +193,24 @@ test("the 51-profile audit matrix returns only complete, distinct, bounded-searc
   }
 
   assert.equal(outcomes.length, 51);
-  assert.ok(outcomes.every(item => item.result.candidateOutcomes.every(outcome => outcome.id !== "plan-c2")));
+  assert.ok(outcomes.every(item => item.result.candidateOutcomes.every(outcome => outcome.id !== "one-year-early")));
 
   const juniorP3 = generate("junior", fixture.profiles.find(profile => profile.id === "P3"), { early: true });
-  const juniorP3Early = juniorP3.result.candidateOutcomes.find(item => item.id === "plan-c2");
-  assert.equal(juniorP3Early.status, "NOT_FEASIBLE");
-  assert.equal(juniorP3Early.displayed, false);
-  assert.equal(juniorP3Early.suppressionReason?.code, "NOT_FEASIBLE");
-  assert.match(juniorP3Early.suppressionReason?.message || "", /4\/4\/1 capacity/);
+  const juniorP3Early = juniorP3.result.candidateOutcomes.find(item => item.id === "one-year-early");
+  assert.equal(juniorP3Early.status, "CONDITIONALLY_FEASIBLE");
+  assert.equal(juniorP3Early.displayed, true);
+  assert.equal(juniorP3Early.suppressionReason, null);
 
   for (const [standing, profileId] of [["freshman", "W5"], ["sophomore", "W5"]]) {
     const early = generate(standing, fixture.profiles.find(profile => profile.id === profileId), { early: true });
-    assert.ok(early.result.candidateOutcomes.every(outcome => outcome.id === "plan-c2"));
-    assert.equal(early.result.context.planningPace, "one_year_early");
+    assert.ok(early.result.candidateOutcomes.some(outcome => outcome.id === "one-year-early"));
+    assert.ok(early.result.candidateOutcomes.some(outcome => outcome.id === "balanced"));
+    assert.equal(early.result.context.planningPace, "standard");
   }
 
   const freshmanP8 = outcomes.find(item => item.id === "FP8");
-  const freshmanP8PlanB = freshmanP8.result.candidateOutcomes.find(item => item.id === "plan-2");
-  assert.equal(freshmanP8PlanB.displayed, true);
-  assert.ok(freshmanP8PlanB.candidatePool.retainedDistinctSchedules > 1);
-  assert.ok([null, "NEXT_DISTINCT_RESERVE"].includes(freshmanP8PlanB.substitutionReason));
-  assert.equal(freshmanP8PlanB.selectedCandidateRank,
-    freshmanP8PlanB.substitutionReason === "NEXT_DISTINCT_RESERVE" ? 2 : 1);
+  const freshmanP8Explore = freshmanP8.result.candidateOutcomes.find(item => item.id === "explore-first");
+  assert.equal(freshmanP8Explore.displayed, true);
+  assert.ok(freshmanP8Explore.candidatePool.retainedDistinctSchedules > 0);
+  assert.ok([1, 2].includes(freshmanP8Explore.selectedCandidateRank));
 });

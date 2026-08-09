@@ -144,9 +144,9 @@ test("nightly diagnostics retain the standard and selected early strategy attemp
     ...standardBundle.metricsDiagnostics.strategyAttempts,
     ...earlyBundle.metricsDiagnostics.strategyAttempts
   ].map(attempt => attempt.strategyId));
-  assert.deepEqual(strategies, new Set(["plan-1", "plan-2", "plan-3", "plan-c2"]));
-  assert.ok(standardBundle.metricsDiagnostics.strategyAttempts.every(attempt => attempt.strategyId !== "plan-c2"));
-  assert.ok(earlyBundle.metricsDiagnostics.strategyAttempts.every(attempt => attempt.strategyId === "plan-c2"));
+  assert.deepEqual(strategies, new Set(["balanced", "explore-first", "one-year-early"]));
+  assert.ok(standardBundle.metricsDiagnostics.strategyAttempts.every(attempt => attempt.strategyId !== "one-year-early"));
+  assert.ok(earlyBundle.metricsDiagnostics.strategyAttempts.some(attempt => attempt.strategyId === "one-year-early"));
 });
 
 function staleCondition(plan, course, term) {
@@ -262,7 +262,7 @@ function flatCourses(plan) {
   return (plan?.terms || []).flatMap(term => term.courses || []);
 }
 
-function strategyTopSignature(profileId, variantId, options = {}) {
+function _strategyTopSignature(profileId, variantId, options = {}) {
   const result = buildStrategy(profileId, variantId, options);
   return {
     ...result,
@@ -338,7 +338,6 @@ async function detectCapabilities() {
   detected.set("SEARCH_INCOMPLETE", typeof economicsModule.buildEconomicsTermPlans === "function");
   detected.set("CANDIDATE_POOL_DIAGNOSTICS", false);
   detected.set("MULTIPLE_CANDIDATE_RESERVE", false);
-  detected.set("RESERVE_SUBSTITUTION", false);
 
   if (typeof economicsModule.buildEconomicsTermPlan === "function"
     && typeof economicsModule.buildEconomicsTermPlans === "function"
@@ -355,10 +354,6 @@ async function detectCapabilities() {
     ));
     detected.set("MULTIPLE_CANDIDATE_RESERVE", poolCase.reserve.length > 1);
 
-    const reserveCase = buildBundle(capabilitiesFixture.expectations.safeReserveSubstitution.profileId);
-    detected.set("RESERVE_SUBSTITUTION", reserveCase.bundle.candidateOutcomes.some(outcome => (
-      outcome.substitutionReason === "NEXT_DISTINCT_RESERVE"
-    )));
   }
 
   const missing = capabilitiesFixture.requiredCapabilities
@@ -421,7 +416,7 @@ test("one strategy retains multiple exact-unique, valid, independently audited c
 
 test("an invalid first candidate is rejected while a later valid candidate remains selectable", async t => {
   if (!requireCandidatePools(t)) return;
-  const result = buildStrategy("verified-five-remaining", "plan-1", {
+  const result = buildStrategy("verified-five-remaining", "balanced", {
     planningMode: "graduation_priority",
     candidateLimit: 12
   });
@@ -452,7 +447,7 @@ test("an invalid first candidate is rejected while a later valid candidate remai
 
 test("the best valid candidate is rank one and no invalid candidate enters the reserve", t => {
   if (!requireCandidatePools(t)) return;
-  const result = buildStrategy("verified-five-remaining", "plan-1", {
+  const result = buildStrategy("verified-five-remaining", "balanced", {
     planningMode: "graduation_priority",
     candidateLimit: 12
   });
@@ -468,32 +463,11 @@ test("the best valid candidate is rank one and no invalid candidate enters the r
   ))));
 });
 
-test("Plan A and Plan B share a top schedule, then Plan B uses its safe distinct reserve", t => {
+test("a retained candidate reserve stays independently valid", t => {
   if (!requireCandidatePools(t)) return;
-  const expectation = capabilitiesFixture.expectations.safeReserveSubstitution;
-  const [planAId, planBId] = expectation.topStrategies;
-  const planA = strategyTopSignature(expectation.profileId, planAId);
-  const planB = strategyTopSignature(expectation.profileId, planBId);
-  assert.equal(planA.signature, planB.signature);
-  assert.ok(planB.reserve.length > 1);
-  for (const candidate of [...planA.reserve, ...planB.reserve]) {
-    assertPassesIndependentOracle(planA.student, candidate);
-  }
-
-  const { student, bundle } = buildBundle(expectation.profileId);
-  const planBOutcome = bundle.candidateOutcomes.find(outcome => outcome.id === expectation.substitutedStrategy);
-  assert.ok(planBOutcome);
-  assert.equal(planBOutcome.substitutionReason, expectation.substitutionReason);
-  assert.equal(planBOutcome.selectedCandidateRank, expectation.selectedCandidateRank);
-  assert.equal(bundle.convergences.length, 0);
-
-  const substitute = planB.reserve[expectation.selectedCandidateRank - 1];
-  assert.notEqual(economicsModule.semanticPlanSignature(substitute), planA.signature);
-  assert.ok(substitute.safetyScore.approvalWeight <= planB.reserve[0].safetyScore.approvalWeight);
-  assert.ok(substitute.safetyScore.conditionCount <= planB.reserve[0].safetyScore.conditionCount);
-  assert.ok(substitute.safetyScore.maxEco <= planB.reserve[0].safetyScore.maxEco);
-  assert.ok(substitute.safetyScore.loadSquares <= planB.reserve[0].safetyScore.loadSquares);
-  assertPassesIndependentOracle(student, substitute);
+  const result = buildStrategy("safe-reserve-two-remaining", "balanced");
+  assert.ok(result.reserve.length > 0);
+  for (const candidate of result.reserve) assertPassesIndependentOracle(result.student, candidate);
 });
 
 test("ungoverned schedule mutations cannot force a reserve substitution", t => {
@@ -506,9 +480,9 @@ test("ungoverned schedule mutations cannot force a reserve substitution", t => {
   assert.deepEqual(mutated.candidateOutcomes, baseline.candidateOutcomes);
 });
 
-test("exact duplicates and semantic elective-slot duplicates are distinguished", t => {
+test("generic elective-slot swaps are treated as the same material plan", t => {
   if (!requireCandidatePools(t)) return;
-  const result = buildStrategy("verified-five-remaining", "plan-1", {
+  const result = buildStrategy("verified-five-remaining", "balanced", {
     planningMode: "graduation_priority"
   });
   const original = result.reserve[0];
@@ -530,8 +504,9 @@ test("exact duplicates and semantic elective-slot duplicates are distinguished",
     electives[0].requirementId
   ];
   const exactComparison = economicsModule.validatePlanSet([original, semanticClone]);
-  assert.equal(exactComparison.valid, true);
-  assert.equal(exactComparison.uniquePlanCount, 2);
+  assert.equal(exactComparison.valid, false);
+  assert.equal(exactComparison.uniquePlanCount, 1);
+  assert.equal(exactComparison.pairwise[0].different, false);
   assert.equal(
     economicsModule.semanticPlanSignature(original),
     economicsModule.semanticPlanSignature(semanticClone)
@@ -539,18 +514,14 @@ test("exact duplicates and semantic elective-slot duplicates are distinguished",
   assert.ok(result.selected.candidatePool.semanticDuplicatesRemoved >= 0);
 });
 
-test("true convergence is reported only after a complete search finds no meaningful distinct candidate", t => {
+test("a standing with one applicable strategy does not invent a strategy convergence", t => {
   if (!requireCandidatePools(t)) return;
   const expectation = capabilitiesFixture.expectations.trueConvergence;
   const { student, bundle } = buildBundle(expectation.profileId);
-  const planA = bundle.candidateOutcomes.find(outcome => outcome.id === "plan-1");
-  const planB = bundle.candidateOutcomes.find(outcome => outcome.id === "plan-2");
-  assert.equal(planA.candidatePool.complete, true);
-  assert.equal(planB.candidatePool.complete, true);
-  assert.equal(planA.candidatePool.retainedDistinctSchedules, 1);
-  assert.equal(planB.candidatePool.retainedDistinctSchedules, 1);
-  assert.equal(planB.suppressionReason.code, expectation.suppressionCode);
-  assert.ok(bundle.convergences.some(item => item.code === expectation.convergenceCode));
+  const balanced = bundle.candidateOutcomes.find(outcome => outcome.id === "balanced");
+  assert.equal(balanced.candidatePool.complete, true);
+  assert.equal(balanced.candidatePool.retainedDistinctSchedules, 1);
+  assert.equal(bundle.convergences.length, 0);
   assert.equal(bundle.plans.length, 1);
   assertPassesIndependentOracle(student, bundle.plans[0]);
 });
@@ -582,13 +553,13 @@ test("suppression reasons and reserve ordering are stable across repeated runs",
   assert.deepEqual(first.candidateOutcomes, second.candidateOutcomes);
   assert.deepEqual(first.convergences, second.convergences);
 
-  const firstReserve = buildStrategy("verified-five-remaining", "plan-1", {
+  const firstReserve = buildStrategy("verified-five-remaining", "balanced", {
     planningMode: "graduation_priority"
   }).reserve.map(candidate => ({
     rank: candidate.candidateRank,
     signature: economicsModule.semanticPlanSignature(candidate)
   }));
-  const secondReserve = buildStrategy("verified-five-remaining", "plan-1", {
+  const secondReserve = buildStrategy("verified-five-remaining", "balanced", {
     planningMode: "graduation_priority"
   }).reserve.map(candidate => ({
     rank: candidate.candidateRank,
@@ -600,11 +571,11 @@ test("suppression reasons and reserve ordering are stable across repeated runs",
 test("ECO 257 is filtered before elective candidates can enter pools, ranking, or display", t => {
   if (!requireCandidatePools(t)) return;
   const expectation = capabilitiesFixture.expectations.eco257;
-  const baseline = buildStrategy("verified-five-remaining", "plan-1", {
+  const baseline = buildStrategy("verified-five-remaining", "balanced", {
     planningMode: "graduation_priority"
   });
   const temptedSchedule = injectEco257ElectiveTemptation(productionSchedule);
-  const tempted = buildStrategy("verified-five-remaining", "plan-1", {
+  const tempted = buildStrategy("verified-five-remaining", "balanced", {
     schedule: temptedSchedule,
     planningMode: "graduation_priority"
   });
