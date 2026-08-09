@@ -18,15 +18,19 @@ function planWithPlacement(term, course) {
   };
 }
 
-test("2026/2027 schedule preserves verified Fall, Winter, and May offerings only", () => {
+test("2026/2027 schedule preserves the August 8, 2026 verified Fall, Winter, and May offerings", () => {
   assert.ok(schedule.terms.Fall.some(course => course.course === "ECO 234"));
+  assert.ok(schedule.terms.Fall.some(course => course.course === "MAT 121" && course.section === "B" && course.availability.rawStatus === "Open"));
+  assert.ok(schedule.terms.Fall.some(course => course.course === "BUSN 323" && course.section === "A" && course.availability.rawStatus === "Full"));
   assert.ok(schedule.terms.Winter.some(course => course.course === "ECO 214"));
+  assert.ok(schedule.terms.Winter.some(course => course.course === "MAT 217" && course.section === "M" && course.availability.rawStatus === "Open"));
   assert.ok(schedule.terms.May.some(course => course.course === "ECO 222" && course.section === "S"));
   assert.ok(schedule.terms.May.some(course => course.course === "ECO 260" && course.section === "S"));
+  assert.ok(schedule.terms.May.some(course => course.course === "MAT 217" && course.section === "S" && course.availability.rawStatus === "Open"));
   assert.equal(schedule.terms.Summer.some(course => course.verificationStatus === "verified"), false);
   assert.equal(schedule.source.sectionCodeSMeans, "May");
-  assert.equal(schedule.source.humanVerifiedOn, null);
-  assert.equal(schedule.availabilityAsOf, null);
+  assert.equal(schedule.source.humanVerifiedOn, "2026-08-08");
+  assert.equal(schedule.availabilityAsOf, "2026-08-08");
 });
 
 test("ECO 213 and ECO 214 are separated and neither is a May offering", () => {

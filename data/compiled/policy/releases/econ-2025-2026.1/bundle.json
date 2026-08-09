@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:233ee6d7405d16af0303e42059bbda1a3860edcd9a95335b21c829bbfea72387",
+  "contentHash": "sha256:50c8d9eb3f9e81c3864edc47558f0d4ac25e59bfdabb8062d454b38a6d5baef9",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -5283,9 +5283,34 @@
         "displayLabel": "Fall 2026",
         "sections": [
           {
-            "course": "ECO 113",
+            "course": "BUSN 323",
             "crossListedAs": [],
             "enrollmentState": "FULL",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2026-12-11",
+              "endTime": "10:30",
+              "location": "Hanover College Science Center - 136",
+              "startDate": "2026-08-24",
+              "startTime": "09:20"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2026-FALL-BUSN-323-A",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-BUSINESS-FALL#BUSN-323-A"
+            ],
+            "title": "Investments",
+            "units": 1
+          },
+          {
+            "course": "ECO 113",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
             "meeting": {
               "days": [
                 "TUE",
@@ -5309,7 +5334,7 @@
           {
             "course": "ECO 114",
             "crossListedAs": [],
-            "enrollmentState": "FULL",
+            "enrollmentState": "OPEN",
             "meeting": {
               "days": [
                 "MON",
@@ -5359,7 +5384,7 @@
           {
             "course": "ECO 114",
             "crossListedAs": [],
-            "enrollmentState": "OPEN",
+            "enrollmentState": "FULL",
             "meeting": {
               "days": [
                 "TUE",
@@ -5455,6 +5480,130 @@
             ],
             "title": "International Trade & Finance",
             "units": 1
+          },
+          {
+            "course": "MAT 113",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2026-12-11",
+              "endTime": "13:10",
+              "location": "Hanover College Science Center - 115",
+              "startDate": "2026-08-24",
+              "startTime": "12:00"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2026-FALL-MAT-113-A",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-FALL#MAT-113-A"
+            ],
+            "title": "Essential Precalculus",
+            "units": 1
+          },
+          {
+            "course": "MAT 121",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2026-12-11",
+              "endTime": "13:10",
+              "location": "Hanover College Science Center - 112",
+              "startDate": "2026-08-24",
+              "startTime": "12:00"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2026-FALL-MAT-121-A",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-FALL#MAT-121-A"
+            ],
+            "title": "Calculus I",
+            "units": 1
+          },
+          {
+            "course": "MAT 121",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2026-12-11",
+              "endTime": "14:30",
+              "location": "Hanover College Science Center - 112",
+              "startDate": "2026-08-24",
+              "startTime": "13:20"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2026-FALL-MAT-121-B",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-FALL#MAT-121-B"
+            ],
+            "title": "Calculus I",
+            "units": 1
+          },
+          {
+            "course": "MAT 217",
+            "crossListedAs": [],
+            "enrollmentState": "FULL",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2026-12-11",
+              "endTime": "15:50",
+              "location": "Hanover College Science Center - 112",
+              "startDate": "2026-08-24",
+              "startTime": "14:40"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2026-FALL-MAT-217-A",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-FALL#MAT-217-A"
+            ],
+            "title": "Applied Statistics",
+            "units": 1
+          },
+          {
+            "course": "MAT 217",
+            "crossListedAs": [],
+            "enrollmentState": "FULL",
+            "meeting": {
+              "days": [
+                "TUE",
+                "THU"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2026-12-11",
+              "endTime": "14:05",
+              "location": "Hanover College Classic Hall - 102",
+              "startDate": "2026-08-24",
+              "startTime": "12:20"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2026-FALL-MAT-217-B",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-FALL#MAT-217-B"
+            ],
+            "title": "Applied Statistics",
+            "units": 1
           }
         ]
       },
@@ -5515,6 +5664,33 @@
               "SCHEDULE-2026-2027-WINTER-MAY#ECO-260-S"
             ],
             "title": "Special Topics",
+            "units": 1
+          },
+          {
+            "course": "MAT 217",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "MON",
+                "TUE",
+                "WED",
+                "THU",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2027-05-28",
+              "endTime": "12:30",
+              "location": "",
+              "startDate": "2027-05-03",
+              "startTime": "08:00"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2027-MAY-MAT-217-S",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-S"
+            ],
+            "title": "Applied Statistics",
             "units": 1
           }
         ]
@@ -5723,6 +5899,153 @@
               "SCHEDULE-2026-2027-WINTER-MAY#ECO-461-J"
             ],
             "title": "Senior Seminar - Econometrics",
+            "units": 1
+          },
+          {
+            "course": "MAT 113",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "TUE",
+                "THU"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2027-04-23",
+              "endTime": "16:00",
+              "location": "",
+              "startDate": "2027-01-11",
+              "startTime": "14:15"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2027-WINTER-MAT-113-J",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-113-J"
+            ],
+            "title": "Essential Precalculus",
+            "units": 1
+          },
+          {
+            "course": "MAT 121",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2027-04-23",
+              "endTime": "14:30",
+              "location": "",
+              "startDate": "2027-01-11",
+              "startTime": "13:20"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2027-WINTER-MAT-121-J",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-121-J"
+            ],
+            "title": "Calculus I",
+            "units": 1
+          },
+          {
+            "course": "MAT 217",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2027-04-23",
+              "endTime": "10:30",
+              "location": "",
+              "startDate": "2027-01-11",
+              "startTime": "09:20"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2027-WINTER-MAT-217-J",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-J"
+            ],
+            "title": "Applied Statistics",
+            "units": 1
+          },
+          {
+            "course": "MAT 217",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "MON",
+                "WED",
+                "FRI"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2027-04-23",
+              "endTime": "11:50",
+              "location": "",
+              "startDate": "2027-01-11",
+              "startTime": "10:40"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2027-WINTER-MAT-217-K",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-K"
+            ],
+            "title": "Applied Statistics",
+            "units": 1
+          },
+          {
+            "course": "MAT 217",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "TUE",
+                "THU"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2027-04-23",
+              "endTime": "11:45",
+              "location": "",
+              "startDate": "2027-01-11",
+              "startTime": "10:00"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2027-WINTER-MAT-217-L",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-L"
+            ],
+            "title": "Applied Statistics",
+            "units": 1
+          },
+          {
+            "course": "MAT 217",
+            "crossListedAs": [],
+            "enrollmentState": "OPEN",
+            "meeting": {
+              "days": [
+                "TUE",
+                "THU"
+              ],
+              "delivery": "IN_PERSON",
+              "endDate": "2027-04-23",
+              "endTime": "14:05",
+              "location": "",
+              "startDate": "2027-01-11",
+              "startTime": "12:20"
+            },
+            "offeringExistence": "OFFERED",
+            "sectionId": "2027-WINTER-MAT-217-M",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-M"
+            ],
+            "title": "Applied Statistics",
             "units": 1
           }
         ]
@@ -6190,14 +6513,61 @@
       },
       {
         "authority": "Verified department schedule source",
+        "authorityBoundary": "EXACT_2026_FALL_ECONOMICS_SUPPORTING_BUSINESS_SECTION",
+        "effective": {
+          "from": "2026-08-24",
+          "through": "2026-12-11"
+        },
+        "path": "data/raw/economics/schedule-2026-2027-business-fall.png",
+        "reviewedOn": "2026-08-08",
+        "reviewer": "Project owner supplied current registrar screenshot",
+        "sha256": "2aeadbb23318e0e71b643130a4cb667734e2bdfd3f8ed6ead9de6a13431c9ef3",
+        "sourceId": "SCHEDULE-2026-2027-BUSINESS-FALL",
+        "sourceType": "SCHEDULE_SCREENSHOT",
+        "supersedes": null
+      },
+      {
+        "authority": "Verified department schedule source",
         "authorityBoundary": "EXACT_2026_FALL_ECONOMICS_SECTIONS",
         "effective": {
           "from": "2026-08-24",
           "through": "2026-12-11"
         },
-        "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
-        "sha256": "fa240dd52020b3c23fd70c4133bec1f21dcaf276bde967568758db23c5e86570",
+        "path": "data/raw/economics/schedule-2026-2027-fall.png",
+        "reviewedOn": "2026-08-08",
+        "reviewer": "Project owner supplied current registrar screenshot",
+        "sha256": "33cae907c5aa8d802fa14612441152da25e8fac516061f661a4222c090727811",
         "sourceId": "SCHEDULE-2026-2027-FALL",
+        "sourceType": "SCHEDULE_SCREENSHOT",
+        "supersedes": null
+      },
+      {
+        "authority": "Verified department schedule source",
+        "authorityBoundary": "EXACT_2026_FALL_ECONOMICS_SUPPORTING_MATHEMATICS_SECTIONS",
+        "effective": {
+          "from": "2026-08-24",
+          "through": "2026-12-11"
+        },
+        "path": "data/raw/economics/schedule-2026-2027-math-fall.png",
+        "reviewedOn": "2026-08-08",
+        "reviewer": "Project owner supplied current registrar screenshot",
+        "sha256": "3a3a26b6e38936651310360b23a23301f5c48996b40855a9bfaa5d65119dd0ca",
+        "sourceId": "SCHEDULE-2026-2027-MATH-FALL",
+        "sourceType": "SCHEDULE_SCREENSHOT",
+        "supersedes": null
+      },
+      {
+        "authority": "Verified department schedule source",
+        "authorityBoundary": "EXACT_2027_WINTER_AND_MAY_ECONOMICS_SUPPORTING_MATHEMATICS_SECTIONS",
+        "effective": {
+          "from": "2027-01-11",
+          "through": "2027-05-28"
+        },
+        "path": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+        "reviewedOn": "2026-08-08",
+        "reviewer": "Project owner supplied current registrar screenshot",
+        "sha256": "fe59160d91c46acab8cf9dfcc91fecd9e6bb23573b25717bbcbda14fb04df410",
+        "sourceId": "SCHEDULE-2026-2027-MATH-WINTER-MAY",
         "sourceType": "SCHEDULE_SCREENSHOT",
         "supersedes": null
       },
@@ -6208,8 +6578,10 @@
           "from": "2027-01-11",
           "through": "2027-05-28"
         },
-        "path": "data/raw/economics/schedule-2026-2027-fall.png",
-        "sha256": "39b78e794d9ac5bf263163b6172943875aa37487f5adfbcb599b1413798cc42b",
+        "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
+        "reviewedOn": "2026-08-08",
+        "reviewer": "Project owner supplied current registrar screenshot",
+        "sha256": "f0c77994f973998164d0651b47736985190c8b1a7d984d93c1c2dec32262777a",
         "sourceId": "SCHEDULE-2026-2027-WINTER-MAY",
         "sourceType": "SCHEDULE_SCREENSHOT",
         "supersedes": null

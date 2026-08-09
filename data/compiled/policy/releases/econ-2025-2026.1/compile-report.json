@@ -27,19 +27,19 @@
       "status": "MATCH"
     },
     {
-      "canonicalHash": "sha256:eb64f7d6d56c6b2463bd9f8b3f57abdba29adf1c314015ab5c1950655f8f8114",
+      "canonicalHash": "sha256:0ebf5cab12da750493bc84cddc256469524161c8f4ba8d1a8ea97d87f3422003",
       "output": "compatibility/schedule-2026-2027.json",
       "source": "data/normalized/economics/schedule-2026-2027.json",
       "status": "MATCH"
     }
   ],
-  "contentHash": "sha256:233ee6d7405d16af0303e42059bbda1a3860edcd9a95335b21c829bbfea72387",
+  "contentHash": "sha256:50c8d9eb3f9e81c3864edc47558f0d4ac25e59bfdabb8062d454b38a6d5baef9",
   "counts": {
     "activeRules": 54,
     "courses": 31,
     "historicalOfferingRecords": 0,
-    "scheduleSections": 17,
-    "sources": 10,
+    "scheduleSections": 30,
+    "sources": 13,
     "unresolvedReviewRecords": 5
   },
   "determinism": {

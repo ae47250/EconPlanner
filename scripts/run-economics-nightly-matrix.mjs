@@ -51,9 +51,9 @@ const PROGRAM = Object.freeze({ id: "economics", name: "Economics" });
 const METRIC_SCHEMA_VERSION = 2;
 const STRATEGY_NAMES = Object.freeze({
   equal: "BALANCED",
-  increasing: "STAGGERED",
-  "standing-specific": "EXPLORE_FIRST",
-  "early-graduation": "ONE_YEAR_EARLY"
+  balanced: "BALANCED",
+  "explore-first": "EXPLORE_FIRST",
+  "one-year-early": "ONE_YEAR_EARLY"
 });
 const APPROVAL_TYPES = Object.freeze({
   "CONCURRENT-INTERMEDIATE-ECO-461": "DEPARTMENT_APPROVAL",

@@ -10,9 +10,9 @@ import {
 } from "../lib/planning/uiState.js";
 
 function sampleReport() {
-  const plans = ["plan-1", "plan-2", "plan-3"].map((id, index) => ({
+  const plans = ["balanced", "explore-first", "one-year-early"].map((id, index) => ({
     id,
-    label: `Plan ${index + 1}`,
+    label: ["Balanced", "Explore First", "One Year Early"][index],
     terms: [{ term: "Fall", courses: [{ course: `ECO ${index + 1}` }] }]
   }));
   return {
@@ -30,14 +30,14 @@ test("generated planner session restores the exact selected plan for matching in
   const saved = createGeneratedPlannerSession({
     report,
     inputSignature: "student-input-v1",
-    selectedPlanId: "plan-2",
+    selectedPlanId: "explore-first",
     view: PLANNER_VIEWS.PLAN
   });
 
   const restored = restoreGeneratedPlannerSession(JSON.stringify(saved), "student-input-v1");
 
   assert.deepEqual(restored.report, report);
-  assert.equal(restored.selectedPlanId, "plan-2");
+  assert.equal(restored.selectedPlanId, "explore-first");
   assert.equal(restored.view, PLANNER_VIEWS.PLAN);
 });
 
@@ -45,7 +45,7 @@ test("generated planner session is rejected after an earlier answer changes", ()
   const saved = createGeneratedPlannerSession({
     report: sampleReport(),
     inputSignature: "before-change",
-    selectedPlanId: "plan-1",
+    selectedPlanId: "balanced",
     view: PLANNER_VIEWS.COMPARE
   });
 
@@ -56,7 +56,7 @@ test("generated planner sessions from before distribution validation regenerate"
   const saved = createGeneratedPlannerSession({
     report: sampleReport(),
     inputSignature: "student-input-v1",
-    selectedPlanId: "plan-1",
+    selectedPlanId: "balanced",
     view: PLANNER_VIEWS.COMPARE
   });
 
@@ -70,7 +70,7 @@ test("replacing one generated plan leaves the other plan objects untouched", () 
   const replacement = { ...originalPlans[1], terms: [] };
   const nextReport = replaceEconomicsPlan(
     report,
-    "plan-2",
+    "explore-first",
     replacement,
     { valid: false, uniquePlanCount: 3 }
   );
@@ -86,6 +86,6 @@ test("replacing one generated plan leaves the other plan objects untouched", () 
 
 test("planner view query accepts only supported generated-plan views", () => {
   assert.equal(plannerViewFromSearch("?view=compare"), PLANNER_VIEWS.COMPARE);
-  assert.equal(plannerViewFromSearch("?view=plan&plan=plan-3"), PLANNER_VIEWS.PLAN);
+  assert.equal(plannerViewFromSearch("?view=plan&plan=one-year-early"), PLANNER_VIEWS.PLAN);
   assert.equal(plannerViewFromSearch("?view=unknown"), PLANNER_VIEWS.INPUT);
 });

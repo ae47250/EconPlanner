@@ -32,7 +32,7 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
-test("early-plan reports identify the selected pace and assumed senior-standing basis", async () => {
+test("an early comparison request preserves the selected normal-horizon report", async () => {
   const student = {
     ...fixture.student,
     academicStanding: "junior",
@@ -42,16 +42,11 @@ test("early-plan reports identify the selected pace and assumed senior-standing 
   const report = await buildEconomicsReportFromStudent(student, "2026-07-28");
   const html = renderEconomicsHtml(report, template);
 
-  assert.equal(report.student.planningPace, "one_year_early");
-  assert.equal(report.student.projectedSeniorStandingAcademicYear, "2026/2027");
-  assert.equal(
-    report.student.projectedSeniorStandingBasis,
-    "accelerated_plan_assumes_senior_standing_in_final_year"
-  );
-  assert.doesNotMatch(report.inputSummary, /student reports Registrar or advisor confirmation/i);
-  assert.match(html, /data-planning-pace="one_year_early"/);
-  assert.match(html, /data-senior-standing-basis="accelerated_plan_assumes_senior_standing_in_final_year"/);
-  assert.equal((html.match(/This plan assumes you will have senior standing/g) || []).length, 1);
+  assert.equal(report.student.planningPace, "standard");
+  assert.equal(report.student.expectedGraduationTerm, "Spring/May 2028");
+  assert.equal(report.selectedPlan.id, "balanced");
+  assert.ok(report.candidateOutcomes.some(item => item.id === "one-year-early" && item.displayed));
+  assert.match(html, /data-planning-pace="standard"/);
 });
 
 test("Economics report API returns canonical JSON or populated HTML", async () => {
@@ -194,7 +189,7 @@ test("PDF rollback flag leaves planner JSON and HTML reports available", async (
   }), { environment: disabledEnvironment });
   const json = await jsonResponse.json();
   assert.equal(jsonResponse.status, 200);
-  assert.equal(json.selectedPlan.id, "plan-1");
+  assert.equal(json.selectedPlan.id, "balanced");
 
   const htmlResponse = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
     method: "POST",
@@ -203,7 +198,7 @@ test("PDF rollback flag leaves planner JSON and HTML reports available", async (
   }), { environment: disabledEnvironment });
   const html = await htmlResponse.text();
   assert.equal(htmlResponse.status, 200);
-  assert.match(html, /data-selected-plan-id="plan-1"/);
+  assert.match(html, /data-selected-plan-id="balanced"/);
   assert.match(html, /Economics Major Course Plan/);
 });
 

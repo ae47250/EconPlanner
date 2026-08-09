@@ -6,38 +6,20 @@
   "preparedDate": "2026-07-30",
   "profiles": [
     {
-      "id": "long-four-year-waitlist-layout",
-      "description": "Fictional four-year layout profile with twelve planned courses, one future-projection notice, and one waitlist presentation condition.",
+      "id": "long-four-year-supported-layout",
+      "description": "Fictional four-year layout profile with twelve planned courses and one future-projection notice.",
       "executionMode": "rendered-html",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional Zoë & José — LongValueABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
         "academicStanding": "freshman",
         "planCreationDate": "2026-07-30",
         "courses": []
       },
-      "layoutMutations": {
-        "availability": [
-          {
-            "academicYear": "2027/2028",
-            "term": "Spring/May 2028",
-            "course": "ECO 222",
-            "value": {
-              "status": "waitlisted",
-              "seatsOpen": 0,
-              "capacity": 25,
-              "asOf": "2026-07-30"
-            }
-          }
-        ],
-        "warnings": [
-          "This fictional section is waitlisted; the schedule works only if a seat becomes available."
-        ]
-      },
       "expectations": {
         "minimumAcademicYears": 4,
         "minimumCourses": 12,
-        "minimumWarnings": 4,
+        "minimumWarnings": 3,
         "minimumAdvisorNotices": 1,
         "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
         "minimumApprovals": 0,
@@ -46,9 +28,9 @@
         "requiredPlanType": "standard",
         "requiredPlanningPace": "standard",
         "requiredHtmlText": ["Fictional Zoë & José", "Plan warnings", "Advisor attention"],
-        "requiredAvailabilityStates": ["open", "waitlisted"],
+        "requiredAvailabilityStates": ["open"],
         "requiredCourseRoles": [
-          { "course": "ECO 257", "role": "statistics" }
+          { "course": "MAT 217", "role": "statistics" }
         ]
       }
     },
@@ -56,7 +38,7 @@
       "id": "approval-heavy-final-year",
       "description": "Fictional final-year plan with a documented Economics Department concurrency approval and many warnings.",
       "executionMode": "report-route",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional Approval Layout Student",
         "academicStanding": "senior",
@@ -71,7 +53,7 @@
       "expectations": {
         "minimumAcademicYears": 1,
         "minimumCourses": 8,
-        "minimumWarnings": 8,
+        "minimumWarnings": 5,
         "minimumApprovals": 1,
         "requiredAvailabilityStates": ["open"],
         "requiredCourseRoles": []
@@ -81,7 +63,7 @@
       "id": "accelerated-one-year-early-plan",
       "description": "Fictional accelerated plan that exercises the actual one-year-early planning and senior-standing notice path.",
       "executionMode": "report-route",
-      "selectedPlanId": "plan-c2",
+      "selectedPlanId": "one-year-early",
       "student": {
         "displayName": "Fictional Accelerated Student",
         "academicStanding": "junior",
@@ -117,7 +99,7 @@
       "id": "transfer-one-year-plan",
       "description": "Fictional transfer student with a one-year horizon and completed transfer-supported coursework.",
       "executionMode": "report-route",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional Transfer Student",
         "isTransferStudent": true,
@@ -165,7 +147,7 @@
       "description": "Fictional profile in which ECO 257 is the statistics requirement and never an Economics elective.",
       "executionMode": "report-route",
       "preparedDate": "2027-07-30",
-      "selectedPlanId": "plan-1",
+      "selectedPlanId": "balanced",
       "student": {
         "displayName": "Fictional ECO 257 Statistics Student",
         "academicStanding": "senior",

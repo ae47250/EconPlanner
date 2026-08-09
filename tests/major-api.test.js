@@ -109,14 +109,15 @@ test("major mapper accepts one-year-early plans without a senior-standing confir
     const data = await response.json();
     assert.equal(response.status, 200);
     const economics = data.programs.find(result => result.program?.id === "economics-base");
-    assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2029");
+    assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
     assert.ok(!Object.hasOwn(economics.planningContext, "projectedSeniorStandingConfirmation"));
-    for (const plan of economics.economicsPlans) {
-      assert.equal(plan.studentNotices.filter(notice => notice.code === "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED").length, 1);
-      const capstoneTerm = plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"));
-      assert.equal(capstoneTerm?.termKey, "Winter");
-      assert.equal(capstoneTerm?.seniorStandingBasis, "accelerated_plan_assumes_senior_standing_in_final_year");
-    }
+    assert.ok(economics.economicsPlans.some(plan => plan.id === "balanced"));
+    const accelerated = economics.economicsPlans.find(plan => plan.id === "one-year-early");
+    assert.ok(accelerated);
+    assert.equal(accelerated.studentNotices.filter(notice => notice.code === "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED").length, 1);
+    const capstoneTerm = accelerated.terms.find(term => term.courses.some(course => course.course === "ECO 461"));
+    assert.equal(capstoneTerm?.termKey, "Winter");
+    assert.equal(capstoneTerm?.seniorStandingBasis, "accelerated_plan_assumes_senior_standing_in_final_year");
   }
 
   const compressedTransferResponse = await POST(new Request("http://localhost/api/majors/map", {
@@ -159,7 +160,7 @@ test("major mapper uses transfer entry catalog and keeps the selected graduation
   assert.equal(data.catalog.basis, "transfer_hanover_entry_academic_year");
   assert.equal(economics.planningContext.isTransferStudent, true);
   assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
-  assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "plan-c2"));
+  assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "one-year-early"));
 });
 
 test("major mapper returns only the selected planning horizon", async () => {
@@ -178,9 +179,9 @@ test("major mapper returns only the selected planning horizon", async () => {
   const economics = data.programs.find(result => result.program?.id === "economics-base");
 
   assert.equal(response.status, 200);
-  assert.ok(economics.economicsPlans.length >= 1 && economics.economicsPlans.length <= 3);
-  assert.equal(economics.economicsCandidateOutcomes.length, 3);
-  assert.ok(economics.economicsPlans.every(plan => plan.id !== "plan-c2"));
+  assert.ok(economics.economicsPlans.length >= 1 && economics.economicsPlans.length <= 2);
+  assert.equal(economics.economicsCandidateOutcomes.length, 2);
+  assert.ok(economics.economicsPlans.every(plan => plan.id !== "one-year-early"));
   assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
 });
 
@@ -313,8 +314,8 @@ test("major mapper retains a standard senior plan above the Economics load prefe
   assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "standard"));
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
   assert.ok(data.catalog.advisorAttention.some(item => /more than two Economics courses/.test(item.message)));
-  assert.ok(data.catalog.advisorAttention.some(item => /Schedule confirmation required/.test(item.message)));
-  assert.equal(economics.economicsPlans[0].feasibilityStatus, "PRELIMINARY_ONLY");
+  assert.ok(data.catalog.advisorAttention.some(item => /MAT 217 requires advisor review \(ENROLLMENT_FULL\)/.test(item.message)));
+  assert.equal(economics.economicsPlans[0].feasibilityStatus, "VERIFIED_FEASIBLE");
 });
 
 test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async () => {
@@ -405,7 +406,7 @@ test("major mapper reports instructor approval for current concurrent math", asy
   assert.match(notice.message, /MAT 113/);
   assert.match(notice.message, /ECO 213 instructor/);
   assert.ok(economics.economicsPlans.length > 0);
-  assert.equal(economics.economicsCandidateOutcomes.length, 3);
+  assert.equal(economics.economicsCandidateOutcomes.length, 2);
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
 });
 
@@ -450,7 +451,7 @@ test("edited plan validation rejects an incomplete submitted candidate", async (
   assert.equal(validation.plan, undefined);
 });
 
-test("edited plan validation keeps future sequencing nonblocking without hiding full-section review", async () => {
+test("edited plan validation keeps future sequencing nonblocking with open selected sections", async () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-08-02",
@@ -488,12 +489,12 @@ test("edited plan validation keeps future sequencing nonblocking without hiding 
 
   assert.equal(validationResponse.status, 200);
   assert.equal(validation.plan.validation.valid, true);
-  assert.equal(validation.plan.validation.evidenceStatus, "REVIEW_REQUIRED");
+  assert.equal(validation.plan.validation.evidenceStatus, "VERIFIED");
   assert.ok(validation.plan.validation.policyDecision.decisions.some(decision => (
     decision.status === "ALLOW" && decision.reasonCode === "FUTURE_SCHEDULE_PLANNING_PROJECTION"
   )));
   assert.ok(validation.plan.validation.policyDecision.decisions.some(decision => (
-    decision.status === "REVIEW_REQUIRED" && decision.reasonCode === "ENROLLMENT_FULL"
+    decision.status === "ALLOW" && decision.reasonCode === "ENROLLMENT_OPEN" && decision.subject?.course === "ECO 113"
   )));
 });
 
@@ -510,7 +511,7 @@ test("edited plan validation preserves the selected plan's yearly design", async
   }));
   const generated = await generatedResponse.json();
   const economics = generated.programs.find(result => result.program?.id === "economics-base");
-  const originalPlan = economics.economicsPlans.find(plan => plan.label === "Plan A");
+  const originalPlan = economics.economicsPlans.find(plan => plan.id === "balanced");
   const editedPlan = structuredClone(originalPlan);
   const sourceTermIndex = editedPlan.terms.findLastIndex(term => (
     term.courses.some(course => course.course === "ECO elective")
@@ -543,7 +544,7 @@ test("edited plan validation preserves the selected plan's yearly design", async
   assert.equal(validationResponse.status, 200);
   assert.equal(validation.plan.validation.valid, true);
   assert.equal(validation.plan.validation.distribution.valid, false);
-  assert.match(validation.plan.validation.warnings.join(" | "), /Plan A no longer follows its Balanced yearly distribution/);
+  assert.match(validation.plan.validation.warnings.join(" | "), /Balanced no longer follows its Balanced yearly distribution/);
 });
 
 test("edited plan validation rejects canonical schedule tampering and post-graduation terms", async () => {

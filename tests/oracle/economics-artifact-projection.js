@@ -122,12 +122,13 @@ function htmlScheduleTerms(html) {
     const cells = [...block[3].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map(match => match[1]);
     for (let index = 0; index < headings.length; index += 1) {
       const courses = [];
-      const coursePattern = /<span class="course"([^>]*)>([\s\S]*?)<\/span><span class="cell-note"([^>]*)>([\s\S]*?)<\/span>/gi;
+      const coursePattern = /<span class="course"([^>]*)>([\s\S]*?)<\/span><span class="cell-note"([^>]*)>([\s\S]*?)<\/span>(?:<span class="availability-badge[^\"]*">([\s\S]*?)<\/span>)?/gi;
       for (const entry of String(cells[index] || "").matchAll(coursePattern)) {
         const label = decodeHtml(entry[2]);
         const identity = label.match(/^([A-Z]{2,5}\s+\d{3})(?:-([^\s]+))?$/);
         const note = decodeHtml(entry[4]);
-        const availability = note.match(/ - (open|full|closed|waitlisted|unknown)(?:\s|\(|$)/i);
+        const availability = decodeHtml(entry[5] || "").match(/\b(open|full)\b/i)
+          || note.match(/ - (open|full|closed|waitlisted|unknown)(?:\s|\(|$)/i);
         const approval = note.match(/ - ([^-]+?) approval for concurrent ([A-Z]{2,5}\s+\d{3})/i);
         const title = note.split(/ - (?:open|full|closed|waitlisted|unknown)(?:\s|\(|$)| - [^-]+? approval for concurrent /i)[0].trim();
         courses.push({

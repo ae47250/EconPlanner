@@ -163,15 +163,12 @@
       "measurementBasis": "CURRENT_VALIDATOR_DISTRIBUTION_RESULT",
       "displayedStrategies": {
         "BALANCED": 158,
-        "STAGGERED": 133,
         "EXPLORE_FIRST": 140,
         "ONE_YEAR_EARLY": 10
       },
       "fits": {
         "BALANCED:EXACT": 111,
         "BALANCED:ACCEPTABLE": 47,
-        "STAGGERED:EXACT": 98,
-        "STAGGERED:ACCEPTABLE": 35,
         "EXPLORE_FIRST:EXACT": 88,
         "EXPLORE_FIRST:ACCEPTABLE": 52,
         "ONE_YEAR_EARLY:EXACT": 7,

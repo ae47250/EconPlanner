@@ -71,7 +71,7 @@ test("prerequisites distinguish prior evidence, missing evidence, and approved c
 });
 
 test("offering evidence keeps FULL under review and ordinary future projections nonblocking", () => {
-  const full = evaluateOffering({ course: "ECO 113", section: "A", source: "verified-offering" }, { academicYear: "2026-2027", termKey: "Fall" }, bundle.indexes.offeringByTerm, bundle, { traceId: "fixture" });
+  const full = evaluateOffering({ course: "ECO 114", section: "C", source: "verified-offering" }, { academicYear: "2026-2027", termKey: "Fall" }, bundle.indexes.offeringByTerm, bundle, { traceId: "fixture" });
   assert.equal(full.status, "REVIEW_REQUIRED");
   assert.equal(full.offeringEvidence.enrollmentState, "FULL");
   const projected = evaluateOffering({ course: "ECO 213", source: "projected-offering" }, { academicYear: "2027-2028", termKey: "Fall" }, bundle.indexes.offeringByTerm, bundle, { traceId: "fixture" });

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  buildEarlyGraduationContext,
   buildPlanningSlots,
   PLANNING_PACES,
   resolvePlanningContext,
@@ -213,7 +214,7 @@ test("five-year transfer planning treats the fourth and fifth college years as s
   assert.equal(slots.at(-1).label, "Spring/May 2031");
 });
 
-test("regular standard, early, and extended paces resolve one authoritative horizon", () => {
+test("One Year Early preserves the ordinary horizon and derives a separate accelerated comparison", () => {
   const expectedStandardYears = new Map([
     ["freshman", 4],
     ["sophomore", 3],
@@ -232,20 +233,27 @@ test("regular standard, early, and extended paces resolve one authoritative hori
     assert.equal(context.planningValidation.valid, true);
   }
 
-  const extended = resolvePlanningContext({
+  const normal = resolvePlanningContext({
     academicStanding: "freshman",
-    planningPace: PLANNING_PACES.EXTENDED,
+    planningPace: PLANNING_PACES.EARLY,
     planCreationDate: "2026-07-26"
   });
-  assert.equal(extended.remainingYears, 5);
-  assert.equal(extended.expectedGraduationTerm, "Spring/May 2031");
-  const extendedSlots = buildPlanningSlots(extended);
-  assert.equal(extendedSlots.find(slot => slot.label === "Winter 2030").absoluteStandingIndex, 3);
-  assert.equal(extendedSlots.find(slot => slot.label === "Winter 2031").absoluteStandingIndex, 3);
+  assert.equal(normal.planningPace, PLANNING_PACES.STANDARD);
+  assert.equal(normal.requestedPlanningPace, PLANNING_PACES.EARLY);
+  assert.equal(normal.earlyComparisonRequested, true);
+  assert.equal(normal.remainingYears, 4);
+  assert.equal(normal.expectedGraduationTerm, "Spring/May 2030");
+  assert.equal(normal.acceleratedPlanAssumesSeniorStanding, false);
+
+  const early = buildEarlyGraduationContext(normal);
+  assert.equal(early.planningPace, PLANNING_PACES.EARLY);
+  assert.equal(early.remainingYears, 3);
+  assert.equal(early.expectedGraduationTerm, "Spring/May 2029");
+  assert.equal(early.acceleratedPlanAssumesSeniorStanding, true);
 });
 
-test("early regular planning assumes senior standing in the final year without a confirmation input", () => {
-  const context = resolvePlanningContext({
+test("the accelerated comparison assumes senior standing in its final year without a confirmation input", () => {
+  const normal = resolvePlanningContext({
     academicStanding: "freshman",
     planningPace: PLANNING_PACES.EARLY,
     planCreationDate: "2026-07-26",
@@ -255,6 +263,7 @@ test("early regular planning assumes senior standing in the final year without a
     }
   });
 
+  const context = buildEarlyGraduationContext(normal);
   assert.equal(context.remainingYears, 3);
   assert.equal(context.planningValidation.valid, true);
   assert.equal(context.acceleratedPlanAssumesSeniorStanding, true);

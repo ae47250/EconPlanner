@@ -209,9 +209,9 @@ test("offering patterns project only unpublished years and exact schedules prese
   assert.equal(schedule.releaseStatus, "ACTIVE");
   assert.deepEqual(schedule.terms.map(term => term.canonicalTerm), ["FALL", "WINTER", "MAY", "SUMMER"]);
   assert.equal(schedule.terms.find(term => term.canonicalTerm === "MAY").displayLabel, "Spring/May 2027");
-  assert.equal(schedule.terms.flatMap(term => term.sections).length, 17);
+  assert.equal(schedule.terms.flatMap(term => term.sections).length, 30);
   assert.equal(schedule.terms.find(term => term.canonicalTerm === "SUMMER").coverage, "UNAVAILABLE");
-  assert.equal(schedule.terms.flatMap(term => term.sections).filter(section => section.enrollmentState === "FULL").length, 2);
+  assert.equal(schedule.terms.flatMap(term => term.sections).filter(section => section.enrollmentState === "FULL").length, 4);
   for (const section of schedule.terms.flatMap(term => term.sections)) {
     assert.equal(section.offeringExistence, "OFFERED");
     assert.ok(section.enrollmentState);

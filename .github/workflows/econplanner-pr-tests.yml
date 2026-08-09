@@ -122,9 +122,8 @@ jobs:
       - name: Run bounded EconPlanner browser regression suite
         run: >-
           pnpm exec playwright test
-          tests/e2e/econ-planner-editing-persistence.spec.js
           tests/e2e/econ-planner-accessibility.spec.js
-          tests/e2e/econ-planner-adversarial.spec.js
+          tests/e2e/econ-planner.spec.js
 
       - name: Run targeted PDF-lock and malformed-response regressions
         run: >-

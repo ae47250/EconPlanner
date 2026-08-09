@@ -206,7 +206,7 @@ test("independent schedule snapshot has reviewed, immutable source evidence", as
   assert.equal(oracle.review.status, "INDEPENDENT_ROW_REVIEW");
   assert.match(oracle.review.reviewedOn, /^\d{4}-\d{2}-\d{2}$/);
   assert.ok(oracle.review.reviewedBy);
-  assert.equal(oracle.sections.length, 17);
+  assert.equal(oracle.sections.length, 30);
 
   const sourcePaths = new Set(oracle.sources.map(source => source.path));
   for (const source of oracle.sources) {
@@ -223,8 +223,8 @@ test("independent schedule snapshot has reviewed, immutable source evidence", as
 
     assert.ok(sourcePaths.has(section.sourceReference), key);
     assert.ok(section.canonicalCrossListIdentity.includes(section.course), key);
-    assert.equal(section.verificationDate, null, key);
-    assert.ok(section.unknownFields.includes("verificationDate"), key);
+    assert.equal(section.verificationDate, "2026-08-08", key);
+    assert.equal(section.unknownFields?.includes("verificationDate") || false, false, key);
   }
 });
 

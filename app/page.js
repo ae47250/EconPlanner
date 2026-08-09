@@ -349,6 +349,16 @@ function formatPlanCreationDate(value) {
   }).format(new Date(year, month - 1, day));
 }
 
+function formatAvailabilityVerificationDate(value) {
+  const [year, month, day] = String(value || "").split("-").map(Number);
+  if (!year || !month || !day) return value || "Status unavailable";
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  }).format(new Date(year, month - 1, day));
+}
+
 function formatAcademicYear(value) {
   return value ? String(value).replace("-", "/") : "Academic year";
 }
@@ -418,17 +428,15 @@ function planPublishedScheduleNotices(plan, schedule) {
     const sections = scheduleTerms[scheduleTermKey(term)] || [];
     return (term.courses || []).flatMap(course => {
       if (!course.course || course.course === "ECO elective" || course.course.includes("requirement")) return [];
-      const matchingSections = sections.filter(section => section.course === course.course);
-      if (!matchingSections.length) return [];
-      const availability = [...new Set(matchingSections.map(section => {
-        const label = courseAvailabilityLabel(section);
-        return label || "not recorded";
-      }))];
+      const selectedSection = sections.find(section => (
+        section.course === course.course && String(section.section || "") === String(course.section || "")
+      ));
+      if (!selectedSection) return [];
       return [{
         code: `SELECTED_PLAN_SCHEDULE_${term.slotId || term.term}_${course.course}`.replace(/[^A-Z0-9_]/gi, "_"),
         title: "Graduation planning assumption",
         severity: "warning",
-        message: `${course.course} in ${term.term || term.displayTerm}: current seat availability is ${availability.join("; ")}. Confirm before registration.`
+        message: `${course.course}${course.section ? `-${course.section}` : ""} in ${term.term || term.displayTerm}: current seat availability is ${courseAvailabilityLabel(selectedSection)}. Confirm before registration.`
       }];
     });
   });
@@ -581,6 +589,7 @@ function PlanTimeline({
   plans = [],
   planningGaps = [],
   activePlanId,
+  schedule,
   onSelectPlan,
   onEditPlanCourse,
   editingPlanCourseKey
@@ -671,7 +680,7 @@ function PlanTimeline({
                               <div className="plan-course-summary">
                                 <strong>{course.course}</strong>
                                 <span>{course.title}</span>
-                                {courseAvailabilityLabel(course) && <span className="plan-course-availability">{courseAvailabilityLabel(course)}</span>}
+                                <CourseAvailabilityStatus course={course} term={term} schedule={schedule} />
                                 {course.approvalRequired?.length > 0 && <span className="plan-course-approval">Approval required</span>}
                               </div>
                               {onEditPlanCourse && (
@@ -838,15 +847,48 @@ function feasibilityLabel(status) {
   })[status] || "Status pending";
 }
 
-function courseAvailabilityLabel(course) {
+function hasExactAvailabilityEvidence(course) {
+  return course?.source === "verified-offering"
+    || course?.source === "summer-last-resort"
+    || course?.verificationStatus === "verified";
+}
+
+function exactPublishedScheduleSection(course, term, schedule) {
+  if (!course?.course || !course.section) return null;
+  if (academicYearKey(term?.academicYear) !== academicYearKey(schedule?.academicYear)) return null;
+  return (schedule?.terms?.[scheduleTermKey(term)] || []).find(section => (
+    section.course === course.course && String(section.section || "") === String(course.section)
+  )) || null;
+}
+
+function courseAvailabilityLabel(course, exactSection = false) {
   const availability = course?.availability;
-  if (!availability?.status) {
-    return course?.verificationStatus === "unverified" ? "Offering not yet verified" : "";
-  }
-  const seats = Number.isFinite(availability.seatsOpen)
-    ? ` · ${availability.seatsOpen} of ${availability.capacity ?? "?"} seats open`
-    : "";
-  return `${availability.status[0].toUpperCase()}${availability.status.slice(1)}${seats}`;
+  if (!exactSection || !hasExactAvailabilityEvidence(course) || !availability?.status) return "Status unavailable";
+  if (availability.status === "open") return "✓ OPEN";
+  if (availability.status === "full") return "FULL";
+  return "Status unavailable";
+}
+
+function availabilityClassName(course, exactSection = false) {
+  if (!exactSection || !hasExactAvailabilityEvidence(course)) return "is-unavailable";
+  if (course?.availability?.status === "open") return "is-open";
+  if (course?.availability?.status === "full") return "is-full";
+  return "is-unavailable";
+}
+
+function scheduleVerificationDate(schedule) {
+  return schedule?.availabilityAsOf
+    || schedule?.verifiedOn
+    || schedule?.lastVerifiedAt
+    || schedule?.source?.humanVerifiedOn
+    || schedule?.source?.screenshotRetrievedOn
+    || null;
+}
+
+function CourseAvailabilityStatus({ course, term, schedule }) {
+  if (academicYearKey(term?.academicYear) !== academicYearKey(schedule?.academicYear)) return null;
+  const selectedSection = exactPublishedScheduleSection(course, term, schedule);
+  return <span className={`plan-course-availability ${availabilityClassName(selectedSection, Boolean(selectedSection))}`}>{courseAvailabilityLabel(selectedSection, Boolean(selectedSection))}</span>;
 }
 
 function CandidateOutcomes({ outcomes = [], convergences = [] }) {
@@ -877,26 +919,37 @@ function ScheduleAvailability({ schedule, plan }) {
   const scheduleYear = academicYearKey(schedule?.academicYear);
   const plannedByTerm = new Map((plan?.terms || [])
     .filter(term => academicYearKey(term.academicYear) === scheduleYear)
-    .map(term => [scheduleTermKey(term), new Set((term.courses || []).map(course => course.course))]));
+    .map(term => [scheduleTermKey(term), term.courses || []]));
   const terms = Object.entries(schedule?.terms || {})
-    .map(([term, sections]) => [term, sections.filter(section => plannedByTerm.get(term)?.has(section.course))])
-    .filter(([, sections]) => sections.length > 0);
+    .map(([term, sections]) => [term, (plannedByTerm.get(term) || []).map(course => ({
+      course,
+      section: sections.find(item => (
+        item.course === course.course && String(item.section || "") === String(course.section || "")
+      )) || null
+    }))])
+    .filter(([, courses]) => courses.length > 0);
   if (!terms.length) return null;
+  const verificationDate = scheduleVerificationDate(schedule);
   return (
     <details className="schedule-availability">
       <summary>Current section availability for {plan?.label || "this plan"} ({formatAcademicYear(schedule.academicYear)})</summary>
-      {terms.map(([term, sections]) => (
+      {terms.map(([term, courses]) => (
         <section key={term}>
           <h3>{term}</h3>
           <ul>
-            {sections.map((section, index) => (
-              <li key={`${term}-${section.course}-${section.section || index}`}>
-                <strong>{section.course}{section.section ? `-${section.section}` : ""}</strong>: {courseAvailabilityLabel(section)}
+            {courses.map(({ course, section }, index) => (
+              <li key={`${term}-${course.course}-${course.section || index}`}>
+                <strong>{course.course}{course.section ? `-${course.section}` : ""}</strong>: <span className={availabilityClassName(section || course, Boolean(section))}>{courseAvailabilityLabel(section || course, Boolean(section))}</span>
               </li>
             ))}
           </ul>
         </section>
       ))}
+      <p className="schedule-availability-note">
+        {verificationDate
+          ? `Course schedule and seat availability verified from the published Hanover schedule as of ${formatAvailabilityVerificationDate(verificationDate)}. OPEN and FULL can change. Courses in later years are projections and do not have verified seat availability.`
+          : "Course schedule and seat availability verification date is unavailable in the published Hanover schedule. OPEN and FULL can change. Courses in later years are projections and do not have verified seat availability."}
+      </p>
     </details>
   );
 }
@@ -971,10 +1024,9 @@ function PlanComparisonScreen({
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
   const planBadges = {
-    "plan-1": "Even load",
-    "plan-2": "More later",
-    "plan-3": "Explore first",
-    "plan-c2": "One year early"
+    balanced: "Balanced",
+    "explore-first": "Explore First",
+    "one-year-early": "One Year Early"
   };
   const planBadge = plan => {
     if (plan.planningMode !== "graduation_priority") return planBadges[plan.id] || "Validated";
@@ -1288,7 +1340,13 @@ function PlanComparisonScreen({
         .comparison-page .plan-course-summary strong,
         .comparison-page .plan-course-summary span { display: block; }
         .comparison-page .plan-course-summary span { margin-top: .15rem; color: #53627a; font-size: 12px; }
-        .comparison-page .plan-course-summary .plan-course-availability { color: #2f5f52; }
+        .comparison-page .plan-course-summary .plan-course-availability { font-weight: 700; }
+        .comparison-page .plan-course-availability.is-open,
+        .comparison-page .schedule-availability .is-open { color: #167c32; font-weight: 700; }
+        .comparison-page .plan-course-availability.is-full,
+        .comparison-page .schedule-availability .is-full { color: #b42318; font-weight: 700; }
+        .comparison-page .plan-course-availability.is-unavailable,
+        .comparison-page .schedule-availability .is-unavailable { color: #53627a; }
         .comparison-page .plan-course-summary .plan-course-approval { color: #8a4c00; font-weight: 700; }
         .comparison-page .plan-course-actions { display: grid; gap: .35rem; margin-top: .5rem; }
         .comparison-page .plan-course-actions select,
@@ -1305,6 +1363,7 @@ function PlanComparisonScreen({
         .schedule-availability summary { cursor: pointer; font-weight: 700; }
         .schedule-availability h3 { margin: .75rem 0 .25rem; font-size: .95rem; }
         .schedule-availability ul { margin: 0; padding-left: 1.2rem; }
+        .schedule-availability-note { margin: .8rem 0 0; color: #53627a; font-size: 12px; }
         .choose-plan-button {
           width: calc(100% - 2rem);
           min-height: 0;
@@ -1547,6 +1606,7 @@ function PlanComparisonScreen({
             plans={plans}
             planningGaps={planningGaps}
             activePlanId={selectedPlan?.id}
+            schedule={result?.annualSchedule}
             onSelectPlan={onSelectPlan}
             onEditPlanCourse={onEditPlanCourse}
             editingPlanCourseKey={editingPlanCourseKey || (isGenerating ? "generation-in-progress" : "")}
@@ -3735,9 +3795,8 @@ export default function Page() {
                         {[
                           [PLANNING_PACES.STANDARD, "Standard pace"],
                           ...(planningContext.standardRemainingYears > 1
-                            ? [[PLANNING_PACES.EARLY, "One year early"]]
-                            : []),
-                          [PLANNING_PACES.EXTENDED, "One extra year"]
+                            ? [[PLANNING_PACES.EARLY, "One Year Early"]]
+                            : [])
                         ].map(([value, label]) => (
                           <button
                             type="button"
@@ -3754,7 +3813,7 @@ export default function Page() {
                         ))}
                       </div>
                       <p className="standing-help">
-                        Standard pace follows your current class year. The early option assumes senior standing in the final planning year; the extra-year option keeps senior standing beginning in your fourth college year.
+                        Standard pace follows your current class year. One Year Early keeps the normal plans visible and adds a separate accelerated feasibility comparison that assumes senior standing in its final planning year.
                       </p>
                     </fieldset>
                   </section>
