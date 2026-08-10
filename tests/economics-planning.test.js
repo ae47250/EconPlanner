@@ -158,7 +158,7 @@ test("default freshman planning returns Balanced and a materially distinct Explo
       assert.equal(plan.validation.distribution.exact, true);
     } else {
       assert.equal(plan.validation.distribution.valid, true);
-      assert.equal(plan.validation.distribution.exactPreferredPacingFound, false);
+      assert.equal(plan.validation.distribution.exactPreferredPacingFound, true);
     }
   }
   assert.ok(result.plans.every(plan => plan.validation.valid));
@@ -209,7 +209,11 @@ test("drop/add keeps Taking now fixed while the exact-term checkbox controls onl
   const baseStudent = {
     academicStanding: "freshman",
     planCreationDate: "2026-08-24",
-    courses: [{ code: "ECO 113", status: "in_progress" }]
+    courses: [{ code: "ECO 113", status: "in_progress" }],
+    reservedCourseUnits: {
+      "winter-2027": 4,
+      "spring-2027": 1
+    }
   };
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, baseStudent);
   const open = buildEconomicsTermPlans({ student: baseStudent, mapping, schedule, prerequisites });

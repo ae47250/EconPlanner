@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
   buildCapacityAwareDistribution,
-  distributeEvenlyLatest
+  distributeEvenlyLatest,
+  partialTermShapeTierRank
 } from "../lib/planning/distribution.js";
 
 const planningPolicy = JSON.parse(await readFile(
@@ -89,6 +90,33 @@ test("Explore ranks separated first-year two-course shapes in explicit tiers", (
     [[1, 0, 1], [0, 1, 1]],
     [[2, 0, 0], [0, 2, 0]]
   ]);
+  assert.deepEqual(shape.ownerApprovedTiers, shape.preferredTiers);
+  assert.equal(shape.selectedPreferenceTier, 1);
+  assert.equal(shape.lowerTierUsed, false);
+  assert.equal(shape.higherTiersUnavailableByCapacity, false);
+  assert.equal(partialTermShapeTierRank([1, 0, 0], shape), 0);
+  assert.equal(partialTermShapeTierRank([1, 1, 0], shape), 0);
+  assert.equal(partialTermShapeTierRank([2, 0, 0], shape), 2);
+});
+
+test("Explore retains the same-term rescue tier when capacity rules out every separated tier", () => {
+  const slots = fullYearSlots(1).map(slot => ({
+    ...slot,
+    remainingPlannerCapacity: slot.termKey === "Fall" ? 4 : 0
+  }));
+  const result = model({ unresolvedCount: 2, yearCount: 1, strategy: "explore-first", slots });
+  const shape = result.preferredTermShapeTiersByYear[0];
+
+  assert.deepEqual(shape.selected, [2, 0, 0]);
+  assert.deepEqual(shape.preferredTiers, [[[2, 0, 0]]]);
+  assert.deepEqual(shape.ownerApprovedTiers, [
+    [[1, 1, 0]],
+    [[1, 0, 1], [0, 1, 1]],
+    [[2, 0, 0], [0, 2, 0]]
+  ]);
+  assert.equal(shape.selectedPreferenceTier, 3);
+  assert.equal(shape.lowerTierUsed, true);
+  assert.equal(shape.higherTiersUnavailableByCapacity, true);
 });
 
 test("partial-year and insufficient-capacity targets stay truthful", () => {

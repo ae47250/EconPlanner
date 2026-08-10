@@ -111,7 +111,7 @@ test("the solver retains deterministic, prerequisite-valid complete schedules", 
   );
 });
 
-test("Explore the Major keeps its two-course first year focused on introductory and intermediate foundations", () => {
+test("Explore separates its two-course first year before applying soft foundation sequencing", () => {
   const supportingSchedule = structuredClone(schedule);
   supportingSchedule.terms.Fall.push(
     verifiedSupportingOffering("MAT 217", "A", "waitlisted", {
@@ -133,10 +133,15 @@ test("Explore the Major keeps its two-course first year focused on introductory 
 
   assert.deepEqual(plan.distribution.targetYearCounts, [2, 4, 4]);
   assert.equal(firstYear.length, 2);
+  assert.deepEqual(
+    plan.terms.filter(term => term.yearIndex === 0).map(term => term.courses.length),
+    [1, 1, 0]
+  );
+  assert.equal(plan.validation.distribution.exactPreferredPacingFound, true);
   assert.ok(firstYear.some(course => course.course === "ECO 114"));
-  assert.ok(firstYear.some(course => course.course === "ECO 213"));
+  assert.ok(firstYear.some(course => ["ECO 257", "MAT 217", "PSY 217"].includes(course.course)));
+  assert.ok(!firstYear.some(course => course.course === "ECO 213"));
   assert.equal(firstYear.filter(course => ["ECO 113", "ECO 114"].includes(course.course)).length, 1);
-  assert.equal(firstYear.filter(course => ["ECO 213", "ECO 214"].includes(course.course)).length, 1);
 
   const mirrorStudent = {
     ...student,
@@ -148,6 +153,11 @@ test("Explore the Major keeps its two-course first year focused on introductory 
   const mirrorFirstYear = mirror.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses);
   assert.deepEqual(mirror.distribution.targetYearCounts, [2, 4, 4]);
   assert.equal(mirrorFirstYear.length, 2);
+  assert.deepEqual(
+    mirror.terms.filter(term => term.yearIndex === 0).map(term => term.courses.length),
+    [1, 1, 0]
+  );
+  assert.equal(mirror.validation.distribution.exactPreferredPacingFound, true);
   assert.ok(mirrorFirstYear.some(course => course.course === "ECO 113"));
   assert.ok(mirrorFirstYear.some(course => course.course === "ECO 214"));
   assert.equal(mirrorFirstYear.filter(course => ["ECO 113", "ECO 114"].includes(course.course)).length, 1);
