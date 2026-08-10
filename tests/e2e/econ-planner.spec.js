@@ -210,12 +210,14 @@ test("course statuses are single-select, clear on a second click, and update the
 
 test("progress navigation returns to About you and advances to Your courses", async ({ page }) => {
   await resetPlanner(page);
+  await expect(page.getByRole("img", { name: "Urveska" })).toBeVisible();
+  const aboutYou = page.getByRole("navigation", { name: "Planner progress" })
+    .getByRole("button", { name: "About you", exact: true });
+  expect(await aboutYou.evaluate(element => Number.parseFloat(getComputedStyle(element).fontSize))).toBeCloseTo(15.6, 1);
   await chooseStanding(page, "freshman");
   await continueToCourses(page);
 
-  await page.getByRole("navigation", { name: "Planner progress" })
-    .getByRole("button", { name: "About you", exact: true })
-    .click();
+  await aboutYou.click();
   await expect(page.getByRole("heading", { name: "Where are you in your degree?" })).toBeVisible();
 
   await page.getByRole("navigation", { name: "Planner progress" })
@@ -334,19 +336,74 @@ test("accelerated results expose the backend Possible, Not possible, and More in
   }
 });
 
-test("completion source choices are off while Completed keeps its planner value", async ({ page }) => {
+test("completion source choices are compact, eligibility-limited, saved, and cleared", async ({ page }) => {
   await resetPlanner(page);
   await chooseStanding(page, "freshman");
   await continueToCourses(page);
 
   const eco113 = page.locator("#course-eco-113");
+  const eco213 = page.locator("#course-eco-213");
+  await expect(eco113.getByRole("button", { name: "Transfer or AP credit?" })).toHaveCount(0);
+  await expect(eco113.getByRole("button", { name: "Another college / transfer credit" })).toHaveCount(0);
+  await expect(eco113.getByRole("button", { name: "AP or exam credit" })).toHaveCount(0);
+
   await setCourseStatus(page, "ECO 113", "Completed");
-  await expect(eco113.locator(".completion-source")).toHaveCount(0);
+  const sourceAction = eco113.getByRole("button", { name: "Transfer or AP credit?" });
+  await expect(sourceAction).toBeVisible();
+  await expect(sourceAction).toHaveAttribute("aria-expanded", "false");
+  await expect(eco113.getByRole("button", { name: "Another college / transfer credit" })).toHaveCount(0);
+  await expect(eco113.getByRole("button", { name: "AP or exam credit" })).toHaveCount(0);
   await expect.poll(async () => page.evaluate(() => {
     const saved = JSON.parse(localStorage.getItem("econ-planner-ui-state"));
     const course = saved.formData.courses.find(item => item.code === "ECO 113");
     return { status: course.status, source: course.source };
   })).toEqual({ status: "completed", source: "manual_code" });
+
+  await sourceAction.click();
+  await expect(eco113.getByRole("button", { name: "Hanover College" })).toHaveAttribute("aria-pressed", "true");
+  await expect(eco113.getByRole("button", { name: "Another college / transfer credit" })).toBeVisible();
+  await expect(eco113.getByRole("button", { name: "AP or exam credit" })).toBeVisible();
+
+  await setCourseStatus(page, "ECO 213", "Completed");
+  await eco213.getByRole("button", { name: "Transfer or AP credit?" }).click();
+  await expect(eco213.getByRole("button", { name: "Another college / transfer credit" })).toBeVisible();
+  await expect(eco213.getByRole("button", { name: "AP or exam credit" })).toHaveCount(0);
+
+  await sourceAction.click();
+  await eco113.getByRole("button", { name: "Another college / transfer credit" }).click();
+  await expect(eco113).toContainText("Selected: Another college / transfer credit");
+  await expect(eco113).toContainText("review-required until its supporting evidence is approved");
+  await expect.poll(async () => page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("econ-planner-ui-state"));
+    const course = saved.formData.courses.find(item => item.code === "ECO 113");
+    return { status: course.status, source: course.source };
+  })).toEqual({ status: "transfer", source: "transfer_equivalency_unapproved" });
+
+  await page.reload();
+  const restoredEco113 = page.locator("#course-eco-113");
+  await expect(restoredEco113.getByRole("button", { name: "Completed" })).toHaveAttribute("aria-pressed", "true");
+  await expect(restoredEco113).toContainText("Selected: Another college / transfer credit");
+  await expect(restoredEco113.getByRole("button", { name: "Another college / transfer credit" })).toHaveCount(0);
+  await restoredEco113.getByRole("button", { name: "Transfer or AP credit?" }).click();
+  await expect(restoredEco113.getByRole("button", { name: "Another college / transfer credit" })).toHaveAttribute("aria-pressed", "true");
+  await restoredEco113.getByRole("button", { name: "Hanover College" }).click();
+  await expect(restoredEco113).not.toContainText("Selected: Another college / transfer credit");
+  await expect.poll(async () => page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("econ-planner-ui-state"));
+    const course = saved.formData.courses.find(item => item.code === "ECO 113");
+    return { status: course.status, source: course.source };
+  })).toEqual({ status: "completed", source: "manual_code" });
+
+  await restoredEco113.getByRole("button", { name: "Another college / transfer credit" }).click();
+  await page.locator(".cp7-summary").getByRole("button", { name: "Clear all", exact: true }).click();
+  await page.getByRole("dialog", { name: "Clear all answers and generated plans?" })
+    .getByRole("button", { name: "Clear all", exact: true })
+    .click();
+  await expect.poll(() => page.evaluate(() => {
+    const saved = JSON.parse(localStorage.getItem("econ-planner-ui-state"));
+    const course = saved?.formData?.courses?.find(item => item.code === "ECO 113");
+    return { status: course?.status || "", source: course?.source || "" };
+  })).toEqual({ status: "not_started", source: "manual_code" });
 });
 
 test("ECO 213 and ECO 214 show canonical inline prerequisite follow-ups", async ({ page }) => {

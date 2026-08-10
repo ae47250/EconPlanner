@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import {
   buildEarlyGraduationContext,
@@ -38,7 +39,6 @@ const NON_SELECTABLE_COURSE_CODES = new Set(COURSE_CATALOG
 const AP_CREDIT_ALLOWED_COURSE_CODES = new Set(COURSE_CATALOG
   .filter(course => course.apEligible)
   .map(course => course.code));
-const COMPLETION_SOURCE_CHOICES_ENABLED = false;
 const COURSE_PREREQUISITES = Object.fromEntries(COURSE_CATALOG
   .filter(course => (
     (course.prerequisites?.all || []).length
@@ -1169,11 +1169,16 @@ function PlanComparisonScreen({
           box-shadow: 0 1px 8px rgba(15, 35, 75, .06);
         }
         .comparison-brand {
+          display: flex;
+          align-items: flex-start;
+          flex-direction: column;
+          gap: .35rem;
           color: #4b2e83;
           font-size: 25px;
           font-weight: 700;
           letter-spacing: -.03em;
         }
+        .comparison-brand-logo { display: block; width: 168px; height: auto; }
         .comparison-student {
           display: flex;
           align-items: center;
@@ -1491,7 +1496,7 @@ function PlanComparisonScreen({
           color: #41506a;
         }
         .result-progress ol { display: flex; gap: .65rem; margin: 0; padding: 0; list-style: none; }
-        .result-progress li { color: #667085; font-size: 12px; }
+        .result-progress li { color: #667085; font-size: 14.4px; }
         .result-progress li::before { content: "✓ "; color: #4b2e83; }
         .result-progress li.is-current { color: #18202b; font-weight: 700; }
         .result-progress li.is-current::before { content: "● "; }
@@ -1622,6 +1627,7 @@ function PlanComparisonScreen({
             flex-wrap: wrap;
             padding: .8rem 1rem;
           }
+          .comparison-brand { flex-basis: 100%; }
           .comparison-student {
             width: 100%;
             min-width: 0;
@@ -1660,7 +1666,17 @@ function PlanComparisonScreen({
       `}</style>
 
       <header className="comparison-topbar">
-        <div className="comparison-brand">EconPlanner</div>
+        <div className="comparison-brand">
+          <Image
+            className="comparison-brand-logo"
+            src="/urveska-midnight-gold-underlined.png"
+            alt="Urveska"
+            width={1868}
+            height={294}
+            priority
+          />
+          <span>EconPlanner</span>
+        </div>
         <nav className="result-progress" aria-label="Planner progress">
           <ol>
             <li><button type="button" onClick={onReviewTimeline}>About you</button></li>
@@ -2179,6 +2195,7 @@ export default function Page() {
   const [failureFocusTarget, setFailureFocusTarget] = useState("");
   const latestFormRef = useRef(initialForm);
   const [courseSearch, setCourseSearch] = useState("");
+  const [completionSourceCourseCode, setCompletionSourceCourseCode] = useState("");
   const [intakeStep, setIntakeStep] = useState(1);
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
   const [migrationNotice, setMigrationNotice] = useState("");
@@ -2512,6 +2529,7 @@ export default function Page() {
     }
     setFormData(blankForm);
     setCourseSearch("");
+    setCompletionSourceCourseCode("");
     setIntakeStep(1);
     setMigrationNotice("");
     setInputBlock(null);
@@ -2566,10 +2584,11 @@ export default function Page() {
         return {
           ...course,
           status,
-          source: status === "completed" ? "manual_code" : status === "not_started" || status === "uncertain" ? "manual_code" : course.source
+          source: "manual_code"
         };
       })
     }));
+    setCompletionSourceCourseCode(current => current === code ? "" : current);
     clearInputFeedback();
   }
 
@@ -2986,6 +3005,8 @@ export default function Page() {
     if (!course && !isHanoverOnly) return null;
     const completed = course ? visibleCourseStatus(course) === "completed" : false;
     const source = course ? completionSourceLabel(course) : "Hanover College";
+    const sourceChoicesOpen = completionSourceCourseCode === code;
+    const sourcePanelId = `completion-source-${domId(code)}`;
     return (
       <div className="course-row" id={`course-${domId(code)}`} key={code} tabIndex={-1}>
         <div className="course-row-main">
@@ -2997,38 +3018,51 @@ export default function Page() {
             <span className="course-status-note">Must be taken at Hanover College</span>
           ) : renderStatusControls(code)}
         </div>
-        {COMPLETION_SOURCE_CHOICES_ENABLED && completed && (
-          <details className="completion-source" open={source !== "Hanover College"}>
-            <summary>Where did you complete this course? <span>{source}</span></summary>
-            <div className="completion-source-options" role="group" aria-label={`Completion source for ${code}`}>
-              {[
-                ["manual_code", "Hanover College"],
-                ["transfer_equivalency_unapproved", "Another college / transfer credit"],
-                ...(AP_CREDIT_ALLOWED_COURSE_CODES.has(code) ? [["ap_credit", "AP or exam credit"]] : [])
-              ].map(([value, label]) => {
-                const selected = value === "transfer_equivalency_unapproved"
-                  ? course.status === "transfer"
-                  : value === "manual_code"
-                    ? course.status === "completed" && completionSourceLabel(course) === "Hanover College"
-                    : course.status === "completed" && course.source === value;
-                return (
-                  <button
-                    type="button"
-                    className={selected ? "is-selected" : ""}
-                    aria-pressed={selected}
-                    key={value}
-                    onClick={() => setCompletionSource(code, value)}
-                  >
-                    <span className="selection-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-            {source !== "Hanover College" && (
-              <p>This credit will stay review-required until its supporting evidence is approved.</p>
+        {completed && (
+          <div className="completion-source">
+            <button
+              type="button"
+              className="completion-source-trigger"
+              aria-expanded={sourceChoicesOpen}
+              aria-controls={sourcePanelId}
+              onClick={() => setCompletionSourceCourseCode(current => current === code ? "" : code)}
+            >
+              Transfer or AP credit?
+            </button>
+            {source !== "Hanover College" && <span className="completion-source-current">Selected: {source}</span>}
+            {sourceChoicesOpen && (
+              <div className="completion-source-panel" id={sourcePanelId}>
+                <div className="completion-source-options" role="group" aria-label={`Completion source for ${code}`}>
+                  {[
+                    ["manual_code", "Hanover College"],
+                    ["transfer_equivalency_unapproved", "Another college / transfer credit"],
+                    ...(AP_CREDIT_ALLOWED_COURSE_CODES.has(code) ? [["ap_credit", "AP or exam credit"]] : [])
+                  ].map(([value, label]) => {
+                    const selected = value === "transfer_equivalency_unapproved"
+                      ? course.status === "transfer"
+                      : value === "manual_code"
+                        ? course.status === "completed" && completionSourceLabel(course) === "Hanover College"
+                        : course.status === "completed" && course.source === value;
+                    return (
+                      <button
+                        type="button"
+                        className={selected ? "is-selected" : ""}
+                        aria-pressed={selected}
+                        key={value}
+                        onClick={() => setCompletionSource(code, value)}
+                      >
+                        <span className="selection-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {source !== "Hanover College" && (
+                  <p>This credit will stay review-required until its supporting evidence is approved.</p>
+                )}
+              </div>
             )}
-          </details>
+          </div>
         )}
         {course && renderPrerequisiteFollowUp(course)}
       </div>
@@ -3308,6 +3342,8 @@ export default function Page() {
           padding: 1rem 0;
           border-bottom: 1px solid var(--cp7-border);
         }
+        .cp7-brand-block { display: flex; align-items: flex-start; flex: 0 0 auto; flex-direction: column; gap: .35rem; }
+        .cp7-brand-logo { display: block; width: 168px; height: auto; }
         .cp7-brand { margin: 0; color: var(--cp7-accent); font-size: 21px; letter-spacing: -.02em; }
         .cp7-progress ol { display: flex; gap: .4rem; margin: 0; padding: 0; list-style: none; }
         .cp7-progress li {
@@ -3316,7 +3352,7 @@ export default function Page() {
           gap: .4rem;
           padding: .35rem .55rem;
           color: var(--cp7-muted);
-          font-size: 13px;
+          font-size: 15.6px;
         }
         .cp7-progress li::before {
           width: .52rem;
@@ -3528,11 +3564,13 @@ export default function Page() {
         .course-requirement-group { margin: .55rem 0; padding: .7rem .85rem; border: 1px solid var(--cp7-border); border-radius: 8px; background: #fafbfc; }
         .course-requirement-heading { display: flex; justify-content: space-between; gap: 1rem; color: var(--cp7-muted); font-size: 13px; }
         .course-requirement-heading strong { color: var(--cp7-ink); font-size: 14px; }
-        .completion-source { margin: .55rem 0 0; padding: .55rem .7rem; border-left: 3px solid #a5afb9; background: var(--cp7-soft); }
-        .completion-source summary { cursor: pointer; color: #344151; font-size: 13px; font-weight: 700; }
-        .completion-source summary span { color: var(--cp7-muted); font-weight: 400; }
-        .completion-source-options { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .65rem; }
-        .completion-source p { margin: .55rem 0 0; color: var(--cp7-muted); font-size: 13px; }
+        .completion-source { display: flex; align-items: center; flex-wrap: wrap; gap: .25rem .55rem; margin: .35rem 0 0; }
+        main.cp7-container .completion-source-trigger { width: auto; margin: 0; padding: .15rem 0; border: 0; background: transparent; color: #4b617a; cursor: pointer; font-size: 12px; text-decoration: underline; text-underline-offset: 2px; }
+        .completion-source-current { color: var(--cp7-muted); font-size: 12px; }
+        .completion-source-panel { flex: 0 0 100%; }
+        .completion-source-options { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .25rem; }
+        main.cp7-container .completion-source-options button { min-height: 32px; padding: .35rem .5rem; font-size: 12px; }
+        .completion-source p { margin: .4rem 0 0; color: var(--cp7-muted); font-size: 12px; }
         .inline-prerequisite { margin: .7rem 0 0; padding: .8rem; border: 1px solid #b9c3ce; border-radius: 7px; background: #f6f8fa; }
         .inline-prerequisite.has-conflict { border-color: #b76458; background: #fff6f3; }
         .inline-prerequisite > p { margin: 0 0 .65rem; }
@@ -3629,7 +3667,17 @@ export default function Page() {
       `}</style>
 
       <header className="cp7-header">
-        <p className="cp7-brand"><strong>EconPlanner</strong></p>
+        <div className="cp7-brand-block">
+          <Image
+            className="cp7-brand-logo"
+            src="/urveska-midnight-gold-underlined.png"
+            alt="Urveska"
+            width={1868}
+            height={294}
+            priority
+          />
+          <p className="cp7-brand"><strong>EconPlanner</strong></p>
+        </div>
         <nav className="cp7-progress" aria-label="Planner progress">
           <ol>
             <li className={intakeStep === 1 ? "is-current" : "is-complete"} aria-current={intakeStep === 1 ? "step" : undefined}>

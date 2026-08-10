@@ -104,29 +104,34 @@ test("accepted completed and in-progress allocations leave the solver only unres
   }
 });
 
-test("unapproved transfer evidence stays review-bound and is never presented as verified credit", () => {
-  const student = {
-    academicStanding: "freshman",
-    planCreationDate: "2026-09-01",
-    courses: [{ code: "ECO 113", status: "transfer", source: "transfer_equivalency_unapproved" }]
-  };
-  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
-  assert.ok(mapping.projectedAfterInProgress.strict.unresolved.some(item => item.requirementId === "eco-113"));
-  assert.ok(mapping.projectedAfterInProgress.optimistic.assignments.some(item => (
-    item.slotId === "eco-113" && item.evidenceStatus === "PROVISIONAL"
-  )));
-  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites, collectDiagnostics: true });
-  assert.ok(!mapping.projectedAfterInProgress.strict.assignments.some(item => item.slotId === "eco-113"));
-  assert.ok(result.plans.length > 0);
-  assert.ok(result.plans.every(plan => (
-    plan.validation.evidenceStatus === "REVIEW_REQUIRED"
-    && plan.validation.readinessStatus === "ADVISOR_ACTION_REQUIRED"
-    && plan.validation.advisorActions.some(action => (
-      action.reasonCode === "COURSE_EVIDENCE_SCOPE_REVIEW"
-      || action.reasonCode === "COURSE_HISTORY_EVIDENCE_FACT_REQUIRED"
-    ))
-    && plan.terms.every(term => term.courses.every(course => course.course !== "ECO 113"))
-  )));
+test("unapproved transfer and AP evidence stay review-bound and are never presented as verified credit", () => {
+  for (const evidenceCourse of [
+    { code: "ECO 113", status: "transfer", source: "transfer_equivalency_unapproved" },
+    { code: "ECO 113", status: "completed", source: "ap_credit" }
+  ]) {
+    const student = {
+      academicStanding: "freshman",
+      planCreationDate: "2026-09-01",
+      courses: [evidenceCourse]
+    };
+    const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+    assert.ok(mapping.projectedAfterInProgress.strict.unresolved.some(item => item.requirementId === "eco-113"));
+    assert.ok(mapping.projectedAfterInProgress.optimistic.assignments.some(item => (
+      item.slotId === "eco-113" && item.evidenceStatus === "PROVISIONAL"
+    )));
+    const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites, collectDiagnostics: true });
+    assert.ok(!mapping.projectedAfterInProgress.strict.assignments.some(item => item.slotId === "eco-113"));
+    assert.ok(result.plans.length > 0);
+    assert.ok(result.plans.every(plan => (
+      plan.validation.evidenceStatus === "REVIEW_REQUIRED"
+      && plan.validation.readinessStatus === "ADVISOR_ACTION_REQUIRED"
+      && plan.validation.advisorActions.some(action => (
+        action.reasonCode === "COURSE_EVIDENCE_SCOPE_REVIEW"
+        || action.reasonCode === "COURSE_HISTORY_EVIDENCE_FACT_REQUIRED"
+      ))
+      && plan.terms.every(term => term.courses.every(course => course.course !== "ECO 113"))
+    )));
+  }
 });
 
 test("default freshman planning returns Balanced and a materially distinct Explore the Major normal horizon", () => {
