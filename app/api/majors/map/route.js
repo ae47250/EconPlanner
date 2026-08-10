@@ -11,7 +11,7 @@ import {
   validateGeneratedPlan,
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
-import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
+import { normalizeScheduleSetByTerm, resolvePlanningContext } from "../../../../lib/planning/horizon.js";
 import { buildAcceleratedPlanningResult } from "../../../../lib/planning/acceleratedResult.js";
 import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
 import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
@@ -286,7 +286,11 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const student = body?.student || {};
+    const submittedStudent = body?.student || {};
+    const student = {
+      ...submittedStudent,
+      scheduleSetByTerm: normalizeScheduleSetByTerm(submittedStudent)
+    };
     const catalogYears = await availableCatalogYears();
     const catalogValidation = validateSubmittedCatalogYear(student.majorDeclarationCatalogYear, catalogYears);
     const planningContext = resolvePlanningContext(student);

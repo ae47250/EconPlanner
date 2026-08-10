@@ -270,9 +270,49 @@ test("Clear all cancels safely and then removes intake and generated state", asy
     return {
       standing: saved?.formData?.academicStanding || "",
       selectedCourses: (saved?.formData?.courses || []).filter(course => course.status !== "not_started").length,
+      scheduleSetByTerm: saved?.formData?.scheduleSetByTerm || {},
       session: sessionStorage.getItem("econ-planner-generated-session")
     };
-  })).toEqual({ standing: "", selectedCourses: 0, session: null });
+  })).toEqual({ standing: "", selectedCourses: 0, scheduleSetByTerm: {}, session: null });
+});
+
+test("drop/add checkbox is accessible, exact-term persistent, request-bound, and mobile safe", async ({ page }) => {
+  await resetPlanner(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await chooseStanding(page, "freshman");
+  await page.locator("details.more-details > summary", { hasText: "More details" }).first().click();
+  await page.getByLabel("Plan creation date", { exact: true }).fill("2026-08-24");
+
+  const checkbox = page.getByRole("checkbox", { name: /My schedule for Fall 2026 is already set/ });
+  await expect(checkbox).toBeVisible();
+  await expect(checkbox).not.toBeChecked();
+  await page.getByRole("button", { name: /graduate one year early/ }).focus();
+  await page.keyboard.press("Shift+Tab");
+  await expect(checkbox).toBeFocused();
+  await expect.poll(() => checkbox.evaluate(element => getComputedStyle(element).outlineStyle)).toBe("solid");
+  await page.keyboard.press("Space");
+  await expect(checkbox).toBeChecked();
+  await expect.poll(() => page.evaluate(() => (
+    JSON.parse(localStorage.getItem("econ-planner-ui-state"))?.formData?.scheduleSetByTerm?.["fall-2026"]
+  ))).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+
+  await page.reload();
+  await expect(checkbox).toBeChecked();
+  await page.locator("details.more-details > summary", { hasText: "More details" }).first().click();
+  await page.getByLabel("Plan creation date", { exact: true }).fill("2026-08-29");
+  await expect(checkbox).toHaveCount(0);
+  await page.getByLabel("Plan creation date", { exact: true }).fill("2026-08-24");
+  await expect(checkbox).toBeChecked();
+
+  let submitted = null;
+  page.on("request", request => {
+    if (request.url().endsWith("/api/majors/map") && request.method() === "POST") submitted = request.postDataJSON();
+  });
+  await fulfillPlanner(page, plannerResultFixture());
+  await continueToCourses(page);
+  await generatePlans(page);
+  expect(submitted.student.scheduleSetByTerm).toEqual({ "fall-2026": true });
 });
 
 test("custom graduation and acceleration stay separate", async ({ page }) => {

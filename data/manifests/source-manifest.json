@@ -420,11 +420,11 @@
     {
       "role": "academic_calendar",
       "source": "https://www.hanover.edu/academics/calendar/",
-      "academicYear": "2026-2027",
-      "retrievedOn": "2026-07-29",
+      "academicYear": "2025-2026 through 2026-2027",
+      "retrievedOn": "2026-08-10",
       "approvalStatus": "OFFICIAL_HANOVER_SOURCE",
       "path": "data/normalized/academic-calendars.json",
-      "sha256": "dbb5eb7ac4638f953a7f576b40a776f4f66a102e5a3d8c2ce7792228cd3cc4f9"
+      "sha256": "5d0723be76b3ed208643969b689a5d60330e9715e3e2039749ff4c57de49b7dc"
     }
   ]
 }

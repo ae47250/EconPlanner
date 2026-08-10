@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0.0",
+  "calendarVersion": "hanover-undergraduate-calendar.1",
+  "status": "OFFICIAL_HANOVER_SOURCE",
+  "source": "https://www.hanover.edu/academics/calendar/",
+  "retrievedOn": "2026-08-10",
+  "sourceRef": "HANOVER-UNDERGRADUATE-ACADEMIC-CALENDAR-2026-08-10#INITIAL-DROP-ADD",
+  "academicYears": {
+    "2025-2026": {
+      "springTermEnd": "2026-05-22"
+    },
+    "2026-2027": {
+      "fallTermStart": "2026-08-24",
+      "springTermEnd": "2027-05-28"
+    }
+  },
+  "summerClarificationWindows": [
+    {
+      "start": "2026-05-23",
+      "end": "2026-08-23",
+      "upcomingFallYear": 2026,
+      "basis": "Day after Spring 2026 classes ended through day before Fall 2026 classes begin"
+    }
+  ],
+  "initialDropAddWindows": [
+    {
+      "academicYear": "2025-2026",
+      "canonicalTerm": "FALL",
+      "displayTerm": "Fall 2025",
+      "start": "2025-08-25",
+      "end": "2025-08-29",
+      "sourceRef": "HANOVER-UNDERGRADUATE-ACADEMIC-CALENDAR-2026-08-10#INITIAL-DROP-ADD"
+    },
+    {
+      "academicYear": "2025-2026",
+      "canonicalTerm": "WINTER",
+      "displayTerm": "Winter 2026",
+      "start": "2026-01-05",
+      "end": "2026-01-09",
+      "sourceRef": "HANOVER-UNDERGRADUATE-ACADEMIC-CALENDAR-2026-08-10#INITIAL-DROP-ADD"
+    },
+    {
+      "academicYear": "2025-2026",
+      "canonicalTerm": "MAY",
+      "displayTerm": "Spring/May 2026",
+      "start": "2026-04-27",
+      "end": "2026-04-28",
+      "sourceRef": "HANOVER-UNDERGRADUATE-ACADEMIC-CALENDAR-2026-08-10#INITIAL-DROP-ADD"
+    },
+    {
+      "academicYear": "2026-2027",
+      "canonicalTerm": "FALL",
+      "displayTerm": "Fall 2026",
+      "start": "2026-08-24",
+      "end": "2026-08-28",
+      "sourceRef": "HANOVER-UNDERGRADUATE-ACADEMIC-CALENDAR-2026-08-10#INITIAL-DROP-ADD"
+    },
+    {
+      "academicYear": "2026-2027",
+      "canonicalTerm": "WINTER",
+      "displayTerm": "Winter 2027",
+      "start": "2027-01-11",
+      "end": "2027-01-15",
+      "sourceRef": "HANOVER-UNDERGRADUATE-ACADEMIC-CALENDAR-2026-08-10#INITIAL-DROP-ADD"
+    },
+    {
+      "academicYear": "2026-2027",
+      "canonicalTerm": "MAY",
+      "displayTerm": "Spring/May 2027",
+      "start": "2027-05-03",
+      "end": "2027-05-04",
+      "sourceRef": "HANOVER-UNDERGRADUATE-ACADEMIC-CALENDAR-2026-08-10#INITIAL-DROP-ADD"
+    }
+  ]
+}

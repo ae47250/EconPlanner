@@ -35,7 +35,7 @@ test("comparison badges use the policy-backed generated plan label", async () =>
 });
 
 test("saved senior One Year Early selections migrate without losing other answers", () => {
-  assert.equal(PLANNER_INPUT_STATE_VERSION, 7);
+  assert.equal(PLANNER_INPUT_STATE_VERSION, 8);
   for (const academicStanding of ["senior"]) {
     const saved = {
       academicStanding,
@@ -143,7 +143,7 @@ test("generated planner sessions from before distribution validation regenerate"
     view: PLANNER_VIEWS.COMPARE
   });
 
-  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 7);
+  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 8);
   assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 4 }, "student-input-v1"), null);
 });
 
