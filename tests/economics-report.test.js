@@ -32,10 +32,10 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
-test("an early comparison request preserves the selected normal-horizon report", async () => {
+test("an eligible early comparison request preserves the selected normal-horizon report", async () => {
   const student = {
     ...fixture.student,
-    academicStanding: "junior",
+    academicStanding: "sophomore",
     planningPace: "one_year_early",
     planCreationDate: "2026-07-28"
   };
@@ -43,7 +43,7 @@ test("an early comparison request preserves the selected normal-horizon report",
   const html = renderEconomicsHtml(report, template);
 
   assert.equal(report.student.planningPace, "standard");
-  assert.equal(report.student.expectedGraduationTerm, "Spring/May 2028");
+  assert.equal(report.student.expectedGraduationTerm, "Spring/May 2029");
   assert.equal(report.selectedPlan.id, "balanced");
   assert.ok(report.candidateOutcomes.some(item => item.id === "one-year-early" && item.displayed));
   assert.match(html, /data-planning-pace="standard"/);

@@ -188,7 +188,7 @@
       }
     },
     {
-      "id": "J-IMPOSSIBLE-ONE-YEAR-EARLY",
+      "id": "J-INELIGIBLE-ONE-YEAR-EARLY-NORMALIZED",
       "group": "junior",
       "student": {
         "academicStanding": "junior",
@@ -199,10 +199,9 @@
         },
         "courses": []
       },
-      "coverage": ["no_completed_courses", "impossible_one_year_early_request"],
+      "coverage": ["no_completed_courses", "ineligible_one_year_early_request_normalized"],
       "expectations": {
         "displayedPlanCount": { "min": 1, "max": 1 },
-        "candidateStrategyStatuses": { "one-year-early": ["NOT_FEASIBLE"] },
         "forbiddenDisplayedStrategies": ["one-year-early", "explore-first"],
         "expectedFindingClasses": ["CURRENT_CONTRACT", "FEATURE_GATED"]
       }

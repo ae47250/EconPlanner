@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import fc from "fast-check";
 import { resolvePlanningContext } from "../../lib/planning/horizon.js";
+import { isOneYearEarlyEligible } from "../../lib/planning/strategyEligibility.js";
 
 export const ECONOMICS_GENERATOR_VERSION = 4;
 export const ECONOMICS_GENERATOR_LEGACY_VERSION = 3;
@@ -328,7 +329,7 @@ function buildProfile({
   const standardRemainingYears = Math.max(1, 4 - Math.max(0, standingIndex));
   const regularEarly = !transfer
     && axes.planningPace === "one_year_early"
-    && standardRemainingYears > 1;
+    && isOneYearEarlyEligible(axes.standing);
   const regularRemainingYears = axes.planningPace === "one_year_extended"
     ? standardRemainingYears + 1
     : regularEarly

@@ -1,4 +1,12 @@
 import { expect, test } from "./nightly-observability.js";
+import {
+  chooseStanding,
+  continueToCourses,
+  fixturePlan,
+  openFixtureResult,
+  plannerResultFixture,
+  resetPlanner
+} from "./cp7-helpers.js";
 
 function unique(values) {
   return [...new Set(values.filter(Boolean))].sort();
@@ -15,25 +23,20 @@ function difference(expected, actual) {
   };
 }
 
-function feasibilityLabel(status) {
+function readinessLabel(status) {
   return ({
-    VERIFIED_FEASIBLE: "Verified feasible",
-    CONDITIONALLY_FEASIBLE: "Conditionally feasible",
-    PRELIMINARY_ONLY: "Preliminary only",
-    SEARCH_INCOMPLETE: "Search incomplete - advisor review needed",
-    NOT_FEASIBLE: "Not feasible"
-  })[status] || "Status pending";
+    STUDENT_READY: "Ready",
+    READY_WITH_CONDITIONS: "Ready with conditions",
+    ADVISOR_ACTION_REQUIRED: "Needs advisor attention"
+  })[status] || "Needs advisor attention";
 }
 
 test("API and selected-plan UI retain material academic content", async ({ page }, testInfo) => {
-  await page.goto("/?layout=apple");
-  await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
-  await page.reload();
-  await page.getByRole("group", { name: "Class standing" }).getByRole("button", { name: "Freshman" }).click();
+  await resetPlanner(page);
+  await chooseStanding(page, "freshman");
+  await page.locator("details.more-details > summary").first().click();
   await page.getByLabel("Plan creation date", { exact: true }).fill("2026-07-30");
+  await continueToCourses(page);
 
   const responsePromise = page.waitForResponse(response => (
     response.url().endsWith("/api/majors/map")
@@ -66,6 +69,8 @@ test("API and selected-plan UI retain material academic content", async ({ page 
   const expectedReview = [...(selectedPlan.unscheduled || []), ...(economics.planningGaps || [])]
     .map(item => `${item.course ? `${item.course}: ` : ""}${item.reason || item.message}`);
   const expectedSource = `Published course schedule: ${String(selectedPlan.academicYear).replace("-", "/")}. Later unpublished schedules are shown as planning projections.`;
+  const backendReadiness = selectedPlan.readinessStatus || selectedPlan.validation?.readinessStatus;
+  const studentReadiness = readinessLabel(backendReadiness);
   const parity = {
     schemaVersion: 2,
     kind: "econplanner-api-ui-parity",
@@ -73,9 +78,9 @@ test("API and selected-plan UI retain material academic content", async ({ page 
     courses: difference(selectedPlan.terms.flatMap(term => term.courses.map(course => course.course)), displayed.courses),
     terms: difference(selectedPlan.terms.map(term => `${term.academicYear || ""}|${term.termKey || ""}`), displayed.terms),
     status: {
-      expected: selectedPlan.feasibilityStatus,
-      displayed: displayed.pageText.includes(feasibilityLabel(selectedPlan.feasibilityStatus)),
-      missing: displayed.pageText.includes(feasibilityLabel(selectedPlan.feasibilityStatus)) ? [] : [selectedPlan.feasibilityStatus],
+      expected: backendReadiness,
+      displayed: displayed.pageText.includes(studentReadiness),
+      missing: displayed.pageText.includes(studentReadiness) ? [] : [backendReadiness],
       extra: []
     },
     warnings: difference((selectedPlan.studentMessages || []).filter(message => !expectedNoticeMessages.has(message)), displayed.warnings),
@@ -101,4 +106,64 @@ test("API and selected-plan UI retain material academic content", async ({ page 
   });
   expect(parity.materialMissingCount, JSON.stringify(parity)).toBe(0);
   expect(parity.materialExtraCount, JSON.stringify(parity)).toBe(0);
+});
+
+test("readiness, conditions, and advisor actions are projected from the returned plan", async ({ page }, testInfo) => {
+  const scenarios = [
+    {
+      name: "conditional",
+      plan: fixturePlan({
+        readinessStatus: "READY_WITH_CONDITIONS",
+        planDisposition: "COMPLETE_READY_WITH_CONDITIONS",
+        conditions: [
+          { code: "CURRENT_COURSE_COMPLETION", message: "Confirm successful completion of ECO 214." },
+          { code: "FINAL_SCHEDULE_CHECK", message: "Confirm the published schedule when it is released." }
+        ]
+      }),
+      expectedStatus: "Ready with conditions",
+      expectedSelector: ".plan-conditions"
+    },
+    {
+      name: "advisor",
+      plan: fixturePlan({
+        readinessStatus: "ADVISOR_ACTION_REQUIRED",
+        planDisposition: "COMPLETE_ADVISOR_ACTION_REQUIRED",
+        advisorActions: [
+          { code: "INSTRUCTOR_APPROVAL", message: "Ask the instructor to confirm concurrent enrollment." },
+          { code: "ADVISOR_REVIEW", message: "Review the final course sequence with your advisor." }
+        ]
+      }),
+      expectedStatus: "Needs advisor attention",
+      expectedSelector: ".plan-advisor-actions"
+    }
+  ];
+  const parity = [];
+
+  for (const scenario of scenarios) {
+    await page.unroute("**/api/majors/map").catch(() => {});
+    await openFixtureResult(page, plannerResultFixture({ plans: [scenario.plan] }));
+
+    const returnedItems = scenario.plan.conditions.length
+      ? scenario.plan.conditions.map(item => item.message)
+      : scenario.plan.advisorActions.map(item => item.message);
+    const displayedItems = await page.locator(`${scenario.expectedSelector} li`).allInnerTexts();
+    const displayedStatus = await page.locator(".result-status-value").innerText();
+    const result = {
+      scenario: scenario.name,
+      backendReadinessStatus: scenario.plan.readinessStatus,
+      backendPlanDisposition: scenario.plan.planDisposition,
+      expectedStatus: scenario.expectedStatus,
+      displayedStatus,
+      items: difference(returnedItems, displayedItems)
+    };
+    parity.push(result);
+    expect(displayedStatus).toBe(scenario.expectedStatus);
+    expect(result.items.missing, JSON.stringify(result)).toEqual([]);
+    expect(result.items.extra, JSON.stringify(result)).toEqual([]);
+  }
+
+  await testInfo.attach("econplanner-result-readiness-parity.json", {
+    body: Buffer.from(JSON.stringify(parity, null, 2)),
+    contentType: "application/json"
+  });
 });

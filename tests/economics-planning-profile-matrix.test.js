@@ -196,10 +196,10 @@ test("the 51-profile audit matrix returns only complete, distinct, bounded-searc
   assert.ok(outcomes.every(item => item.result.candidateOutcomes.every(outcome => outcome.id !== "one-year-early")));
 
   const juniorP3 = generate("junior", fixture.profiles.find(profile => profile.id === "P3"), { early: true });
-  const juniorP3Early = juniorP3.result.candidateOutcomes.find(item => item.id === "one-year-early");
-  assert.equal(juniorP3Early.status, "CONDITIONALLY_FEASIBLE");
-  assert.equal(juniorP3Early.displayed, true);
-  assert.equal(juniorP3Early.suppressionReason, null);
+  assert.equal(juniorP3.result.context.planningPace, "standard");
+  assert.equal(juniorP3.result.context.earlyComparisonRequested, false);
+  assert.equal(juniorP3.result.context.planningPaceNormalization.code, "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD");
+  assert.ok(juniorP3.result.candidateOutcomes.every(item => item.id !== "one-year-early"));
 
   for (const [standing, profileId] of [["freshman", "W5"], ["sophomore", "W5"]]) {
     const early = generate(standing, fixture.profiles.find(profile => profile.id === profileId), { early: true });

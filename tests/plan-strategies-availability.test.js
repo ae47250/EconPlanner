@@ -39,11 +39,10 @@ test("default planning exposes only the applicable normal strategies", () => {
   }
 });
 
-test("One Year Early keeps normal plans intact and always reports its separate result", () => {
+test("One Year Early keeps normal plans intact for eligible standings", () => {
   const horizons = new Map([
     ["freshman", ["Spring/May 2030", "Spring/May 2029"]],
-    ["sophomore", ["Spring/May 2029", "Spring/May 2028"]],
-    ["junior", ["Spring/May 2028", "Spring/May 2027"]]
+    ["sophomore", ["Spring/May 2029", "Spring/May 2028"]]
   ]);
   for (const [standing, [normalHorizon, earlyHorizon]] of horizons) {
     const result = bundle({ academicStanding: standing, planningPace: "one_year_early", planCreationDate: "2026-07-30", courses: [] });
@@ -57,6 +56,22 @@ test("One Year Early keeps normal plans intact and always reports its separate r
     const earlyPlan = result.plans.find(plan => plan.id === "one-year-early");
     if (earlyPlan) assert.equal(earlyPlan.planningContext.expectedGraduationTerm, earlyHorizon, standing);
     assert.ok(["VERIFIED_FEASIBLE", "CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY", "SEARCH_INCOMPLETE", "NOT_FEASIBLE"].includes(earlyOutcome.status));
+  }
+});
+
+test("junior and senior One Year Early requests return only standard-horizon strategies", () => {
+  for (const standing of ["junior", "senior"]) {
+    const result = bundle({
+      academicStanding: standing,
+      planningPace: "one_year_early",
+      planCreationDate: "2026-07-30",
+      courses: []
+    });
+    assert.equal(result.context.planningPace, "standard", standing);
+    assert.equal(result.context.earlyComparisonRequested, false, standing);
+    assert.equal(result.context.planningPaceNormalization.code, "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD", standing);
+    assert.ok(result.candidateOutcomes.every(outcome => outcome.id !== "one-year-early"), standing);
+    assert.ok(result.plans.every(plan => plan.planningContext.planningPace === "standard"), standing);
   }
 });
 

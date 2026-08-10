@@ -113,39 +113,21 @@ test("sophomore One Year Early evaluates 12, 11, 10, and 9 remaining through the
   assert.notEqual(statuses[0].plan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);
 });
 
-test("junior One Year Early does not treat injected sections as authoritative verified-year capacity", () => {
-  const tenStudent = earlyUpcomingStudent("junior", ["ECO 113", "ECO 114"]);
-  const tenRemaining = bundle(tenStudent);
-  assert.equal(tenRemaining.mapping.strict.remainingUnits, 10);
-  assert.equal(tenRemaining.result.candidateOutcomes.find(item => item.id === "one-year-early").status, "NOT_FEASIBLE");
-  const tenPlan = buildEconomicsTermPlan({
-    student: tenStudent,
-    mapping: tenRemaining.mapping,
-    schedule,
-    prerequisites,
-    planningContext: buildEarlyGraduationContext(resolvePlanningContext(tenStudent)),
-    planVariant: { id: "one-year-early", label: "One Year Early", strategy: "one-year-early", description: "" },
-    planningMode: "graduation_priority"
-  });
-  assert.equal(tenPlan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);
-  assert.equal(tenPlan.feasibility.search.complete, true);
-  assert.equal(tenPlan.feasibility.search.terminationReason, "COUNT_CAPACITY");
+test("junior One Year Early safely normalizes to the standard horizon", () => {
+  const student = earlyUpcomingStudent("junior", ["ECO 113", "ECO 114"]);
+  const { mapping, result } = bundle(student);
 
-  const baseProfile = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
-  const threeUsable = bundle(baseProfile);
-  assert.equal(threeUsable.mapping.strict.remainingUnits, 9);
-  assert.equal(threeUsable.result.candidateOutcomes.find(item => item.id === "one-year-early").status, "CONDITIONALLY_FEASIBLE");
-
-  const fourUsableSchedule = structuredClone(schedule);
-  const fourthElective = extraOpenElective("ECO 315", "A");
-  fourthElective.days = "Wed";
-  fourUsableSchedule.terms.Fall.push(extraOpenElective("ECO 224"), fourthElective);
-  const fourUsable = bundle(baseProfile, fourUsableSchedule);
-  assert.equal(fourUsable.result.candidateOutcomes.find(item => item.id === "one-year-early").status, "CONDITIONALLY_FEASIBLE");
+  assert.equal(mapping.strict.remainingUnits, 10);
+  assert.equal(result.context.planningPace, PLANNING_PACES.STANDARD);
+  assert.equal(result.context.earlyComparisonRequested, false);
+  assert.equal(result.context.planningPaceNormalization.code, "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD");
+  assert.equal(result.earlyGraduationContext, null);
+  assert.ok(result.candidateOutcomes.every(item => item.id !== "one-year-early"));
+  assert.ok(result.plans.every(item => item.id !== "one-year-early"));
 });
 
-test("J+3 One Year Early uses canonical sections rather than injected extra electives", () => {
-  const student = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
+test("eligible One Year Early uses canonical sections rather than injected extra electives", () => {
+  const student = earlyUpcomingStudent("sophomore", ["ECO 113", "MAT 113", "ECO 213"]);
   const verifiedElectiveSchedule = structuredClone(schedule);
   const fourthElective = extraOpenElective("ECO 315", "A");
   fourthElective.days = "Wed";
@@ -154,13 +136,13 @@ test("J+3 One Year Early uses canonical sections rather than injected extra elec
   const plan = result.plans.find(item => item.id === "one-year-early");
 
   assert.ok(plan);
-  assert.equal(result.candidateOutcomes.find(item => item.id === "one-year-early").status, "CONDITIONALLY_FEASIBLE");
+  assert.equal(result.candidateOutcomes.find(item => item.id === "one-year-early").status, "VERIFIED_FEASIBLE");
   assert.ok(!plan.terms.flatMap(term => term.courses).some(course => ["ECO 224", "ECO 315"].includes(course.course)));
   assert.equal(mapping.strict.remainingUnits, 9);
 });
 
 test("node-limited plans are search-incomplete rather than declared infeasible", () => {
-  const student = earlyUpcomingStudent("junior", ["ECO 113", "MAT 113", "ECO 213"]);
+  const student = earlyUpcomingStudent("sophomore", ["ECO 113", "MAT 113", "ECO 213"]);
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const context = resolvePlanningContext(student);
   const plan = buildEconomicsTermPlan({
@@ -228,9 +210,9 @@ test("the solver ignores ungoverned injected offerings", () => {
 });
 
 test("one-year-early final Winter carries assumed senior standing for ECO 461", () => {
-  const context = buildEarlyGraduationContext(resolvePlanningContext(earlyUpcomingStudent("junior", [])));
-  const finalWinter = buildPlanningSlots(context).find(slot => slot.termKey === "Winter");
-  assert.equal(context.remainingYears, 1);
+  const context = buildEarlyGraduationContext(resolvePlanningContext(earlyUpcomingStudent("sophomore", [])));
+  const finalWinter = buildPlanningSlots(context).filter(slot => slot.termKey === "Winter").at(-1);
+  assert.equal(context.remainingYears, 2);
   assert.equal(context.planningValidation.valid, true);
   assert.equal(finalWinter.absoluteStandingIndex, 3);
   assert.equal(finalWinter.seniorStandingBasis, "accelerated_plan_assumes_senior_standing_in_final_year");

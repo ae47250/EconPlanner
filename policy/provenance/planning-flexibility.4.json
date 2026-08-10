@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "econ-planning-flexibility.4",
+  "sources": [
+    {
+      "sourceId": "OWNER-CONFIRMATION-CP5-2026-08-09",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project-owner planning preference",
+      "authorityBoundary": "ECONOMICS_PLANNING_STRATEGY_RANKING_ONLY",
+      "locator": "Current Codex thread, project-owner messages dated 2026-08-09",
+      "confirmedOn": "2026-08-09",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "statement": "Balanced and Explore the Major remain separate searches. Balanced prefers feasible even pacing. Explore is available only in effective freshman and sophomore contexts, is compared at yearIndex 0 with the selected same-context Balanced plan, must be lighter and materially distinct, and softly prefers a nondecreasing backloaded distribution. Two or three final-year tracked requirements are common and four is acceptable; this is nonblocking planning guidance, not Hanover academic policy.",
+      "anchors": ["STRATEGY-PREFERENCES"],
+      "effective": {
+        "from": "2026-08-09",
+        "through": null
+      },
+      "supersedes": "Earlier owner-approved planning strategy wording and the Explore First public label"
+    },
+    {
+      "sourceId": "OWNER-CONFIRMATION-CP7-2026-08-09",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project-owner product decision",
+      "authorityBoundary": "ECONOMICS_NONACADEMIC_PLANNING_STRATEGY_ELIGIBILITY_ONLY",
+      "locator": "Current CP7 Codex task, project-owner request dated 2026-08-09",
+      "confirmedOn": "2026-08-09",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "statement": "One Year Early is offered only to students whose effective standing is freshman or sophomore. Junior and senior requests are safely normalized to the standard graduation timeline. This is a nonacademic product and strategy-eligibility decision and does not change plan feasibility or academic policy.",
+      "anchors": ["ONE-YEAR-EARLY-ELIGIBILITY"],
+      "effective": {
+        "from": "2026-08-09",
+        "through": null
+      },
+      "supersedes": "The earlier One Year Early strategy contract without an explicit standing-eligibility boundary"
+    }
+  ]
+}

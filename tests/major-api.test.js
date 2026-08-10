@@ -23,6 +23,12 @@ test("major mapper returns every captured program and Economics schedule", async
   assert.equal(data.catalog.catalogApplicability.status, "OWNER_DESIGNATED_REQUIREMENTS_MATCH_INCOMING_CATALOG");
   assert.equal(data.catalog.governingMajorCatalogYear, "2025-2026");
   assert.ok(!data.catalog.advisorAttention.some(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE"));
+  assert.equal(economics.economicsPlanResult.category, "PLANS_READY");
+  assert.equal(economics.economicsPlanResult.reason, "VALIDATED_PLANS_RETURNED");
+  assert.deepEqual(
+    economics.economicsPlanResult.evidence.candidateOutcomes,
+    economics.economicsCandidateOutcomes
+  );
   assert.ok(economics.economicsPlans.every(plan => plan.publicationStatus === "PLANNING_PROJECTION"));
   assert.equal(economics.annualSchedule.academicYear, "2026-2027");
   assert.ok(economics.annualSchedule.terms.May.some(course => course.section === "S"));
@@ -68,6 +74,23 @@ test("major mapper validates transfer graduation and Hanover entry years", async
   assert.equal(response.status, 422);
   assert.equal(data.code, "INVALID_TRANSFER_PLANNING_INPUT");
   assert.match(data.error, /2027 through 2031/);
+});
+
+test("major mapper asks the exact missing plan-date question", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student: { academicStanding: "freshman", courses: [] } })
+  }));
+  const data = await response.json();
+
+  assert.equal(response.status, 400);
+  assert.equal(data.economicsPlanResult.category, "INPUT_BLOCKED");
+  assert.deepEqual(data.economicsPlanResult.questions, [{
+    field: "planCreationDate",
+    prompt: "What date should this plan use?"
+  }]);
+  assert.deepEqual(data.economicsPlanResult.questions, data.inputResolution.questions);
 });
 
 test("a matching incoming catalog needs no SAC notification", async () => {
@@ -136,6 +159,38 @@ test("major mapper accepts one-year-early plans without a senior-standing confir
   const compressedTransfer = await compressedTransferResponse.json();
   assert.equal(compressedTransferResponse.status, 200);
   assert.equal(compressedTransfer.programs[0].planningContext.acceleratedPlanAssumesSeniorStanding, true);
+});
+
+test("major mapper safely normalizes junior and senior One Year Early requests", async () => {
+  for (const academicStanding of ["junior", "senior"]) {
+    const response = await POST(new Request("http://localhost/api/majors/map", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        student: {
+          academicStanding,
+          planningPace: "one_year_early",
+          planCreationDate: "2026-07-30",
+          courses: []
+        }
+      })
+    }));
+    const data = await response.json();
+    const economics = data.programs.find(result => result.program?.id === "economics-base");
+
+    assert.equal(response.status, 200, academicStanding);
+    assert.equal(economics.planningContext.planningPace, "standard", academicStanding);
+    assert.equal(economics.planningContext.earlyComparisonRequested, false, academicStanding);
+    assert.equal(
+      economics.planningContext.planningPaceNormalization.code,
+      "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD",
+      academicStanding
+    );
+    assert.ok(
+      economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "one-year-early"),
+      academicStanding
+    );
+  }
 });
 
 test("major mapper uses transfer entry catalog and keeps the selected graduation target", async () => {
@@ -226,6 +281,44 @@ test("major mapper generation continues to enforce authoritative reserved term c
     plan.validation.valid
     && plan.terms.find(term => term.slotId === "spring-2027").courses.length === 0
   )));
+});
+
+test("major mapper reports proven infeasibility only with exhaustive bounded-search evidence", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "junior",
+        planningPace: "standard",
+        planCreationDate: "2027-02-15",
+        courses: [
+          { code: "ECO 114", status: "completed" },
+          { code: "ECO 257", status: "completed" }
+        ],
+        reservedCourseUnits: {
+          "spring-2027": 1,
+          "fall-2027": 1,
+          "winter-2028": 1,
+          "spring-2028": 1
+        }
+      }
+    })
+  }));
+  const data = await response.json();
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
+  const planResult = economics.economicsPlanResult;
+
+  assert.equal(response.status, 200);
+  assert.equal(economics.economicsPlans.length, 0);
+  assert.equal(planResult.category, "INFEASIBLE_PROVEN");
+  assert.equal(planResult.conclusion, "PROVEN_INFEASIBLE");
+  assert.equal(planResult.reason, "COUNT_CAPACITY");
+  assert.ok(planResult.evidence.strategyAttempts.length > 0);
+  assert.ok(planResult.evidence.strategyAttempts.every(attempt => attempt.exhaustive));
+  assert.ok(planResult.evidence.searchAttempts.length > 0);
+  assert.ok(planResult.evidence.searchAttempts.every(attempt => attempt.failure === "COUNT_CAPACITY"));
+  assert.deepEqual(planResult.evidence.planningGaps, economics.economicsPlanningGaps);
 });
 
 test("major mapper uses the inferred entry catalog and reports an unavailable newer catalog", async () => {
@@ -384,6 +477,10 @@ test("major mapper rejects an in-progress course with missing prerequisites", as
   assert.equal(response.status, 422);
   assert.equal(data.code, "INVALID_STUDENT_PREREQUISITES");
   assert.ok(data.prerequisiteIssues.some(issue => issue.course === "ECO 213"));
+  assert.equal(data.economicsPlanResult.category, "INPUT_BLOCKED");
+  assert.equal(data.economicsPlanResult.reason, "INVALID_INPUT");
+  assert.deepEqual(data.economicsPlanResult.questions, data.inputResolution.questions);
+  assert.equal(data.economicsPlanResult.evidence.inputResolution.issueCode, "INVALID_STUDENT_PREREQUISITES");
 });
 
 test("major mapper reports instructor approval for current concurrent math", async () => {

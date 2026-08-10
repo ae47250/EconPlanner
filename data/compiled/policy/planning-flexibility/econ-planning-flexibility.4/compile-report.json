@@ -1,0 +1,32 @@
+{
+  "activationStatus": "OWNER_APPROVED",
+  "activeRuntimeMappingChanged": false,
+  "bundleVersion": "econ-planning-flexibility.4",
+  "contentHash": "sha256:d9f9551889039b57d1553872447434a225c07a3950705ae7f3477fc7e9e32fd7",
+  "determinism": {
+    "canonicalFormat": "UTF-8 JSON with canonical key and ID-array ordering",
+    "requiredCleanCompilations": 3
+  },
+  "inputs": [
+    "policy/rules/planning-flexibility.json",
+    "policy/provenance/planning-flexibility.4.json"
+  ],
+  "schemaVersion": "1.0.0",
+  "validation": {
+    "acceleratedSeniorStandingNonblocking": "PASS",
+    "approvedMathematicsEquivalencies": 0,
+    "automaticNewestSelectionDisabled": "PASS",
+    "catalog2026_2027Invented": false,
+    "collegeWidePolicyChanged": false,
+    "economicsStrategyContractOwnerApproved": "PASS",
+    "futureLikelihoodsNotInvented": "PASS",
+    "futureScheduleProjectionNonblocking": "PASS",
+    "generalDegreeCatalogKeptSeparate": "PASS",
+    "generalDegreeDesignationInformationNonblocking": "PASS",
+    "mathematicsEquivalencyCrossScopeInferenceDisabled": "PASS",
+    "oneYearEarlyEligibilityFreshmanSophomoreOnly": "PASS",
+    "ownerDesignationFixedTo2025_2026": "PASS",
+    "publishedScheduleAuthorityPreserved": "PASS",
+    "strategyPreferencesNonacademicAndNonblocking": "PASS"
+  }
+}

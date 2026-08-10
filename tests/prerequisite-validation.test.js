@@ -5,6 +5,10 @@ import {
   validateCoursePrerequisites,
   validateStudentPrerequisites
 } from "../lib/planning/prerequisiteValidation.js";
+import {
+  buildPrerequisiteFollowUp,
+  selectedStatus as selectedFormStatus
+} from "../lib/planning/prerequisiteFormValidation.js";
 
 const prerequisites = JSON.parse(await readFile(
   new URL("../data/normalized/economics/prerequisites.json", import.meta.url),
@@ -93,4 +97,93 @@ test("ECO 214 supports the same MAT 121 concurrency rule but not concurrent ECO 
   assert.equal(allowed.conditionalApprovals[0].prerequisite, "MAT 121");
   assert.equal(blocked.valid, false);
   assert.ok(blocked.issues.some(issue => issue.prerequisite === "ECO 114"));
+});
+
+test("form follow-up builds canonical required and alternative questions for a course taking now", () => {
+  const result = buildPrerequisiteFollowUp({
+    course: "ECO 213",
+    targetStatus: "in_progress",
+    courses: [],
+    prerequisites
+  });
+
+  assert.equal(result.required, true);
+  assert.equal(result.valid, false);
+  assert.equal(result.status, "BLOCK");
+  assert.deepEqual(result.questions.map(question => ({
+    kind: question.kind,
+    options: question.options,
+    blocking: question.blocking
+  })), [
+    { kind: "required", options: ["ECO 113"], blocking: true },
+    { kind: "one_of", options: ["MAT 113", "MAT 121"], blocking: true }
+  ]);
+  assert.deepEqual(result.conflicts.map(conflict => conflict.code), [
+    "PREREQUISITE_STATUS_CONFLICT",
+    "PREREQUISITE_STATUS_CONFLICT"
+  ]);
+});
+
+test("completed-course follow-up asks the same canonical questions without creating a new block", () => {
+  const result = buildPrerequisiteFollowUp({
+    course: "ECO 214",
+    targetStatus: "completed",
+    courses: [],
+    prerequisites
+  });
+
+  assert.equal(result.required, true);
+  assert.equal(result.valid, true);
+  assert.equal(result.status, "ALLOW");
+  assert.deepEqual(result.questions.map(question => question.options), [
+    ["ECO 114"],
+    ["MAT 113", "MAT 121"]
+  ]);
+  assert.ok(result.questions.every(question => question.blocking === false));
+  assert.deepEqual(result.conflicts, []);
+});
+
+test("alternative follow-up preserves not-started and uncertain statuses as unsatisfied", () => {
+  const courses = [
+    { code: "ECO 113", status: "completed" },
+    { code: "MAT 113", status: "uncertain" },
+    { code: "MAT 121", status: "not_started" }
+  ];
+  const result = buildPrerequisiteFollowUp({
+    course: "ECO 213",
+    targetStatus: "in_progress",
+    courses,
+    prerequisites
+  });
+
+  assert.equal(selectedFormStatus(courses, "MAT 113"), "uncertain");
+  assert.equal(selectedFormStatus(courses, "MAT 121"), "not_started");
+  assert.equal(result.questions.length, 1);
+  assert.equal(result.questions[0].kind, "one_of");
+  assert.deepEqual(result.questions[0].options, ["MAT 113", "MAT 121"]);
+  assert.deepEqual(result.questions[0].statuses, [
+    { code: "MAT 113", status: "uncertain" },
+    { code: "MAT 121", status: "not_started" }
+  ]);
+  assert.deepEqual(result.conflicts[0].statuses, result.questions[0].statuses);
+  assert.equal(result.conflicts[0].blocking, true);
+});
+
+test("approved current-term prerequisite paths produce metadata instead of a follow-up conflict", () => {
+  const result = buildPrerequisiteFollowUp({
+    course: "ECO 213",
+    targetStatus: "in_progress",
+    courses: [
+      { code: "ECO 113", status: "completed" },
+      { code: "MAT 113", status: "in_progress" }
+    ],
+    prerequisites
+  });
+
+  assert.equal(result.required, false);
+  assert.equal(result.valid, true);
+  assert.deepEqual(result.questions, []);
+  assert.deepEqual(result.conflicts, []);
+  assert.equal(result.conditionalApprovals.length, 1);
+  assert.equal(result.conditionalApprovals[0].prerequisite, "MAT 113");
 });

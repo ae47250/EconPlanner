@@ -2,19 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
+  buildEarlyGraduationContext,
   buildPlanningSlots,
   PLANNING_PACES,
   resolvePlanningContext,
   transferPlanningOptions
 } from "../lib/planning/horizon.js";
 import {
-  selectedStatus,
-  validateCoursePrerequisites,
+  buildPrerequisiteFollowUp,
   validateStudentPrerequisites
 } from "../lib/planning/prerequisiteFormValidation.js";
 import {
   createGeneratedPlannerSession,
   economicsResultFromReport,
+  migratePlannerInputState,
+  PLANNER_INPUT_STATE_VERSION,
   PLANNER_VIEWS,
   plannerViewFromSearch,
   replaceEconomicsPlan,
@@ -24,7 +26,7 @@ import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
-const PLANNER_STORAGE_VERSION = 5;
+const PLANNER_STORAGE_VERSION = PLANNER_INPUT_STATE_VERSION;
 const COURSE_CATALOG = economicsCourseData.courses || [];
 const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
   (course.aliases || []).map(alias => [alias, course.code])
@@ -43,6 +45,12 @@ const COURSE_PREREQUISITES = Object.fromEntries(COURSE_CATALOG
   .map(course => [course.code, course.prerequisites]));
 
 const SELECTABLE_COURSE_CATALOG = COURSE_CATALOG.filter(course => course.studentSelectable !== false);
+const STANDING_LABELS = Object.freeze({
+  freshman: "Freshman",
+  sophomore: "Sophomore",
+  junior: "Junior",
+  senior: "Senior"
+});
 
 const GROUPED_COURSE_CODES = new Set([
   "MAT 113", "MAT 121", "ECO 257", "MAT 217", "PSY 217", "ECO 321", "BUSN 323"
@@ -134,9 +142,6 @@ const COURSE_DISPLAY_GROUPS = [
 
 const DECLARATION_COURSE_IDS = ["ECO 113", "ECO 114", "ECO 213", "ECO 214"];
 const DECLARATION_REQUIREMENT_IDS = ["math-requirement", "statistics-requirement"];
-const DECLARATION_RIGHT_COURSE_IDS = ["ECO 160", "ECO 161"];
-const RELATIVELY_FREQUENT_COURSE_IDS = new Set(["finance-requirement", "ECO 331", "ECO 333"]);
-const DECLARATION_GROUP_IDS = new Set([...DECLARATION_COURSE_IDS, ...DECLARATION_REQUIREMENT_IDS, ...DECLARATION_RIGHT_COURSE_IDS]);
 const MAX_COURSE_NAME_CHARS = Math.max(...COURSE_DISPLAY_GROUPS.map(group => `${group.code} ${group.title}`.length));
 const COURSE_COLUMNS_STYLE = { "--course-name-width": `calc(${MAX_COURSE_NAME_CHARS}ch + .4rem)` };
 
@@ -208,7 +213,7 @@ function plannerInputSignature(formData) {
 
 const initialForm = {
   displayName: "",
-  academicStanding: "freshman",
+  academicStanding: "",
   majorDeclarationCatalogYear: "",
   planningPace: PLANNING_PACES.STANDARD,
   planCreationDate: "",
@@ -230,35 +235,51 @@ function isTaken(course) {
   return course.status === "completed" || course.status === "transfer";
 }
 
+function visibleCourseStatus(course = {}) {
+  if (isTaken(course)) return "completed";
+  if (course.status === "in_progress") return "in_progress";
+  if (course.status === "uncertain") return "uncertain";
+  return "";
+}
+
+function completionSourceLabel(course = {}) {
+  if (course.status === "transfer") return "Another college / transfer credit";
+  if (course.source === "ap_credit" || /\bap\b|exam/i.test(course.source || "")) return "AP or exam credit";
+  return "Hanover College";
+}
+
+function hasExplicitPrerequisiteConflict(question = {}) {
+  return Boolean(
+    question.blocking
+    && (question.statuses || []).some(item => item.status && item.status !== "not_started")
+  );
+}
+
+function prerequisiteStatusLabel(status) {
+  return ({
+    completed: "Completed",
+    transfer: "Completed with transfer credit",
+    in_progress: "Taking now",
+    uncertain: "Not taken / not sure",
+    repeated: "Repeated",
+    failed: "Not completed",
+    withdrawn: "Withdrawn"
+  })[status] || plainCodeText(status);
+}
+
+function explicitPrerequisiteStatusText(question = {}) {
+  return (question.statuses || [])
+    .filter(item => item.status && item.status !== "not_started")
+    .map(item => `${item.code} is marked ${prerequisiteStatusLabel(item.status)}`)
+    .join("; ");
+}
+
 function selectedCourses(courses) {
   return courses.filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code) && ["completed", "transfer", "in_progress"].includes(course.status));
 }
 
 function courseTitle(code) {
   return COURSE_CATALOG.find(course => course.code === code)?.title || code;
-}
-
-function clearInvalidDependents(courses, changedCode) {
-  const nextCourses = courses.map(course => ({ ...course }));
-  const affectedCodes = new Set([changedCode]);
-  const clearedCodes = [];
-
-  while (true) {
-    const validation = validateStudentPrerequisites(nextCourses, COURSE_PREREQUISITES);
-    const invalidDependent = validation.issues.find(issue => (
-      !clearedCodes.includes(issue.course)
-      && [issue.prerequisite, ...(issue.options || [])].some(code => affectedCodes.has(code))
-    ));
-    if (!invalidDependent) break;
-
-    const dependent = nextCourses.find(course => course.code === invalidDependent.course);
-    if (!dependent || dependent.status === "not_started") break;
-    dependent.status = "not_started";
-    affectedCodes.add(dependent.code);
-    clearedCodes.push(dependent.code);
-  }
-
-  return { courses: nextCourses, clearedCodes };
 }
 
 function economicsResult(report) {
@@ -311,10 +332,6 @@ function studentFacingRequestError(error, fallback, connectionMessage = "The pla
   return message || fallback;
 }
 
-function planCourseCount(plan) {
-  return plan?.terms?.reduce((count, term) => count + term.courses.length, 0) || 0;
-}
-
 function planCourseIdentity(course) {
   return course.requirementId || `${course.course}-${course.source || "course"}`;
 }
@@ -328,25 +345,6 @@ function localToday() {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${date.getFullYear()}-${month}-${day}`;
-}
-
-function CalendarIcon() {
-  return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-      <rect x="2" y="3.5" width="12" height="10" rx="1.5" />
-      <path d="M5 2v3M11 2v3M2 7h12" />
-    </svg>
-  );
-}
-
-function formatPlanCreationDate(value) {
-  const [year, month, day] = String(value || "").split("-").map(Number);
-  if (!year || !month || !day) return "Not set";
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  }).format(new Date(year, month - 1, day));
 }
 
 function formatAvailabilityVerificationDate(value) {
@@ -461,15 +459,70 @@ function selectedPlanNotices(plan, schedule) {
   ].map(notice => [notice.message, notice])).values()];
 }
 
+function structuredItemText(item, fallback) {
+  if (typeof item === "string") return item;
+  return item?.message || item?.question || item?.prompt || item?.reason || item?.label || item?.code || fallback;
+}
+
+function plainCodeText(value) {
+  const words = String(value || "").trim().replaceAll("_", " ").toLowerCase();
+  return words ? `${words[0].toUpperCase()}${words.slice(1)}` : "";
+}
+
+function planningTermText(value) {
+  const match = /^(\d{4})-(FALL|WINTER|SPRING|MAY|SUMMER)$/u.exec(String(value || "").trim().toUpperCase());
+  return match ? `${plainCodeText(match[2])} ${match[1]}` : String(value || "").trim();
+}
+
+function affectedPlanningItemText(item) {
+  const affected = item?.affectedObject || item?.subject || {};
+  const parts = [
+    affected.course,
+    affected.termId ? `in ${planningTermText(affected.termId)}` : "",
+    !affected.course && affected.requirementId ? `requirement ${affected.requirementId}` : "",
+    !affected.course && !affected.requirementId && affected.catalogDecision
+      ? plainCodeText(affected.catalogDecision)
+      : ""
+  ].filter(Boolean);
+  return parts.join(" ");
+}
+
+function conditionText(condition) {
+  const supplied = structuredItemText(condition, "");
+  if (supplied) return supplied;
+  const affected = affectedPlanningItemText(condition);
+  const reason = plainCodeText(condition?.reasonCode || condition?.type);
+  return affected && reason
+    ? `${affected}: ${reason}.`
+    : affected || (reason ? `${reason}.` : "Confirm this plan condition.");
+}
+
+function advisorActionText(action) {
+  const supplied = structuredItemText(action, "");
+  if (supplied) return supplied;
+  const affected = affectedPlanningItemText(action);
+  const reason = plainCodeText(action?.reasonCode);
+  const authority = plainCodeText(action?.responsibleAuthority);
+  const evidence = (action?.evidenceRequired || []).map(plainCodeText).filter(Boolean);
+  const summary = affected && reason ? `${affected}: ${reason}.` : affected || (reason ? `${reason}.` : "Review this plan item.");
+  return [
+    summary,
+    authority ? `Review with ${authority.toLowerCase()}.` : "",
+    evidence.length ? `Evidence needed: ${evidence.join(", ")}.` : ""
+  ].filter(Boolean).join(" ");
+}
+
 function AdvisorAttention({ catalog, plan, schedule }) {
   const degreeInformation = plan?.degreeRequirementInformation;
   const degreeItems = degreeInformation?.items || [];
+  const advisorActions = plan?.advisorActions || plan?.validation?.advisorActions || [];
+  const conditions = plan?.conditions || plan?.validation?.conditions || [];
   const globalNotices = (catalog?.advisorAttention || []).filter(notice => !isFlattenedPlanNotice(notice));
   const notices = [...new Map([
     ...globalNotices,
     ...selectedPlanNotices(plan, schedule)
   ].map(notice => [notice.message, notice])).values()];
-  if (!notices.length && !degreeItems.length) return null;
+  if (!notices.length && !degreeItems.length && !advisorActions.length && !conditions.length) return null;
   const planningNotices = notices.filter(notice => notice.title === "Graduation planning assumption");
   const otherNotices = notices.filter(notice => notice.title !== "Graduation planning assumption");
   const projectedNotices = planningNotices.filter(notice => /projected placement/i.test(notice.message || ""));
@@ -510,11 +563,42 @@ function AdvisorAttention({ catalog, plan, schedule }) {
   const publishedScheduleLabel = schedule?.academicYear
     ? `Published ${formatAcademicYear(schedule.academicYear)} schedule checks`
     : "Published schedule checks";
+  const advisorActionRequired = Boolean(
+    advisorActions.length
+    || plan?.advisorActionRequired
+    || plan?.readinessStatus === "ADVISOR_ACTION_REQUIRED"
+    || plan?.validation?.readinessStatus === "ADVISOR_ACTION_REQUIRED"
+  );
+  const sectionHeading = advisorActionRequired
+    ? "Advisor Attention"
+    : conditions.length
+      ? "Plan Conditions"
+      : "Plan Notes";
 
   return (
     <section className="advisor-attention" aria-live="polite" data-plan-id={plan?.id || ""}>
-      <h2>Advisor Attention</h2>
+      <h2>{sectionHeading}</h2>
       {plan?.label && <p className="advisor-attention-scope">Information and warnings shown for {plan.label}.</p>}
+      {conditions.length > 0 && (
+        <div className="advisor-attention-item plan-conditions" data-plan-conditions>
+          <h3>Conditions to confirm</h3>
+          <ul>
+            {conditions.map((condition, index) => (
+              <li key={condition.conditionId || `${condition.code || "condition"}-${index}`}>{conditionText(condition)}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {advisorActions.length > 0 && (
+        <div className="advisor-attention-item plan-advisor-actions" data-plan-advisor-actions>
+          <h3>Actions for you and your advisor</h3>
+          <ul>
+            {advisorActions.map((action, index) => (
+              <li key={action.actionId || `${action.code || "action"}-${index}`}>{advisorActionText(action)}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {degreeItems.length > 0 && (
         <div className="advisor-attention-item degree-requirement-information" data-degree-requirement-information>
           <h3>CCR/ACE information</h3>
@@ -619,15 +703,12 @@ function PlanTimeline({
   return (
     <section className="plan-section" aria-live="polite">
       {plans.length > 1 && (
-        <div className="plan-tabs" role="tablist" aria-label="Generated plans">
+        <div className="plan-tabs" role="group" aria-label="Generated plans">
           {plans.map(plan => (
             <button
               type="button"
               className={`plan-tab${plan.id === activePlan.id ? " is-active" : ""}`}
-              id={`${plan.id}-tab`}
-              role="tab"
-              aria-selected={plan.id === activePlan.id}
-              aria-controls={plan.id}
+              aria-pressed={plan.id === activePlan.id}
               key={plan.id}
               onClick={() => onSelectPlan?.(plan.id)}
             >
@@ -636,16 +717,11 @@ function PlanTimeline({
           ))}
         </div>
       )}
-      {plans.filter(plan => plan.id !== activePlan.id).map(plan => (
-        <div
-          id={plan.id}
-          role="tabpanel"
-          aria-labelledby={`${plan.id}-tab`}
-          hidden
-          key={plan.id}
-        />
-      ))}
-      <div id={activePlan.id} role="tabpanel" aria-labelledby={`${activePlan.id}-tab`}>
+      <div
+        id={activePlan.id}
+        role="region"
+        aria-label={`${activePlan.label} plan`}
+      >
         <div className="section-heading">
           <span className="step-number">3.</span>
           <div>
@@ -791,7 +867,7 @@ function PlanTimeline({
             </ul>
           </div>
         )}
-        <PlanningGaps items={[...(activePlan.unscheduled || []), ...planningGaps]} />
+        <PlanningGaps items={activePlan.unscheduled || []} />
         {activePlan.summerFallbacks?.length > 0 && (
           <div className="plan-notes summer-fallback-note">
             <strong>Summer fallback used</strong>
@@ -820,21 +896,6 @@ function compactPlanCourse(course) {
     return "ECO elective (200+)";
   }
   return course.course;
-}
-
-function planValidationLabel(plan) {
-  if (plan?.validation?.valid === false) {
-    const count = plan.validation.errors?.length || 1;
-    return `Needs attention: ${count} blocking validation ${count === 1 ? "issue" : "issues"}`;
-  }
-  const warningCount = plan?.validation?.warnings?.length || 0;
-  if (warningCount) {
-    return `Validated with ${warningCount} advisor-review ${warningCount === 1 ? "warning" : "warnings"}`;
-  }
-  const requirementCount = plan?.validation?.checkedRequirementCount;
-  return requirementCount
-    ? `Validated against all ${requirementCount} requirement slots`
-    : "Validated by the Economics planning rules";
 }
 
 function feasibilityLabel(status) {
@@ -975,6 +1036,8 @@ function comparisonScheduleRows(plan) {
 
 function PlanComparisonScreen({
   report,
+  planResult,
+  fallbackPlanningContext,
   courses,
   displayName,
   view,
@@ -985,6 +1048,7 @@ function PlanComparisonScreen({
   planEditStatus,
   canUndoPlanEdit,
   onEditCourses,
+  onReviewTimeline,
   onBackToCompare,
   onChoosePlan,
   onSelectPlan,
@@ -1001,10 +1065,17 @@ function PlanComparisonScreen({
   const planningGaps = result?.economicsPlanningGaps || [];
   const candidateOutcomes = result?.economicsCandidateOutcomes || [];
   const convergences = result?.economicsPlanConvergences || [];
-  const planningContext = result?.planningContext;
+  const planningContext = result?.planningContext || fallbackPlanningContext;
+  const canonicalPlanResult = result?.economicsPlanResult || planResult || null;
   const [highlightDifferences, setHighlightDifferences] = useState(false);
+  const resultHeadingRef = useRef(null);
   const isPlanView = view === PLANNER_VIEWS.PLAN;
   const selectedPlan = plans.find(plan => plan.id === selectedPlanId) || plans[0];
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => resultHeadingRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [view]);
 
   const rowsByPlan = new Map(plans.map(plan => [plan.id, comparisonScheduleRows(plan)]));
   const allRowKeys = new Set([...rowsByPlan.values()].flatMap(rows => rows.map(row => row.key)));
@@ -1017,12 +1088,21 @@ function PlanComparisonScreen({
       : [];
     return [key, new Set(shared)];
   }));
-  const standing = displayName?.trim() || (planningContext?.isTransferStudent ? "Transfer plan" : planningContext?.effectiveStandingLabel)
+  const standing = displayName?.trim() || (planningContext?.isTransferStudent ? "Custom timeline" : planningContext?.effectiveStandingLabel)
     || planningContext?.standingLabel
     || "Student";
   const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
+  const overallStatus = overallPlanReadiness(plans);
+  const noPlan = noPlanPresentation(canonicalPlanResult?.category);
+  const displayedOverallStatus = plans.length
+    ? overallStatus
+    : canonicalPlanResult?.category === "INPUT_BLOCKED"
+      ? "Needs one more detail"
+      : canonicalPlanResult?.category === "INFEASIBLE_PROVEN"
+        ? "No complete plan"
+        : "Needs advisor attention";
   const planBadge = plan => {
     if (plan.planningMode !== "graduation_priority") return plan.label || "Validated";
     const mayCourse = plan.terms
@@ -1036,10 +1116,8 @@ function PlanComparisonScreen({
       <style jsx global>{`
         body {
           margin: 0;
-          background:
-            radial-gradient(circle at 8% 10%, rgba(23, 151, 210, .12), transparent 24rem),
-            linear-gradient(145deg, #f8fbff 0%, #eef4fa 58%, #fff8ed 100%);
-          color: #101f45;
+          background: #f1f3f5;
+          color: #18202b;
           font-family: Arial, sans-serif;
         }
         button, input { font-family: Arial, sans-serif; }
@@ -1066,7 +1144,7 @@ function PlanComparisonScreen({
           gap: 1rem;
           padding: 1rem 2rem;
           border-bottom: 1px solid #cbd5e1;
-          background: rgba(255, 255, 255, .92);
+          background: #fff;
           box-shadow: 0 1px 8px rgba(15, 35, 75, .06);
         }
         .comparison-brand {
@@ -1135,6 +1213,7 @@ function PlanComparisonScreen({
         .comparison-back:hover { text-decoration: underline; }
         .comparison-course-status {
           display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: .25rem;
           margin: .65rem 0 .9rem;
           padding: .65rem .8rem;
@@ -1146,6 +1225,8 @@ function PlanComparisonScreen({
         }
         .comparison-course-status p { margin: 0; }
         .comparison-course-status strong { color: #071956; }
+        .comparison-course-status span { display: block; margin-top: .2rem; font-size: 14px; }
+        .result-status-value { font-weight: 700; }
         .comparison-heading-row {
           display: flex;
           align-items: flex-end;
@@ -1192,7 +1273,7 @@ function PlanComparisonScreen({
         .comparison-difference-key strong { color: #4169a6; }
         .comparison-grid {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
           gap: 1rem;
           align-items: stretch;
         }
@@ -1387,9 +1468,45 @@ function PlanComparisonScreen({
           background: #fff;
           color: #41506a;
         }
+        .result-progress ol { display: flex; gap: .65rem; margin: 0; padding: 0; list-style: none; }
+        .result-progress li { color: #667085; font-size: 12px; }
+        .result-progress li::before { content: "✓ "; color: #31557e; }
+        .result-progress li.is-current { color: #18202b; font-weight: 700; }
+        .result-progress li.is-current::before { content: "● "; }
+        .no-plan-state {
+          padding: 1.25rem;
+          border: 1px solid #bdc9da;
+          border-radius: .7rem;
+          background: #fff;
+        }
+        .no-plan-state h2 { margin: 0; color: #18202b; font-size: 22px; line-height: 1.3; }
+        .no-plan-state > p { color: #53627a; line-height: 1.5; }
+        .no-plan-question-list, .no-plan-action-list { margin: .8rem 0; padding-left: 1.25rem; }
+        .no-plan-primary {
+          width: auto;
+          min-height: 42px;
+          padding: .65rem .9rem;
+          border: 1px solid #172a40;
+          border-radius: 7px;
+          background: #26384f;
+          color: #fff;
+          font-weight: 700;
+          cursor: pointer;
+        }
+        .result-diagnostics {
+          margin-top: 1rem;
+          padding: .75rem .9rem;
+          border: 1px solid #cfd8e6;
+          border-radius: 9px;
+          background: #fff;
+          color: #33425d;
+        }
+        .result-diagnostics > summary { cursor: pointer; color: #244f85; font-weight: 700; }
+        .result-diagnostics .candidate-outcomes,
+        .result-diagnostics .planning-gaps { margin: .75rem 0 0; }
         .comparison-page .advisor-attention,
         .comparison-page .plan-notes {
-          margin: 0 0 1rem;
+          margin: 1rem 0;
           padding: .8rem 1rem;
           border: 1px solid #d7a633;
           border-radius: .55rem;
@@ -1451,6 +1568,7 @@ function PlanComparisonScreen({
         }
         @media (max-width: 760px) {
           .comparison-grid { grid-template-columns: 1fr; }
+          .comparison-course-status { grid-template-columns: 1fr 1fr; }
           .comparison-plan-summary { min-height: 0; }
           .comparison-page .plan-grid { grid-template-columns: 1fr; }
           .comparison-page .advisor-attention-groups { grid-template-columns: 1fr; }
@@ -1500,6 +1618,13 @@ function PlanComparisonScreen({
 
       <header className="comparison-topbar">
         <div className="comparison-brand">EconPlanner</div>
+        <nav className="result-progress" aria-label="Planner progress">
+          <ol>
+            <li>About you</li>
+            <li>Your courses</li>
+            <li className="is-current" aria-current="step">Your plans</li>
+          </ol>
+        </nav>
         <div className="comparison-student">
           <strong>{standing}</strong>
           <span aria-hidden="true">·</span>
@@ -1531,7 +1656,7 @@ function PlanComparisonScreen({
             {isGenerating ? "Regenerating..." : "Regenerate plans"}
           </button>
           <button type="button" className="edit-courses-button" onClick={onEditCourses}>
-            Edit completed courses
+            Edit answers
           </button>
         </div>
       </header>
@@ -1546,21 +1671,27 @@ function PlanComparisonScreen({
           {isPlanView ? "← Back to plan comparison" : "← Back to course selection"}
         </button>
         <section className="comparison-course-status" aria-label="Selected course status">
-          <p><strong>Completed:</strong> {completedCodes.join(", ") || "None"}</p>
-          <p><strong>In Progress:</strong> {inProgressCodes.join(", ") || "None"}</p>
+          <p><strong>Graduation target</strong><span>{graduationTarget}</span></p>
+          <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
+          <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
+          <p><strong>Overall status</strong><span className="result-status-value">{displayedOverallStatus}</span></p>
         </section>
         <div className="comparison-heading-row">
           <div>
-            <h1>{isPlanView
+            <h1 ref={resultHeadingRef} tabIndex={-1}>{isPlanView
               ? `Review ${selectedPlan?.label || "your plan"}`
               : plans.length > 1
                 ? "Compare your plans"
-                : "Your feasible plan"}</h1>
+                : plans.length === 1
+                  ? "Your feasible plan"
+                  : "Your planning result"}</h1>
             <p>{isPlanView
               ? "Switch plans, adjust one plan, or return to the side-by-side comparison."
               : plans.length > 1
                 ? "Same degree requirements and graduation target, different feasible schedules."
-                : "The verified schedule supports one feasible plan; infeasible or duplicate filler plans are not shown."}</p>
+                : plans.length === 1
+                  ? "The planner returned one validated schedule for this graduation target."
+                  : "Review this result and the next step below."}</p>
           </div>
           {!isPlanView && plans.length > 1 && (
             <label className="difference-toggle">
@@ -1579,10 +1710,6 @@ function PlanComparisonScreen({
             <strong>Blue courses are shared by every plan in the same term.</strong> They remain visible so you can compare the complete timeline; the darker courses are the schedule differences to review.
           </p>
         )}
-
-        <AdvisorAttention catalog={report?.catalog} plan={selectedPlan} schedule={result?.annualSchedule} />
-        <CandidateOutcomes outcomes={candidateOutcomes} convergences={convergences} />
-        <ScheduleAvailability schedule={result?.annualSchedule} plan={selectedPlan} />
 
         {planEditStatus && <p className="plan-edit-status" role="status">{planEditStatus}</p>}
         {isPlanView && canUndoPlanEdit && (
@@ -1661,7 +1788,7 @@ function PlanComparisonScreen({
                   ) : null}
 
                   <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
-                    {feasibilityLabel(plan.feasibilityStatus)} · {planValidationLabel(plan)}
+                    {planReadinessLabel(plan)}
                   </p>
                   <button
                     type="button"
@@ -1680,89 +1807,233 @@ function PlanComparisonScreen({
             })}
           </div>
         ) : (
-          <div className="comparison-empty">
-            No validated plan can be displayed for this profile.
-          </div>
+          <section className="no-plan-state" aria-live="polite">
+            <h2>{noPlan.title}</h2>
+            <p>{noPlan.message}</p>
+            {canonicalPlanResult?.questions?.length > 0 && (
+              <ul className="no-plan-question-list">
+                {canonicalPlanResult.questions.map((question, index) => (
+                  <li key={question.id || `${question.code || "question"}-${index}`}>
+                    {structuredItemText(question, "Provide the requested planning detail.")}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {canonicalPlanResult?.actions?.length > 0 && (
+              <ul className="no-plan-action-list">
+                {canonicalPlanResult.actions.map((action, index) => (
+                  <li key={action.id || `${action.code || "action"}-${index}`}>
+                    {structuredItemText(action, "Review this planning item with your advisor.")}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <button
+              type="button"
+              className="no-plan-primary"
+              onClick={noPlan.actionTarget === "timeline" ? onReviewTimeline : onEditCourses}
+            >
+              {noPlan.action}
+            </button>
+          </section>
         )}
 
-        {!isPlanView && <PlanningGaps items={planningGaps} />}
+        {selectedPlan && (
+          <>
+            <AdvisorAttention catalog={report?.catalog} plan={selectedPlan} schedule={result?.annualSchedule} />
+            <ScheduleAvailability schedule={result?.annualSchedule} plan={selectedPlan} />
+          </>
+        )}
+
+        <ResultDiagnostics
+          outcomes={candidateOutcomes}
+          convergences={convergences}
+          planningGaps={planningGaps}
+          planResult={canonicalPlanResult}
+          planCount={plans.length}
+        />
       </div>
     </main>
   );
 }
 
-function PlannerSummary({ report, courses, planningContext: initialPlanningContext }) {
-  const result = economicsResult(report);
-  const plan = result?.economicsPlans?.[0] || result?.economicsPlan;
-  const planningContext = result?.planningContext || initialPlanningContext;
-  const chosen = selectedCourses(courses);
-  const completedCount = chosen.filter(course => isTaken(course)).length;
-  const inProgressCount = chosen.filter(course => course.status === "in_progress").length;
-  const remainingUnits = result?.projectedAfterInProgress?.optimistic?.remainingUnits
-    ?? result?.optimistic?.remainingUnits;
-  const catalog = report?.catalog;
+function SummaryCourseCodes({ courses = [] }) {
+  if (!courses.length) return <span className="summary-none">None selected</span>;
+  const visible = courses.slice(0, 5);
+  if (courses.length <= visible.length) return <span>{visible.join(" · ")}</span>;
+  return (
+    <>
+      <span>{visible.join(" · ")}</span>
+      <details className="summary-show-all">
+        <summary>Show all {courses.length}</summary>
+        <span>{courses.join(" · ")}</span>
+      </details>
+    </>
+  );
+}
+
+function planReadinessLabel(plan) {
+  const readiness = plan?.readinessStatus || plan?.validation?.readinessStatus || "";
+  const disposition = plan?.planDisposition || plan?.validation?.planDisposition || "";
+  if (readiness === "ADVISOR_ACTION_REQUIRED" || disposition.includes("ADVISOR_ACTION_REQUIRED")) {
+    return "Needs advisor attention";
+  }
+  if (readiness === "READY_WITH_CONDITIONS" || disposition.includes("READY_WITH_CONDITIONS")) {
+    return "Ready with conditions";
+  }
+  if (readiness === "STUDENT_READY" || disposition.includes("STUDENT_READY")) return "Ready";
+  return "Needs advisor attention";
+}
+
+function overallPlanReadiness(plans = []) {
+  const labels = plans.map(planReadinessLabel);
+  if (labels.includes("Needs advisor attention")) return "Needs advisor attention";
+  if (labels.includes("Ready with conditions")) return "Ready with conditions";
+  return plans.length ? "Ready" : "Not available";
+}
+
+function noPlanPresentation(category) {
+  if (category === "INPUT_BLOCKED") {
+    return {
+      title: "We need one more detail before we can build your plan.",
+      message: "Review the question below. Your previous answers are still saved.",
+      action: "Review my answers"
+    };
+  }
+  if (category === "INFEASIBLE_PROVEN") {
+    return {
+      title: "No complete plan fits this graduation target under the current requirements and course timing.",
+      message: "Review your graduation timeline and bring this result to your academic advisor.",
+      action: "Review graduation timeline",
+      actionTarget: "timeline"
+    };
+  }
+  if (category === "SEARCH_INCOMPLETE") {
+    return {
+      title: "We could not finish checking every possible plan.",
+      message: "This does not mean a plan is impossible. Review your answers or ask an advisor to help check the remaining possibilities.",
+      action: "Review my answers"
+    };
+  }
+  return {
+    title: "This planning result needs advisor attention before we can show a complete schedule.",
+    message: "Your answers are saved. Review the details below with your academic advisor.",
+    action: "Review my answers"
+  };
+}
+
+function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, planCount = 0 }) {
+  const hasDiagnostics = outcomes.length || convergences.length || planningGaps.length || planResult?.evidence;
+  if (!hasDiagnostics) return null;
+  return (
+    <details className="result-diagnostics">
+      <summary>{planCount ? "Why am I seeing these plans?" : "Why am I seeing this result?"}</summary>
+      <CandidateOutcomes outcomes={outcomes} convergences={convergences} />
+      <PlanningGaps items={planningGaps} />
+    </details>
+  );
+}
+
+function PlannerSummary({
+  courses,
+  formData,
+  planningContext,
+  planningStart,
+  attentionItems = [],
+  intakeStep,
+  isGenerating,
+  status,
+  migrationNotice,
+  generateButtonRef,
+  onContinue,
+  onFocusAttention
+}) {
+  const completedCodes = courses.filter(isTaken).map(course => course.code);
+  const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
+  const earlyContext = planningContext?.earlyComparisonRequested
+    ? buildEarlyGraduationContext(planningContext)
+    : null;
+  const hasStanding = Boolean(formData.academicStanding);
+  const standardPlanningContext = hasStanding
+    ? resolvePlanningContext({ ...formData, isTransferStudent: false, planningPace: PLANNING_PACES.STANDARD })
+    : null;
 
   return (
-    <aside className="summary-card">
-      <div className="section-heading">
+    <aside className="summary-card cp7-summary" aria-labelledby="plan-setup-heading">
+      <h2 id="plan-setup-heading">Your plan setup</h2>
+      <dl className="summary-details">
         <div>
-          <h2>{report ? "Planner Summary" : "Plan setup"}</h2>
-          <p>{report ? "Your selected courses and generated plan at a glance." : "Your summary will appear after you generate your plan."}</p>
+          <dt>Class standing</dt>
+          <dd>{hasStanding ? STANDING_LABELS[formData.academicStanding] : "Choose your standing"}</dd>
         </div>
-      </div>
-      {report ? (
-        <>
-          <div className="summary-grid">
-            <div><span>Taken or AP credit</span><strong>{completedCount}</strong></div>
-            <div><span>In Progress</span><strong>{inProgressCount}</strong></div>
-            <div><span>Remaining</span><strong>{remainingUnits ?? "-"}</strong></div>
-            <div><span>Courses in plan</span><strong>{planCourseCount(plan)}</strong></div>
+        <div>
+          <dt>Standard graduation target</dt>
+          <dd>{standardPlanningContext?.expectedGraduationTerm || "To be confirmed"}</dd>
+        </div>
+        {earlyContext?.expectedGraduationTerm && (
+          <div>
+            <dt>One-year-early target</dt>
+            <dd>{earlyContext.expectedGraduationTerm}</dd>
           </div>
-          {planningContext?.expectedGraduationTerm && (
-            <p className="summary-footnote">{planningContext.isTransferStudent ? "Transfer plan" : `${planningContext.effectiveStandingLabel || planningContext.standingLabel} plan`}, {planningContext.remainingYears} years remaining; expected graduation {planningContext.expectedGraduationTerm}.</p>
+        )}
+        {planningContext.isTransferStudent && (
+          <div>
+            <dt>Custom graduation target</dt>
+            <dd>{planningContext.transferValidation.valid ? planningContext.expectedGraduationTerm : "Needs more information"}</dd>
+          </div>
+        )}
+        <div>
+          <dt>Planning starts</dt>
+          <dd>{hasStanding || planningContext.isTransferStudent ? planningStart : "To be confirmed"}</dd>
+        </div>
+        <div>
+          <dt>Completed</dt>
+          <dd><SummaryCourseCodes courses={completedCodes} /></dd>
+        </div>
+        <div>
+          <dt>Taking now</dt>
+          <dd><SummaryCourseCodes courses={inProgressCodes} /></dd>
+        </div>
+      </dl>
+
+      {(migrationNotice || attentionItems.length > 0) && (
+        <div className="summary-attention" aria-live="polite">
+          <strong>Needs attention</strong>
+          {migrationNotice && <p>{migrationNotice}</p>}
+          {attentionItems.length > 0 && (
+            <ul>
+              {attentionItems.map(item => (
+                <li key={`${item.target}-${item.message}`}>
+                  <button type="button" onClick={() => onFocusAttention(item)}>{item.message}</button>
+                </li>
+              ))}
+            </ul>
           )}
-          <p className="summary-footnote">Applied catalog: {formatAcademicYear(catalog?.selectedCatalogYear)}. The plan uses the selected course status and verified economics scheduling rules.</p>
-        </>
+        </div>
+      )}
+
+      {status && <p className="summary-status" role="status" aria-live="polite">{status}</p>}
+      {intakeStep === 1 ? (
+        <button key="continue" type="button" className="primary-action" onClick={onContinue}>
+          Continue to your courses
+        </button>
       ) : (
-        <>
-          <div className="apple-summary-preview">
-            <div className="apple-summary-line"><span>{planningContext?.isTransferStudent ? "Plan type" : "Class standing"}</span><strong>{planningContext?.isTransferStudent ? "Transfer plan" : planningContext?.standingLabel || "Choose standing"}</strong></div>
-            <div className="apple-summary-line"><span>Planning horizon</span><strong>{planningContext?.remainingYears ? `${planningContext.remainingYears} years` : "To be confirmed"}</strong></div>
-            <div className="apple-summary-line"><span>Completed</span><strong>{completedCount}</strong></div>
-            <div className="apple-summary-line"><span>In progress</span><strong>{inProgressCount}</strong></div>
-            <div className="apple-summary-courses" aria-label="Selected courses">
-              <div className="apple-summary-courses-heading"><span>Selected courses</span><strong>{chosen.length}</strong></div>
-              {chosen.length ? (
-                <ul>
-                  {chosen.map(course => (
-                    <li key={course.code}>
-                      <strong>{course.code}</strong>
-                      <span>{isTaken(course) ? "Completed" : "In progress"}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="apple-summary-no-courses">None selected</p>
-              )}
-            </div>
-            <p>The plan will use the published 2026/2027 schedule where available and show later terms as planning projections.</p>
-          </div>
-          <div className="summary-empty">Select your courses, then choose <strong>Generate My Plan</strong>.</div>
-        </>
+        <button
+          key="generate"
+          type="submit"
+          className="primary-action generate-button"
+          ref={generateButtonRef}
+          disabled={isGenerating}
+        >
+          {isGenerating ? "Generating plans…" : "Generate my plans"}
+        </button>
       )}
     </aside>
   );
 }
 
 export default function Page() {
-  const [appleLayoutPreview, setAppleLayoutPreview] = useState(true);
   const [formData, setFormData] = useState(initialForm);
-  const [requirementModes, setRequirementModes] = useState({});
-  const [requirementScrollTarget, setRequirementScrollTarget] = useState("");
-  const [requirementPopoverPosition, setRequirementPopoverPosition] = useState(null);
-  const [pendingPrerequisiteSelection, setPendingPrerequisiteSelection] = useState(null);
-  const requirementCardRefs = useRef({});
-  const requirementTriggerRefs = useRef({});
   const courseAccordionRefs = useRef({});
   const generatedInputSignatureRef = useRef("");
   const generationInFlightRef = useRef(false);
@@ -1777,7 +2048,9 @@ export default function Page() {
   const [failureFocusTarget, setFailureFocusTarget] = useState("");
   const latestFormRef = useRef(initialForm);
   const [courseSearch, setCourseSearch] = useState("");
-  const [isEditingPlanDate, setIsEditingPlanDate] = useState(false);
+  const [intakeStep, setIntakeStep] = useState(1);
+  const [migrationNotice, setMigrationNotice] = useState("");
+  const [inputBlock, setInputBlock] = useState(null);
   const [isHydrated, setIsHydrated] = useState(false);
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
@@ -1873,10 +2146,6 @@ export default function Page() {
   }
 
   useEffect(() => {
-    setAppleLayoutPreview(new URLSearchParams(window.location.search).get("layout") !== "classic");
-  }, []);
-
-  useEffect(() => {
     let restoredForm = { ...initialForm, planCreationDate: localToday() };
     let restoredCourseSearch = "";
 
@@ -1890,16 +2159,19 @@ export default function Page() {
             summerStandingConfirmed: _summerStandingConfirmed,
             ...savedFormData
           } = parsed.formData;
+          const migrated = migratePlannerInputState(savedFormData);
           const savedPlanCreationDateEdited = savedFormData.planCreationDateEdited === true;
           restoredForm = {
             ...restoredForm,
-            ...savedFormData,
-            courses: migrateSavedCourses(savedFormData.courses),
-            planCreationDate: savedPlanCreationDateEdited && savedFormData.planCreationDate
-              ? savedFormData.planCreationDate
+            ...migrated.formData,
+            courses: migrateSavedCourses(migrated.formData.courses),
+            planCreationDate: savedPlanCreationDateEdited && migrated.formData.planCreationDate
+              ? migrated.formData.planCreationDate
               : localToday(),
             planCreationDateEdited: savedPlanCreationDateEdited
           };
+          const savedMigrationNotice = migrated.notices[0]?.message;
+          if (savedMigrationNotice) setMigrationNotice(savedMigrationNotice);
         }
         if (typeof parsed.courseSearch === "string") restoredCourseSearch = parsed.courseSearch;
       }
@@ -1923,7 +2195,9 @@ export default function Page() {
       initialPlanId = new URLSearchParams(window.location.search).get("plan") || restoredSession.selectedPlanId;
       const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
       if (!plans.some(plan => plan.id === initialPlanId)) initialPlanId = plans[0]?.id || "";
-      initialView = requestedView;
+      initialView = requestedView === PLANNER_VIEWS.PLAN && !plans.length
+        ? PLANNER_VIEWS.COMPARE
+        : requestedView;
       setSelectedPlanId(initialPlanId);
       setPlannerView(initialView);
       setPlanEditUndo(restoredSession.planEditUndo);
@@ -1988,14 +2262,14 @@ export default function Page() {
         : plannerViewFromSearch(window.location.search);
       const plans = economicsResult(report)?.economicsPlans || [];
       const requestedPlanId = event.state?.planId || new URLSearchParams(window.location.search).get("plan");
-      if (requestedView !== PLANNER_VIEWS.INPUT && !plans.length) {
-        setPlannerView(PLANNER_VIEWS.INPUT);
+      if (requestedView === PLANNER_VIEWS.PLAN && !plans.length) {
+        setPlannerView(PLANNER_VIEWS.COMPARE);
         setSelectedPlanId("");
-        setStatus("That generated plan is no longer available. Generate new plans to continue.");
+        setStatus("");
         window.history.replaceState(
-          { econPlanner: true, view: PLANNER_VIEWS.INPUT, planId: "", previousView: null },
+          { econPlanner: true, view: PLANNER_VIEWS.COMPARE, planId: "", previousView: PLANNER_VIEWS.INPUT },
           "",
-          plannerUrl(PLANNER_VIEWS.INPUT)
+          plannerUrl(PLANNER_VIEWS.COMPARE)
         );
         return;
       }
@@ -2055,178 +2329,90 @@ export default function Page() {
     );
   }, [formData, report]);
 
-  useEffect(() => {
-    if (!requirementScrollTarget) return undefined;
+  function clearInputFeedback() {
+    setStatus("");
+    setInputBlock(null);
+    setMigrationNotice("");
+  }
 
-    const frame = window.requestAnimationFrame(() => {
-      const card = requirementCardRefs.current[requirementScrollTarget];
-      card?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
-      });
-      if (pendingPrerequisiteSelection?.groupId === requirementScrollTarget) card?.focus();
+  function setCourseStatus(code, nextStatus) {
+    setFormData(current => ({
+      ...current,
+      courses: current.courses.map(course => {
+        if (course.code !== code) return course;
+        const currentVisibleStatus = visibleCourseStatus(course);
+        const status = currentVisibleStatus === nextStatus ? "not_started" : nextStatus;
+        return {
+          ...course,
+          status,
+          source: status === "completed" ? "manual_code" : status === "not_started" || status === "uncertain" ? "manual_code" : course.source
+        };
+      })
+    }));
+    clearInputFeedback();
+  }
+
+  function setCompletionSource(code, source) {
+    setFormData(current => ({
+      ...current,
+      courses: current.courses.map(course => course.code === code
+        ? {
+            ...course,
+            status: source === "transfer_equivalency_unapproved" ? "transfer" : "completed",
+            source
+          }
+        : course)
+    }));
+    clearInputFeedback();
+  }
+
+  function chooseStanding(academicStanding) {
+    setFormData(current => {
+      const candidate = {
+        ...current,
+        academicStanding,
+        isTransferStudent: false,
+        transferExpectedGraduationYear: "",
+        transferEntryAcademicYear: ""
+      };
+      const candidateContext = resolvePlanningContext(candidate);
+      return {
+        ...candidate,
+        planningPace: candidateContext.oneYearEarlyEligible
+          ? current.planningPace
+          : PLANNING_PACES.STANDARD
+      };
     });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [pendingPrerequisiteSelection, requirementScrollTarget]);
-
-  function closeRequirementPopover(groupId, { restoreFocus = true } = {}) {
-    setRequirementModes(current => current[groupId]
-      ? { ...current, [groupId]: "" }
-      : current);
-    setRequirementScrollTarget(current => current === groupId ? "" : current);
-    setRequirementPopoverPosition(current => current?.groupId === groupId ? null : current);
-    setPendingPrerequisiteSelection(current => current?.groupId === groupId ? null : current);
-    if (restoreFocus) {
-      window.requestAnimationFrame(() => requirementTriggerRefs.current[groupId]?.focus());
-    }
+    clearInputFeedback();
   }
 
-  useEffect(() => {
-    if (!Object.values(requirementModes).some(Boolean) && !pendingPrerequisiteSelection) return undefined;
-
-    function handleOutsidePointer(event) {
-      const openCards = document.querySelectorAll(".requirement-choice-card");
-      if ([...openCards].some(card => card.contains(event.target))) return;
-      const clickedRow = event.target.closest?.(".course-row");
-      if (clickedRow && [...document.querySelectorAll(".course-row.has-requirement")].includes(clickedRow)) return;
-
-      setRequirementModes(current => Object.fromEntries(
-        Object.keys(current).map(id => [id, ""])
-      ));
-      setRequirementScrollTarget("");
-      setRequirementPopoverPosition(null);
-      setPendingPrerequisiteSelection(null);
-    }
-
-    function handlePopoverKeydown(event) {
-      if (event.key !== "Escape") return;
-      const openGroupId = pendingPrerequisiteSelection?.groupId
-        || Object.keys(requirementModes).find(id => requirementModes[id]);
-      if (!openGroupId) return;
-      event.preventDefault();
-      closeRequirementPopover(openGroupId);
-    }
-
-    document.addEventListener("pointerdown", handleOutsidePointer);
-    document.addEventListener("keydown", handlePopoverKeydown);
-    return () => {
-      document.removeEventListener("pointerdown", handleOutsidePointer);
-      document.removeEventListener("keydown", handlePopoverKeydown);
-    };
-  }, [pendingPrerequisiteSelection, requirementModes]);
-
-  function applyCourseChanges(changes) {
-    let nextCourses = formData.courses.map(course => ({ ...course }));
-    const clearedDependents = new Set();
-
-    for (const [code, nextStatus] of changes) {
-      nextCourses = nextCourses.map(course => course.code === code
-        ? { ...course, status: nextStatus }
-        : course);
-      const result = clearInvalidDependents(nextCourses, code);
-      nextCourses = result.courses;
-      result.clearedCodes.forEach(item => clearedDependents.add(item));
-    }
-
-    setFormData(current => ({ ...current, courses: nextCourses }));
-    if (clearedDependents.size) {
-      setStatus(`${[...clearedDependents].join(", ")} was cleared because a required prerequisite is no longer satisfied.`);
-    }
-  }
-
-  function setPopoverPosition(group, event) {
-    if (!event?.currentTarget) return;
-    const row = event.currentTarget.closest(".course-row");
-    const rowRect = row?.getBoundingClientRect();
-    const buttonRect = event.currentTarget.getBoundingClientRect();
-    if (!rowRect) return;
-    setRequirementPopoverPosition({
-      groupId: group.id,
-      left: buttonRect.left - rowRect.left,
-      top: buttonRect.bottom - rowRect.top + 6
+  function focusAttention(item) {
+    if (item.step) setIntakeStep(item.step);
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById(item.target);
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
+      target?.focus();
     });
   }
 
-  function beginCourseSelection(group, code, targetStatus, event) {
-    const course = formData.courses.find(item => item.code === code);
-    const alreadySelected = targetStatus === "completed"
-      ? isTaken(course || {})
-      : course?.status === targetStatus;
-    if (alreadySelected) {
-      applyCourseChanges([[code, "not_started"]]);
-      if (!group.options) closeRequirementPopover(group.id);
+  function continueToCourses() {
+    if (!formData.academicStanding) {
+      setStatus("Choose your class standing to continue.");
+      focusAttention({ step: 1, target: "standing-freshman", message: "Choose your class standing." });
       return;
     }
-
-    if (COURSE_PREREQUISITES[code]) {
-      const prerequisiteValidation = validateCoursePrerequisites({
-        course: code,
-        targetStatus,
-        courses: formData.courses,
-        prerequisites: COURSE_PREREQUISITES
+    if (formData.isTransferStudent && !planningContext.transferValidation.valid) {
+      setStatus(planningContext.transferValidation.errors[0]);
+      focusAttention({
+        step: 1,
+        target: !formData.transferExpectedGraduationYear ? "custom-graduation-year" : "custom-entry-year",
+        message: planningContext.transferValidation.errors[0]
       });
-      if (prerequisiteValidation.valid && !prerequisiteValidation.conditionalApprovals.length) {
-        applyCourseChanges([[code, targetStatus]]);
-        return;
-      }
-      setPendingPrerequisiteSelection({
-        groupId: group.id,
-        courseCode: code,
-        targetStatus
-      });
-      if (event?.currentTarget) requirementTriggerRefs.current[group.id] = event.currentTarget;
-      setRequirementScrollTarget(group.id);
-      if (event) setPopoverPosition(group, event);
       return;
     }
-
-    applyCourseChanges([[code, targetStatus]]);
-  }
-
-  function toggleCourseGroup(group, nextStatus, event) {
-    if (group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code))) return;
-
-    if (group.options) {
-      const selectedCodes = group.courseCodes.filter(code => {
-        const course = formData.courses.find(item => item.code === code);
-        return nextStatus === "completed" ? isTaken(course || {}) : course?.status === nextStatus;
-      });
-      if (selectedCodes.length) {
-        applyCourseChanges(selectedCodes.map(code => [code, "not_started"]));
-        closeRequirementPopover(group.id);
-        return;
-      }
-
-      setRequirementModes(current => ({ ...current, [group.id]: nextStatus }));
-      if (event?.currentTarget) requirementTriggerRefs.current[group.id] = event.currentTarget;
-      setPendingPrerequisiteSelection(null);
-      setRequirementScrollTarget(group.id);
-      setPopoverPosition(group, event);
-      return;
-    }
-
-    beginCourseSelection(group, group.courseCodes[0], nextStatus, event);
-  }
-
-  function toggleGroupOption(group, code) {
-    const mode = requirementModes[group.id];
-    if (!mode) return;
-    beginCourseSelection(group, code, mode);
-  }
-
-  function setPrerequisiteStatus(code, nextStatus) {
-    applyCourseChanges([[code, nextStatus]]);
-  }
-
-  function confirmPrerequisiteSelection(validation) {
-    if (!pendingPrerequisiteSelection || !validation.valid) return;
-    const { groupId, courseCode, targetStatus } = pendingPrerequisiteSelection;
-    applyCourseChanges([[courseCode, targetStatus]]);
-    if (validation.conditionalApprovals.length) {
-      setStatus(validation.conditionalApprovals[0].message);
-    }
-    closeRequirementPopover(groupId);
+    setStatus("");
+    setIntakeStep(2);
+    window.requestAnimationFrame(() => document.getElementById("course-search")?.focus());
   }
 
   async function mapMajors(event) {
@@ -2234,13 +2420,25 @@ export default function Page() {
 
     if (generationInFlightRef.current) return;
 
+    if (!formData.academicStanding) {
+      setStatus("Choose your class standing before generating your plans.");
+      focusAttention({ step: 1, target: "standing-freshman", message: "Choose your class standing." });
+      return;
+    }
+
     if (!formData.planCreationDate) {
       setStatus("Enter the plan creation date before generating a plan.");
+      focusAttention({ step: 1, target: "plan-creation-date", message: "Enter the plan creation date." });
       return;
     }
 
     if (formData.isTransferStudent && !planningContext.transferValidation.valid) {
       setStatus(planningContext.transferValidation.errors[0]);
+      focusAttention({
+        step: 1,
+        target: !formData.transferExpectedGraduationYear ? "custom-graduation-year" : "custom-entry-year",
+        message: planningContext.transferValidation.errors[0]
+      });
       return;
     }
 
@@ -2251,6 +2449,11 @@ export default function Page() {
 
     if (!inputPrerequisiteValidation.valid) {
       setStatus("Correct the highlighted prerequisite issues before generating a plan.");
+      focusAttention({
+        step: 2,
+        target: `course-${domId(inputPrerequisiteValidation.issues[0]?.course)}`,
+        message: inputPrerequisiteValidation.issues[0]?.message || "Review the prerequisite information."
+      });
       return;
     }
 
@@ -2280,8 +2483,22 @@ export default function Page() {
       const data = await response.json().catch(() => {
         throw new Error("The planner returned an invalid response. Please try again.");
       });
-      if (!response.ok) throw new Error(data.error || "The planner could not complete.");
       if (requestId !== generationRequestRef.current || controller.signal.aborted) return;
+      if (!response.ok && data.economicsPlanResult?.category === "INPUT_BLOCKED") {
+        setInputBlock(data);
+        setReport(null);
+        setSelectedPlanId("");
+        setPlannerView(PLANNER_VIEWS.COMPARE);
+        window.history.pushState(
+          { econPlanner: true, view: PLANNER_VIEWS.COMPARE, planId: "", previousView: plannerView },
+          "",
+          plannerUrl(PLANNER_VIEWS.COMPARE)
+        );
+        setStatus("");
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
+        return;
+      }
+      if (!response.ok) throw new Error(data.error || "The planner could not complete.");
       if (plannerInputSignature(latestFormRef.current) !== requestSignature) {
         setStatus("Your answers changed while plans were being generated. Generate again with the current answers.");
         return;
@@ -2294,6 +2511,7 @@ export default function Page() {
       const firstPlanId = plans[0]?.id || "";
       generatedInputSignatureRef.current = requestSignature;
       setIsComparisonExiting(false);
+      setInputBlock(null);
       setReport(data);
       setSelectedPlanId(firstPlanId);
       setPlannerView(PLANNER_VIEWS.COMPARE);
@@ -2390,19 +2608,30 @@ export default function Page() {
   );
   const declarationCourseGroups = visibleGroups.filter(group => DECLARATION_COURSE_IDS.includes(group.id));
   const declarationRequirementGroups = visibleGroups.filter(group => DECLARATION_REQUIREMENT_IDS.includes(group.id));
-  const declarationRightCourseGroups = visibleGroups.filter(group => DECLARATION_RIGHT_COURSE_IDS.includes(group.id));
-  const declarationGroups = [...declarationCourseGroups, ...declarationRequirementGroups, ...declarationRightCourseGroups];
-  const remainingGroups = visibleGroups.filter(group => !DECLARATION_GROUP_IDS.has(group.id));
   const sortCourseGroups = groups => [...groups].sort((a, b) => courseLevel(a.code) - courseLevel(b.code) || a.code.localeCompare(b.code));
-  const relativelyFrequentGroups = sortCourseGroups(remainingGroups.filter(group =>
-    (courseLevel(group.code) >= 200 && courseLevel(group.code) < 300) || RELATIVELY_FREQUENT_COURSE_IDS.has(group.id)
-  ));
-  const advancedGroups = sortCourseGroups(remainingGroups.filter(group =>
-    courseLevel(group.code) >= 300 && !RELATIVELY_FREQUENT_COURSE_IDS.has(group.id)
-  ));
-  const appleAdvancedGroups = appleLayoutPreview
-    ? sortCourseGroups([...advancedGroups, ...declarationRightCourseGroups])
-    : advancedGroups;
+  const financeGroups = visibleGroups.filter(group => group.id === "finance-requirement");
+  const secondaryCourseGroups = sortCourseGroups(visibleGroups.filter(group => !new Set([
+    ...DECLARATION_COURSE_IDS,
+    ...DECLARATION_REQUIREMENT_IDS,
+    "finance-requirement"
+  ]).has(group.id)));
+  const attentionItems = [];
+  if (!formData.academicStanding) {
+    attentionItems.push({ step: 1, target: "standing-freshman", message: "Choose your class standing." });
+  }
+  if (formData.isTransferStudent && !formData.transferExpectedGraduationYear) {
+    attentionItems.push({ step: 1, target: "custom-graduation-year", message: "Choose your expected graduation year." });
+  }
+  if (formData.isTransferStudent && !formData.transferEntryAcademicYear) {
+    attentionItems.push({ step: 1, target: "custom-entry-year", message: "Choose when you first enrolled at Hanover." });
+  }
+  for (const issue of inputPrerequisiteValidation.issues) {
+    attentionItems.push({
+      step: 2,
+      target: `course-${domId(issue.course)}`,
+      message: issue.message
+    });
+  }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -2432,185 +2661,150 @@ export default function Page() {
     );
   }
 
-  function prerequisitePopoverStyle(groupId) {
-    return requirementPopoverPosition?.groupId === groupId ? {
-      left: `${requirementPopoverPosition.left}px`,
-      top: `${requirementPopoverPosition.top}px`
-    } : undefined;
+  function renderStatusControls(code, labelPrefix = code, compact = false) {
+    const course = formData.courses.find(item => item.code === code) || blankCourse({ code, title: courseTitle(code), units: 1 });
+    const activeStatus = visibleCourseStatus(course);
+    return (
+      <div className={compact ? "course-toggles is-compact" : "course-toggles"} role="group" aria-label={`Status for ${labelPrefix}`}>
+        {[
+          ["completed", "Completed"],
+          ["in_progress", "Taking now"],
+          ["uncertain", "Not taken / not sure"]
+        ].map(([value, label]) => {
+          const selected = activeStatus === value;
+          return (
+            <button
+              type="button"
+              className={`course-toggle is-${value}${selected ? " is-selected" : ""}`}
+              aria-pressed={selected}
+              key={value}
+              onClick={() => setCourseStatus(code, value)}
+            >
+              <span className="selection-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+              <span>{label}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
   }
 
-  function renderPrerequisiteChoiceCard(group) {
-    const pending = pendingPrerequisiteSelection;
-    if (!pending || pending.groupId !== group.id) return null;
-    const rule = COURSE_PREREQUISITES[pending.courseCode];
-    const validation = validateCoursePrerequisites({
-      course: pending.courseCode,
-      targetStatus: pending.targetStatus,
+  function renderPrerequisiteFollowUp(course) {
+    const targetStatus = course.status;
+    if (!["completed", "transfer", "in_progress"].includes(targetStatus)) return null;
+    const followUp = buildPrerequisiteFollowUp({
+      course: course.code,
+      targetStatus,
       courses: formData.courses,
       prerequisites: COURSE_PREREQUISITES
     });
-    const requirementSections = [
-      ...(rule.all || []).map(code => ({ label: "Required course", options: [code] })),
-      ...(rule.any || []).map(options => ({ label: "Choose one or more", options }))
-    ];
-    const targetStatusLabel = pending.targetStatus === "completed" ? "Taken" : "In Progress";
-    const prerequisiteTitleId = `prerequisite-title-${domId(group.id)}`;
+    if (!followUp.required && !followUp.conditionalApprovals.length) return null;
+    const hasExplicitConflict = followUp.questions.some(hasExplicitPrerequisiteConflict);
 
     return (
-      <div
-        className="requirement-choice-card prerequisite-choice-card"
-        role="dialog"
-        aria-labelledby={prerequisiteTitleId}
-        tabIndex={-1}
-        style={prerequisitePopoverStyle(group.id)}
-        ref={node => {
-          requirementCardRefs.current[group.id] = node;
-        }}
-      >
-        <strong id={prerequisiteTitleId}>Confirm prerequisites for {pending.courseCode}</strong>
-        <p className="prerequisite-help">Set each prerequisite status, then confirm {targetStatusLabel.toLowerCase()}.</p>
-        <div className="prerequisite-sections">
-          {requirementSections.map((section, sectionIndex) => (
-            <section className="prerequisite-section" key={`${section.label}-${sectionIndex}`}>
-              <span className="prerequisite-section-label">{section.label}</span>
-              {section.options.map(code => {
-                const statusValue = selectedStatus(formData.courses, code);
+      <div className={`inline-prerequisite${hasExplicitConflict ? " has-conflict" : ""}`} aria-live="polite">
+        {followUp.questions.length > 0 && (
+          <p><strong>Before we can use {course.code}, tell us about {followUp.questions.length === 1 ? "this prerequisite" : "these prerequisites"}.</strong></p>
+        )}
+        {followUp.questions.map(question => (
+          <section className="prerequisite-question" key={question.id} aria-labelledby={`${question.id}-label`}>
+            <div id={`${question.id}-label`} className="prerequisite-question-heading">
+              <strong>{question.kind === "one_of" ? "Choose a prerequisite option" : "Required course"}</strong>
+              {question.kind === "one_of" && <span>One of the current valid options is needed.</span>}
+            </div>
+            {question.options.map(option => (
+              <div className="prerequisite-option" key={option}>
+                <div className="prerequisite-name">
+                  <strong>{option}</strong>
+                  <small>{courseTitle(option)}</small>
+                </div>
+                {renderStatusControls(option, `prerequisite ${option}`, true)}
+              </div>
+            ))}
+            {hasExplicitPrerequisiteConflict(question) && (
+              <div className="prerequisite-conflict" role="alert">
+                <p>{question.issueMessage}</p>
+                <p>You marked {course.code} as {prerequisiteStatusLabel(targetStatus)}, but {explicitPrerequisiteStatusText(question)}.</p>
+                <p>Update one of these course statuses before generating your plan.</p>
+              </div>
+            )}
+          </section>
+        ))}
+        {followUp.conditionalApprovals.map(approval => (
+          <p className="prerequisite-approval" key={`${approval.course}-${approval.prerequisite}`}>{approval.message}</p>
+        ))}
+      </div>
+    );
+  }
+
+  function renderCourseRow(code, title) {
+    const course = formData.courses.find(item => item.code === code);
+    const isHanoverOnly = NON_SELECTABLE_COURSE_CODES.has(code);
+    if (!course && !isHanoverOnly) return null;
+    const completed = course ? visibleCourseStatus(course) === "completed" : false;
+    const source = course ? completionSourceLabel(course) : "Hanover College";
+    return (
+      <div className="course-row" id={`course-${domId(code)}`} key={code} tabIndex={-1}>
+        <div className="course-row-main">
+          <div className="course-name">
+            <strong>{code}</strong>
+            <span>{title}</span>
+          </div>
+          {isHanoverOnly ? (
+            <span className="course-status-note">Must be taken at Hanover College</span>
+          ) : renderStatusControls(code)}
+        </div>
+        {completed && (
+          <details className="completion-source" open={source !== "Hanover College"}>
+            <summary>Where did you complete this course? <span>{source}</span></summary>
+            <div className="completion-source-options" role="group" aria-label={`Completion source for ${code}`}>
+              {[
+                ["manual_code", "Hanover College"],
+                ["transfer_equivalency_unapproved", "Another college / transfer credit"],
+                ...(AP_CREDIT_ALLOWED_COURSE_CODES.has(code) ? [["ap_credit", "AP or exam credit"]] : [])
+              ].map(([value, label]) => {
+                const selected = value === "transfer_equivalency_unapproved"
+                  ? course.status === "transfer"
+                  : value === "manual_code"
+                    ? course.status === "completed" && completionSourceLabel(course) === "Hanover College"
+                    : course.status === "completed" && course.source === value;
                 return (
-                  <div className="prerequisite-option" key={code}>
-                    <div className="prerequisite-name">
-                      <strong>{code}</strong>
-                      <small>{courseTitle(code)}</small>
-                    </div>
-                    <div className="prerequisite-statuses" role="group" aria-label={`Status for prerequisite ${code}`}>
-                      {[
-                        ["completed", "Taken"],
-                        ["in_progress", "In Progress"],
-                        ["not_started", "Not taken"]
-                      ].map(([value, label]) => (
-                        <button
-                          type="button"
-                          className={`prerequisite-status is-${value}${statusValue === value ? " is-selected" : ""}`}
-                          aria-pressed={statusValue === value}
-                          key={value}
-                          onClick={() => setPrerequisiteStatus(code, value)}
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  <button
+                    type="button"
+                    className={selected ? "is-selected" : ""}
+                    aria-pressed={selected}
+                    key={value}
+                    onClick={() => setCompletionSource(code, value)}
+                  >
+                    <span className="selection-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                    {label}
+                  </button>
                 );
               })}
-            </section>
-          ))}
-        </div>
-        {!validation.valid && (
-          <ul className="prerequisite-issues">
-            {validation.issues.map(issue => <li key={`${issue.code}-${issue.course}-${issue.message}`}>{issue.message}</li>)}
-          </ul>
+            </div>
+            {source !== "Hanover College" && (
+              <p>This credit will stay review-required until its supporting evidence is approved.</p>
+            )}
+          </details>
         )}
-        {validation.conditionalApprovals.map(item => (
-          <p className="prerequisite-approval" key={`${item.course}-${item.prerequisite}`}>{item.message}</p>
-        ))}
-        <div className="prerequisite-actions">
-          <button type="button" className="prerequisite-cancel" onClick={() => closeRequirementPopover(group.id)}>
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="prerequisite-confirm"
-            disabled={!validation.valid}
-            onClick={() => confirmPrerequisiteSelection(validation)}
-          >
-            Confirm {targetStatusLabel}
-          </button>
-        </div>
+        {course && renderPrerequisiteFollowUp(course)}
       </div>
     );
   }
 
   function renderCourseGroup(group) {
-    const groupCourses = formData.courses.filter(course => group.courseCodes.includes(course.code));
-    const requirementMode = requirementModes[group.id] || "";
-    const hasPendingPrerequisite = pendingPrerequisiteSelection?.groupId === group.id;
-    const taken = groupCourses.some(isTaken);
-    const inProgress = groupCourses.some(course => course.status === "in_progress");
-    const isHanoverOnly = group.courseCodes.some(code => NON_SELECTABLE_COURSE_CODES.has(code));
-    const allowsApCredit = group.courseCodes.some(code => AP_CREDIT_ALLOWED_COURSE_CODES.has(code));
-    const takenButtonLabel = allowsApCredit ? "Taken or AP credit" : "Taken";
-    const requirementTitleId = `requirement-title-${domId(group.id)}`;
-    return (
-      <div
-        className={`course-row${(group.options && requirementMode) || hasPendingPrerequisite ? " has-requirement" : ""}`}
-        key={group.id}
-        onMouseLeave={() => {
-          if (group.options && requirementMode) closeRequirementPopover(group.id);
-        }}
-      >
-        <div className="course-name">
-          <strong>{group.code}</strong>
-          <span>{group.title}</span>
-        </div>
-        {isHanoverOnly ? (
-          <span className="course-status-note">Must be taken at Hanover College</span>
-        ) : (
-          <div className="course-toggles" role="group" aria-label={`Status for ${group.code}`}>
-            <button
-              type="button"
-              className={`course-toggle taken-toggle${taken ? " is-selected" : ""}`}
-              aria-pressed={taken}
-              onClick={event => toggleCourseGroup(group, "completed", event)}
-            >
-              <span className="default-course-label">{takenButtonLabel}</span>
-              <span className="apple-course-label">Completed</span>
-            </button>
-            <button
-              type="button"
-              className={`course-toggle progress-toggle${inProgress ? " is-selected" : ""}`}
-              aria-pressed={inProgress}
-              onClick={event => toggleCourseGroup(group, "in_progress", event)}
-            >
-              <span className="default-course-label">In Progress</span>
-              <span className="apple-course-label">In progress</span>
-            </button>
+    if (group.options) {
+      return (
+        <section className="course-requirement-group" key={group.id} aria-labelledby={`${domId(group.id)}-heading`}>
+          <div className="course-requirement-heading" id={`${domId(group.id)}-heading`}>
+            <strong>{group.title}</strong>
+            <span>Choose the course that applies to you.</span>
           </div>
-        )}
-        {hasPendingPrerequisite && renderPrerequisiteChoiceCard(group)}
-        {group.options && requirementMode && !hasPendingPrerequisite && (
-          <div
-            className="requirement-choice-card"
-            role="group"
-            aria-labelledby={requirementTitleId}
-            tabIndex={-1}
-            style={prerequisitePopoverStyle(group.id)}
-            onMouseLeave={() => closeRequirementPopover(group.id)}
-            ref={node => {
-              requirementCardRefs.current[group.id] = node;
-            }}
-          >
-            <strong id={requirementTitleId}>Which course(s) satisfy this requirement?</strong>
-            <div className="choice-options">
-              {group.options.map(option => {
-                const course = formData.courses.find(item => item.code === option.code);
-                const checked = requirementMode === "completed" ? isTaken(course || {}) : course?.status === requirementMode;
-                return (
-                  <label className={`choice-option${checked ? " is-selected" : ""}`} key={option.code}>
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => toggleGroupOption(group, option.code)}
-                    />
-                    <span className="choice-radio" aria-hidden="true" />
-                    <span className="choice-check" aria-hidden="true">{checked ? "\u2713" : ""}</span>
-                    <span className="choice-label"><strong>{option.code}</strong><small>{option.title}</small></span>
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-    );
+          {group.options.map(option => renderCourseRow(option.code, option.title))}
+        </section>
+      );
+    }
+    return renderCourseRow(group.courseCodes[0], group.title);
   }
 
   function renderCourseColumns(groups, stackInFirstColumn = false) {
@@ -2621,15 +2815,6 @@ export default function Page() {
       <div className="course-columns" style={COURSE_COLUMNS_STYLE}>
         <div className="course-column">{leftGroups.map(renderCourseGroup)}</div>
         <div className="course-column">{rightGroups.map(renderCourseGroup)}</div>
-      </div>
-    );
-  }
-
-  function renderDeclarationColumns(courseGroups, requirementGroups) {
-    return (
-      <div className="course-columns" style={COURSE_COLUMNS_STYLE}>
-        <div className="course-column">{courseGroups.map(renderCourseGroup)}</div>
-        <div className="course-column">{requirementGroups.map(renderCourseGroup)}</div>
       </div>
     );
   }
@@ -2756,10 +2941,12 @@ export default function Page() {
     setPlanEditStatus(`${restoredPlan.label} was restored.`);
   }
 
-  function returnToCourseSelection() {
+  function returnToInputStep(step) {
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     const finish = () => {
       setStatus("");
+      setInputBlock(null);
+      setIntakeStep(step);
       setPlanEditStatus("");
       setIsComparisonExiting(false);
       navigateBackTo(PLANNER_VIEWS.INPUT);
@@ -2773,6 +2960,10 @@ export default function Page() {
     window.setTimeout(finish, 240);
   }
 
+  function returnToCourseSelection() {
+    returnToInputStep(2);
+  }
+
   if (!isHydrated) {
     return (
       <main className="planner-loading" aria-busy="true" aria-label="Loading EconPlanner">
@@ -2784,10 +2975,12 @@ export default function Page() {
     );
   }
 
-  if (isHydrated && report && plannerView !== PLANNER_VIEWS.INPUT) {
+  if (isHydrated && (report || inputBlock) && plannerView !== PLANNER_VIEWS.INPUT) {
     return (
       <PlanComparisonScreen
         report={report}
+        planResult={inputBlock?.economicsPlanResult}
+        fallbackPlanningContext={planningContext}
         courses={formData.courses}
         displayName={formData.displayName}
         view={plannerView}
@@ -2798,6 +2991,7 @@ export default function Page() {
         planEditStatus={planEditStatus}
         canUndoPlanEdit={Boolean(planEditUndo)}
         onEditCourses={returnToCourseSelection}
+        onReviewTimeline={() => returnToInputStep(1)}
         onBackToCompare={() => navigateBackTo(PLANNER_VIEWS.COMPARE)}
         onChoosePlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
         onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
@@ -2813,1311 +3007,610 @@ export default function Page() {
   }
 
   return (
-    <main className={`container${appleLayoutPreview ? " apple-layout-preview" : ""}`}>
+    <main className="container cp7-container">
       <style jsx global>{`
         :root {
-          --planner-bg: #7c3aed;
-          --planner-panel: #ffffff;
-          --planner-border: #a9b0b5;
-          --planner-strong-border: #202427;
-          --planner-muted: #5c656b;
-          --planner-green: #bde9c9;
-          --planner-dark-green: #006400;
-          --planner-generate-bg: #fff1b8;
-          --planner-generate-bg-hover: #ffe58a;
-          --planner-purple: #850085;
-          --planner-dropdown-bg: #fff;
-          --planner-blue: #cfe9fb;
-          --planner-blue-border: #8dbddb;
-          --planner-font-family: Arial, sans-serif;
-          --planner-body-size: 11px;
-          --planner-heading-size: 14px;
-          --planner-page-title-size: 43.2px;
-          --planner-intro-title-size: 20px;
-          --planner-intro-text-size: 18px;
-          --planner-action-size: var(--planner-intro-text-size);
-          --urveska-orange: #ff9d5c;
-          --urveska-gold: #ffd166;
-          --urveska-aqua: #8ef7d3;
-          --urveska-lead-orange: #c94b00;
-          --urveska-lead-gold: #c46a00;
-          --urveska-lead-aqua: #006f8f;
+          --cp7-ink: #18202b;
+          --cp7-muted: #5b6470;
+          --cp7-border: #d5dae1;
+          --cp7-border-strong: #7b8794;
+          --cp7-surface: #ffffff;
+          --cp7-soft: #f6f7f9;
+          --cp7-selected: #edf1f5;
+          --cp7-accent: #26384f;
+          --cp7-warning: #fff8e8;
+          --cp7-warning-border: #c18b2d;
+          --cp7-danger: #8a2c25;
         }
-        .apple-brand,
-        .apple-progress,
-        .apple-heading-row,
-        .apple-planning-heading,
-        .apple-standing-segmented,
-        .apple-mini-fields,
-        .apple-course-heading,
-        .apple-course-toolbar,
-        .apple-course-label,
-        .apple-generate-label,
-        .apple-summary-preview { display: none; }
-        body { font-family: var(--planner-font-family); font-size: var(--planner-body-size); }
-        button, input, select, textarea { font-family: var(--planner-font-family); font-size: var(--planner-body-size); font-weight: inherit; }
-        body { background: var(--planner-bg); color: #171a1c; }
-        h1, h2, h3, h4, h5, h6 { color: #1d4ed8; font-family: inherit; font-size: var(--planner-heading-size); font-weight: 700; }
-        main.container { max-width: 1240px; padding: 1.25rem 1rem 4rem; }
-        .summary-card, .plan-section { border: 1px solid var(--planner-strong-border); background: var(--planner-panel); }
-        .intake-card { border: 1px solid var(--planner-strong-border); background: #f1faff; }
-        .generate-card { border: 1px solid var(--planner-strong-border); background: #f1faff; padding: 1.1rem; }
-        .instruction-card { margin-bottom: 1rem; padding: 1.1rem; border: 1px solid var(--planner-strong-border); background: #f1faff; font-size: var(--planner-intro-text-size); }
-        .instruction-card h2 { font-size: var(--planner-intro-title-size); }
-        .instruction-card p { font-size: inherit; }
-        .instruction-card .instruction-lead { margin: .85rem 0 0; font-size: var(--planner-intro-title-size); font-weight: 700; }
-        .instruction-lead .lead-aqua { color: var(--urveska-lead-aqua); }
-        .instruction-lead .lead-gold { color: var(--urveska-lead-gold); }
-        .instruction-lead .lead-orange { color: var(--urveska-lead-orange); }
-        .instruction-card h2 { margin: 0; }
-        .app-header { display: flex; align-items: center; justify-content: center; text-align: center; gap: 1rem; padding: .85rem 1.1rem; margin-bottom: 1rem; }
-        .app-header h1 { margin: 0; color: #06182e; font-size: var(--planner-page-title-size); line-height: 1.05; }
-        .app-header h1 .headline-econ { color: var(--urveska-aqua); }
-        .app-header h1 .headline-planner { color: var(--urveska-orange); }
-        .intake-layout { display: grid; gap: 1rem; grid-template-columns: 1fr; align-items: start; }
-        .apple-left-column, .apple-right-column { display: contents; }
-        .intake-card, .summary-card, .plan-section { padding: 1.1rem; }
-        .section-heading { display: flex; gap: .65rem; align-items: flex-start; }
-        .section-heading h2 { margin: 0; }
-        .course-heading h2 { color: var(--planner-purple); font-size: var(--planner-intro-text-size); }
-        .section-heading p { margin: .2rem 0 0; color: var(--planner-muted); font-size: 12px; }
-        .step-number { font-weight: 700; line-height: 1.1; }
-        .planning-details .section-heading h2 { color: var(--urveska-lead-orange); font-size: var(--planner-intro-text-size); }
-        .planning-details { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--planner-border); }
-        .planning-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-top: .85rem; max-width: 38rem; }
-        .planning-field { display: grid; gap: .25rem; }
-        .planning-field label, .planning-label { color: var(--planner-muted); }
-        .planning-field input, .planning-field select { width: 100%; box-sizing: border-box; }
-        .catalog-year-intake { max-width: 38rem; margin-top: .85rem; }
-        .standing-help { margin: .25rem 0 0; color: var(--planner-muted); }
-        .date-display { display: flex; align-items: baseline; gap: .4rem; min-height: 1.5rem; }
-        .date-display strong { font-weight: 400; }
-        button.date-edit-button { display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; min-height: 0 !important; margin: 0 0 0 .25rem; padding: 0; border: 0; border-radius: .3rem; background: transparent; color: #1d4ed8; }
-        button.date-edit-button svg { width: .85rem; height: .85rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; }
-        button.date-edit-button:hover { color: #163ea9; }
-        button.date-edit-button:focus-visible { outline: 2px solid #93c5fd; outline-offset: 1px; }
-        #plan-creation-date::-webkit-calendar-picker-indicator { display: none; }
-        button.transfer-student-trigger, button.regular-standing-trigger { width: auto; min-height: 0 !important; margin: .65rem 0 0; padding: 0; border: 0; background: transparent; color: #1d4ed8; text-align: left; text-decoration: underline; cursor: pointer; }
-        button.transfer-student-trigger:hover, button.regular-standing-trigger:hover { color: #163ea9; }
-        .transfer-student-card { max-width: 46rem; margin-top: .75rem; padding: .85rem; border: 1px solid #8dbddb; border-radius: .6rem; background: #f7fbff; }
-        .transfer-card-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
-        .transfer-card-heading h2 { margin: 0; color: #111; }
-        .transfer-card-heading p { max-width: 46rem; margin: .35rem 0 0; color: var(--planner-muted); }
-        button.regular-standing-trigger { flex: 0 0 auto; margin-top: 0; }
-        .transfer-graduation-fieldset { min-width: 0; margin: .85rem 0 0; padding: 0; border: 0; }
-        .transfer-graduation-fieldset legend, .transfer-entry-year > span { color: #171a1c; font-weight: 700; }
-        .transfer-graduation-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; margin-top: .4rem; }
-        .transfer-graduation-options button { width: 100%; min-height: 2rem; margin: 0; padding: .35rem; border: 1px solid var(--planner-border); border-radius: .4rem; background: #fff; color: #171a1c; }
-        .transfer-graduation-options button.is-selected { border-color: #0b5cad; background: #0b5cad; color: #fff; }
-        .transfer-other-year { display: flex; align-items: center; gap: .5rem; margin-top: .55rem; }
-        .transfer-other-year label { display: flex; align-items: center; gap: .3rem; cursor: pointer; }
-        .transfer-other-year input[type="radio"] { margin: 0; }
-        .transfer-other-year input[type="number"] { width: 7rem; box-sizing: border-box; }
-        .transfer-other-year span { color: var(--planner-muted); }
-        .transfer-entry-year { display: grid; gap: .3rem; max-width: 22rem; margin-top: .85rem; }
-        .transfer-entry-year select { width: 100%; box-sizing: border-box; }
-        .transfer-validation { margin: .65rem 0 0; padding-left: 1.25rem; color: #9b2c20; }
-        .transfer-advisor-note { margin: .75rem 0 0; padding-top: .65rem; border-top: 1px solid #cfe2f0; color: var(--planner-muted); }
-        .search-label { display: block; width: 33.333%; margin: 1rem 0 .7rem; }
-        .search-label input { width: 100%; box-sizing: border-box; margin: 0; }
-        .course-columns { display: grid; grid-template-columns: max-content max-content; gap: .45rem; align-items: start; justify-content: start; }
-        .course-column { display: flex; flex-direction: column; gap: .45rem; width: max-content; max-width: 100%; min-width: 0; }
-        .two-hundred-section { margin-top: .9rem; padding-top: .85rem; border-top: 2px solid var(--planner-strong-border); }
-        .course-row { position: relative; display: grid; grid-template-columns: var(--course-name-width) auto; grid-template-rows: 16.5px; width: max-content; max-width: 100%; height: max-content; gap: .5rem; align-items: center; min-width: 0; border: 1px solid var(--planner-border); padding: .4rem .5rem; background: #fff; }
-        .course-row.has-requirement { z-index: 20; }
-        .course-name { display: flex; width: var(--course-name-width); gap: .65rem; align-items: center; min-width: 0; white-space: nowrap; }
-        .course-name strong { flex: 0 0 auto; min-width: 0; white-space: nowrap; }
-        .course-name span { min-width: 0; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: break-word; line-height: 1.25; }
-        .course-toggles { display: flex; gap: .25rem; align-items: center; flex-wrap: nowrap; }
-        .course-status-note { color: var(--planner-dark-green); font-weight: 700; white-space: nowrap; }
-        button.course-toggle { width: auto; min-height: 0 !important; height: auto; margin: 0; padding: 0 .35rem; border: 1px solid var(--planner-border); border-radius: .35rem; background: #fff; color: #171a1c; font-family: var(--planner-font-family); font-size: var(--planner-body-size); line-height: 1.25; white-space: nowrap; }
-        button.course-toggle:hover { border-color: var(--planner-strong-border); }
-        button.taken-toggle.is-selected { background: var(--planner-green); border-color: #6db784; }
-        button.progress-toggle.is-selected { background: var(--planner-blue); border-color: var(--planner-blue-border); }
-        .course-accordion { margin-top: .85rem; border-top: 1px solid var(--planner-border); padding-top: .75rem; }
-        .course-accordion summary { display: flex; align-items: center; gap: .5rem; cursor: pointer; list-style: none; color: #171a1c; font-weight: 700; }
-        .course-accordion summary::-webkit-details-marker { display: none; }
-        .course-accordion summary::before { content: "▶"; color: #ff7a00; font-size: 14px; line-height: 1; }
-        .course-accordion[open] summary::before { content: "▼"; }
-        .course-accordion-title { color: #171a1c; }
-        .course-accordion-count { margin-left: auto; color: var(--planner-muted); font-weight: 400; }
-        .course-accordion .course-columns { margin-top: .7rem; }
-        .requirement-choice-card { position: absolute; z-index: 30; top: calc(100% + .35rem); left: 0; width: max-content; max-width: calc(100vw - 2rem); scroll-margin: 1rem; padding: .35rem; border: 1px solid #cfd3d5; border-radius: .9rem; background: var(--planner-dropdown-bg); box-shadow: 0 .5rem 1.4rem rgba(32, 36, 39, .14); }
-        .requirement-choice-card > strong { display: block; padding: .4rem .55rem .3rem; color: var(--planner-muted); font-weight: 400; }
-        .choice-options { display: grid; gap: .1rem; width: max-content; min-width: 100%; margin: 0; }
-        .choice-option { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; width: max-content; min-width: 100%; box-sizing: border-box; gap: .8rem; padding: .55rem .8rem .55rem .6rem; border: 0; border-radius: .65rem; background: var(--planner-dropdown-bg); cursor: pointer; white-space: nowrap; }
-        .choice-option.is-selected { background: #f3fff5; }
-        .choice-option:hover { background: #f4f5f6; }
-        .choice-option input { position: absolute; opacity: 0; pointer-events: none; }
-        .choice-radio { display: none; }
-        .choice-label { display: grid; gap: .1rem; min-width: 0; }
-        .choice-check { width: 1rem; color: #2f8f4e; font-size: 15px; font-weight: 700; line-height: 1; text-align: center; }
-        .choice-option small { color: var(--planner-muted); }
-        .prerequisite-choice-card { width: min(34rem, calc(100vw - 2rem)); padding: .55rem; }
-        .prerequisite-help { margin: 0; padding: 0 .55rem .45rem; color: var(--planner-muted); }
-        .prerequisite-sections { display: grid; gap: .45rem; }
-        .prerequisite-section { display: grid; gap: .35rem; padding: .45rem .55rem; border-top: 1px solid #d9dddf; }
-        .prerequisite-section-label { color: var(--planner-muted); font-weight: 700; }
-        .prerequisite-option { display: grid; grid-template-columns: minmax(9rem, 1fr) auto; gap: .65rem; align-items: center; }
-        .prerequisite-name { display: grid; gap: .1rem; }
-        .prerequisite-name small { color: var(--planner-muted); }
-        .prerequisite-statuses { display: flex; gap: .25rem; }
-        button.prerequisite-status,
-        button.prerequisite-cancel,
-        button.prerequisite-confirm {
-          width: auto;
-          min-height: 0 !important;
+        body {
           margin: 0;
-          padding: .3rem .45rem;
-          border: 1px solid var(--planner-border);
-          border-radius: .35rem;
-          background: #fff;
-          color: #171a1c;
+          background: #f1f3f5 !important;
+          color: var(--cp7-ink) !important;
+          font-family: Arial, sans-serif;
         }
-        button.prerequisite-status.is-completed.is-selected { border-color: #6db784; background: var(--planner-green); }
-        button.prerequisite-status.is-in_progress.is-selected { border-color: var(--planner-blue-border); background: var(--planner-blue); }
-        button.prerequisite-status.is-not_started.is-selected { border-color: #9da4a8; background: #eceff1; }
-        .prerequisite-issues { margin: .45rem .55rem; padding-left: 1.1rem; color: #9b2f1f; }
-        .prerequisite-approval { margin: .45rem .55rem; padding: .45rem; border: 1px solid #d5a233; background: #fff9e8; color: #704600; }
-        .prerequisite-actions { display: flex; justify-content: flex-end; gap: .35rem; padding: .45rem .55rem .1rem; }
-        button.prerequisite-confirm { border-color: #5a9a6e; background: #d9f4e1; color: #064f20; font-weight: 700; }
-        button.prerequisite-confirm:disabled { cursor: not-allowed; opacity: .5; }
-        .prerequisite-error-summary { margin: .8rem 0 0; padding: .65rem .75rem; border: 1px solid #bd6a5d; background: #fff3ef; color: #7e281c; }
-        .prerequisite-error-summary strong { display: block; margin-bottom: .25rem; }
-        .prerequisite-error-summary ul { margin: 0; padding-left: 1.1rem; }
-        .generate-row { margin-top: 1rem; display: flex; justify-content: flex-end; }
-        .generate-button { width: auto; margin: 0; border: 1px solid #73b98a; background: var(--planner-generate-bg); color: var(--planner-dark-green); font-family: var(--planner-font-family); font-size: var(--planner-intro-text-size); font-weight: 700; }
-        .generate-button:hover { background: var(--planner-generate-bg-hover); }
-        .generate-button:disabled { cursor: not-allowed; opacity: .6; }
-        .summary-card { min-height: 100%; margin-bottom: 1rem; }
-        .planner-instructions { margin: .85rem 0 0; padding-left: 3ch; font-size: inherit; font-weight: 700; }
-        .planner-instructions p { margin: .25rem 0; font-size: inherit; font-weight: 700; }
-        .planner-instructions p:first-child { color: var(--urveska-lead-orange); }
-        .planner-instructions p:nth-child(2) { color: var(--planner-purple); }
-        .planner-instructions p:nth-child(3) { color: var(--planner-dark-green); font-size: var(--planner-action-size); }
-        .summary-grid { display: grid; gap: .45rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
-        .summary-grid div { display: flex; align-items: baseline; gap: .35rem; border: 1px solid var(--planner-border); padding: .45rem .6rem; min-height: 0; }
-        .summary-grid span { color: var(--planner-muted); }
-        .summary-grid strong { margin: 0; }
-        .summary-empty { margin-top: 1rem; padding: 1rem; border: 1px dashed var(--planner-border); color: var(--planner-muted); }
-        .summary-footnote { margin: 1rem 0 0; color: var(--planner-muted); }
-        .status { margin: .8rem 0 0; color: var(--planner-muted); min-height: 1.4rem; }
-        .plan-section { margin-top: 1rem; }
-        .plan-source-note { margin: .35rem 0 0; color: var(--planner-muted); }
-        .plan-tabs { display: flex; gap: .35rem; border-bottom: 1px solid var(--planner-border); margin-bottom: .85rem; }
-        button.plan-tab { width: auto; min-height: 0 !important; margin: 0; padding: .35rem .75rem; border: 1px solid var(--planner-border); border-bottom: 0; background: #fff; color: #171a1c; font-family: var(--planner-font-family); font-size: var(--planner-body-size); font-weight: 700; }
-        button.plan-tab.is-active { background: var(--planner-blue); border-color: var(--planner-blue-border); }
-        .academic-year-group { margin-top: 1rem; }
-        .academic-year-label { margin: 0 0 .55rem; color: #1d4ed8; font-size: var(--planner-heading-size); font-weight: 700; }
-        .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
-        .term-card { border: 1px solid var(--planner-border); padding: .8rem; min-height: 8rem; }
-        .term-card h4 { margin: 0 0 .65rem; color: #1d4ed8; font-size: var(--planner-heading-size); font-weight: 700; }
-        .term-card ul { display: grid; gap: .45rem; list-style: none; margin: 0; padding: 0; }
-        .term-card li { border: 1px solid #d1d6d9; padding: .45rem; }
-        .term-card li strong, .term-card li span { display: block; }
-        .term-card li span { color: var(--planner-muted); margin-top: .1rem; }
-        .term-card.is-placeholder { border-style: dashed; background: #f7fbff; }
-        .placeholder-term-note { margin: .65rem 0 0; color: var(--planner-muted); }
-        .empty-term { margin: 0; color: var(--planner-muted); }
-        .summer-term-note { margin: .65rem 0 0; color: #2f8f4e; font-weight: 700; }
-        .plan-notes { margin-top: 1rem; padding: .75rem; border: 1px solid #d5b36a; background: #fff9e8; }
-        .plan-notes ul { margin: .45rem 0 0; padding-left: 1.25rem; }
-        .planning-gaps { border-color: #bd6a5d; background: #fff3ef; }
-        .advisor-attention { margin-top: 1rem; padding: 1rem; border: 2px solid #d5a233; background: #fff9e8; }
-        .advisor-attention h2 { margin: 0 0 .65rem; }
-        .advisor-attention-item + .advisor-attention-item { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid #d5b36a; }
-        .advisor-attention-item strong { color: #1d4ed8; }
-        .advisor-attention-item p { margin: .35rem 0 0; }
-        .advisor-attention-item ul { margin: .45rem 0 0; padding-left: 1.25rem; }
-        .advisor-attention-item.is-info { border-left: 3px solid #2f8f4e; padding-left: .65rem; }
-        @media (max-width: 900px) { .intake-layout { grid-template-columns: 1fr; } }
-        @media (max-width: 680px) {
-          .course-columns { grid-template-columns: 1fr; }
-          .course-column, .course-row { width: 100%; max-width: 100%; }
-          .course-row { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
-          .course-name { width: auto; }
-          .search-label { width: 100%; }
-          .planning-fields { grid-template-columns: 1fr; }
-          .transfer-card-heading { display: block; }
-          button.regular-standing-trigger { margin-top: .55rem; }
-          .transfer-graduation-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-          .transfer-other-year { align-items: flex-start; flex-wrap: wrap; }
-          .course-name { white-space: normal; }
-          .course-name span { white-space: normal; }
-          .course-toggles { flex-wrap: wrap; }
-          .requirement-choice-card { right: 0; width: auto; max-width: none; }
-          .choice-options, .choice-option { width: 100%; min-width: 0; }
-          .choice-option { white-space: normal; }
-          .prerequisite-choice-card { width: auto; }
-          .prerequisite-option { grid-template-columns: 1fr; }
-          .prerequisite-statuses { flex-wrap: wrap; }
-          .generate-row { justify-content: stretch; }
-          .generate-button { width: 100%; }
-          .plan-grid { grid-template-columns: 1fr; }
+        main.cp7-container {
+          box-sizing: border-box;
+          width: min(1180px, calc(100% - 2rem));
+          max-width: none;
+          margin: 0 auto;
+          padding: 0 0 4rem;
+          color: var(--cp7-ink);
+          font-size: 15px;
         }
-        main.apple-layout-preview {
-          max-width: 1580px;
-          padding: 0 .5rem 2rem;
-          color: #101010;
+        main.cp7-container *, main.cp7-container *::before, main.cp7-container *::after { box-sizing: border-box; }
+        main.cp7-container button,
+        main.cp7-container input,
+        main.cp7-container select { font-size: inherit; }
+        main.cp7-container button:focus-visible,
+        main.cp7-container input:focus-visible,
+        main.cp7-container select:focus-visible,
+        main.cp7-container summary:focus-visible,
+        main.cp7-container [tabindex]:focus-visible {
+          outline: 3px solid #2463c5;
+          outline-offset: 3px;
         }
-        html:has(main.apple-layout-preview) { font-size: 16px; }
-        body:has(main.apple-layout-preview) {
-          background: #fff;
-          color: #101010;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-        main.apple-layout-preview .app-header {
-          min-height: 4.15rem;
-          margin: 0 0 1rem;
-          padding: .55rem 0;
-          border-bottom: 1px solid #eef0f2;
-          background: #fff;
-          color: #101010;
-        }
-        main.apple-layout-preview .app-title { display: none; }
-        main.apple-layout-preview .apple-brand,
-        main.apple-layout-preview .apple-progress { display: flex; }
-        main.apple-layout-preview .apple-brand {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: .25rem;
-          color: #111;
-          font-size: 14.4px;
-          font-weight: 500;
-        }
-        main.apple-layout-preview .apple-brand-logo {
-          display: block;
-          width: min(8.75rem, 36vw);
-          height: auto;
-        }
-        main.apple-layout-preview .apple-progress {
-          align-items: center;
-          gap: .9rem;
-          color: #5f6873;
-          font-size: 11px;
-        }
-        main.apple-layout-preview .apple-progress-step {
-          display: inline-flex;
-          align-items: center;
-          gap: .3rem;
-        }
-        main.apple-layout-preview .apple-progress-step span {
-          width: .42rem;
-          height: .42rem;
-          border-radius: 50%;
-          background: #e1e2e5;
-        }
-        main.apple-layout-preview .apple-progress-step.is-current { color: #111; }
-        main.apple-layout-preview .apple-progress-step.is-current span { background: #3699ef; }
-        main.apple-layout-preview .apple-heading-row {
+        .cp7-header {
           display: flex;
-          align-items: end;
+          align-items: center;
           justify-content: space-between;
-          gap: 1rem;
-          margin: 0 0 .6rem;
+          gap: 2rem;
+          padding: 1rem 0;
+          border-bottom: 1px solid var(--cp7-border);
         }
-        main.apple-layout-preview .apple-heading-row h2 {
+        .cp7-brand { margin: 0; color: var(--cp7-ink); font-size: 21px; letter-spacing: -.02em; }
+        .cp7-progress ol { display: flex; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+        .cp7-progress li {
+          display: flex;
+          align-items: center;
+          gap: .4rem;
+          padding: .35rem .55rem;
+          color: var(--cp7-muted);
+          font-size: 13px;
+        }
+        .cp7-progress li::before {
+          width: .52rem;
+          height: .52rem;
+          border: 1px solid #98a1ab;
+          border-radius: 50%;
+          background: #fff;
+          content: "";
+        }
+        .cp7-progress li.is-current { color: var(--cp7-ink); font-weight: 700; }
+        .cp7-progress li.is-current::before,
+        .cp7-progress li.is-complete::before { border-color: var(--cp7-accent); background: var(--cp7-accent); }
+        .cp7-page-heading { padding: 2rem 0 1.25rem; }
+        .cp7-page-heading h1 {
           margin: 0;
-          color: #101010;
-          font-size: 16px;
-          line-height: 1.2;
+          color: var(--cp7-ink);
+          font-size: clamp(28px, 4vw, 40px);
+          letter-spacing: -.035em;
+          line-height: 1.08;
         }
-        main.apple-layout-preview .apple-heading-row p {
-          margin: .3rem 0 0;
-          color: #5f6873;
-          font-size: 11px;
-        }
-        main.apple-layout-preview .apple-help-button {
-          width: auto;
-          min-height: 0 !important;
-          margin: 0;
-          padding: .2rem 0;
-          border: 0;
-          background: transparent;
-          color: #5f6873;
-          font-size: 11px;
-        }
-        main.apple-layout-preview .apple-help-button span { margin-left: .2rem; }
-        main.apple-layout-preview .app-header {
-          justify-content: space-between;
-          text-align: left;
-        }
-        main.apple-layout-preview .instruction-card { display: none; }
-        main.apple-layout-preview .intake-layout {
-          grid-template-columns: minmax(0, 1.35fr) minmax(16rem, .65fr);
-          gap: 1.25rem;
-        }
-        main.apple-layout-preview .apple-left-column,
-        main.apple-layout-preview .apple-right-column {
+        .cp7-page-heading p { max-width: 46rem; margin: .55rem 0 0; color: var(--cp7-muted); font-size: 16px; line-height: 1.5; }
+        .cp7-intake-layout {
           display: grid;
           grid-template-columns: minmax(0, 1fr);
-          align-content: start;
-          gap: .65rem;
+          gap: 1.25rem;
+          align-items: start;
+        }
+        .cp7-left { min-width: 0; }
+        main.cp7-container .cp7-task-card,
+        main.cp7-container .cp7-summary {
+          padding: 1.35rem;
+          border: 1px solid var(--cp7-border);
+          border-radius: 10px;
+          background: var(--cp7-surface);
+          box-shadow: 0 3px 12px rgba(27, 39, 51, .045);
+        }
+        .cp7-task-card h2,
+        main.cp7-container .cp7-summary h2 { margin: 0; color: var(--cp7-ink); font-size: 23px; line-height: 1.2; }
+        .cp7-task-intro { margin: .45rem 0 1.35rem; color: var(--cp7-muted); line-height: 1.5; }
+        .cp7-question-label { display: block; margin-bottom: .65rem; font-weight: 700; }
+        .standing-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .55rem; }
+        main.cp7-container .standing-option,
+        main.cp7-container .early-toggle,
+        main.cp7-container .custom-timeline-trigger,
+        main.cp7-container .standard-timeline-trigger,
+        main.cp7-container .secondary-action {
+          width: auto;
+          min-height: 44px;
+          margin: 0;
+          padding: .65rem .8rem;
+          border: 1px solid var(--cp7-border-strong);
+          border-radius: 7px;
+          background: #fff;
+          color: var(--cp7-ink);
+          cursor: pointer;
+        }
+        main.cp7-container .standing-option.is-selected,
+        main.cp7-container .early-toggle.is-selected {
+          border: 2px solid var(--cp7-accent);
+          background: var(--cp7-selected);
+          font-weight: 700;
+        }
+        .standing-feedback { margin: .75rem 0 0; padding: .7rem .8rem; border-left: 3px solid #74879c; background: var(--cp7-soft); color: #344151; }
+        .early-option, .custom-timeline-disclosure { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid var(--cp7-border); }
+        main.cp7-container .early-toggle { display: inline-flex; align-items: center; gap: .55rem; text-align: left; }
+        .early-option p, .custom-timeline-copy { margin: .4rem 0 0; color: var(--cp7-muted); font-size: 14px; line-height: 1.45; }
+        main.cp7-container .custom-timeline-trigger,
+        main.cp7-container .standard-timeline-trigger { border-color: transparent; padding-left: 0; color: #244f85; font-weight: 700; }
+        .custom-timeline-panel {
+          display: grid;
+          gap: 1rem;
+          margin-top: .65rem;
+          padding: 1rem;
+          border: 1px solid var(--cp7-border);
+          border-radius: 8px;
+          background: var(--cp7-soft);
+        }
+        .custom-fields, .advanced-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+        .custom-fields label, .advanced-fields label {
+          display: grid;
+          gap: .4rem;
+          color: #303a46;
+          font-weight: 700;
+        }
+        .custom-fields select, .advanced-fields input, .advanced-fields select {
+          width: 100%;
+          min-height: 42px;
+          padding: .55rem .65rem;
+          border: 1px solid var(--cp7-border-strong);
+          border-radius: 6px;
+          background: #fff;
+          color: var(--cp7-ink);
+          font-weight: 400;
+        }
+        .custom-target { margin: 0; color: #344151; }
+        .custom-errors { margin: 0; padding-left: 1.2rem; color: var(--cp7-danger); }
+        .more-details { margin-top: 1.25rem; border-top: 1px solid var(--cp7-border); padding-top: 1rem; }
+        .more-details > summary { color: #244f85; cursor: pointer; font-weight: 700; }
+        .advanced-fields { margin-top: 1rem; }
+        .advanced-fields .wide-field { grid-column: 1 / -1; }
+        .non-major-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-top: .75rem; }
+        .step-two-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+        main.cp7-container .secondary-action { flex: 0 0 auto; color: #244f85; }
+        .course-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; align-items: end; margin: 1rem 0 1.25rem; }
+        .course-toolbar label { display: grid; gap: .35rem; font-weight: 700; }
+        .course-toolbar input {
+          width: 100%;
+          min-height: 42px;
+          padding: .55rem .65rem;
+          border: 1px solid var(--cp7-border-strong);
+          border-radius: 6px;
+        }
+        main.cp7-container .clear-courses {
+          width: auto;
+          min-height: 42px;
+          margin: 0;
+          padding: .55rem .8rem;
+          border: 1px solid var(--cp7-border-strong);
+          border-radius: 6px;
+          background: #fff;
+          color: var(--cp7-ink);
+          cursor: pointer;
+        }
+        .course-priority-section + .course-priority-section { margin-top: 1.35rem; }
+        .course-priority-section > h3 { margin: 0 0 .45rem; color: var(--cp7-ink); font-size: 16px; }
+        main.cp7-container .course-columns { display: grid; grid-template-columns: 1fr; gap: 0; }
+        main.cp7-container .course-row {
+          position: static;
+          display: block;
           min-width: 0;
-        }
-        main.apple-layout-preview .apple-left-column { grid-column: 1; grid-row: 1; }
-        main.apple-layout-preview .apple-right-column { grid-column: 2; grid-row: 1; }
-        main.apple-layout-preview .intake-card {
+          padding: .8rem 0;
           border: 0;
-          border-radius: .75rem;
-          background: #f3f3f4;
-          box-shadow: none;
-          padding: .55rem .65rem;
-        }
-        main.apple-layout-preview .planning-intake-card,
-        main.apple-layout-preview .non-major-intake-card,
-        main.apple-layout-preview .course-intake-card {
-          margin: 0;
-        }
-        main.apple-layout-preview .planning-intake-card,
-        main.apple-layout-preview .non-major-intake-card,
-        main.apple-layout-preview .course-intake-card,
-        main.apple-layout-preview .summary-card,
-        main.apple-layout-preview .generate-card {
-          grid-column: 1;
-          grid-row: auto;
-        }
-        main.apple-layout-preview .summary-card {
-          grid-column: 2;
-          grid-row: 1;
-          min-height: 0;
-          margin: 0;
-          padding: .55rem .65rem;
-          border: 0;
-          border-radius: .75rem;
-          background: #f3f3f4;
-          box-shadow: none;
-        }
-        main.apple-layout-preview .generate-card {
-          grid-column: 2;
-          grid-row: 2;
-          align-self: start;
-          margin: 0;
-          padding: 0;
-          border: 0;
+          border-bottom: 1px solid #e4e7eb;
           background: transparent;
         }
-        main.apple-layout-preview .planning-details { margin: 0; padding: 0; border: 0; }
-        main.apple-layout-preview .planning-details .section-heading,
-        main.apple-layout-preview .course-heading { display: none; }
-        main.apple-layout-preview .planning-timeline-panel {
-          margin-top: .2rem;
-          padding: .9rem;
-          border: 1px solid #cbd8e6;
-          border-radius: .75rem;
-          background: #fff;
-        }
-        main.apple-layout-preview .planning-timeline-eyebrow {
-          margin: 0 0 .45rem;
-          color: #38536f;
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: .02em;
-        }
-        main.apple-layout-preview .apple-planning-heading { display: block; margin-bottom: .65rem; }
-        main.apple-layout-preview .apple-planning-heading h2 {
-          margin: 0;
-          color: #111;
-          font-size: 16px;
-          line-height: 1.2;
-        }
-        main.apple-layout-preview .apple-planning-heading p {
-          margin: .25rem 0 0;
-          color: #5f6873;
-          font-size: 11px;
-        }
-        main.apple-layout-preview .section-heading h2,
-        main.apple-layout-preview .apple-course-heading h2,
-        main.apple-layout-preview .summary-card h2 {
-          color: #111;
-          font-size: 14px;
-          line-height: 1.2;
-        }
-        main.apple-layout-preview .planning-fields { display: none; }
-        main.apple-layout-preview .apple-standing-segmented {
+        main.cp7-container .course-row-main {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: minmax(175px, 1fr) minmax(370px, auto);
+          gap: 1rem;
+          align-items: center;
+        }
+        main.cp7-container .course-name { display: grid; gap: .18rem; min-width: 0; }
+        main.cp7-container .course-name strong { color: var(--cp7-ink); font-size: 15px; }
+        main.cp7-container .course-name span { color: var(--cp7-muted); font-size: 13px; line-height: 1.3; }
+        main.cp7-container .course-toggles { display: grid; grid-template-columns: repeat(3, minmax(105px, 1fr)); gap: .35rem; justify-content: stretch; }
+        main.cp7-container button.course-toggle,
+        main.cp7-container .completion-source-options button {
+          display: inline-flex;
+          width: auto;
+          min-width: 0;
+          min-height: 38px;
+          align-items: center;
+          justify-content: center;
           gap: .35rem;
           margin: 0;
-        }
-        main.apple-layout-preview .apple-standing-segmented button {
-          width: 100%;
-          min-height: 2.25rem !important;
-          margin: 0;
-          padding: .4rem .5rem;
-          border: 1px solid #d9dadd;
-          border-radius: .4rem;
+          padding: .48rem .55rem;
+          border: 1px solid #aeb6bf;
+          border-radius: 6px;
           background: #fff;
-          color: #111;
+          color: #303a46;
           font-size: 13px;
           font-weight: 600;
+          line-height: 1.2;
+          cursor: pointer;
         }
-        main.apple-layout-preview .apple-standing-segmented button.is-selected {
-          border-color: #0b5cad;
-          background: #0b5cad;
+        main.cp7-container button.course-toggle.is-selected,
+        main.cp7-container .completion-source-options button.is-selected {
+          border: 2px solid var(--cp7-accent);
+          background: var(--cp7-selected);
+          color: var(--cp7-ink);
+        }
+        .selection-check { display: inline-block; width: 1em; color: var(--cp7-accent); font-weight: 800; }
+        .course-status-note { color: var(--cp7-muted); font-size: 13px; }
+        .course-requirement-group { margin: .55rem 0; padding: .7rem .85rem; border: 1px solid var(--cp7-border); border-radius: 8px; background: #fafbfc; }
+        .course-requirement-heading { display: flex; justify-content: space-between; gap: 1rem; color: var(--cp7-muted); font-size: 13px; }
+        .course-requirement-heading strong { color: var(--cp7-ink); font-size: 14px; }
+        .completion-source { margin: .55rem 0 0; padding: .55rem .7rem; border-left: 3px solid #a5afb9; background: var(--cp7-soft); }
+        .completion-source summary { cursor: pointer; color: #344151; font-size: 13px; font-weight: 700; }
+        .completion-source summary span { color: var(--cp7-muted); font-weight: 400; }
+        .completion-source-options { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .65rem; }
+        .completion-source p { margin: .55rem 0 0; color: var(--cp7-muted); font-size: 13px; }
+        .inline-prerequisite { margin: .7rem 0 0; padding: .8rem; border: 1px solid #b9c3ce; border-radius: 7px; background: #f6f8fa; }
+        .inline-prerequisite.has-conflict { border-color: #b76458; background: #fff6f3; }
+        .inline-prerequisite > p { margin: 0 0 .65rem; }
+        .prerequisite-question + .prerequisite-question { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--cp7-border); }
+        .prerequisite-question-heading { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; color: var(--cp7-muted); font-size: 13px; }
+        .prerequisite-question-heading strong { color: var(--cp7-ink); }
+        .prerequisite-option { display: grid; grid-template-columns: minmax(165px, 1fr) minmax(370px, auto); gap: 1rem; align-items: center; padding: .45rem 0; }
+        .prerequisite-name { display: grid; gap: .1rem; }
+        .prerequisite-name small { color: var(--cp7-muted); }
+        .prerequisite-conflict { margin-top: .55rem; padding: .65rem .75rem; border-left: 3px solid var(--cp7-danger); background: #fff; color: #64251f; }
+        .prerequisite-conflict p { margin: .2rem 0; }
+        .prerequisite-approval { margin: .55rem 0 0 !important; color: #704c08; }
+        main.cp7-container .course-accordion { margin-top: 1.35rem; border: 1px solid var(--cp7-border); border-radius: 8px; background: #fafbfc; }
+        main.cp7-container .course-accordion > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem .9rem; color: var(--cp7-ink); cursor: pointer; font-weight: 700; }
+        main.cp7-container .course-accordion-title { min-width: 0; }
+        main.cp7-container .course-accordion-count { flex: 0 0 auto; }
+        main.cp7-container .course-accordion .course-columns { padding: 0 .9rem .55rem; }
+        main.cp7-container .cp7-summary { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow: auto; }
+        .summary-details { display: grid; gap: 0; margin: .8rem 0 0; }
+        .summary-details > div { padding: .62rem 0; border-bottom: 1px solid #e5e8eb; }
+        .summary-details dt { color: var(--cp7-muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .035em; }
+        .summary-details dd { margin: .24rem 0 0; color: var(--cp7-ink); line-height: 1.4; }
+        .summary-none { color: var(--cp7-muted); }
+        .summary-show-all { margin-top: .35rem; }
+        .summary-show-all summary { color: #244f85; cursor: pointer; font-size: 13px; font-weight: 700; }
+        .summary-show-all span { display: block; margin-top: .35rem; }
+        .summary-attention { margin-top: .8rem; padding: .7rem; border: 1px solid var(--cp7-warning-border); border-radius: 7px; background: var(--cp7-warning); font-size: 13px; }
+        .summary-attention p { margin: .4rem 0 0; }
+        .summary-attention ul { display: grid; gap: .3rem; margin: .45rem 0 0; padding: 0; list-style: none; }
+        .summary-attention button { padding: 0; border: 0; background: transparent; color: #704c08; text-align: left; text-decoration: underline; cursor: pointer; }
+        .summary-status { margin: .8rem 0 0; color: #6c2c25; font-size: 13px; line-height: 1.4; }
+        main.cp7-container .primary-action {
+          width: 100%;
+          min-height: 45px;
+          margin: 1rem 0 0;
+          padding: .7rem 1rem;
+          border: 1px solid #172a40;
+          border-radius: 7px;
+          background: var(--cp7-accent);
           color: #fff;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
         }
-        main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options {
-          grid-template-columns: repeat(3, max-content);
-          gap: .35rem;
-          justify-content: start;
-          margin-top: .35rem;
-          font-size: 11px;
-        }
-        main.apple-layout-preview .planning-timeline-panel .planning-pace-fieldset {
-          margin-top: .9rem;
-          padding-top: .75rem;
-          border-top: 1px solid #e1e7ee;
-        }
-        main.apple-layout-preview .planning-timeline-panel .standing-help {
-          max-width: 72ch;
-          margin: .55rem 0 0;
-          font-size: 12px;
-          line-height: 1.4;
-        }
-        main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options button {
-          width: 14ch;
-          min-height: 1.8rem !important;
-          padding: .2rem .35rem;
-          font-size: 11px;
-        }
-        @media (max-width: 30rem) {
-          main.apple-layout-preview .planning-pace-fieldset .transfer-graduation-options {
-            grid-template-columns: repeat(2, max-content);
+        main.cp7-container .primary-action:hover { background: #172a40; }
+        main.cp7-container .primary-action:disabled { cursor: wait; opacity: .68; }
+        @media (min-width: 861px) {
+          main.cp7-container .cp7-intake-layout {
+            grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
           }
         }
-        main.apple-layout-preview .apple-mini-fields {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: .65rem;
-          margin-top: .35rem;
-        }
-        main.apple-layout-preview .apple-mini-fields {
-          grid-auto-rows: max-content;
-        }
-        main.apple-layout-preview .apple-mini-fields label {
-          display: grid;
-          align-self: start;
-          gap: .2rem;
-          height: auto;
-          margin: 0 !important;
-        }
-        main.apple-layout-preview .apple-mini-fields label > span {
-          color: #333;
-          font-size: 10px;
-        }
-        main.apple-layout-preview .apple-mini-fields input {
-          width: 100%;
-          height: 1.35rem !important;
-          min-height: 0 !important;
-          box-sizing: border-box;
-          margin: 0 !important;
-          padding: .1rem .35rem !important;
-          border: 1px solid #d9dadd;
-          border-radius: .4rem;
-          background: #fff;
-          color: #111;
-          font-size: 11px;
-          line-height: 1.1 !important;
-        }
-        main.apple-layout-preview .apple-plan-details-fields {
-          display: flex;
-          flex-wrap: wrap;
-          gap: .65rem;
-        }
-        main.apple-layout-preview .apple-plan-details-fields .apple-student-name-field {
-          flex: 0 1 28ch;
-          max-width: 100%;
-          order: 1;
-        }
-        main.apple-layout-preview .apple-plan-details-fields .apple-horizon-detail-pair {
-          display: flex;
-          flex: 0 1 auto;
-          gap: .65rem;
-          max-width: 100%;
-          order: 2;
-        }
-        main.apple-layout-preview .apple-plan-details-fields .apple-plan-creation-field { order: 3; }
-        main.apple-layout-preview .apple-plan-details-fields .apple-compact-detail-field {
-          flex: 0 1 10.5rem;
-          max-width: 10.5rem;
-        }
-        main.apple-layout-preview .apple-plan-details-fields .apple-expected-graduation-field > span {
-          font-size: 12px;
-        }
-        main.apple-layout-preview button.transfer-student-trigger {
-          width: auto;
-          min-height: 1.8rem !important;
-          margin: .65rem 0 0;
-          padding: .25rem .55rem;
-          border: 1px solid #0b5cad;
-          border-radius: .4rem;
-          background: #fff;
-          color: #0b47c8;
-          font-size: 11px;
-          font-weight: 600;
-          text-decoration: none;
-        }
-        main.apple-layout-preview button.transfer-student-trigger:hover {
-          border-color: #0b47c8;
-          background: #e4f1ff;
-        }
-        main.apple-layout-preview .non-major-commitments { margin: 1rem 0; padding: .8rem; border: 1px solid #d8e0ea; border-radius: .65rem; }
-        main.apple-layout-preview .non-major-commitments summary { cursor: pointer; font-weight: 700; }
-        main.apple-layout-preview .non-major-commitments p { color: #52627a; font-size: .88rem; }
-        main.apple-layout-preview .apple-course-heading {
-          display: flex;
-          align-items: start;
-          justify-content: space-between;
-          gap: .75rem;
-        }
-        main.apple-layout-preview .apple-course-heading p {
-          margin: .25rem 0 0;
-          color: #5f6873;
-          font-size: 11px;
-        }
-        main.apple-layout-preview .apple-course-heading > span {
-          flex: 0 0 auto;
-          padding-top: .1rem;
-          color: #0b5cad;
-          font-size: 10px;
-        }
-        main.apple-layout-preview .apple-course-toolbar {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) auto;
-          gap: .65rem;
-          align-items: center;
-          margin: .4rem 0 .35rem;
-        }
-        main.apple-layout-preview .search-label { width: 100%; margin: 0; }
-        main.apple-layout-preview .search-label input {
-          height: 1.35rem !important;
-          min-height: 0 !important;
-          padding: .1rem .35rem !important;
-          border: 1px solid #d9dadd;
-          border-radius: .4rem;
-          background: #fff;
-          font-size: 11px;
-          line-height: 1.1 !important;
-        }
-        main.apple-layout-preview .apple-clear-button {
-          width: auto;
-          min-height: 1.65rem !important;
-          margin: 0;
-          padding: .35rem .7rem;
-          border: 1px solid #7fb1e8;
-          border-radius: .45rem;
-          background: #e4f1ff;
-          color: #0b47c8;
-          font-size: 11px;
-          font-weight: 600;
-          line-height: 1.1;
-        }
-        main.apple-layout-preview .apple-clear-button:hover {
-          border-color: #0b47c8;
-          background: #dceeff;
-        }
-        main.apple-layout-preview .apple-clear-button:focus-visible {
-          outline: 2px solid #93c5fd;
-          outline-offset: 1px;
-        }
-        main.apple-layout-preview .apple-clear-button:active {
-          background: #cbe4ff;
-        }
-        main.apple-layout-preview .course-columns { display: block; width: 100%; }
-        main.apple-layout-preview .course-column { display: block; width: 100%; max-width: none; }
-        main.apple-layout-preview .course-row {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) auto;
-          grid-template-rows: auto;
-          width: 100%;
-          max-width: none;
-          padding: .5rem 0;
-          border: 0;
-          border-bottom: 1px solid #dedee0;
-          background: transparent;
-        }
-        main.apple-layout-preview .course-name { width: auto; gap: .6rem; }
-        main.apple-layout-preview .course-name strong { color: #111; font-weight: 500; }
-        main.apple-layout-preview .course-name span { color: #5f6873; }
-        main.apple-layout-preview .course-toggles { gap: .45rem; }
-        main.apple-layout-preview button.course-toggle {
-          min-width: 5.4rem;
-          padding: .25rem .4rem;
-          border-color: #d9dadd;
-          border-radius: .45rem;
-          font-size: 11px;
-        }
-        main.apple-layout-preview button.course-toggle.is-selected,
-        main.apple-layout-preview button.taken-toggle.is-selected {
-          background: #dff4e4;
-          border-color: #6db784;
-          color: #064f20;
-          font-weight: 600;
-        }
-        main.apple-layout-preview button.course-toggle:focus {
-          outline: none;
-          box-shadow: none;
-        }
-        main.apple-layout-preview button.course-toggle:focus-visible {
-          outline: 3px solid #0b47c8;
-          outline-offset: 2px;
-          box-shadow: 0 0 0 1px #fff;
-        }
-        main.apple-layout-preview .default-course-label { display: none; }
-        main.apple-layout-preview .apple-course-label { display: inline; }
-        main.apple-layout-preview .course-accordion { margin-top: 0; border-color: #dedee0; padding: .45rem 0 0; }
-        main.apple-layout-preview .course-accordion summary { font-size: 11px; font-weight: 500; }
-        main.apple-layout-preview .course-accordion summary::before { color: #111; font-size: 10px; }
-        main.apple-layout-preview .course-accordion-count { display: none; }
-        main.apple-layout-preview .apple-summary-preview { display: block; }
-        main.apple-layout-preview .summary-card > .section-heading { margin-bottom: .3rem; }
-        main.apple-layout-preview .summary-card > .section-heading p { display: none; }
-        main.apple-layout-preview .apple-summary-line {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
-          gap: 1rem;
-          padding: .45rem 0;
-          border-bottom: 1px solid #dedee0;
-          font-size: 11px;
-        }
-        main.apple-layout-preview .apple-summary-line strong { font-weight: 500; }
-        main.apple-layout-preview .apple-summary-courses {
-          padding: .45rem 0 0;
-        }
-        main.apple-layout-preview .apple-summary-courses-heading {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
-          gap: 1rem;
-          color: #333;
-          font-size: 10px;
-          font-weight: 600;
-        }
-        main.apple-layout-preview .apple-summary-courses-heading strong {
-          color: #111;
-          font-weight: 500;
-        }
-        main.apple-layout-preview .apple-summary-courses ul {
-          display: grid;
-          gap: .2rem;
-          margin: .3rem 0 0;
-          padding: 0;
-          list-style: none;
-        }
-        main.apple-layout-preview .apple-summary-courses li {
-          display: flex;
-          align-items: baseline;
-          justify-content: space-between;
-          gap: .6rem;
-          color: #102a5c;
-          font-size: 10px;
-        }
-        main.apple-layout-preview .apple-summary-courses li span,
-        main.apple-layout-preview .apple-summary-no-courses {
-          color: #5f6873;
-        }
-        main.apple-layout-preview .apple-summary-no-courses {
-          margin: .3rem 0 0;
-          font-size: 10px;
-        }
-        main.apple-layout-preview .apple-summary-preview > p {
-          margin: .45rem 0 0;
-          color: #5f6873;
-          font-size: 10px;
-          line-height: 1.35;
-        }
-        main.apple-layout-preview .summary-empty { display: none; }
-        main.apple-layout-preview .generate-row { margin: .75rem 0 0; }
-        main.apple-layout-preview .prerequisite-choice-card {
-          width: min(34rem, calc(100vw - 2rem));
-          padding: 0;
-          border-color: #a9c8ed;
-          border-radius: .7rem;
-          background: #fff;
-          box-shadow: 0 .45rem 1.2rem rgba(20, 44, 92, .12);
-          color: #102a5c;
-        }
-        main.apple-layout-preview .requirement-choice-card {
-          left: auto !important;
-          right: 0;
-        }
-        main.apple-layout-preview .prerequisite-choice-card > strong {
-          padding: .8rem .9rem .35rem;
-          color: #102a5c;
-          font-size: var(--planner-body-size);
-          font-weight: 700;
-        }
-        main.apple-layout-preview .prerequisite-help {
-          padding: 0 .9rem .65rem;
-          color: #53627a;
-          font-size: var(--planner-body-size);
-        }
-        main.apple-layout-preview .prerequisite-sections { gap: 0; }
-        main.apple-layout-preview .prerequisite-section {
-          gap: .45rem;
-          padding: .7rem .9rem;
-          border-color: #d7e1ec;
-        }
-        main.apple-layout-preview .prerequisite-section-label {
-          color: #53627a;
-          font-size: var(--planner-body-size);
-        }
-        main.apple-layout-preview .prerequisite-option {
-          grid-template-columns: minmax(8rem, 1fr) auto;
-          gap: .75rem;
-        }
-        main.apple-layout-preview .prerequisite-name { gap: .1rem; }
-        main.apple-layout-preview .prerequisite-name strong { color: #102a5c; font-size: var(--planner-body-size); }
-        main.apple-layout-preview .prerequisite-name small { color: #53627a; font-size: .7rem; }
-        main.apple-layout-preview .prerequisite-statuses { gap: .3rem; }
-        main.apple-layout-preview button.prerequisite-status,
-        main.apple-layout-preview button.prerequisite-cancel,
-        main.apple-layout-preview button.prerequisite-confirm {
-          min-height: 0 !important;
-          padding: .3rem .45rem;
-          border-color: #a9c8ed;
-          border-radius: .35rem;
-          font-size: var(--planner-body-size);
-          line-height: 1.25;
-        }
-        main.apple-layout-preview button.prerequisite-status.is-completed.is-selected { border-color: #6db784; background: #dff4e4; }
-        main.apple-layout-preview button.prerequisite-status.is-in_progress.is-selected { border-color: #8bb7e8; background: #e6f1ff; }
-        main.apple-layout-preview button.prerequisite-status.is-not_started.is-selected { border-color: #b8c8d8; background: #eef3f8; }
-        main.apple-layout-preview .prerequisite-issues { margin: .55rem .9rem; font-size: var(--planner-body-size); }
-        main.apple-layout-preview .prerequisite-actions {
-          gap: .45rem;
-          padding: .7rem .9rem .85rem;
-        }
-        main.apple-layout-preview button.prerequisite-cancel { color: #102a5c; }
-        main.apple-layout-preview button.prerequisite-confirm {
-          border-color: #0b47c8;
-          background: #0b47c8;
-          color: #fff;
-        }
-        main.apple-layout-preview button.prerequisite-confirm:disabled {
-          border-color: #b8c8d8;
-          background: #eef3f8;
-          color: #7690aa;
-        }
-        main.apple-layout-preview .generate-card { border: 0; padding: 0; background: transparent; }
-        main.apple-layout-preview .return-to-plans-button {
-          width: 100%;
-          margin: 0 0 .55rem;
-          padding: .45rem .6rem;
-          border: 1px solid #155eef;
-          border-radius: .35rem;
-          background: #fff;
-          color: #0b47c8;
-          font-size: 12px;
-          font-weight: 700;
-        }
-        main.apple-layout-preview .generate-button {
-          width: 100%;
-          border: 0;
-          min-height: 0 !important;
-          padding: .3rem .5rem;
-          border-radius: .35rem;
-          background: #1b1c1e;
-          color: #fff;
-          font-size: 11px;
-          line-height: 1.1;
-        }
-        main.apple-layout-preview .default-generate-label { display: none; }
-        main.apple-layout-preview .apple-generate-label { display: inline; }
-        @media (max-width: 900px) {
-          main.apple-layout-preview .intake-layout { grid-template-columns: 1fr; }
-          main.apple-layout-preview .apple-left-column,
-          main.apple-layout-preview .apple-right-column {
-            grid-column: 1;
-            grid-row: auto;
+        @media (max-width: 860px) {
+          main.cp7-container { width: min(100% - 1rem, 720px); }
+          .cp7-header { align-items: flex-start; flex-direction: column; gap: .55rem; }
+          .cp7-progress { width: 100%; overflow-x: auto; }
+          .cp7-progress ol { justify-content: space-between; min-width: 330px; }
+          main.cp7-container .cp7-intake-layout { grid-template-columns: minmax(0, 1fr) !important; }
+          main.cp7-container .cp7-summary {
+            position: static;
+            grid-column: 1 !important;
+            grid-row: auto !important;
+            max-height: none;
+            overflow: visible;
           }
         }
-        @media (max-width: 560px) {
-          main.apple-layout-preview .apple-progress { gap: .35rem; font-size: 0; }
-          main.apple-layout-preview .apple-progress-step span { width: .5rem; height: .5rem; }
-          main.apple-layout-preview .apple-heading-row { align-items: flex-start; }
-          main.apple-layout-preview .apple-help-button span { display: none; }
-          main.apple-layout-preview .apple-mini-fields { grid-template-columns: 1fr; }
-          main.apple-layout-preview .apple-plan-details-fields .apple-compact-detail-field { flex-basis: 10rem; }
-          main.apple-layout-preview .apple-course-toolbar { grid-template-columns: 1fr; gap: .2rem; }
-          main.apple-layout-preview .apple-clear-button { justify-self: start; }
-          main.apple-layout-preview .course-row { grid-template-columns: 1fr; gap: .35rem; }
-          main.apple-layout-preview .course-toggles { justify-content: stretch; }
-          main.apple-layout-preview button.course-toggle { flex: 1; }
+        @media (max-width: 620px) {
+          main.cp7-container { width: 100%; padding: 0 .65rem 2rem; }
+          .cp7-page-heading { padding: 1.35rem .25rem 1rem; }
+          .cp7-page-heading h1 { font-size: 28px; }
+          main.cp7-container .cp7-task-card,
+          main.cp7-container .cp7-summary { padding: 1rem; border-radius: 8px; }
+          .standing-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .custom-fields, .advanced-fields, .non-major-fields { grid-template-columns: 1fr; }
+          .advanced-fields .wide-field { grid-column: auto; }
+          .step-two-heading { display: block; }
+          main.cp7-container .secondary-action { margin-top: .7rem; }
+          .course-toolbar { grid-template-columns: 1fr; }
+          main.cp7-container .clear-courses { justify-self: start; }
+          main.cp7-container .course-row-main,
+          .prerequisite-option { grid-template-columns: 1fr; gap: .55rem; }
+          main.cp7-container .course-toggles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+          main.cp7-container button.course-toggle { min-height: 44px; }
+          .course-requirement-heading,
+          .prerequisite-question-heading { display: grid; gap: .25rem; }
+        }
+        @media (max-width: 360px) {
+          main.cp7-container .course-toggles { grid-template-columns: 1fr; }
+          main.cp7-container button.course-toggle { justify-content: flex-start; }
         }
       `}</style>
 
-      <header className="app-header">
-        <div className="apple-brand" aria-label="EconPlanner">
-          <img
-            className="apple-brand-logo"
-            src="/urveska-midnight-gold-underlined.png"
-            alt="URVESKA"
-          />
-          <span className="apple-brand-name">EconPlanner</span>
-        </div>
-        <div className="apple-progress" aria-label="Planner progress">
-          <span className="apple-progress-step is-current"><span />About you</span>
-          <span className="apple-progress-step"><span />Your courses</span>
-          <span className="apple-progress-step"><span />Your plan</span>
-        </div>
-        <div className="app-title">
-          <h1><span className="headline-econ">Econ</span> <span className="headline-planner">Planner</span></h1>
-        </div>
+      <header className="cp7-header">
+        <p className="cp7-brand"><strong>EconPlanner</strong></p>
+        <nav className="cp7-progress" aria-label="Planner progress">
+          <ol>
+            <li className={intakeStep === 1 ? "is-current" : "is-complete"} aria-current={intakeStep === 1 ? "step" : undefined}>About you</li>
+            <li className={intakeStep === 2 ? "is-current" : ""} aria-current={intakeStep === 2 ? "step" : undefined}>Your courses</li>
+            <li>Your plans</li>
+          </ol>
+        </nav>
       </header>
 
-      <div className="apple-heading-row">
-        <div>
-          <h2>Build your economics course plan</h2>
-          <p>Tell us where you are and which courses you have completed or are taking.</p>
-        </div>
-        <button type="button" className="apple-help-button">? <span>How this works</span></button>
+      <div className="cp7-page-heading">
+        <h1>{intakeStep === 1 ? "Where are you in your degree?" : "Which courses have you finished or are taking now?"}</h1>
+        <p>{intakeStep === 1
+          ? "Your class standing helps us estimate your normal graduation timeline."
+          : "Choose a status for the courses that apply to you. Select the same choice again to clear it."}</p>
       </div>
 
       <form onSubmit={mapMajors}>
-        <section className="instruction-card">
-          <h2>The EconPlanner combines your completed and current courses, major requirements, and course timing to show what you still need and help build a manageable semester-by-semester path through the rest of your time at Hanover College so you can plan ahead easily.</h2>
-          <p className="instruction-lead"><span className="lead-aqua">This</span> <span className="lead-gold">is</span> <span className="lead-orange">what</span> <span className="lead-gold">you</span> <span className="lead-aqua">do</span></p>
-          <div className="planner-instructions">
-            <p>1. Choose your year in college or transfer graduation target</p>
-            <p>2. Select Econ and cognate courses taken or in progress</p>
-            <p>3. Click on Generate My Plan below course selection list.</p>
-            <p>4. EconPlanner will generate a course plan.</p>
-          </div>
-        </section>
-
-        <div className="intake-layout">
-          <div className="apple-left-column">
-          <section className="intake-card planning-intake-card">
-            <div className="planning-details">
-              <div className="section-heading">
-                <div>
-                  <h2>1. Choose your planning year and courses taken or in progress</h2>
-                  <p>Your year in college or transfer graduation target sets the number of years and terms in your plan.</p>
-                </div>
-              </div>
-              <div className="planning-fields">
-                <div className="planning-field">
-                  {!formData.isTransferStudent && (
-                    <>
-                      <label htmlFor="academic-standing">{standingQuestion}</label>
-                      <select
-                        id="academic-standing"
-                        value={formData.academicStanding}
-                        onChange={event => setFormData(current => ({
-                          ...current,
-                          academicStanding: event.target.value,
-                          planningPace: event.target.value === "senior" && current.planningPace === PLANNING_PACES.EARLY
-                            ? PLANNING_PACES.STANDARD
-                            : current.planningPace
-                        }))}
+        <div className="cp7-intake-layout">
+          <div className="cp7-left">
+            {intakeStep === 1 ? (
+              <section className="cp7-task-card" aria-labelledby="about-you-heading">
+                <h2 id="about-you-heading">Tell us about your timeline</h2>
+                <p className="cp7-task-intro">Start with your current class standing. You can adjust the timeline if your expected graduation is different.</p>
+                <fieldset>
+                  <legend className="cp7-question-label">{standingQuestion}</legend>
+                  <div className="standing-options" role="group" aria-label="Class standing">
+                    {[
+                      ["freshman", "Freshman"],
+                      ["sophomore", "Sophomore"],
+                      ["junior", "Junior"],
+                      ["senior", "Senior"]
+                    ].map(([value, label]) => (
+                      <button
+                        type="button"
+                        id={`standing-${value}`}
+                        className={`standing-option${formData.academicStanding === value ? " is-selected" : ""}`}
+                        aria-pressed={formData.academicStanding === value}
+                        key={value}
+                        onClick={() => chooseStanding(value)}
                       >
-                        <option value="freshman">Freshman</option>
-                        <option value="sophomore">Sophomore</option>
-                        <option value="junior">Junior</option>
-                        <option value="senior">Senior</option>
-                      </select>
-                      <p className="standing-help">{standingHelp}</p>
-                    </>
-                  )}
-                </div>
-                <div className="planning-field">
-                  <div className="date-display" aria-labelledby="plan-creation-date-label">
-                    <span id="plan-creation-date-label" className="planning-label">Plan creation date:</span>
-                    <strong>{formatPlanCreationDate(formData.planCreationDate)}</strong>
+                        <span className="selection-check" aria-hidden="true">{formData.academicStanding === value ? "✓" : ""}</span>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="custom-timeline-copy">{standingHelp}</p>
+                </fieldset>
+                {formData.academicStanding && !formData.isTransferStudent && (
+                  <p className="standing-feedback">
+                    Based on {planningContext.standingLabel.toLowerCase()} standing, your standard plan ends in <strong>{planningContext.expectedGraduationTerm}</strong>.
+                  </p>
+                )}
+                {formData.academicStanding && !formData.isTransferStudent && planningContext.oneYearEarlyEligible && (
+                  <div className="early-option">
                     <button
                       type="button"
-                      className="date-edit-button"
-                      aria-label={isEditingPlanDate ? "Close plan creation date editor" : "Change plan creation date"}
-                      aria-expanded={isEditingPlanDate}
-                      aria-controls="plan-creation-date"
-                      onClick={() => setIsEditingPlanDate(current => !current)}
+                      className={`early-toggle${planningContext.earlyComparisonRequested ? " is-selected" : ""}`}
+                      aria-pressed={planningContext.earlyComparisonRequested}
+                      onClick={() => {
+                        setFormData(current => ({
+                          ...current,
+                          planningPace: current.planningPace === PLANNING_PACES.EARLY ? PLANNING_PACES.STANDARD : PLANNING_PACES.EARLY
+                        }));
+                        clearInputFeedback();
+                      }}
                     >
-                      <CalendarIcon />
+                      <span className="selection-check" aria-hidden="true">{planningContext.earlyComparisonRequested ? "✓" : ""}</span>
+                      Include a one-year-early plan
                     </button>
+                    <p>Available for freshmen and sophomores.</p>
                   </div>
-                  {isEditingPlanDate && (
-                    <input
-                      id="plan-creation-date"
-                      type="date"
-                      aria-labelledby="plan-creation-date-label"
-                      value={formData.planCreationDate}
-                      onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))}
-                    />
-                  )}
-                </div>
-              </div>
-              {!formData.isTransferStudent && (
-                <>
-                  <section
-                    className="planning-timeline-panel"
-                    aria-labelledby="planning-timeline-heading"
-                  >
-                    <p className="planning-timeline-eyebrow">Planning timeline</p>
-                    <div className="apple-planning-heading">
-                      <h2 id="planning-timeline-heading">{standingQuestion}</h2>
-                      <p>{standingHelp}</p>
-                    </div>
-                    <div className="apple-standing-segmented" role="group" aria-label="Class standing">
-                      {[
-                        ["freshman", "Freshman"],
-                        ["sophomore", "Sophomore"],
-                        ["junior", "Junior"],
-                        ["senior", "Senior"]
-                      ].map(([value, label]) => (
-                        <button
-                          type="button"
-                          className={formData.academicStanding === value ? "is-selected" : ""}
-                          aria-pressed={formData.academicStanding === value}
-                          key={value}
-                          onClick={() => setFormData(current => ({
-                            ...current,
-                            academicStanding: value,
-                            planningPace: value === "senior" && current.planningPace === PLANNING_PACES.EARLY
-                              ? PLANNING_PACES.STANDARD
-                              : current.planningPace
-                          }))}
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-                    <fieldset className="transfer-graduation-fieldset planning-pace-fieldset">
-                      <legend>How quickly do you want this plan to finish?</legend>
-                      <div className="transfer-graduation-options">
-                        {[
-                          [PLANNING_PACES.STANDARD, "Standard pace"],
-                          ...(planningContext.standardRemainingYears > 1
-                            ? [[PLANNING_PACES.EARLY, "One Year Early"]]
-                            : [])
-                        ].map(([value, label]) => (
-                          <button
-                            type="button"
-                            key={value}
-                            className={formData.planningPace === value ? "is-selected" : ""}
-                            aria-pressed={formData.planningPace === value}
-                            onClick={() => setFormData(current => ({
-                              ...current,
-                              planningPace: value
-                            }))}
-                          >
-                            {label}
-                          </button>
-                        ))}
-                      </div>
-                      <p className="standing-help">
-                        Standard pace follows your current class year. One Year Early keeps the normal plans visible and adds a separate accelerated feasibility comparison that assumes senior standing in its final planning year.
-                      </p>
-                    </fieldset>
-                  </section>
+                )}
+                <div className="custom-timeline-disclosure">
                   <button
                     type="button"
-                    className="transfer-student-trigger"
-                    aria-expanded="false"
-                    aria-controls="transfer-student-planning"
-                    onClick={() => setFormData(current => ({
-                      ...current,
-                      isTransferStudent: true,
-                      planningPace: PLANNING_PACES.STANDARD,
-                      transferExpectedGraduationYear: "",
-                      transferEntryAcademicYear: ""
-                    }))}
+                    className="custom-timeline-trigger"
+                    aria-expanded={formData.isTransferStudent}
+                    aria-controls="custom-timeline-panel"
+                    onClick={() => {
+                      setFormData(current => ({ ...current, isTransferStudent: !current.isTransferStudent, planningPace: PLANNING_PACES.STANDARD }));
+                      clearInputFeedback();
+                    }}
                   >
-                    Transfer students: Change graduation year
+                    My graduation timeline is different
                   </button>
-                </>
-              )}
-              {formData.isTransferStudent && (
-                <section
-                  id="transfer-student-planning"
-                  className="transfer-student-card"
-                  aria-labelledby="transfer-student-heading"
-                >
-                  <div className="transfer-card-heading">
-                    <div>
-                      <h2 id="transfer-student-heading">Transfer student planning</h2>
-                      <p>Transfer credits do not always line up with the usual Freshman, Sophomore, Junior, or Senior labels. Choose when you expect to graduate, and EconPlanner will set the length of your plan.</p>
-                    </div>
-                    <button
-                      type="button"
-                      className="regular-standing-trigger"
-                      onClick={() => setFormData(current => ({
-                        ...current,
-                        isTransferStudent: false,
-                        planningPace: PLANNING_PACES.STANDARD,
-                        transferExpectedGraduationYear: "",
-                        transferEntryAcademicYear: ""
-                      }))}
-                    >
-                      Use regular class-year choices
-                    </button>
-                  </div>
-                  <fieldset className="transfer-graduation-fieldset">
-                    <legend>When do you expect to graduate?</legend>
-                    <div className="transfer-graduation-options">
-                      {transferOptions.graduationYears.map(year => (
-                        <button
-                          type="button"
-                          key={year}
-                          className={Number(formData.transferExpectedGraduationYear) === year ? "is-selected" : ""}
-                          aria-pressed={Number(formData.transferExpectedGraduationYear) === year}
-                          onClick={() => setFormData(current => ({
-                            ...current,
-                            transferExpectedGraduationYear: String(year)
-                          }))}
-                        >
-                          Spring/May {year}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="transfer-other-year">
-                      <label>
-                        <input
-                          type="radio"
-                          name="transfer-graduation-year"
-                          checked={Number(formData.transferExpectedGraduationYear) === transferOptions.otherGraduationYear}
-                          onChange={() => setFormData(current => ({
-                            ...current,
-                            transferExpectedGraduationYear: String(transferOptions.otherGraduationYear)
-                          }))}
-                        />
-                        Other
-                      </label>
-                      <input
-                        type="number"
-                        aria-label="Other expected graduation year"
-                        min={transferOptions.otherGraduationYear}
-                        max={transferOptions.otherGraduationYear}
-                        value={Number(formData.transferExpectedGraduationYear) >= transferOptions.otherGraduationYear
-                          ? formData.transferExpectedGraduationYear
-                          : transferOptions.otherGraduationYear || ""}
-                        onFocus={() => setFormData(current => ({
-                          ...current,
-                          transferExpectedGraduationYear: String(transferOptions.otherGraduationYear)
-                        }))}
-                        onChange={event => setFormData(current => ({
-                          ...current,
-                          transferExpectedGraduationYear: event.target.value
-                        }))}
-                      />
-                      <span>Five-year maximum</span>
-                    </div>
-                  </fieldset>
-                  <label className="transfer-entry-year">
-                    <span>When did you first enroll at Hanover?</span>
-                    <select
-                      value={formData.transferEntryAcademicYear}
-                      onChange={event => setFormData(current => ({
-                        ...current,
-                        transferEntryAcademicYear: event.target.value
-                      }))}
-                    >
-                      <option value="">Choose an academic year</option>
-                      {transferOptions.entryAcademicYears.map(year => (
-                        <option value={year} key={year}>{formatAcademicYear(year)}</option>
-                      ))}
-                    </select>
-                  </label>
-                  {!planningContext.transferValidation.valid && (
-                    <div role="alert">
-                      <ul className="transfer-validation">
-                        {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
-                      </ul>
+                  {!formData.isTransferStudent && <p className="custom-timeline-copy">Use this only when the standard target shown above does not fit your situation.</p>}
+                  {formData.isTransferStudent && (
+                    <div className="custom-timeline-panel" id="custom-timeline-panel">
+                      <p className="custom-timeline-copy">Tell us the two details required to build a custom-length plan. This does not claim transfer credit or change academic requirements.</p>
+                      <div className="custom-fields">
+                        <label htmlFor="custom-graduation-year">
+                          <span>When do you expect to graduate?</span>
+                          <select
+                            id="custom-graduation-year"
+                            value={formData.transferExpectedGraduationYear}
+                            onChange={event => {
+                              setFormData(current => ({ ...current, transferExpectedGraduationYear: event.target.value }));
+                              clearInputFeedback();
+                            }}
+                          >
+                            <option value="">Choose a graduation year</option>
+                            {[...transferOptions.graduationYears, transferOptions.otherGraduationYear].map(year => (
+                              <option value={year} key={year}>Spring/May {year}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label htmlFor="custom-entry-year">
+                          <span>When did you first enroll at Hanover?</span>
+                          <select
+                            id="custom-entry-year"
+                            value={formData.transferEntryAcademicYear}
+                            onChange={event => {
+                              setFormData(current => ({ ...current, transferEntryAcademicYear: event.target.value }));
+                              clearInputFeedback();
+                            }}
+                          >
+                            <option value="">Choose an academic year</option>
+                            {transferOptions.entryAcademicYears.map(year => <option value={year} key={year}>{formatAcademicYear(year)}</option>)}
+                          </select>
+                        </label>
+                      </div>
+                      <p className="custom-target"><strong>Custom target:</strong> {planningContext.transferValidation.valid ? planningContext.expectedGraduationTerm : "Choose both details above."}</p>
+                      {!planningContext.transferValidation.valid && (
+                        <ul className="custom-errors">
+                          {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
+                        </ul>
+                      )}
+                      <button
+                        type="button"
+                        className="standard-timeline-trigger"
+                        onClick={() => {
+                          setFormData(current => ({ ...current, isTransferStudent: false, planningPace: PLANNING_PACES.STANDARD }));
+                          clearInputFeedback();
+                        }}
+                      >
+                        Use my standard class-year timeline
+                      </button>
                     </div>
                   )}
-                  <p className="transfer-advisor-note">Hanover's Registrar decides how transfer credits apply. Confirm your catalog year and course equivalencies with your advisor or the Registrar.</p>
-                </section>
-              )}
-              <div className="planning-field catalog-year-intake">
-                <label htmlFor="major-declaration-catalog-year">When did you declare the Economics major? (optional)</label>
-                <select
-                  id="major-declaration-catalog-year"
-                  value={formData.majorDeclarationCatalogYear}
-                  onChange={event => setFormData(current => ({
-                    ...current,
-                    majorDeclarationCatalogYear: event.target.value
-                  }))}
-                >
-                  <option value="">Not provided</option>
-                  <option value="2023-2024">2023–2024</option>
-                  <option value="2024-2025">2024–2025</option>
-                  <option value="2025-2026">2025–2026</option>
-                  <option value="I_DO_NOT_KNOW">I do not know</option>
-                </select>
-                <p className="standing-help">
-                  Economics planning always uses the department’s owner-designated 2025–2026 flexible requirements. This optional year is kept for degree-audit comparison and any routine SAC petition notice.
-                </p>
-              </div>
-              <div className="apple-mini-fields apple-plan-details-fields">
-                <label className="apple-student-name-field">
-                  <span>Student name (optional)</span>
-                  <input
-                    type="text"
-                    autoComplete="name"
-                    value={formData.displayName}
-                    onChange={event => setFormData(current => ({ ...current, displayName: event.target.value }))}
-                  />
-                </label>
-                <label className="apple-compact-detail-field apple-plan-creation-field">
-                  <span>Plan creation date</span>
-                  <input
-                    type="date"
-                    value={formData.planCreationDate}
-                    onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))}
-                  />
-                </label>
-                <div className="apple-horizon-detail-pair">
-                  <label className="apple-compact-detail-field apple-expected-graduation-field">
-                    <span>Expected graduation</span>
-                    <input type="text" value={planningContext.expectedGraduationTerm || "To be confirmed"} readOnly />
-                  </label>
-                  <label className="apple-compact-detail-field apple-planning-start-field">
-                    <span>Planning starts</span>
-                    <input type="text" value={planningStart} readOnly />
-                  </label>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          {planningSlots.length > 0 && (
-            <section className="intake-card non-major-intake-card">
-              <details className="non-major-commitments">
-                <summary>Enter planned non-major courses (optional)</summary>
-                <p>These courses use space in a term even though EconPlanner does not place them.</p>
-                <div className="apple-mini-fields">
-                  {planningSlots.filter(slot => !slot.isSummer).map(slot => (
-                    <label key={slot.id}>
-                      <span>{slot.label}</span>
-                      <input
-                        type="number"
-                        min="0"
-                        max={slot.termKey === "Spring" ? "1" : "4"}
-                        step="1"
-                        value={formData.reservedCourseUnits?.[slot.id] ?? ""}
-                        onChange={event => setFormData(current => ({
-                          ...current,
-                          reservedCourseUnits: {
-                            ...(current.reservedCourseUnits || {}),
-                            [slot.id]: event.target.value === "" ? 0 : Number(event.target.value)
-                          }
-                        }))}
-                      />
+                <details className="more-details">
+                  <summary>More details</summary>
+                  <div className="advanced-fields">
+                    <label>
+                      <span>Student name (optional)</span>
+                      <input type="text" autoComplete="name" value={formData.displayName} onChange={event => setFormData(current => ({ ...current, displayName: event.target.value }))} />
                     </label>
-                  ))}
+                    <label htmlFor="plan-creation-date">
+                      <span>Plan creation date</span>
+                      <input id="plan-creation-date" type="date" value={formData.planCreationDate} onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))} />
+                    </label>
+                    <label className="wide-field" htmlFor="major-declaration-catalog-year">
+                      <span>When did you declare the Economics major? (optional)</span>
+                      <select id="major-declaration-catalog-year" value={formData.majorDeclarationCatalogYear} onChange={event => setFormData(current => ({ ...current, majorDeclarationCatalogYear: event.target.value }))}>
+                        <option value="">Not provided</option>
+                        <option value="2023-2024">2023–2024</option>
+                        <option value="2024-2025">2024–2025</option>
+                        <option value="2025-2026">2025–2026</option>
+                        <option value="I_DO_NOT_KNOW">I do not know</option>
+                      </select>
+                      <span className="standing-help">
+                        Economics planning always uses the department’s owner-designated 2025–2026 flexible requirements. This optional year is kept for degree-audit comparison and any routine SAC petition notice.
+                      </span>
+                    </label>
+                  </div>
+                  {planningSlots.length > 0 && (
+                    <details className="more-details">
+                      <summary>Planned non-major courses (optional)</summary>
+                      <p className="custom-timeline-copy">These use space in a term even though EconPlanner does not place them.</p>
+                      <div className="non-major-fields">
+                        {planningSlots.filter(slot => !slot.isSummer).map(slot => (
+                          <label key={slot.id}>
+                            <span>{slot.label}</span>
+                            <input
+                              type="number"
+                              min="0"
+                              max={slot.termKey === "Spring" ? "1" : "4"}
+                              step="1"
+                              value={formData.reservedCourseUnits?.[slot.id] ?? ""}
+                              onChange={event => setFormData(current => ({
+                                ...current,
+                                reservedCourseUnits: {
+                                  ...(current.reservedCourseUnits || {}),
+                                  [slot.id]: event.target.value === "" ? 0 : Number(event.target.value)
+                                }
+                              }))}
+                            />
+                          </label>
+                        ))}
+                      </div>
+                    </details>
+                  )}
+                </details>
+              </section>
+            ) : (
+              <section className="cp7-task-card" aria-labelledby="your-courses-heading">
+                <div className="step-two-heading">
+                  <div>
+                    <h2 id="your-courses-heading">Your course history</h2>
+                    <p className="cp7-task-intro">Only choose courses that apply to you. Completed credit from another source stays review-required until approved.</p>
+                  </div>
+                  <button type="button" className="secondary-action" onClick={() => setIntakeStep(1)}>Back to about you</button>
                 </div>
-              </details>
-            </section>
-          )}
-
-          <section className="intake-card course-intake-card">
-            <div className="section-heading course-heading">
-              <div>
-                <h2>2. Select Econ and cognate courses you have taken or are taking (in-progress).</h2>
-                <p>Select completed and in-progress courses. We will map out your remaining plan.</p>
-                <p>Choose a status for each course. Click a selected button again to clear it.</p>
-              </div>
-            </div>
-            <div className="apple-course-heading">
-              <div>
-                <h2>Which courses have you taken?</h2>
-                <p>Select Completed or In progress. Tap a selected status again to clear it.</p>
-              </div>
-              <span>{selectedCourses(formData.courses).length} selected</span>
-            </div>
-
-            <div className="apple-course-toolbar">
-              <label className="search-label" htmlFor="course-search">
-                <span>Search courses</span>
-                <input
-                  id="course-search"
-                  type="search"
-                  value={courseSearch}
-                  onChange={event => setCourseSearch(event.target.value)}
-                  onKeyDown={event => {
-                    if (event.key === "Enter") event.preventDefault();
-                  }}
-                  placeholder="Search by course or title"
-                />
-              </label>
-              <button
-                type="button"
-                className="apple-clear-button"
-                onClick={() => setFormData(current => ({
-                  ...current,
-                  courses: current.courses.map(course => ({ ...course, status: "not_started" }))
-                }))}
-              >
-                Clear selections
-              </button>
-            </div>
-
-            {declarationGroups.length > 0 && (
-              <div className="course-level-section declaration-section">
-                {renderDeclarationColumns(
-                  declarationCourseGroups,
-                  appleLayoutPreview ? declarationRequirementGroups : [...declarationRequirementGroups, ...declarationRightCourseGroups]
+                <div className="course-toolbar">
+                  <label htmlFor="course-search">
+                    <span>Search courses</span>
+                    <input
+                      id="course-search"
+                      type="search"
+                      value={courseSearch}
+                      onChange={event => setCourseSearch(event.target.value)}
+                      onKeyDown={event => {
+                        if (event.key === "Enter") event.preventDefault();
+                      }}
+                      placeholder="Search by course code or title"
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    className="clear-courses"
+                    onClick={() => {
+                      setFormData(current => ({
+                        ...current,
+                        courses: current.courses.map(course => ({ ...course, status: "not_started", source: "manual_code" }))
+                      }));
+                      clearInputFeedback();
+                    }}
+                  >
+                    Clear course choices
+                  </button>
+                </div>
+                {declarationCourseGroups.length > 0 && (
+                  <section className="course-priority-section" aria-labelledby="foundations-heading">
+                    <h3 id="foundations-heading">Required Economics foundations</h3>
+                    {renderCourseColumns(declarationCourseGroups, true)}
+                  </section>
                 )}
-              </div>
+                {declarationRequirementGroups.length > 0 && (
+                  <section className="course-priority-section" aria-labelledby="cognates-heading">
+                    <h3 id="cognates-heading">Mathematics and statistics</h3>
+                    {renderCourseColumns(declarationRequirementGroups, true)}
+                  </section>
+                )}
+                {financeGroups.length > 0 && (
+                  <section className="course-priority-section" aria-labelledby="finance-heading">
+                    <h3 id="finance-heading">Finance</h3>
+                    {renderCourseColumns(financeGroups, true)}
+                  </section>
+                )}
+                {renderCourseAccordion("other-economics", "Other Economics courses", secondaryCourseGroups)}
+                {visibleGroups.length === 0 && <p role="status">No courses match your search.</p>}
+              </section>
             )}
-
-            {renderCourseAccordion(
-              "two-hundred-level",
-              appleLayoutPreview ? "Courses offered relatively frequently" : "Courses offered relatively frequent",
-              relativelyFrequentGroups
-            )}
-            {renderCourseAccordion(
-              "three-hundred-level",
-              appleLayoutPreview ? "Additional and less-frequent economics courses" : "Econ courses offered infrequently",
-              appleAdvancedGroups
-            )}
-
-            {visibleGroups.length === 0 && <p className="status">No courses match your search.</p>}
-
-          </section>
           </div>
-
-          <div className="apple-right-column">
-          <PlannerSummary report={null} courses={formData.courses} planningContext={planningContext} />
-
-          <section className="generate-card">
-            {!inputPrerequisiteValidation.valid && (
-              <div className="prerequisite-error-summary" role="alert">
-                <strong>Correct these course selections before generating a plan:</strong>
-                <ul>
-                  {inputPrerequisiteValidation.issues.map(issue => (
-                    <li key={`${issue.code}-${issue.course}-${issue.message}`}>{issue.message}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {status && <p className="status" role="status">{status}</p>}
-            {report && generatedInputSignatureRef.current === plannerInputSignature(formData) && (
-              <button
-                type="button"
-                className="return-to-plans-button"
-                onClick={() => navigatePlanner(PLANNER_VIEWS.COMPARE, selectedPlanId)}
-              >
-                Return to generated plans
-              </button>
-            )}
-            <div className="generate-row">
-              <button
-                type="submit"
-                className="generate-button"
-                ref={generateButtonRef}
-                disabled={isGenerating || !formData.planCreationDate || !planningContext.transferValidation.valid || !inputPrerequisiteValidation.valid}
-              >
-                <span className="default-generate-label">3. Generate My Plan</span>
-                <span className="apple-generate-label">{isGenerating ? "Generating plans..." : "Generate my plans →"}</span>
-              </button>
-            </div>
-          </section>
-          </div>
+          <PlannerSummary
+            courses={formData.courses}
+            formData={formData}
+            planningContext={planningContext}
+            planningStart={planningStart}
+            attentionItems={attentionItems}
+            intakeStep={intakeStep}
+            isGenerating={isGenerating}
+            status={status}
+            migrationNotice={migrationNotice}
+            generateButtonRef={generateButtonRef}
+            onContinue={continueToCourses}
+            onFocusAttention={focusAttention}
+          />
         </div>
       </form>
+
 
     </main>
   );

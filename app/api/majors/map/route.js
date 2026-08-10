@@ -12,6 +12,7 @@ import {
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
+import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
 import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
 import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../../lib/catalog/input-resolution.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
@@ -104,7 +105,8 @@ function planAdvisorAttention(results) {
 function mapCatalogPrograms(catalog, student, catalogReview, {
   economicsOnly = false,
   planningContext = null,
-  catalogApplicability = null
+  catalogApplicability = null,
+  inputResolution = null
 } = {}) {
   return catalog.variants.filter(variant => !economicsOnly || variant.programId === "economics").map(variant => {
     const program = catalog.programs.find(item => item.id === variant.programId) || {
@@ -136,7 +138,8 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
           courseCatalog: catalog.economicsCourses,
           policyBundle: catalog.policyBundle,
           planningContext,
-          catalogApplicability
+          catalogApplicability,
+          collectDiagnostics: true
         })
       : null;
     const economicsPlanningGaps = economicsPlanBundle?.planningGaps || [];
@@ -153,6 +156,15 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
       : combinedRiskReasons.length
         ? "FEASIBLE_WITH_ASSUMPTIONS"
         : mapping.risk.class;
+    const economicsPlanResult = economicsPlanBundle
+      ? buildEconomicsPlanResult({
+          plans: economicsPlanBundle.plans,
+          inputResolution,
+          candidateOutcomes: economicsPlanBundle.candidateOutcomes,
+          planningGaps: economicsPlanBundle.planningGaps,
+          metricsDiagnostics: economicsPlanBundle.metricsDiagnostics
+        })
+      : null;
 
     return {
       ...mapping,
@@ -172,6 +184,7 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
       planningContext: economicsPlanBundle?.context || null,
       economicsCandidateOutcomes: economicsPlanBundle?.candidateOutcomes || [],
       economicsPlanConvergences: economicsPlanBundle?.convergences || [],
+      economicsPlanResult,
       earlyGraduationContext: economicsPlanBundle?.earlyGraduationContext || null,
       catalogApplicability,
       catalogReview: variant.programId === "economics" ? catalogReview : null
@@ -280,12 +293,18 @@ export async function POST(request) {
         submittedMajorDeclarationCatalogYear: catalogValidation.submittedValue,
         availableCatalogYears: catalogYears,
         planningContext,
-        inputResolution
+        inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
       }, 422);
     }
     if (!student.planCreationDate) {
       const inputResolution = resolveInputResolution({student, planningContext, issueCode: "MISSING_PLAN_CREATION_DATE"});
-      return jsonResponse({ error: "Plan creation date is required before mapping majors.", planningContext, inputResolution }, 400);
+      return jsonResponse({
+        error: "Plan creation date is required before mapping majors.",
+        planningContext,
+        inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
+      }, 400);
     }
     if (planningContext.isTransferStudent && !planningContext.transferValidation.valid) {
       const inputResolution = resolveInputResolution({student, planningContext, issueCode: "INVALID_TRANSFER_PLANNING_INPUT"});
@@ -293,7 +312,8 @@ export async function POST(request) {
         error: planningContext.transferValidation.errors[0],
         code: "INVALID_TRANSFER_PLANNING_INPUT",
         planningContext,
-        inputResolution
+        inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
       }, 422);
     }
     if (!planningContext.planningValidation.valid) {
@@ -302,7 +322,8 @@ export async function POST(request) {
         error: planningContext.planningValidation.errors[0],
         code: "INVALID_PLANNING_PACE",
         planningContext,
-        inputResolution
+        inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
       }, 422);
     }
     const catalogApplicability = resolveCatalogApplicability({
@@ -322,7 +343,8 @@ export async function POST(request) {
         catalogResolutionStatus: "unavailable",
         availableCatalogYears: catalogYears,
         catalogApplicability,
-        inputResolution
+        inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
       }, 422);
     }
     const catalogResolution = {
@@ -344,7 +366,8 @@ export async function POST(request) {
         catalogResolutionStatus: "unavailable",
         availableCatalogYears: catalogYears,
         catalogApplicability,
-        inputResolution
+        inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
       }, 422);
     }
     const authoritativePlanningContext = { ...planningContext, catalogApplicability };
@@ -365,7 +388,8 @@ export async function POST(request) {
         error: "Correct the selected course prerequisites before generating a plan.",
         code: "INVALID_STUDENT_PREREQUISITES",
         prerequisiteIssues: prerequisiteValidation.issues,
-        inputResolution: prerequisiteInputResolution
+        inputResolution: prerequisiteInputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution: prerequisiteInputResolution })
       }, 422);
     }
 
@@ -403,7 +427,8 @@ export async function POST(request) {
     const results = mapCatalogPrograms(catalog, student, catalogReview, {
       economicsOnly,
       planningContext: authoritativePlanningContext,
-      catalogApplicability
+      catalogApplicability,
+      inputResolution
     });
     const advisorAttention = [
       ...catalogAdvisorAttention(authoritativePlanningContext),
