@@ -1,0 +1,48 @@
+name: Hanover 2026-2027 catalog watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 14 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: econplanner-catalog-watch
+  cancel-in-progress: true
+
+jobs:
+  catalog-watch:
+    name: Check official Hanover catalog sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node and pnpm
+        uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+
+      - name: Check official sources
+        id: catalog-watch
+        continue-on-error: true
+        run: node scripts/watch-hanover-catalog.mjs
+
+      - name: Upload catalog-watch evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: hanover-catalog-watch
+          path: test-results/catalog-watch/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Surface a detected change or lookup failure
+        if: steps.catalog-watch.outcome == 'failure'
+        run: exit 1

@@ -231,25 +231,32 @@ test("One Year Early preserves the ordinary horizon and derives a separate accel
     assert.equal(context.remainingYears, remainingYears);
     assert.equal(context.acceleratedPlanAssumesSeniorStanding, false);
     assert.equal(context.planningValidation.valid, true);
+    assert.equal(context.oneYearEarlyEligible, ["freshman", "sophomore", "junior"].includes(academicStanding));
   }
 
-  const normal = resolvePlanningContext({
-    academicStanding: "freshman",
-    planningPace: PLANNING_PACES.EARLY,
-    planCreationDate: "2026-07-26"
-  });
-  assert.equal(normal.planningPace, PLANNING_PACES.STANDARD);
-  assert.equal(normal.requestedPlanningPace, PLANNING_PACES.EARLY);
-  assert.equal(normal.earlyComparisonRequested, true);
-  assert.equal(normal.remainingYears, 4);
-  assert.equal(normal.expectedGraduationTerm, "Spring/May 2030");
-  assert.equal(normal.acceleratedPlanAssumesSeniorStanding, false);
+  for (const [academicStanding, normalTarget, earlyTarget] of [
+    ["freshman", "Spring/May 2030", "Spring/May 2029"],
+    ["sophomore", "Spring/May 2029", "Spring/May 2028"],
+    ["junior", "Spring/May 2028", "Spring/May 2027"]
+  ]) {
+    const normal = resolvePlanningContext({
+      academicStanding,
+      planningPace: PLANNING_PACES.EARLY,
+      planCreationDate: "2026-07-26"
+    });
+    assert.equal(normal.planningPace, PLANNING_PACES.STANDARD);
+    assert.equal(normal.requestedPlanningPace, PLANNING_PACES.EARLY);
+    assert.equal(normal.oneYearEarlyEligible, true);
+    assert.equal(normal.planningPaceNormalization, null);
+    assert.equal(normal.earlyComparisonRequested, true);
+    assert.equal(normal.expectedGraduationTerm, normalTarget);
+    assert.equal(normal.acceleratedPlanAssumesSeniorStanding, false);
 
-  const early = buildEarlyGraduationContext(normal);
-  assert.equal(early.planningPace, PLANNING_PACES.EARLY);
-  assert.equal(early.remainingYears, 3);
-  assert.equal(early.expectedGraduationTerm, "Spring/May 2029");
-  assert.equal(early.acceleratedPlanAssumesSeniorStanding, true);
+    const early = buildEarlyGraduationContext(normal);
+    assert.equal(early.planningPace, PLANNING_PACES.EARLY);
+    assert.equal(early.expectedGraduationTerm, earlyTarget);
+    assert.equal(early.acceleratedPlanAssumesSeniorStanding, true);
+  }
 });
 
 test("the accelerated comparison assumes senior standing in its final year without a confirmation input", () => {
@@ -274,16 +281,46 @@ test("the accelerated comparison assumes senior standing in its final year witho
   assert.equal(seniorWinter.seniorStandingBasis, "accelerated_plan_assumes_senior_standing_in_final_year");
 });
 
-test("one-year-early pace is invalid when fewer than two standard years remain", () => {
+test("senior one-year-early requests safely normalize to the standard horizon", () => {
+  for (const [academicStanding, remainingYears, expectedGraduationTerm] of [
+    ["senior", 1, "Spring/May 2027"]
+  ]) {
+    const context = resolvePlanningContext({
+      academicStanding,
+      planningPace: PLANNING_PACES.EARLY,
+      planCreationDate: "2026-07-26"
+    });
+
+    assert.equal(context.remainingYears, remainingYears);
+    assert.equal(context.expectedGraduationTerm, expectedGraduationTerm);
+    assert.equal(context.requestedPlanningPace, PLANNING_PACES.EARLY);
+    assert.equal(context.planningPace, PLANNING_PACES.STANDARD);
+    assert.equal(context.oneYearEarlyEligible, false);
+    assert.equal(context.earlyComparisonRequested, false);
+    assert.equal(context.planningValidation.valid, true);
+    assert.equal(context.planningPaceNormalization.code, "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD");
+    assert.match(context.planningPaceNormalization.message, /through junior standing/i);
+    assert.equal(buildEarlyGraduationContext(context), null);
+  }
+});
+
+test("a custom graduation year changes only the horizon and does not create transfer identity", () => {
   const context = resolvePlanningContext({
-    academicStanding: "senior",
+    academicStanding: "sophomore",
+    customGraduationEnabled: true,
+    customExpectedGraduationYear: "2030",
     planningPace: PLANNING_PACES.EARLY,
     planCreationDate: "2026-07-26"
   });
 
-  assert.equal(context.remainingYears, 1);
-  assert.equal(context.planningValidation.valid, false);
-  assert.match(context.planningValidation.errors[0], /unavailable/);
+  assert.equal(context.isTransferStudent, false);
+  assert.equal(context.customGraduationEnabled, true);
+  assert.equal(context.customGraduationValidation.valid, true);
+  assert.equal(context.expectedGraduationTerm, "Spring/May 2030");
+  assert.equal(context.remainingYears, 4);
+  assert.equal(context.earlyComparisonRequested, false);
+  assert.equal(context.planningPace, PLANNING_PACES.STANDARD);
+  assert.equal(buildEarlyGraduationContext(context), null);
 });
 
 test("transfer planning rejects missing or out-of-range graduation and entry years", () => {

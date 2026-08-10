@@ -424,8 +424,9 @@ test("the approved v1 fixture is permanent, hash-complete, and adapts only commo
   assert.equal(baselineCases.outcomes.filter(value => !value.endsWith("=0")).length, 190);
   assert.equal(baselineCases.outcomes.reduce((sum, value) => sum + Number(value.slice(value.lastIndexOf("=") + 1)), 0), 570);
   assert.equal(createHash("sha256").update(JSON.stringify(baselineCases.outcomes)).digest("hex"), baseline.caseFixture.outcomesSha256);
+  const baselineCaseFixture = await readFile(new URL("./fixtures/econplanner-nightly-baseline-cases.v1.json", import.meta.url), "utf8");
   assert.equal(
-    createHash("sha256").update(await readFile(new URL("./fixtures/econplanner-nightly-baseline-cases.v1.json", import.meta.url))).digest("hex"),
+    createHash("sha256").update(baselineCaseFixture.replaceAll("\r\n", "\n")).digest("hex"),
     baseline.caseFixture.sha256
   );
 });

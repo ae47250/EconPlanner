@@ -13,7 +13,7 @@ const MANIFESTS = [
 const EXPECTED_YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 const FLEXIBILITY_RULE_ID = "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK";
 const PLANNING_FLEXIBILITY_POLICY_PATH = "policy/rules/planning-flexibility.json";
-const PLANNING_FLEXIBILITY_PROVENANCE_PATH = "policy/provenance/planning-flexibility.3.json";
+const PLANNING_FLEXIBILITY_PROVENANCE_PATH = "policy/provenance/planning-flexibility.4.json";
 const ACTIVE_BUNDLE_VERSION = "econ-2025-2026.1";
 const ACTIVE_BUNDLE_HASH = "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7";
 
@@ -157,7 +157,7 @@ function historicalSourceReport(provenance, releases) {
 }
 
 function validatePlanningFlexibilityPolicy(policy) {
-  if (policy?.policyVersion !== "econ-planning-flexibility.3" || policy?.status !== "OWNER_APPROVED") {
+  if (policy?.policyVersion !== "econ-planning-flexibility.4" || policy?.status !== "OWNER_APPROVED") {
     fail("owner-approved planning flexibility policy is missing");
   }
   const senior = policy.acceleratedSeniorStanding;
@@ -194,7 +194,9 @@ function validatePlanningFlexibilityPolicy(policy) {
   }
   const designation = policy.mostFlexibleEconomicsMajorRequirementSet;
   if (designation?.catalogYear !== "2025-2026"
-    || designation?.selectionMethod !== "OWNER_DESIGNATION"
+    || designation?.selectionMethod !== "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED"
+    || designation?.requiresVerifiedActivation !== true
+    || designation?.discoveryMayAutoActivate !== false
     || designation?.automaticNewestSelectionPermitted !== false
     || designation?.declarationCatalogMayOverride !== false) {
     fail("owner-designated Economics requirement set is incomplete");
@@ -215,6 +217,10 @@ function validatePlanningFlexibilityPolicy(policy) {
     || strategies["explore-first"].rankingPreferences?.exactTargetIsFeasibilityRule !== false) {
     fail("Explore the Major strategy contract is incomplete or academicized");
   }
+  if (JSON.stringify(strategies["one-year-early"].eligibility?.effectiveStandings)
+      !== JSON.stringify(["freshman", "sophomore", "junior"])) {
+    fail("One Year Early must remain limited to effective freshman, sophomore, and junior contexts");
+  }
   if (policy.boundaries?.catalog2026_2027CreatedOrActivated !== false) {
     fail("the planning flexibility policy may not create or activate a 2026-2027 catalog");
   }
@@ -226,13 +232,14 @@ function planningFlexibilityContract(bundle) {
     `Compiled policy: \`${bundle.bundleVersion}\` (\`${bundle.contentHash}\`).\n\n` +
     `- Accelerated one-year-early plans assume senior standing in the final planning year; no student confirmation is requested and readiness is unchanged by the assumption alone.\n` +
     `- Published schedules remain authoritative. Later unpublished schedules use academically checked placements with \`PLANNING_PROJECTION\` provenance and one informational notice.\n` +
-    `- Economics planning uses the owner-designated ${policy.mostFlexibleEconomicsMajorRequirementSet.catalogYear} requirement set. Incoming catalog years remain comparison and degree-audit metadata.\n` +
+    `- Economics planning uses the latest verified, activated, owner-approved requirement set, currently ${policy.mostFlexibleEconomicsMajorRequirementSet.catalogYear}. Catalog discovery never activates a new requirement set; incoming catalog years remain comparison and degree-audit metadata.\n` +
     `- Material incoming-catalog differences create a nonblocking SAC petition notification, not a substantive advisor action.\n` +
     `- A future owner-supplied Excel history may support informational offering likelihoods only when data coverage and method are disclosed. No likelihood data or probability is present in this release.\n` +
     `- CCR/ACE information uses the student's supported general-degree catalog separately from the Economics major requirement set and has no readiness or feasibility effect.\n` +
     `- Mathematics equivalencies require an explicit cognate, prerequisite, or both scope with complete approval evidence; no equivalencies are activated in this release.\n` +
     `- Balanced, Explore the Major, and One Year Early use the strategy IDs, public labels, eligibility boundaries, definitions, and nonacademic ranking preferences in the compiled strategy contract.\n` +
     `- Explore the Major remains limited to effective freshman and sophomore contexts, must be lighter than and materially distinct from its selected same-context Balanced baseline, and uses a soft nondecreasing backloaded target.\n` +
+    `- One Year Early remains limited to effective freshman, sophomore, and junior contexts; ineligible saved or submitted requests normalize to the standard graduation timeline without changing academic feasibility.\n` +
     `- No 2026-2027 catalog is compiled or activated, and the active Decision Engine mapping is unchanged.\n`;
 }
 
@@ -242,7 +249,9 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
   validatePlanningFlexibilityPolicy(policy);
   if (provenance.policyVersion !== policy.policyVersion
     || !provenance.sources?.some(source => source.sourceId === "OWNER-CONFIRMATION-CP5-2026-08-09"
-      && source.authorityBoundary === "ECONOMICS_PLANNING_STRATEGY_RANKING_ONLY")) {
+      && source.authorityBoundary === "ECONOMICS_PLANNING_STRATEGY_RANKING_ONLY")
+    || !provenance.sources?.some(source => source.sourceId === "OWNER-CONFIRMATION-CP7-2026-08-09"
+      && source.authorityBoundary === "ECONOMICS_NONACADEMIC_PLANNING_STRATEGY_ELIGIBILITY_ONLY")) {
     fail("planning-flexibility owner-confirmation provenance is incomplete");
   }
   const payload = {
@@ -272,7 +281,7 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
       acceleratedSeniorStandingNonblocking: "PASS",
       futureScheduleProjectionNonblocking: "PASS",
       publishedScheduleAuthorityPreserved: "PASS",
-      ownerDesignationFixedTo2025_2026: "PASS",
+      verifiedActivatedDefaultFixedTo2025_2026: "PASS",
       automaticNewestSelectionDisabled: "PASS",
       futureLikelihoodsNotInvented: "PASS",
       generalDegreeDesignationInformationNonblocking: "PASS",
@@ -281,6 +290,7 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
       approvedMathematicsEquivalencies: 0,
       economicsStrategyContractOwnerApproved: "PASS",
       strategyPreferencesNonacademicAndNonblocking: "PASS",
+      oneYearEarlyEligibilityFreshmanSophomoreJuniorOnly: "PASS",
       catalog2026_2027Invented: false,
       collegeWidePolicyChanged: false
     },

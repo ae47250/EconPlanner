@@ -32,10 +32,10 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
-test("an early comparison request preserves the selected normal-horizon report", async () => {
+test("an eligible early comparison request preserves the selected normal-horizon report", async () => {
   const student = {
     ...fixture.student,
-    academicStanding: "junior",
+    academicStanding: "sophomore",
     planningPace: "one_year_early",
     planCreationDate: "2026-07-28"
   };
@@ -43,10 +43,30 @@ test("an early comparison request preserves the selected normal-horizon report",
   const html = renderEconomicsHtml(report, template);
 
   assert.equal(report.student.planningPace, "standard");
-  assert.equal(report.student.expectedGraduationTerm, "Spring/May 2028");
+  assert.equal(report.student.expectedGraduationTerm, "Spring/May 2029");
   assert.equal(report.selectedPlan.id, "balanced");
   assert.ok(report.candidateOutcomes.some(item => item.id === "one-year-early" && item.displayed));
+  assert.equal(report.acceleratedPlanningResult.status, "POSSIBLE");
   assert.match(html, /data-planning-pace="standard"/);
+  assert.match(html, /data-accelerated-planning-result="POSSIBLE"/);
+  assert.match(html, /Graduate one year early: Possible/);
+});
+
+test("a custom graduation target remains separate in the advisor report", async () => {
+  const student = {
+    ...fixture.student,
+    academicStanding: "sophomore",
+    customGraduationEnabled: true,
+    customExpectedGraduationYear: "2030",
+    planningPace: "standard",
+    planCreationDate: "2026-07-28"
+  };
+  const report = await buildEconomicsReportFromStudent(student, "2026-07-28");
+
+  assert.equal(report.student.planType, "custom-graduation-horizon");
+  assert.equal(report.student.expectedGraduationTerm, "Spring/May 2030");
+  assert.equal(report.acceleratedPlanningResult, null);
+  assert.match(report.inputSummary, /student-selected Spring\/May 2030 target/);
 });
 
 test("Economics report API returns canonical JSON or populated HTML", async () => {

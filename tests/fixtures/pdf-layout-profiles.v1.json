@@ -66,7 +66,7 @@
       "selectedPlanId": "one-year-early",
       "student": {
         "displayName": "Fictional Accelerated Student",
-        "academicStanding": "junior",
+        "academicStanding": "sophomore",
         "planningPace": "one_year_early",
         "planCreationDate": "2026-07-30",
         "projectedSeniorStandingConfirmation": {

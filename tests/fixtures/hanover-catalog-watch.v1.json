@@ -1,0 +1,10 @@
+{
+  "currentRegistrar": "<html><h1>Office of the Registrar</h1><a href='https://catalog.hanover.edu/'>2025–2026 Academic Catalog</a></html>",
+  "currentRoot": "<html><title>Academic Catalog 2025–2026</title><h1>Academic Catalog 2025–2026</h1></html>",
+  "targetRegistrar": "<html><h1>Office of the Registrar</h1><a href='https://catalog.hanover.edu/'>2026–2027 Undergraduate Academic Catalog</a></html>",
+  "targetRoot": "<html><title>Academic Catalog 2026–2027</title><h1>Academic Catalog 2026–2027</h1></html>",
+  "targetEconomics": "<html><title>2026–2027 Academic Catalog: Economics</title><main><h1>Economics</h1><p>Major: Economics courses – ECO 113 and ECO 114; ECO 213; ECO 214; ECO 257 or MAT 217 or PSY 217; ECO 321 or BUSN 323; ECO 461.</p><p>Prerequisite for ECO 461: ECO 213 and ECO 214.</p></main></html>",
+  "calendarOnly": "<html><h1>Office of the Registrar</h1><a href='/academics/academic-calendar/2026-2027'>2026–2027 Undergraduate Academic Calendar</a><a href='https://catalog.hanover.edu/'>2025–2026 Academic Catalog</a></html>",
+  "graduateOnly": "<html><a href='/graduate/catalog/2026-2027'>2026–2027 Graduate Catalog</a><a href='https://catalog.hanover.edu/'>2025–2026 Undergraduate Academic Catalog</a></html>",
+  "resourcesTarget": "<html><a href='https://catalog.hanover.edu/'>2026–2027 Undergraduate Academic Catalog</a></html>"
+}

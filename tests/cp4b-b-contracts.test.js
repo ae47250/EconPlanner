@@ -27,7 +27,7 @@ import {compileCatalogPolicies} from "../scripts/compile-catalog-policies.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 
-test("compiled planning-flexibility.3 is the runtime strategy source of truth", () => {
+test("compiled planning-flexibility.4 is the runtime strategy source of truth", () => {
   const contract = economicsPlanningStrategyContract();
   assert.equal(contract.classification, "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES");
   assert.equal(contract.feasibilityImpact, "NONE");
@@ -37,6 +37,8 @@ test("compiled planning-flexibility.3 is the runtime strategy source of truth", 
   assert.deepEqual(explore.eligibility.effectiveStandings, ["freshman", "sophomore"]);
   assert.equal(explore.rankingPreferences.firstYearTargetFormula, "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS");
   assert.equal(explore.rankingPreferences.exactTargetIsFeasibilityRule, false);
+  const oneYearEarly = contract.strategies.find(strategy => strategy.id === "one-year-early");
+  assert.deepEqual(oneYearEarly.eligibility.effectiveStandings, ["freshman", "sophomore", "junior"]);
 });
 
 function requestFor(student) {
@@ -155,6 +157,15 @@ test("catalog intake validation preserves unknown and rejects unsupported values
 });
 
 test("recoverable and contradictory input problems remain structured and blocked", () => {
+  const missingPlanDate = resolveInputResolution({issueCode: "MISSING_PLAN_CREATION_DATE"});
+  assert.equal(missingPlanDate.status, "RECOVERABLE_MISSING_INFORMATION");
+  assert.deepEqual(missingPlanDate.blockingFields, ["planCreationDate"]);
+  assert.deepEqual(missingPlanDate.questions, [{
+    field: "planCreationDate",
+    prompt: "What date should this plan use?"
+  }]);
+  assert.equal(missingPlanDate.planningMustRemainBlocked, true);
+
   const recoverable = resolveInputResolution({
     student: {},
     planningContext: {projectedSeniorStandingAcademicYear: "2028/2029"},
@@ -225,10 +236,9 @@ test("API evaluates a known older catalog and rejects a submitted unsupported ye
 
 test("minimal accessible intake is present and the browser contains no selection logic", async () => {
   const source = await readFile(path.join(ROOT, "app/page.js"), "utf8");
-  assert.match(source, /htmlFor="major-declaration-catalog-year"/);
-  assert.match(source, /id="major-declaration-catalog-year"/);
-  assert.match(source, /value="I_DO_NOT_KNOW">I do not know/);
-  assert.match(source, /owner-designated 2025–2026 flexible requirements/);
+  assert.doesNotMatch(source, /htmlFor="major-declaration-catalog-year"/);
+  assert.doesNotMatch(source, /id="major-declaration-catalog-year"/);
+  assert.match(source, /Planning requirements: 2025–2026 Economics catalog and confirmed department policies/);
   assert.doesNotMatch(source, /projectedSeniorStandingConfirmation/);
   assert.doesNotMatch(source, /resolveCatalogApplicability/);
 });
@@ -243,7 +253,7 @@ test("catalog policy compilation is byte-identical across three clean outputs an
       await compileCatalogPolicies({repositoryRoot: ROOT, outputRoot});
       outputs.push(await Promise.all([
         readFile(path.join(outputRoot, "catalog-releases.json"), "utf8"),
-        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.3", "bundle.json"), "utf8"),
+        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.4", "bundle.json"), "utf8"),
         ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.2"]
           .map(version => readFile(path.join(outputRoot, "releases", version, "bundle.json"), "utf8"))
       ]));

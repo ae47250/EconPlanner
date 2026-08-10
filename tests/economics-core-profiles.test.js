@@ -412,7 +412,7 @@ test("core fixture contains the required fictional profile coverage", () => {
     "both_intermediates_completed",
     "normal_graduation",
     "one_year_early_request",
-    "impossible_one_year_early_request",
+    "ineligible_one_year_early_request_normalized",
     "senior_strict_capstone_path",
     "one_intermediate_concurrent_with_eco461",
     "both_intermediates_missing",

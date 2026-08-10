@@ -1,15 +1,17 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.3",
+  "policyVersion": "econ-planning-flexibility.4",
   "status": "OWNER_APPROVED",
   "confirmation": {
     "date": "2026-08-09",
     "reviewer": "Project owner and Economics Department domain expert",
-    "source": "Explicit owner authorization in the CP5 implementation Codex task"
+    "source": "Explicit owner authorization in the CP5 and CP7 implementation Codex tasks"
   },
   "sourceRefs": [
     "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
-    "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES"
+    "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
+    "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
+    "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT"
   ],
   "acceleratedSeniorStanding": {
     "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
@@ -168,7 +170,9 @@
     "designationId": "economics-most-flexible-2025-2026",
     "catalogYear": "2025-2026",
     "requirementSetPolicyVersion": "econ-catalog-2025-2026.2",
-    "selectionMethod": "OWNER_DESIGNATION",
+    "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED",
+    "requiresVerifiedActivation": true,
+    "discoveryMayAutoActivate": false,
     "automaticNewestSelectionPermitted": false,
     "incomingCatalogRole": "AUDIT_AND_COMPARISON_METADATA",
     "declarationCatalogMayOverride": false,
@@ -207,7 +211,8 @@
     "feasibilityImpact": "NONE",
     "stableSavedStateIds": true,
     "sourceRefs": [
-      "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES"
+      "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
+      "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY"
     ],
     "strategies": [
       {
@@ -256,6 +261,7 @@
         "publicLabel": "One Year Early",
         "definition": "Compress the complete prerequisite and offering sequence into the independently searched one-year-early graduation horizon.",
         "eligibility": {
+          "effectiveStandings": ["freshman", "sophomore", "junior"],
           "horizon": "SHORTENED_ONE_YEAR_EARLY",
           "separateSearch": true
         },
