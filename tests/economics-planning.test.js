@@ -154,7 +154,12 @@ test("default freshman planning returns Balanced and a materially distinct Explo
     assert.deepEqual(plan.distribution.targetYearCounts, expected);
     assert.deepEqual(plan.validation.distribution.actualYearCounts, expected);
     assert.equal(plan.validation.distribution.valid, true);
-    assert.equal(plan.validation.distribution.exact, true);
+    if (plan.id === "balanced") {
+      assert.equal(plan.validation.distribution.exact, true);
+    } else {
+      assert.equal(plan.validation.distribution.valid, true);
+      assert.equal(plan.validation.distribution.exactPreferredPacingFound, false);
+    }
   }
   assert.ok(result.plans.every(plan => plan.validation.valid));
   const exploreFirst = result.plans.find(plan => plan.label === "Explore the Major");
@@ -200,7 +205,71 @@ test("selected One Year Early returns normal comparisons plus one separate short
   assert.equal(accelerated.studentNotices.filter(notice => notice.code === "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED").length, 1);
 });
 
-test("a proven prerequisite constraint records a validated distribution exception", () => {
+test("drop/add keeps Taking now fixed while the exact-term checkbox controls only new additions", () => {
+  const baseStudent = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-24",
+    courses: [{ code: "ECO 113", status: "in_progress" }]
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, baseStudent);
+  const open = buildEconomicsTermPlans({ student: baseStudent, mapping, schedule, prerequisites });
+  const optedOutStudent = { ...baseStudent, scheduleSetByTerm: { "fall-2026": true } };
+  const optedOut = buildEconomicsTermPlans({ student: optedOutStudent, mapping, schedule, prerequisites });
+
+  assert.ok(open.plans.some(plan => {
+    const current = plan.terms.find(term => term.slotId === "fall-2026");
+    return current?.courses.some(course => !course.fixedInProgress);
+  }));
+  for (const result of [open, optedOut]) {
+    for (const plan of result.plans) {
+      const current = plan.terms.find(term => term.slotId === "fall-2026");
+      const takingNow = current?.courses.filter(course => course.course === "ECO 113") || [];
+      assert.equal(takingNow.length, 1);
+      assert.equal(takingNow[0].fixedInProgress, true);
+      assert.equal(takingNow[0].plannerTracked, true);
+      assert.equal(plan.terms.flatMap(term => term.courses).filter(course => course.course === "ECO 113").length, 1);
+      assert.ok(current.courses.length <= 4);
+    }
+  }
+  assert.ok(optedOut.plans.every(plan => (
+    plan.terms.find(term => term.slotId === "fall-2026")?.courses.every(course => course.fixedInProgress)
+  )));
+});
+
+test("generated-plan validation rejects removing, moving, or duplicating a fixed Taking now course", () => {
+  const student = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-24",
+    courses: [{ code: "ECO 113", status: "in_progress" }]
+  };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const result = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const original = result.plans[0];
+  const currentIndex = original.terms.findIndex(term => term.slotId === "fall-2026");
+  const nextIndex = original.terms.findIndex((term, index) => index > currentIndex && !term.isSummer);
+  const fixed = original.terms[currentIndex].courses.find(course => course.fixedInProgress);
+
+  const removed = structuredClone(original);
+  removed.terms[currentIndex].courses = removed.terms[currentIndex].courses.filter(course => !course.fixedInProgress);
+  assert.equal(validateGeneratedPlan(removed, {
+    student, mapping, schedule, prerequisites, context: result.context, enforcePlanIntegrity: true
+  }).valid, false);
+
+  const moved = structuredClone(original);
+  moved.terms[currentIndex].courses = moved.terms[currentIndex].courses.filter(course => !course.fixedInProgress);
+  moved.terms[nextIndex].courses.push(structuredClone(fixed));
+  assert.equal(validateGeneratedPlan(moved, {
+    student, mapping, schedule, prerequisites, context: result.context, enforcePlanIntegrity: true
+  }).valid, false);
+
+  const duplicated = structuredClone(original);
+  duplicated.terms[nextIndex].courses.push(structuredClone(fixed));
+  assert.equal(validateGeneratedPlan(duplicated, {
+    student, mapping, schedule, prerequisites, context: result.context, enforcePlanIntegrity: true
+  }).valid, false);
+});
+
+test("late annual remainder remains nonblocking when an offering forces a different term shape", () => {
   const unresolved = [{ requirementId: "eco-461", options: ["ECO 461"] }];
   const mapping = {
     requirements: [{ id: "eco-461", kind: "exact", label: "Senior Seminar", options: ["ECO 461"] }],
@@ -216,13 +285,14 @@ test("a proven prerequisite constraint records a validated distribution exceptio
   };
   const plan = buildEconomicsTermPlan({ student, mapping, schedule, prerequisites });
 
-  assert.deepEqual(plan.distribution.targetYearCounts, [1, 0, 0, 0]);
+  assert.deepEqual(plan.distribution.targetYearCounts, [0, 0, 0, 1]);
   assert.deepEqual(plan.validation.distribution.actualYearCounts, [0, 0, 0, 1]);
-  assert.equal(plan.preferredDistributionException.code, "PREFERRED_DISTRIBUTION_EXCEPTION");
-  assert.equal(plan.preferredDistributionException.allowedAnnualDistance, 2);
+  assert.equal(plan.preferredDistributionException, null);
   assert.equal(plan.validation.distribution.valid, true);
   assert.equal(plan.validation.distribution.exact, false);
-  assert.ok(plan.validation.warnings.some(message => /exact Balanced yearly distribution is not feasible/.test(message)));
+  assert.equal(plan.validation.distribution.annualDistance, 0);
+  assert.ok(plan.validation.distribution.termShapeDistance > 0);
+  assert.deepEqual(plan.validation.warnings, []);
 
   const unprovenException = structuredClone(plan);
   delete unprovenException.search.attempts;
@@ -234,8 +304,9 @@ test("a proven prerequisite constraint records a validated distribution exceptio
     context: plan.planningContext
   });
   assert.equal(validation.valid, true);
-  assert.equal(validation.distribution.valid, false);
-  assert.ok(validation.warnings.some(message => /yearly distribution/.test(message)));
+  assert.equal(validation.distribution.valid, true);
+  assert.equal(validation.distribution.annualDistance, 0);
+  assert.equal(validation.valid, true);
 });
 
 test("validated plans cover every required course, choice group, cognate, and elective slot", () => {
@@ -648,9 +719,6 @@ test("every prerequisite option marked in progress unlocks its dependent course 
           || placement.term.inProgressPrerequisitesAvailable === true,
         `${scenario} must be placed after the current term`
       );
-      if (code === "ECO 222" && focus.code === "ECO 114") {
-        assert.equal(placement.term.term, "Spring/May 2027");
-      }
       if (code === "ECO 357") {
         assert.ok(placement.course.approvalRequired.some(approval => (
           approval.type === "department" && approval.prerequisite === null

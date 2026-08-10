@@ -1,17 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.4",
+  "policyVersion": "econ-planning-flexibility.5",
   "status": "OWNER_APPROVED",
   "confirmation": {
-    "date": "2026-08-09",
+    "date": "2026-08-10",
     "reviewer": "Project owner and Economics Department domain expert",
-    "source": "Explicit owner authorization in the CP5 and CP7 implementation Codex tasks"
+    "source": "Explicit owner authorization in the CP5, CP7, and capacity-aware distribution Codex tasks"
   },
   "sourceRefs": [
     "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
     "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
     "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
-    "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT"
+    "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
+    "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING"
   ],
   "acceleratedSeniorStanding": {
     "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
@@ -212,7 +213,8 @@
     "stableSavedStateIds": true,
     "sourceRefs": [
       "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
-      "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY"
+      "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
+      "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING"
     ],
     "strategies": [
       {
@@ -226,7 +228,15 @@
         "rankingPreferences": {
           "annualTarget": "EVEN_ACROSS_REMAINING_YEARS",
           "annualRemainderPlacement": "LATEST_YEARS",
-          "termTarget": "EVEN_ACROSS_FALL_WINTER_MAY",
+          "annualCapacityBasis": "ACTUAL_REMAINING_USABLE_CAPACITY_AFTER_FIXED_AND_RESERVED_OCCUPANCY",
+          "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES",
+          "termShapePreferences": {
+            "twoCourses": "SPREAD_ACROSS_TWO_TERMS_WHEN_FEASIBLE",
+            "threeCourses": [[1, 1, 1]],
+            "fourCourses": [[1, 2, 1], [2, 1, 1]],
+            "fiveCourses": [[2, 2, 1]],
+            "springMayPreferredMaximum": 1
+          },
           "exactTargetIsFeasibilityRule": false
         }
       },
@@ -245,6 +255,7 @@
         "rankingPreferences": {
           "firstYearTargetFormula": "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS",
           "laterYearDistribution": "EVEN_WITH_REMAINDER_IN_LATEST_YEARS",
+          "annualCapacityBasis": "ACTUAL_REMAINING_USABLE_CAPACITY_AFTER_FIXED_AND_RESERVED_OCCUPANCY",
           "preferNondecreasingAnnualLoad": true,
           "strongerSafeBackloadingRemainsEligible": true,
           "foundationSequencingIsSoft": true,
@@ -252,7 +263,18 @@
           "typicalFinalYearTrackedLoad": [2, 3],
           "acceptableFinalYearTrackedLoad": 4,
           "finalYearGuidanceIsMinimum": false,
-          "reuseExistingFourCourseTermShapeRanking": true,
+          "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES",
+          "firstFullYearTwoCourseShapeTiers": [
+            [[1, 1, 0]],
+            [[1, 0, 1], [0, 1, 1]],
+            [[2, 0, 0], [0, 2, 0]]
+          ],
+          "termShapePreferences": {
+            "threeCourses": [[1, 1, 1]],
+            "fourCourses": [[1, 2, 1], [2, 1, 1]],
+            "fiveCourses": [[2, 2, 1]],
+            "springMayPreferredMaximum": 1
+          },
           "exactTargetIsFeasibilityRule": false
         }
       },

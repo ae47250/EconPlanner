@@ -3,10 +3,77 @@ import assert from "node:assert/strict";
 import {
   buildEarlyGraduationContext,
   buildPlanningSlots,
+  initialDropAddWindowForDate,
+  normalizeScheduleSetByTerm,
   PLANNING_PACES,
   resolvePlanningContext,
   transferPlanningOptions
 } from "../lib/planning/horizon.js";
+
+const VERIFIED_INITIAL_DROP_ADD_WINDOWS = [
+  ["Fall 2025", "2025-08-24", "2025-08-25", "2025-08-29", "2025-08-30"],
+  ["Winter 2026", "2026-01-04", "2026-01-05", "2026-01-09", "2026-01-10"],
+  ["Spring/May 2026", "2026-04-26", "2026-04-27", "2026-04-28", "2026-04-29"],
+  ["Fall 2026", "2026-08-23", "2026-08-24", "2026-08-28", "2026-08-29"],
+  ["Winter 2027", "2027-01-10", "2027-01-11", "2027-01-15", "2027-01-16"],
+  ["Spring/May 2027", "2027-05-02", "2027-05-03", "2027-05-04", "2027-05-05"]
+];
+
+test("every verified initial drop/add window is inclusive and date-only", () => {
+  for (const [label, before, first, last, after] of VERIFIED_INITIAL_DROP_ADD_WINDOWS) {
+    assert.equal(initialDropAddWindowForDate(before), null, `${label}: day before`);
+    assert.equal(initialDropAddWindowForDate(first)?.label, label, `${label}: first day`);
+    assert.equal(initialDropAddWindowForDate(last)?.label, label, `${label}: last day`);
+    assert.equal(initialDropAddWindowForDate(after), null, `${label}: day after`);
+  }
+
+  const hostileUtcFallback = new Date("2026-08-23T23:30:00.000Z");
+  assert.equal(initialDropAddWindowForDate("2026-08-24", hostileUtcFallback)?.label, "Fall 2026");
+});
+
+test("later schedule-confirmation dates do not reopen a current term", () => {
+  for (const date of ["2025-11-03", "2026-03-30", "2026-11-02", "2027-04-05"]) {
+    assert.equal(initialDropAddWindowForDate(date), null);
+  }
+});
+
+test("current-term schedule-set state is exact-window scoped", () => {
+  assert.deepEqual(normalizeScheduleSetByTerm({
+    planCreationDate: "2026-08-24",
+    scheduleSetByTerm: { "fall-2026": true, "winter-2027": true }
+  }), { "fall-2026": true });
+  assert.deepEqual(normalizeScheduleSetByTerm({
+    planCreationDate: "2026-08-29",
+    scheduleSetByTerm: { "fall-2026": true }
+  }), {});
+});
+
+test("the current term is usable only during initial drop/add and opt-out blocks new courses", () => {
+  const open = resolvePlanningContext({
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-24"
+  });
+  const openSlot = buildPlanningSlots(open).find(slot => slot.id === "fall-2026");
+  assert.equal(openSlot?.isCurrentTerm, true);
+  assert.equal(openSlot?.newCoursesAllowed, true);
+
+  const optedOut = resolvePlanningContext({
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-24",
+    scheduleSetByTerm: { "fall-2026": true }
+  });
+  const optedOutSlot = buildPlanningSlots(optedOut).find(slot => slot.id === "fall-2026");
+  assert.equal(optedOutSlot?.isCurrentTerm, true);
+  assert.equal(optedOutSlot?.newCoursesAllowed, false);
+
+  const closed = resolvePlanningContext({
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-29",
+    scheduleSetByTerm: { "fall-2026": true }
+  });
+  assert.equal(closed.currentTermPlanningWindow, null);
+  assert.ok(!buildPlanningSlots(closed).some(slot => slot.id === "fall-2026"));
+});
 
 test("Fall freshman planning excludes the running Fall and maps through Spring/May 2030", () => {
   const context = resolvePlanningContext({

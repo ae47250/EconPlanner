@@ -13,6 +13,7 @@
     "watch:catalog:2026-2027": "node scripts/watch-hanover-catalog.mjs",
     "compile:policy": "node scripts/compile-policy.mjs",
     "compile:catalog-policy": "node scripts/compile-catalog-policies.mjs",
+    "compile:calendar": "node scripts/compile-academic-calendar.mjs",
     "report:economics": "node scripts/generate-economics-report.mjs",
     "verify:pdf:economics": "node scripts/verify-economics-pdf.mjs",
     "test": "node --test",

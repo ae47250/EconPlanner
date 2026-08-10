@@ -27,15 +27,21 @@ import {compileCatalogPolicies} from "../scripts/compile-catalog-policies.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 
-test("compiled planning-flexibility.4 is the runtime strategy source of truth", () => {
+test("compiled planning-flexibility.5 is the runtime strategy source of truth", () => {
   const contract = economicsPlanningStrategyContract();
   assert.equal(contract.classification, "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES");
   assert.equal(contract.feasibilityImpact, "NONE");
   assert.deepEqual(contract.strategies.map(strategy => strategy.id), ["balanced", "explore-first", "one-year-early"]);
   const explore = contract.strategies.find(strategy => strategy.id === "explore-first");
+  const balanced = contract.strategies.find(strategy => strategy.id === "balanced");
+  assert.equal(balanced.rankingPreferences.annualRemainderPlacement, "LATEST_YEARS");
+  assert.equal(balanced.rankingPreferences.annualCapacityBasis, "ACTUAL_REMAINING_USABLE_CAPACITY_AFTER_FIXED_AND_RESERVED_OCCUPANCY");
+  assert.deepEqual(balanced.rankingPreferences.termShapePreferences.fourCourses, [[1, 2, 1], [2, 1, 1]]);
+  assert.equal(balanced.rankingPreferences.termShapePreferences.springMayPreferredMaximum, 1);
   assert.equal(explore.publicLabel, "Explore the Major");
   assert.deepEqual(explore.eligibility.effectiveStandings, ["freshman", "sophomore"]);
   assert.equal(explore.rankingPreferences.firstYearTargetFormula, "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS");
+  assert.deepEqual(explore.rankingPreferences.firstFullYearTwoCourseShapeTiers[0], [[1, 1, 0]]);
   assert.equal(explore.rankingPreferences.exactTargetIsFeasibilityRule, false);
   const oneYearEarly = contract.strategies.find(strategy => strategy.id === "one-year-early");
   assert.deepEqual(oneYearEarly.eligibility.effectiveStandings, ["freshman", "sophomore", "junior"]);
@@ -48,6 +54,35 @@ function requestFor(student) {
     body: JSON.stringify({student})
   });
 }
+
+test("API normalizes schedule-set state to the exact active drop/add term", async () => {
+  const currentStudent = {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-24",
+    courses: [{code: "ECO 113", status: "in_progress"}],
+    scheduleSetByTerm: {"fall-2026": true, "winter-2027": true}
+  };
+  const currentResponse = await POST(requestFor(currentStudent));
+  const currentBody = await currentResponse.json();
+  const currentEconomics = currentBody.programs.find(item => item.program.programId === "economics");
+  assert.equal(currentResponse.status, 200);
+  assert.equal(currentEconomics.planningContext.currentTermScheduleSet, true);
+  assert.equal(currentEconomics.planningContext.currentTermPlanningWindow.slotId, "fall-2026");
+  assert.ok(currentEconomics.economicsPlans.every(plan => (
+    plan.terms.find(term => term.slotId === "fall-2026").courses.every(course => course.fixedInProgress)
+  )));
+
+  const staleResponse = await POST(requestFor({
+    ...currentStudent,
+    planCreationDate: "2026-08-29"
+  }));
+  const staleBody = await staleResponse.json();
+  const staleEconomics = staleBody.programs.find(item => item.program.programId === "economics");
+  assert.equal(staleResponse.status, 200);
+  assert.equal(staleEconomics.planningContext.currentTermPlanningWindow, null);
+  assert.equal(staleEconomics.planningContext.currentTermScheduleSet, false);
+  assert.ok(staleEconomics.economicsPlans.every(plan => !plan.terms.some(term => term.slotId === "fall-2026")));
+});
 
 test("governed historical releases preserve the authoritative flexibility sequence", () => {
   const records = catalogPolicyRecords();
@@ -253,7 +288,7 @@ test("catalog policy compilation is byte-identical across three clean outputs an
       await compileCatalogPolicies({repositoryRoot: ROOT, outputRoot});
       outputs.push(await Promise.all([
         readFile(path.join(outputRoot, "catalog-releases.json"), "utf8"),
-        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.4", "bundle.json"), "utf8"),
+        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.5", "bundle.json"), "utf8"),
         ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.2"]
           .map(version => readFile(path.join(outputRoot, "releases", version, "bundle.json"), "utf8"))
       ]));

@@ -198,6 +198,7 @@ function migrateSavedCourses(savedCourses = []) {
 }
 
 function plannerInputSignature(formData) {
+  const currentTermWindow = resolvePlanningContext(formData).currentTermPlanningWindow;
   return JSON.stringify({
     academicStanding: formData.academicStanding,
     majorDeclarationCatalogYear: formData.majorDeclarationCatalogYear,
@@ -210,6 +211,9 @@ function plannerInputSignature(formData) {
     transferEntryAcademicYear: formData.transferEntryAcademicYear,
     reservedCourseUnits: formData.reservedCourseUnits,
     studyAbroadTerm: formData.studyAbroadTerm,
+    currentTermScheduleSet: currentTermWindow
+      ? [currentTermWindow.slotId, formData.scheduleSetByTerm?.[currentTermWindow.slotId] === true]
+      : null,
     courses: selectedCourses(formData.courses)
       .map(course => [canonicalSavedCode(course.code), course.status, course.units, course.source])
       .sort((left, right) => left[0].localeCompare(right[0]))
@@ -231,6 +235,7 @@ const initialForm = {
   expectedGraduationTerm: "",
   reservedCourseUnits: {},
   reservationMemory: {},
+  scheduleSetByTerm: {},
   studyAbroadTerm: "",
   courses: SELECTABLE_COURSE_CATALOG.map(blankCourse),
   advisorApprovals: ""
@@ -775,10 +780,11 @@ function PlanTimeline({
                               <div className="plan-course-summary">
                                 <strong>{course.course}</strong>
                                 <span>{course.title}</span>
+                                {course.fixedInProgress && <span>Taking now — fixed in this term</span>}
                                 <CourseAvailabilityStatus course={course} term={term} schedule={schedule} />
                                 {course.approvalRequired?.length > 0 && <span className="plan-course-approval">Approval required</span>}
                               </div>
-                              {onEditPlanCourse && (
+                              {onEditPlanCourse && !course.fixedInProgress && (
                                 <div className="plan-course-actions">
                                   {course.alternativeOptions?.length > 1 && (
                                     <label>
@@ -3426,6 +3432,11 @@ export default function Page() {
         }
         .standing-feedback { margin: .75rem 0 0; padding: .7rem .8rem; border-left: 3px solid var(--cp7-aqua); background: var(--cp7-soft); color: #344151; }
         .early-option, .custom-timeline-disclosure { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid var(--cp7-border); }
+        .current-term-option { margin-top: 1rem; padding: .75rem .85rem; border: 1px solid var(--cp7-border); border-radius: 7px; background: var(--cp7-soft); }
+        .current-term-option label { display: flex; align-items: flex-start; gap: .65rem; min-width: 0; line-height: 1.45; }
+        .current-term-option input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: .12rem; accent-color: var(--cp7-accent); }
+        .current-term-option input:focus-visible { outline: 3px solid var(--cp7-aqua); outline-offset: 3px; }
+        .current-term-option span { min-width: 0; overflow-wrap: anywhere; }
         main.cp7-container .early-toggle { display: inline-flex; align-items: center; gap: .55rem; text-align: left; }
         .early-option p, .custom-timeline-copy { margin: .4rem 0 0; color: var(--cp7-muted); font-size: 14px; line-height: 1.45; }
         main.cp7-container .custom-timeline-trigger,
@@ -3733,6 +3744,29 @@ export default function Page() {
                   <p className="standing-feedback">
                     Based on {planningContext.standingLabel.toLowerCase()} standing, we’ll plan through <strong>{planningContext.expectedGraduationTerm}</strong>.
                   </p>
+                )}
+                {planningContext.currentTermPlanningWindow && (
+                  <div className="current-term-option">
+                    <label htmlFor="current-term-schedule-set">
+                      <input
+                        id="current-term-schedule-set"
+                        type="checkbox"
+                        checked={formData.scheduleSetByTerm?.[planningContext.currentTermPlanningWindow.slotId] === true}
+                        onChange={event => {
+                          const slotId = planningContext.currentTermPlanningWindow.slotId;
+                          setFormData(current => ({
+                            ...current,
+                            scheduleSetByTerm: {
+                              ...(current.scheduleSetByTerm || {}),
+                              [slotId]: event.target.checked
+                            }
+                          }));
+                          clearInputFeedback();
+                        }}
+                      />
+                      <span>My schedule for {planningContext.currentTermPlanningWindow.displayTerm} is already set — don&apos;t add courses to this term.</span>
+                    </label>
+                  </div>
                 )}
                 {formData.academicStanding && !formData.isTransferStudent && planningContext.oneYearEarlyEligible && (
                   <div className="early-option">

@@ -32,6 +32,27 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
+test("Taking now fixed occupancy is identical in the validated plan, JSON projection, and HTML", async () => {
+  const student = {
+    ...fixture.student,
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-24",
+    courses: [{ code: "ECO 113", status: "in_progress" }],
+    scheduleSetByTerm: { "fall-2026": true }
+  };
+  const report = await buildEconomicsReportFromStudent(student, "2026-08-24");
+  const html = renderEconomicsHtml(report, template);
+  const planCurrent = report.selectedPlan.terms.find(term => term.slotId === "fall-2026");
+  const reportCurrent = report.terms.find(term => term.slotId === "fall-2026");
+
+  assert.deepEqual(planCurrent.courses.map(course => course.course), ["ECO 113"]);
+  assert.deepEqual(reportCurrent.courses.map(course => course.code), ["ECO 113"]);
+  assert.equal(planCurrent.courses[0].fixedInProgress, true);
+  assert.equal(reportCurrent.courses[0].fixedInProgress, true);
+  assert.match(html, /Taking now - fixed in this term/);
+  assert.equal((html.match(/Taking now - fixed in this term/g) || []).length, 1);
+});
+
 test("an eligible early comparison request preserves the selected normal-horizon report", async () => {
   const student = {
     ...fixture.student,
