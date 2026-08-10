@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:fc151e1f824c7a29d166f0420623159a4700c4d660a9c70eb479c63cb16dab01",
+  "contentHash": "sha256:a6eadb40059442f0e5800456c31896d7ca0460fe65984b59639378429f466457",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -4667,7 +4667,7 @@
     "coursesByCode": {
       "BUSN 323": {
         "code": "BUSN 323",
-        "title": "Business finance option",
+        "title": "Investments",
         "units": 1
       },
       "ECO 113": {
@@ -4755,7 +4755,7 @@
       },
       "ECO 321": {
         "code": "ECO 321",
-        "title": "Money & Financial Markets",
+        "title": "Money and Financial Markets",
         "units": 1
       },
       "ECO 331": {
@@ -4805,7 +4805,7 @@
       },
       "MAT 113": {
         "code": "MAT 113",
-        "title": "Mathematics cognate",
+        "title": "Essential Pre-Calculus",
         "units": 1
       },
       "MAT 121": {

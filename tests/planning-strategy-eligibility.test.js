@@ -10,24 +10,24 @@ import {
 test("the client-safe eligibility projection preserves the compiled strategy boundaries", () => {
   assert.deepEqual(
     ECONOMICS_PLANNING_STRATEGY_ELIGIBILITY["one-year-early"].effectiveStandings,
-    ["freshman", "sophomore"]
+    ["freshman", "sophomore", "junior"]
   );
   assert.equal(isPlanningStrategyEligible("balanced", "senior"), true);
   assert.equal(isPlanningStrategyEligible("explore-first", "junior"), false);
   assert.equal(isPlanningStrategyEligible("unknown", "freshman"), false);
 });
 
-test("One Year Early is eligible only for effective freshmen and sophomores", () => {
+test("One Year Early is eligible through effective junior standing", () => {
   assert.equal(isOneYearEarlyEligible("freshman"), true);
   assert.equal(isOneYearEarlyEligible("Sophomore"), true);
-  assert.equal(isOneYearEarlyEligible("junior"), false);
+  assert.equal(isOneYearEarlyEligible("junior"), true);
   assert.equal(isOneYearEarlyEligible("senior"), false);
 });
 
 test("ineligible One Year Early pace requests normalize with a structured plain-language notice", () => {
   const normalized = normalizePlanningPaceForEligibility({
     planningPace: "one_year_early",
-    effectiveStanding: "junior"
+    effectiveStanding: "senior"
   });
   assert.equal(normalized.planningPace, "standard");
   assert.equal(normalized.oneYearEarlyEligible, false);
@@ -44,7 +44,7 @@ test("ineligible One Year Early pace requests normalize with a structured plain-
       field: "planningPace",
       submittedValue: "one_year_early",
       normalizedValue: "standard",
-      effectiveStanding: "junior"
+      effectiveStanding: "senior"
     }
   );
   assert.match(normalized.planningPaceNormalization.message, /standard graduation timeline/i);

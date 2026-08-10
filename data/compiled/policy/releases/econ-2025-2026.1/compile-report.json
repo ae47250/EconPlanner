@@ -3,7 +3,7 @@
   "bundleVersion": "econ-2025-2026.1",
   "compatibility": [
     {
-      "canonicalHash": "sha256:8593e5f78d418d9f75a7994e8c20f0b1cab241822966b29431a8c9005571ba56",
+      "canonicalHash": "sha256:e5ce476c3b9a8748dbf7cbc3a1ad9a54041b29fc6a2fc5efc4d9189ae7abcbb1",
       "output": "compatibility/courses.json",
       "runtimeOutput": "data/normalized/economics/courses.json",
       "source": "canonical Knowledge Hub manifest inputs",
@@ -38,7 +38,7 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:fc151e1f824c7a29d166f0420623159a4700c4d660a9c70eb479c63cb16dab01",
+  "contentHash": "sha256:a6eadb40059442f0e5800456c31896d7ca0460fe65984b59639378429f466457",
   "counts": {
     "activeRules": 54,
     "courses": 31,

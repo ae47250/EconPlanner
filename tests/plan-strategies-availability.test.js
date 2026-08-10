@@ -42,7 +42,8 @@ test("default planning exposes only the applicable normal strategies", () => {
 test("One Year Early keeps normal plans intact for eligible standings", () => {
   const horizons = new Map([
     ["freshman", ["Spring/May 2030", "Spring/May 2029"]],
-    ["sophomore", ["Spring/May 2029", "Spring/May 2028"]]
+    ["sophomore", ["Spring/May 2029", "Spring/May 2028"]],
+    ["junior", ["Spring/May 2028", "Spring/May 2027"]]
   ]);
   for (const [standing, [normalHorizon, earlyHorizon]] of horizons) {
     const result = bundle({ academicStanding: standing, planningPace: "one_year_early", planCreationDate: "2026-07-30", courses: [] });
@@ -59,8 +60,8 @@ test("One Year Early keeps normal plans intact for eligible standings", () => {
   }
 });
 
-test("junior and senior One Year Early requests return only standard-horizon strategies", () => {
-  for (const standing of ["junior", "senior"]) {
+test("senior One Year Early requests return only standard-horizon strategies", () => {
+  for (const standing of ["senior"]) {
     const result = bundle({
       academicStanding: standing,
       planningPace: "one_year_early",

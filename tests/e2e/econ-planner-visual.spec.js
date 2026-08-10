@@ -11,9 +11,8 @@ import {
 } from "./cp7-helpers.js";
 
 async function setFirstCustomTimeline(page) {
-  await page.getByRole("button", { name: "My graduation timeline is different" }).click();
+  await page.getByRole("button", { name: "My expected graduation year is different" }).click();
   await page.getByLabel("When do you expect to graduate?").selectOption({ index: 1 });
-  await page.getByLabel("When did you first enroll at Hanover?").selectOption({ index: 1 });
 }
 
 const visualStates = [
@@ -30,16 +29,18 @@ const visualStates = [
     setup: async page => {
       await resetPlanner(page);
       await chooseStanding(page, "sophomore");
-      await page.getByRole("button", { name: "Include a one-year-early plan" }).click();
+      await page.getByRole("button", { name: "I’d like to graduate one year early", exact: true }).click();
       await expect(page.locator(".cp7-summary")).toContainText("One-year-early target");
     }
   },
   {
-    id: "junior-intake",
+    id: "junior-graduate-next-year",
     setup: async page => {
       await resetPlanner(page);
       await chooseStanding(page, "junior");
-      await expect(page.getByRole("button", { name: "Include a one-year-early plan" })).toHaveCount(0);
+      const nextYear = page.getByRole("button", { name: "I’d like to graduate next year", exact: true });
+      await nextYear.click();
+      await expect(nextYear).toHaveAttribute("aria-pressed", "true");
     }
   },
   {
@@ -49,6 +50,38 @@ const visualStates = [
       await chooseStanding(page, "sophomore");
       await setFirstCustomTimeline(page);
       await expect(page.locator(".custom-timeline-panel")).toBeVisible();
+    }
+  },
+  {
+    id: "study-abroad-adjustment",
+    setup: async page => {
+      await resetPlanner(page);
+      await chooseStanding(page, "freshman");
+      await page.locator("details.more-details > summary", { hasText: "More details" }).first().click();
+      await page.getByText("Adjust your schedule (optional)", { exact: true }).click();
+      await page.getByRole("button", { name: "I plan to study abroad during my junior year" }).click();
+      await expect(page.getByText(/No Economics courses will be scheduled in/)).toBeVisible();
+    }
+  },
+  {
+    id: "manual-term-reservation",
+    setup: async page => {
+      await resetPlanner(page);
+      await chooseStanding(page, "freshman");
+      await page.locator("details.more-details > summary", { hasText: "More details" }).first().click();
+      await page.getByText("Adjust your schedule (optional)", { exact: true }).click();
+      const reservation = page.locator(".non-major-fields select").first();
+      await reservation.selectOption("1");
+      await expect(page.locator(".cp7-summary")).toContainText("Room for other courses");
+    }
+  },
+  {
+    id: "clear-all-confirmation",
+    setup: async page => {
+      await resetPlanner(page);
+      await chooseStanding(page, "sophomore");
+      await page.getByRole("button", { name: "Clear all", exact: true }).click();
+      await expect(page.getByRole("dialog", { name: "Clear all answers and generated plans?" })).toBeVisible();
     }
   },
   {
@@ -118,6 +151,22 @@ const visualStates = [
     setup: async page => {
       await openFixtureResult(page, plannerResultFixture());
       await expect(page.locator(".result-status-value")).toHaveText("Ready");
+    }
+  },
+  {
+    id: "accelerated-result",
+    setup: async page => {
+      await openFixtureResult(page, plannerResultFixture({
+        acceleratedResult: {
+          requested: true,
+          status: "POSSIBLE",
+          label: "Graduate one year early",
+          standardTarget: "Spring/May 2030",
+          acceleratedTarget: "Spring/May 2029",
+          message: "Graduate one year early appears possible under the current requirements and planning evidence."
+        }
+      }));
+      await expect(page.locator(".accelerated-result-status")).toHaveText("Possible");
     }
   },
   {

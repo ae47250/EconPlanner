@@ -137,6 +137,9 @@ test("major mapper accepts one-year-early plans without a senior-standing confir
     assert.ok(economics.economicsPlans.some(plan => plan.id === "balanced"));
     const accelerated = economics.economicsPlans.find(plan => plan.id === "one-year-early");
     assert.ok(accelerated);
+    assert.equal(economics.economicsAcceleratedResult.status, "POSSIBLE");
+    assert.equal(economics.economicsAcceleratedResult.standardTarget, "Spring/May 2030");
+    assert.equal(economics.economicsAcceleratedResult.acceleratedTarget, "Spring/May 2029");
     assert.equal(accelerated.studentNotices.filter(notice => notice.code === "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED").length, 1);
     const capstoneTerm = accelerated.terms.find(term => term.courses.some(course => course.course === "ECO 461"));
     assert.equal(capstoneTerm?.termKey, "Winter");
@@ -161,7 +164,7 @@ test("major mapper accepts one-year-early plans without a senior-standing confir
   assert.equal(compressedTransfer.programs[0].planningContext.acceleratedPlanAssumesSeniorStanding, true);
 });
 
-test("major mapper safely normalizes junior and senior One Year Early requests", async () => {
+test("major mapper evaluates Junior Graduate next year and normalizes Senior requests", async () => {
   for (const academicStanding of ["junior", "senior"]) {
     const response = await POST(new Request("http://localhost/api/majors/map", {
       method: "POST",
@@ -180,17 +183,46 @@ test("major mapper safely normalizes junior and senior One Year Early requests",
 
     assert.equal(response.status, 200, academicStanding);
     assert.equal(economics.planningContext.planningPace, "standard", academicStanding);
-    assert.equal(economics.planningContext.earlyComparisonRequested, false, academicStanding);
-    assert.equal(
-      economics.planningContext.planningPaceNormalization.code,
-      "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD",
-      academicStanding
-    );
-    assert.ok(
-      economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "one-year-early"),
-      academicStanding
-    );
+    if (academicStanding === "junior") {
+      assert.equal(economics.planningContext.earlyComparisonRequested, true);
+      assert.equal(economics.planningContext.planningPaceNormalization, null);
+      assert.ok(economics.economicsCandidateOutcomes.some(outcome => outcome.id === "one-year-early"));
+      assert.equal(economics.economicsAcceleratedResult.label, "Graduate next year");
+      assert.equal(economics.economicsAcceleratedResult.acceleratedTarget, "Spring/May 2027");
+      assert.ok(["POSSIBLE", "NOT_POSSIBLE", "MORE_INFORMATION_NEEDED"].includes(economics.economicsAcceleratedResult.status));
+    } else {
+      assert.equal(economics.planningContext.earlyComparisonRequested, false);
+      assert.equal(economics.planningContext.planningPaceNormalization.code, "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD");
+      assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "one-year-early"));
+      assert.equal(economics.economicsAcceleratedResult, null);
+    }
   }
+});
+
+test("major mapper accepts a custom graduation year without transfer identity", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "sophomore",
+        customGraduationEnabled: true,
+        customExpectedGraduationYear: "2030",
+        planCreationDate: "2026-07-30",
+        courses: []
+      }
+    })
+  }));
+  const data = await response.json();
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
+
+  assert.equal(response.status, 200);
+  assert.equal(economics.planningContext.isTransferStudent, false);
+  assert.equal(economics.planningContext.customGraduationEnabled, true);
+  assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
+  assert.equal(economics.planningContext.earlyComparisonRequested, false);
+  assert.equal(economics.economicsAcceleratedResult, null);
+  assert.equal(data.catalog.basis, "entry_catalog_year_inferred_from_standing_and_plan_date");
 });
 
 test("major mapper uses transfer entry catalog and keeps the selected graduation target", async () => {

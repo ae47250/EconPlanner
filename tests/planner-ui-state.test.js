@@ -34,9 +34,9 @@ test("comparison badges use the policy-backed generated plan label", async () =>
   assert.doesNotMatch(source, /"explore-first":\s*"Explore/);
 });
 
-test("saved junior and senior One Year Early selections migrate without losing other answers", () => {
-  assert.equal(PLANNER_INPUT_STATE_VERSION, 6);
-  for (const academicStanding of ["junior", "senior"]) {
+test("saved senior One Year Early selections migrate without losing other answers", () => {
+  assert.equal(PLANNER_INPUT_STATE_VERSION, 7);
+  for (const academicStanding of ["senior"]) {
     const saved = {
       academicStanding,
       planningPace: "one_year_early",
@@ -54,8 +54,8 @@ test("saved junior and senior One Year Early selections migrate without losing o
   }
 });
 
-test("saved freshman and sophomore One Year Early selections remain selected", () => {
-  for (const academicStanding of ["freshman", "sophomore"]) {
+test("saved freshman through junior One Year Early selections remain selected", () => {
+  for (const academicStanding of ["freshman", "sophomore", "junior"]) {
     const saved = { academicStanding, planningPace: "one_year_early", courses: [] };
     const migrated = migratePlannerInputState(saved);
     assert.equal(migrated.formData, saved);
@@ -103,6 +103,27 @@ test("generated planner session restores an explicit zero-plan comparison result
   assert.equal(restored.view, PLANNER_VIEWS.COMPARE);
 });
 
+test("generated planner session restores an input-blocked result", () => {
+  const inputBlock = {
+    code: "INVALID_CUSTOM_GRADUATION_INPUT",
+    economicsPlanResult: {
+      category: "INPUT_BLOCKED",
+      questions: [{field: "customExpectedGraduationYear", prompt: "When do you expect to graduate?"}]
+    }
+  };
+  const saved = createGeneratedPlannerSession({
+    inputBlock,
+    inputSignature: "blocked-input",
+    selectedPlanId: "",
+    view: PLANNER_VIEWS.COMPARE
+  });
+
+  const restored = restoreGeneratedPlannerSession(saved, "blocked-input");
+  assert.equal(restored.report, null);
+  assert.deepEqual(restored.inputBlock, inputBlock);
+  assert.equal(restored.view, PLANNER_VIEWS.COMPARE);
+});
+
 test("generated planner session is rejected after an earlier answer changes", () => {
   const saved = createGeneratedPlannerSession({
     report: sampleReport(),
@@ -122,7 +143,7 @@ test("generated planner sessions from before distribution validation regenerate"
     view: PLANNER_VIEWS.COMPARE
   });
 
-  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 6);
+  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 7);
   assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 4 }, "student-input-v1"), null);
 });
 

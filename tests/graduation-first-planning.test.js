@@ -113,17 +113,16 @@ test("sophomore One Year Early evaluates 12, 11, 10, and 9 remaining through the
   assert.notEqual(statuses[0].plan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);
 });
 
-test("junior One Year Early safely normalizes to the standard horizon", () => {
+test("junior One Year Early keeps the standard horizon and evaluates Graduate next year", () => {
   const student = earlyUpcomingStudent("junior", ["ECO 113", "ECO 114"]);
   const { mapping, result } = bundle(student);
 
   assert.equal(mapping.strict.remainingUnits, 10);
   assert.equal(result.context.planningPace, PLANNING_PACES.STANDARD);
-  assert.equal(result.context.earlyComparisonRequested, false);
-  assert.equal(result.context.planningPaceNormalization.code, "ONE_YEAR_EARLY_NORMALIZED_TO_STANDARD");
-  assert.equal(result.earlyGraduationContext, null);
-  assert.ok(result.candidateOutcomes.every(item => item.id !== "one-year-early"));
-  assert.ok(result.plans.every(item => item.id !== "one-year-early"));
+  assert.equal(result.context.earlyComparisonRequested, true);
+  assert.equal(result.context.planningPaceNormalization, null);
+  assert.equal(result.earlyGraduationContext.expectedGraduationTerm, "Spring/May 2027");
+  assert.ok(result.candidateOutcomes.some(item => item.id === "one-year-early"));
 });
 
 test("eligible One Year Early uses canonical sections rather than injected extra electives", () => {

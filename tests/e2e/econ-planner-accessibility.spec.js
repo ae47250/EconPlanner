@@ -24,7 +24,7 @@ test("standing and One Year Early controls expose one keyboard-operable pressed 
   await expect(standingGroup.locator("[aria-pressed='true']")).toHaveCount(1);
   await expect(freshman.locator(".selection-check")).toHaveText("✓");
 
-  const early = page.getByRole("button", { name: "Include a one-year-early plan" });
+  const early = page.getByRole("button", { name: "I’d like to graduate one year early", exact: true });
   await early.focus();
   await expect(early).toBeFocused();
   await page.keyboard.press("Space");
@@ -63,7 +63,7 @@ test("course choices retain visible focus, non-color selection cues, and correct
     };
   });
   expect(styles.selectedBackground).not.toBe(styles.unselectedBackground);
-  expect(styles.selectedBorderWidth).not.toBe(styles.unselectedBorderWidth);
+  expect(styles.selectedBorderWidth).toBe(styles.unselectedBorderWidth);
   expect(styles.outlineStyle).not.toBe("none");
 
   await page.keyboard.press("Enter");

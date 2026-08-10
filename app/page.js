@@ -23,6 +23,7 @@ import {
   restoreGeneratedPlannerSession
 } from "../lib/planning/uiState.js";
 import economicsCourseData from "../data/normalized/economics/courses.json";
+import economicsPlanningConstraints from "../data/normalized/economics/planning-constraints.json";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
@@ -37,6 +38,7 @@ const NON_SELECTABLE_COURSE_CODES = new Set(COURSE_CATALOG
 const AP_CREDIT_ALLOWED_COURSE_CODES = new Set(COURSE_CATALOG
   .filter(course => course.apEligible)
   .map(course => course.code));
+const COMPLETION_SOURCE_CHOICES_ENABLED = false;
 const COURSE_PREREQUISITES = Object.fromEntries(COURSE_CATALOG
   .filter(course => (
     (course.prerequisites?.all || []).length
@@ -60,74 +62,74 @@ const COURSE_DISPLAY_GROUPS = [
   {
     id: "ECO 113",
     code: "ECO 113",
-    title: "Principles of Microeconomics",
+    title: courseTitle("ECO 113"),
     courseCodes: ["ECO 113"]
   },
   {
     id: "ECO 114",
     code: "ECO 114",
-    title: "Principles of Macroeconomics",
+    title: courseTitle("ECO 114"),
     courseCodes: ["ECO 114"]
   },
   {
     id: "ECO 160",
     code: "ECO 160",
-    title: "Special Topics",
+    title: courseTitle("ECO 160"),
     courseCodes: ["ECO 160"]
   },
   {
     id: "ECO 161",
     code: "ECO 161",
-    title: "Foundations of Economics",
+    title: courseTitle("ECO 161"),
     courseCodes: ["ECO 161"]
   },
   {
     id: "ECO 213",
     code: "ECO 213",
-    title: "Intermediate Microeconomics",
+    title: courseTitle("ECO 213"),
     courseCodes: ["ECO 213"]
   },
   {
     id: "ECO 214",
     code: "ECO 214",
-    title: "Intermediate Macroeconomics",
+    title: courseTitle("ECO 214"),
     courseCodes: ["ECO 214"]
   },
   {
     id: "ECO 461",
     code: "ECO 461",
-    title: "Senior Seminar: Econometrics",
+    title: courseTitle("ECO 461"),
     courseCodes: ["ECO 461"]
   },
   {
     id: "math-requirement",
     code: "MAT 113 / MAT 121",
-    title: "Mathematics cognate",
+    title: "Required math course",
     courseCodes: ["MAT 113", "MAT 121"],
     options: [
-      { code: "MAT 113", title: "Mathematics cognate" },
-      { code: "MAT 121", title: "Calculus I" }
+      { code: "MAT 113", title: courseTitle("MAT 113") },
+      { code: "MAT 121", title: courseTitle("MAT 121") }
     ]
   },
   {
     id: "statistics-requirement",
     code: "ECO 257 / MAT 217 / PSY 217",
-    title: "Statistics requirement",
+    title: "Choose a statistics course",
     courseCodes: ["ECO 257", "MAT 217", "PSY 217"],
     options: [
-      { code: "ECO 257", title: "Quantitative Methods for Business/Economics" },
-      { code: "MAT 217", title: "Applied Statistics" },
-      { code: "PSY 217", title: "Statistical Analysis" }
+      { code: "ECO 257", title: courseTitle("ECO 257") },
+      { code: "MAT 217", title: courseTitle("MAT 217") },
+      { code: "PSY 217", title: courseTitle("PSY 217") }
     ]
   },
   {
     id: "finance-requirement",
     code: "ECO 321 / BUSN 323",
-    title: "Finance requirement",
+    title: "Choose a money and finance course",
     courseCodes: ["ECO 321", "BUSN 323"],
     options: [
-      { code: "ECO 321", title: "Money & Financial Markets" },
-      { code: "BUSN 323", title: "Business finance option" }
+      { code: "ECO 321", title: courseTitle("ECO 321") },
+      { code: "BUSN 323", title: courseTitle("BUSN 323") }
     ]
   },
   ...COURSE_CATALOG
@@ -202,9 +204,12 @@ function plannerInputSignature(formData) {
     planningPace: formData.planningPace,
     planCreationDate: formData.planCreationDate,
     isTransferStudent: formData.isTransferStudent,
+    customGraduationEnabled: formData.customGraduationEnabled,
+    customExpectedGraduationYear: formData.customExpectedGraduationYear,
     transferExpectedGraduationYear: formData.transferExpectedGraduationYear,
     transferEntryAcademicYear: formData.transferEntryAcademicYear,
     reservedCourseUnits: formData.reservedCourseUnits,
+    studyAbroadTerm: formData.studyAbroadTerm,
     courses: selectedCourses(formData.courses)
       .map(course => [canonicalSavedCode(course.code), course.status, course.units, course.source])
       .sort((left, right) => left[0].localeCompare(right[0]))
@@ -219,10 +224,14 @@ const initialForm = {
   planCreationDate: "",
   planCreationDateEdited: false,
   isTransferStudent: false,
+  customGraduationEnabled: false,
+  customExpectedGraduationYear: "",
   transferExpectedGraduationYear: "",
   transferEntryAcademicYear: "",
   expectedGraduationTerm: "",
   reservedCourseUnits: {},
+  reservationMemory: {},
+  studyAbroadTerm: "",
   courses: SELECTABLE_COURSE_CATALOG.map(blankCourse),
   advisorApprovals: ""
 };
@@ -369,7 +378,7 @@ function PlanningGaps({ items = [] }) {
   if (!items.length) return null;
   return (
     <div className="plan-notes planning-gaps" role="status">
-      <strong>Planning Gaps</strong>
+      <strong>What still needs attention</strong>
       <ul>
         {items.map((item, index) => (
           <li key={`${item.requirementId || item.code || "gap"}-${index}`}>
@@ -457,6 +466,16 @@ function selectedPlanNotices(plan, schedule) {
     ...notices,
     ...planPublishedScheduleNotices(plan, schedule)
   ].map(notice => [notice.message, notice])).values()];
+}
+
+function termReservationLimit(slot = {}) {
+  const key = slot.termKey === "Spring" ? "May" : slot.termKey;
+  const contract = economicsPlanningConstraints.terms?.[key];
+  return Math.max(0, Number(contract?.normalCourseUnits ?? contract?.maxTotalCourses ?? 0));
+}
+
+function planningSlotsLabel(slotId, planningContext) {
+  return buildPlanningSlots(planningContext).find(slot => slot.id === slotId)?.label || slotId;
 }
 
 function structuredItemText(item, fallback) {
@@ -623,7 +642,7 @@ function AdvisorAttention({ catalog, plan, schedule }) {
       ))}
       {planningNotices.length > 0 && (
         <div className="advisor-attention-item graduation-assumptions">
-          <h3>Graduation planning assumptions</h3>
+          <h3>Things to confirm</h3>
           <div className="advisor-attention-groups">
             {hasPublishedScheduleChecks && (
               <section>
@@ -1049,6 +1068,7 @@ function PlanComparisonScreen({
   canUndoPlanEdit,
   onEditCourses,
   onReviewTimeline,
+  onClearAll,
   onBackToCompare,
   onChoosePlan,
   onSelectPlan,
@@ -1067,6 +1087,7 @@ function PlanComparisonScreen({
   const convergences = result?.economicsPlanConvergences || [];
   const planningContext = result?.planningContext || fallbackPlanningContext;
   const canonicalPlanResult = result?.economicsPlanResult || planResult || null;
+  const acceleratedResult = result?.economicsAcceleratedResult || null;
   const [highlightDifferences, setHighlightDifferences] = useState(false);
   const resultHeadingRef = useRef(null);
   const isPlanView = view === PLANNER_VIEWS.PLAN;
@@ -1088,7 +1109,7 @@ function PlanComparisonScreen({
       : [];
     return [key, new Set(shared)];
   }));
-  const standing = displayName?.trim() || (planningContext?.isTransferStudent ? "Custom timeline" : planningContext?.effectiveStandingLabel)
+  const standing = displayName?.trim() || (planningContext?.customGraduationEnabled ? "Custom timeline" : planningContext?.effectiveStandingLabel)
     || planningContext?.standingLabel
     || "Student";
   const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
@@ -1148,7 +1169,7 @@ function PlanComparisonScreen({
           box-shadow: 0 1px 8px rgba(15, 35, 75, .06);
         }
         .comparison-brand {
-          color: #071956;
+          color: #4b2e83;
           font-size: 25px;
           font-weight: 700;
           letter-spacing: -.03em;
@@ -1158,7 +1179,7 @@ function PlanComparisonScreen({
           align-items: center;
           gap: .45rem;
           margin-left: auto;
-          color: #071956;
+          color: #2f1c57;
           font-size: 15px;
         }
         .comparison-student strong { font-weight: 700; }
@@ -1177,10 +1198,10 @@ function PlanComparisonScreen({
           min-height: 0;
           margin: 0;
           padding: .65rem 1rem;
-          border: 1px solid #102a83;
+          border: 1px solid #6d5a86;
           border-radius: .45rem;
           background: #fff;
-          color: #071956;
+          color: #2f1c57;
           font-size: 14px;
           font-weight: 700;
           cursor: pointer;
@@ -1189,7 +1210,7 @@ function PlanComparisonScreen({
         .regenerate-plans-button:hover,
         .compare-plans-button:hover,
         .download-pdf-button:hover,
-        .undo-plan-edit-button:hover { background: #edf4ff; }
+        .undo-plan-edit-button:hover { background: #f2eef7; }
         .regenerate-plans-button:disabled,
         .download-pdf-button:disabled,
         .undo-plan-edit-button:disabled { cursor: wait; opacity: .65; }
@@ -1206,7 +1227,7 @@ function PlanComparisonScreen({
           padding: .25rem 0;
           border: 0;
           background: transparent;
-          color: #155eef;
+          color: #4b2e83;
           font-size: 14px;
           cursor: pointer;
         }
@@ -1224,7 +1245,7 @@ function PlanComparisonScreen({
           font-size: 12px;
         }
         .comparison-course-status p { margin: 0; }
-        .comparison-course-status strong { color: #071956; }
+        .comparison-course-status strong { color: #2f1c57; }
         .comparison-course-status span { display: block; margin-top: .2rem; font-size: 14px; }
         .result-status-value { font-weight: 700; }
         .comparison-heading-row {
@@ -1236,7 +1257,7 @@ function PlanComparisonScreen({
         }
         .comparison-heading-row h1 {
           margin: 0;
-          color: #071956;
+          color: #2f1c57;
           font-size: clamp(29px, 3vw, 42px);
           line-height: 1.05;
           letter-spacing: -.035em;
@@ -1251,14 +1272,14 @@ function PlanComparisonScreen({
           align-items: center;
           gap: .6rem;
           flex: 0 0 auto;
-          color: #071956;
+          color: #2f1c57;
           font-size: 14px;
           cursor: pointer;
         }
         .difference-toggle input {
           width: 2.7rem;
           height: 1.45rem;
-          accent-color: #155eef;
+          accent-color: #4b2e83;
           cursor: pointer;
         }
         .comparison-difference-key {
@@ -1288,8 +1309,8 @@ function PlanComparisonScreen({
           box-shadow: 0 .45rem 1.2rem rgba(20, 44, 92, .06);
         }
         .comparison-plan-card.is-selected {
-          border: 2px solid #155eef;
-          box-shadow: 0 .65rem 1.5rem rgba(21, 94, 239, .14);
+          border-color: #8e7aa6;
+          box-shadow: 0 .65rem 1.5rem rgba(75, 46, 131, .12);
         }
         .comparison-plan-summary {
           min-height: 8rem;
@@ -1305,7 +1326,7 @@ function PlanComparisonScreen({
         }
         .comparison-plan-summary h2 {
           margin: 0;
-          color: #071956;
+          color: #2f1c57;
           font-size: 25px;
           line-height: 1.1;
         }
@@ -1321,7 +1342,7 @@ function PlanComparisonScreen({
           border: 1px solid #9dc7ff;
           border-radius: .4rem;
           background: #f3f8ff;
-          color: #155eef;
+          color: #4b2e83;
           font-size: 12px;
         }
         .comparison-plan-card:nth-child(3) .plan-strategy-badge {
@@ -1401,12 +1422,12 @@ function PlanComparisonScreen({
           cursor: pointer;
         }
         .comparison-page .plan-tab.is-active {
-          border-bottom-color: #155eef;
-          color: #071956;
+          border-bottom-color: #4b2e83;
+          color: #2f1c57;
           font-weight: 700;
         }
         .comparison-page .academic-year-group { margin-top: 1rem; }
-        .comparison-page .academic-year-label { margin: 0 0 .55rem; color: #155eef; font-size: 17px; }
+        .comparison-page .academic-year-label { margin: 0 0 .55rem; color: #4b2e83; font-size: 17px; }
         .comparison-page .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
         .comparison-page .term-card { min-width: 0; min-height: 8rem; padding: .8rem; border: 1px solid #cbd5e1; border-radius: .5rem; }
         .comparison-page .term-card.is-placeholder { border-style: dashed; background: #f7fbff; }
@@ -1445,21 +1466,22 @@ function PlanComparisonScreen({
           min-height: 0;
           margin: 0 1rem 1rem;
           padding: .72rem 1rem;
-          border: 1px solid #0c3eaf;
+          border: 1px solid #6d5a86;
           border-radius: .42rem;
           background: #fff;
-          color: #071956;
+          color: #2f1c57;
           font-size: 16px;
           font-weight: 700;
           cursor: pointer;
         }
-        .choose-plan-button:hover { background: #edf4ff; }
+        .choose-plan-button:hover { background: #f2eef7; }
         .comparison-plan-card.is-selected .choose-plan-button {
-          background: linear-gradient(135deg, #0b47c8, #07399e);
+          border-color: transparent;
+          background: #4b2e83;
           color: #fff;
         }
         .comparison-plan-card.is-selected .choose-plan-button:hover {
-          background: linear-gradient(135deg, #083ca9, #062f83);
+          background: #2f1c57;
         }
         .comparison-empty {
           padding: 1.25rem;
@@ -1470,9 +1492,18 @@ function PlanComparisonScreen({
         }
         .result-progress ol { display: flex; gap: .65rem; margin: 0; padding: 0; list-style: none; }
         .result-progress li { color: #667085; font-size: 12px; }
-        .result-progress li::before { content: "✓ "; color: #31557e; }
+        .result-progress li::before { content: "✓ "; color: #4b2e83; }
         .result-progress li.is-current { color: #18202b; font-weight: 700; }
         .result-progress li.is-current::before { content: "● "; }
+        .result-progress button {
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          color: inherit;
+          font: inherit;
+          cursor: pointer;
+        }
         .no-plan-state {
           padding: 1.25rem;
           border: 1px solid #bdc9da;
@@ -1488,7 +1519,7 @@ function PlanComparisonScreen({
           padding: .65rem .9rem;
           border: 1px solid #172a40;
           border-radius: 7px;
-          background: #26384f;
+          background: #2f1c57;
           color: #fff;
           font-weight: 700;
           cursor: pointer;
@@ -1501,9 +1532,21 @@ function PlanComparisonScreen({
           background: #fff;
           color: #33425d;
         }
-        .result-diagnostics > summary { cursor: pointer; color: #244f85; font-weight: 700; }
+        .result-diagnostics > summary { cursor: pointer; color: #4b2e83; font-weight: 700; }
         .result-diagnostics .candidate-outcomes,
         .result-diagnostics .planning-gaps { margin: .75rem 0 0; }
+        .comparison-actions .clear-all-results { color: #5a397d; }
+        .accelerated-result {
+          margin: 0 0 1rem;
+          padding: 1rem 1.1rem;
+          border-left: 4px solid #4f2d7f;
+          border-radius: 8px;
+          background: #f5f1fa;
+        }
+        .accelerated-result h2 { margin: 0; font-size: 18px; color: #302044; }
+        .accelerated-result p { margin: .35rem 0 0; color: #4c4357; line-height: 1.45; }
+        .accelerated-result-status { display: inline-block; margin-left: .35rem; color: #4f2d7f; }
+        .planning-guide-disclaimer { margin: 1.2rem 0 0; color: #626a75; font-size: 13px; text-align: center; }
         .comparison-page .advisor-attention,
         .comparison-page .plan-notes {
           margin: 1rem 0;
@@ -1620,9 +1663,9 @@ function PlanComparisonScreen({
         <div className="comparison-brand">EconPlanner</div>
         <nav className="result-progress" aria-label="Planner progress">
           <ol>
-            <li>About you</li>
-            <li>Your courses</li>
-            <li className="is-current" aria-current="step">Your plans</li>
+            <li><button type="button" onClick={onReviewTimeline}>About you</button></li>
+            <li><button type="button" onClick={onEditCourses}>Your courses</button></li>
+            <li className="is-current" aria-current="step"><span>Your plans</span></li>
           </ol>
         </nav>
         <div className="comparison-student">
@@ -1657,6 +1700,9 @@ function PlanComparisonScreen({
           </button>
           <button type="button" className="edit-courses-button" onClick={onEditCourses}>
             Edit answers
+          </button>
+          <button type="button" className="edit-courses-button clear-all-results" onClick={onClearAll}>
+            Clear all
           </button>
         </div>
       </header>
@@ -1721,6 +1767,21 @@ function PlanComparisonScreen({
           >
             Undo last plan edit
           </button>
+        )}
+
+        {acceleratedResult && (
+          <section className="accelerated-result" aria-labelledby="accelerated-result-heading">
+            <h2 id="accelerated-result-heading">
+              {acceleratedResult.label}:
+              <span className="accelerated-result-status">{({
+                POSSIBLE: "Possible",
+                NOT_POSSIBLE: "Not possible",
+                MORE_INFORMATION_NEEDED: "More information needed"
+              })[acceleratedResult.status] || "More information needed"}</span>
+            </h2>
+            <p><strong>Standard target:</strong> {acceleratedResult.standardTarget}. <strong>Accelerated target:</strong> {acceleratedResult.acceleratedTarget || "To be confirmed"}.</p>
+            <p>{acceleratedResult.message}</p>
+          </section>
         )}
 
         {isPlanView ? (
@@ -1852,6 +1913,7 @@ function PlanComparisonScreen({
           planResult={canonicalPlanResult}
           planCount={plans.length}
         />
+        <p className="planning-guide-disclaimer">EconPlanner is a planning guide, not an official degree audit.</p>
       </div>
     </main>
   );
@@ -1934,6 +1996,53 @@ function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, p
   );
 }
 
+function ClearAllDialog({ open, onCancel, onConfirm }) {
+  const dialogRef = useRef(null);
+  const cancelRef = useRef(null);
+  useEffect(() => {
+    if (!open) return undefined;
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
+    const frame = window.requestAnimationFrame(() => cancelRef.current?.focus());
+    return () => {
+      window.cancelAnimationFrame(frame);
+      if (dialog?.open) dialog.close();
+    };
+  }, [open]);
+  if (!open) return null;
+  return (
+    <dialog
+      ref={dialogRef}
+      className="clear-all-dialog"
+      aria-labelledby="clear-all-title"
+      onCancel={event => {
+        event.preventDefault();
+        onCancel();
+      }}
+    >
+      <style jsx global>{`
+        .clear-all-dialog { display: block; width: min(calc(100% - 2rem), 28rem); padding: 1.25rem; border: 1px solid #cfc8dc; border-radius: 12px; box-shadow: 0 18px 50px rgba(29,20,48,.25); color: #201b2b; }
+        .clear-all-dialog::backdrop { background: rgba(22,16,33,.45); }
+        .clear-all-dialog h2 { margin: 0; font-size: 21px; }
+        .clear-all-dialog p { margin: .65rem 0 1rem; line-height: 1.45; }
+        .clear-all-dialog-actions { display: flex; justify-content: flex-end; gap: .65rem; }
+        .clear-all-dialog button { min-height: 42px; padding: .55rem .9rem; border: 1px solid #7c708f; border-radius: 7px; background: #fff; color: #2f1c57; font-weight: 700; cursor: pointer; }
+        .clear-all-dialog .confirm-clear-all { border-color: #2f1c57; background: #2f1c57; color: #fff; }
+        @media (max-width: 520px) {
+          .clear-all-dialog { width: calc(100% - 1.5rem); padding: 1rem; }
+          .clear-all-dialog-actions { display: grid; grid-template-columns: 1fr 1fr; }
+        }
+      `}</style>
+      <h2 id="clear-all-title">Clear all answers and generated plans?</h2>
+      <p>This returns EconPlanner to a blank first page on this browser.</p>
+      <div className="clear-all-dialog-actions">
+        <button type="button" ref={cancelRef} onClick={onCancel}>Cancel</button>
+        <button type="button" className="confirm-clear-all" onClick={onConfirm}>Clear all</button>
+      </div>
+    </dialog>
+  );
+}
+
 function PlannerSummary({
   courses,
   formData,
@@ -1946,7 +2055,8 @@ function PlannerSummary({
   migrationNotice,
   generateButtonRef,
   onContinue,
-  onFocusAttention
+  onFocusAttention,
+  onClearAll
 }) {
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
@@ -1955,7 +2065,12 @@ function PlannerSummary({
     : null;
   const hasStanding = Boolean(formData.academicStanding);
   const standardPlanningContext = hasStanding
-    ? resolvePlanningContext({ ...formData, isTransferStudent: false, planningPace: PLANNING_PACES.STANDARD })
+    ? resolvePlanningContext({
+        ...formData,
+        isTransferStudent: false,
+        customGraduationEnabled: false,
+        planningPace: PLANNING_PACES.STANDARD
+      })
     : null;
 
   return (
@@ -1976,15 +2091,15 @@ function PlannerSummary({
             <dd>{earlyContext.expectedGraduationTerm}</dd>
           </div>
         )}
-        {planningContext.isTransferStudent && (
+        {planningContext.customGraduationEnabled && (
           <div>
             <dt>Custom graduation target</dt>
-            <dd>{planningContext.transferValidation.valid ? planningContext.expectedGraduationTerm : "Needs more information"}</dd>
+            <dd>{planningContext.customGraduationValidation.valid ? planningContext.expectedGraduationTerm : "Needs more information"}</dd>
           </div>
         )}
         <div>
           <dt>Planning starts</dt>
-          <dd>{hasStanding || planningContext.isTransferStudent ? planningStart : "To be confirmed"}</dd>
+          <dd>{hasStanding ? planningStart : "To be confirmed"}</dd>
         </div>
         <div>
           <dt>Completed</dt>
@@ -1994,6 +2109,21 @@ function PlannerSummary({
           <dt>Taking now</dt>
           <dd><SummaryCourseCodes courses={inProgressCodes} /></dd>
         </div>
+        {formData.studyAbroadTerm && (
+          <div>
+            <dt>Study abroad</dt>
+            <dd>No Economics courses in {planningSlotsLabel(formData.studyAbroadTerm, planningContext)}</dd>
+          </div>
+        )}
+        {Object.entries(formData.reservedCourseUnits || {}).some(([, value]) => Number(value) > 0) && (
+          <div>
+            <dt>Room for other courses</dt>
+            <dd>{Object.entries(formData.reservedCourseUnits)
+              .filter(([slotId, value]) => Number(value) > 0 && slotId !== formData.studyAbroadTerm)
+              .map(([slotId, value]) => `${planningSlotsLabel(slotId, planningContext)}: ${value}`)
+              .join(" · ") || "Study-abroad term only"}</dd>
+          </div>
+        )}
       </dl>
 
       {(migrationNotice || attentionItems.length > 0) && (
@@ -2013,6 +2143,7 @@ function PlannerSummary({
       )}
 
       {status && <p className="summary-status" role="status" aria-live="polite">{status}</p>}
+      <button type="button" className="clear-all-button" onClick={onClearAll}>Clear all</button>
       {intakeStep === 1 ? (
         <button key="continue" type="button" className="primary-action" onClick={onContinue}>
           Continue to your courses
@@ -2049,6 +2180,7 @@ export default function Page() {
   const latestFormRef = useRef(initialForm);
   const [courseSearch, setCourseSearch] = useState("");
   const [intakeStep, setIntakeStep] = useState(1);
+  const [clearDialogOpen, setClearDialogOpen] = useState(false);
   const [migrationNotice, setMigrationNotice] = useState("");
   const [inputBlock, setInputBlock] = useState(null);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -2065,6 +2197,8 @@ export default function Page() {
   const [isComparisonExiting, setIsComparisonExiting] = useState(false);
   const planningContext = resolvePlanningContext(formData);
   const planningSlots = buildPlanningSlots(planningContext);
+  const juniorStudyAbroadSlots = planningSlots.filter(slot => !slot.isSummer && slot.absoluteStandingIndex === 2);
+  const planningSlotIdSignature = planningSlots.map(slot => slot.id).join("|");
   const planningStart = planningSlots[0]?.label || "To be confirmed";
   const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
   const transferOptions = transferPlanningOptions(planningContext);
@@ -2148,6 +2282,7 @@ export default function Page() {
   useEffect(() => {
     let restoredForm = { ...initialForm, planCreationDate: localToday() };
     let restoredCourseSearch = "";
+    let restoredIntakeStep = 1;
 
     try {
       const saved = window.localStorage.getItem(PLANNER_STORAGE_KEY);
@@ -2174,6 +2309,7 @@ export default function Page() {
           if (savedMigrationNotice) setMigrationNotice(savedMigrationNotice);
         }
         if (typeof parsed.courseSearch === "string") restoredCourseSearch = parsed.courseSearch;
+        if (parsed.intakeStep === 2) restoredIntakeStep = 2;
       }
     } catch {
       window.localStorage.removeItem(PLANNER_STORAGE_KEY);
@@ -2181,6 +2317,7 @@ export default function Page() {
 
     setFormData(restoredForm);
     setCourseSearch(restoredCourseSearch);
+    setIntakeStep(restoredIntakeStep);
 
     const requestedView = plannerViewFromSearch(window.location.search);
     const restoredSession = restoreGeneratedPlannerSession(
@@ -2191,13 +2328,15 @@ export default function Page() {
     let initialPlanId = "";
     if (restoredSession) {
       setReport(restoredSession.report);
+      setInputBlock(restoredSession.inputBlock);
       generatedInputSignatureRef.current = restoredSession.inputSignature;
       initialPlanId = new URLSearchParams(window.location.search).get("plan") || restoredSession.selectedPlanId;
       const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
       if (!plans.some(plan => plan.id === initialPlanId)) initialPlanId = plans[0]?.id || "";
-      initialView = requestedView === PLANNER_VIEWS.PLAN && !plans.length
+      const restoredView = requestedView === PLANNER_VIEWS.INPUT ? restoredSession.view : requestedView;
+      initialView = restoredView === PLANNER_VIEWS.PLAN && !plans.length
         ? PLANNER_VIEWS.COMPARE
-        : requestedView;
+        : restoredView;
       setSelectedPlanId(initialPlanId);
       setPlannerView(initialView);
       setPlanEditUndo(restoredSession.planEditUndo);
@@ -2225,20 +2364,39 @@ export default function Page() {
       window.localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify({
         schemaVersion: PLANNER_STORAGE_VERSION,
         formData,
-        courseSearch
+        courseSearch,
+        intakeStep
       }));
     } catch {
       // Local storage may be unavailable in restricted browser sessions.
     }
-  }, [courseSearch, formData, isHydrated]);
+  }, [courseSearch, formData, intakeStep, isHydrated]);
+
+  useEffect(() => {
+    if (!isHydrated || !formData.studyAbroadTerm) return;
+    const valid = planningSlots.some(slot => slot.id === formData.studyAbroadTerm);
+    if (valid) return;
+    setFormData(current => {
+      const restoredUnits = Number(current.reservationMemory?.[current.studyAbroadTerm] || 0);
+      const reservedCourseUnits = { ...(current.reservedCourseUnits || {}) };
+      if (current.studyAbroadTerm) reservedCourseUnits[current.studyAbroadTerm] = restoredUnits;
+      return {
+        ...current,
+        studyAbroadTerm: "",
+        reservedCourseUnits,
+        reservationMemory: {}
+      };
+    });
+  }, [formData.studyAbroadTerm, isHydrated, planningSlotIdSignature]);
 
   useEffect(() => {
     if (!isHydrated) return;
     try {
-      if (report && generatedInputSignatureRef.current) {
+      if ((report || inputBlock) && generatedInputSignatureRef.current) {
         window.sessionStorage.setItem(GENERATED_PLANNER_SESSION_KEY, JSON.stringify(
           createGeneratedPlannerSession({
             report,
+            inputBlock,
             inputSignature: generatedInputSignatureRef.current,
             selectedPlanId,
             view: plannerView,
@@ -2251,7 +2409,7 @@ export default function Page() {
     } catch {
       // Session storage may be unavailable in restricted browser sessions.
     }
-  }, [isHydrated, planEditUndo, plannerView, report, selectedPlanId]);
+  }, [inputBlock, isHydrated, planEditUndo, plannerView, report, selectedPlanId]);
 
   useEffect(() => {
     if (!isHydrated) return undefined;
@@ -2310,12 +2468,13 @@ export default function Page() {
   }, [editingPlanCourseKey, failureFocusTarget, isDownloadingPdf, isGenerating, pdfStatus, planEditStatus, status]);
 
   useEffect(() => {
-    if (!report || !generatedInputSignatureRef.current) return;
+    if ((!report && !inputBlock) || !generatedInputSignatureRef.current) return;
     if (plannerInputSignature(formData) === generatedInputSignatureRef.current) return;
     generationAbortRef.current?.abort();
     generationInFlightRef.current = false;
     generatedInputSignatureRef.current = "";
     setReport(null);
+    setInputBlock(null);
     setSelectedPlanId("");
     setPlannerView(PLANNER_VIEWS.INPUT);
     setPlanEditUndo(null);
@@ -2327,12 +2486,74 @@ export default function Page() {
       "",
       plannerUrl(PLANNER_VIEWS.INPUT)
     );
-  }, [formData, report]);
+  }, [formData, inputBlock, report]);
 
   function clearInputFeedback() {
     setStatus("");
     setInputBlock(null);
     setMigrationNotice("");
+  }
+
+  function clearAllPlanner() {
+    generationAbortRef.current?.abort();
+    pdfDownloadAbortRef.current?.abort();
+    generationInFlightRef.current = false;
+    generatedInputSignatureRef.current = "";
+    const blankForm = {
+      ...initialForm,
+      planCreationDate: localToday(),
+      courses: SELECTABLE_COURSE_CATALOG.map(blankCourse)
+    };
+    try {
+      window.localStorage.removeItem(PLANNER_STORAGE_KEY);
+      window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY);
+    } catch {
+      // Browser storage may be unavailable in restricted sessions.
+    }
+    setFormData(blankForm);
+    setCourseSearch("");
+    setIntakeStep(1);
+    setMigrationNotice("");
+    setInputBlock(null);
+    setStatus("");
+    setReport(null);
+    setPlannerView(PLANNER_VIEWS.INPUT);
+    setSelectedPlanId("");
+    setPlanEditUndo(null);
+    setPlanEditStatus("");
+    setPdfStatus("");
+    setIsGenerating(false);
+    setIsDownloadingPdf(false);
+    setClearDialogOpen(false);
+    window.history.replaceState(
+      { econPlanner: true, view: PLANNER_VIEWS.INPUT, planId: "", previousView: null },
+      "",
+      plannerUrl(PLANNER_VIEWS.INPUT)
+    );
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }
+
+  function changeStudyAbroadTerm(nextTermId) {
+    setFormData(current => {
+      const reservedCourseUnits = { ...(current.reservedCourseUnits || {}) };
+      const reservationMemory = { ...(current.reservationMemory || {}) };
+      if (current.studyAbroadTerm) {
+        reservedCourseUnits[current.studyAbroadTerm] = Number(reservationMemory[current.studyAbroadTerm] || 0);
+        delete reservationMemory[current.studyAbroadTerm];
+      }
+      if (nextTermId) {
+        const nextSlot = planningSlots.find(slot => slot.id === nextTermId);
+        reservationMemory[nextTermId] = Number(reservedCourseUnits[nextTermId] || 0);
+        reservedCourseUnits[nextTermId] = termReservationLimit(nextSlot);
+      }
+      return {
+        ...current,
+        studyAbroadTerm: nextTermId,
+        reservedCourseUnits,
+        reservationMemory
+      };
+    });
+    clearInputFeedback();
   }
 
   function setCourseStatus(code, nextStatus) {
@@ -2410,6 +2631,15 @@ export default function Page() {
       });
       return;
     }
+    if (formData.customGraduationEnabled && !planningContext.customGraduationValidation.valid) {
+      setStatus(planningContext.customGraduationValidation.errors[0]);
+      focusAttention({
+        step: 1,
+        target: "custom-graduation-year",
+        message: planningContext.customGraduationValidation.errors[0]
+      });
+      return;
+    }
     setStatus("");
     setIntakeStep(2);
     window.requestAnimationFrame(() => document.getElementById("course-search")?.focus());
@@ -2438,6 +2668,15 @@ export default function Page() {
         step: 1,
         target: !formData.transferExpectedGraduationYear ? "custom-graduation-year" : "custom-entry-year",
         message: planningContext.transferValidation.errors[0]
+      });
+      return;
+    }
+    if (formData.customGraduationEnabled && !planningContext.customGraduationValidation.valid) {
+      setStatus(planningContext.customGraduationValidation.errors[0]);
+      focusAttention({
+        step: 1,
+        target: "custom-graduation-year",
+        message: planningContext.customGraduationValidation.errors[0]
       });
       return;
     }
@@ -2485,6 +2724,7 @@ export default function Page() {
       });
       if (requestId !== generationRequestRef.current || controller.signal.aborted) return;
       if (!response.ok && data.economicsPlanResult?.category === "INPUT_BLOCKED") {
+        generatedInputSignatureRef.current = requestSignature;
         setInputBlock(data);
         setReport(null);
         setSelectedPlanId("");
@@ -2625,6 +2865,9 @@ export default function Page() {
   if (formData.isTransferStudent && !formData.transferEntryAcademicYear) {
     attentionItems.push({ step: 1, target: "custom-entry-year", message: "Choose when you first enrolled at Hanover." });
   }
+  if (formData.customGraduationEnabled && !formData.customExpectedGraduationYear) {
+    attentionItems.push({ step: 1, target: "custom-graduation-year", message: "Choose your expected graduation year." });
+  }
   for (const issue of inputPrerequisiteValidation.issues) {
     attentionItems.push({
       step: 2,
@@ -2661,16 +2904,17 @@ export default function Page() {
     );
   }
 
-  function renderStatusControls(code, labelPrefix = code, compact = false) {
+  function renderStatusControls(code, labelPrefix = code, compact = false, includeUncertain = false) {
     const course = formData.courses.find(item => item.code === code) || blankCourse({ code, title: courseTitle(code), units: 1 });
     const activeStatus = visibleCourseStatus(course);
+    const statusChoices = [
+      ["completed", "Completed"],
+      ["in_progress", "Taking now"],
+      ...(includeUncertain ? [["uncertain", "Not taken / not sure"]] : [])
+    ];
     return (
-      <div className={compact ? "course-toggles is-compact" : "course-toggles"} role="group" aria-label={`Status for ${labelPrefix}`}>
-        {[
-          ["completed", "Completed"],
-          ["in_progress", "Taking now"],
-          ["uncertain", "Not taken / not sure"]
-        ].map(([value, label]) => {
+      <div className={`course-toggles${compact ? " is-compact" : ""}${includeUncertain ? " has-three" : ""}`} role="group" aria-label={`Status for ${labelPrefix}`}>
+        {statusChoices.map(([value, label]) => {
           const selected = activeStatus === value;
           return (
             <button
@@ -2710,7 +2954,6 @@ export default function Page() {
           <section className="prerequisite-question" key={question.id} aria-labelledby={`${question.id}-label`}>
             <div id={`${question.id}-label`} className="prerequisite-question-heading">
               <strong>{question.kind === "one_of" ? "Choose a prerequisite option" : "Required course"}</strong>
-              {question.kind === "one_of" && <span>One of the current valid options is needed.</span>}
             </div>
             {question.options.map(option => (
               <div className="prerequisite-option" key={option}>
@@ -2718,7 +2961,7 @@ export default function Page() {
                   <strong>{option}</strong>
                   <small>{courseTitle(option)}</small>
                 </div>
-                {renderStatusControls(option, `prerequisite ${option}`, true)}
+                {renderStatusControls(option, `prerequisite ${option}`, true, true)}
               </div>
             ))}
             {hasExplicitPrerequisiteConflict(question) && (
@@ -2754,7 +2997,7 @@ export default function Page() {
             <span className="course-status-note">Must be taken at Hanover College</span>
           ) : renderStatusControls(code)}
         </div>
-        {completed && (
+        {COMPLETION_SOURCE_CHOICES_ENABLED && completed && (
           <details className="completion-source" open={source !== "Hanover College"}>
             <summary>Where did you complete this course? <span>{source}</span></summary>
             <div className="completion-source-options" role="group" aria-label={`Completion source for ${code}`}>
@@ -2977,47 +3220,55 @@ export default function Page() {
 
   if (isHydrated && (report || inputBlock) && plannerView !== PLANNER_VIEWS.INPUT) {
     return (
-      <PlanComparisonScreen
-        report={report}
-        planResult={inputBlock?.economicsPlanResult}
-        fallbackPlanningContext={planningContext}
-        courses={formData.courses}
-        displayName={formData.displayName}
-        view={plannerView}
-        selectedPlanId={selectedPlanId}
-        isExiting={isComparisonExiting}
-        isGenerating={isGenerating}
-        editingPlanCourseKey={editingPlanCourseKey}
-        planEditStatus={planEditStatus}
-        canUndoPlanEdit={Boolean(planEditUndo)}
-        onEditCourses={returnToCourseSelection}
-        onReviewTimeline={() => returnToInputStep(1)}
-        onBackToCompare={() => navigateBackTo(PLANNER_VIEWS.COMPARE)}
-        onChoosePlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
-        onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
-        onRegenerate={() => mapMajors()}
-        onDownloadPdf={downloadSelectedPlanPdf}
-        downloadButtonRef={downloadButtonRef}
-        isDownloadingPdf={isDownloadingPdf}
-        pdfStatus={pdfStatus}
-        onEditPlanCourse={editPlanCourse}
-        onUndoPlanEdit={undoPlanEdit}
-      />
+      <>
+        <PlanComparisonScreen
+          report={report}
+          planResult={inputBlock?.economicsPlanResult}
+          fallbackPlanningContext={planningContext}
+          courses={formData.courses}
+          displayName={formData.displayName}
+          view={plannerView}
+          selectedPlanId={selectedPlanId}
+          isExiting={isComparisonExiting}
+          isGenerating={isGenerating}
+          editingPlanCourseKey={editingPlanCourseKey}
+          planEditStatus={planEditStatus}
+          canUndoPlanEdit={Boolean(planEditUndo)}
+          onEditCourses={returnToCourseSelection}
+          onReviewTimeline={() => returnToInputStep(1)}
+          onClearAll={() => setClearDialogOpen(true)}
+          onBackToCompare={() => navigateBackTo(PLANNER_VIEWS.COMPARE)}
+          onChoosePlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
+          onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
+          onRegenerate={() => mapMajors()}
+          onDownloadPdf={downloadSelectedPlanPdf}
+          downloadButtonRef={downloadButtonRef}
+          isDownloadingPdf={isDownloadingPdf}
+          pdfStatus={pdfStatus}
+          onEditPlanCourse={editPlanCourse}
+          onUndoPlanEdit={undoPlanEdit}
+        />
+        <ClearAllDialog open={clearDialogOpen} onCancel={() => setClearDialogOpen(false)} onConfirm={clearAllPlanner} />
+      </>
     );
   }
 
   return (
+    <>
     <main className="container cp7-container">
       <style jsx global>{`
         :root {
           --cp7-ink: #18202b;
           --cp7-muted: #5b6470;
-          --cp7-border: #d5dae1;
-          --cp7-border-strong: #7b8794;
+          --cp7-border: #ddd8e4;
+          --cp7-border-strong: #8a8096;
           --cp7-surface: #ffffff;
-          --cp7-soft: #f6f7f9;
-          --cp7-selected: #edf1f5;
-          --cp7-accent: #26384f;
+          --cp7-soft: #f7f5f9;
+          --cp7-selected: #f0edf7;
+          --cp7-accent: #4b2e83;
+          --cp7-accent-dark: #2f1c57;
+          --cp7-aqua: #2a8f9e;
+          --cp7-gold: #b77912;
           --cp7-warning: #fff8e8;
           --cp7-warning-border: #c18b2d;
           --cp7-danger: #8a2c25;
@@ -3046,7 +3297,7 @@ export default function Page() {
         main.cp7-container select:focus-visible,
         main.cp7-container summary:focus-visible,
         main.cp7-container [tabindex]:focus-visible {
-          outline: 3px solid #2463c5;
+          outline: 3px solid var(--cp7-aqua);
           outline-offset: 3px;
         }
         .cp7-header {
@@ -3057,7 +3308,7 @@ export default function Page() {
           padding: 1rem 0;
           border-bottom: 1px solid var(--cp7-border);
         }
-        .cp7-brand { margin: 0; color: var(--cp7-ink); font-size: 21px; letter-spacing: -.02em; }
+        .cp7-brand { margin: 0; color: var(--cp7-accent); font-size: 21px; letter-spacing: -.02em; }
         .cp7-progress ol { display: flex; gap: .4rem; margin: 0; padding: 0; list-style: none; }
         .cp7-progress li {
           display: flex;
@@ -3078,6 +3329,15 @@ export default function Page() {
         .cp7-progress li.is-current { color: var(--cp7-ink); font-weight: 700; }
         .cp7-progress li.is-current::before,
         .cp7-progress li.is-complete::before { border-color: var(--cp7-accent); background: var(--cp7-accent); }
+        .cp7-progress button {
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          color: inherit;
+          font: inherit;
+          cursor: pointer;
+        }
         .cp7-page-heading { padding: 2rem 0 1.25rem; }
         .cp7-page-heading h1 {
           margin: 0;
@@ -3124,16 +3384,18 @@ export default function Page() {
         }
         main.cp7-container .standing-option.is-selected,
         main.cp7-container .early-toggle.is-selected {
-          border: 2px solid var(--cp7-accent);
+          border-color: transparent;
           background: var(--cp7-selected);
           font-weight: 700;
         }
-        .standing-feedback { margin: .75rem 0 0; padding: .7rem .8rem; border-left: 3px solid #74879c; background: var(--cp7-soft); color: #344151; }
+        .standing-feedback { margin: .75rem 0 0; padding: .7rem .8rem; border-left: 3px solid var(--cp7-aqua); background: var(--cp7-soft); color: #344151; }
         .early-option, .custom-timeline-disclosure { margin-top: 1.25rem; padding-top: 1.1rem; border-top: 1px solid var(--cp7-border); }
         main.cp7-container .early-toggle { display: inline-flex; align-items: center; gap: .55rem; text-align: left; }
         .early-option p, .custom-timeline-copy { margin: .4rem 0 0; color: var(--cp7-muted); font-size: 14px; line-height: 1.45; }
         main.cp7-container .custom-timeline-trigger,
-        main.cp7-container .standard-timeline-trigger { border-color: transparent; padding-left: 0; color: #244f85; font-weight: 700; }
+        main.cp7-container .standard-timeline-trigger { border-color: transparent; padding-left: 0; color: var(--cp7-accent); font-weight: 700; }
+        .catalog-planning-note { margin-top: 1.1rem; padding: .8rem .9rem; border-left: 3px solid var(--cp7-gold); background: #fffaf0; color: #473c2d; line-height: 1.45; }
+        .catalog-planning-note p { margin: .3rem 0 0; font-size: 13px; }
         .custom-timeline-panel {
           display: grid;
           gap: 1rem;
@@ -3163,10 +3425,16 @@ export default function Page() {
         .custom-target { margin: 0; color: #344151; }
         .custom-errors { margin: 0; padding-left: 1.2rem; color: var(--cp7-danger); }
         .more-details { margin-top: 1.25rem; border-top: 1px solid var(--cp7-border); padding-top: 1rem; }
-        .more-details > summary { color: #244f85; cursor: pointer; font-weight: 700; }
+        .more-details > summary { color: var(--cp7-accent); cursor: pointer; font-weight: 700; }
         .advanced-fields { margin-top: 1rem; }
         .advanced-fields .wide-field { grid-column: 1 / -1; }
         .non-major-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-top: .75rem; }
+        .non-major-fields label, .study-abroad-fields label { display: grid; gap: .3rem; font-size: 13px; font-weight: 700; }
+        .non-major-fields select, .study-abroad-fields select { min-height: 40px; padding: .45rem .55rem; border: 1px solid var(--cp7-border-strong); border-radius: 6px; background: #fff; }
+        .study-abroad-fields { display: grid; gap: .65rem; margin: .9rem 0; padding: .8rem; border: 1px solid #cae0e4; border-radius: 8px; background: #f2fafb; }
+        .study-abroad-fields p { margin: 0; color: #285b63; }
+        main.cp7-container .study-abroad-toggle { display: inline-flex; width: fit-content; min-height: 42px; align-items: center; gap: .4rem; padding: .55rem .7rem; border: 1px solid #8ab7bf; border-radius: 7px; background: #fff; color: #24434a; font-weight: 700; cursor: pointer; }
+        main.cp7-container .study-abroad-toggle.is-selected { border-color: transparent; background: #e2f2f4; }
         .step-two-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
         main.cp7-container .secondary-action { flex: 0 0 auto; color: #244f85; }
         .course-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; align-items: end; margin: 1rem 0 1.25rem; }
@@ -3210,7 +3478,18 @@ export default function Page() {
         main.cp7-container .course-name { display: grid; gap: .18rem; min-width: 0; }
         main.cp7-container .course-name strong { color: var(--cp7-ink); font-size: 15px; }
         main.cp7-container .course-name span { color: var(--cp7-muted); font-size: 13px; line-height: 1.3; }
-        main.cp7-container .course-toggles { display: grid; grid-template-columns: repeat(3, minmax(105px, 1fr)); gap: .35rem; justify-content: stretch; }
+        main.cp7-container .course-toggles {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(105px, 1fr));
+          gap: .35rem;
+          justify-content: stretch;
+          outline: 0;
+          box-shadow: none;
+        }
+        main.cp7-container .course-toggles.has-three { grid-template-columns: repeat(3, minmax(105px, 1fr)); }
+        main.cp7-container .course-toggles:focus,
+        main.cp7-container .course-toggles:focus-visible,
+        main.cp7-container .course-toggles:focus-within { outline: 0; box-shadow: none; }
         main.cp7-container button.course-toggle,
         main.cp7-container .completion-source-options button {
           display: inline-flex;
@@ -3233,9 +3512,16 @@ export default function Page() {
         }
         main.cp7-container button.course-toggle.is-selected,
         main.cp7-container .completion-source-options button.is-selected {
-          border: 2px solid var(--cp7-accent);
+          border-color: transparent;
           background: var(--cp7-selected);
           color: var(--cp7-ink);
+        }
+        main.cp7-container button.course-toggle:focus-visible {
+          position: relative;
+          z-index: 1;
+          outline: 3px solid var(--cp7-aqua);
+          outline-offset: 2px;
+          box-shadow: none;
         }
         .selection-check { display: inline-block; width: 1em; color: var(--cp7-accent); font-weight: 800; }
         .course-status-note { color: var(--cp7-muted); font-size: 13px; }
@@ -3251,9 +3537,9 @@ export default function Page() {
         .inline-prerequisite.has-conflict { border-color: #b76458; background: #fff6f3; }
         .inline-prerequisite > p { margin: 0 0 .65rem; }
         .prerequisite-question + .prerequisite-question { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--cp7-border); }
-        .prerequisite-question-heading { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; color: var(--cp7-muted); font-size: 13px; }
-        .prerequisite-question-heading strong { color: var(--cp7-ink); }
-        .prerequisite-option { display: grid; grid-template-columns: minmax(165px, 1fr) minmax(370px, auto); gap: 1rem; align-items: center; padding: .45rem 0; }
+        .prerequisite-question-heading { display: grid; grid-template-columns: minmax(165px, 1fr) minmax(370px, 2fr); gap: 1rem; margin-bottom: .25rem; color: var(--cp7-muted); font-size: 13px; }
+        .prerequisite-question-heading strong { grid-column: 2; color: var(--cp7-ink); text-align: center; }
+        .prerequisite-option { display: grid; grid-template-columns: minmax(165px, 1fr) minmax(370px, 2fr); gap: 1rem; align-items: center; padding: .45rem 0; }
         .prerequisite-name { display: grid; gap: .1rem; }
         .prerequisite-name small { color: var(--cp7-muted); }
         .prerequisite-conflict { margin-top: .55rem; padding: .65rem .75rem; border-left: 3px solid var(--cp7-danger); background: #fff; color: #64251f; }
@@ -3278,20 +3564,21 @@ export default function Page() {
         .summary-attention ul { display: grid; gap: .3rem; margin: .45rem 0 0; padding: 0; list-style: none; }
         .summary-attention button { padding: 0; border: 0; background: transparent; color: #704c08; text-align: left; text-decoration: underline; cursor: pointer; }
         .summary-status { margin: .8rem 0 0; color: #6c2c25; font-size: 13px; line-height: 1.4; }
+        main.cp7-container .clear-all-button { width: 100%; min-height: 43px; margin: .85rem 0 0; padding: .6rem .8rem; border: 1px solid var(--cp7-accent); border-radius: 7px; background: #fff; color: var(--cp7-accent); font-weight: 700; cursor: pointer; }
         main.cp7-container .primary-action {
           width: 100%;
           min-height: 45px;
           margin: 1rem 0 0;
           padding: .7rem 1rem;
-          border: 1px solid #172a40;
+          border: 1px solid var(--cp7-accent-dark);
           border-radius: 7px;
-          background: var(--cp7-accent);
+          background: var(--cp7-accent-dark);
           color: #fff;
           font-size: 15px;
           font-weight: 700;
           cursor: pointer;
         }
-        main.cp7-container .primary-action:hover { background: #172a40; }
+        main.cp7-container .primary-action:hover { background: #21123f; }
         main.cp7-container .primary-action:disabled { cursor: wait; opacity: .68; }
         @media (min-width: 861px) {
           main.cp7-container .cp7-intake-layout {
@@ -3327,7 +3614,10 @@ export default function Page() {
           main.cp7-container .clear-courses { justify-self: start; }
           main.cp7-container .course-row-main,
           .prerequisite-option { grid-template-columns: 1fr; gap: .55rem; }
-          main.cp7-container .course-toggles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+          .prerequisite-question-heading { grid-template-columns: 1fr; }
+          .prerequisite-question-heading strong { grid-column: 1; }
+          main.cp7-container .course-toggles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          main.cp7-container .course-toggles.has-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
           main.cp7-container button.course-toggle { min-height: 44px; }
           .course-requirement-heading,
           .prerequisite-question-heading { display: grid; gap: .25rem; }
@@ -3342,9 +3632,13 @@ export default function Page() {
         <p className="cp7-brand"><strong>EconPlanner</strong></p>
         <nav className="cp7-progress" aria-label="Planner progress">
           <ol>
-            <li className={intakeStep === 1 ? "is-current" : "is-complete"} aria-current={intakeStep === 1 ? "step" : undefined}>About you</li>
-            <li className={intakeStep === 2 ? "is-current" : ""} aria-current={intakeStep === 2 ? "step" : undefined}>Your courses</li>
-            <li>Your plans</li>
+            <li className={intakeStep === 1 ? "is-current" : "is-complete"} aria-current={intakeStep === 1 ? "step" : undefined}>
+              <button type="button" onClick={() => setIntakeStep(1)}>About you</button>
+            </li>
+            <li className={intakeStep === 2 ? "is-current" : ""} aria-current={intakeStep === 2 ? "step" : undefined}>
+              <button type="button" onClick={continueToCourses}>Your courses</button>
+            </li>
+            <li><span aria-disabled="true">Your plans</span></li>
           </ol>
         </nav>
       </header>
@@ -3352,8 +3646,8 @@ export default function Page() {
       <div className="cp7-page-heading">
         <h1>{intakeStep === 1 ? "Where are you in your degree?" : "Which courses have you finished or are taking now?"}</h1>
         <p>{intakeStep === 1
-          ? "Your class standing helps us estimate your normal graduation timeline."
-          : "Choose a status for the courses that apply to you. Select the same choice again to clear it."}</p>
+          ? "We’ll use your class standing to estimate your graduation timeline."
+          : "Choose Completed or Taking now only when it applies. Leave both off for courses you have not taken or are not sure about. Click a selected status again to clear it."}</p>
       </div>
 
       <form onSubmit={mapMajors}>
@@ -3362,7 +3656,7 @@ export default function Page() {
             {intakeStep === 1 ? (
               <section className="cp7-task-card" aria-labelledby="about-you-heading">
                 <h2 id="about-you-heading">Tell us about your timeline</h2>
-                <p className="cp7-task-intro">Start with your current class standing. You can adjust the timeline if your expected graduation is different.</p>
+                <p className="cp7-task-intro">Choose your current class standing. You can adjust the graduation year if your expected timeline is different.</p>
                 <fieldset>
                   <legend className="cp7-question-label">{standingQuestion}</legend>
                   <div className="standing-options" role="group" aria-label="Class standing">
@@ -3387,9 +3681,9 @@ export default function Page() {
                   </div>
                   <p className="custom-timeline-copy">{standingHelp}</p>
                 </fieldset>
-                {formData.academicStanding && !formData.isTransferStudent && (
+                {formData.academicStanding && !formData.isTransferStudent && !formData.customGraduationEnabled && (
                   <p className="standing-feedback">
-                    Based on {planningContext.standingLabel.toLowerCase()} standing, your standard plan ends in <strong>{planningContext.expectedGraduationTerm}</strong>.
+                    Based on {planningContext.standingLabel.toLowerCase()} standing, we’ll plan through <strong>{planningContext.expectedGraduationTerm}</strong>.
                   </p>
                 )}
                 {formData.academicStanding && !formData.isTransferStudent && planningContext.oneYearEarlyEligible && (
@@ -3407,36 +3701,47 @@ export default function Page() {
                       }}
                     >
                       <span className="selection-check" aria-hidden="true">{planningContext.earlyComparisonRequested ? "✓" : ""}</span>
-                      Include a one-year-early plan
+                      {formData.academicStanding === "junior"
+                        ? "I’d like to graduate next year"
+                        : "I’d like to graduate one year early"}
                     </button>
-                    <p>Available for freshmen and sophomores.</p>
+                    <p>Standard target: {planningContext.expectedGraduationTerm}. Accelerated target: {buildEarlyGraduationContext(planningContext)?.expectedGraduationTerm}.</p>
                   </div>
                 )}
                 <div className="custom-timeline-disclosure">
                   <button
                     type="button"
                     className="custom-timeline-trigger"
-                    aria-expanded={formData.isTransferStudent}
+                    aria-expanded={formData.customGraduationEnabled}
                     aria-controls="custom-timeline-panel"
                     onClick={() => {
-                      setFormData(current => ({ ...current, isTransferStudent: !current.isTransferStudent, planningPace: PLANNING_PACES.STANDARD }));
+                      const turningOn = !formData.customGraduationEnabled;
+                      const earlyWasSelected = formData.planningPace === PLANNING_PACES.EARLY;
+                      setFormData(current => ({
+                        ...current,
+                        customGraduationEnabled: !current.customGraduationEnabled,
+                        planningPace: PLANNING_PACES.STANDARD
+                      }));
                       clearInputFeedback();
+                      if (turningOn && earlyWasSelected) {
+                        setStatus("The accelerated comparison was turned off because a custom graduation year uses its own timeline.");
+                      }
                     }}
                   >
-                    My graduation timeline is different
+                    My expected graduation year is different
                   </button>
-                  {!formData.isTransferStudent && <p className="custom-timeline-copy">Use this only when the standard target shown above does not fit your situation.</p>}
-                  {formData.isTransferStudent && (
+                  {!formData.customGraduationEnabled && <p className="custom-timeline-copy">Use this only when the standard target shown above does not fit your situation.</p>}
+                  {formData.customGraduationEnabled && (
                     <div className="custom-timeline-panel" id="custom-timeline-panel">
-                      <p className="custom-timeline-copy">Tell us the two details required to build a custom-length plan. This does not claim transfer credit or change academic requirements.</p>
+                      <p className="custom-timeline-copy">This changes only the planning horizon. It does not claim transfer credit or change academic requirements.</p>
                       <div className="custom-fields">
                         <label htmlFor="custom-graduation-year">
                           <span>When do you expect to graduate?</span>
                           <select
                             id="custom-graduation-year"
-                            value={formData.transferExpectedGraduationYear}
+                            value={formData.customExpectedGraduationYear}
                             onChange={event => {
-                              setFormData(current => ({ ...current, transferExpectedGraduationYear: event.target.value }));
+                              setFormData(current => ({ ...current, customExpectedGraduationYear: event.target.value }));
                               clearInputFeedback();
                             }}
                           >
@@ -3446,32 +3751,18 @@ export default function Page() {
                             ))}
                           </select>
                         </label>
-                        <label htmlFor="custom-entry-year">
-                          <span>When did you first enroll at Hanover?</span>
-                          <select
-                            id="custom-entry-year"
-                            value={formData.transferEntryAcademicYear}
-                            onChange={event => {
-                              setFormData(current => ({ ...current, transferEntryAcademicYear: event.target.value }));
-                              clearInputFeedback();
-                            }}
-                          >
-                            <option value="">Choose an academic year</option>
-                            {transferOptions.entryAcademicYears.map(year => <option value={year} key={year}>{formatAcademicYear(year)}</option>)}
-                          </select>
-                        </label>
                       </div>
-                      <p className="custom-target"><strong>Custom target:</strong> {planningContext.transferValidation.valid ? planningContext.expectedGraduationTerm : "Choose both details above."}</p>
-                      {!planningContext.transferValidation.valid && (
+                      <p className="custom-target"><strong>Custom target:</strong> {planningContext.customGraduationValidation.valid ? planningContext.expectedGraduationTerm : "Choose a graduation year above."}</p>
+                      {!planningContext.customGraduationValidation.valid && (
                         <ul className="custom-errors">
-                          {planningContext.transferValidation.errors.map(error => <li key={error}>{error}</li>)}
+                          {planningContext.customGraduationValidation.errors.map(error => <li key={error}>{error}</li>)}
                         </ul>
                       )}
                       <button
                         type="button"
                         className="standard-timeline-trigger"
                         onClick={() => {
-                          setFormData(current => ({ ...current, isTransferStudent: false, planningPace: PLANNING_PACES.STANDARD }));
+                          setFormData(current => ({ ...current, customGraduationEnabled: false, planningPace: PLANNING_PACES.STANDARD }));
                           clearInputFeedback();
                         }}
                       >
@@ -3479,6 +3770,10 @@ export default function Page() {
                       </button>
                     </div>
                   )}
+                </div>
+                <div className="catalog-planning-note">
+                  <strong>Planning requirements: 2025–2026 Economics catalog and confirmed department policies.</strong>
+                  <p>Your official degree audit may differ. If an older declaration catalog applies, your advisor can confirm whether routine SAC paperwork is needed.</p>
                 </div>
                 <details className="more-details">
                   <summary>More details</summary>
@@ -3491,42 +3786,63 @@ export default function Page() {
                       <span>Plan creation date</span>
                       <input id="plan-creation-date" type="date" value={formData.planCreationDate} onChange={event => setFormData(current => updatePlanCreationDate(current, event.target.value))} />
                     </label>
-                    <label className="wide-field" htmlFor="major-declaration-catalog-year">
-                      <span>When did you declare the Economics major? (optional)</span>
-                      <select id="major-declaration-catalog-year" value={formData.majorDeclarationCatalogYear} onChange={event => setFormData(current => ({ ...current, majorDeclarationCatalogYear: event.target.value }))}>
-                        <option value="">Not provided</option>
-                        <option value="2023-2024">2023–2024</option>
-                        <option value="2024-2025">2024–2025</option>
-                        <option value="2025-2026">2025–2026</option>
-                        <option value="I_DO_NOT_KNOW">I do not know</option>
-                      </select>
-                      <span className="standing-help">
-                        Economics planning always uses the department’s owner-designated 2025–2026 flexible requirements. This optional year is kept for degree-audit comparison and any routine SAC petition notice.
-                      </span>
-                    </label>
                   </div>
                   {planningSlots.length > 0 && (
                     <details className="more-details">
-                      <summary>Planned non-major courses (optional)</summary>
-                      <p className="custom-timeline-copy">These use space in a term even though EconPlanner does not place them.</p>
+                      <summary>Adjust your schedule (optional)</summary>
+                      <p className="custom-timeline-copy">Tell EconPlanner about a future study-abroad term or space you want to leave for other courses.</p>
+                      {juniorStudyAbroadSlots.length > 0 && (
+                        <div className="study-abroad-fields">
+                          <button
+                            type="button"
+                            className={`study-abroad-toggle${formData.studyAbroadTerm ? " is-selected" : ""}`}
+                            aria-pressed={Boolean(formData.studyAbroadTerm)}
+                            onClick={() => changeStudyAbroadTerm(formData.studyAbroadTerm ? "" : juniorStudyAbroadSlots[0].id)}
+                          >
+                            <span className="selection-check" aria-hidden="true">{formData.studyAbroadTerm ? "✓" : ""}</span>
+                            I plan to study abroad during my junior year
+                          </button>
+                          {formData.studyAbroadTerm && (
+                            <label htmlFor="study-abroad-term">
+                              <span>Study-abroad term</span>
+                              <select id="study-abroad-term" value={formData.studyAbroadTerm} onChange={event => changeStudyAbroadTerm(event.target.value)}>
+                                {juniorStudyAbroadSlots.map(slot => <option value={slot.id} key={slot.id}>{slot.label}</option>)}
+                              </select>
+                            </label>
+                          )}
+                          {formData.studyAbroadTerm && <p>No Economics courses will be scheduled in {planningSlotsLabel(formData.studyAbroadTerm, planningContext)}.</p>}
+                        </div>
+                      )}
+                      <h3>Leave room for other courses</h3>
+                      <p className="custom-timeline-copy">Choose 0, 1, or 2 course units, within the normal capacity for each term.</p>
                       <div className="non-major-fields">
                         {planningSlots.filter(slot => !slot.isSummer).map(slot => (
                           <label key={slot.id}>
                             <span>{slot.label}</span>
-                            <input
-                              type="number"
-                              min="0"
-                              max={slot.termKey === "Spring" ? "1" : "4"}
-                              step="1"
-                              value={formData.reservedCourseUnits?.[slot.id] ?? ""}
-                              onChange={event => setFormData(current => ({
-                                ...current,
-                                reservedCourseUnits: {
-                                  ...(current.reservedCourseUnits || {}),
-                                  [slot.id]: event.target.value === "" ? 0 : Number(event.target.value)
-                                }
-                              }))}
-                            />
+                            <select
+                              value={formData.studyAbroadTerm === slot.id
+                                ? termReservationLimit(slot)
+                                : Number(formData.reservedCourseUnits?.[slot.id] || 0)}
+                              disabled={formData.studyAbroadTerm === slot.id}
+                              aria-label={`Course units reserved in ${slot.label}`}
+                              onChange={event => {
+                                setFormData(current => ({
+                                  ...current,
+                                  reservedCourseUnits: {
+                                    ...(current.reservedCourseUnits || {}),
+                                    [slot.id]: Number(event.target.value)
+                                  }
+                                }));
+                                clearInputFeedback();
+                              }}
+                            >
+                              {Array.from({ length: Math.min(2, termReservationLimit(slot)) + 1 }, (_, value) => (
+                                <option value={value} key={value}>{value}</option>
+                              ))}
+                              {formData.studyAbroadTerm === slot.id && termReservationLimit(slot) > 2 && (
+                                <option value={termReservationLimit(slot)}>{termReservationLimit(slot)}</option>
+                              )}
+                            </select>
                           </label>
                         ))}
                       </div>
@@ -3539,7 +3855,7 @@ export default function Page() {
                 <div className="step-two-heading">
                   <div>
                     <h2 id="your-courses-heading">Your course history</h2>
-                    <p className="cp7-task-intro">Only choose courses that apply to you. Completed credit from another source stays review-required until approved.</p>
+                    <p className="cp7-task-intro">Only choose courses that apply to you.</p>
                   </div>
                   <button type="button" className="secondary-action" onClick={() => setIntakeStep(1)}>Back to about you</button>
                 </div>
@@ -3607,11 +3923,14 @@ export default function Page() {
             generateButtonRef={generateButtonRef}
             onContinue={continueToCourses}
             onFocusAttention={focusAttention}
+            onClearAll={() => setClearDialogOpen(true)}
           />
         </div>
       </form>
 
 
     </main>
+    <ClearAllDialog open={clearDialogOpen} onCancel={() => setClearDialogOpen(false)} onConfirm={clearAllPlanner} />
+    </>
   );
 }

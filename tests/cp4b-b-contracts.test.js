@@ -38,7 +38,7 @@ test("compiled planning-flexibility.4 is the runtime strategy source of truth", 
   assert.equal(explore.rankingPreferences.firstYearTargetFormula, "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS");
   assert.equal(explore.rankingPreferences.exactTargetIsFeasibilityRule, false);
   const oneYearEarly = contract.strategies.find(strategy => strategy.id === "one-year-early");
-  assert.deepEqual(oneYearEarly.eligibility.effectiveStandings, ["freshman", "sophomore"]);
+  assert.deepEqual(oneYearEarly.eligibility.effectiveStandings, ["freshman", "sophomore", "junior"]);
 });
 
 function requestFor(student) {
@@ -236,10 +236,9 @@ test("API evaluates a known older catalog and rejects a submitted unsupported ye
 
 test("minimal accessible intake is present and the browser contains no selection logic", async () => {
   const source = await readFile(path.join(ROOT, "app/page.js"), "utf8");
-  assert.match(source, /htmlFor="major-declaration-catalog-year"/);
-  assert.match(source, /id="major-declaration-catalog-year"/);
-  assert.match(source, /value="I_DO_NOT_KNOW">I do not know/);
-  assert.match(source, /owner-designated 2025–2026 flexible requirements/);
+  assert.doesNotMatch(source, /htmlFor="major-declaration-catalog-year"/);
+  assert.doesNotMatch(source, /id="major-declaration-catalog-year"/);
+  assert.match(source, /Planning requirements: 2025–2026 Economics catalog and confirmed department policies/);
   assert.doesNotMatch(source, /projectedSeniorStandingConfirmation/);
   assert.doesNotMatch(source, /resolveCatalogApplicability/);
 });

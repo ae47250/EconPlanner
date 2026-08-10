@@ -1,6 +1,6 @@
 # Dependency impact: econ-2025-2026.1
 
-Bundle digest: `sha256:fc151e1f824c7a29d166f0420623159a4700c4d660a9c70eb479c63cb16dab01`
+Bundle digest: `sha256:a6eadb40059442f0e5800456c31896d7ca0460fe65984b59639378429f466457`
 
 Compatibility data is generated from canonical Knowledge Hub inputs. Current catalog loading, planning, validation, editing, reports, and PDFs continue to use their existing runtime paths.
 

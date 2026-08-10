@@ -26,13 +26,29 @@
       "locator": "Current CP7 Codex task, project-owner request dated 2026-08-09",
       "confirmedOn": "2026-08-09",
       "reviewer": "Project owner and Economics Department domain expert",
-      "statement": "One Year Early is offered only to students whose effective standing is freshman or sophomore. Junior and senior requests are safely normalized to the standard graduation timeline. This is a nonacademic product and strategy-eligibility decision and does not change plan feasibility or academic policy.",
+      "statement": "One Year Early is offered to students whose effective standing is freshman, sophomore, or junior. Junior students see the same one-year-early strategy as Graduate next year. Senior requests are safely normalized to the standard graduation timeline. This is a nonacademic product and strategy-eligibility decision and does not change plan feasibility or academic policy.",
       "anchors": ["ONE-YEAR-EARLY-ELIGIBILITY"],
       "effective": {
         "from": "2026-08-09",
         "through": null
       },
-      "supersedes": "The earlier One Year Early strategy contract without an explicit standing-eligibility boundary"
+      "supersedes": "The earlier One Year Early strategy contract limited to freshman and sophomore contexts"
+    },
+    {
+      "sourceId": "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project-owner product decision",
+      "authorityBoundary": "ECONOMICS_CATALOG_DEFAULT_SELECTION_ONLY",
+      "locator": "Current CP7 Codex task, project-owner request dated 2026-08-09",
+      "confirmedOn": "2026-08-09",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "statement": "Ordinary Economics planning uses the latest officially published requirement set that has been independently verified and explicitly activated by the project owner. Discovery alone never activates a new catalog. The current verified and activated default remains 2025-2026.",
+      "anchors": ["CATALOG-DEFAULT"],
+      "effective": {
+        "from": "2026-08-09",
+        "through": null
+      },
+      "supersedes": "The owner-designation wording for the same current 2025-2026 default"
     }
   ]
 }

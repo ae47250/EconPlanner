@@ -94,7 +94,8 @@ export function plannerResultFixture({
   actions = [],
   evidence = null,
   planningGaps = [],
-  candidateOutcomes = []
+  candidateOutcomes = [],
+  acceleratedResult = null
 } = {}) {
   return {
     programs: [{
@@ -110,7 +111,8 @@ export function plannerResultFixture({
       economicsPlanningGaps: planningGaps,
       economicsCandidateOutcomes: candidateOutcomes,
       economicsPlanConvergences: [],
-      economicsPlanResult: { category, questions, actions, evidence }
+      economicsPlanResult: { category, questions, actions, evidence },
+      economicsAcceleratedResult: acceleratedResult
     }]
   };
 }

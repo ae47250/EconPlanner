@@ -415,7 +415,7 @@
       "retrievedOn": "2026-07-29",
       "approvalStatus": "APPROVED_LOCAL_SOURCE",
       "path": "data/normalized/economics/courses.json",
-      "sha256": "d50dd80eba46d7becd48781242029311e58e50e4a85ef748033c2387d820916d"
+      "sha256": "e5ce476c3b9a8748dbf7cbc3a1ad9a54041b29fc6a2fc5efc4d9189ae7abcbb1"
     },
     {
       "role": "academic_calendar",

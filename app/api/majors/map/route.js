@@ -12,6 +12,7 @@ import {
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
 import { resolvePlanningContext } from "../../../../lib/planning/horizon.js";
+import { buildAcceleratedPlanningResult } from "../../../../lib/planning/acceleratedResult.js";
 import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
 import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
 import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../../lib/catalog/input-resolution.js";
@@ -165,6 +166,14 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
           metricsDiagnostics: economicsPlanBundle.metricsDiagnostics
         })
       : null;
+    const economicsAcceleratedResult = economicsPlanBundle
+      ? buildAcceleratedPlanningResult({
+          planningContext: economicsPlanBundle.context,
+          earlyGraduationContext: economicsPlanBundle.earlyGraduationContext,
+          candidateOutcomes: economicsPlanBundle.candidateOutcomes,
+          metricsDiagnostics: economicsPlanBundle.metricsDiagnostics
+        })
+      : null;
 
     return {
       ...mapping,
@@ -185,6 +194,7 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
       economicsCandidateOutcomes: economicsPlanBundle?.candidateOutcomes || [],
       economicsPlanConvergences: economicsPlanBundle?.convergences || [],
       economicsPlanResult,
+      economicsAcceleratedResult,
       earlyGraduationContext: economicsPlanBundle?.earlyGraduationContext || null,
       catalogApplicability,
       catalogReview: variant.programId === "economics" ? catalogReview : null
@@ -311,6 +321,16 @@ export async function POST(request) {
       return jsonResponse({
         error: planningContext.transferValidation.errors[0],
         code: "INVALID_TRANSFER_PLANNING_INPUT",
+        planningContext,
+        inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
+      }, 422);
+    }
+    if (planningContext.customGraduationEnabled && !planningContext.customGraduationValidation.valid) {
+      const inputResolution = resolveInputResolution({student, planningContext, issueCode: "INVALID_CUSTOM_GRADUATION_INPUT"});
+      return jsonResponse({
+        error: planningContext.customGraduationValidation.errors[0],
+        code: "INVALID_CUSTOM_GRADUATION_INPUT",
         planningContext,
         inputResolution,
         economicsPlanResult: buildEconomicsPlanResult({ inputResolution })

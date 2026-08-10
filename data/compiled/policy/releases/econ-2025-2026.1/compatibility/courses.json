@@ -13,7 +13,7 @@
         "any": []
       },
       "studentSelectable": true,
-      "title": "Business finance option",
+      "title": "Investments",
       "units": 1
     },
     {
@@ -378,7 +378,7 @@
         "any": []
       },
       "studentSelectable": true,
-      "title": "Money & Financial Markets",
+      "title": "Money and Financial Markets",
       "titleAliases": [
         "Money and Financial Markets"
       ],
@@ -584,7 +584,7 @@
         "any": []
       },
       "studentSelectable": true,
-      "title": "Mathematics cognate",
+      "title": "Essential Pre-Calculus",
       "units": 1
     },
     {

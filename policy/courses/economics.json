@@ -4,7 +4,7 @@
   "catalogYear": "2025-2026",
   "sourceRefs": ["OFFICIAL-CATALOG-ECONOMICS#course-descriptions", "ECONOMICS-REQUIREMENTS#ECO-Course-Title-Reference"],
   "courses": [
-    {"code": "BUSN 323", "title": "Business finance option", "units": 1},
+    {"code": "BUSN 323", "title": "Investments", "units": 1},
     {"code": "ECO 113", "title": "Principles of Microeconomics", "units": 1},
     {"code": "ECO 114", "title": "Principles of Macroeconomics", "units": 1},
     {"code": "ECO 160", "title": "Special Topics", "units": 1},
@@ -21,7 +21,7 @@
     {"code": "ECO 307", "title": "Directed Study", "units": 0.5},
     {"code": "ECO 315", "title": "U.S. Economic History", "units": 1},
     {"code": "ECO 316", "title": "History of Economic Thought", "units": 1},
-    {"code": "ECO 321", "title": "Money & Financial Markets", "units": 1},
+    {"code": "ECO 321", "title": "Money and Financial Markets", "units": 1},
     {"code": "ECO 331", "title": "Labor Economics", "units": 1},
     {"code": "ECO 333", "title": "International Trade & Finance", "units": 1},
     {"code": "ECO 335", "title": "Managerial Economics", "units": 1},
@@ -31,7 +31,7 @@
     {"code": "ECO 370", "title": "Directed Study", "units": 1},
     {"code": "ECO 461", "title": "Senior Seminar: Econometrics", "units": 1},
     {"code": "ECO 471", "title": "Senior Thesis", "units": 1},
-    {"code": "MAT 113", "title": "Mathematics cognate", "units": 1},
+    {"code": "MAT 113", "title": "Essential Pre-Calculus", "units": 1},
     {"code": "MAT 121", "title": "Calculus I", "units": 1},
     {"code": "MAT 217", "title": "Applied Statistics", "units": 1},
     {"code": "PSY 217", "title": "Statistical Analysis", "units": 1}
