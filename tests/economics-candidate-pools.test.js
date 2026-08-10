@@ -92,6 +92,46 @@ function buildBundle(profileId, { schedule = productionSchedule, nodeLimit, coll
   return { student, mapping, bundle };
 }
 
+function currentFreshmanStudent(overrides = {}) {
+  return {
+    academicStanding: "freshman",
+    planCreationDate: "2026-08-10",
+    planningPace: "standard",
+    courses: [],
+    reservedCourseUnits: {},
+    scheduleSetByTerm: {},
+    studyAbroadTerm: "",
+    ...overrides
+  };
+}
+
+function buildCurrentFreshmanBundle(overrides = {}) {
+  const student = currentFreshmanStudent(overrides);
+  const mapping = mappingFor(student);
+  const bundle = economicsModule.buildEconomicsTermPlans({
+    student,
+    mapping,
+    schedule: productionSchedule,
+    prerequisites: productionPrerequisites,
+    collectDiagnostics: true
+  });
+  return { student, mapping, bundle };
+}
+
+function firstYearTermLoads(plan) {
+  return ["Fall", "Winter", "Spring"].map(termKey => (
+    plan.terms.find(term => term.yearIndex === 0 && term.termKey === termKey)?.courses.length || 0
+  ));
+}
+
+function assertIntroCoursesAreSeparated(plan) {
+  const introTerms = plan.terms
+    .filter(term => term.courses.some(course => ["ECO 113", "ECO 114"].includes(course.course)))
+    .map(term => term.slotId);
+  assert.equal(introTerms.length, 2);
+  assert.notEqual(introTerms[0], introTerms[1]);
+}
+
 test("opt-in nightly diagnostics do not change production planner output", () => {
   const withoutDiagnostics = buildBundle("safe-reserve-two-remaining").bundle;
   const withDiagnostics = buildBundle("safe-reserve-two-remaining", { collectDiagnostics: true }).bundle;
@@ -155,6 +195,152 @@ test("nightly diagnostics retain the standard and selected early strategy attemp
   assert.deepEqual(strategies, new Set(["balanced", "explore-first", "one-year-early"]));
   assert.ok(standardBundle.metricsDiagnostics.strategyAttempts.every(attempt => attempt.strategyId !== "one-year-early"));
   assert.ok(earlyBundle.metricsDiagnostics.strategyAttempts.some(attempt => attempt.strategyId === "one-year-early"));
+});
+
+test("the current freshman Explore plan selects the top separated first-year tier within the ordinary solution budget", () => {
+  const result = buildCurrentFreshmanBundle();
+  const balanced = result.bundle.plans.find(plan => plan.id === "balanced");
+  const explore = result.bundle.plans.find(plan => plan.id === "explore-first");
+  const outcome = result.bundle.candidateOutcomes.find(item => item.id === "explore-first");
+
+  assert.ok(balanced);
+  assert.ok(explore);
+  assert.deepEqual(firstYearTermLoads(explore), [1, 1, 0]);
+  assert.ok(firstYearTermLoads(explore).every(load => load <= 1));
+  assertIntroCoursesAreSeparated(explore);
+  assert.equal(explore.validation.distribution.exactPreferredPacingFound, true);
+  assert.ok(firstYearTermLoads(explore).reduce((sum, load) => sum + load, 0)
+    < firstYearTermLoads(balanced).reduce((sum, load) => sum + load, 0));
+  assert.equal(economicsModule.materialPlanDistance(balanced, explore).materiallyDifferent, true);
+  assert.equal(validateCandidate(result, explore).valid, true);
+  assertPassesIndependentOracle(result.student, explore);
+  assert.equal(explore.candidateRank, 1);
+  assert.equal(outcome.selectedCandidateRank, 1);
+  assert.equal(outcome.candidatePool.perInvocationSolutionLimit, 100);
+  assert.equal(outcome.candidatePool.eligibleFinalValidSchedules > 0, true);
+  assert.equal(outcome.suppressionReason, null);
+});
+
+test("Explore counts fixed Fall Taking now occupancy toward the top separated first-year tier", () => {
+  const result = buildCurrentFreshmanBundle({
+    planCreationDate: "2026-08-24",
+    courses: [{ code: "ECO 113", status: "in_progress" }]
+  });
+  const explore = result.bundle.plans.find(plan => plan.id === "explore-first");
+  const outcome = result.bundle.candidateOutcomes.find(item => item.id === "explore-first");
+  const shape = explore?.distribution.preferredTermShapeTiersByYear[0];
+  const fall = explore?.terms.find(term => term.slotId === "fall-2026");
+  const winter = explore?.terms.find(term => term.slotId === "winter-2027");
+
+  assert.ok(explore);
+  assert.deepEqual(firstYearTermLoads(explore), [1, 1, 0]);
+  assert.deepEqual(shape.selected, [1, 1, 0]);
+  assert.equal(shape.selectedPreferenceTier, 1);
+  assert.equal(shape.lowerTierUsed, false);
+  assert.equal(shape.higherTiersUnavailableByCapacity, false);
+  assert.equal(explore.distribution.fixedTrackedOccupancy.byTerm["fall-2026"], 1);
+  assert.equal(fall.courses.length, 1);
+  assert.equal(fall.courses[0].course, "ECO 113");
+  assert.equal(fall.courses[0].fixedInProgress, true);
+  assert.equal(winter.courses.length, 1);
+  assert.notEqual(winter.courses[0].fixedInProgress, true);
+  assert.equal(explore.validation.distribution.termShapeDistance, 0);
+  assert.equal(explore.validation.distribution.exactPreferredPacingFound, true);
+  assert.equal(validateCandidate(result, explore).valid, true);
+  assertPassesIndependentOracle(result.student, explore);
+  assert.equal(explore.candidateRank, 1);
+  assert.equal(outcome.selectedCandidateRank, 1);
+  assert.equal(outcome.candidatePool.perInvocationSolutionLimit, 100);
+  assert.equal(outcome.candidatePool.complete, false);
+  assert.equal(outcome.candidatePool.terminationReason, "SOLUTION_BUDGET");
+  assert.equal(outcome.candidatePool.eligibleFinalValidSchedules > 0, true);
+  assert.equal(outcome.suppressionReason, null);
+});
+
+test("Explore retains the fixed-occupancy same-term rescue only when later first-year terms have no capacity", () => {
+  const result = buildCurrentFreshmanBundle({
+    planCreationDate: "2026-08-24",
+    courses: [{ code: "ECO 113", status: "in_progress" }],
+    reservedCourseUnits: {
+      "winter-2027": 4,
+      "spring-2027": 1
+    }
+  });
+  const explore = result.bundle.plans.find(plan => plan.id === "explore-first");
+  const outcome = result.bundle.candidateOutcomes.find(item => item.id === "explore-first");
+  const shape = explore?.distribution.preferredTermShapeTiersByYear[0];
+  const fall = explore?.terms.find(term => term.slotId === "fall-2026");
+
+  assert.ok(explore);
+  assert.deepEqual(firstYearTermLoads(explore), [2, 0, 0]);
+  assert.deepEqual(shape.selected, [2, 0, 0]);
+  assert.equal(shape.selectedPreferenceTier, 3);
+  assert.equal(shape.lowerTierUsed, true);
+  assert.equal(shape.higherTiersUnavailableByCapacity, true);
+  assert.deepEqual(shape.minimums, [1, 0, 0]);
+  assert.deepEqual(shape.maximums, [4, 0, 0]);
+  assert.equal(fall.courses.filter(course => course.course === "ECO 113" && course.fixedInProgress).length, 1);
+  assert.equal(fall.courses.filter(course => !course.fixedInProgress).length, 1);
+  assert.equal(explore.validation.distribution.termShapeDistance, 0);
+  assert.equal(explore.validation.distribution.exactPreferredPacingFound, true);
+  assert.equal(validateCandidate(result, explore).valid, true);
+  assertPassesIndependentOracle(result.student, explore);
+  assert.equal(outcome.selectedCandidateRank, 1);
+  assert.equal(outcome.candidatePool.complete, false);
+  assert.equal(outcome.candidatePool.terminationReason, "SOLUTION_BUDGET");
+  assert.notEqual(outcome.status, "NOT_FEASIBLE");
+  assert.notEqual(outcome.status, "SEARCH_INCOMPLETE");
+  assert.equal(outcome.suppressionReason, null);
+});
+
+test("Explore keeps fixed Fall occupancy but adds nothing to Fall when the current schedule is already set", () => {
+  const result = buildCurrentFreshmanBundle({
+    planCreationDate: "2026-08-24",
+    courses: [{ code: "ECO 113", status: "in_progress" }],
+    scheduleSetByTerm: { "fall-2026": true }
+  });
+  const explore = result.bundle.plans.find(plan => plan.id === "explore-first");
+  const fall = explore?.terms.find(term => term.slotId === "fall-2026");
+  const winter = explore?.terms.find(term => term.slotId === "winter-2027");
+
+  assert.ok(explore);
+  assert.deepEqual(firstYearTermLoads(explore), [1, 1, 0]);
+  assert.equal(fall.courses.length, 1);
+  assert.equal(fall.courses[0].course, "ECO 113");
+  assert.equal(fall.courses[0].fixedInProgress, true);
+  assert.equal(winter.courses.length, 1);
+  assert.notEqual(winter.courses[0].fixedInProgress, true);
+  assert.equal(explore.validation.distribution.termShapeDistance, 0);
+  assert.equal(explore.validation.distribution.exactPreferredPacingFound, true);
+  assert.equal(validateCandidate(result, explore).valid, true);
+  assertPassesIndependentOracle(result.student, explore);
+});
+
+test("Explore uses the same-term rescue tier only when first-year capacity rules out every separated tier", () => {
+  const result = buildCurrentFreshmanBundle({
+    reservedCourseUnits: {
+      "winter-2027": 4,
+      "spring-2027": 1
+    }
+  });
+  const explore = result.bundle.plans.find(plan => plan.id === "explore-first");
+  const outcome = result.bundle.candidateOutcomes.find(item => item.id === "explore-first");
+  const shape = explore?.distribution.preferredTermShapeTiersByYear[0];
+
+  assert.ok(explore);
+  assert.deepEqual(firstYearTermLoads(explore), [2, 0, 0]);
+  assert.equal(shape.selectedPreferenceTier, 3);
+  assert.equal(shape.lowerTierUsed, true);
+  assert.equal(shape.higherTiersUnavailableByCapacity, true);
+  assert.deepEqual(shape.preferredTiers, [[[2, 0, 0]]]);
+  assert.equal(explore.validation.distribution.exactPreferredPacingFound, true);
+  assert.equal(validateCandidate(result, explore).valid, true);
+  assertPassesIndependentOracle(result.student, explore);
+  assert.equal(outcome.selectedCandidateRank, 1);
+  assert.equal(outcome.candidatePool.eligibleFinalValidSchedules > 0, true);
+  assert.notEqual(outcome.status, "NOT_FEASIBLE");
+  assert.notEqual(outcome.status, "SEARCH_INCOMPLETE");
+  assert.equal(outcome.suppressionReason, null);
 });
 
 function staleCondition(plan, course, term) {
@@ -245,7 +431,13 @@ function auditPlan(student, plan, verifiedSchedule = oracleSchedule) {
       id: plan.id,
       terms: plan.terms.map(term => ({
         ...term,
-        courses: term.courses.map(course => oracleCourse(plan, term, course))
+        reservedOutsideCourseUnits: Number(term.reservedCourseUnits || 0)
+          + term.courses.filter(course => course.fixedInProgress).reduce((sum, course) => (
+            sum + Number(course.units || 1)
+          ), 0),
+        courses: term.courses
+          .filter(course => !course.fixedInProgress)
+          .map(course => oracleCourse(plan, term, course))
       })),
       requirementClaims: []
     },

@@ -34,6 +34,44 @@ test("major mapper returns every captured program and Economics schedule", async
   assert.ok(economics.annualSchedule.terms.May.some(course => course.section === "S"));
 });
 
+test("major mapper returns the separated top-tier Explore plan for the current freshman profile", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      student: {
+        academicStanding: "freshman",
+        planCreationDate: "2026-08-10",
+        planningPace: "standard",
+        courses: [],
+        reservedCourseUnits: {},
+        scheduleSetByTerm: {},
+        studyAbroadTerm: ""
+      }
+    })
+  }));
+  const data = await response.json();
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
+  const explore = economics.economicsPlans.find(plan => plan.id === "explore-first");
+  const firstYearLoads = ["Fall", "Winter", "Spring"].map(termKey => (
+    explore.terms.find(term => term.yearIndex === 0 && term.termKey === termKey)?.courses.length || 0
+  ));
+  const introTerms = explore.terms
+    .filter(term => term.courses.some(course => ["ECO 113", "ECO 114"].includes(course.course)))
+    .map(term => term.slotId);
+
+  assert.equal(response.status, 200);
+  assert.equal(economics.economicsPlanResult.category, "PLANS_READY");
+  assert.deepEqual(firstYearLoads, [1, 1, 0]);
+  assert.equal(introTerms.length, 2);
+  assert.notEqual(introTerms[0], introTerms[1]);
+  assert.equal(explore.validation.distribution.exactPreferredPacingFound, true);
+  assert.equal(
+    economics.economicsCandidateOutcomes.find(outcome => outcome.id === "explore-first").selectedCandidateRank,
+    1
+  );
+});
+
 test("major mapper treats summer standing as the upcoming Fall without clarification", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
