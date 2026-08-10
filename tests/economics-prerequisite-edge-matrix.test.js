@@ -5,6 +5,11 @@ import {
   evaluatePlanPrerequisites,
   evaluateStudentPrerequisites
 } from "../lib/planning/prerequisiteEvaluator.js";
+import {
+  evaluatePlan as evaluateProductionPlan,
+  evaluatePrerequisites as evaluateProductionPrerequisites,
+  normalizeStudentFacts
+} from "../lib/decision-engine/index.js";
 import { loadEconomicsPolicyCompatibility } from "../lib/policy/compat-normalized.js";
 import { checkExternalEconomicsPrerequisites } from "./oracle/check-prerequisites.js";
 
@@ -660,6 +665,33 @@ function productionResult(input) {
     requireRecordedApprovals: true,
     policyBundle: productionPolicy.bundle
   });
+  const firstTerm = input.plan.terms?.[0] || null;
+  const startYear = Number(firstTerm?.academicYear?.split("/")[0]) || 2027;
+  const decisionPlan = {
+    ...input.plan,
+    unscheduled: input.plan.unscheduled || [],
+    terms: (input.plan.terms || []).map((term, termIndex) => ({
+      ...term,
+      yearIndex: term.yearIndex ?? termIndex,
+      courses: (term.courses || []).map(course => ({
+        ...course,
+        requirementId: course.requirementId || "eco-elective-1",
+        source: course.source || "projected-offering"
+      }))
+    }))
+  };
+  const decisionEngine = evaluateProductionPlan(
+    decisionPlan,
+    normalizeStudentFacts({ planCreationDate: "2026-08-05", courses: input.student.courses }),
+    {
+      planningContext: {
+        startYear,
+        expectedGraduationYear: startYear + 1,
+        effectiveStanding: "junior"
+      }
+    },
+    productionPolicy.bundle
+  );
   return {
     valid: studentResult.valid && planResult.valid,
     status: studentResult.status === "REVIEW_REQUIRED" || planResult.status === "REVIEW_REQUIRED"
@@ -668,12 +700,31 @@ function productionResult(input) {
         ? "BLOCK"
         : "ALLOW",
     studentResult,
-    planResult
+    planResult,
+    decisionEngine
   };
 }
 
 function substantiveReviews(result) {
   return result.reviewItems.filter(item => item.code !== "RULE_FAMILY_NOT_CHECKED");
+}
+
+function assertCanonicalProductionReview(finding, expectedRule, caseId) {
+  const policyRecord = productionPolicy.bundle.unresolved.find(record => (
+    record.ruleId === expectedRule
+  ));
+  assert.ok(policyRecord, `${caseId}: missing compiled review policy record`);
+  assert.deepEqual(finding.ruleIds, [expectedRule], caseId);
+  assert.deepEqual(finding.sourceRefs, policyRecord.sourceRefs, caseId);
+  assert.equal(finding.policyDisposition?.disposition, "REVIEW_ONLY", caseId);
+  assert.equal(finding.policyDisposition?.enforcement, "NON_ENFORCING", caseId);
+  assert.equal(finding.policyDisposition?.status, "REVIEW_REQUIRED", caseId);
+  assert.equal(finding.policyDisposition?.requiredDisposition, policyRecord.requiredDisposition, caseId);
+  assert.deepEqual(
+    finding.provenance?.map(source => source.sourceId),
+    policyRecord.sourceRefs.map(sourceRef => sourceRef.split("#")[0]),
+    caseId
+  );
 }
 
 function evaluateMatrixCase(matrixCase) {
@@ -832,7 +883,39 @@ test("review-only evidence never becomes an invented prerequisite conclusion", (
     assertOracleOutcome(evaluation);
     assert.equal(evaluation.oracle.valid, false, evaluation.matrixCase.caseId);
     assert.equal(evaluation.oracle.violations.length, 0, evaluation.matrixCase.caseId);
+    assert.equal(evaluation.production.status, "REVIEW_REQUIRED", evaluation.matrixCase.caseId);
+    assert.equal(evaluation.production.decisionEngine.status, "REVIEW_REQUIRED", evaluation.matrixCase.caseId);
+    assert.equal(
+      evaluation.production.decisionEngine.reviewFindings.length,
+      1,
+      `${evaluation.matrixCase.caseId}: expected exactly one total Production review finding`
+    );
+    assertCanonicalProductionReview(
+      evaluation.production.decisionEngine.reviewFindings[0],
+      evaluation.matrixCase.expectedReviewRule,
+      evaluation.matrixCase.caseId
+    );
   }
+});
+
+test("historical prerequisite closure takes precedence over a prerequisite claim", () => {
+  const advanced = fixture.reviewOnlyCases.find(item => item.kind === "advanced-course-closure");
+  const equivalency = fixture.reviewOnlyCases.find(item => item.kind === "equivalency");
+  const decision = evaluateProductionPrerequisites({
+    course: advanced.course,
+    prerequisiteClaims: [{
+      kind: equivalency.kind,
+      prerequisite: equivalency.prerequisite,
+      authority: "not independently confirmed"
+    }]
+  }, {}, normalizeStudentFacts({ courses: [] }), productionPolicy.bundle, {
+    traceId: "mixed-historical-claim",
+    availableCourses: new Set(),
+    sameTermCourses: new Set(),
+    historical: true
+  });
+  assert.equal(decision.status, "REVIEW_REQUIRED");
+  assertCanonicalProductionReview(decision, advanced.expectedReviewRule, "mixed-historical-claim");
 });
 
 test(

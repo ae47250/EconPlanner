@@ -198,7 +198,7 @@ test("the observability registry exactly maps all 53 confirmed, 3 review, and 4 
   });
   const coverage = ruleCoverageSummary(observabilityPolicy);
   assert.equal(coverage.rows.length, 60);
-  assert.ok(coverage.missingProductionOrOracle.length > 0);
+  assert.deepEqual(coverage.missingProductionOrOracle, []);
   const sources = sourceEvidenceSummary(oraclePolicy);
   assert.equal(sources.effectiveDateComplete, true);
   assert.equal(sources.reviewerSignoffPresent, true);
@@ -208,6 +208,37 @@ test("the observability registry exactly maps all 53 confirmed, 3 review, and 4 
       await access(new URL(`../${reference}`, import.meta.url));
     }
   }
+});
+
+test("nightly coverage has no missing Production or Oracle rule and no critical coverage-gap gate", () => {
+  const coverage = ruleCoverageSummary(observabilityPolicy);
+  assert.deepEqual(coverage.missingProductionOrOracle, []);
+  const gates = evaluateGates({
+    generated: mergeGeneratedShards([
+      shard(1, [profile("coverage-1", "coverage-h1")]),
+      shard(2, [profile("coverage-2", "coverage-h2")])
+    ]),
+    prerequisite: { metrics: {}, normal: {}, optional: {} },
+    browser: { metrics: {} },
+    pdf: { hosted: { configuration: "CONFIGURED", status: "PASSED" }, local: { status: "PASSED" } },
+    phases: [],
+    comparison: {
+      approvedBaseline: { metrics: {} },
+      previousSuccessful: { availability: "AVAILABLE", compatible: true, changedCases: [] }
+    },
+    coverage,
+    mutations: { survivedCritical: 0 },
+    artifactCompleteness: { missingMandatoryKinds: [], missingMandatoryPhases: [] },
+    sourceEvidence: {
+      effectiveDateComplete: true,
+      reviewerSignoffPresent: true,
+      missingSourceRules: [],
+      unknownSourceRules: [],
+      missingConfirmationRules: []
+    },
+    observabilityPolicy
+  });
+  assert.equal(gates.red.some(item => item.code === "CRITICAL_RULE_COVERAGE_GAP"), false);
 });
 
 test("canonical planner input hashing is stable across key order and exposes duplicates", () => {

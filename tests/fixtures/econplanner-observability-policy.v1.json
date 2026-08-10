@@ -112,11 +112,10 @@
       "group": "review-states",
       "ruleIds": ["REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE", "REVIEW-ECO-335-MATH-EQUIVALENT", "REVIEW-WAIVER-SUBSTITUTION-EQUIVALENCY-SCOPE"],
       "criticalFamilies": ["REQUIRED_WARNINGS_APPROVALS_AND_REVIEW_STATES"],
-      "implementationRefs": ["tests/oracle/economics-policy.v1.json", "tests/oracle/check-prerequisites.js"],
+      "implementationRefs": ["lib/decision-engine/prerequisites.js", "lib/planning/prerequisiteEvaluator.js", "tests/oracle/economics-policy.v1.json", "tests/oracle/check-prerequisites.js"],
       "positiveTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
       "negativeTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
-      "knownGapCodes": ["PRODUCTION_ACCEPTS_UNREVIEWED_EVIDENCE", "PRODUCTION_HAS_NO_REVIEW_STATE"],
-      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "MISSING", "production_validator": "MISSING", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "NOT_APPLICABLE", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
     },
     {
       "group": "oracle-structure",
