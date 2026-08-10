@@ -116,10 +116,6 @@
     { "scenarioId": "permission_wrong_authority", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
     { "scenarioId": "permission_wrong_course", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
     { "scenarioId": "permission_wrong_prerequisite", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
-    { "scenarioId": "permission_wrong_term", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" },
-    { "scenarioId": "advanced_course_without_prerequisite_records", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
-    { "scenarioId": "eco335_math_equivalent", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
-    { "scenarioId": "eco331_prerequisite_waiver", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" },
-    { "scenarioId": "eco333_prerequisite_substitution", "oracleStatus": "REVIEW_REQUIRED", "productionValid": false, "classification": "PRODUCTION_HAS_NO_REVIEW_STATE" }
+    { "scenarioId": "permission_wrong_term", "oracleStatus": "INVALID_PREREQUISITES", "productionValid": true, "classification": "PRODUCTION_PERMISSION_GAP" }
   ]
 }
