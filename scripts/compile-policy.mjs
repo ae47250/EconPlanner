@@ -12,6 +12,7 @@ const SCHEMA_PATHS = [
   "policy/schema/policy-record.v1.schema.json",
   "policy/schema/policy-manifest.v1.schema.json",
   "policy/schema/schedule-release.v1.schema.json",
+  "policy/schema/preliminary-schedules.v1.schema.json",
   "policy/schema/offering-pattern.v1.schema.json",
   "policy/schema/historical-offering.v1.schema.json",
   "policy/schema/approval-instance.v1.schema.json",
@@ -120,6 +121,34 @@ function offeringIndex(schedule) {
   }]));
 }
 
+export function preliminaryOfferingIndex(preliminary, exactSchedule, provenance) {
+  const sources = new Map(provenance.sources.map(source => [source.sourceId, source]));
+  const index = {};
+  const releaseIds = new Set();
+  for (const release of preliminary.releases) {
+    if (releaseIds.has(release.releaseId)) fail(`duplicate preliminary release ${release.releaseId}`);
+    releaseIds.add(release.releaseId);
+    for (const ref of release.sourceRefs) {
+      const source = sources.get(ref.split("#")[0]);
+      if (!source?.path || !source.sha256) fail(`preliminary release ${release.releaseId} needs archived, hashed schedule evidence for ${ref}`);
+    }
+    for (const term of release.terms) {
+      const match = term.termId.match(/^(\d{4})-(FALL|WINTER|MAY|SUMMER)$/);
+      const expectedYear = match[2] === "FALL" ? release.academicYear.slice(0, 4) : release.academicYear.slice(5);
+      if (match[1] !== expectedYear) fail(`preliminary term ${term.termId} is outside ${release.academicYear}`);
+      if (exactSchedule.terms.some(exact => exact.termId === term.termId)) fail(`preliminary term ${term.termId} overlaps the active exact schedule`);
+      if (index[term.termId]) fail(`duplicate preliminary term ${term.termId}`);
+      index[term.termId] = {
+        releaseId: release.releaseId,
+        issuedOn: release.issuedOn,
+        sourceRefs: release.sourceRefs,
+        courses: [...term.courses].sort()
+      };
+    }
+  }
+  return index;
+}
+
 function validateCriticalConflicts({ rules, schedule, unresolved, offeringPatterns, historicalOfferings }) {
   const unresolvedIds = new Set(unresolved.questions.map(question => question.ruleId));
   for (const rule of rules) if (unresolvedIds.has(rule.ruleId)) fail(`${rule.ruleId} is both active and unresolved`);
@@ -196,7 +225,7 @@ function policyDiff(bundle) {
     `- The two-Economics-course target is a soft preference bounded by hard total-term capacity.\n` +
     `- MAY is the canonical internal term; "Spring/May" remains the display label.\n` +
     `- Completed advanced history is preserved and missing historical evidence produces review.\n` +
-    `- Unsupported future exact terms remain preliminary/TBC.\n` +
+    `- Dated preliminary schedules guide course-to-term estimates within their recorded scope; omissions do not block, and unsupported terms remain labeled projections.\n` +
     `- FULL remains REVIEW_REQUIRED in the bundle; the generated compatibility view preserves the existing runtime representation.\n` +
     `- Strategy fit remains ranking metadata and cannot invalidate an academically complete plan.\n\n` +
     `## Unresolved review records\n\n` +
@@ -239,6 +268,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   const messages = inputById["messages-en-US"];
   const unresolved = inputById.unresolved;
   const schedule = inputById["schedule-2026-2027"];
+  const preliminarySchedules = inputById["preliminary-schedules"];
   const courses = inputById.courses;
   const requirements = inputById.requirements;
   const offeringPatterns = inputById["offering-patterns"];
@@ -276,6 +306,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
       requirementsByRuleId: Object.fromEntries(requirements.records.map(rule => [rule.ruleId, rule.effect])),
       prerequisiteClosure: prerequisiteClosure(rules),
       offeringByTerm: offeringIndex(schedule),
+      preliminaryOfferingByTerm: preliminaryOfferingIndex(preliminarySchedules, schedule, provenance),
       offeringPatternsById: Object.fromEntries(offeringPatterns.patterns.map(pattern => [pattern.patternId, pattern])),
       historicalOfferingByCourse: Object.fromEntries(historicalOfferings.records
         .filter(record => record.activationStatus === "ACTIVE_OWNER_APPROVED" && record.ownerApproval?.approved === true)

@@ -118,6 +118,23 @@ test("Explore the Major label propagates into report JSON and HTML", () => {
   assert.match(html, /data-field="plan-strategy">Explore the Major</);
 });
 
+test("dated preliminary evidence stays visible in report JSON and HTML", () => {
+  const student = { academicStanding: "freshman", planCreationDate: "2026-07-30", courses: [] };
+  const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
+  const planBundle = buildEconomicsTermPlans({ student, mapping, schedule, prerequisites });
+  const economicsPlan = structuredClone(planBundle.plans[0]);
+  const future = economicsPlan.terms.find(term => term.academicYear !== schedule.academicYear && term.courses.some(course => course.source === "projected-offering"));
+  assert.ok(future);
+  future.courses.find(course => course.source === "projected-offering").preliminaryScheduleEvidence = {
+    releaseId: "FICTIONAL-TEST-RELEASE",
+    issuedOn: "2026-11-01",
+    sourceRefs: ["FICTIONAL-TEST-SCHEDULE#TERM"]
+  };
+  const report = buildEconomicsReport({ student, mapping, schedule, economicsPlan, planBundle, preparedDate: "2026-11-02" });
+  assert.ok(report.terms.some(term => term.courses.some(course => course.preliminaryScheduleEvidence?.issuedOn === "2026-11-01")));
+  assert.match(renderEconomicsHtml(report, template), /Preliminary schedule \(2026-11-01\); course and term subject to change/);
+});
+
 test("generic elective identity does not create a strategy difference, but risk changes do", () => {
   const base = {
     planningContext: { expectedGraduationTerm: "Spring/May 2028", planningPace: "standard" },

@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:a6eadb40059442f0e5800456c31896d7ca0460fe65984b59639378429f466457",
+  "contentHash": "sha256:06bc4584334d2e63c0a8f9ac1cdd02c2a7134e5ba012857897060c1ecc092172",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -2054,8 +2054,8 @@
         "confidence": "CONFIRMED",
         "confirmation": {
           "date": "2026-08-01",
-          "lastReviewDate": "2026-08-01",
-          "reviewer": "Economics Department representative and project owner"
+          "lastReviewDate": "2026-09-22",
+          "reviewer": "Economics Department chair and EconPlanner project owner"
         },
         "dependencies": [
           "SCHEDULE-EVIDENCE-PROVENANCE"
@@ -2063,7 +2063,10 @@
         "disposition": "ENFORCE",
         "effect": {
           "inventedExactTermPermitted": false,
-          "projectionGranularity": "ACADEMIC_YEAR_TBC",
+          "preliminaryOmissionBlocks": false,
+          "preliminaryScheduleEvidence": "SOFT_COURSE_TERM_GUIDE",
+          "preliminarySectionsOrSeatsPermitted": false,
+          "projectionGranularity": "LABELED_TERM_WORKLOAD_ESTIMATE",
           "releaseStatus": "PRELIMINARY",
           "unknownBecomesAllow": false
         },
@@ -2106,7 +2109,8 @@
         },
         "sourceRefs": [
           "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
-          "ECONOMICS-OFFERINGS#General-Offering-Pattern"
+          "ECONOMICS-OFFERINGS#General-Offering-Pattern",
+          "OWNER-PRELIMINARY-SCHEDULE-2026-09-22#PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE"
         ],
         "status": "ACTIVE",
         "supersedes": [],
@@ -2116,7 +2120,8 @@
             "unsupported-exact-future-term"
           ],
           "positive": [
-            "future-term-tbc"
+            "future-term-tbc",
+            "dated-preliminary-course-term"
           ],
           "reviewState": [
             "unknown-schedule"
@@ -6160,6 +6165,7 @@
         ]
       }
     },
+    "preliminaryOfferingByTerm": {},
     "prerequisiteClosure": {
       "ECO 213": [
         "ECO 113",
@@ -6530,6 +6536,21 @@
         "sourceType": "OWNER_CONFIRMATION",
         "statement": "For the existing ECO 461 concurrency exception, exactly one of ECO 213 or ECO 214 must be successfully completed before the target ECO 461 term. Eligible completed and accepted-transfer evidence, a current in-progress course finishing before the target term, and an earlier generated-term course may count. Same-term or later courses and uncertain or unaccepted history, equivalency, substitution, waiver, or prerequisite evidence do not count. Earlier in-progress or planned completion remains conditional on success. This clarifies the existing 2026-08-01 department-confirmed exception and creates no new exception or alternate planning mode.",
         "supersedes": "Ambiguous use of already completed in the 2026-08-01 ECO 461 concurrency wording"
+      },
+      {
+        "authority": "Economics Department planning policy",
+        "authorityBoundary": "PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE",
+        "confirmedOn": "2026-09-22",
+        "effective": {
+          "from": "2026-09-22",
+          "through": null
+        },
+        "locator": "Current Codex task, department chair and project-owner approval dated 2026-09-22",
+        "reviewer": "Economics Department chair and EconPlanner project owner",
+        "sourceId": "OWNER-PRELIMINARY-SCHEDULE-2026-09-22",
+        "sourceType": "OWNER_CONFIRMATION",
+        "statement": "A dated preliminary schedule may guide course-to-term planning only for its documented academic year, terms, and courses. Its omissions do not prove non-offering or block a plan. It supplies no verified section or seat information. Without such evidence, a labeled term-level workload projection is permitted but does not assert an actual offering. A verified exact schedule supersedes preliminary evidence within its covered scope; saved plans must be revalidated when it arrives.",
+        "supersedes": "Earlier academic-year-TBC-only wording for unpublished offering projections"
       },
       {
         "authority": "Verified department schedule source",
@@ -8491,8 +8512,8 @@
       "confidence": "CONFIRMED",
       "confirmation": {
         "date": "2026-08-01",
-        "lastReviewDate": "2026-08-01",
-        "reviewer": "Economics Department representative and project owner"
+        "lastReviewDate": "2026-09-22",
+        "reviewer": "Economics Department chair and EconPlanner project owner"
       },
       "dependencies": [
         "SCHEDULE-EVIDENCE-PROVENANCE"
@@ -8500,7 +8521,10 @@
       "disposition": "ENFORCE",
       "effect": {
         "inventedExactTermPermitted": false,
-        "projectionGranularity": "ACADEMIC_YEAR_TBC",
+        "preliminaryOmissionBlocks": false,
+        "preliminaryScheduleEvidence": "SOFT_COURSE_TERM_GUIDE",
+        "preliminarySectionsOrSeatsPermitted": false,
+        "projectionGranularity": "LABELED_TERM_WORKLOAD_ESTIMATE",
         "releaseStatus": "PRELIMINARY",
         "unknownBecomesAllow": false
       },
@@ -8543,7 +8567,8 @@
       },
       "sourceRefs": [
         "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
-        "ECONOMICS-OFFERINGS#General-Offering-Pattern"
+        "ECONOMICS-OFFERINGS#General-Offering-Pattern",
+        "OWNER-PRELIMINARY-SCHEDULE-2026-09-22#PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE"
       ],
       "status": "ACTIVE",
       "supersedes": [],
@@ -8553,7 +8578,8 @@
           "unsupported-exact-future-term"
         ],
         "positive": [
-          "future-term-tbc"
+          "future-term-tbc",
+          "dated-preliminary-course-term"
         ],
         "reviewState": [
           "unknown-schedule"

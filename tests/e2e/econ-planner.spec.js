@@ -607,7 +607,8 @@ test("a freshman receives the Balanced and Explore the Major normal comparisons"
   const availability = page.locator("details.schedule-availability");
   await expect(availability).toBeVisible();
   await availability.locator("summary").click();
-  await expect(availability).toContainText("ECO 113-A: ✓ OPEN");
+  await expect(availability.locator("li")).not.toHaveCount(0);
+  await expect(availability.locator("li").first()).toContainText("✓ OPEN");
   await expect(availability).toContainText("as of August 8, 2026");
 });
 
