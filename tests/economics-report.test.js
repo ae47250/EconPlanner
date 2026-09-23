@@ -91,19 +91,21 @@ test("a custom graduation target remains separate in the advisor report", async 
 });
 
 test("Economics report API returns canonical JSON or populated HTML", async () => {
+  const preparedDate = "2026-07-28";
   const jsonResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ ...fixture, format: "json" })
+    body: JSON.stringify({ ...fixture, preparedDate, format: "json" })
   }));
   const json = await jsonResponse.json();
   assert.equal(jsonResponse.status, 200);
   assert.equal(json.schemaVersion, "econmapper-economics-report-v1");
+  assert.equal(json.preparedDate, preparedDate);
 
   const htmlResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(fixture)
+    body: JSON.stringify({ ...fixture, preparedDate })
   }));
   const html = await htmlResponse.text();
   assert.equal(htmlResponse.status, 200);

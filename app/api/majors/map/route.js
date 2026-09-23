@@ -438,6 +438,13 @@ export async function POST(request) {
           validation: editedPlanResult.plan.validation
         }, 422);
       }
+      if (!editedPlanResult.planSetValidation.valid) {
+        return jsonResponse({
+          error: `That plan change cannot be saved. ${editedPlanResult.planSetValidation.errors[0] || "The resulting plans are not a valid comparison."}`,
+          code: "INVALID_PLAN_SET",
+          planSetValidation: editedPlanResult.planSetValidation
+        }, 422);
+      }
       return jsonResponse(editedPlanResult);
     }
     const catalogReview = {

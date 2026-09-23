@@ -3183,6 +3183,9 @@ export default function Page() {
         if (!data.plan?.validation?.valid) {
           throw new Error(data.plan?.validation?.errors?.[0] || "That plan change violates the Economics planning rules.");
         }
+        if (data.planSetValidation?.valid !== true) {
+          throw new Error(data.planSetValidation?.errors?.[0] || "That plan change would make the comparison invalid.");
+        }
 
         setPlanEditUndo({
           planId: sourcePlan.id,
