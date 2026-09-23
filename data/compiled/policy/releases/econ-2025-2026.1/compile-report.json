@@ -38,13 +38,13 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:a6eadb40059442f0e5800456c31896d7ca0460fe65984b59639378429f466457",
+  "contentHash": "sha256:06bc4584334d2e63c0a8f9ac1cdd02c2a7134e5ba012857897060c1ecc092172",
   "counts": {
     "activeRules": 54,
     "courses": 31,
     "historicalOfferingRecords": 0,
     "scheduleSections": 30,
-    "sources": 14,
+    "sources": 15,
     "unresolvedReviewRecords": 5
   },
   "determinism": {
@@ -61,6 +61,7 @@
     "policy/rules/permissions-exceptions.json",
     "policy/rules/terms-load-graduation.json",
     "policy/schedules/2026-2027.json",
+    "policy/schedules/preliminary.json",
     "policy/offering-patterns/economics.json",
     "policy/historical-offerings/economics.json",
     "policy/messages/en-US.json",

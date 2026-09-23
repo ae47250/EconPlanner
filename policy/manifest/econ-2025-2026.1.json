@@ -23,6 +23,7 @@
     {"id": "permissions-exceptions", "path": "policy/rules/permissions-exceptions.json", "schema": "policy/schema/policy-record.v1.schema.json"},
     {"id": "terms-load-graduation", "path": "policy/rules/terms-load-graduation.json", "schema": "policy/schema/policy-record.v1.schema.json"},
     {"id": "schedule-2026-2027", "path": "policy/schedules/2026-2027.json", "schema": "policy/schema/schedule-release.v1.schema.json"},
+    {"id": "preliminary-schedules", "path": "policy/schedules/preliminary.json", "schema": "policy/schema/preliminary-schedules.v1.schema.json"},
     {"id": "offering-patterns", "path": "policy/offering-patterns/economics.json", "schema": "policy/schema/offering-pattern.v1.schema.json"},
     {"id": "historical-offerings", "path": "policy/historical-offerings/economics.json", "schema": "policy/schema/historical-offering.v1.schema.json"},
     {"id": "messages-en-US", "path": "policy/messages/en-US.json", "schema": "policy/schema/message-catalog.v1.schema.json"},

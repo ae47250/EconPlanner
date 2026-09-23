@@ -152,6 +152,18 @@
       "supersedes": "Ambiguous older prose suggesting ECO 257 might receive elective treatment"
     },
     {
+      "sourceId": "OWNER-PRELIMINARY-SCHEDULE-2026-09-22",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Economics Department planning policy",
+      "authorityBoundary": "PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE",
+      "locator": "Current Codex task, department chair and project-owner approval dated 2026-09-22",
+      "confirmedOn": "2026-09-22",
+      "reviewer": "Economics Department chair and EconPlanner project owner",
+      "statement": "A dated preliminary schedule may guide course-to-term planning only for its documented academic year, terms, and courses. Its omissions do not prove non-offering or block a plan. It supplies no verified section or seat information. Without such evidence, a labeled term-level workload projection is permitted but does not assert an actual offering. A verified exact schedule supersedes preliminary evidence within its covered scope; saved plans must be revalidated when it arrives.",
+      "effective": {"from": "2026-09-22", "through": null},
+      "supersedes": "Earlier academic-year-TBC-only wording for unpublished offering projections"
+    },
+    {
       "sourceId": "OWNER-ECO461-CHRONOLOGY-2026-08-09",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "Economics Department domain policy",

@@ -71,6 +71,11 @@ test("an eligible early comparison request preserves the selected normal-horizon
   assert.match(html, /data-planning-pace="standard"/);
   assert.match(html, /data-accelerated-planning-result="POSSIBLE"/);
   assert.match(html, /Graduate one year early: Possible/);
+
+  const selectedReport = await buildEconomicsReportFromStudent(student, "2026-07-28", structuredClone(report.selectedPlan));
+  assert.equal(selectedReport.selectedPlan.id, "balanced");
+  assert.deepEqual(selectedReport.candidateOutcomes, []);
+  assert.equal(selectedReport.acceleratedPlanningResult, null);
 });
 
 test("a custom graduation target remains separate in the advisor report", async () => {
@@ -318,6 +323,8 @@ test("transfer reports use the selected graduation and Hanover entry years", asy
 test("selected report plan is revalidated and rendered exactly", async () => {
   const generated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28");
   const selectedPlan = structuredClone(generated.selectedPlan);
+  selectedPlan.search = { complete: false, solutionFound: false, terminationReason: "NODE_LIMIT" };
+  selectedPlan.feasibility.search = selectedPlan.search;
   const response = await reportPost(new Request("http://localhost/api/reports/economics", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -326,10 +333,23 @@ test("selected report plan is revalidated and rendered exactly", async () => {
   const report = await response.json();
   assert.equal(response.status, 200);
   assert.equal(report.selectedPlan.id, selectedPlan.id);
+  assert.equal(report.selectedPlan.search, null);
+  assert.equal(report.selectedPlan.feasibility.search, null);
+  assert.notEqual(report.selectedPlan.feasibilityStatus, "SEARCH_INCOMPLETE");
+  assert.deepEqual(report.candidateOutcomes, []);
+  assert.equal(report.acceleratedPlanningResult, null);
   assert.deepEqual(
     report.terms.flatMap(term => term.courses.map(course => course.code)),
     selectedPlan.terms.flatMap(term => term.courses.map(course => course.course))
   );
+
+  const htmlResponse = await reportPost(new Request("http://localhost/api/reports/economics", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student: fixture.student, preparedDate: "2026-07-28", selectedPlan, format: "html" })
+  }));
+  assert.equal(htmlResponse.status, 200);
+  assert.match(await htmlResponse.text(), /data-selected-plan-id="balanced"/);
 
   const tamperedMeetingPlan = structuredClone(selectedPlan);
   const verifiedCourse = tamperedMeetingPlan.terms

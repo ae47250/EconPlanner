@@ -1,6 +1,6 @@
 # Policy diff: econ-2025-2026.1
 
-Bundle digest: `sha256:a6eadb40059442f0e5800456c31896d7ca0460fe65984b59639378429f466457`
+Bundle digest: `sha256:06bc4584334d2e63c0a8f9ac1cdd02c2a7134e5ba012857897060c1ecc092172`
 
 Runtime activation: **not changed by CP2**. Compatibility files preserve the current runtime shapes.
 
@@ -11,7 +11,7 @@ Runtime activation: **not changed by CP2**. Compatibility files preserve the cur
 - The two-Economics-course target is a soft preference bounded by hard total-term capacity.
 - MAY is the canonical internal term; "Spring/May" remains the display label.
 - Completed advanced history is preserved and missing historical evidence produces review.
-- Unsupported future exact terms remain preliminary/TBC.
+- Dated preliminary schedules guide course-to-term estimates within their recorded scope; omissions do not block, and unsupported terms remain labeled projections.
 - FULL remains REVIEW_REQUIRED in the bundle; the generated compatibility view preserves the existing runtime representation.
 - Strategy fit remains ranking metadata and cannot invalidate an academically complete plan.
 

@@ -15,6 +15,7 @@ const schemaPaths = [
   "policy/schema/policy-record.v1.schema.json",
   "policy/schema/policy-manifest.v1.schema.json",
   "policy/schema/schedule-release.v1.schema.json",
+  "policy/schema/preliminary-schedules.v1.schema.json",
   "policy/schema/offering-pattern.v1.schema.json",
   "policy/schema/historical-offering.v1.schema.json",
   "policy/schema/approval-instance.v1.schema.json",
@@ -62,7 +63,7 @@ const messageKeys = new Set(Object.keys(messages.messages));
 
 test("CP1 uses the required direct Ajv 8.20.0 dependency and compiles every Draft 2020-12 schema", () => {
   assert.equal(ajvPackage.version, "8.20.0");
-  assert.equal(schemas.size, 7);
+  assert.equal(schemas.size, 8);
   for (const schema of schemas.values()) assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
 
   const approvalSchema = "policy/schema/approval-instance.v1.schema.json";

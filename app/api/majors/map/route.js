@@ -18,6 +18,7 @@ import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../..
 import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../../lib/catalog/input-resolution.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
 import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequisiteEvaluator.js";
+import { annotatePreliminaryScheduleEvidence } from "../../../../lib/policy/preliminary-schedule.js";
 
 export const runtime = "nodejs";
 
@@ -250,6 +251,7 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
         }
       : plan.distribution
   };
+  annotatePreliminaryScheduleEvidence(validatedPlan, catalog.policyBundle);
   validatedPlan.prerequisiteNotices = buildPrerequisiteStatusNotices({
     plan: validatedPlan,
     student,

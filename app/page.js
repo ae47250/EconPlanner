@@ -782,6 +782,7 @@ function PlanTimeline({
                                 <span>{course.title}</span>
                                 {course.fixedInProgress && <span>Taking now — fixed in this term</span>}
                                 <CourseAvailabilityStatus course={course} term={term} schedule={schedule} />
+                                {course.preliminaryScheduleEvidence && <span className="plan-course-availability">Preliminary schedule ({course.preliminaryScheduleEvidence.issuedOn}); course and term subject to change</span>}
                                 {course.approvalRequired?.length > 0 && <span className="plan-course-approval">Approval required</span>}
                               </div>
                               {onEditPlanCourse && !course.fixedInProgress && (

@@ -23,6 +23,7 @@ test("the CP2 compiler validates and emits a complete release within its perform
   assert.equal(compileReport.counts.unresolvedReviewRecords, 5);
   assert.equal(compileReport.counts.historicalOfferingRecords, 0);
   assert.deepEqual(bundle.indexes.historicalOfferingByCourse, {});
+  assert.deepEqual(bundle.indexes.preliminaryOfferingByTerm, {});
   assert.equal(bundle.provenance.historicalOfferingContract.activationStatus, "INACTIVE_NO_APPROVED_DATA");
   assert.equal(compileReport.compatibility.length, 5);
   assert.ok(compileReport.compatibility.every(entry => entry.status === "GENERATED"));
