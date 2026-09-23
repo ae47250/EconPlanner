@@ -48,7 +48,7 @@
       "group": "requirements",
       "ruleIds": ["REQ-MAJOR-COURSE-COUNT", "REQ-COGNATE-COURSE-COUNT", "REQ-ECO-113", "REQ-ECO-114", "REQ-ECO-213", "REQ-ECO-214", "REQ-STATISTICS", "REQ-FINANCE", "REQ-ECO-461", "REQ-COGNATE", "REQ-ECO-ELECTIVES"],
       "criticalFamilies": ["MAJOR_REQUIREMENTS_AND_ALLOCATION"],
-      "implementationRefs": ["lib/assignment/solve.js", "lib/planning/requirementAllocation.js", "lib/validateCoursePlan.js", "tests/oracle/check-requirements.js"],
+      "implementationRefs": ["lib/assignment/solve.js", "lib/planning/requirementAllocation.js", "lib/decision-engine/requirements.js", "tests/oracle/check-requirements.js"],
       "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "IMPLEMENTED", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
@@ -57,7 +57,7 @@
       "group": "prerequisites",
       "ruleIds": ["PREREQ-ECO-213", "PREREQ-ECO-214", "PREREQ-ECO-221", "PREREQ-ECO-222", "PREREQ-ECO-223", "PREREQ-ECO-257", "PREREQ-ECO-315", "PREREQ-ECO-316", "PREREQ-ECO-321", "PREREQ-ECO-331", "PREREQ-ECO-333", "PREREQ-ECO-335", "PREREQ-ECO-337", "PREREQ-ECO-357", "PREREQ-ECO-461", "PREREQ-ECO-471"],
       "criticalFamilies": ["PREREQUISITES_ORDER_AND_CONCURRENCY"],
-      "implementationRefs": ["lib/planning/prerequisiteEvaluator.js", "lib/planning/termSolver.js", "lib/validateCoursePlan.js", "tests/oracle/check-prerequisites.js"],
+      "implementationRefs": ["lib/planning/prerequisiteEvaluator.js", "lib/planning/termSolver.js", "lib/decision-engine/prerequisites.js", "tests/oracle/check-prerequisites.js"],
       "positiveTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
       "negativeTests": ["tests/economics-oracle-prerequisites.test.js", "tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
@@ -66,7 +66,7 @@
       "group": "concurrency-and-permissions",
       "ruleIds": ["CONCURRENT-MATH-ECO-213", "CONCURRENT-MATH-ECO-214", "CONCURRENT-INTERMEDIATE-ECO-461", "PERMISSION-ECO-357"],
       "criticalFamilies": ["PERMISSIONS_AND_APPROVAL_IDENTITY", "ECO357_DEPARTMENT_PERMISSION"],
-      "implementationRefs": ["lib/planning/prerequisiteEvaluator.js", "lib/validateCoursePlan.js", "tests/oracle/check-prerequisites.js"],
+      "implementationRefs": ["lib/planning/prerequisiteEvaluator.js", "lib/decision-engine/prerequisites.js", "tests/oracle/check-prerequisites.js"],
       "positiveTests": ["tests/economics-prerequisite-edge-matrix.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "knownGapCodes": ["PRODUCTION_PERMISSION_GAP"],
@@ -76,7 +76,7 @@
       "group": "electives",
       "ruleIds": ["ELECTIVE-MAX-ONE-100-LEVEL", "ELECTIVE-ECO-260-COUNTS", "ELECTIVE-ECO-257-STATISTICS-ONLY", "ELECTIVE-CROSSLIST-ECO-234-PHI-234", "ELECTIVE-NO-DOUBLE-COUNT"],
       "criticalFamilies": ["ECO257_STATISTICS_ONLY", "ELECTIVE_LIMITS_AND_CROSSLIST_COUNT_ONCE", "DOUBLE_COUNTING_INCLUDING_ECO321"],
-      "implementationRefs": ["lib/planning/requirementAllocation.js", "lib/planning/termSolver.js", "lib/validateCoursePlan.js", "tests/oracle/check-requirements.js"],
+      "implementationRefs": ["lib/planning/requirementAllocation.js", "lib/planning/termSolver.js", "lib/decision-engine/requirements.js", "tests/oracle/check-requirements.js"],
       "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "IMPLEMENTED", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
@@ -85,7 +85,7 @@
       "group": "capstone",
       "ruleIds": ["CAPSTONE-WINTER-ONLY", "CAPSTONE-SENIOR-STANDING", "CAPSTONE-EARLY-GRADUATE-STANDING", "CAPSTONE-HANOVER-RESIDENCY", "CAPSTONE-STATISTICS-BEFORE"],
       "criticalFamilies": ["ECO461_CAPSTONE_RULES"],
-      "implementationRefs": ["lib/planning/termSolver.js", "lib/planning/economics.js", "lib/validateCoursePlan.js", "tests/oracle/check-schedule-and-horizon.js"],
+      "implementationRefs": ["lib/planning/termSolver.js", "lib/planning/economics.js", "lib/decision-engine/prerequisites.js", "tests/oracle/check-schedule-and-horizon.js"],
       "positiveTests": ["tests/economics-planning-profile-matrix.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
@@ -94,7 +94,7 @@
       "group": "planning",
       "ruleIds": ["CAPACITY-FALL", "CAPACITY-WINTER", "CAPACITY-MAY", "PLANNING-CURRENT-TERM-EXCLUDED", "PLANNING-IN-PROGRESS-UNLOCKS-LATER", "PLANNING-ECO-LOAD-PREFERENCE", "PLANNING-INTERMEDIATE-OFFERING-SEPARATION", "PLANNING-MAY-COURSE-EXCLUSIONS", "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"],
       "criticalFamilies": ["TERM_ECONOMICS_AND_TOTAL_LOAD_CAPACITY", "GRADUATION_HORIZON_AND_COURSE_TIMING", "FUTURE_PLACEHOLDER_AND_PROJECTION_VALIDITY"],
-      "implementationRefs": ["lib/planning/horizon.js", "lib/planning/termSolver.js", "lib/planning/economics.js", "lib/validateCoursePlan.js", "tests/oracle/check-schedule-and-horizon.js"],
+      "implementationRefs": ["lib/planning/horizon.js", "lib/planning/termSolver.js", "lib/planning/economics.js", "lib/decision-engine/placement.js", "tests/oracle/check-schedule-and-horizon.js"],
       "positiveTests": ["tests/economics-planning.test.js", "tests/planning-horizon.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
@@ -103,7 +103,7 @@
       "group": "schedule-evidence",
       "ruleIds": ["SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS", "SCHEDULE-EVIDENCE-PROVENANCE", "SCHEDULE-AVAILABILITY-BEHAVIOR"],
       "criticalFamilies": ["OFFERING_SECTION_AVAILABILITY_AND_CONFLICTS", "SCHEDULE_EVIDENCE_INTEGRITY", "SOURCE_AUTHORITY_EFFECTIVE_DATE_AND_RULE_IDENTITY"],
-      "implementationRefs": ["lib/planning/scheduleProvider.js", "lib/planning/termSolver.js", "lib/validateCoursePlan.js", "tests/oracle/check-schedule-and-horizon.js"],
+      "implementationRefs": ["lib/planning/scheduleProvider.js", "lib/planning/termSolver.js", "lib/decision-engine/placement.js", "tests/oracle/check-schedule-and-horizon.js"],
       "positiveTests": ["tests/economics-schedule.test.js", "tests/economics-schedule-drift.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }

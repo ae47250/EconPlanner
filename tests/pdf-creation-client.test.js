@@ -73,10 +73,24 @@ test("PDF client succeeds on the first stored attempt and uses a new operation k
   });
 
   assert.equal(firstSubmitted.length, 1);
+  assert.equal(firstSubmitted[0].storeResult, true);
+  assert.equal(firstSubmitted[0].storeHtml, false);
+  assert.equal(firstSubmitted[0].retentionDays, 30);
   assert.equal(firstSubmitted[0].idempotencyKey, "econplanner:operation-one");
   assert.equal(secondSubmitted[0].idempotencyKey, "econplanner:operation-two");
   assert.notEqual(firstSubmitted[0].idempotencyKey, secondSubmitted[0].idempotencyKey);
   assert.equal(firstSubmitted[0].correlationId, "correlation-one");
+});
+
+test("PDF retention can change without enabling HTML storage", async () => {
+  const submitted = [];
+  await createPdfFromHtml({ html: "<!doctype html><p>fictional report</p>", retentionDays: 7, storeHtml: true }, {
+    environment,
+    fetchImpl: successfulStoredFetch({ submitted })
+  });
+  assert.equal(submitted[0].storeResult, true);
+  assert.equal(submitted[0].storeHtml, false);
+  assert.equal(submitted[0].retentionDays, 7);
 });
 
 test("renderer_busy retries reuse one idempotency key and apply bounded full-jitter delays", async () => {

@@ -10,7 +10,7 @@ test("the CP2 compiler validates and emits a complete release within its perform
   t.after(() => rm(temporaryRoot, { recursive: true, force: true }));
   const releaseRoot = path.join(temporaryRoot, "release");
   const started = performance.now();
-  const { bundle, compileReport } = await compilePolicy({ outputRoot: releaseRoot });
+  const { bundle, compileReport, activePath } = await compilePolicy({ outputRoot: releaseRoot });
   const elapsedMs = performance.now() - started;
 
   assert.ok(elapsedMs <= 5000, `compiler took ${elapsedMs.toFixed(2)}ms`);
@@ -27,6 +27,9 @@ test("the CP2 compiler validates and emits a complete release within its perform
   assert.equal(bundle.provenance.historicalOfferingContract.activationStatus, "INACTIVE_NO_APPROVED_DATA");
   assert.equal(compileReport.compatibility.length, 5);
   assert.ok(compileReport.compatibility.every(entry => entry.status === "GENERATED"));
+  const active = JSON.parse(await readFile(activePath, "utf8"));
+  assert.deepEqual(active.programs.ECONOMICS["2025-2026"].compatibilityHashes,
+    Object.fromEntries(compileReport.compatibility.map(entry => [entry.output, entry.canonicalHash])));
 
   for (const relativePath of [
     "bundle.json", "bundle.sha256", "compile-report.json", "policy-diff.md", "dependency-impact.md",

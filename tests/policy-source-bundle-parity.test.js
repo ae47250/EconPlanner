@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { canonicalJson } from "../lib/policy/canonical-json.js";
 import { loadEconomicsPolicyCompatibility } from "../lib/policy/compat-normalized.js";
 
@@ -40,12 +42,45 @@ test("generated compatibility views are field-complete semantic matches for curr
   const names = ["courses.json", "requirements.json", "prerequisites.json", "planning-constraints.json", "schedule-2026-2027.json"];
   const loaded = loadEconomicsPolicyCompatibility({ useCache: false });
   const loaderKeys = ["courses", "requirements", "prerequisites", "planningConstraints", "schedule"];
+  const reference = (await readJson("data/compiled/policy/active.json")).programs.ECONOMICS["2025-2026"];
+  const report = await readJson("data/compiled/policy/releases/econ-2025-2026.1/compile-report.json");
+  assert.deepEqual(reference.compatibilityHashes, Object.fromEntries(report.compatibility.map(entry => [entry.output, entry.canonicalHash])));
   for (const [index, name] of names.entries()) {
     const compiled = await readJson(`data/compiled/policy/releases/econ-2025-2026.1/compatibility/${name}`);
     const current = await readJson(`data/normalized/economics/${name}`);
     assert.equal(canonicalJson(compiled), canonicalJson(current), name);
     assert.equal(canonicalJson(loaded[loaderKeys[index]]), canonicalJson(current), `loader ${name}`);
   }
+});
+
+test("compatibility loading rejects changed files, absent files, and missing or changed pins", async t => {
+  const compiledRoot = await mkdtemp(path.join(os.tmpdir(), "econ-compat-integrity-"));
+  t.after(() => rm(compiledRoot, { recursive: true, force: true }));
+  await cp(new URL("data/compiled/policy/active.json", root), path.join(compiledRoot, "active.json"));
+  const release = "releases/econ-2025-2026.1";
+  await cp(new URL(`data/compiled/policy/${release}`, root), path.join(compiledRoot, release), { recursive: true });
+  const activePath = path.join(compiledRoot, "active.json");
+  const active = JSON.parse(await readFile(activePath, "utf8"));
+  const reference = active.programs.ECONOMICS["2025-2026"];
+  const load = (useCache = false) => loadEconomicsPolicyCompatibility({ compiledRoot, useCache });
+  assert.equal(Object.isFrozen(load().planningConstraints), true);
+  for (const name of Object.keys(reference.compatibilityHashes)) {
+    const file = path.join(compiledRoot, release, name);
+    const original = await readFile(file, "utf8");
+    await writeFile(file, JSON.stringify({ ...JSON.parse(original), unexpectedChange: true }));
+    assert.throws(() => load(), /compatibility digest mismatch/);
+    await rm(file);
+    assert.throws(() => load(), { code: "ENOENT" });
+    await writeFile(file, original);
+  }
+  load(true); // A changed pin must not reuse a previously cached release.
+  const name = "compatibility/planning-constraints.json";
+  reference.compatibilityHashes[name] = `sha256:${"0".repeat(64)}`;
+  await writeFile(activePath, JSON.stringify(active));
+  assert.throws(() => load(true), /compatibility digest mismatch/);
+  delete reference.compatibilityHashes[name];
+  await writeFile(activePath, JSON.stringify(active));
+  assert.throws(() => load(), /No compatibility digest is pinned/);
 });
 
 test("canonical indexes preserve approved semantics that differ from legacy representations", () => {

@@ -386,6 +386,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
       [manifest.program]: Object.fromEntries(manifest.catalogApplicability.map(catalogYear => [catalogYear, {
         bundleVersion: manifest.policyVersion,
         contentHash,
+        compatibilityHashes: Object.fromEntries(compatibility.map(entry => [entry.output, entry.canonicalHash])),
         releasePath: `releases/${manifest.policyVersion}/bundle.json`,
         activationStatus
       }]))

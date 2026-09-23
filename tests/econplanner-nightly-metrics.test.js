@@ -382,6 +382,48 @@ test("shard validation rejects missing, duplicate, and malformed inputs", () => 
   assert.deepEqual(merged.missingShardIndexes, [2]);
 });
 
+test("current authority survives aggregation, including runs that found no plans", () => {
+  for (const plans of [0, 1]) {
+    const current = [shard(1, [profile("p1", "h1", plans)]), shard(2, [profile("p2", "h2", plans)])];
+    for (const item of current) {
+      item.metrics.productionDecisionEngine = {
+        authority: "PRODUCTION_DECISION_ENGINE", availability: "MEASURED_AUTHORITY",
+        bundleVersion: "econ-2025-2026.1", bundleHash: "sha256:fixture"
+      };
+      item.metrics.completion = { shadowDecision: { authority: "PRODUCTION_DECISION_ENGINE" } };
+      for (const row of item.profiles) for (const record of row.decisionShadow) record.mode = "AUTHORITATIVE_REUSED";
+    }
+    const merged = mergeGeneratedShards(current);
+    assert.equal(merged.productionDecisionEngine.authority, "PRODUCTION_DECISION_ENGINE");
+    assert.equal(merged.productionDecisionEngine.availability, "MEASURED_AUTHORITY");
+    assert.equal(merged.productionDecisionEngine.bundleVersion, "econ-2025-2026.1");
+    assert.equal(merged.productionDecisionEngine.bundleHash, "sha256:fixture");
+    assert.equal(merged.coverage.completion.shadowDecision.authority, "PRODUCTION_DECISION_ENGINE");
+    assert.equal(merged.coverage.completion.targetAvailability, plans ? "MEASURED_AUTHORITY" : "NOT_MEASURED");
+    assert.equal(merged.coverage.completion.primaryProductCoverage.availability, "MEASURED_AUTHORITY");
+    assert.equal(merged.coverage.completion.primaryProductCoverage.numerator, plans * 2);
+    assert.equal(merged.coverage.completion.primaryProductCoverage.percentage, plans * 100);
+
+    const mixed = structuredClone(current);
+    delete mixed[1].metrics.productionDecisionEngine;
+    assert.throws(() => mergeGeneratedShards(mixed), { code: "INCONSISTENT_DECISION_AUTHORITY" });
+    const differentBundle = structuredClone(current);
+    differentBundle[1].metrics.productionDecisionEngine.bundleHash = "sha256:other-release";
+    assert.throws(() => mergeGeneratedShards(differentBundle), { code: "INCONSISTENT_DECISION_BUNDLE" });
+    current[0].metrics.completion.shadowDecision.authority = "LEGACY_PRODUCTION_REMAINS_AUTHORITATIVE";
+    assert.throws(() => mergeGeneratedShards(current), { code: "INCONSISTENT_DECISION_AUTHORITY" });
+  }
+});
+
+test("historical shadow runs retain their original authority and cannot masquerade as production", () => {
+  const historical = [shard(1, [profile("p1", "h1")]), shard(2, [profile("p2", "h2")])];
+  const merged = mergeGeneratedShards(historical);
+  assert.equal(merged.productionDecisionEngine.authority, "LEGACY_PRODUCTION_REMAINS_AUTHORITATIVE");
+  assert.equal(merged.coverage.completion.primaryProductCoverage.availability, "MEASURED_SHADOW");
+  historical[0].profiles[0].decisionShadow[0].mode = "AUTHORITATIVE_REUSED";
+  assert.throws(() => mergeGeneratedShards(historical), { code: "INCONSISTENT_DECISION_AUTHORITY" });
+});
+
 test("percentiles and baseline deltas preserve zero-denominator and unavailable semantics", () => {
   assert.equal(percentile([1, 2, 10], 0.9), 10);
   assert.equal(distributionSummary([1, 2, 10]).p99, 10);
