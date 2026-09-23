@@ -396,6 +396,24 @@ async function _futureTwoCourseFallPlan() {
   return { student, plan };
 }
 
+test("edit API rejects an individually valid plan that duplicates another comparison schedule", async () => {
+  const { student, economics } = await generated("flexibleFourYearPlan");
+  const [first, second] = economics.economicsPlans;
+  assert.ok(first && second, "This regression requires two generated plans.");
+  const duplicate = {
+    ...structuredClone(first),
+    id: second.id,
+    label: second.label
+  };
+  const plans = economics.economicsPlans.map(plan => plan.id === second.id ? duplicate : plan);
+
+  const { response, data } = await validateEdit(student, duplicate, { plans });
+  assert.equal(response.status, 422, JSON.stringify(data));
+  assert.equal(data.code, "INVALID_PLAN_SET");
+  assert.equal(data.planSetValidation?.valid, false);
+  assert.match(data.error, /same material schedule/);
+});
+
 test("Task 15 API accepts a valid published-course move and independently revalidates it", async () => {
   const { student, economics } = await generated("projectedMove");
   const edited = structuredClone(economics.economicsPlans.find(plan => plan.id === "balanced"));

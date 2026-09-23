@@ -26,6 +26,43 @@ async function reviewBalanced(page) {
   await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
 }
 
+for (const responseStatus of [422, 200]) {
+  test(`a duplicate-plan edit response (${responseStatus}) leaves the visible comparison unchanged`, async ({ page }) => {
+    const balanced = fixturePlan();
+    const explore = structuredClone(balanced);
+    explore.id = "explore-first";
+    explore.label = "Explore the Major";
+    explore.terms[1].courses.push(...explore.terms[0].courses);
+    explore.terms[0].courses = [];
+    await openFixtureResult(page, plannerResultFixture({ plans: [balanced, explore] }));
+    await page.getByRole("button", { name: "Review selected Balanced" }).click();
+    await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
+    const originalSchedule = await page.locator(".term-card").allTextContents();
+    const moveControl = page.getByRole("combobox", { name: "Move ECO 113 to another term" });
+
+    await page.unroute("**/api/majors/map");
+    await page.route("**/api/majors/map", async route => {
+      const request = route.request().postDataJSON();
+      expect(request.action).toBe("validate-plan");
+      const reason = "Balanced and Explore the Major have the same material schedule.";
+      await route.fulfill({
+        status: responseStatus,
+        contentType: "application/json",
+        body: JSON.stringify(responseStatus === 422
+          ? { code: "INVALID_PLAN_SET", error: `That plan change cannot be saved. ${reason}`, planSetValidation: { valid: false, errors: [reason] } }
+          : { plan: { ...request.plan, validation: { valid: true } }, planSetValidation: { valid: false, errors: [reason] } })
+      });
+    });
+
+    await moveControl.selectOption("2027-WINTER");
+    await expect(page.locator(".plan-edit-status")).toContainText("same material schedule");
+    await expect(page.locator(".plan-edit-status")).not.toContainText("updated and remains valid");
+    await expect.poll(() => page.locator(".term-card").allTextContents()).toEqual(originalSchedule);
+    await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
+    await expect(moveControl).toBeFocused();
+  });
+}
+
 test("Freshman, Sophomore, and Junior can request the shared accelerated comparison while Senior cannot", async ({ page }) => {
   await resetPlanner(page);
 
