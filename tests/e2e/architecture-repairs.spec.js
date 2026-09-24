@@ -112,7 +112,10 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   expect(invalid.error).not.toMatch(/Fall 2028|projected standing/);
   await expect(page.getByRole('combobox',{name:'Move MAT 217 to another term',exact:true})).toHaveValue('winter-2027');
   await expect(page.getByText('ECO 222 is typically offered only in Spring/May. A different term needs a published schedule confirming it.')).toBeVisible();
-  await expect(page.getByRole('combobox',{name:'Move ECO 222 to another term',exact:true})).toHaveCount(0);
+  const eco222MoveOptions = await page.getByRole('combobox',{name:'Move ECO 222 to another term',exact:true})
+    .locator('option').evaluateAll(options => options.map(option => option.value));
+  expect(eco222MoveOptions.length).toBeGreaterThan(1);
+  expect(eco222MoveOptions.every(termId => termId.startsWith('spring-') || termId.startsWith('may-'))).toBe(true);
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
   await page.getByRole('button',{name:'← Back to plan comparison',exact:true}).click();
