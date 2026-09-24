@@ -119,11 +119,15 @@ jobs:
       - name: Install Playwright Chrome and operating-system dependencies
         run: pnpm exec playwright install --with-deps chrome
 
+      - name: Install local PDF text verification
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
       - name: Run bounded EconPlanner browser regression suite
         run: >-
           pnpm exec playwright test
           tests/e2e/econ-planner-accessibility.spec.js
           tests/e2e/econ-planner.spec.js
+          tests/e2e/architecture-repairs.spec.js
 
       - name: Run targeted PDF-lock and malformed-response regressions
         run: >-

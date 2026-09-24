@@ -5,6 +5,7 @@ import { evaluatePlan, normalizeStudentFacts } from "../lib/decision-engine/inde
 import {
   buildDecisionComparisonRecord,
   classifyShadowDisagreement,
+  recordDecisionComparisonSafely,
   recordShadowEvaluation,
   runDecisionEngineShadow
 } from "../lib/decision-engine/shadow.js";
@@ -62,6 +63,19 @@ test("observability reuses the authoritative plan decision without dropping plan
   assert.ok(!record.reasonCodes.includes("PLANNING_CONTEXT_REQUIRED"));
 });
 
+test("observability failures remain nonfatal and do not expose student data", () => {
+  const output = [];
+  const args = { student, plan: plan(), engine: evaluatePlan(plan(), normalizeStudentFacts(student), {}, bundle) };
+  const failure = recordDecisionComparisonSafely(args, {
+    sink() { throw new Error("Private log transport detail"); },
+    errorSink: value => output.push(value)
+  });
+  assert.equal(failure.mode, "AUTHORITATIVE_REUSED");
+  assert.equal(failure.classification, "DECISION_OBSERVABILITY_ERROR");
+  assert.equal(output.length, 1);
+  assert.doesNotMatch(output[0], /Must Not Appear|private@example|Private log transport detail/);
+});
+
 test("FULL is a named review state rather than an unexpected disagreement", async () => {
   const record = await runDecisionEngineShadow({
     student,
@@ -81,6 +95,16 @@ test("unapproved production accepts and blocks are classified RED", () => {
   const engineAllow = { academicallyValid: true, decisions: [] };
   assert.equal(classifyShadowDisagreement({ valid: false }, engineAllow), "UNEXPECTED_PRODUCTION_BLOCK_ENGINE_ACCEPT");
   assert.equal(classifyShadowDisagreement({ valid: false, errors: ["hard failure"] }, engineAllow), "UNEXPECTED_PRODUCTION_BLOCK_ENGINE_ACCEPT");
+});
+
+test("a recognized review cannot hide an independent hard disagreement", () => {
+  const review = { status: "REVIEW_REQUIRED", ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"] };
+  const blocked = { academicallyValid: false, decisions: [review, { status: "BLOCK", ruleIds: ["PREREQ-ECO-461"] }] };
+  assert.equal(classifyShadowDisagreement({ valid: true }, blocked), "UNEXPECTED_PRODUCTION_ACCEPT_ENGINE_BLOCK");
+  const allowed = { academicallyValid: true, decisions: [review] };
+  assert.equal(classifyShadowDisagreement({ valid: true }, allowed, { valid: false }), "UNEXPECTED_ENGINE_ORACLE_DISAGREEMENT");
+  assert.equal(classifyShadowDisagreement({ valid: false, errors: ["ECO 114 is full", "Missing statistics"] }, allowed), "UNEXPECTED_PRODUCTION_BLOCK_ENGINE_ACCEPT");
+  assert.equal(classifyShadowDisagreement({ valid: true }, allowed, { valid: true }), "KNOWN_REVIEW_STATE");
 });
 
 test("CP4 placement-context gaps are classified without weakening production blocks", () => {

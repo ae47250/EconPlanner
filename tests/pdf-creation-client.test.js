@@ -56,6 +56,17 @@ function ids(...values) {
   return () => values[index++] || `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`;
 }
 
+test("manual retries can reuse the stored operation and report a changed-content conflict", async () => {
+  const submitted = [];
+  const input = {html: "<p>Fictional report</p>", downloadOperationId: "00000000-0000-4000-8000-000000000001"};
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await createPdfFromHtml(input, {environment, fetchImpl: successfulStoredFetch({submitted})});
+  }
+  assert.equal(submitted[0].idempotencyKey, submitted[1].idempotencyKey);
+  assert.notEqual(submitted[0].correlationId, submitted[1].correlationId);
+  await assert.rejects(createPdfFromHtml(input, {environment, fetchImpl: async () => serviceError(409, "idempotency_conflict")}), error => error.code === "PDF_REPORT_CHANGED" && error.status === 409);
+});
+
 test("PDF client succeeds on the first stored attempt and uses a new operation key for identical HTML", async () => {
   const firstSubmitted = [];
   const secondSubmitted = [];
@@ -73,10 +84,24 @@ test("PDF client succeeds on the first stored attempt and uses a new operation k
   });
 
   assert.equal(firstSubmitted.length, 1);
+  assert.equal(firstSubmitted[0].storeResult, true);
+  assert.equal(firstSubmitted[0].storeHtml, false);
+  assert.equal(firstSubmitted[0].retentionDays, 30);
   assert.equal(firstSubmitted[0].idempotencyKey, "econplanner:operation-one");
   assert.equal(secondSubmitted[0].idempotencyKey, "econplanner:operation-two");
   assert.notEqual(firstSubmitted[0].idempotencyKey, secondSubmitted[0].idempotencyKey);
   assert.equal(firstSubmitted[0].correlationId, "correlation-one");
+});
+
+test("PDF retention can change without enabling HTML storage", async () => {
+  const submitted = [];
+  await createPdfFromHtml({ html: "<!doctype html><p>fictional report</p>", retentionDays: 7, storeHtml: true }, {
+    environment,
+    fetchImpl: successfulStoredFetch({ submitted })
+  });
+  assert.equal(submitted[0].storeResult, true);
+  assert.equal(submitted[0].storeHtml, false);
+  assert.equal(submitted[0].retentionDays, 7);
 });
 
 test("renderer_busy retries reuse one idempotency key and apply bounded full-jitter delays", async () => {

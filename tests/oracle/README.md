@@ -1,5 +1,20 @@
 # Economics test-oracle policy
 
+## Two complementary audit paths
+
+`audit-external-plan.js` composes the independent structure, requirement allocation,
+prerequisite, schedule, capacity and horizon checks against test-owned specifications
+and reviewed schedule evidence. `load-canonical-policy.js` separately evaluates raw
+canonical policy records for decision-level differential tests (including offering
+projection boundaries). It does not replace the external audit's completeness checks.
+Neither path imports production decisions. Both derive meaning from `policy/`.
+
+Catalog projection evidence is course- and term-specific: `CATALOG-ECO-222-SPRING`
+supports unpublished May placements, not verified offerings or a Winter catalog claim.
+The 2026-09-22 preliminary-schedule authority permits labeled workload projections
+without asserting an offering. A future term with no exact dates must fall wholly
+within the evidence's effective calendar years; a midyear boundary remains unresolved.
+
 `policy/` and its provenance are the sole authority for the meaning of EconPlanner academic rules. `economics-policy.v1.json` is an independently maintained test specification derived from that authority; it is not a second academic-policy authority. The Oracle must implement confirmed meanings independently and must not import or copy decisions at runtime from the production Decision Engine, planner, normalized production data, or production validators.
 
 Oracle independence means independent implementation, not independent interpretation. When timing matters, the controlling policy must state the relevant boundary explicitly, such as completion before the target term, whether same-term work counts, and whether earlier pending work remains conditional on successful completion. Neither production nor the Oracle may infer a missing timing meaning from vague prose.

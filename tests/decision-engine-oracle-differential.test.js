@@ -19,6 +19,35 @@ const [bundle, oracle, independentOraclePolicy, prerequisiteFixtures, compatibil
 ]);
 const facts = normalizeStudentFacts({ courses: [] });
 
+test("catalog projections require matching course, term and effective evidence; exact schedules win", () => {
+  for (const [course, term, expected] of [
+    [{course: "ECO 222", source: "catalog-statement"}, {academicYear: "2027-2028", termKey: "May"}, "ALLOW"],
+    [{course: "ECO 222", source: "catalog-statement"}, {academicYear: "2027-2028", termKey: "Winter"}, "UNKNOWN"],
+    [{course: "ECO 221", source: "catalog-statement"}, {academicYear: "2027-2028", termKey: "May"}, "UNKNOWN"],
+    [{course: "ECO 222", source: "catalog-statement"}, {academicYear: "2023-2024", termKey: "May"}, "UNKNOWN"],
+    [{course: "ECO 222", section: "fictional", source: "catalog-statement"}, {academicYear: "2026-2027", termKey: "May"}, "BLOCK"],
+    [{course: "ECO 222", source: "projected-offering"}, {academicYear: "2027-2028", termKey: "Winter"}, "ALLOW"]
+  ]) {
+    assert.equal(evaluateOffering(course, term, bundle.indexes.offeringByTerm, bundle).status, expected);
+    assert.equal(oracleEvaluateOffering(oracle, course, term).status, expected);
+  }
+  // Internal boundary diagnostics: neither implementation may silently extend
+  // expired evidence or guess a term date inside a partially covered year.
+  for (const effective of [
+    {from: "2024-01-01", through: "2027-12-31"},
+    {from: "2028-04-01", through: null}
+  ]) {
+    const changedOracle = structuredClone(oracle);
+    const changedBundle = structuredClone(bundle);
+    changedOracle.offeringPatterns.find(pattern => pattern.patternId === "CATALOG-ECO-222-SPRING").effective = effective;
+    changedBundle.indexes.offeringPatternsById["CATALOG-ECO-222-SPRING"].effective = effective;
+    const course = {course: "ECO 222", source: "catalog-statement"};
+    const term = {academicYear: "2027-2028", termKey: "May"};
+    assert.equal(oracleEvaluateOffering(changedOracle, course, term).status, "UNKNOWN");
+    assert.equal(evaluateOffering(course, term, changedBundle.indexes.offeringByTerm, changedBundle).status, "UNKNOWN");
+  }
+});
+
 async function readJson(relativePath) {
   return JSON.parse(await readFile(new URL(relativePath, import.meta.url), "utf8"));
 }

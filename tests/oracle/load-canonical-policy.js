@@ -120,7 +120,37 @@ export function oracleEvaluateOffering(policy, course, term) {
     return { status: "PRELIMINARY", ruleIds: ["PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"], reasonCode: "UNPUBLISHED_OFFERING_TBC" };
   }
   const releaseTerm = policy.schedule.terms.find(candidate => candidate.termId === termId(term));
-  if (!releaseTerm && ["future-placeholder", "projected-offering", "recurring-rule-unconfirmed"].includes(course.source)) {
+  if (!releaseTerm && ["catalog-statement", "recurring-rule-unconfirmed", "historical-pattern"].includes(course.source)) {
+    const key = canonicalTerm(term.termKey || term.term);
+    const year = termId(term)?.split("-")[0];
+    let supported = false;
+    if (course.source === "historical-pattern") {
+      const records = policy.documents["historical-offerings"]?.records || [];
+      supported = records.some(record => record.courseIdentity === course.course
+        && record.activationStatus === "ACTIVE_OWNER_APPROVED" && record.ownerApproval?.approved === true
+        && Object.keys(record.conditionalTermDistribution || {}).includes(key));
+    } else {
+      const capstone = policy.byRuleId["CAPSTONE-WINTER-ONLY"];
+      supported = course.source === "recurring-rule-unconfirmed" && course.course === capstone.condition.course
+        && capstone.effect.allowedCanonicalTerms.includes(key) && Boolean(year)
+        && capstone.effective.from <= `${year}-01-01`
+        && (!capstone.effective.through || capstone.effective.through >= `${year}-12-31`);
+      for (const pattern of policy.offeringPatterns) {
+        if (![pattern.course].flat().includes(course.course)) continue;
+        if (pattern.evidenceType !== (course.source === "catalog-statement" ? "OFFICIAL_CATALOG_STATEMENT" : "DEPARTMENT_RECURRING")) continue;
+        if (!pattern.authorityBoundary || !pattern.sourceRefs?.length) continue;
+        if (!pattern.approvedRecurringTerms.includes(key) || pattern.hardExcludedTerms.includes(key)) continue;
+        if (!pattern.projectionPolicy.scheduleCoverage.some(coverage => coverage === "UNKNOWN" || coverage === "UNAVAILABLE")) continue;
+        if (!year || !(pattern.effective.from <= `${year}-01-01`)) continue;
+        if (pattern.effective.through && pattern.effective.through < `${year}-12-31`) continue;
+        if (policy.offeringPatterns.some(replacement => replacement.supersedes.includes(pattern.patternId))) continue;
+        supported = true;
+      }
+    }
+    if (!supported) return { status: "UNKNOWN", ruleIds: [], reasonCode: "PROJECTION_EVIDENCE_OUT_OF_SCOPE" };
+    return { status: "ALLOW", ruleIds: ["FUTURE-UNPUBLISHED-SCHEDULE-PLANNING-PROJECTION"], reasonCode: "FUTURE_SCHEDULE_PLANNING_PROJECTION" };
+  }
+  if (!releaseTerm && ["future-placeholder", "projected-offering"].includes(course.source)) {
     return { status: "ALLOW", ruleIds: ["FUTURE-UNPUBLISHED-SCHEDULE-PLANNING-PROJECTION"], reasonCode: "FUTURE_SCHEDULE_PLANNING_PROJECTION" };
   }
   if (!releaseTerm) return { status: "UNKNOWN", ruleIds: [], reasonCode: "SCHEDULE_TERM_NOT_COVERED" };

@@ -2,21 +2,21 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { buildScheduleCourseSets, renderScheduleKnowledge } from "../lib/schedule/annual.js";
-import { courseRules, normalizeCourseCode, validateCoursePlan } from "../lib/validateCoursePlan.js";
+import { evaluateOffering } from "../lib/decision-engine/index.js";
+import { runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
 
 const schedule = JSON.parse(await readFile(new URL("../data/normalized/economics/schedule-2026-2027.json", import.meta.url), "utf8"));
 const historicalSchedule = JSON.parse(await readFile(new URL("./fixtures/schedules/schedule-2025-2026.json", import.meta.url), "utf8"));
 const humanSchedule = await readFile(new URL("../knowledge/course-schedule-2026-2027.md", import.meta.url), "utf8");
 
-function planWithPlacement(term, course) {
-  return {
-    years: [{
-      label: "Senior Year",
-      academicYear: "2026/2027",
-      terms: { Fall: [], Winter: [], May: [], [term]: [course] }
-    }]
-  };
-}
+const bundle = runtimePolicyBundle();
+const offering = (termKey, course) => evaluateOffering(
+  { course, source: "verified-offering" },
+  { academicYear: "2026-2027", termKey },
+  bundle.indexes.offeringByTerm,
+  bundle,
+  { traceId: "schedule-test" }
+);
 
 test("2026/2027 schedule preserves the August 8, 2026 verified Fall, Winter, and May offerings", () => {
   assert.ok(schedule.terms.Fall.some(course => course.course === "ECO 234"));
@@ -39,25 +39,30 @@ test("ECO 213 and ECO 214 are separated and neither is a May offering", () => {
   assert.ok(!schedule.terms.May.some(course => ["ECO 213", "ECO 214"].includes(course.course)));
 });
 
-test("validator schedule sets exactly match the canonical 2026/2027 schedule", () => {
+test("Decision Engine schedule sets exactly match the canonical 2026/2027 schedule", () => {
   const canonical = buildScheduleCourseSets(schedule, ["Fall", "Winter", "May"]);
   for (const term of ["Fall", "Winter", "May"]) {
-    assert.deepEqual([...courseRules.SCHEDULE_2026_2027[term]].sort(), [...canonical[term]].sort(), term);
+    const year = term === "Fall" ? "2026" : "2027";
+    const courses = new Set(bundle.indexes.offeringByTerm[`${year}-${term.toUpperCase()}`].sections.map(section => section.course));
+    assert.deepEqual([...courses].sort(), [...canonical[term]].sort(), term);
   }
 });
 
 test("ECO 234 and PHI 234 are equivalent in Fall 2026", () => {
-  assert.equal(normalizeCourseCode("PHI 234"), "ECO 234");
   for (const code of ["ECO 234", "PHI 234"]) {
-    const result = validateCoursePlan(planWithPlacement("Fall", code));
-    assert.equal(result.errors.some(error => /not listed in the 2026\/2027 schedule/.test(error)), false, code);
+    const result = offering("Fall", code);
+    assert.equal(result.status, "ALLOW", code);
+    assert.equal(result.offeringEvidence.sectionId, offering("Fall", "ECO 234").offeringEvidence.sectionId);
   }
 });
 
 test("ECO 234 and PHI 234 are rejected from incorrect 2026/2027 terms", () => {
   for (const term of ["Winter", "May"]) {
-    const result = validateCoursePlan(planWithPlacement(term, "PHI 234"));
-    assert.equal(result.errors.some(error => new RegExp(`not listed in ${term} 2026/2027\\.`).test(error)), true, term);
+    for (const code of ["ECO 234", "PHI 234"]) {
+      const result = offering(term, code);
+      assert.equal(result.status, "BLOCK", `${term}: ${code}`);
+      assert.equal(result.reasonCode, "NOT_OFFERED_IN_COMPLETE_SCHEDULE");
+    }
   }
 });
 

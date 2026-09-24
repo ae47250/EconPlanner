@@ -21,9 +21,11 @@ test("the independent canonical-policy Oracle imports no production engine, plan
   assert.doesNotMatch(source, /lib\/decision-engine|lib\/planning|lib\/assignment|validateGeneratedPlan|loadPolicyBundle/iu);
 });
 
-test("the UI does not import academic policy or evaluator modules", async () => {
+test("the UI does not directly import authoritative server policy evaluators", async () => {
   const source = await readFile(new URL("app/page.js", root), "utf8");
-  assert.doesNotMatch(source, /lib\/decision-engine|lib\/policy|data\/compiled\/policy/iu);
+  for (const [, importedPath] of source.matchAll(/\bfrom\s+["']([^"']+)["']/gu)) {
+    assert.doesNotMatch(importedPath, /lib\/decision-engine|lib\/policy|data\/compiled\/policy|planning\/economics|prerequisiteEvaluator|prerequisiteValidation|assignment\/solve/iu);
+  }
 });
 
 test("the active mapper passes the compiled bundle into authoritative validation", async () => {

@@ -32,6 +32,27 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
+test("report observability reuses each freshly validated selected or generated plan", async t => {
+  const output = [];
+  t.mock.method(console, "info", value => output.push(value));
+  const generated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28");
+  const selected = structuredClone(generated.selectedPlan);
+  selected.validation.policyDecision = { staleClientResult: true };
+  const revalidated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28", selected);
+  assert.equal(output.length, 2);
+  for (const [index, report] of [generated, revalidated].entries()) {
+    const record = JSON.parse(output[index].replace(/^ECONPLANNER_DECISION_SHADOW /, ""));
+    const engine = report.selectedPlan.validation.policyDecision;
+    assert.equal(record.mode, "AUTHORITATIVE_REUSED");
+    assert.equal(record.evaluationSource, "PLAN_VALIDATION_POLICY_DECISION");
+    assert.equal(record.traceId, engine.traceId);
+    assert.equal(record.policyBundleHash, engine.policyBundleHash);
+    assert.equal(record.completionStatus, engine.completionStatus);
+    assert.equal(record.decisionCount, engine.decisions.length);
+    assert.ok(!record.reasonCodes.includes("PLANNING_CONTEXT_REQUIRED"));
+  }
+});
+
 test("Taking now fixed occupancy is identical in the validated plan, JSON projection, and HTML", async () => {
   const student = {
     ...fixture.student,
@@ -104,6 +125,7 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
   }));
   const json = await jsonResponse.json();
   assert.equal(jsonResponse.status, 200);
+  assert.equal(jsonResponse.headers.get("cache-control"), "no-store");
   assert.equal(json.schemaVersion, "econmapper-economics-report-v1");
   assert.equal(json.preparedDate, preparedDate);
 
@@ -126,7 +148,8 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   const response = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf" })
+    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf", storeResult: false, retentionDays: 1,
+      downloadOperationId: "00000000-0000-4000-8000-000000000001" })
   }), {
     environment: {
       PDF_CREATION_ENABLED: "true",
@@ -167,8 +190,9 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.match(response.headers.get("content-type"), /application\/pdf/);
   assert.match(response.headers.get("content-disposition"), /attachment/);
   assert.equal(submitted.storeResult, true);
-  assert.equal(submitted.storeHtml, true);
+  assert.equal(submitted.storeHtml, false);
   assert.equal(submitted.retentionDays, 30);
+  assert.equal(submitted.idempotencyKey, "econplanner:00000000-0000-4000-8000-000000000001");
   assert.match(submitted.idempotencyKey, /^econplanner:[A-Za-z0-9._:-]{8,128}$/);
   assert.match(submitted.html, /^<!doctype html>/i);
   assert.equal(/<script\b/i.test(submitted.html), false);

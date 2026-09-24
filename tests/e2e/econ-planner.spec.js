@@ -285,7 +285,7 @@ test("intake and generated results survive a normal reload", async ({ page }) =>
   await generatePlans(page);
   await expect(page.getByRole("heading", { name: /Your feasible plan|Compare your plans/ })).toBeVisible();
   await page.reload();
-  await expect(page.locator(".result-status-value")).toHaveText("Ready");
+  await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
   await expect(page.getByText("EconPlanner is a planning guide, not an official degree audit.", { exact: true })).toHaveCount(1);
 });
 
@@ -296,7 +296,7 @@ test("Clear all cancels safely and then removes intake and generated state", asy
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("button", { name: "Cancel", exact: true })).toBeFocused();
   await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
-  await expect(page.locator(".result-status-value")).toHaveText("Ready");
+  await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
 
   await page.getByRole("button", { name: "Clear all", exact: true }).click();
   await dialog.getByRole("button", { name: "Clear all", exact: true }).click();
@@ -557,7 +557,7 @@ test("ordinary results show backend readiness and hide diagnostics by default", 
   });
   await openFixtureResult(page, fixture);
 
-  await expect(page.locator(".result-status-value")).toHaveText("Ready");
+  await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
   const diagnostics = page.locator("details.result-diagnostics");
   await expect(diagnostics).not.toHaveAttribute("open", "");
   await expect(diagnostics.getByText("Plan candidate results")).not.toBeVisible();
