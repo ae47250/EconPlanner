@@ -125,6 +125,7 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
   }));
   const json = await jsonResponse.json();
   assert.equal(jsonResponse.status, 200);
+  assert.equal(jsonResponse.headers.get("cache-control"), "no-store");
   assert.equal(json.schemaVersion, "econmapper-economics-report-v1");
   assert.equal(json.preparedDate, preparedDate);
 
@@ -147,7 +148,8 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   const response = await handleEconomicsReportRequest(new Request("http://localhost/api/reports/economics", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf" })
+    body: JSON.stringify({ ...fixture, preparedDate: "2026-07-28", format: "pdf", storeResult: false, retentionDays: 1,
+      downloadOperationId: "00000000-0000-4000-8000-000000000001" })
   }), {
     environment: {
       PDF_CREATION_ENABLED: "true",
@@ -190,6 +192,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(submitted.storeResult, true);
   assert.equal(submitted.storeHtml, false);
   assert.equal(submitted.retentionDays, 30);
+  assert.equal(submitted.idempotencyKey, "econplanner:00000000-0000-4000-8000-000000000001");
   assert.match(submitted.idempotencyKey, /^econplanner:[A-Za-z0-9._:-]{8,128}$/);
   assert.match(submitted.html, /^<!doctype html>/i);
   assert.equal(/<script\b/i.test(submitted.html), false);

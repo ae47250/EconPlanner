@@ -11,7 +11,8 @@ import {
   validateGeneratedPlan,
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
-import { normalizeScheduleSetByTerm, resolvePlanningContext } from "../../../../lib/planning/horizon.js";
+import { normalizeScheduleSetByTerm, resolvePlanningContext, selectedPlanContext } from "../../../../lib/planning/horizon.js";
+import { applyEconomicsPlanEdit } from "../../../../lib/planning/termSolver.js";
 import { buildAcceleratedPlanningResult } from "../../../../lib/planning/acceleratedResult.js";
 import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
 import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
@@ -161,6 +162,9 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
     const economicsPlanResult = economicsPlanBundle
       ? buildEconomicsPlanResult({
           plans: economicsPlanBundle.plans,
+          mapping,
+          planningContext: economicsPlanBundle.context,
+          policyBundle: catalog.policyBundle,
           inputResolution,
           candidateOutcomes: economicsPlanBundle.candidateOutcomes,
           planningGaps: economicsPlanBundle.planningGaps,
@@ -203,7 +207,7 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
   });
 }
 
-function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, plans }) {
+function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, plans, edit }) {
   const variant = catalog.variants.find(item => item.programId === "economics");
   const program = catalog.programs.find(item => item.id === variant?.programId);
   if (!variant || !program) {
@@ -216,17 +220,32 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     student,
     { policyBundle: catalog.policyBundle }
   );
-  const validation = validateGeneratedPlan(plan, {
+  const context = selectedPlanContext(planningContext, plan);
+  if (!context) return { error: "That plan strategy is no longer eligible. Regenerate your plans." };
+  const validationOptions = {
     student,
     mapping,
     schedule: catalog.economicsSchedule,
     prerequisites: catalog.prerequisitesByProgram.get(program.id),
-    context: planningContext,
+    context,
     policyBundle: catalog.policyBundle,
     enforcePlanIntegrity: true
-  });
+  };
+  if (edit) {
+    const originalValidation = validateGeneratedPlan(plan, validationOptions);
+    if (!originalValidation.valid) return { error: "The original plan no longer passes validation. Regenerate your plans." };
+    try {
+      plan = applyEconomicsPlanEdit({ plan, edit, student, mapping,
+        schedule: catalog.economicsSchedule, prerequisites: catalog.prerequisitesByProgram.get(program.id),
+        courseCatalog: catalog.economicsCourses, policyBundle: catalog.policyBundle });
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+  const validation = validateGeneratedPlan(plan, validationOptions);
   const validatedPlan = {
     ...plan,
+    planningContext: context,
     validation,
     readinessStatus: validation.readinessStatus,
     planDisposition: validation.planDisposition,
@@ -428,7 +447,8 @@ export async function POST(request) {
         student,
         planningContext: authoritativePlanningContext,
         plan: body.plan,
-        plans: body.plans
+        plans: body.plans,
+        edit: body.edit
       });
       if (editedPlanResult.error) {
         return jsonResponse({ error: editedPlanResult.error }, 422);

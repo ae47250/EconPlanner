@@ -25,7 +25,7 @@ function difference(expected, actual) {
 
 function readinessLabel(status) {
   return ({
-    STUDENT_READY: "Ready",
+    STUDENT_READY: "Ready to plan",
     READY_WITH_CONDITIONS: "Ready with conditions",
     ADVISOR_ACTION_REQUIRED: "Needs advisor attention"
   })[status] || "Needs advisor attention";

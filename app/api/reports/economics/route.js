@@ -10,18 +10,22 @@ export const maxDuration = 120;
 export async function handleEconomicsReportRequest(request, dependencies = {}) {
   try {
     const body = await request.json();
+    if (body?.downloadOperationId !== undefined && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.downloadOperationId)) {
+      return Response.json({ error: "Start a new PDF download.", code: "INVALID_DOWNLOAD_OPERATION" }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    }
     const report = await buildEconomicsReportFromStudent(
       body?.student || body || {},
       body?.preparedDate,
       body?.selectedPlan || null
     );
-    if (body?.format === "json") return Response.json(report);
+    if (body?.format === "json") return Response.json(report, { headers: { "Cache-Control": "no-store" } });
 
     const template = await readFile(path.join(process.cwd(), "templates/econplannertemplate.html"), "utf8");
     const html = renderEconomicsHtml(report, template);
     if (body?.format === "pdf") {
       const result = await createPdfFromHtml(
-        { html, filename: "EconPlanner-Economics-Plan.pdf" },
+        { html, filename: "EconPlanner-Economics-Plan.pdf", storeResult: true, retentionDays: 30,
+          downloadOperationId: body.downloadOperationId },
         dependencies
       );
       return new Response(result.pdf, {

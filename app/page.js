@@ -332,13 +332,13 @@ function isValidGeneratedPlannerReport(report) {
     && result.economicsPlan.id === result.economicsPlans[0].id;
 }
 
-function studentFacingRequestError(error, fallback, connectionMessage = "The planner could not connect. Please try again.") {
+function studentFacingRequestError(error, fallback, connectionMessage = "The planner could not connect. Please try again.", timeoutSubject = "The planner") {
   const message = typeof error?.message === "string" ? error.message.trim() : "";
   if (error?.name === "AbortError" || /abort(?:ed|error)?/i.test(message)) {
     return "The request was interrupted. Please try again.";
   }
   if (error?.name === "TimeoutError" || /timed?\s*out|timeout/i.test(message)) {
-    return "The planner took too long to respond. Please try again.";
+    return `${timeoutSubject} took too long to respond. Please try again.`;
   }
   if (!message || /failed to fetch|networkerror|network request failed|load failed|network stack/i.test(message)) {
     return connectionMessage;
@@ -774,7 +774,6 @@ function PlanTimeline({
                         {term.courses.map(course => {
                           const termId = term.slotId || term.term;
                           const courseId = planCourseIdentity(course);
-                          const editKey = `${activePlan.id}:${termId}:${courseId}`;
                           return (
                             <li key={`${termId}-${courseId}`}>
                               <div className="plan-course-summary">
@@ -834,18 +833,9 @@ function PlanTimeline({
                                       })}
                                     </select>
                                   </label>
-                                  <button
-                                    type="button"
-                                    disabled={Boolean(editingPlanCourseKey)}
-                                    onClick={event => onEditPlanCourse({
-                                      type: "remove",
-                                      planId: activePlan.id,
-                                      fromTermId: termId,
-                                      courseId
-                                    }, event.currentTarget)}
-                                  >
-                                    {editingPlanCourseKey === editKey ? "Checking..." : `Remove ${course.course}`}
-                                  </button>
+                                  <span className="required-course-note">
+                                    Required for this plan. Move it to another valid term{course.alternativeOptions?.length > 1 ? " or choose a replacement above" : ""}.
+                                  </span>
                                 </div>
                               )}
                             </li>
@@ -1092,13 +1082,14 @@ function PlanComparisonScreen({
   const planningGaps = result?.economicsPlanningGaps || [];
   const candidateOutcomes = result?.economicsCandidateOutcomes || [];
   const convergences = result?.economicsPlanConvergences || [];
-  const planningContext = result?.planningContext || fallbackPlanningContext;
+  const comparisonContext = result?.planningContext || fallbackPlanningContext;
   const canonicalPlanResult = result?.economicsPlanResult || planResult || null;
   const acceleratedResult = result?.economicsAcceleratedResult || null;
   const [highlightDifferences, setHighlightDifferences] = useState(false);
   const resultHeadingRef = useRef(null);
   const isPlanView = view === PLANNER_VIEWS.PLAN;
   const selectedPlan = plans.find(plan => plan.id === selectedPlanId) || plans[0];
+  const planningContext = isPlanView ? selectedPlan?.planningContext || comparisonContext : comparisonContext;
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => resultHeadingRef.current?.focus());
@@ -1122,7 +1113,9 @@ function PlanComparisonScreen({
   const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
-  const overallStatus = overallPlanReadiness(plans);
+  const overallStatus = overallPlanReadiness(isPlanView && selectedPlan ? [selectedPlan] : plans);
+  const hasProjectedOfferings = (isPlanView && selectedPlan ? [selectedPlan] : plans)
+    .some(plan => plan.terms?.some(term => term.courses?.some(course => course.scheduleProvenance === "PLANNING_PROJECTION")));
   const noPlan = noPlanPresentation(canonicalPlanResult?.category);
   const displayedOverallStatus = plans.length
     ? overallStatus
@@ -1745,6 +1738,7 @@ function PlanComparisonScreen({
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>Overall status</strong><span className="result-status-value">{displayedOverallStatus}</span></p>
         </section>
+        {hasProjectedOfferings && <p className="projection-readiness-note">Future course offerings are projected and must be confirmed.</p>}
         <div className="comparison-heading-row">
           <div>
             <h1 ref={resultHeadingRef} tabIndex={-1}>{isPlanView
@@ -1757,7 +1751,7 @@ function PlanComparisonScreen({
             <p>{isPlanView
               ? "Switch plans, adjust one plan, or return to the side-by-side comparison."
               : plans.length > 1
-                ? "Same degree requirements and graduation target, different feasible schedules."
+                ? "Same degree requirements; compare pace, course placement and graduation target."
                 : plans.length === 1
                   ? "The planner returned one validated schedule for this graduation target."
                   : "Review this result and the next step below."}</p>
@@ -1966,7 +1960,7 @@ function planReadinessLabel(plan) {
   if (readiness === "READY_WITH_CONDITIONS" || disposition.includes("READY_WITH_CONDITIONS")) {
     return "Ready with conditions";
   }
-  if (readiness === "STUDENT_READY" || disposition.includes("STUDENT_READY")) return "Ready";
+  if (readiness === "STUDENT_READY" || disposition.includes("STUDENT_READY")) return "Ready to plan";
   return "Needs advisor attention";
 }
 
@@ -1974,7 +1968,7 @@ function overallPlanReadiness(plans = []) {
   const labels = plans.map(planReadinessLabel);
   if (labels.includes("Needs advisor attention")) return "Needs advisor attention";
   if (labels.includes("Ready with conditions")) return "Ready with conditions";
-  return plans.length ? "Ready" : "Not available";
+  return plans.length ? "Ready to plan" : "Not available";
 }
 
 function noPlanPresentation(category) {
@@ -2008,13 +2002,17 @@ function noPlanPresentation(category) {
 }
 
 function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, planCount = 0 }) {
+  const blockingReasons = !planCount && planResult?.category === "INFEASIBLE_PROVEN"
+    ? planResult.evidence?.blockingReasons || [] : [];
   const hasDiagnostics = outcomes.length || convergences.length || planningGaps.length || planResult?.evidence;
   if (!hasDiagnostics) return null;
   return (
     <details className="result-diagnostics">
       <summary>{planCount ? "Why am I seeing these plans?" : "Why am I seeing this result?"}</summary>
-      <CandidateOutcomes outcomes={outcomes} convergences={convergences} />
-      <PlanningGaps items={planningGaps} />
+      {blockingReasons.length ? <ul>{blockingReasons.map(reason => <li key={reason.code}>{reason.message}</li>)}</ul> : <>
+        <CandidateOutcomes outcomes={outcomes} convergences={convergences} />
+        <PlanningGaps items={planningGaps} />
+      </>}
     </details>
   );
 }
@@ -2196,6 +2194,7 @@ export default function Page() {
   const planEditInFlightRef = useRef(false);
   const pdfDownloadInFlightRef = useRef(false);
   const pdfDownloadAbortRef = useRef(null);
+  const pdfOperationRef = useRef(null);
   const generateButtonRef = useRef(null);
   const planEditTriggerRef = useRef(null);
   const downloadButtonRef = useRef(null);
@@ -2473,6 +2472,15 @@ export default function Page() {
     generationAbortRef.current?.abort();
     pdfDownloadAbortRef.current?.abort();
   }, []);
+
+  useEffect(() => {
+    pdfDownloadAbortRef.current?.abort();
+    pdfDownloadAbortRef.current = null;
+    pdfDownloadInFlightRef.current = false;
+    pdfOperationRef.current = null;
+    setIsDownloadingPdf(false);
+    setPdfStatus("");
+  }, [selectedPlanId, report, formData]);
 
   function restoreFocusAfterFailure(target) {
     setFailureFocusTarget(target);
@@ -2824,30 +2832,34 @@ export default function Page() {
     pdfDownloadAbortRef.current = controller;
     setIsDownloadingPdf(true);
     setPdfStatus("Creating your PDF...");
+    if (!pdfOperationRef.current) {
+      pdfOperationRef.current = {
+        student: { ...formData, courses: selectedCourses(formData.courses) },
+        preparedDate: formData.planCreationDate,
+        selectedPlan,
+        format: "pdf",
+        downloadOperationId: crypto.randomUUID()
+      };
+    }
     try {
       const response = await fetch("/api/reports/economics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          student: {
-            ...formData,
-            courses: selectedCourses(formData.courses)
-          },
-          preparedDate: formData.planCreationDate,
-          selectedPlan,
-          format: "pdf"
-        }),
+        body: JSON.stringify(pdfOperationRef.current),
         signal: controller.signal
       });
       if (!response.ok) {
         const result = await response.json().catch(() => ({}));
+        if (result.code === "PDF_REPORT_CHANGED") pdfOperationRef.current = null;
         throw new Error(result.error || "The PDF could not be created.");
       }
       if (!response.headers.get("content-type")?.toLowerCase().startsWith("application/pdf")) {
         throw new Error("The PDF service returned an invalid response.");
       }
 
-      const objectUrl = URL.createObjectURL(await response.blob());
+      const blob = await response.blob();
+      if (controller.signal.aborted) return;
+      const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = objectUrl;
       link.download = "EconPlanner-Economics-Plan.pdf";
@@ -2855,9 +2867,11 @@ export default function Page() {
       link.click();
       link.remove();
       window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
-      setPdfStatus("PDF downloaded.");
+      setPdfStatus("PDF ready. Download started.");
+      pdfOperationRef.current = null;
     } catch (error) {
-      setPdfStatus(studentFacingRequestError(error, "The PDF could not be created."));
+      if (controller.signal.aborted) return;
+      setPdfStatus(studentFacingRequestError(error, "The PDF could not be created.", "The PDF service could not connect. Please try again.", "PDF creation"));
       restoreFocusAfterFailure("download");
     } finally {
       if (pdfDownloadAbortRef.current === controller) {
@@ -3104,10 +3118,8 @@ export default function Page() {
   }
 
   function navigateBackTo(targetView) {
-    if (window.history.state?.econPlanner && window.history.state.previousView === targetView) {
-      window.history.back();
-      return;
-    }
+    // Keep in-app navigation in React. A native history traversal can remount
+    // Next before the saved view updates and restore the comparison instead.
     navigatePlanner(targetView, selectedPlanId, { replace: true });
   }
 
@@ -3129,39 +3141,7 @@ export default function Page() {
         return;
       }
 
-      const selectedAlternative = edit.type === "option"
-        ? selectedCourse.alternativeOptions?.find(option => option.id === edit.optionId)
-        : null;
-      if (edit.type === "option" && !selectedAlternative) {
-        setPlanEditStatus("That elective option is no longer available in this plan.");
-        return;
-      }
-      const replacementCourse = selectedAlternative ? {
-        ...selectedCourse,
-        ...selectedAlternative,
-        requirementId: selectedCourse.requirementId,
-        selectedOptionId: selectedAlternative.id,
-        alternativeOptions: selectedCourse.alternativeOptions
-      } : selectedCourse;
-
       const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
-      const candidatePlan = {
-        ...sourcePlan,
-        terms: sourcePlan.terms.map(term => {
-          const termId = term.slotId || term.term;
-          let courses = term.courses;
-          if (termId === edit.fromTermId) {
-            courses = edit.type === "option"
-              ? courses.map(course => planCourseIdentity(course) === edit.courseId ? replacementCourse : course)
-              : courses.filter(course => planCourseIdentity(course) !== edit.courseId);
-          }
-          if (edit.type === "move" && termId === edit.toTermId) {
-            courses = [...courses, replacementCourse];
-          }
-          return courses === term.courses ? term : { ...term, courses };
-        })
-      };
-      const candidatePlans = plans.map(plan => plan.id === sourcePlan.id ? candidatePlan : plan);
 
       setEditingPlanCourseKey(editKey);
       setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
@@ -3175,8 +3155,9 @@ export default function Page() {
               ...formData,
               courses: selectedCourses(formData.courses)
             },
-            plan: candidatePlan,
-            plans: candidatePlans
+            plan: sourcePlan,
+            plans,
+            edit
           })
         });
         const data = await response.json().catch(() => ({}));

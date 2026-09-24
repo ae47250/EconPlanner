@@ -97,6 +97,16 @@ test("unapproved production accepts and blocks are classified RED", () => {
   assert.equal(classifyShadowDisagreement({ valid: false, errors: ["hard failure"] }, engineAllow), "UNEXPECTED_PRODUCTION_BLOCK_ENGINE_ACCEPT");
 });
 
+test("a recognized review cannot hide an independent hard disagreement", () => {
+  const review = { status: "REVIEW_REQUIRED", ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"] };
+  const blocked = { academicallyValid: false, decisions: [review, { status: "BLOCK", ruleIds: ["PREREQ-ECO-461"] }] };
+  assert.equal(classifyShadowDisagreement({ valid: true }, blocked), "UNEXPECTED_PRODUCTION_ACCEPT_ENGINE_BLOCK");
+  const allowed = { academicallyValid: true, decisions: [review] };
+  assert.equal(classifyShadowDisagreement({ valid: true }, allowed, { valid: false }), "UNEXPECTED_ENGINE_ORACLE_DISAGREEMENT");
+  assert.equal(classifyShadowDisagreement({ valid: false, errors: ["ECO 114 is full", "Missing statistics"] }, allowed), "UNEXPECTED_PRODUCTION_BLOCK_ENGINE_ACCEPT");
+  assert.equal(classifyShadowDisagreement({ valid: true }, allowed, { valid: true }), "KNOWN_REVIEW_STATE");
+});
+
 test("CP4 placement-context gaps are classified without weakening production blocks", () => {
   const engineAllow = { academicallyValid: true, decisions: [] };
   assert.equal(classifyShadowDisagreement({ valid: false, errors: ["The plan differs from the canonical verified schedule."] }, engineAllow), "KNOWN_SCHEDULE_INTEGRITY_DIFFERENCE");

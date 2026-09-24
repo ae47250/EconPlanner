@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { POST } from "../app/api/majors/map/route.js";
 import { resolvePlanningContext } from "../lib/planning/horizon.js";
 import { auditExternalEconomicsPlanComplete } from "./oracle/audit-external-plan.js";
+import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan } from "./oracle/load-canonical-policy.js";
 
 const oraclePolicy = JSON.parse(await readFile(
   new URL("./oracle/economics-policy.v1.json", import.meta.url),
@@ -13,6 +14,59 @@ const oracleSchedule = JSON.parse(await readFile(
   new URL("./oracle/verified-schedule-2026-2027.json", import.meta.url),
   "utf8"
 ));
+
+test("ordinary freshman plans agree with the independent policy Oracle and early edits rebuild evidence", async () => {
+  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const generated = await postMap({student});
+  const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
+  assert.equal(plans.length, 3);
+  const policy = await loadCanonicalPolicy();
+  for (const plan of plans) assert.equal(oracleEvaluateCanonicalPlan(policy, student, plan).valid, true, plan.id);
+  const early = plans.find(plan => plan.id === "one-year-early");
+  const original = structuredClone(early);
+  const move = async (course, toTermId) => {
+    const from = early.terms.find(term => term.courses.some(item => item.course === course));
+    return validateEdit(student, early, {plans, extraBody: {edit: {
+      type: "move", fromTermId: from.slotId, courseId: from.courses.find(item => item.course === course).requirementId, toTermId
+    }}});
+  };
+  const valid = await move("MAT 217", "winter-2027");
+  assert.equal(valid.response.status, 200, JSON.stringify(valid.data));
+  assert.equal(valid.data.plan.planningContext.expectedGraduationTerm, "Spring/May 2029");
+  const statistics = valid.data.plan.terms.find(term => term.slotId === "winter-2027").courses.find(course => course.course === "MAT 217");
+  assert.ok(["J", "K", "L", "M"].includes(statistics.section));
+  assert.notEqual(statistics.section, "S");
+  assert.equal(statistics.source, "verified-offering");
+  assert.equal(statistics.slotId, "winter-2027");
+  const invalid = await move("MAT 217", "winter-2029");
+  assert.equal(invalid.response.status, 422);
+  assert.match(invalid.data.error, /prerequisite|statistics/i);
+  assert.doesNotMatch(invalid.data.error, /Fall 2028|projected standing/);
+  const projected = await move("ECO 222", "winter-2028");
+  assert.equal(projected.response.status, 200, JSON.stringify(projected.data));
+  const elective = projected.data.plan.terms.find(term => term.slotId === "winter-2028").courses.find(course => course.course === "ECO 222");
+  assert.equal(elective.source, "projected-offering");
+  assert.equal(elective.section, "");
+  assert.equal(elective.availability, null);
+  assert.equal(elective.meeting, null);
+  assert.equal(elective.preliminaryScheduleEvidence, undefined);
+  assert.deepEqual(early, original, "failed and successful requests must not mutate the original plan");
+});
+
+test("senior statistics explanation follows the actual horizon and disappears when statistics are satisfied", async () => {
+  const student = {academicStanding: "senior", planCreationDate: "2026-09-23", courses: completed([
+    "ECO 113", "ECO 114", "MAT 113", "MAT 217", "ECO 213", "ECO 214", "BUSN 323", "ECO 161", "ECO 221", "ECO 222", "ECO 234"
+  ])};
+  const result = async () => (await postMap({student})).data.programs.find(item => item.program.id === "economics-base");
+  assert.ok((await result()).economicsPlans.length);
+  student.courses = student.courses.filter(course => course.code !== "MAT 217");
+  const blocked = await result();
+  assert.equal(blocked.economicsPlanResult.category, "INFEASIBLE_PROVEN");
+  assert.equal(blocked.economicsPlanResult.evidence.blockingReasons.length, 1);
+  assert.match(blocked.economicsPlanResult.evidence.blockingReasons[0].message, /Winter 2027.*ECO 461.*statistics.*before/);
+  student.planCreationDate = "2026-07-30";
+  assert.deepEqual((await result()).economicsPlanResult.evidence.blockingReasons, []);
+});
 
 const PROFILES = Object.freeze({
   verifiedFiveRemaining: {

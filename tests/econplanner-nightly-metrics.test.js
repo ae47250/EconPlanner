@@ -474,6 +474,10 @@ test("GREEN, AMBER, and RED gate paths are distinct and timing remains AMBER", (
     observabilityPolicy
   };
   assert.equal(evaluateGates(common).overall, "GREEN");
+  const engineOnly = structuredClone(common);
+  engineOnly.generated.productionDecisionEngine.unexpectedDisagreements = 1;
+  assert.equal(evaluateGates(engineOnly).overall, "RED");
+  assert.ok(evaluateGates(engineOnly).red.some(item => item.code === "UNEXPECTED_ENGINE_DISAGREEMENT"));
   assert.equal(evaluateGates({ ...common, pdf: { hosted: { configuration: "NOT_CONFIGURED", status: "SKIPPED" } } }).overall, "AMBER");
   assert.equal(evaluateGates({ ...common, mutations: { survivedCritical: 1 } }).overall, "RED");
   const missingCommitShard = shard(2, [profile("p2", "h2")]);

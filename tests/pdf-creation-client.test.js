@@ -56,6 +56,17 @@ function ids(...values) {
   return () => values[index++] || `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`;
 }
 
+test("manual retries can reuse the stored operation and report a changed-content conflict", async () => {
+  const submitted = [];
+  const input = {html: "<p>Fictional report</p>", downloadOperationId: "00000000-0000-4000-8000-000000000001"};
+  for (let attempt = 0; attempt < 2; attempt++) {
+    await createPdfFromHtml(input, {environment, fetchImpl: successfulStoredFetch({submitted})});
+  }
+  assert.equal(submitted[0].idempotencyKey, submitted[1].idempotencyKey);
+  assert.notEqual(submitted[0].correlationId, submitted[1].correlationId);
+  await assert.rejects(createPdfFromHtml(input, {environment, fetchImpl: async () => serviceError(409, "idempotency_conflict")}), error => error.code === "PDF_REPORT_CHANGED" && error.status === 409);
+});
+
 test("PDF client succeeds on the first stored attempt and uses a new operation key for identical HTML", async () => {
   const firstSubmitted = [];
   const secondSubmitted = [];

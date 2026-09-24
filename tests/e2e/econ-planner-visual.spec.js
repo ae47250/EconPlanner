@@ -150,7 +150,7 @@ const visualStates = [
     id: "ordinary-results",
     setup: async page => {
       await openFixtureResult(page, plannerResultFixture());
-      await expect(page.locator(".result-status-value")).toHaveText("Ready");
+      await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
     }
   },
   {
