@@ -700,7 +700,8 @@ function PlanTimeline({
   schedule,
   onSelectPlan,
   onEditPlanCourse,
-  editingPlanCourseKey
+  editingPlanCourseKey,
+  planEditFeedback
 }) {
   if (!plans.length) {
     return planningGaps.length ? (
@@ -774,6 +775,14 @@ function PlanTimeline({
                         {term.courses.map(course => {
                           const termId = term.slotId || term.term;
                           const courseId = planCourseIdentity(course);
+                          const feedback = planEditFeedback?.planId === activePlan.id
+                            && planEditFeedback.fromTermId === termId
+                            && planEditFeedback.courseId === courseId
+                            ? planEditFeedback.message : null;
+                          const moveTerms = (activePlan.terms || []).filter(optionTerm => (
+                            !Array.isArray(course.moveTermIds)
+                            || course.moveTermIds.includes(optionTerm.slotId || optionTerm.term)
+                          ));
                           return (
                             <li key={`${termId}-${courseId}`}>
                               <div className="plan-course-summary">
@@ -784,7 +793,10 @@ function PlanTimeline({
                                 {course.preliminaryScheduleEvidence && <span className="plan-course-availability">Preliminary schedule ({course.preliminaryScheduleEvidence.issuedOn}); course and term subject to change</span>}
                                 {course.approvalRequired?.length > 0 && <span className="plan-course-approval">Approval required</span>}
                               </div>
-                              {onEditPlanCourse && !course.fixedInProgress && (
+                              {onEditPlanCourse && course.course === "ECO 461" && (
+                                <p className="required-course-note">ECO 461 stays in senior Winter. If graduating early, this plan assumes senior standing in the final year; confirm it with your advisor.</p>
+                              )}
+                              {onEditPlanCourse && !course.fixedInProgress && course.course !== "ECO 461" && (
                                 <div className="plan-course-actions">
                                   {course.alternativeOptions?.length > 1 && (
                                     <label>
@@ -809,7 +821,7 @@ function PlanTimeline({
                                       </select>
                                     </label>
                                   )}
-                                  <label>
+                                  {moveTerms.length > 1 && <label>
                                     <span className="sr-only">Move {course.course} to another term</span>
                                     <select
                                       aria-label={`Move ${course.course} to another term`}
@@ -823,7 +835,7 @@ function PlanTimeline({
                                           courseId
                                         }, event.currentTarget)}
                                     >
-                                      {(activePlan.terms || []).map(optionTerm => {
+                                      {moveTerms.map(optionTerm => {
                                         const optionTermId = optionTerm.slotId || optionTerm.term;
                                         return (
                                           <option value={optionTermId} key={optionTermId}>
@@ -832,9 +844,14 @@ function PlanTimeline({
                                         );
                                       })}
                                     </select>
-                                  </label>
+                                  </label>}
+                                  {course.moveRestriction && <span className="required-course-note">{course.moveRestriction}</span>}
+                                  {moveTerms.length <= 1 && !course.moveRestriction && (
+                                    <span className="required-course-note">No other term has a supported placement and room for this course in the current plan.</span>
+                                  )}
+                                  {feedback && <span className="plan-course-edit-feedback" role="alert">{feedback}</span>}
                                   <span className="required-course-note">
-                                    Required for this plan. Move it to another valid term{course.alternativeOptions?.length > 1 ? " or choose a replacement above" : ""}.
+                                    Required for this plan.{moveTerms.length > 1 ? " Move it to another listed term" : ""}{course.alternativeOptions?.length > 1 ? " or choose a replacement above" : ""}.
                                   </span>
                                 </div>
                               )}
@@ -1062,6 +1079,7 @@ function PlanComparisonScreen({
   isGenerating,
   editingPlanCourseKey,
   planEditStatus,
+  planEditFeedback,
   canUndoPlanEdit,
   onEditCourses,
   onReviewTimeline,
@@ -1454,6 +1472,7 @@ function PlanComparisonScreen({
         .comparison-page .plan-course-actions select,
         .comparison-page .plan-course-actions button { width: 100%; min-height: 2rem; font-size: 12px; }
         .comparison-page .plan-course-actions button { border: 1px solid #b64235; background: #fff; color: #8d251b; }
+        .comparison-page .plan-course-edit-feedback { padding: .45rem .55rem; border: 1px solid #c85a4c; border-radius: .25rem; background: #fff2ef; color: #6f2119; font-weight: 600; }
         .comparison-page .plan-validation-errors { margin-top: 1rem; padding: .8rem; border: 1px solid #c85a4c; background: #fff2ef; color: #6f2119; }
         .comparison-page .plan-validation-errors ul { margin: .45rem 0 0; padding-left: 1.2rem; }
         .plan-edit-status { margin: .75rem 0; color: #33425d; }
@@ -1810,6 +1829,7 @@ function PlanComparisonScreen({
             onSelectPlan={onSelectPlan}
             onEditPlanCourse={onEditPlanCourse}
             editingPlanCourseKey={editingPlanCourseKey || (isGenerating ? "generation-in-progress" : "")}
+            planEditFeedback={planEditFeedback}
           />
         ) : plans.length > 0 ? (
           <div className="comparison-grid">
@@ -2216,6 +2236,7 @@ export default function Page() {
   const [pdfStatus, setPdfStatus] = useState("");
   const [editingPlanCourseKey, setEditingPlanCourseKey] = useState("");
   const [planEditStatus, setPlanEditStatus] = useState("");
+  const [planEditFeedback, setPlanEditFeedback] = useState(null);
   const [planEditUndo, setPlanEditUndo] = useState(null);
   const [isComparisonExiting, setIsComparisonExiting] = useState(false);
   const planningContext = resolvePlanningContext(formData);
@@ -3144,6 +3165,7 @@ export default function Page() {
       const editKey = `${sourcePlan.id}:${edit.fromTermId}:${edit.courseId}`;
 
       setEditingPlanCourseKey(editKey);
+      setPlanEditFeedback(null);
       setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
       try {
         const response = await fetch("/api/majors/map", {
@@ -3182,11 +3204,13 @@ export default function Page() {
         ));
         setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
       } catch (error) {
-        setPlanEditStatus(studentFacingRequestError(
+        const message = studentFacingRequestError(
           error,
           "The plan edit could not be validated.",
           "The plan edit could not be validated. Please try again."
-        ));
+        );
+        setPlanEditStatus(message);
+        setPlanEditFeedback({ planId: sourcePlan.id, fromTermId: edit.fromTermId, courseId: edit.courseId, message });
         restoreFocusAfterFailure("plan-edit");
       } finally {
         setEditingPlanCourseKey("");
@@ -3258,6 +3282,7 @@ export default function Page() {
           isGenerating={isGenerating}
           editingPlanCourseKey={editingPlanCourseKey}
           planEditStatus={planEditStatus}
+          planEditFeedback={planEditFeedback}
           canUndoPlanEdit={Boolean(planEditUndo)}
           onEditCourses={returnToCourseSelection}
           onReviewTimeline={() => returnToInputStep(1)}

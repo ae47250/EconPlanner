@@ -3,6 +3,10 @@ import {
   externalTermPosition,
   parseExternalAcademicYear
 } from "./plan-signature.js";
+import { readFileSync } from "node:fs";
+
+const provenance = JSON.parse(readFileSync(new URL("../../policy/provenance/sources.json", import.meta.url), "utf8"));
+const provenanceById = new Map(provenance.sources.map(source => [source.sourceId, source]));
 
 const ORACLE_SOURCE = "tests/oracle/economics-policy.v1.json";
 const PLACEHOLDER_OPTION_GROUPS = new Map([
@@ -49,6 +53,16 @@ function ruleById(policy, ruleId) {
 function ruleSource(policy, ruleId) {
   const refs = ruleById(policy, ruleId)?.sourceRefs;
   return Array.isArray(refs) && refs.length ? refs.join(", ") : ORACLE_SOURCE;
+}
+
+function approvalSourceMatches(sourceRef, sourceRefs) {
+  if (sourceRefs.includes(sourceRef)) return true;
+  return sourceRefs.some(reference => {
+    const [sourceId, fragment] = reference.split("#");
+    const source = provenanceById.get(sourceId);
+    if (!source?.path || !/^Confirmed-policy-[34]$/.test(fragment || "")) return false;
+    return sourceRef === `${source.path}#${fragment.slice("Confirmed-".length)}`;
+  });
 }
 
 function makeFinding(policy, ruleId, objectPath, message, extra = {}) {
@@ -284,7 +298,7 @@ function consumeApproval({ policy, approvals, usedApprovals, rule, dependent, pr
       : upper(approval.prerequisite) === expected.prerequisite, "prerequisite"],
     [sameText(approval.term, expected.term), "term"],
     [Boolean(text(approval.reason)), "reason"],
-    [expected.sourceRefs.includes(approval.sourceRef), "sourceRef"],
+    [approvalSourceMatches(approval.sourceRef, expected.sourceRefs), "sourceRef"],
     [approval.attachedCourse === null || approval.attachedCourse === expected.course, "attachment course"],
     [approval.attachedTerm === null || sameText(approval.attachedTerm, expected.term), "attachment term"]
   ];

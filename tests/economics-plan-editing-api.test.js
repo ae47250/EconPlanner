@@ -38,19 +38,58 @@ test("ordinary freshman plans agree with the independent policy Oracle and early
   assert.notEqual(statistics.section, "S");
   assert.equal(statistics.source, "verified-offering");
   assert.equal(statistics.slotId, "winter-2027");
+  assert.ok(early.warnings.some(message => message.includes("MAT 217-S")), "The source plan must carry the May section warning.");
+  assert.ok(!valid.data.plan.warnings.some(message => message.includes("MAT 217-S")), "The moved plan must drop the old section warning.");
+  assert.ok(!valid.data.plan.studentMessages.some(message => message.includes("MAT 217-S")));
   const invalid = await move("MAT 217", "winter-2029");
   assert.equal(invalid.response.status, 422);
   assert.match(invalid.data.error, /prerequisite|statistics/i);
   assert.doesNotMatch(invalid.data.error, /Fall 2028|projected standing/);
-  const projected = await move("ECO 222", "winter-2028");
-  assert.equal(projected.response.status, 200, JSON.stringify(projected.data));
-  const elective = projected.data.plan.terms.find(term => term.slotId === "winter-2028").courses.find(course => course.course === "ECO 222");
-  assert.equal(elective.source, "projected-offering");
-  assert.equal(elective.section, "");
-  assert.equal(elective.availability, null);
-  assert.equal(elective.meeting, null);
-  assert.equal(elective.preliminaryScheduleEvidence, undefined);
+  const mayElective = early.terms.flatMap(term => term.courses).find(course => course.course === "ECO 222");
+  const mayTerm = early.terms.find(term => term.courses.includes(mayElective));
+  assert.deepEqual(mayElective.moveTermIds, [mayTerm.slotId]);
+  assert.match(mayElective.moveRestriction, /typically offered only in Spring\/May/);
+  const unsupported = await move("ECO 222", "winter-2028");
+  assert.equal(unsupported.response.status, 422);
+  assert.match(unsupported.data.error, /typically offered only in Spring\/May/);
+  const core = early.terms.flatMap(term => term.courses).find(course => course.course === "ECO 113");
+  assert.ok(core.moveTermIds.every(termId => !termId.startsWith("may-")));
+  assert.ok(core.moveTermIds.every(termId => !termId.startsWith("spring-")));
+  assert.match(core.moveRestriction, /normally planned in Fall or Winter/);
+  const occupiedMay = await move("ECO 113", "spring-2027");
+  assert.equal(occupiedMay.response.status, 422);
+  assert.match(occupiedMay.data.error, /Spring\/May has room for only one course/);
+  const capstone = early.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
+  assert.equal(capstone.moveTermIds, undefined);
+  const capstoneFrom = early.terms.find(term => term.courses.includes(capstone));
+  const locked = await validateEdit(student, early, {plans, extraBody: {edit: {
+    type: "move", fromTermId: capstoneFrom.slotId, courseId: capstone.requirementId, toTermId: "winter-2027"
+  }}});
+  assert.equal(locked.response.status, 422);
+  assert.match(locked.data.error, /fixed in senior Winter.*senior standing/i);
   assert.deepEqual(early, original, "failed and successful requests must not mutate the original plan");
+});
+
+test("moving ECO 214 before ECO 461 removes a no-longer-required concurrent approval", async () => {
+  const student = {
+    academicStanding: "junior", planCreationDate: "2026-07-30",
+    courses: completed(["MAT 113", "ECO 161", "ECO 221"])
+  };
+  const generated = await postMap({ student });
+  const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
+  const plan = plans.find(item => item.id === "balanced");
+  const original = structuredClone(plan);
+  const source = plan.terms.find(term => term.slotId === "winter-2028");
+  const course = source.courses.find(item => item.course === "ECO 214");
+  assert.ok(source.courses.find(item => item.course === "ECO 461").approvalRequired?.length);
+  const edited = await validateEdit(student, plan, { plans, extraBody: { edit: {
+    type: "move", fromTermId: source.slotId, toTermId: "winter-2027", courseId: course.requirementId
+  } } });
+  assert.equal(edited.response.status, 200, JSON.stringify(edited.data));
+  const capstone = edited.data.plan.terms.flatMap(term => term.courses).find(item => item.course === "ECO 461");
+  assert.equal(capstone.approvalRequired?.length || 0, 0);
+  assert.equal(edited.data.plan.feasibility.requiredApprovals.some(item => item.course === "ECO 461"), false);
+  assert.deepEqual(plan, original);
 });
 
 test("senior statistics explanation follows the actual horizon and disappears when statistics are satisfied", async () => {

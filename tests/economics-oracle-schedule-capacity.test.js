@@ -224,6 +224,16 @@ test("direct meeting conflicts are rejected", () => {
   assert.ok(result.violations.some(item => item.code === "SCHEDULE_MEETING_CONFLICT"));
 });
 
+test("a canonical ECO 222 May catalog projection has an explicit source", () => {
+  const input = projectedInput({
+    fixtureId: "eco-222-catalog-may", academicYear: "2027/2028",
+    termKey: "May", course: "ECO 222", source: "catalog-statement", graduationYear: 2028
+  });
+  const result = checkExternalEconomicsScheduleAndHorizon(input);
+  assert.ok(!result.violations.some(item => item.code === "SCHEDULE_FUTURE_SOURCE_NOT_EXPLICIT"));
+  assert.ok(result.projectionFindings.some(item => item.code === "SCHEDULE_FUTURE_PLANNING_PROJECTION"));
+});
+
 test("4/4/1 capacity includes reserved outside-course units", () => {
   assert.equal(fixtures.capacityCases.length, 5);
   for (const fixture of fixtures.capacityCases) {
