@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import fc from "fast-check";
 import { POST } from "../app/api/majors/map/route.js";
 import { resolvePlanningContext, selectedPlanContext } from "../lib/planning/horizon.js";
+import { checkExternalEconomicsScheduleAndHorizon } from "./oracle/check-schedule-and-horizon.js";
 import { auditExternalEconomicsPlanComplete } from "./oracle/audit-external-plan.js";
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan } from "./oracle/load-canonical-policy.js";
 
@@ -17,6 +18,7 @@ const completed = codes => codes.map(code => ({ code, status: "completed" }));
 const baseSenior = completed(["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323"]);
 
 const profiles = [
+  ["extended", { academicStanding: "freshman", customGraduationEnabled: true, customExpectedGraduationYear: "2031", planCreationDate: "2026-09-23", courses: [] }],
   ["freshman", { academicStanding: "freshman", planCreationDate: "2026-09-23", courses: [] }],
   ["early", { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] }],
   ["sophomore", { academicStanding: "sophomore", planCreationDate: "2026-07-30", courses: completed(["ECO 113", "ECO 114", "MAT 113"]) }],
@@ -75,7 +77,7 @@ function policyBoundary(student, course, destination) {
   const rule = policy.rules.find(item => item.ruleType === "termLoad" && item.condition.canonicalTerm === key);
   const reserved = Number(student.reservedCourseUnits?.[destination.slotId] ?? 0);
   if (course.fixedInProgress) return { blocked: true, ruleIds: ["FIXED-IN-PROGRESS"] };
-  if (course.course === "ECO 461") return { blocked: true, ruleIds: ["CAPSTONE-WINTER-ONLY", "CAPSTONE-SENIOR-STANDING"] };
+  if (course.course === "ECO 461" && !policy.byRuleId["CAPSTONE-WINTER-ONLY"].effect.allowedCanonicalTerms.includes(key)) return { blocked: true, ruleIds: ["CAPSTONE-WINTER-ONLY"] };
   if (rule && (destination.courses.length + 1 > rule.effect.maxTotalCourses
     || destination.courses.reduce((sum, item) => sum + Number(item.units ?? 1), reserved) + Number(course.units ?? 1) > rule.effect.normalCourseUnits
     || (rule.effect.maxEconomicsCourses
@@ -85,19 +87,82 @@ function policyBoundary(student, course, destination) {
   }
   const exact = matchingExactSections(course.course, destination);
   if (exact && !exact.length) return { blocked: true, ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"] };
-  if (!exact && key === "MAY") {
-    const excluded = policy.byRuleId["PLANNING-MAY-COURSE-EXCLUSIONS"];
-    if (excluded.effect.excludedCourses.includes(course.course)) return { blocked: true, ruleIds: [excluded.ruleId] };
-  }
-  if (!exact) {
-    const mayOnly = policy.offeringPatterns.find(pattern => (
-      [pattern.course].flat().includes(course.course)
-      && pattern.approvedRecurringTerms.length === 1
-      && pattern.approvedRecurringTerms[0] === "MAY"
-    ));
-    if (mayOnly && key !== "MAY") return { blocked: true, ruleIds: [mayOnly.patternId] };
-  }
+  const excluded = policy.offeringPatterns.find(pattern => [pattern.course].flat().includes(course.course)
+    && pattern.hardExcludedTerms.includes(key));
+  if (excluded) return { blocked: true, ruleIds: [excluded.patternId] };
   return { blocked: false, ruleIds: [] };
+}
+
+// Build counterfactual placements from the independent verified schedule and canonical
+// permission records. Offering patterns guide generation; the future-projection policy
+// permits explicitly unconfirmed edits. Do not use production edit/validation helpers.
+function sameCourseTiming(left, right) {
+  const timing = plan => placements(plan).map(({ term, course }) => [
+    term.slotId,
+    String(course.requirementId).startsWith("eco-elective") ? "elective" : course.requirementId,
+    String(course.requirementId).startsWith("eco-elective") ? "elective" : course.course
+  ].join("|")).sort();
+  return left.planningContext.expectedGraduationTerm === right.planningContext.expectedGraduationTerm
+    && left.planningContext.planningPace === right.planningContext.planningPace
+    && JSON.stringify(timing(left)) === JSON.stringify(timing(right));
+}
+
+function expectedMove(student, plan, from, course, destination, plans = []) {
+  const boundary = policyBoundary(student, course, destination);
+  if (destination.isCurrentTerm) {
+    const prerequisite = policy.rules.find(rule => rule.ruleType === "coursePrerequisite" && rule.condition.course === course.course);
+    const finished = new Set((student.courses || []).filter(item => ["completed", "transfer"].includes(item.status)).map(item => item.code));
+    if ((prerequisite?.effect.allOf || []).some(code => !finished.has(code))) {
+      return { status: 422, evidence: [prerequisite.ruleId] };
+    }
+  }
+  if (boundary.blocked) return { status: 422, evidence: boundary.ruleIds };
+  const exact = matchingExactSections(course.course, destination);
+  const rows = exact ? verifiedSchedule.sections.filter(row =>
+    canonicalTerm({ termKey: row.term }) === canonicalTerm(destination)
+    && (row.canonicalCrossListIdentity || [row.course]).includes(course.course)) : [null];
+  const audits = rows.map(row => {
+    const candidate = structuredClone(plan);
+    const source = candidate.terms.find(term => term.slotId === from.slotId);
+    const target = candidate.terms.find(term => term.slotId === destination.slotId);
+    const index = source.courses.findIndex(item => item.requirementId === course.requirementId);
+    const moved = source.courses.splice(index, 1)[0];
+    Object.assign(moved, {
+      slotId: destination.slotId, term: destination.term, termKey: destination.termKey,
+      academicYear: destination.academicYear, projectedStanding: destination.projectedStanding,
+      source: row ? "verified-offering" : "projected-offering",
+      verificationStatus: row ? "verified" : "unconfirmed",
+      title: row?.title || moved.title, units: row?.units ?? moved.units,
+      crossListedAs: row?.canonicalCrossListIdentity.filter(code => code !== course.course) || [],
+      section: row?.section || "", availability: row?.availability || null,
+      meeting: row ? { ...row.meeting, ...row.courseDates } : null,
+      provenance: row ? { humanVerifiedOn: row.verificationDate, sourceFiles: [row.sourceReference] } : null
+    });
+    delete moved.preliminaryScheduleEvidence;
+    target.courses.push(moved);
+    const available = new Set((student.courses || []).filter(item => ["completed", "transfer", "in_progress"].includes(item.status)).map(item => item.code));
+    for (const term of candidate.terms) {
+      for (const item of term.courses) {
+        delete item.approvalRequired;
+        const approvals = policy.rules.filter(rule => rule.ruleType === "permissionException"
+          && rule.condition.dependentCourse === item.course).flatMap(rule =>
+          (rule.condition.concurrentOptions || []).filter(code => !available.has(code)
+            && term.courses.some(other => other.course === code)).map(code => ({
+            ruleId: rule.ruleId, authority: rule.effect.approvalAuthority,
+            course: item.course, prerequisite: code, term: term.term,
+            reason: "Concurrent prerequisite requires approval", sourceRef: rule.sourceRefs[0]
+          })));
+        if (approvals.length) item.approvalRequired = approvals;
+      }
+      for (const item of term.courses) available.add(item.course);
+    }
+    return { ...completeOracleAudit(student, candidate),
+      duplicateSchedule: plans.find(peer => peer.id !== plan.id && sameCourseTiming(candidate, peer))?.id || null };
+  });
+  const viable = audits.find(audit => audit.violations.length === 0);
+  return { status: viable ? 200 : 422, duplicateSchedule: viable?.duplicateSchedule, evidence: viable
+    ? ["FUTURE-UNPUBLISHED-SCHEDULE-PLANNING-PROJECTION", "Independent Oracle: no violations"]
+    : audits.flatMap(audit => audit.violations.map(item => item.ruleId || item.code)) };
 }
 
 function oracleApproval(approval) {
@@ -113,9 +178,11 @@ function oracleApproval(approval) {
 
 function completeOracleAudit(student, plan) {
   const studentCourses = (student.courses || []).filter(course => ["completed", "transfer", "in_progress"].includes(course.status));
-  return auditExternalEconomicsPlanComplete({
+  const input = {
     student: {
       academicStanding: student.academicStanding,
+      // The requirements auditor counts projected completions; preserve that input,
+      // and independently check current-term chronology in expectedMove below.
       completedCourses: studentCourses.map(course => ({ course: course.code, ...(course.status === "in_progress" ? { projectedCompletion: true } : {}) })),
       inProgressCourses: studentCourses.filter(course => course.status === "in_progress").map(course => {
         const placement = placements(plan).find(item => item.course.course === course.code && item.course.fixedInProgress);
@@ -158,7 +225,13 @@ function completeOracleAudit(student, plan) {
     },
     policy: oracleSpecification,
     verifiedSchedule
-  });
+  };
+  const complete = auditExternalEconomicsPlanComplete(input);
+  // Prerequisite review can short-circuit the composed audit. Still independently
+  // check section conflicts and capacity instead of treating an unchecked family as valid.
+  const schedule = checkExternalEconomicsScheduleAndHorizon({ ...input, requirementAllocation: complete.requirementAllocation });
+  return { ...complete, valid: complete.valid && schedule.violations.length === 0,
+    violations: [...complete.violations, ...schedule.violations] };
 }
 
 function assignmentSignature(plan) {
@@ -210,7 +283,7 @@ function assertAcceptedMove({ student, plan, from, course, destination, result, 
 }
 
 test(`course-to-term move matrix [${fullMode ? "full" : "PR"}]`, async t => {
-  const coverage = { profiles: 0, plans: 0, pairs: 0, listed: 0, hidden: 0, accepted: 0, rejected: 0, may2027: 0, capstone: 0, fixed: 0 };
+  const coverage = { profiles: 0, plans: 0, pairs: 0, listed: 0, hidden: 0, accepted: 0, rejected: 0, may2027: 0, capstone: 0, capstoneAccepted: 0, capstoneRejected: 0, fixed: 0 };
   const expectedCells = new Set();
   const exercisedCells = new Set();
   const uncoveredProfiles = [];
@@ -235,19 +308,28 @@ test(`course-to-term move matrix [${fullMode ? "full" : "PR"}]`, async t => {
       }
       for (const { term: from, course } of placements(plan)) for (const destination of plan.terms) {
         if (destination === from) continue;
-        const boundary = policyBoundary(student, course, destination);
-        const listed = course.moveTermIds?.includes(destination.slotId) === true;
+        const expected = expectedMove(student, plan, from, course, destination, plans);
+        const listed = !course.fixedInProgress;
         exercisedCells.add(`${profileName}|${plan.id}|${course.requirementId || course.course}|${from.slotId}|${destination.slotId}`);
-        const label = JSON.stringify({ profile: profileName, plan: plan.id, course: course.course, source: from.slotId, destination: destination.slotId, listed, ruleIds: boundary.ruleIds });
+        const label = JSON.stringify({ profile: profileName, plan: plan.id, course: course.course, source: from.slotId, destination: destination.slotId, listed, expected: expected.status, evidence: expected.evidence });
         const result = await post({ action: "validate-plan", student, plan, plans, edit: moveEdit(plan, from, course, destination) });
         coverage.pairs += 1;
         coverage[listed ? "listed" : "hidden"] += 1;
         if (destination.slotId === "spring-2027") coverage.may2027 += 1;
-        if (course.course === "ECO 461") coverage.capstone += 1;
+        if (course.course === "ECO 461") {
+          coverage.capstone += 1;
+          coverage[result.status === 200 ? "capstoneAccepted" : "capstoneRejected"] += 1;
+        }
         if (course.fixedInProgress) coverage.fixed += 1;
         coverage[result.status === 200 ? "accepted" : "rejected"] += 1;
         try {
-          if (boundary.blocked) assert.equal(result.status, 422, `${label}: independently blocked placement was accepted`);
+          if (expected.status === 200 && expected.duplicateSchedule && result.status === 422) {
+            // Academic validity does not override the existing distinct-plan contract.
+            // Independently establish identical coursework timing before accepting this reason.
+            assert.match(result.data.error, /same material schedule/, label);
+          } else {
+            assert.equal(result.status, expected.status, `${label}: independent expected outcome differs from API`);
+          }
           if (result.status === 200) {
             assert.equal(listed, true, `${label}: a hidden destination was accepted`);
             assertAcceptedMove({ student, plan, from, course, destination, result, label });
@@ -258,23 +340,22 @@ test(`course-to-term move matrix [${fullMode ? "full" : "PR"}]`, async t => {
           }
           assert.deepEqual(plan, original, `${label}: validation mutated the source plan`);
         } catch (error) {
-          if (!fullMode) throw error;
-          findings.push({ cell: label, failure: String(error.message).slice(0, 1200) });
+          findings.push({ cell: label, actualStatus: result.status, error: result.data.error || null, failure: String(error.message).slice(0, 1200) });
         }
       }
     }
   }
-  for (const key of (profileFilter ? ["profiles", "plans", "pairs"] : ["profiles", "plans", "pairs", "listed", "hidden", "accepted", "rejected", "may2027", "capstone", "fixed"])) {
+  for (const key of (profileFilter ? ["profiles", "plans", "pairs"] : ["profiles", "plans", "pairs", "listed", "hidden", "accepted", "rejected", "may2027", "capstone", "capstoneAccepted", "capstoneRejected", "fixed"])) {
     assert.ok(coverage[key] > 0, `Missing move-matrix coverage: ${key}`);
   }
   const uncoveredCells = [...expectedCells].filter(cell => !exercisedCells.has(cell));
-  t.diagnostic(JSON.stringify({ mode: fullMode ? "full" : "PR", profileFilter, coverage, uncoveredCells, uncoveredProfiles, findingCount: findings.length, findings: findings.slice(0, 20) }));
+  t.diagnostic(JSON.stringify({ mode: fullMode ? "full" : "PR", profileFilter, coverage, uncoveredCells, uncoveredProfiles, findingCount: findings.length, findings }));
   assert.deepEqual(uncoveredCells, [], "Generated course-to-term cells were not exercised");
   assert.equal(findings.length, 0, `${findings.length} move cells failed; first: ${JSON.stringify(findings[0])}`);
 });
 
 test("an invalid move leaves the plan usable for two consecutive valid moves", async () => {
-  const student = profiles[1][1];
+  const student = profiles.find(([name]) => name === "early")[1];
   const generated = await post({ student });
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   let plan = plans.find(item => item.id === "one-year-early");
@@ -298,8 +379,8 @@ test("an invalid move leaves the plan usable for two consecutive valid moves", a
   assert.deepEqual(assignmentSignature(plan), assignmentSignature(before));
 });
 
-test("invalid and forged move requests cannot expand a plan's move choices", async () => {
-  const student = profiles[1][1];
+test("malformed requests fail and forged evidence cannot confirm a future offering", async () => {
+  const student = profiles.find(([name]) => name === "early")[1];
   const generated = await post({ student });
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   const plan = plans.find(item => item.id === "one-year-early");
@@ -309,9 +390,12 @@ test("invalid and forged move requests cannot expand a plan's move choices", asy
   const destination = plan.terms.find(term => term.slotId === "winter-2028");
   const forged = structuredClone(plan);
   forged.terms.find(term => term.slotId === from.slotId).courses.find(item => item.requirementId === course.requirementId).moveTermIds = [from.slotId, destination.slotId];
-  const rejected = await post({ action: "validate-plan", student, plan: forged, plans, edit: { ...moveEdit(plan, from, course, destination), source: "verified-offering", section: "J" } });
-  assert.equal(rejected.status, 422);
-  assert.match(rejected.data.error, /typically offered only in Spring\/May/);
+  const forgedResult = await post({ action: "validate-plan", student, plan: forged, plans, edit: { ...moveEdit(plan, from, course, destination), source: "verified-offering", section: "J" } });
+  assert.equal(forgedResult.status, 200, JSON.stringify(forgedResult.data));
+  const projection = placements(forgedResult.data.plan).find(item => item.course.requirementId === course.requirementId).course;
+  assert.equal(projection.source, "projected-offering");
+  assert.equal(projection.section, "");
+  assert.equal(projection.availability, null);
   for (const edit of [
     { ...moveEdit(plan, from, course, destination), fromTermId: "missing-term" },
     { ...moveEdit(plan, from, course, destination), toTermId: "missing-term" },
@@ -331,7 +415,7 @@ test("invalid and forged move requests cannot expand a plan's move choices", asy
 });
 
 test(`shrinking move sequences preserve the selected plan [seed=20260923; ${fullMode ? 50 : 8} runs]`, async () => {
-  const student = profiles[1][1];
+  const student = profiles.find(([name]) => name === "early")[1];
   const generated = await post({ student });
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   const startingPlan = plans.find(item => item.id === "one-year-early");
@@ -346,6 +430,10 @@ test(`shrinking move sequences preserve the selected plan [seed=20260923; ${full
       const result = await post({ action: "validate-plan", student, plan: current, plans: plans.map(plan => plan.id === current.id ? current : plan), edit: moveEdit(current, chosen.term, chosen.course, destination) });
       const label = JSON.stringify({ seed: 20260923, sequence, course: chosen.course.course, from: chosen.term.slotId, to: destination.slotId });
       assert.deepEqual(current, before, `${label}: request mutated input`);
+      const expected = expectedMove(student, current, chosen.term, chosen.course, destination, plans);
+      if (expected.status === 200 && expected.duplicateSchedule && result.status === 422) {
+        assert.match(result.data.error, /same material schedule/, label);
+      } else assert.equal(result.status, expected.status, `${label}: ${JSON.stringify(expected)}`);
       if (result.status === 200) {
         assertAcceptedMove({ student, plan: current, from: chosen.term, course: chosen.course, destination, result, label });
         current = result.data.plan;

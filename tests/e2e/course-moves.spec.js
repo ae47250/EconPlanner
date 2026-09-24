@@ -7,12 +7,16 @@ import {
   resetPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus
 } from "./cp7-helpers.js";
 
-async function openPlan(page, standing, { early = false, completed = [], date = "2026-09-23" } = {}) {
+async function openPlan(page, standing, { early = false, completed = [], date = "2026-09-23", graduationYear = null } = {}) {
   await resetPlanner(page);
   await chooseStanding(page, standing);
   await page.locator("details.more-details > summary").first().click();
   await page.getByLabel("Plan creation date", { exact: true }).fill(date);
   if (early) await page.getByRole("button", { name: "I’d like to graduate one year early", exact: true }).click();
+  if (graduationYear) {
+    await page.getByRole("button", { name: "My expected graduation year is different", exact: true }).click();
+    await page.getByRole("combobox", { name: "When do you expect to graduate?", exact: true }).selectOption(graduationYear);
+  }
   await continueToCourses(page);
   for (const code of completed) await setCourseStatus(page, code, "Completed");
   const response = await generatePlans(page);
@@ -37,12 +41,10 @@ function validationResponse(page) {
 test("move selectors, rejection feedback, successful move, undo, and reload agree", async ({ page }) => {
   await openPlan(page, "freshman", { early: true });
   const core = page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true });
-  await expect(core.locator('option[value^="spring-"]')).toHaveCount(0);
-  await expect(card(page, "ECO 113")).toContainText("normally planned in Fall or Winter");
-  await expect(page.getByRole("combobox", { name: "Move ECO 222 to another term", exact: true })).toHaveCount(0);
-  await expect(card(page, "ECO 222")).toContainText("typically offered only in Spring/May");
-  await expect(page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true })).toHaveCount(0);
-  await expect(card(page, "ECO 461")).toContainText("senior standing in the final year");
+  const termIds = await page.locator(".term-card").count();
+  await expect(core.locator("option")).toHaveCount(termIds);
+  await expect(page.getByRole("combobox", { name: "Move ECO 222 to another term", exact: true })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true })).toBeVisible();
 
   await core.focus();
   const rejectedResponse = validationResponse(page);
@@ -113,7 +115,7 @@ test("after an elective replacement the May 2027 card still rejects an unsupport
   const updatedPlan = (await replacementResponse.json()).plan;
   await expect(may).toContainText("ECO 260");
   await expect(may.locator(".plan-course-summary > strong")).toHaveCount(1);
-  await expect(page.getByRole("combobox", { name: "Move ECO 260 to another term", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("combobox", { name: "Move ECO 260 to another term", exact: true })).toBeVisible();
   const mayTerm = updatedPlan.terms.find(term => term.slotId === "spring-2027");
   const elective = mayTerm.courses.find(course => course.course === "ECO 260");
   const selected = await page.request.post("/api/majors/map", {
@@ -125,7 +127,7 @@ test("after an elective replacement the May 2027 card still rejects an unsupport
     }
   });
   expect(selected.status()).toBe(422);
-  expect((await selected.json()).error).toMatch(/no supported offering in Winter 2027/);
+  expect((await selected.json()).error).toMatch(/no verified, conflict-free section in Winter 2027/);
 });
 
 test("move controls stay disabled during an outstanding validation request", async ({ page }) => {
@@ -168,4 +170,76 @@ test("a move error remains readable and announced at mobile width", async ({ pag
   const accessibility = await new AxeBuilder({ page }).include(".plan-course-edit-feedback")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"]).analyze();
   expect(accessibility.violations).toEqual([]);
+});
+
+for (const scenario of [
+  { code: "ECO 461", options: { graduationYear: "2031" }, from: "winter-2030", to: "winter-2031" },
+  { code: "ECO 222", options: { early: true }, from: "spring-2028", to: "winter-2028" }
+]) test(`ordinary freshman can move ${scenario.code} from ${scenario.from} to ${scenario.to}`, async ({ page }) => {
+  const { selected, student } = await openPlan(page, "freshman", scenario.options);
+  const control = page.getByRole("combobox", { name: `Move ${scenario.code} to another term`, exact: true });
+  await expect(control).toHaveValue(scenario.from);
+  await expect(control.locator(`option[value="${scenario.to}"]`)).toHaveCount(1);
+  if (scenario.code === "ECO 461") {
+    const rejected = validationResponse(page);
+    await control.selectOption("winter-2029");
+    expect((await rejected).status()).toBe(422);
+    await expect(control).toHaveValue(scenario.from);
+    await expect(card(page, scenario.code).getByRole("alert")).toContainText(/senior Winter/);
+  }
+  const response = validationResponse(page);
+  await control.selectOption(scenario.to);
+  const saved = await response;
+  expect(saved.status()).toBe(200);
+  const plan = (await saved.json()).plan;
+  const moved = plan.terms.find(term => term.slotId === scenario.to).courses.find(course => course.course === scenario.code);
+  expect(moved).toBeTruthy();
+  expect(moved.section).toBe("");
+  expect(moved.availability).toBeNull();
+  expect(moved.meeting).toBeNull();
+  expect(moved.preliminaryScheduleEvidence).toBeUndefined();
+  if (scenario.code === "ECO 222") expect(moved.source).toBe("projected-offering");
+  const before = selected.terms.flatMap(term => term.courses.map(course => `${course.requirementId}:${term.slotId}`)).sort();
+  const after = plan.terms.flatMap(term => term.courses.map(course => `${course.requirementId}:${term.slotId}`)).sort();
+  expect(after).toEqual(before.map(value => value === `${moved.requirementId}:${scenario.from}` ? `${moved.requirementId}:${scenario.to}` : value).sort());
+  await expect(page.locator("main")).toContainText("Later unpublished schedules are shown as planning projections");
+  await page.reload();
+  await expect(control).toHaveValue(scenario.to);
+  const input = { student, preparedDate: "2026-09-23", selectedPlan: plan };
+  const json = await page.request.post("/api/reports/economics", { data: { ...input, format: "json" } });
+  expect(json.status()).toBe(200);
+  const report = await json.json();
+  const expected = projectSelectedPlanArtifact(plan, { advisorNotices: report.catalog?.advisorAttention || [] });
+  expect(projectionMismatches(expected, projectReportJsonArtifact(report))).toEqual([]);
+  const html = await page.request.post("/api/reports/economics", { data: { ...input, format: "html" } });
+  expect(html.status()).toBe(200);
+  const htmlProjection = projectReportHtmlArtifact(await html.text());
+  // HTML includes empty calendar terms omitted by the selected-plan JSON.
+  const occupied = projection => ({ ...projection, terms: projection.terms.filter(term => term.courses.length) });
+  expect(projectionMismatches(occupied(expected), occupied(htmlProjection))).toEqual([]);
+});
+
+test("completed prerequisite timing does not allow a standard freshman capstone in junior Winter", async ({ page }) => {
+  const { selected } = await openPlan(page, "freshman");
+  const control = page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true });
+  await expect(control).toHaveValue("winter-2030");
+  const originalCards = await page.locator(".term-card").evaluateAll(cards => cards.map(item => ({
+    year: item.dataset.academicYear, term: item.dataset.termKey,
+    courses: [...item.querySelectorAll(".plan-course-summary > strong")].map(course => course.textContent)
+  })));
+  const response = validationResponse(page);
+  await control.selectOption("winter-2029");
+  const rejected = await response;
+  expect(rejected.status()).toBe(422);
+  expect((await rejected.json()).error).toContain("not in a valid senior Winter slot");
+  await expect(control).toHaveValue("winter-2030");
+  await expect(card(page, "ECO 461").getByRole("alert")).toContainText("senior Winter");
+  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
+  await page.reload();
+  await expect(control).toHaveValue("winter-2030");
+  expect(await page.locator(".term-card").evaluateAll(cards => cards.map(item => ({
+    year: item.dataset.academicYear, term: item.dataset.termKey,
+    courses: [...item.querySelectorAll(".plan-course-summary > strong")].map(course => course.textContent)
+  })))).toEqual(originalCards);
+  expect(selected.id).toBe("balanced");
 });

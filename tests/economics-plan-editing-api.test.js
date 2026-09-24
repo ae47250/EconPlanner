@@ -45,28 +45,14 @@ test("ordinary freshman plans agree with the independent policy Oracle and early
   assert.equal(invalid.response.status, 422);
   assert.match(invalid.data.error, /prerequisite|statistics/i);
   assert.doesNotMatch(invalid.data.error, /Fall 2028|projected standing/);
-  const mayElective = early.terms.flatMap(term => term.courses).find(course => course.course === "ECO 222");
-  const mayTerm = early.terms.find(term => term.courses.includes(mayElective));
-  assert.deepEqual(mayElective.moveTermIds, [mayTerm.slotId]);
-  assert.match(mayElective.moveRestriction, /typically offered only in Spring\/May/);
-  const unsupported = await move("ECO 222", "winter-2028");
-  assert.equal(unsupported.response.status, 422);
-  assert.match(unsupported.data.error, /typically offered only in Spring\/May/);
-  const core = early.terms.flatMap(term => term.courses).find(course => course.course === "ECO 113");
-  assert.ok(core.moveTermIds.every(termId => !termId.startsWith("may-")));
-  assert.ok(core.moveTermIds.every(termId => !termId.startsWith("spring-")));
-  assert.match(core.moveRestriction, /normally planned in Fall or Winter/);
-  const occupiedMay = await move("ECO 113", "spring-2027");
-  assert.equal(occupiedMay.response.status, 422);
-  assert.match(occupiedMay.data.error, /Spring\/May has room for only one course/);
-  const capstone = early.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
-  assert.equal(capstone.moveTermIds, undefined);
-  const capstoneFrom = early.terms.find(term => term.courses.includes(capstone));
-  const locked = await validateEdit(student, early, {plans, extraBody: {edit: {
-    type: "move", fromTermId: capstoneFrom.slotId, courseId: capstone.requirementId, toTermId: "winter-2027"
-  }}});
-  assert.equal(locked.response.status, 422);
-  assert.match(locked.data.error, /fixed in senior Winter.*senior standing/i);
+  const projected = await move("ECO 222", "winter-2028");
+  assert.equal(projected.response.status, 200, JSON.stringify(projected.data));
+  const elective = projected.data.plan.terms.find(term => term.slotId === "winter-2028").courses.find(course => course.course === "ECO 222");
+  assert.equal(elective.source, "projected-offering");
+  assert.equal(elective.section, "");
+  assert.equal(elective.availability, null);
+  assert.equal(elective.meeting, null);
+  assert.equal(elective.preliminaryScheduleEvidence, undefined);
   assert.deepEqual(early, original, "failed and successful requests must not mutate the original plan");
 });
 

@@ -779,10 +779,6 @@ function PlanTimeline({
                             && planEditFeedback.fromTermId === termId
                             && planEditFeedback.courseId === courseId
                             ? planEditFeedback.message : null;
-                          const moveTerms = (activePlan.terms || []).filter(optionTerm => (
-                            !Array.isArray(course.moveTermIds)
-                            || course.moveTermIds.includes(optionTerm.slotId || optionTerm.term)
-                          ));
                           return (
                             <li key={`${termId}-${courseId}`}>
                               <div className="plan-course-summary">
@@ -793,10 +789,7 @@ function PlanTimeline({
                                 {course.preliminaryScheduleEvidence && <span className="plan-course-availability">Preliminary schedule ({course.preliminaryScheduleEvidence.issuedOn}); course and term subject to change</span>}
                                 {course.approvalRequired?.length > 0 && <span className="plan-course-approval">Approval required</span>}
                               </div>
-                              {onEditPlanCourse && course.course === "ECO 461" && (
-                                <p className="required-course-note">ECO 461 stays in senior Winter. If graduating early, this plan assumes senior standing in the final year; confirm it with your advisor.</p>
-                              )}
-                              {onEditPlanCourse && !course.fixedInProgress && course.course !== "ECO 461" && (
+                              {onEditPlanCourse && !course.fixedInProgress && (
                                 <div className="plan-course-actions">
                                   {course.alternativeOptions?.length > 1 && (
                                     <label>
@@ -821,7 +814,7 @@ function PlanTimeline({
                                       </select>
                                     </label>
                                   )}
-                                  {moveTerms.length > 1 && <label>
+                                  <label>
                                     <span className="sr-only">Move {course.course} to another term</span>
                                     <select
                                       aria-label={`Move ${course.course} to another term`}
@@ -835,7 +828,7 @@ function PlanTimeline({
                                           courseId
                                         }, event.currentTarget)}
                                     >
-                                      {moveTerms.map(optionTerm => {
+                                      {(activePlan.terms || []).map(optionTerm => {
                                         const optionTermId = optionTerm.slotId || optionTerm.term;
                                         return (
                                           <option value={optionTermId} key={optionTermId}>
@@ -844,14 +837,10 @@ function PlanTimeline({
                                         );
                                       })}
                                     </select>
-                                  </label>}
-                                  {course.moveRestriction && <span className="required-course-note">{course.moveRestriction}</span>}
-                                  {moveTerms.length <= 1 && !course.moveRestriction && (
-                                    <span className="required-course-note">No other term has a supported placement and room for this course in the current plan.</span>
-                                  )}
+                                  </label>
                                   {feedback && <span className="plan-course-edit-feedback" role="alert">{feedback}</span>}
                                   <span className="required-course-note">
-                                    Required for this plan.{moveTerms.length > 1 ? " Move it to another listed term" : ""}{course.alternativeOptions?.length > 1 ? " or choose a replacement above" : ""}.
+                                    Required for this plan. Move it to another valid term{course.alternativeOptions?.length > 1 ? " or choose a replacement above" : ""}.
                                   </span>
                                 </div>
                               )}
