@@ -87,6 +87,11 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
 }
 
 test('freshman early selection, persistence, evidence-aware moves, rollback and local PDF parity', async ({page,browser}, testInfo) => {
+  try {
+    execFileSync(process.env.PDFTOTEXT || 'pdftotext', ['-v'], {stdio:'pipe'});
+  } catch (error) {
+    throw new Error('PDF verification requires Poppler pdftotext. Install Poppler or set PDFTOTEXT to its executable path. See docs/testing.md.', {cause:error});
+  }
   await intake(page, 'freshman', true);
   const response = await generatePlans(page);
   const payload = await response.json();

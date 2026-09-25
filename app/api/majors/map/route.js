@@ -307,7 +307,15 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
 
 export async function POST(request) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        return jsonResponse({ error: "The request contains invalid JSON. Please try again." }, 400);
+      }
+      throw error;
+    }
     const submittedStudent = body?.student || {};
     const student = {
       ...submittedStudent,
