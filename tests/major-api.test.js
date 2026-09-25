@@ -2,6 +2,31 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { POST } from "../app/api/majors/map/route.js";
 
+test("malformed JSON is a client error, including truncated edit requests", async () => {
+  for (const body of ['{', '', '{"action":"validate-plan","plan":']) {
+    const response = await POST(new Request("http://localhost/api/majors/map", {
+      method: "POST", headers: { "content-type": "application/json" }, body
+    }));
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /invalid JSON/);
+  }
+});
+
+test("valid incomplete JSON retains the existing input validation", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST", headers: { "content-type": "application/json" }, body: '{}'
+  }));
+  assert.equal(response.status, 400);
+  assert.match((await response.json()).error, /Plan creation date is required/);
+});
+
+test("non-syntax request failures remain internal errors", async t => {
+  t.mock.method(console, "error", () => {});
+  const response = await POST({ json: async () => { throw new Error("request transport unavailable"); } });
+  assert.equal(response.status, 500);
+  assert.doesNotMatch((await response.json()).error, /invalid JSON/);
+});
+
 test("major mapper returns every captured program and Economics schedule", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",

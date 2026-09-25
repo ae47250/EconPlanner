@@ -38,6 +38,24 @@ function validationResponse(page) {
     && response.request().postDataJSON()?.action === "validate-plan");
 }
 
+test("malformed edit requests preserve the saved plan and allow a later valid move", async ({ page }) => {
+  await openPlan(page, "freshman", { early: true });
+  const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
+  await page.route("**/api/majors/map", route => route.continue({ postData: '{"action":"validate-plan",' }), { times: 1 });
+  const rejected = page.waitForResponse(response => response.url().endsWith("/api/majors/map"));
+  await control.selectOption("winter-2027");
+  expect((await rejected).status()).toBe(400);
+  await expect(control).toHaveValue("spring-2027");
+  await expect(card(page, "MAT 217").getByRole("alert")).toContainText("invalid JSON");
+  await page.reload();
+  await expect(control).toHaveValue("spring-2027");
+  const accepted = validationResponse(page);
+  await control.selectOption("winter-2027");
+  expect((await accepted).status()).toBe(200);
+  await page.reload();
+  await expect(control).toHaveValue("winter-2027");
+});
+
 test("move selectors, rejection feedback, successful move, undo, and reload agree", async ({ page }) => {
   await openPlan(page, "freshman", { early: true });
   const core = page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true });

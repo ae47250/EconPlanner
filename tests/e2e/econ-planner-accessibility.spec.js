@@ -52,20 +52,22 @@ test("course choices retain visible focus, non-color selection cues, and correct
   await expect(completed.locator(".selection-check")).toHaveText("✓");
   await expect(takingNow.locator(".selection-check")).toHaveText("");
 
-  const styles = await page.evaluate(() => {
-    const selected = document.querySelector("#course-eco-113 button[aria-pressed='true']");
-    const unselected = document.querySelector("#course-eco-113 button[aria-pressed='false']");
-    return {
-      selectedBackground: getComputedStyle(selected).backgroundColor,
-      unselectedBackground: getComputedStyle(unselected).backgroundColor,
-      selectedBorderWidth: getComputedStyle(selected).borderTopWidth,
-      unselectedBorderWidth: getComputedStyle(unselected).borderTopWidth,
-      outlineStyle: getComputedStyle(selected).outlineStyle
-    };
-  });
-  expect(styles.selectedBackground).not.toBe(styles.unselectedBackground);
-  expect(styles.selectedBorderWidth).toBe(styles.unselectedBorderWidth);
-  expect(styles.outlineStyle).not.toBe("none");
+  await expect(async () => {
+    const styles = await page.evaluate(() => {
+      const selected = document.querySelector("#course-eco-113 button[aria-pressed='true']");
+      const unselected = document.querySelector("#course-eco-113 button[aria-pressed='false']");
+      return {
+        selectedBackground: getComputedStyle(selected).backgroundColor,
+        unselectedBackground: getComputedStyle(unselected).backgroundColor,
+        selectedBorderWidth: getComputedStyle(selected).borderTopWidth,
+        unselectedBorderWidth: getComputedStyle(unselected).borderTopWidth,
+        outlineStyle: getComputedStyle(selected).outlineStyle
+      };
+    });
+    expect(styles.selectedBackground).not.toBe(styles.unselectedBackground);
+    expect(styles.selectedBorderWidth).toBe(styles.unselectedBorderWidth);
+    expect(styles.outlineStyle).not.toBe("none");
+  }).toPass({ timeout: 3000 });
 
   await page.keyboard.press("Enter");
   await expect(completed).toHaveAttribute("aria-pressed", "false");
