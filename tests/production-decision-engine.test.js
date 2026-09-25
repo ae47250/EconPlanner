@@ -13,6 +13,8 @@ import {
   normalizeStudentFacts
 } from "../lib/decision-engine/index.js";
 
+import { evaluateCoursePlacement } from "../lib/decision-engine/placement.js";
+
 const activeReference = JSON.parse(await fs.readFile(new URL(
   "../data/compiled/policy/active.json",
   import.meta.url
@@ -118,4 +120,22 @@ test("whole-plan decision p95 stays below 100ms", () => {
   const sorted = samples.toSorted((left, right) => left - right);
   const p95 = sorted[Math.ceil(sorted.length * 0.95) - 1];
   assert.ok(p95 < 100, `whole-plan decision p95 was ${p95}ms`);
+});
+
+
+test("capstone standing uses the authoritative timeline and permits both senior Winters in an extended plan", () => {
+  const course = { course: "ECO 461", residency: "hanover", source: "projected-offering" };
+  const context = { startYear: 2026, entryAcademicYearStart: 2026, standing: "freshman", expectedGraduationYear: 2031 };
+  const winter = year => ({ academicYear: `${year - 1}/${year}`, termKey: "Winter", absoluteStandingIndex: 3 });
+  const junior = evaluateCoursePlacement(course, winter(2029), context, bundle);
+  assert.equal(junior.status, "BLOCK", "A submitted senior label must not authorize a junior-year placement");
+  assert.deepEqual(junior.ruleIds, ["CAPSTONE-SENIOR-STANDING"]);
+  assert.deepEqual(junior.sourceRefs, bundle.indexes.byRuleId["CAPSTONE-SENIOR-STANDING"].sourceRefs);
+  for (const year of [2030, 2031]) {
+    assert.equal(evaluateCoursePlacement(course, winter(year), context, bundle).status, "ALLOW");
+  }
+  const early = { ...context, expectedGraduationYear: 2029, acceleratedPlanAssumesSeniorStanding: true,
+    projectedSeniorStandingAcademicYear: "2028/2029" };
+  assert.equal(evaluateCoursePlacement(course, winter(2029), early, bundle).status, "ALLOW");
+  assert.equal(evaluateCoursePlacement(course, winter(2028), early, bundle).status, "BLOCK");
 });

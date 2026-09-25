@@ -8,6 +8,7 @@ const SCHEDULE_SOURCE = "tests/oracle/verified-schedule-2026-2027.json";
 const VERIFIED_SOURCE = "verified-offering";
 const PRELIMINARY_SOURCES = new Set([
   "projected-offering",
+  "catalog-statement",
   "future-placeholder",
   "requirement-placeholder",
   "recurring-rule-unconfirmed",

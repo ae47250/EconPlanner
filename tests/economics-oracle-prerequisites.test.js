@@ -18,6 +18,8 @@ const fixtureDocument = JSON.parse(await readFile(
   new URL("./fixtures/economics-oracle-plans/prerequisite-cases.json", import.meta.url),
   "utf8"
 ));
+const canonicalPermissions = JSON.parse(await readFile(new URL("../policy/rules/permissions-exceptions.json", import.meta.url), "utf8"));
+const canonicalProvenance = JSON.parse(await readFile(new URL("../policy/provenance/sources.json", import.meta.url), "utf8"));
 
 const DEFAULT_CONTEXT = Object.freeze({
   startYear: 2026,
@@ -190,6 +192,24 @@ test("every approval metadata field and attachment is validated independently", 
       fixture.fixtureId
     );
   }
+});
+
+test("ECO 461 approval source references resolve to the same canonical department evidence", () => {
+  const canonical = canonicalPermissions.records.find(rule => rule.ruleId === "CONCURRENT-INTERMEDIATE-ECO-461");
+  const source = canonicalProvenance.sources.find(item => item.sourceId === "DEPARTMENT-POLICIES");
+  assert.equal(canonical.sourceRefs[0], "DEPARTMENT-POLICIES#Confirmed-policy-4");
+  assert.equal(source.path, "data/raw/economics/Department_Confirmed_Planning_Policies.md");
+  const raw = `${source.path}#policy-4`;
+  const input = externalInput(fixtureById("prereq-valid-concurrent-eco214-capstone"));
+  const approval = input.plan.terms[0].courses.find(course => course.course === "ECO 461").approvalRequired[0];
+  assert.equal(checkExternalEconomicsPrerequisites(input).status, "VALID_PREREQUISITES");
+  approval.sourceRef = raw;
+  assert.equal(checkExternalEconomicsPrerequisites(input).status, "VALID_PREREQUISITES");
+  approval.sourceRef = `${source.path}#policy-3`;
+  assert.ok(checkExternalEconomicsPrerequisites(input).violations.some(item => /sourceRef/.test(item.message)));
+  approval.sourceRef = raw;
+  input.plan.terms[0].courses.find(course => course.course === "ECO 461").approvalRequired = [];
+  assert.ok(checkExternalEconomicsPrerequisites(input).violations.some(item => /requires complete approval metadata/.test(item.message)));
 });
 
 test("advanced-course gaps, ECO 335 equivalency, waivers, and substitutions remain review-only", () => {

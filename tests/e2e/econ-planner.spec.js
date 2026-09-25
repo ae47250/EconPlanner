@@ -26,6 +26,14 @@ async function reviewBalanced(page) {
   await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
 }
 
+async function visibleSchedule(page) {
+  return page.locator(".term-card").evaluateAll(cards => cards.map(card => ({
+    academicYear: card.dataset.academicYear,
+    termKey: card.dataset.termKey,
+    courses: [...card.querySelectorAll(".plan-course-summary > strong")].map(course => course.textContent.trim())
+  })));
+}
+
 for (const responseStatus of [422, 200]) {
   test(`a duplicate-plan edit response (${responseStatus}) leaves the visible comparison unchanged`, async ({ page }) => {
     const balanced = fixturePlan();
@@ -37,7 +45,7 @@ for (const responseStatus of [422, 200]) {
     await openFixtureResult(page, plannerResultFixture({ plans: [balanced, explore] }));
     await page.getByRole("button", { name: "Review selected Balanced" }).click();
     await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
-    const originalSchedule = await page.locator(".term-card").allTextContents();
+    const originalSchedule = await visibleSchedule(page);
     const moveControl = page.getByRole("combobox", { name: "Move ECO 113 to another term" });
 
     await page.unroute("**/api/majors/map");
@@ -57,7 +65,7 @@ for (const responseStatus of [422, 200]) {
     await moveControl.selectOption("2027-WINTER");
     await expect(page.locator(".plan-edit-status")).toContainText("same material schedule");
     await expect(page.locator(".plan-edit-status")).not.toContainText("updated and remains valid");
-    await expect.poll(() => page.locator(".term-card").allTextContents()).toEqual(originalSchedule);
+    await expect.poll(() => visibleSchedule(page)).toEqual(originalSchedule);
     await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
     await expect(moveControl).toBeFocused();
   });

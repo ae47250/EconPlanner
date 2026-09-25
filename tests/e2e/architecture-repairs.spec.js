@@ -153,6 +153,19 @@ test('required controls explain restrictions while mobile elective editing and k
   await page.screenshot({path:testInfo.outputPath('mobile-edited.png'),fullPage:true,animations:'disabled'});
 });
 
+test('course cards explain a rejected prerequisite move beside the course', async ({page}) => {
+  await intake(page, 'freshman', true);
+  await generatePlans(page);
+  await page.getByRole('button',{name:/^(Choose|Review selected) One Year Early$/}).click();
+  const coreMove = page.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true});
+  const response = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
+  await coreMove.selectOption('fall-2027');
+  expect((await response).status()).toBe(422);
+  const coreCard = page.locator('.term-card li').filter({has:page.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true})});
+  await expect(coreCard.getByRole('alert')).toContainText('ECO 213 is missing prerequisites: ECO 113');
+  await expect(coreMove).toHaveValue('winter-2027');
+});
+
 test('senior statistics blocker is causal and saved answers survive revisiting', async ({page},testInfo) => {
   await intake(page,'senior');
   await page.getByText('Other Economics courses',{exact:true}).click();
