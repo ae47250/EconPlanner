@@ -283,9 +283,9 @@
     },
     {
       "role": "economics_source",
-      "source": "department-provided:Econ_Course_Offerings.md",
-      "path": "data/raw/economics/Econ_Course_Offerings.md",
-      "sha256": "c7ca6b3f570920bb71a73101231c1053a877e4c8716d31b2a4faac50f1e9856e"
+      "source": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+      "path": "policy/provenance/offering-policy-2026-09-26.md",
+      "sha256": "f97ee7afcab40d19f20ce9e2b2f5b82f469eae5c51262b5eb619f18f43bc4093"
     },
     {
       "role": "economics_local_policy",

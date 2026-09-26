@@ -87,6 +87,16 @@ function policyBoundary(student, course, destination) {
   }
   const exact = matchingExactSections(course.course, destination);
   if (exact && !exact.length) return { blocked: true, ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"] };
+  const may = policy.byRuleId["PLANNING-MAY-COURSE-EXCLUSIONS"];
+  if (key === "MAY" && may.effect.excludedCourses.includes(course.course) && !exact?.length) {
+    return { blocked: true, ruleIds: [may.ruleId] };
+  }
+  const pair = policy.offeringPatterns.find(pattern => pattern.projectionPolicy.sameTerm === "REQUIRE_MATCHING_VERIFIED_SECTIONS"
+    && [pattern.course].flat().includes(course.course));
+  const counterparts = pair ? destination.courses.filter(row => row.course !== course.course && [pair.course].flat().includes(row.course)) : [];
+  if (counterparts.length && !(exact?.length && counterparts.every(row => matchingExactSections(row.course, destination)?.length))) {
+    return { blocked: true, ruleIds: [pair.patternId] };
+  }
   const excluded = policy.offeringPatterns.find(pattern => [pattern.course].flat().includes(course.course)
     && pattern.hardExcludedTerms.includes(key));
   if (excluded) return { blocked: true, ruleIds: [excluded.patternId] };

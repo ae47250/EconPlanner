@@ -828,7 +828,8 @@ function PlanTimeline({
                                           courseId
                                         }, event.currentTarget)}
                                     >
-                                      {(activePlan.terms || []).map(optionTerm => {
+                                      {(activePlan.terms || []).filter(optionTerm => (optionTerm.slotId || optionTerm.term) === termId
+                                        || course.moveDestinationIds?.includes(optionTerm.slotId || optionTerm.term)).map(optionTerm => {
                                         const optionTermId = optionTerm.slotId || optionTerm.term;
                                         return (
                                           <option value={optionTermId} key={optionTermId}>

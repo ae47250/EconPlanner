@@ -18,7 +18,13 @@ async function openPlan(page, standing, { early = false, completed = [], date = 
     await page.getByRole("combobox", { name: "When do you expect to graduate?", exact: true }).selectOption(graduationYear);
   }
   await continueToCourses(page);
-  for (const code of completed) await setCourseStatus(page, code, "Completed");
+  for (const code of completed) {
+    if (!await page.getByRole("group", { name: `Status for ${code}`, exact: true }).isVisible()) {
+      await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill(code);
+    }
+    await setCourseStatus(page, code, "Completed");
+    await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill("");
+  }
   const response = await generatePlans(page);
   expect(response.status()).toBe(200);
   const result = await response.json();
@@ -57,10 +63,11 @@ test("malformed edit requests preserve the saved plan and allow a later valid mo
 });
 
 test("move selectors, rejection feedback, successful move, undo, and reload agree", async ({ page }) => {
-  await openPlan(page, "freshman", { early: true });
+  const { selected } = await openPlan(page, "freshman", { early: true });
   const core = page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true });
-  const termIds = await page.locator(".term-card").count();
-  await expect(core.locator("option")).toHaveCount(termIds);
+  const course = selected.terms.flatMap(term => term.courses).find(course => course.course === "ECO 113");
+  expect(await core.locator("option").evaluateAll(options => options.map(option => option.value))).toEqual(course.moveDestinationIds);
+  expect(course.moveDestinationIds.every(id => !id.startsWith("spring-"))).toBe(true);
   await expect(page.getByRole("combobox", { name: "Move ECO 222 to another term", exact: true })).toBeVisible();
   await expect(page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true })).toBeVisible();
 
@@ -260,4 +267,65 @@ test("completed prerequisite timing does not allow a standard freshman capstone 
     courses: [...item.querySelectorAll(".plan-course-summary > strong")].map(course => course.textContent)
   })))).toEqual(originalCards);
   expect(selected.id).toBe("balanced");
+});
+
+test("MAT 217 can move to an unpublished May and persist in the selected plan", async ({ page }) => {
+  const { selected } = await openPlan(page, "sophomore", {
+    date: "2027-07-30",
+    completed: ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "BUSN 323", "ECO 221", "ECO 222", "ECO 234", "ECO 333"]
+  });
+  const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
+  const original = selected.terms.find(term => term.courses.some(course => course.course === "MAT 217"));
+  expect(original.slotId).not.toBe("spring-2028");
+  await expect(control.locator('option[value="spring-2028"]')).toHaveCount(1);
+  const response = validationResponse(page);
+  await control.selectOption("spring-2028");
+  const saved = await response;
+  expect(saved.status()).toBe(200);
+  const plan = (await saved.json()).plan;
+  const course = plan.terms.find(term => term.slotId === "spring-2028").courses.find(course => course.course === "MAT 217");
+  expect(course.source).toBe("projected-offering");
+  expect(course.section).toBe("");
+  await page.reload();
+  await expect(control).toHaveValue("spring-2028");
+  await expect(page.locator("main")).toContainText("Later unpublished schedules are shown as planning projections");
+});
+
+test("unpublished intermediate dropdowns omit the counterpart's occupied term in both directions", async ({ page }) => {
+  const { selected } = await openPlan(page, "sophomore", {
+    date: "2027-07-30", completed: ["ECO 113", "ECO 114", "MAT 113", "MAT 217"]
+  });
+  for (const [code, counterpart] of [["ECO 213", "ECO 214"], ["ECO 214", "ECO 213"]]) {
+    const own = selected.terms.find(term => term.courses.some(course => course.course === code));
+    const other = selected.terms.find(term => term.courses.some(course => course.course === counterpart));
+    expect(own.slotId).not.toBe(other.slotId);
+    const control = page.getByRole("combobox", { name: `Move ${code} to another term`, exact: true });
+    await expect(control).toHaveValue(own.slotId);
+    await expect(control.locator(`option[value="${other.slotId}"]`)).toHaveCount(0);
+    expect(await control.locator("option").evaluateAll(options => options.map(option => option.value)))
+      .toEqual(own.courses.find(course => course.course === code).moveDestinationIds);
+  }
+});
+
+test("pre-offering sessions regenerate while preserving saved course answers", async ({ page }) => {
+  await openPlan(page, "freshman", { early: true, completed: ["ECO 113"] });
+  await page.evaluate(() => {
+    const key = "econ-planner-generated-session";
+    const saved = JSON.parse(sessionStorage.getItem(key));
+    saved.schemaVersion = 8;
+    for (const program of saved.report.programs) for (const plan of program.economicsPlans || []) {
+      for (const term of plan.terms) for (const course of term.courses) delete course.moveDestinationIds;
+    }
+    sessionStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload();
+  await expect(page.getByText("That generated plan is no longer available. Review your saved inputs and generate new plans.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Status for ECO 113", exact: true })
+    .getByRole("button", { name: "Completed", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await generatePlans(page);
+  await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
+  const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
+  expect(await control.locator("option").count()).toBeGreaterThan(1);
+  await page.reload();
+  expect(await control.locator("option").count()).toBeGreaterThan(1);
 });

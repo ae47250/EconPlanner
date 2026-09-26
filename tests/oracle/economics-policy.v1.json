@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 5,
-    "confirmationDate": "2026-08-09",
+    "version": 6,
+    "confirmationDate": "2026-09-26",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -42,6 +42,11 @@
       "date": "2026-08-09",
       "reviewedBy": "Project owner and Economics Department domain expert",
       "summary": "For the existing ECO 461 concurrency exception, exactly one intermediate must be successfully completed before the target ECO 461 term. Eligible completed or accepted-transfer evidence, current in-progress work finishing before the target term, and earlier generated-term work may count; same-term, later, uncertain, or unaccepted evidence may not. Earlier pending work remains conditional on success."
+    },
+    {
+      "id": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+      "date": "2026-09-26",
+      "reviewedBy": "Project owner and Economics Department domain expert"
     }
   ],
   "sources": [
@@ -56,9 +61,9 @@
       "authority": "catalog-derived Economics requirements and prerequisites"
     },
     {
-      "id": "ECONOMICS-OFFERINGS",
-      "path": "data/raw/economics/Econ_Course_Offerings.md",
-      "authority": "Economics offering guidance"
+      "id": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+      "path": "policy/provenance/offering-policy-2026-09-26.md",
+      "authority": "Owner-confirmed offering consolidation"
     },
     {
       "id": "TERM-STRUCTURE",
@@ -162,8 +167,7 @@
       "status": "CONFIRMED",
       "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
       "sourceRefs": [
-        "ECONOMICS-REQUIREMENTS#Required economics courses",
-        "ECONOMICS-OFFERINGS#ECO 321 / BUSN 323"
+        "ECONOMICS-REQUIREMENTS#Required economics courses"
       ],
       "kind": "choice",
       "slotCount": 1,
@@ -736,10 +740,10 @@
     {
       "ruleId": "PLANNING-INTERMEDIATE-OFFERING-SEPARATION",
       "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "confirmationRef": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
       "sourceRefs": [
         "DEPARTMENT-POLICIES#Confirmed policy 5",
-        "ECONOMICS-OFFERINGS#General Offering Pattern"
+        "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Owner-instructions"
       ],
       "courses": [
         "ECO 213",
@@ -747,14 +751,15 @@
       ],
       "normalPattern": "different Fall and Winter terms",
       "universalSameTermProhibition": false,
-      "verifiedScheduleControls": true
+      "verifiedScheduleControls": true,
+      "separateTermsWithoutVerifiedSchedule": true
     },
     {
       "ruleId": "PLANNING-MAY-COURSE-EXCLUSIONS",
       "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "confirmationRef": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
       "sourceRefs": [
-        "ECONOMICS-OFFERINGS#May Term"
+        "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary"
       ],
       "term": "May",
       "excludedCourses": [
@@ -764,11 +769,13 @@
         "ECO 214",
         "ECO 321",
         "BUSN 323",
-        "MAT 217",
         "ECO 257",
         "PSY 217",
-        "ECO 461"
-      ]
+        "ECO 461",
+        "MAT 113",
+        "MAT 121"
+      ],
+      "verifiedScheduleOverride": true
     },
     {
       "ruleId": "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY",
@@ -776,7 +783,7 @@
       "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
       "sourceRefs": [
         "ECONOMICS-REQUIREMENTS#Core Scheduling Rule",
-        "ECONOMICS-OFFERINGS#General Offering Pattern"
+        "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Owner-instructions"
       ],
       "unverifiedFutureOfferingStatus": "PRELIMINARY_ONLY"
     }

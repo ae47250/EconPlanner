@@ -51,7 +51,6 @@
     "sourceStatus": "APPROVED_LOCAL_SOURCE",
     "sourceRefs": [
       "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
-      "data/raw/economics/Econ_Course_Offerings.md",
       "data/raw/economics/Term_Structure.md",
       "data/raw/economics/Department_Confirmed_Planning_Policies.md"
     ],
@@ -78,7 +77,7 @@
   "planningConstraints": {
     "summer": {"maxTotalCourses": 1, "maxEconomicsCourses": 1, "planningNote": "No Summer Economics offering is verified; a Summer course cannot support a fully verified plan."},
     "hardRules": [
-      {"ruleIds": ["PLANNING-MAY-COURSE-EXCLUSIONS"], "text": "ECO 213 and ECO 214 cannot be scheduled in May"},
+      {"ruleIds": ["PLANNING-MAY-COURSE-EXCLUSIONS"], "text": "Apply the canonical May projection exclusions; a matching verified schedule section overrides that projection exclusion only."},
       {"ruleIds": ["CAPSTONE-WINTER-ONLY", "CAPSTONE-SENIOR-STANDING"], "text": "ECO 461 is senior Winter only"},
       {"ruleIds": ["CAPSTONE-HANOVER-RESIDENCY"], "text": "ECO 461 must be completed at Hanover College"},
       {"ruleIds": ["CONCURRENT-MATH-ECO-213", "CONCURRENT-MATH-ECO-214"], "text": "MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only as a last resort with the ECO course instructor's approval; every other prerequisite must be completed first"},

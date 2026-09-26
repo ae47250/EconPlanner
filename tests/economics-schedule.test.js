@@ -80,10 +80,9 @@ test("model schedule text is rendered from the canonical schedule", () => {
   assert.match(knowledge, /ECO 234 and PHI 234 are cross-listed/);
 });
 
-test("human-readable schedule includes every canonical course and term", () => {
-  for (const [term, courses] of Object.entries(schedule.terms)) {
-    for (const course of new Set(courses.map(row => row.course))) {
-      assert.match(humanSchedule, new RegExp(`\\| 2026/2027 \\| ${term} \\| ${course.replace(" ", "\\s+")} \\|`), `${term} ${course}`);
-    }
-  }
+test("retired schedule summary directs maintenance to the canonical exact release", async () => {
+  assert.match(humanSchedule, /\[the canonical policy hub\]\(\.\.\/policy\/README\.md\)/);
+  const hub = await readFile(new URL("../policy/README.md", import.meta.url), "utf8");
+  assert.match(hub, /\[Exact release\]\(schedules\/2026-2027\.json\)/);
+  assert.doesNotMatch(humanSchedule, /\| 2026\/2027 \|/);
 });

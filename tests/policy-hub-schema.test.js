@@ -202,7 +202,7 @@ test("offering patterns project only unpublished years and exact schedules prese
   const patterns = await readJson("policy/offering-patterns/economics.json");
   const pattern = patterns.patterns.find(entry => entry.patternId === "PLANNING-INTERMEDIATE-OFFERING-SEPARATION");
   assert.deepEqual(pattern.course, ["ECO 213", "ECO 214"]);
-  assert.equal(pattern.projectionGranularity, "ACADEMIC_YEAR_TBC");
+  assert.equal(pattern.projectionGranularity, "LABELED_TERM_WORKLOAD_ESTIMATE");
   assert.equal(pattern.projectionPolicy.universalSameTermProhibition, false);
   assert.equal(pattern.projectionPolicy.activeExactScheduleOverrides, true);
   const eco222 = patterns.patterns.find(entry => entry.patternId === "CATALOG-ECO-222-SPRING");
