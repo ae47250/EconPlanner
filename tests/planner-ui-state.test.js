@@ -135,7 +135,7 @@ test("generated planner session is rejected after an earlier answer changes", ()
   assert.equal(restoreGeneratedPlannerSession(saved, "after-change"), null);
 });
 
-test("generated planner sessions from before distribution validation regenerate", () => {
+test("generated planner sessions from before offering-aware moves regenerate", () => {
   const saved = createGeneratedPlannerSession({
     report: sampleReport(),
     inputSignature: "student-input-v1",
@@ -143,7 +143,8 @@ test("generated planner sessions from before distribution validation regenerate"
     view: PLANNER_VIEWS.COMPARE
   });
 
-  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 8);
+  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 9);
+  assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 8 }, "student-input-v1"), null);
   assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 4 }, "student-input-v1"), null);
 });
 

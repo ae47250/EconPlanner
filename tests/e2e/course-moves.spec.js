@@ -306,3 +306,26 @@ test("unpublished intermediate dropdowns omit the counterpart's occupied term in
       .toEqual(own.courses.find(course => course.course === code).moveDestinationIds);
   }
 });
+
+test("pre-offering sessions regenerate while preserving saved course answers", async ({ page }) => {
+  await openPlan(page, "freshman", { early: true, completed: ["ECO 113"] });
+  await page.evaluate(() => {
+    const key = "econ-planner-generated-session";
+    const saved = JSON.parse(sessionStorage.getItem(key));
+    saved.schemaVersion = 8;
+    for (const program of saved.report.programs) for (const plan of program.economicsPlans || []) {
+      for (const term of plan.terms) for (const course of term.courses) delete course.moveDestinationIds;
+    }
+    sessionStorage.setItem(key, JSON.stringify(saved));
+  });
+  await page.reload();
+  await expect(page.getByText("That generated plan is no longer available. Review your saved inputs and generate new plans.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Status for ECO 113", exact: true })
+    .getByRole("button", { name: "Completed", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await generatePlans(page);
+  await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
+  const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
+  expect(await control.locator("option").count()).toBeGreaterThan(1);
+  await page.reload();
+  expect(await control.locator("option").count()).toBeGreaterThan(1);
+});

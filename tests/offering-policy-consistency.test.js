@@ -36,7 +36,7 @@ async function generate(student) {
 
 test("all canonical May exclusions agree in production and both independent offering checks", () => {
   assert.deepEqual([...bundle.indexes.byRuleId["PLANNING-MAY-COURSE-EXCLUSIONS"].effect.excludedCourses].sort(), [...expectedExcluded].sort());
-  for (const code of expectedExcluded) {
+  for (const code of expectedExcluded.flatMap(code => [code, code.toLowerCase(), ` ${code} `])) {
     const course = placement(code), term = { ...may, courses: [course] };
     assert.equal(courseTermEligibility(course, term, bundle).allowed, false, code);
     assert.equal(oracleEvaluateOffering(policy, course, term).status, "BLOCK", code);
@@ -174,4 +174,52 @@ test("supporting projections reference the sole canonical May list", async () =>
   assert.equal(Object.hasOwn(flexibility.supportingCoursePlacement, "planningTerms"), false);
   assert.ok(bundle.indexes.byRuleId[flexibility.supportingCoursePlacement.termEligibilityRuleId]);
   await assert.rejects(readFile(new URL("../data/raw/economics/Econ_Course_Offerings.md", import.meta.url)), { code: "ENOENT" });
+});
+
+test("equivalent course spellings cannot bypass intermediate separation in submitted plans or reports", async () => {
+  const student = studentWith(["ECO 113", "ECO 114", "MAT 113", "MAT 217"]);
+  const original = await generate(student);
+  assert.equal((await post({ action: "validate-plan", student, plan: original })).status, 200);
+  for (const spelling of [code => code.toLowerCase(), code => ` ${code} `]) {
+    const plan = structuredClone(original);
+    const first = entries(plan).find(row => row.course.course === "ECO 213");
+    const second = entries(plan).find(row => row.course.course === "ECO 214");
+    first.course.course = spelling("ECO 213");
+    second.course.course = spelling("ECO 214");
+    first.term.courses.splice(first.term.courses.indexOf(first.course), 1);
+    second.term.courses.push(first.course);
+    const submitted = await post({ action: "validate-plan", student, plan });
+    assert.equal(submitted.status, 422);
+    assert.ok(submitted.data.validation.policyDecision.decisions.some(decision => decision.reasonCode === "INTERMEDIATE_SAME_TERM_REQUIRES_VERIFIED_SCHEDULE"));
+    await assert.rejects(buildEconomicsReportFromStudent(student, "2027-07-30", plan), /validation/);
+  }
+});
+
+test("whitespace in ECO 321 cannot bypass its May exclusion in submissions or reports", async () => {
+  const student = studentWith([...baseCompleted.filter(code => code !== "BUSN 323"), "MAT 217"]);
+  const plan = await generate(student);
+  const finance = entries(plan).find(row => row.course.requirementId === "finance");
+  finance.course.course = " ECO 321 ";
+  assert.equal((await post({ action: "validate-plan", student, plan })).status, 200);
+  finance.term.courses.splice(finance.term.courses.indexOf(finance.course), 1);
+  plan.terms.find(term => term.slotId === "spring-2028").courses.push(finance.course);
+  const submitted = await post({ action: "validate-plan", student, plan });
+  assert.equal(submitted.status, 422);
+  assert.ok(submitted.data.validation.policyDecision.decisions.some(decision => decision.reasonCode === "COURSE_NOT_SUPPORTED_IN_MAY"));
+  await assert.rejects(buildEconomicsReportFromStudent(student, "2027-07-30", plan), /validation/);
+});
+
+test("duplicate canonical term rows cannot split intermediate occupancy in submissions or reports", async () => {
+  const student = studentWith(["ECO 113", "ECO 114", "MAT 113", "MAT 217"]);
+  const plan = await generate(student);
+  const first = entries(plan).find(row => row.course.course === "ECO 213");
+  const second = entries(plan).find(row => row.course.course === "ECO 214");
+  first.term.courses.splice(first.term.courses.indexOf(first.course), 1);
+  plan.terms.splice(plan.terms.indexOf(second.term), 0, {
+    ...structuredClone(second.term), academicYear: second.term.academicYear.replace("/", "-"), courses: [first.course]
+  });
+  const submitted = await post({ action: "validate-plan", student, plan });
+  assert.equal(submitted.status, 422);
+  assert.match(submitted.data.error, /DUPLICATE_TERM_IDENTITY/);
+  await assert.rejects(buildEconomicsReportFromStudent(student, "2027-07-30", plan), /validation/);
 });

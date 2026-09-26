@@ -445,7 +445,7 @@ function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, viola
   const actual = canonicalExternalTermKey(term.termKey);
   const may = policyRule(policy, "PLANNING-MAY-COURSE-EXCLUSIONS");
   const separation = policyRule(policy, "PLANNING-INTERMEDIATE-OFFERING-SEPARATION");
-  const courses = term.courses || [];
+  const courses = (term.courses || []).map(course => ({ ...course, course: upper(course.course) }));
   courses.forEach((course, index) => {
     if (course.fixedInProgress) return;
     const key = actual === "TBC" ? canonicalExternalTermKey(course.projectedTerm) : actual;

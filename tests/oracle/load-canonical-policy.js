@@ -116,6 +116,9 @@ function termId(term) {
 }
 
 export function oracleEvaluateOffering(policy, course, term) {
+  const normalizeCode = value => String(value || "").trim().toUpperCase();
+  course = { ...course, course: normalizeCode(course.course) };
+  term = { ...term, courses: (term.courses || []).map(row => ({ ...row, course: normalizeCode(row.course) })) };
   const key = canonicalTerm(term.termKey || term.term);
   const sections = policy.schedule.terms.find(row => row.termId === termId(term))?.sections || [];
   const verified = code => sections.some(row => row.course === code || (row.crossListedAs || []).includes(code));
