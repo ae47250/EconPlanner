@@ -37,6 +37,7 @@ async function visibleSchedule(page) {
 for (const responseStatus of [422, 200]) {
   test(`a duplicate-plan edit response (${responseStatus}) leaves the visible comparison unchanged`, async ({ page }) => {
     const balanced = fixturePlan();
+    balanced.terms[0].courses[0].moveDestinationIds = ["2026-FALL", "2027-WINTER"];
     const explore = structuredClone(balanced);
     explore.id = "explore-first";
     explore.label = "Explore the Major";
@@ -62,6 +63,7 @@ for (const responseStatus of [422, 200]) {
       });
     });
 
+    await expect(moveControl.locator('option[value="2027-WINTER"]')).toHaveCount(1);
     await moveControl.selectOption("2027-WINTER");
     await expect(page.locator(".plan-edit-status")).toContainText("same material schedule");
     await expect(page.locator(".plan-edit-status")).not.toContainText("updated and remains valid");
