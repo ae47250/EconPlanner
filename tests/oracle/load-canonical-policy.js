@@ -116,6 +116,31 @@ function termId(term) {
 }
 
 export function oracleEvaluateOffering(policy, course, term) {
+  const key = canonicalTerm(term.termKey || term.term);
+  const sections = policy.schedule.terms.find(row => row.termId === termId(term))?.sections || [];
+  const verified = code => sections.some(row => row.course === code || (row.crossListedAs || []).includes(code));
+  const block = (id, reason) => ({ status: "BLOCK", ruleIds: [id], reasonCode: reason });
+  const capstone = policy.byRuleId["CAPSTONE-WINTER-ONLY"];
+  if (course.course === capstone.condition.course && key !== "TBC" && !capstone.effect.allowedCanonicalTerms.includes(key)) {
+    return block(capstone.ruleId, capstone.reasonCode);
+  }
+  const may = policy.byRuleId["PLANNING-MAY-COURSE-EXCLUSIONS"];
+  if (key === may.condition.canonicalTerm && may.effect.excludedCourses.includes(course.course)
+    && !(may.override.permitted && may.override.authority === "ACTIVE_EXACT_SCHEDULE" && verified(course.course))) {
+    return block(may.ruleId, may.reasonCode);
+  }
+  for (const pattern of policy.offeringPatterns) {
+    const codes = [pattern.course].flat();
+    if (!codes.includes(course.course)) continue;
+    if (pattern.hardExcludedTerms.includes(key) && !(pattern.projectionPolicy.activeExactScheduleOverrides && verified(course.course))) {
+      return block(pattern.patternId, "COURSE_TERM_EXCLUDED");
+    }
+    const others = (term.courses || []).filter(row => row.course !== course.course && codes.includes(row.course));
+    if (key !== "TBC" && pattern.projectionPolicy.sameTerm === "REQUIRE_MATCHING_VERIFIED_SECTIONS"
+      && others.length && !(verified(course.course) && others.every(row => verified(row.course)))) {
+      return block(pattern.patternId, "INTERMEDIATE_SAME_TERM_REQUIRES_VERIFIED_SCHEDULE");
+    }
+  }
   if (course.source === "requirement-placeholder") {
     return { status: "PRELIMINARY", ruleIds: ["PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"], reasonCode: "UNPUBLISHED_OFFERING_TBC" };
   }

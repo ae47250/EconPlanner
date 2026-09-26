@@ -36,16 +36,6 @@
       "supersedes": null
     },
     {
-      "sourceId": "ECONOMICS-OFFERINGS",
-      "sourceType": "DEPARTMENT_GUIDANCE",
-      "authority": "Economics Department",
-      "authorityBoundary": "UNPUBLISHED_ECONOMICS_OFFERING_PROJECTION",
-      "path": "data/raw/economics/Econ_Course_Offerings.md",
-      "sha256": "c7ca6b3f570920bb71a73101231c1053a877e4c8716d31b2a4faac50f1e9856e",
-      "effective": {"from": "2026-08-01", "through": null},
-      "supersedes": null
-    },
-    {
       "sourceId": "TERM-STRUCTURE",
       "sourceType": "COLLEGE_GUIDANCE",
       "authority": "Hanover College",
@@ -174,6 +164,19 @@
       "statement": "For the existing ECO 461 concurrency exception, exactly one of ECO 213 or ECO 214 must be successfully completed before the target ECO 461 term. Eligible completed and accepted-transfer evidence, a current in-progress course finishing before the target term, and an earlier generated-term course may count. Same-term or later courses and uncertain or unaccepted history, equivalency, substitution, waiver, or prerequisite evidence do not count. Earlier in-progress or planned completion remains conditional on success. This clarifies the existing 2026-08-01 department-confirmed exception and creates no new exception or alternate planning mode.",
       "effective": {"from": "2026-08-09", "through": null},
       "supersedes": "Ambiguous use of already completed in the 2026-08-01 ECO 461 concurrency wording"
+    },
+    {
+      "sourceId": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "ECONOMICS_OFFERING_PROJECTION_AND_CONSISTENT_TERM_PLACEMENT",
+      "path": "policy/provenance/offering-policy-2026-09-26.md",
+      "sha256": "f97ee7afcab40d19f20ce9e2b2f5b82f469eae5c51262b5eb619f18f43bc4093",
+      "effective": {
+        "from": "2026-09-26",
+        "through": null
+      },
+      "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
     }
   ],
   "authorityHierarchy": [

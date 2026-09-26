@@ -1,3 +1,4 @@
+import { annotateEconomicsMoveDestinations } from "../../../../lib/planning/termSolver.js";
 import { availableCatalogYears, loadCatalog } from "../../../../lib/catalog/load.js";
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
@@ -299,6 +300,7 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     ? plans.map(item => item.id === validatedPlan.id ? validatedPlan : item)
     : [validatedPlan];
 
+  annotateEconomicsMoveDestinations(validatedPlan, catalog.policyBundle);
   return {
     plan: validatedPlan,
     planSetValidation: validatePlanSet(candidatePlans)

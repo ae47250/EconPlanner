@@ -26,8 +26,8 @@ function byId(ruleId) {
 test("policy manifest has stable version and review metadata", () => {
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.policy.id, "hanover-economics-planning-policy");
-  assert.equal(manifest.policy.version, 5);
-  assert.equal(manifest.policy.confirmationDate, "2026-08-09");
+  assert.equal(manifest.policy.version, 6);
+  assert.equal(manifest.policy.confirmationDate, "2026-09-26");
   assert.equal(
     manifest.policy.reviewedBy,
     "Project owner and Economics Department domain expert"

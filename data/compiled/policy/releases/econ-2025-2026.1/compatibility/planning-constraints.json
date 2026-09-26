@@ -4,7 +4,7 @@
   ],
   "futureSchedulePolicy": "Use projected or Term to be confirmed placements when an exact annual offering is not verified, and label the plan PRELIMINARY_ONLY.",
   "hardRules": [
-    "ECO 213 and ECO 214 cannot be scheduled in May",
+    "Apply the canonical May projection exclusions; a matching verified schedule section overrides that projection exclusion only.",
     "ECO 461 is senior Winter only",
     "ECO 461 must be completed at Hanover College",
     "MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only as a last resort with the ECO course instructor's approval; every other prerequisite must be completed first",

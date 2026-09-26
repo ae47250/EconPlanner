@@ -10,7 +10,7 @@
       "status": "GENERATED"
     },
     {
-      "canonicalHash": "sha256:a195626bc7656a134f618cf0e38058b42a5fc7f014633b5d20b2a3d3cd6a3515",
+      "canonicalHash": "sha256:c82d5ddf4607c90fbe9f6d63dbe632538733fb72c486076d792aef7aeda77234",
       "output": "compatibility/requirements.json",
       "runtimeOutput": "data/normalized/economics/requirements.json",
       "source": "canonical Knowledge Hub manifest inputs",
@@ -24,7 +24,7 @@
       "status": "GENERATED"
     },
     {
-      "canonicalHash": "sha256:7bc11aff51dc23afc14ef23755cf5f805e2d890c410143eb81893d408abb3e88",
+      "canonicalHash": "sha256:e35b4ab5bc76f1de1ea9f8ff7f997c392d869177e3c3c02550aed1e908204c9b",
       "output": "compatibility/planning-constraints.json",
       "runtimeOutput": "data/normalized/economics/planning-constraints.json",
       "source": "canonical Knowledge Hub manifest inputs",
@@ -38,7 +38,7 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:06bc4584334d2e63c0a8f9ac1cdd02c2a7134e5ba012857897060c1ecc092172",
+  "contentHash": "sha256:9a5e6d408864cdf9bf252cad57adf9b8e83a7b67612020c697bf095b35a0f05d",
   "counts": {
     "activeRules": 54,
     "courses": 31,

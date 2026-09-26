@@ -27,7 +27,7 @@ import {compileCatalogPolicies} from "../scripts/compile-catalog-policies.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 
-test("compiled planning-flexibility.5 is the runtime strategy source of truth", () => {
+test("compiled planning-flexibility.6 is the runtime strategy source of truth", () => {
   const contract = economicsPlanningStrategyContract();
   assert.equal(contract.classification, "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES");
   assert.equal(contract.feasibilityImpact, "NONE");
@@ -288,7 +288,7 @@ test("catalog policy compilation is byte-identical across three clean outputs an
       await compileCatalogPolicies({repositoryRoot: ROOT, outputRoot});
       outputs.push(await Promise.all([
         readFile(path.join(outputRoot, "catalog-releases.json"), "utf8"),
-        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.5", "bundle.json"), "utf8"),
+        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.6", "bundle.json"), "utf8"),
         ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.2"]
           .map(version => readFile(path.join(outputRoot, "releases", version, "bundle.json"), "utf8"))
       ]));

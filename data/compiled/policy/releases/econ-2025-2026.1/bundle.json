@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:06bc4584334d2e63c0a8f9ac1cdd02c2a7134e5ba012857897060c1ecc092172",
+  "contentHash": "sha256:9a5e6d408864cdf9bf252cad57adf9b8e83a7b67612020c697bf095b35a0f05d",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -98,16 +98,17 @@
       "MAT 113": [
         "CONCURRENT-MATH-ECO-213",
         "CONCURRENT-MATH-ECO-214",
+        "PLANNING-MAY-COURSE-EXCLUSIONS",
         "REQ-COGNATE"
       ],
       "MAT 121": [
         "CONCURRENT-MATH-ECO-213",
         "CONCURRENT-MATH-ECO-214",
+        "PLANNING-MAY-COURSE-EXCLUSIONS",
         "REQ-COGNATE"
       ],
       "MAT 217": [
         "CAPSTONE-STATISTICS-BEFORE",
-        "PLANNING-MAY-COURSE-EXCLUSIONS",
         "REQ-STATISTICS"
       ],
       "PHI 234": [
@@ -1957,7 +1958,7 @@
         "confidence": "CONFIRMED",
         "confirmation": {
           "date": "2026-08-01",
-          "lastReviewDate": "2026-08-01",
+          "lastReviewDate": "2026-09-26",
           "reviewer": "Economics Department representative and project owner"
         },
         "dependencies": [
@@ -1972,14 +1973,15 @@
             "ECO 214",
             "ECO 321",
             "BUSN 323",
-            "MAT 217",
             "ECO 257",
             "PSY 217",
-            "ECO 461"
+            "ECO 461",
+            "MAT 113",
+            "MAT 121"
           ]
         },
         "effective": {
-          "from": "2026-08-01",
+          "from": "2026-09-26",
           "through": null
         },
         "family": "TERM",
@@ -2017,16 +2019,17 @@
             "ECO 214",
             "ECO 321",
             "BUSN 323",
-            "MAT 217",
             "ECO 257",
             "PSY 217",
-            "ECO 461"
+            "ECO 461",
+            "MAT 113",
+            "MAT 121"
           ],
           "program": "ECONOMICS",
           "requirements": []
         },
         "sourceRefs": [
-          "ECONOMICS-OFFERINGS#May-Term"
+          "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary"
         ],
         "status": "ACTIVE",
         "supersedes": [],
@@ -2109,7 +2112,6 @@
         },
         "sourceRefs": [
           "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
-          "ECONOMICS-OFFERINGS#General-Offering-Pattern",
           "OWNER-PRELIMINARY-SCHEDULE-2026-09-22#PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE"
         ],
         "status": "ACTIVE",
@@ -4170,8 +4172,7 @@
           ]
         },
         "sourceRefs": [
-          "OFFICIAL-CATALOG-ECONOMICS#Major",
-          "ECONOMICS-OFFERINGS#ECO-321-BUSN-323"
+          "OFFICIAL-CATALOG-ECONOMICS#Major"
         ],
         "status": "ACTIVE",
         "supersedes": [],
@@ -6121,9 +6122,7 @@
           "through": null
         },
         "evidenceType": "DEPARTMENT_RECURRING",
-        "hardExcludedTerms": [
-          "MAY"
-        ],
+        "hardExcludedTerms": [],
         "observationsByTerm": {
           "2026-FALL": [
             "ECO 213"
@@ -6133,29 +6132,30 @@
           ]
         },
         "patternId": "PLANNING-INTERMEDIATE-OFFERING-SEPARATION",
-        "projectionGranularity": "ACADEMIC_YEAR_TBC",
+        "projectionGranularity": "LABELED_TERM_WORKLOAD_ESTIMATE",
         "projectionPolicy": {
           "activeExactScheduleOverrides": true,
-          "fallback": "TERM_TO_BE_CONFIRMED_ONLY",
+          "fallback": "LABELED_TERM_WORKLOAD_ESTIMATE",
           "normalTerms": [
             "FALL",
             "WINTER"
           ],
           "probabilityEmitted": false,
-          "sameTerm": "PATTERN_UNSUPPORTED",
+          "sameTerm": "REQUIRE_MATCHING_VERIFIED_SECTIONS",
           "scheduleCoverage": [
             "UNAVAILABLE",
             "UNKNOWN"
           ],
+          "termEligibilityRuleId": "PLANNING-MAY-COURSE-EXCLUSIONS",
           "universalSameTermProhibition": false
         },
         "review": {
-          "lastReviewDate": "2026-08-01",
+          "lastReviewDate": "2026-09-26",
           "reviewer": "Economics Department representative and project owner"
         },
         "sourceRefs": [
           "DEPARTMENT-POLICIES#Confirmed-policy-5",
-          "ECONOMICS-OFFERINGS#General-Offering-Pattern"
+          "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Owner-instructions"
         ],
         "supersedes": [
           "LEGACY-INTERMEDIATE-SAME-TERM-PROHIBITION"
@@ -6454,19 +6454,6 @@
       },
       {
         "authority": "Economics Department",
-        "authorityBoundary": "UNPUBLISHED_ECONOMICS_OFFERING_PROJECTION",
-        "effective": {
-          "from": "2026-08-01",
-          "through": null
-        },
-        "path": "data/raw/economics/Econ_Course_Offerings.md",
-        "sha256": "c7ca6b3f570920bb71a73101231c1053a877e4c8716d31b2a4faac50f1e9856e",
-        "sourceId": "ECONOMICS-OFFERINGS",
-        "sourceType": "DEPARTMENT_GUIDANCE",
-        "supersedes": null
-      },
-      {
-        "authority": "Economics Department",
         "authorityBoundary": "ECONOMICS_REQUIREMENTS_AND_PREREQUISITE_TRANSCRIPTION",
         "effective": {
           "from": "2025-08-01",
@@ -6536,6 +6523,19 @@
         "sourceType": "OWNER_CONFIRMATION",
         "statement": "For the existing ECO 461 concurrency exception, exactly one of ECO 213 or ECO 214 must be successfully completed before the target ECO 461 term. Eligible completed and accepted-transfer evidence, a current in-progress course finishing before the target term, and an earlier generated-term course may count. Same-term or later courses and uncertain or unaccepted history, equivalency, substitution, waiver, or prerequisite evidence do not count. Earlier in-progress or planned completion remains conditional on success. This clarifies the existing 2026-08-01 department-confirmed exception and creates no new exception or alternate planning mode.",
         "supersedes": "Ambiguous use of already completed in the 2026-08-01 ECO 461 concurrency wording"
+      },
+      {
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_OFFERING_PROJECTION_AND_CONSISTENT_TERM_PLACEMENT",
+        "effective": {
+          "from": "2026-09-26",
+          "through": null
+        },
+        "path": "policy/provenance/offering-policy-2026-09-26.md",
+        "sha256": "f97ee7afcab40d19f20ce9e2b2f5b82f469eae5c51262b5eb619f18f43bc4093",
+        "sourceId": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
       },
       {
         "authority": "Economics Department planning policy",
@@ -8415,7 +8415,7 @@
       "confidence": "CONFIRMED",
       "confirmation": {
         "date": "2026-08-01",
-        "lastReviewDate": "2026-08-01",
+        "lastReviewDate": "2026-09-26",
         "reviewer": "Economics Department representative and project owner"
       },
       "dependencies": [
@@ -8430,14 +8430,15 @@
           "ECO 214",
           "ECO 321",
           "BUSN 323",
-          "MAT 217",
           "ECO 257",
           "PSY 217",
-          "ECO 461"
+          "ECO 461",
+          "MAT 113",
+          "MAT 121"
         ]
       },
       "effective": {
-        "from": "2026-08-01",
+        "from": "2026-09-26",
         "through": null
       },
       "family": "TERM",
@@ -8475,16 +8476,17 @@
           "ECO 214",
           "ECO 321",
           "BUSN 323",
-          "MAT 217",
           "ECO 257",
           "PSY 217",
-          "ECO 461"
+          "ECO 461",
+          "MAT 113",
+          "MAT 121"
         ],
         "program": "ECONOMICS",
         "requirements": []
       },
       "sourceRefs": [
-        "ECONOMICS-OFFERINGS#May-Term"
+        "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary"
       ],
       "status": "ACTIVE",
       "supersedes": [],
@@ -8567,7 +8569,6 @@
       },
       "sourceRefs": [
         "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
-        "ECONOMICS-OFFERINGS#General-Offering-Pattern",
         "OWNER-PRELIMINARY-SCHEDULE-2026-09-22#PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE"
       ],
       "status": "ACTIVE",
@@ -10628,8 +10629,7 @@
         ]
       },
       "sourceRefs": [
-        "OFFICIAL-CATALOG-ECONOMICS#Major",
-        "ECONOMICS-OFFERINGS#ECO-321-BUSN-323"
+        "OFFICIAL-CATALOG-ECONOMICS#Major"
       ],
       "status": "ACTIVE",
       "supersedes": [],

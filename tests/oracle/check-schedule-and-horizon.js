@@ -441,6 +441,36 @@ function result({ violations, warnings, reviewItems, conditions, projections }) 
   };
 }
 
+function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, violations) {
+  const actual = canonicalExternalTermKey(term.termKey);
+  const may = policyRule(policy, "PLANNING-MAY-COURSE-EXCLUSIONS");
+  const separation = policyRule(policy, "PLANNING-INTERMEDIATE-OFFERING-SEPARATION");
+  const courses = term.courses || [];
+  courses.forEach((course, index) => {
+    if (course.fixedInProgress) return;
+    const key = actual === "TBC" ? canonicalExternalTermKey(course.projectedTerm) : actual;
+    if (!key || key === "TBC") return; // A year-only row does not assert a shared term.
+    const verified = code => (verifiedSchedule.sections || []).some(row =>
+      normalizeYear(row.academicYear) === normalizeYear(term.academicYear)
+      && normalizeTerm(row.term) === normalizeTerm(key)
+      && (row.course === code || (row.canonicalCrossListIdentity || []).includes(code)));
+    const path = `$.plan.terms[${termIndex}].courses[${index}]`;
+    if (normalizeTerm(key) === "May" && may?.excludedCourses.includes(course.course)
+      && !(may.verifiedScheduleOverride && verified(course.course))) {
+      violations.push(finding(policy, "COURSE_NOT_SUPPORTED_IN_MAY", may.ruleId, path,
+        `${course.course} needs verified schedule evidence for May.`));
+    }
+    if (separation?.separateTermsWithoutVerifiedSchedule && separation.courses.includes(course.course)) {
+      const others = courses.filter(row => row.course !== course.course && separation.courses.includes(row.course)
+        && (actual !== "TBC" || canonicalExternalTermKey(row.projectedTerm) === key));
+      if (others.length && !(verified(course.course) && others.every(row => verified(row.course)))) {
+        violations.push(finding(policy, "INTERMEDIATE_SAME_TERM_REQUIRES_VERIFIED_SCHEDULE", separation.ruleId, path,
+          "The intermediate courses need separate terms without matching verified sections."));
+      }
+    }
+  });
+}
+
 export function checkExternalEconomicsScheduleAndHorizon(input) {
   const args = isObject(input) ? input : {};
   const policy = isObject(args.policy) ? args.policy : {};
@@ -453,6 +483,7 @@ export function checkExternalEconomicsScheduleAndHorizon(input) {
   const projections = [];
 
   (plan.terms || []).forEach((term, termIndex) => {
+    checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, violations);
     checkCapacity(policy, term, termIndex, violations);
     checkSummer(policy, term, termIndex, violations, reviewItems);
     (term.courses || []).forEach((course, courseIndex) => {

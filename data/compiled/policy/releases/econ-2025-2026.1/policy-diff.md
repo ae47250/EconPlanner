@@ -1,6 +1,6 @@
 # Policy diff: econ-2025-2026.1
 
-Bundle digest: `sha256:06bc4584334d2e63c0a8f9ac1cdd02c2a7134e5ba012857897060c1ecc092172`
+Bundle digest: `sha256:9a5e6d408864cdf9bf252cad57adf9b8e83a7b67612020c697bf095b35a0f05d`
 
 Runtime activation: **not changed by CP2**. Compatibility files preserve the current runtime shapes.
 
