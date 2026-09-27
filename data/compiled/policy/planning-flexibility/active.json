@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.5",
-  "contentHash": "sha256:b63cc4c711750ef666bb2dfef4a5642b7e13944986cb4e11a758b60f6e0bcd29",
+  "bundleVersion": "econ-planning-flexibility.7",
+  "contentHash": "sha256:821f6dfbbb0f694196debbe93f0082a9b703eec2f2d5b23c57df94d11174850e",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -13,7 +13,7 @@
           "ACADEMIC_ADVISOR"
         ],
         "code": "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED",
-        "message": "This plan assumes you will have senior standing in your final year so you can take ECO 461. Please check this with your advisor as you get closer to that year."
+        "message": "This plan assumes you will have senior standing in your final year."
       },
       "readinessImpact": "NONE",
       "requiresStudentConfirmation": false,
@@ -31,9 +31,9 @@
       "legacyCodeRetired": false
     },
     "confirmation": {
-      "date": "2026-08-10",
+      "date": "2026-09-27",
       "reviewer": "Project owner and Economics Department domain expert",
-      "source": "Explicit owner authorization in the CP5, CP7, and capacity-aware distribution Codex tasks"
+      "source": "policy/provenance/canonical-consumption-2026-09-27.md"
     },
     "economicsPlanningStrategies": {
       "classification": "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES",
@@ -356,14 +356,16 @@
       "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
       "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED"
     },
-    "policyVersion": "econ-planning-flexibility.5",
+    "policyVersion": "econ-planning-flexibility.7",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
+      "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
       "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
       "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
       "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
       "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
-      "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING"
+      "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
+      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
     ],
     "status": "OWNER_APPROVED",
     "supportingCoursePlacement": {
@@ -377,10 +379,6 @@
       "evidenceStatus": "PLANNING_PROJECTION",
       "exactSectionsInvented": false,
       "historicalFrequencyInvented": false,
-      "planningTerms": [
-        "FALL",
-        "WINTER"
-      ],
       "ranking": {
         "moveFlexiblePlacementsFirst": true,
         "preferFrequentStatisticsOptionWhenEquallySafe": true,
@@ -392,20 +390,36 @@
         "cognateOptionsRemainCognateOnly": true,
         "financeOptionsRemainFinanceOnlyUnlessAnExplicitAllocationRuleApplies": true,
         "statisticsOptionsRemainStatisticsOnly": true
-      }
+      },
+      "termEligibilityRuleId": "PLANNING-MAY-COURSE-EXCLUSIONS"
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.5.json",
+    "provenancePath": "policy/provenance/planning-flexibility.7.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
+      "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
       "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
       "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
       "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
       "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
-      "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING"
+      "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
+      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
     ],
     "sources": [
+      {
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION",
+        "effective": {
+          "from": "2026-09-27",
+          "through": null
+        },
+        "path": "policy/provenance/canonical-consumption-2026-09-27.md",
+        "sha256": "9a5018fb2eb76643cc58b715dc93115f95aedea938b3e4f2ea3f8884246a8516",
+        "sourceId": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
+      },
       {
         "anchors": [
           "STRATEGY-PREFERENCES"
@@ -477,6 +491,19 @@
         "sourceType": "OWNER_CONFIRMATION",
         "statement": "Balanced distributes total planner-tracked load as evenly as feasible with remainders in later usable years. Explore uses a lighter first planned year and backloads remaining work, including a 2/3/3/4 full freshman target for twelve tracked requirements. Annual and within-year targets use actual capacity after fixed Taking now courses and other reservations. Full-year preferred term shapes are 1/1/1 for three, equally preferred 1/2/1 and 2/1/1 for four, and 2/2/1 for five, with no preferred Spring/May target above one. Explore ranks 1/1/0 ahead of the other separated two-course shapes and same-term arrangements only as rescue candidates. These preferences rank academically valid plans and never change feasibility, requirements, prerequisites, offerings, capacity, or readiness.",
         "supersedes": "Earlier incomplete implementation details for Balanced remainder placement and within-year distribution"
+      },
+      {
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_OFFERING_PROJECTION_AND_CONSISTENT_TERM_PLACEMENT",
+        "effective": {
+          "from": "2026-09-26",
+          "through": null
+        },
+        "path": "policy/provenance/offering-policy-2026-09-26.md",
+        "sha256": "f97ee7afcab40d19f20ce9e2b2f5b82f469eae5c51262b5eb619f18f43bc4093",
+        "sourceId": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
       }
     ]
   },

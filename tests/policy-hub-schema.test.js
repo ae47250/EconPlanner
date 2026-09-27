@@ -55,7 +55,7 @@ for (const input of manifest.inputs) {
   }
 }
 
-const activeRules = policyDocuments.flatMap(document => document.data.records);
+const activeRules = policyDocuments.flatMap(document => document.data.records).filter(rule => rule.status === "ACTIVE");
 const rulesById = new Map(activeRules.map(rule => [rule.ruleId, rule]));
 const unresolvedById = new Map(unresolved.questions.map(question => [question.ruleId, question]));
 const sourceIds = new Set(provenance.sources.map(source => source.sourceId));

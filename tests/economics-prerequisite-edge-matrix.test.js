@@ -249,7 +249,7 @@ function expectedReviewRule(edge) {
 function expectedViolationRule(edge) {
   if (edge.course !== "ECO 461") return edge.ruleId;
   return CAPSTONE_STATISTICS.has(edge.prerequisite)
-    ? "CAPSTONE-STATISTICS-BEFORE"
+    ? "PREREQ-ECO-461"
     : "PREREQ-ECO-461";
 }
 

@@ -82,7 +82,7 @@
       {"ruleIds": ["CAPSTONE-HANOVER-RESIDENCY"], "text": "ECO 461 must be completed at Hanover College"},
       {"ruleIds": ["CONCURRENT-MATH-ECO-213", "CONCURRENT-MATH-ECO-214"], "text": "MAT 113 or MAT 121 may be concurrent with ECO 213 or ECO 214 only as a last resort with the ECO course instructor's approval; every other prerequisite must be completed first"},
       {"ruleIds": ["CONCURRENT-INTERMEDIATE-ECO-461"], "text": "When exactly one of ECO 213 or ECO 214 is already completed, the other may be concurrent with ECO 461 only with Economics Department approval and after all other ECO 461 prerequisites are completed"},
-      {"ruleIds": ["PLANNING-CURRENT-TERM-EXCLUDED"], "text": "A generated plan never adds courses to the regular term containing the plan-creation date; current-term courses must be recorded as In Progress"},
+      {"ruleIds": ["PLANNING-CURRENT-TERM-ADD-DROP"], "text": "New current-term placements are allowed only during the official initial add/drop window; preserve In Progress occupancy and prerequisite timing"},
       {"ruleIds": ["PLANNING-IN-PROGRESS-UNLOCKS-LATER"], "text": "A prerequisite currently In Progress becomes available for a dependent course only after the current term"}
     ],
     "offeringPatternText": {"PLANNING-INTERMEDIATE-OFFERING-SEPARATION": "One is normally offered in Fall and the other in Winter; the verified annual schedule determines the order."},

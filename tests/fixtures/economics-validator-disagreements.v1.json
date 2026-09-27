@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "registryVersion": 2,
-  "policyVersion": 7,
+  "policyVersion": 8,
   "authorship": "handwritten-curated-mutations",
   "reviewedOn": "2026-08-06",
   "reviewer": "Economics Department / EconPlanner testing review",
@@ -131,7 +131,7 @@
       "id": "VAL-012-STATISTICS-CONCURRENT-ECO461",
       "mutationId": "STATISTICS_CONCURRENT_WITH_ECO_461",
       "baselineId": "statistics-before-capstone",
-      "ruleId": "CAPSTONE-STATISTICS-BEFORE",
+      "ruleId": "PREREQ-ECO-461",
       "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
       "status": "AGREEMENT",

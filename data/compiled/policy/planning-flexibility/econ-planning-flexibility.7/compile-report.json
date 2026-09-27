@@ -1,15 +1,15 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.5",
-  "contentHash": "sha256:b63cc4c711750ef666bb2dfef4a5642b7e13944986cb4e11a758b60f6e0bcd29",
+  "bundleVersion": "econ-planning-flexibility.7",
+  "contentHash": "sha256:821f6dfbbb0f694196debbe93f0082a9b703eec2f2d5b23c57df94d11174850e",
   "determinism": {
     "canonicalFormat": "UTF-8 JSON with canonical key and ID-array ordering",
     "requiredCleanCompilations": 3
   },
   "inputs": [
     "policy/rules/planning-flexibility.json",
-    "policy/provenance/planning-flexibility.5.json"
+    "policy/provenance/planning-flexibility.7.json"
   ],
   "schemaVersion": "1.0.0",
   "validation": {

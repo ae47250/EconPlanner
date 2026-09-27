@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { loadPlanningFlexibilityPolicy } from "../lib/catalog/policy-releases.js";
 
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -2908,9 +2909,9 @@ async function writeCp4bBFollowupArtifacts(summary) {
     },
     policyCompilation: {
       source: "policy/rules/planning-flexibility.json",
-      bundle: "data/compiled/policy/planning-flexibility/econ-planning-flexibility.5/bundle.json",
-      digest: "data/compiled/policy/planning-flexibility/econ-planning-flexibility.5/bundle.sha256",
-      compileReport: "data/compiled/policy/planning-flexibility/econ-planning-flexibility.5/compile-report.json"
+      bundle: `data/compiled/policy/planning-flexibility/${loadPlanningFlexibilityPolicy().bundleVersion}/bundle.json`,
+      digest: `data/compiled/policy/planning-flexibility/${loadPlanningFlexibilityPolicy().bundleVersion}/bundle.sha256`,
+      compileReport: `data/compiled/policy/planning-flexibility/${loadPlanningFlexibilityPolicy().bundleVersion}/compile-report.json`
     },
     reportAndPdfParity: {
       contractTests: ["tests/economics-report-parity.test.js", "tests/economics-report.test.js"],
@@ -2919,7 +2920,7 @@ async function writeCp4bBFollowupArtifacts(summary) {
       reason: "The established report verification boundary is local-only for this checkpoint."
     },
     architectureContracts: [
-      "data/compiled/policy/planning-flexibility/econ-planning-flexibility.5/architecture-contract.md",
+      `data/compiled/policy/planning-flexibility/${loadPlanningFlexibilityPolicy().bundleVersion}/architecture-contract.md`,
       "policy/rules/planning-flexibility.json"
     ],
     fullPolicyReconciliation: fullReconciliation,

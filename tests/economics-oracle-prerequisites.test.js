@@ -240,9 +240,8 @@ test("capstone rules include final-Winter senior standing and never infer concur
   assert.deepEqual(policy.capstoneRules.map(rule => rule.ruleId), [
     "CAPSTONE-WINTER-ONLY",
     "CAPSTONE-SENIOR-STANDING",
-    "CAPSTONE-EARLY-GRADUATE-STANDING",
-    "CAPSTONE-HANOVER-RESIDENCY",
-    "CAPSTONE-STATISTICS-BEFORE"
+    "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
+    "CAPSTONE-HANOVER-RESIDENCY"
   ]);
   assert.equal(
     fixtureById("prereq-valid-integrated-strict-capstone").expectedContext.planningPace,
@@ -256,7 +255,7 @@ test("capstone rules include final-Winter senior standing and never infer concur
   const concurrentStatistics = checkExternalEconomicsPrerequisites(externalInput(
     fixtureById("prereq-invalid-statistics-concurrent-capstone")
   ));
-  assert.ok(concurrentStatistics.violations.some(item => item.code === "CAPSTONE-STATISTICS-BEFORE"));
+  assert.ok(concurrentStatistics.violations.some(item => item.code === "PREREQ-ECO-461"));
 });
 
 test("integrated Task 5 audit checks requirements and prerequisites but leaves schedules NOT_CHECKED", () => {
