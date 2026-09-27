@@ -45,6 +45,37 @@
   ],
   "ruleGroups": [
     {
+      "group": "submitted-elective-slot-contract",
+      "ruleIds": [
+        "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT"
+      ],
+      "criticalFamilies": [
+        "MAJOR_REQUIREMENTS_AND_ALLOCATION"
+      ],
+      "implementationRefs": [
+        "policy/provenance/plan-slot-contract-2026-09-26.md",
+        "lib/planning/economics.js",
+        "tests/oracle/check-requirements.js"
+      ],
+      "positiveTests": [
+        "tests/economics-plan-editing-api.test.js",
+        "tests/economics-oracle-requirements.test.js"
+      ],
+      "negativeTests": [
+        "tests/economics-plan-editing-api.test.js",
+        "tests/economics-oracle-requirements.test.js"
+      ],
+      "layers": {
+        "requirement_mapping": "NOT_APPLICABLE",
+        "planner_pruning": "NOT_APPLICABLE",
+        "production_validator": "IMPLEMENTED",
+        "independent_oracle": "IMPLEMENTED",
+        "ui_parity": "MISSING",
+        "html": "MISSING",
+        "pdf": "MISSING"
+      }
+    },
+    {
       "group": "requirements",
       "ruleIds": ["REQ-MAJOR-COURSE-COUNT", "REQ-COGNATE-COURSE-COUNT", "REQ-ECO-113", "REQ-ECO-114", "REQ-ECO-213", "REQ-ECO-214", "REQ-STATISTICS", "REQ-FINANCE", "REQ-ECO-461", "REQ-COGNATE", "REQ-ECO-ELECTIVES"],
       "criticalFamilies": ["MAJOR_REQUIREMENTS_AND_ALLOCATION"],

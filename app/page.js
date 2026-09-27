@@ -2202,6 +2202,10 @@ export default function Page() {
   const generationRequestRef = useRef(0);
   const generationAbortRef = useRef(null);
   const planEditInFlightRef = useRef(false);
+  const planEditRequestRef = useRef(0);
+  const planEditAbortRef = useRef(null);
+  const reportContextIdRef = useRef(null);
+  const latestReportRef = useRef(null);
   const pdfDownloadInFlightRef = useRef(false);
   const pdfDownloadAbortRef = useRef(null);
   const pdfOperationRef = useRef(null);
@@ -2243,6 +2247,7 @@ export default function Page() {
     ? `Choose the year you'll start in Fall ${planningContext.startYear}.`
     : `Choose your year for the ${formatAcademicYearCompact(planningContext.startYear)} academic year.`;
   latestFormRef.current = formData;
+  latestReportRef.current = report;
 
   function updatePlanCreationDate(current, planCreationDate) {
     const next = {
@@ -2314,81 +2319,104 @@ export default function Page() {
   }
 
   useEffect(() => {
-    let restoredForm = { ...initialForm, planCreationDate: localToday() };
-    let restoredCourseSearch = "";
-    let restoredIntakeStep = 1;
+    let cancelled = false;
+    const controller = new AbortController();
+    async function restoreSession() {
+      let restoredForm = { ...initialForm, planCreationDate: localToday() };
+      let restoredCourseSearch = "";
+      let restoredIntakeStep = 1;
 
-    try {
-      const saved = window.localStorage.getItem(PLANNER_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.formData && Array.isArray(parsed.formData.courses)) {
-          const {
-            entryCatalogYear: _entryCatalogYear,
-            summerStandingConfirmed: _summerStandingConfirmed,
-            ...savedFormData
-          } = parsed.formData;
-          const migrated = migratePlannerInputState(savedFormData);
-          const savedPlanCreationDateEdited = savedFormData.planCreationDateEdited === true;
-          restoredForm = {
-            ...restoredForm,
-            ...migrated.formData,
-            courses: migrateSavedCourses(migrated.formData.courses),
-            planCreationDate: savedPlanCreationDateEdited && migrated.formData.planCreationDate
-              ? migrated.formData.planCreationDate
-              : localToday(),
-            planCreationDateEdited: savedPlanCreationDateEdited
-          };
-          const savedMigrationNotice = migrated.notices[0]?.message;
-          if (savedMigrationNotice) setMigrationNotice(savedMigrationNotice);
+      try {
+        const saved = window.localStorage.getItem(PLANNER_STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.formData && Array.isArray(parsed.formData.courses)) {
+            const {
+              entryCatalogYear: _entryCatalogYear,
+              summerStandingConfirmed: _summerStandingConfirmed,
+              ...savedFormData
+            } = parsed.formData;
+            const migrated = migratePlannerInputState(savedFormData);
+            const savedPlanCreationDateEdited = savedFormData.planCreationDateEdited === true;
+            restoredForm = {
+              ...restoredForm,
+              ...migrated.formData,
+              courses: migrateSavedCourses(migrated.formData.courses),
+              planCreationDate: savedPlanCreationDateEdited && migrated.formData.planCreationDate
+                ? migrated.formData.planCreationDate
+                : localToday(),
+              planCreationDateEdited: savedPlanCreationDateEdited
+            };
+            const savedMigrationNotice = migrated.notices[0]?.message;
+            if (savedMigrationNotice) setMigrationNotice(savedMigrationNotice);
+          }
+          if (typeof parsed.courseSearch === "string") restoredCourseSearch = parsed.courseSearch;
+          if (parsed.intakeStep === 2) restoredIntakeStep = 2;
         }
-        if (typeof parsed.courseSearch === "string") restoredCourseSearch = parsed.courseSearch;
-        if (parsed.intakeStep === 2) restoredIntakeStep = 2;
+      } catch {
+        try { window.localStorage.removeItem(PLANNER_STORAGE_KEY); } catch { /* Storage may be disabled. */ }
       }
-    } catch {
-      window.localStorage.removeItem(PLANNER_STORAGE_KEY);
-    }
 
-    setFormData(restoredForm);
-    setCourseSearch(restoredCourseSearch);
-    setIntakeStep(restoredIntakeStep);
+      setFormData(restoredForm);
+      setCourseSearch(restoredCourseSearch);
+      setIntakeStep(restoredIntakeStep);
 
-    const requestedView = plannerViewFromSearch(window.location.search);
-    const restoredSession = restoreGeneratedPlannerSession(
-      window.sessionStorage.getItem(GENERATED_PLANNER_SESSION_KEY),
-      plannerInputSignature(restoredForm)
-    );
-    let initialView = PLANNER_VIEWS.INPUT;
-    let initialPlanId = "";
-    if (restoredSession) {
-      setReport(restoredSession.report);
-      setInputBlock(restoredSession.inputBlock);
-      generatedInputSignatureRef.current = restoredSession.inputSignature;
-      initialPlanId = new URLSearchParams(window.location.search).get("plan") || restoredSession.selectedPlanId;
-      const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
-      if (!plans.some(plan => plan.id === initialPlanId)) initialPlanId = plans[0]?.id || "";
-      const restoredView = requestedView === PLANNER_VIEWS.INPUT ? restoredSession.view : requestedView;
-      initialView = restoredView === PLANNER_VIEWS.PLAN && !plans.length
-        ? PLANNER_VIEWS.COMPARE
-        : restoredView;
-      setSelectedPlanId(initialPlanId);
-      setPlannerView(initialView);
-      setPlanEditUndo(restoredSession.planEditUndo);
-    } else {
-      window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY);
-      if (requestedView !== PLANNER_VIEWS.INPUT) {
-        setStatus("That generated plan is no longer available. Review your saved inputs and generate new plans.");
+      const requestedView = plannerViewFromSearch(window.location.search);
+      let savedSession = null;
+      let activeFingerprint = null;
+      try {
+        savedSession = window.sessionStorage.getItem(GENERATED_PLANNER_SESSION_KEY);
+        if (savedSession) {
+          const timeout = setTimeout(() => controller.abort(), 5000);
+          try {
+            const response = await fetch("/api/majors/map", { cache: "no-store", signal: controller.signal });
+            if (response.ok) activeFingerprint = (await response.json()).plannerFingerprint;
+          } finally {
+            clearTimeout(timeout);
+          }
+        }
+      } catch {
+        // Unavailable policy verification cannot authorize restoring old plans.
       }
-    }
+      if (cancelled) return;
+      const restoredSession = restoreGeneratedPlannerSession(
+        savedSession, plannerInputSignature(restoredForm), activeFingerprint
+      );
+      let initialView = PLANNER_VIEWS.INPUT;
+      let initialPlanId = "";
+      if (restoredSession) {
+        reportContextIdRef.current = restoredSession.reportContextId || crypto.randomUUID();
+        setReport(restoredSession.report);
+        setInputBlock(restoredSession.inputBlock);
+        generatedInputSignatureRef.current = restoredSession.inputSignature;
+        initialPlanId = new URLSearchParams(window.location.search).get("plan") || restoredSession.selectedPlanId;
+        const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
+        if (!plans.some(plan => plan.id === initialPlanId)) initialPlanId = plans[0]?.id || "";
+        const restoredView = requestedView === PLANNER_VIEWS.INPUT ? restoredSession.view : requestedView;
+        initialView = restoredView === PLANNER_VIEWS.PLAN && !plans.length
+          ? PLANNER_VIEWS.COMPARE
+          : restoredView;
+        setSelectedPlanId(initialPlanId);
+        setPlannerView(initialView);
+        setPlanEditUndo(restoredSession.planEditUndo);
+      } else {
+        try { window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY); } catch { /* Storage may be disabled. */ }
+        if (savedSession || requestedView !== PLANNER_VIEWS.INPUT) {
+          setStatus("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.");
+        }
+      }
 
-    window.history.replaceState(
-      { econPlanner: true, view: initialView, planId: initialPlanId, previousView: null },
-      "",
-      plannerUrl(initialView, initialPlanId)
-    );
-    window.history.scrollRestoration = "manual";
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    setIsHydrated(true);
+      window.history.replaceState(
+        { econPlanner: true, view: initialView, planId: initialPlanId, previousView: null },
+        "",
+        plannerUrl(initialView, initialPlanId)
+      );
+      window.history.scrollRestoration = "manual";
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      setIsHydrated(true);
+    }
+    void restoreSession();
+    return () => { cancelled = true; controller.abort(); };
   }, []);
 
   useEffect(() => {
@@ -2434,7 +2462,8 @@ export default function Page() {
             inputSignature: generatedInputSignatureRef.current,
             selectedPlanId,
             view: plannerView,
-            planEditUndo
+            planEditUndo,
+            reportContextId: reportContextIdRef.current
           })
         ));
       } else {
@@ -2481,6 +2510,7 @@ export default function Page() {
 
   useEffect(() => () => {
     generationAbortRef.current?.abort();
+    planEditAbortRef.current?.abort();
     pdfDownloadAbortRef.current?.abort();
   }, []);
 
@@ -2510,9 +2540,23 @@ export default function Page() {
     window.requestAnimationFrame(() => control.focus());
   }, [editingPlanCourseKey, failureFocusTarget, isDownloadingPdf, isGenerating, pdfStatus, planEditStatus, status]);
 
+  function invalidatePlanEdits() {
+    planEditRequestRef.current += 1;
+    planEditAbortRef.current?.abort();
+    planEditAbortRef.current = null;
+    planEditInFlightRef.current = false;
+    reportContextIdRef.current = null;
+    setEditingPlanCourseKey("");
+    setPlanEditUndo(null);
+    setPlanEditFeedback(null);
+    setPlanEditStatus("");
+    setFailureFocusTarget("");
+  }
+
   useEffect(() => {
     if ((!report && !inputBlock) || !generatedInputSignatureRef.current) return;
     if (plannerInputSignature(formData) === generatedInputSignatureRef.current) return;
+    invalidatePlanEdits();
     generationAbortRef.current?.abort();
     generationInFlightRef.current = false;
     generatedInputSignatureRef.current = "";
@@ -2538,6 +2582,7 @@ export default function Page() {
   }
 
   function clearAllPlanner() {
+    invalidatePlanEdits();
     generationAbortRef.current?.abort();
     pdfDownloadAbortRef.current?.abort();
     generationInFlightRef.current = false;
@@ -2741,6 +2786,8 @@ export default function Page() {
       return;
     }
 
+    invalidatePlanEdits();
+    reportContextIdRef.current = crypto.randomUUID();
     generationInFlightRef.current = true;
     setIsGenerating(true);
     setStatus("Building your economics plan...");
@@ -3138,6 +3185,17 @@ export default function Page() {
     if (planEditInFlightRef.current || generationInFlightRef.current) return;
     planEditInFlightRef.current = true;
     planEditTriggerRef.current = trigger;
+    const requestId = ++planEditRequestRef.current;
+    const controller = new AbortController();
+    planEditAbortRef.current = controller;
+    const inputSignature = plannerInputSignature(formData);
+    const reportContextId = reportContextIdRef.current;
+    const sourceReport = report;
+    const isCurrent = () => requestId === planEditRequestRef.current
+      && !controller.signal.aborted
+      && reportContextId === reportContextIdRef.current
+      && sourceReport === latestReportRef.current
+      && inputSignature === plannerInputSignature(latestFormRef.current);
 
     try {
       const result = economicsResult(report);
@@ -3170,9 +3228,11 @@ export default function Page() {
             plan: sourcePlan,
             plans,
             edit
-          })
+          }),
+          signal: controller.signal
         });
         const data = await response.json().catch(() => ({}));
+        if (!isCurrent()) return;
         if (!response.ok) throw new Error(data.error || "The plan edit could not be validated.");
         if (!data.plan?.validation?.valid) {
           throw new Error(data.plan?.validation?.errors?.[0] || "That plan change violates the Economics planning rules.");
@@ -3182,18 +3242,17 @@ export default function Page() {
         }
 
         setPlanEditUndo({
+          inputSignature, reportContextId,
           planId: sourcePlan.id,
           plan: sourcePlan,
           planSetValidation: result.economicsPlanValidation
         });
-        setReport(current => replaceEconomicsPlan(
-          current,
-          sourcePlan.id,
-          data.plan,
-          data.planSetValidation
-        ));
+        const nextReport = replaceEconomicsPlan(sourceReport, sourcePlan.id, data.plan, data.planSetValidation);
+        latestReportRef.current = nextReport;
+        setReport(nextReport);
         setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
       } catch (error) {
+        if (!isCurrent()) return;
         const message = studentFacingRequestError(
           error,
           "The plan edit could not be validated.",
@@ -3203,15 +3262,20 @@ export default function Page() {
         setPlanEditFeedback({ planId: sourcePlan.id, fromTermId: edit.fromTermId, courseId: edit.courseId, message });
         restoreFocusAfterFailure("plan-edit");
       } finally {
-        setEditingPlanCourseKey("");
+        if (requestId === planEditRequestRef.current) setEditingPlanCourseKey("");
       }
     } finally {
-      planEditInFlightRef.current = false;
+      if (requestId === planEditRequestRef.current) {
+        planEditInFlightRef.current = false;
+        planEditAbortRef.current = null;
+      }
     }
   }
 
   function undoPlanEdit() {
-    if (!planEditUndo) return;
+    if (!planEditUndo || planEditInFlightRef.current || generationInFlightRef.current) return;
+    if (planEditUndo.reportContextId !== reportContextIdRef.current
+      || planEditUndo.inputSignature !== plannerInputSignature(formData)) return;
     const restoredPlan = planEditUndo.plan;
     setReport(current => replaceEconomicsPlan(
       current,

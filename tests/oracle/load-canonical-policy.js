@@ -201,6 +201,8 @@ export function oracleEvaluateTermLoad(policy, term) {
 
 export function oracleEvaluateCanonicalPlan(policy, student, plan) {
   const findings = [];
+  const slotContract = policy.rules.find(rule => rule.ruleId === "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT");
+  const declaredElectiveSlots = new Set();
   const available = new Set((student.courses || []).filter(course => ["completed", "transfer", "in_progress"].includes(course.status)).map(course => String(course.code).toUpperCase()));
   for (const [termIndex, term] of (plan.terms || []).entries()) {
     const isTbc = canonicalTerm(term.termKey || term.term) === "TBC";
@@ -234,6 +236,13 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan) {
           ? candidate.options
           : [candidate.course]);
       const path = `$.terms[${termIndex}].courses[${courseIndex}]`;
+      if (slotContract?.scope.requirements.includes(course.requirementId)) {
+        if (declaredElectiveSlots.has(course.requirementId)) findings.push({
+          path: `${path}.requirementId`, status: "BLOCK", ruleIds: [slotContract.ruleId],
+          reasonCode: slotContract.reasonCode
+        });
+        declaredElectiveSlots.add(course.requirementId);
+      }
       findings.push({ path, ...oracleEvaluateAllocation(policy, course, course.requirementId) });
       findings.push({ path, ...oracleEvaluateOffering(policy, course, term) });
       if (course.course !== "ECO elective" && !String(course.source).includes("placeholder")) findings.push({ path, ...oracleEvaluatePrerequisite(policy, course.course, { available: [...available], sameTerm, approvals: course.approvalRequired || [] }) });

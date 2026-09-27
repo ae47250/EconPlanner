@@ -38,13 +38,13 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:9a5e6d408864cdf9bf252cad57adf9b8e83a7b67612020c697bf095b35a0f05d",
+  "contentHash": "sha256:fb5ee7105b9276d08bb3a85ba5b82d13d5203a8a938764aef221f6cf26466477",
   "counts": {
-    "activeRules": 54,
+    "activeRules": 55,
     "courses": 31,
     "historicalOfferingRecords": 0,
     "scheduleSections": 30,
-    "sources": 15,
+    "sources": 16,
     "unresolvedReviewRecords": 5
   },
   "determinism": {

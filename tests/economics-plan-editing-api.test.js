@@ -83,7 +83,11 @@ test("senior statistics explanation follows the actual horizon and disappears wh
     "ECO 113", "ECO 114", "MAT 113", "MAT 217", "ECO 213", "ECO 214", "BUSN 323", "ECO 161", "ECO 221", "ECO 222", "ECO 234"
   ])};
   const result = async () => (await postMap({student})).data.programs.find(item => item.program.id === "economics-base");
-  assert.ok((await result()).economicsPlans.length);
+  const ready = await result();
+  assert.ok(ready.economicsPlans.length);
+  assert.equal(ready.planningContext.remainingYears, 1);
+  assert.equal(ready.planningContext.expectedGraduationYear, 2027);
+  assert.ok(ready.economicsPlans.every(plan => plan.validation.valid));
   student.courses = student.courses.filter(course => course.code !== "MAT 217");
   const blocked = await result();
   assert.equal(blocked.economicsPlanResult.category, "INFEASIBLE_PROVEN");
@@ -159,10 +163,10 @@ const TASK15_FINDINGS = Object.freeze({
     reason: "Production and the independent oracle both enforce authoritative student reservations when a submitted plan is validated."
   },
   duplicateRequirementAssignment: {
-    classification: "CONFIRMED_PRODUCTION_ORACLE_DISAGREEMENT",
+    classification: "CONFIRMED_PRODUCTION_ORACLE_AGREEMENT",
     production: "REJECTED_DUPLICATE_REQUIREMENT",
-    oracle: "ACCEPTED_INTERCHANGEABLE_ELECTIVE_SLOTS",
-    reason: "Production preserves concrete elective requirement IDs and rejects a duplicated slot, while the independent oracle currently normalizes all elective slot identities as interchangeable."
+    oracle: "REJECTED_DUPLICATE_ELECTIVE_SLOT_ASSIGNMENT",
+    reason: "Verified against the owner-adopted September 26 submitted-slot contract: both reject duplicate declared assignments and accept swaps between distinct elective slots."
   }
 });
 
@@ -681,7 +685,6 @@ test("Task 15 API rejects altered embedded schedule metadata", async () => {
 });
 
 test("Task 15 API rejects duplicate requirement assignment", async () => {
-  const finding = TASK15_FINDINGS.duplicateRequirementAssignment;
   const { student, economics } = await generated("verifiedFiveRemaining");
   const edited = structuredClone(economics.economicsPlans[0]);
   const electives = courseEntries(edited).filter(({ course }) => (
@@ -695,9 +698,34 @@ test("Task 15 API rejects duplicate requirement assignment", async () => {
   assert.ok(result.data.validation.errors.some(error => (
     /Requirement eco-elective-1 is assigned more than once/.test(error)
   )));
+  const canonicalAudit = oracleEvaluateCanonicalPlan(await loadCanonicalPolicy(), student, edited);
+  assert.equal(canonicalAudit.valid, false);
+  assert.ok(canonicalAudit.findings.some(item => item.reasonCode === "DUPLICATE_ELECTIVE_SLOT_ASSIGNMENT"));
   const audit = auditPlan(student, edited);
-  assert.equal(audit.valid, true);
-  assert.equal(finding.classification, "CONFIRMED_PRODUCTION_ORACLE_DISAGREEMENT");
+  assert.equal(audit.valid, false);
+  assert.ok(audit.violations.some(item => item.code === "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT"
+    && /eco-elective-1.*more than once/.test(item.message)), JSON.stringify(audit.violations));
+});
+
+test("distinct elective-slot swaps preserve courses and terms and pass both validators", async () => {
+  const { student, economics } = await generated("verifiedFiveRemaining");
+  const original = economics.economicsPlans[0];
+  const edited = structuredClone(original);
+  const electives = courseEntries(edited).filter(({ course }) => String(course.requirementId).startsWith("eco-elective"));
+  assert.ok(electives.length >= 2);
+  const firstId = electives[0].course.requirementId;
+  const secondId = electives[1].course.requirementId;
+  assert.notEqual(firstId, secondId);
+  electives[0].course.requirementId = secondId;
+  electives[1].course.requirementId = firstId;
+  const withoutAssignments = plan => plan.terms.map(term => ({ ...term,
+    courses: term.courses.map(({ requirementId: _id, ...course }) => course)
+  }));
+  assert.deepEqual(withoutAssignments(edited), withoutAssignments(original));
+  assertOracleAccepted(student, original);
+  assertOracleAccepted(student, edited);
+  assert.equal(oracleEvaluateCanonicalPlan(await loadCanonicalPolicy(), student, edited).valid, true);
+  await assertAccepted(student, edited);
 });
 
 test("Task 15 API rejects a second 100-level Economics elective", async () => {
@@ -773,11 +801,11 @@ test("Task 15 disagreement registry is explicit and contains no unclassified fin
   ]);
   assert.equal(
     Object.values(TASK15_FINDINGS).filter(item => item.classification === "CONFIRMED_PRODUCTION_ORACLE_DISAGREEMENT").length,
-    1
+    0
   );
   assert.equal(
     Object.values(TASK15_FINDINGS).filter(item => item.classification === "CONFIRMED_PRODUCTION_ORACLE_AGREEMENT").length,
-    1
+    2
   );
   t.diagnostic(JSON.stringify({ task: 15, findings: TASK15_FINDINGS }));
 });

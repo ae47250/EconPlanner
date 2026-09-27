@@ -4,6 +4,7 @@ export const PLANNER_URL = "/?layout=apple";
 
 export async function resetPlanner(page) {
   await page.goto(PLANNER_URL);
+  await expect(page.locator(".planner-loading")).toHaveCount(0, { timeout: 10000 });
   await page.evaluate(() => {
     window.localStorage.clear();
     window.sessionStorage.clear();
@@ -167,6 +168,11 @@ export function infeasibleFixture() {
 }
 
 export async function fulfillPlanner(page, body, status = 200) {
+  // Mocked decisions must carry the same freshness contract as real responses.
+  const current = await page.request.get("/api/majors/map");
+  expect(current.status()).toBe(200);
+  const { plannerFingerprint } = await current.json();
+  body = { ...body, plannerFingerprint };
   await page.route("**/api/majors/map", async route => {
     if (route.request().method() !== "POST") {
       await route.continue();

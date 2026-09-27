@@ -3,6 +3,20 @@
   "policyVersion": "econ-2025-2026.1",
   "sources": [
     {
+      "sourceId": "OWNER-PLAN-SLOT-CONTRACT-2026-09-26",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner, explicit repair task",
+      "authorityBoundary": "SUBMITTED_PLAN_ELECTIVE_SLOT_ASSIGNMENT_CONTRACT",
+      "path": "policy/provenance/plan-slot-contract-2026-09-26.md",
+      "confirmedOn": "2026-09-26",
+      "sha256": "1853b45d7138c6167e03e3f50d6a34d67759ed2fc273b1898303cd09bc437b40",
+      "effective": {
+        "from": "2026-09-26",
+        "through": null
+      },
+      "supersedes": null
+    },
+    {
       "sourceId": "OFFICIAL-CATALOG-ECONOMICS",
       "sourceType": "OFFICIAL_CATALOG",
       "authority": "Hanover College",

@@ -3,6 +3,9 @@ import path from "node:path";
 import { buildEconomicsReportFromStudent } from "../../../../lib/reports/build-economics.js";
 import { renderEconomicsHtml } from "../../../../lib/reports/economics-html.js";
 import { createPdfFromHtml, PdfCreationClientError } from "../../../../lib/pdf-creation-client.js";
+import { PlanningInputError } from "../../../../lib/planning/horizon.js";
+import { resolveInputResolution } from "../../../../lib/catalog/input-resolution.js";
+import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -42,6 +45,13 @@ export async function handleEconomicsReportRequest(request, dependencies = {}) {
       headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" }
     });
   } catch (error) {
+    if (error instanceof PlanningInputError) {
+      const inputResolution = resolveInputResolution({ issueCode: error.code, issues: error.issues });
+      return Response.json({
+        error: error.message, code: error.code, issues: error.issues, inputResolution,
+        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
+      }, { status: 422, headers: { "Cache-Control": "no-store" } });
+    }
     if (error instanceof PdfCreationClientError) {
       console.error(JSON.stringify({
         event: "econplanner_pdf_failed",

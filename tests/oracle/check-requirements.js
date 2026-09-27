@@ -443,7 +443,7 @@ export function checkExternalEconomicsRequirements(input) {
   const policy = isObject(args.policy) ? args.policy : {};
   const plan = isObject(args.plan) ? args.plan : {};
   const student = isObject(args.student) ? args.student : {};
-  const missingManifestRules = REQUIRED_RULE_IDS.filter(ruleId => !ruleById(policy, ruleId));
+  const missingManifestRules = [...REQUIRED_RULE_IDS, "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT"].filter(ruleId => !ruleById(policy, ruleId));
   if (missingManifestRules.length) {
     const violations = missingManifestRules.map(ruleId => violation(
       ruleId,
@@ -472,7 +472,32 @@ export function checkExternalEconomicsRequirements(input) {
   if (!results.length && !residencyViolation) {
     violations.push(...diagnoseFailure(courses, slots, candidates, claims.coveredRuleIds, policy));
   }
-  const uncoveredViolations = violations.filter(item => !claims.coveredRuleIds.has(item.ruleId));
+  // Audit the submitted assignments independently of the alternative allocations
+  // above. Raw history carries course evidence, not declared plan slot ownership.
+  const assignmentRule = ruleById(policy, "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT");
+  const electiveSlotIds = new Set(assignmentRule?.electiveSlotIds || []);
+  const assignedSlots = new Set();
+  const assignmentViolations = [];
+  const submittedTerms = Array.isArray(plan.terms) ? plan.terms : [];
+  for (const [termIndex, term] of submittedTerms.entries()) {
+    const submittedCourses = Array.isArray(term?.courses) ? term.courses : [];
+    for (const [courseIndex, course] of submittedCourses.entries()) {
+      const slotId = normalizedText(course?.requirementId);
+      if (!electiveSlotIds.has(slotId)) continue;
+      if (assignedSlots.has(slotId)) assignmentViolations.push(violation(
+        assignmentRule.ruleId,
+        `$.plan.terms[${termIndex}].courses[${courseIndex}].requirementId`,
+        `Elective slot ${slotId} is assigned more than once in this submitted plan.`,
+        policy
+      ));
+      assignedSlots.add(slotId);
+    }
+  }
+  // A waiver of academic credit cannot waive malformed submitted assignments.
+  const uncoveredViolations = [
+    ...violations.filter(item => !claims.coveredRuleIds.has(item.ruleId)),
+    ...assignmentViolations
+  ];
 
   return requirementResult({
     allocations: residencyViolation ? [] : results,

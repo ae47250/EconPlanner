@@ -232,3 +232,23 @@ test("integrated Task 4 audit leaves prerequisites and schedule explicitly NOT_C
     item.family === "SCHEDULE" && item.status === "NOT_CHECKED"
   )));
 });
+
+test("declared elective-slot uniqueness is per submitted plan and excludes raw history", () => {
+  const input = externalInput(fixtureById("requirements-valid-busn-finance-eco321-elective"));
+  const courses = input.plan.terms[0].courses;
+  const first = courses.find(course => course.course === "PHI 234");
+  const second = courses.find(course => course.course === "ECO 260");
+  first.requirementId = "eco-elective-1";
+  second.requirementId = "eco-elective-2";
+  assert.equal(checkExternalEconomicsRequirements(input).valid, true);
+  // A separate alternative may use the same IDs; there is no global seen set.
+  assert.equal(checkExternalEconomicsRequirements(structuredClone(input)).valid, true);
+  second.requirementId = "eco-elective-1";
+  const duplicate = checkExternalEconomicsRequirements(input);
+  assert.equal(duplicate.valid, false);
+  assert.ok(duplicate.violations.some(item => item.code === "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT"));
+  // Move one course into raw completed history without a declared assignment.
+  input.plan.terms[0].courses = courses.filter(course => course !== second);
+  input.student.completedCourses.push({ course: second.course });
+  assert.equal(checkExternalEconomicsRequirements(input).valid, true);
+});

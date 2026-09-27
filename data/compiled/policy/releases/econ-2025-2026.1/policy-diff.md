@@ -1,8 +1,8 @@
 # Policy diff: econ-2025-2026.1
 
-Bundle digest: `sha256:9a5e6d408864cdf9bf252cad57adf9b8e83a7b67612020c697bf095b35a0f05d`
+Bundle digest: `sha256:fb5ee7105b9276d08bb3a85ba5b82d13d5203a8a938764aef221f6cf26466477`
 
-Runtime activation: **not changed by CP2**. Compatibility files preserve the current runtime shapes.
+Runtime activation: the active pinned bundle governs production decisions. Compatibility files are generated projections of the same canonical sources.
 
 ## Governed dispositions
 

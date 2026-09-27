@@ -12,6 +12,8 @@ import {
   restoreGeneratedPlannerSession
 } from "../lib/planning/uiState.js";
 
+const fingerprint = "sha256:current-policy-and-schedule";
+
 function sampleReport() {
   const plans = ["balanced", "explore-first", "one-year-early"].map((id, index) => ({
     id,
@@ -19,6 +21,7 @@ function sampleReport() {
     terms: [{ term: "Fall", courses: [{ course: `ECO ${index + 1}` }] }]
   }));
   return {
+    plannerFingerprint: fingerprint,
     programs: [{
       program: { name: "Economics" },
       economicsPlan: plans[0],
@@ -72,7 +75,7 @@ test("generated planner session restores the exact selected plan for matching in
     view: PLANNER_VIEWS.PLAN
   });
 
-  const restored = restoreGeneratedPlannerSession(JSON.stringify(saved), "student-input-v1");
+  const restored = restoreGeneratedPlannerSession(JSON.stringify(saved), "student-input-v1", fingerprint);
 
   assert.deepEqual(restored.report, report);
   assert.equal(restored.selectedPlanId, "explore-first");
@@ -81,6 +84,7 @@ test("generated planner session restores the exact selected plan for matching in
 
 test("generated planner session restores an explicit zero-plan comparison result", () => {
   const report = {
+    plannerFingerprint: fingerprint,
     programs: [{
       program: { name: "Economics" },
       economicsPlan: null,
@@ -97,7 +101,7 @@ test("generated planner session restores an explicit zero-plan comparison result
     view: PLANNER_VIEWS.COMPARE
   });
 
-  const restored = restoreGeneratedPlannerSession(saved, "zero-plan-input");
+  const restored = restoreGeneratedPlannerSession(saved, "zero-plan-input", fingerprint);
   assert.equal(restored.report, report);
   assert.equal(restored.selectedPlanId, "");
   assert.equal(restored.view, PLANNER_VIEWS.COMPARE);
@@ -105,6 +109,7 @@ test("generated planner session restores an explicit zero-plan comparison result
 
 test("generated planner session restores an input-blocked result", () => {
   const inputBlock = {
+    plannerFingerprint: fingerprint,
     code: "INVALID_CUSTOM_GRADUATION_INPUT",
     economicsPlanResult: {
       category: "INPUT_BLOCKED",
@@ -118,7 +123,7 @@ test("generated planner session restores an input-blocked result", () => {
     view: PLANNER_VIEWS.COMPARE
   });
 
-  const restored = restoreGeneratedPlannerSession(saved, "blocked-input");
+  const restored = restoreGeneratedPlannerSession(saved, "blocked-input", fingerprint);
   assert.equal(restored.report, null);
   assert.deepEqual(restored.inputBlock, inputBlock);
   assert.equal(restored.view, PLANNER_VIEWS.COMPARE);
@@ -132,7 +137,7 @@ test("generated planner session is rejected after an earlier answer changes", ()
     view: PLANNER_VIEWS.COMPARE
   });
 
-  assert.equal(restoreGeneratedPlannerSession(saved, "after-change"), null);
+  assert.equal(restoreGeneratedPlannerSession(saved, "after-change", fingerprint), null);
 });
 
 test("generated planner sessions from before offering-aware moves regenerate", () => {
@@ -143,9 +148,9 @@ test("generated planner sessions from before offering-aware moves regenerate", (
     view: PLANNER_VIEWS.COMPARE
   });
 
-  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 9);
-  assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 8 }, "student-input-v1"), null);
-  assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 4 }, "student-input-v1"), null);
+  assert.equal(GENERATED_PLANNER_SESSION_VERSION, 10);
+  assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 8 }, "student-input-v1", fingerprint), null);
+  assert.equal(restoreGeneratedPlannerSession({ ...saved, schemaVersion: 4 }, "student-input-v1", fingerprint), null);
 });
 
 test("replacing one generated plan leaves the other plan objects untouched", () => {
@@ -172,4 +177,28 @@ test("planner view query accepts only supported generated-plan views", () => {
   assert.equal(plannerViewFromSearch("?view=compare"), PLANNER_VIEWS.COMPARE);
   assert.equal(plannerViewFromSearch("?view=plan&plan=one-year-early"), PLANNER_VIEWS.PLAN);
   assert.equal(plannerViewFromSearch("?view=unknown"), PLANNER_VIEWS.INPUT);
+});
+
+
+test("saved plans require matching available policy fingerprints and matching embedded results", () => {
+  const report = sampleReport();
+  const saved = createGeneratedPlannerSession({ report, inputSignature: "answers", selectedPlanId: "balanced", view: PLANNER_VIEWS.PLAN });
+  for (const active of [null, undefined, "", "sha256:changed-schedule"]) {
+    assert.equal(restoreGeneratedPlannerSession(saved, "answers", active), null);
+  }
+  assert.equal(restoreGeneratedPlannerSession({ ...saved, plannerFingerprint: undefined }, "answers", fingerprint), null);
+  assert.equal(restoreGeneratedPlannerSession({ ...saved, report: { ...report, plannerFingerprint: undefined } }, "answers", fingerprint), null);
+  assert.equal(restoreGeneratedPlannerSession(saved, "answers", fingerprint).report, report);
+});
+
+test("restored undo must belong to the same report and input context", () => {
+  const saved = createGeneratedPlannerSession({ report: sampleReport(), inputSignature: "answers", reportContextId: "report-1",
+    selectedPlanId: "balanced", view: PLANNER_VIEWS.PLAN,
+    planEditUndo: { reportContextId: "report-1", inputSignature: "answers", planId: "balanced", plan: { id: "balanced" } }
+  });
+  assert.deepEqual(restoreGeneratedPlannerSession(saved, "answers", fingerprint).planEditUndo, saved.planEditUndo);
+  for (const change of [{ reportContextId: "older-report" }, { inputSignature: "older-answers" }]) {
+    const altered = { ...saved, planEditUndo: { ...saved.planEditUndo, ...change } };
+    assert.equal(restoreGeneratedPlannerSession(altered, "answers", fingerprint).planEditUndo, null);
+  }
 });

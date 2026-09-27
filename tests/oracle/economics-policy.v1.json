@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 6,
+    "version": 7,
     "confirmationDate": "2026-09-26",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
@@ -47,6 +47,12 @@
       "id": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
       "date": "2026-09-26",
       "reviewedBy": "Project owner and Economics Department domain expert"
+    },
+    {
+      "id": "PROJECT-OWNER-SLOT-CONTRACT-2026-09-26",
+      "date": "2026-09-26",
+      "reviewedBy": "Project owner, explicit repair task",
+      "summary": "Submitted elective slots have at most one assigned course per plan. Unlabeled raw history and separate alternatives are outside this uniqueness check; academic eligibility is unchanged."
     }
   ],
   "sources": [
@@ -69,6 +75,11 @@
       "id": "TERM-STRUCTURE",
       "path": "data/raw/economics/Term_Structure.md",
       "authority": "Hanover term and normal-load guidance"
+    },
+    {
+      "id": "OWNER-PLAN-SLOT-CONTRACT-2026-09-26",
+      "path": "policy/provenance/plan-slot-contract-2026-09-26.md",
+      "authority": "Project owner, explicit submitted-plan contract in the September 26, 2026 repair task"
     }
   ],
   "requirementRules": [
@@ -611,6 +622,23 @@
         "ECONOMICS-REQUIREMENTS#Elective requirement"
       ],
       "courseMayFillAtMostOneRequirement": true
+    },
+    {
+      "ruleId": "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
+      "status": "CONFIRMED",
+      "confirmationRef": "PROJECT-OWNER-SLOT-CONTRACT-2026-09-26",
+      "sourceRefs": [
+        "OWNER-PLAN-SLOT-CONTRACT-2026-09-26#Contract"
+      ],
+      "electiveSlotIds": [
+        "eco-elective-1",
+        "eco-elective-2",
+        "eco-elective-3",
+        "eco-elective-4"
+      ],
+      "maximumAssignmentsPerSlotPerPlan": 1,
+      "rawCourseHistoryExcluded": true,
+      "silentReallocationPermitted": false
     }
   ],
   "capstoneRules": [

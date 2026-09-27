@@ -14,3 +14,5 @@ Maintain current academic meaning here. Raw evidence and dated review documents 
 | Authority, dates and supersession | [Source registry](provenance/sources.json), [September 26 consolidation](provenance/offering-policy-2026-09-26.md) |
 
 Each fact has one maintained definition. Regenerate derived data with `pnpm run compile:policy` and `pnpm run compile:catalog-policy`; never update compiled or normalized mirrors by hand. Confirm the same decision in generation, cards, direct edits, saved-plan validation and reports, and independently in the Oracle. Historical frequency alone creates no exclusion or promise of availability.
+
+The [September 26 submitted-slot contract](provenance/plan-slot-contract-2026-09-26.md) governs declared elective assignments per plan; it does not change academic eligibility.

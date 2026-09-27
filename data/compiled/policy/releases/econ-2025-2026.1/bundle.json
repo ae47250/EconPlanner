@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:9a5e6d408864cdf9bf252cad57adf9b8e83a7b67612020c697bf095b35a0f05d",
+  "contentHash": "sha256:fb5ee7105b9276d08bb3a85ba5b82d13d5203a8a938764aef221f6cf26466477",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -152,6 +152,7 @@
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
         "ELECTIVE-MAX-ONE-100-LEVEL",
+        "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
       ],
       "eco-elective-2": [
@@ -159,6 +160,7 @@
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
         "ELECTIVE-MAX-ONE-100-LEVEL",
+        "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
       ],
       "eco-elective-3": [
@@ -166,6 +168,7 @@
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
         "ELECTIVE-MAX-ONE-100-LEVEL",
+        "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
       ],
       "eco-elective-4": [
@@ -173,6 +176,7 @@
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
         "ELECTIVE-MAX-ONE-100-LEVEL",
+        "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
       ],
       "economics-major": [
@@ -1549,6 +1553,84 @@
           ],
           "positive": [
             "requirement-allocation-matrix"
+          ],
+          "reviewState": []
+        }
+      },
+      "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT": {
+        "authority": {
+          "boundary": "SUBMITTED_PLAN_ELECTIVE_SLOT_ASSIGNMENT_CONTRACT",
+          "kind": "OWNER_CONFIRMATION",
+          "owner": "Project owner, explicit repair task"
+        },
+        "classification": "HARD",
+        "condition": {},
+        "confidence": "CONFIRMED",
+        "confirmation": {
+          "date": "2026-09-26",
+          "lastReviewDate": "2026-09-26",
+          "reviewer": "Project owner, explicit repair task"
+        },
+        "dependencies": [
+          "REQ-ECO-ELECTIVES"
+        ],
+        "disposition": "ENFORCE",
+        "effect": {
+          "appliesTo": "DECLARED_PLAN_ASSIGNMENTS",
+          "maximumAssignmentsPerElectiveSlotPerPlan": 1,
+          "rawCourseHistoryExcluded": true,
+          "silentReallocationPermitted": false
+        },
+        "effective": {
+          "from": "2026-09-26",
+          "through": null
+        },
+        "family": "ALLOCATION",
+        "messageKeys": {
+          "advisor": "allocation.advisor",
+          "move": "allocation.move",
+          "report": "allocation.report",
+          "student": "allocation.student"
+        },
+        "override": {
+          "authority": null,
+          "permitted": false,
+          "requiredEvidence": []
+        },
+        "policyVersion": "econ-2025-2026.1",
+        "reasonCode": "DUPLICATE_ELECTIVE_SLOT_ASSIGNMENT",
+        "requiredEvidence": [],
+        "requiredInputs": [
+          "submittedPlan"
+        ],
+        "ruleId": "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
+        "ruleType": "requirementAllocation",
+        "schemaVersion": "1.0.0",
+        "scope": {
+          "catalogYears": [
+            "2025-2026"
+          ],
+          "courses": [],
+          "program": "ECONOMICS",
+          "requirements": [
+            "eco-elective-1",
+            "eco-elective-2",
+            "eco-elective-3",
+            "eco-elective-4"
+          ]
+        },
+        "sourceRefs": [
+          "OWNER-PLAN-SLOT-CONTRACT-2026-09-26#Contract"
+        ],
+        "status": "ACTIVE",
+        "supersedes": [],
+        "testRefs": {
+          "approval": [],
+          "negative": [
+            "duplicate-requirement-assignment"
+          ],
+          "positive": [
+            "distinct-elective-slot-swap"
           ],
           "reviewState": []
         }
@@ -4874,6 +4956,9 @@
       "ELECTIVE-NO-DOUBLE-COUNT": [
         "REQ-MAJOR-COURSE-COUNT"
       ],
+      "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT": [
+        "REQ-ECO-ELECTIVES"
+      ],
       "HISTORY-COMPLETED-ADVANCED-PRESERVED": [
         "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE"
       ],
@@ -5053,6 +5138,12 @@
         "student": "allocation.student"
       },
       "ELECTIVE-NO-DOUBLE-COUNT": {
+        "advisor": "allocation.advisor",
+        "move": "allocation.move",
+        "report": "allocation.report",
+        "student": "allocation.student"
+      },
+      "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT": {
         "advisor": "allocation.advisor",
         "move": "allocation.move",
         "report": "allocation.report",
@@ -6538,6 +6629,20 @@
         "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
       },
       {
+        "authority": "Project owner, explicit repair task",
+        "authorityBoundary": "SUBMITTED_PLAN_ELECTIVE_SLOT_ASSIGNMENT_CONTRACT",
+        "confirmedOn": "2026-09-26",
+        "effective": {
+          "from": "2026-09-26",
+          "through": null
+        },
+        "path": "policy/provenance/plan-slot-contract-2026-09-26.md",
+        "sha256": "1853b45d7138c6167e03e3f50d6a34d67759ed2fc273b1898303cd09bc437b40",
+        "sourceId": "OWNER-PLAN-SLOT-CONTRACT-2026-09-26",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
+      },
+      {
         "authority": "Economics Department planning policy",
         "authorityBoundary": "PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE",
         "confirmedOn": "2026-09-22",
@@ -8006,6 +8111,84 @@
         ],
         "positive": [
           "requirement-allocation-matrix"
+        ],
+        "reviewState": []
+      }
+    },
+    {
+      "authority": {
+        "boundary": "SUBMITTED_PLAN_ELECTIVE_SLOT_ASSIGNMENT_CONTRACT",
+        "kind": "OWNER_CONFIRMATION",
+        "owner": "Project owner, explicit repair task"
+      },
+      "classification": "HARD",
+      "condition": {},
+      "confidence": "CONFIRMED",
+      "confirmation": {
+        "date": "2026-09-26",
+        "lastReviewDate": "2026-09-26",
+        "reviewer": "Project owner, explicit repair task"
+      },
+      "dependencies": [
+        "REQ-ECO-ELECTIVES"
+      ],
+      "disposition": "ENFORCE",
+      "effect": {
+        "appliesTo": "DECLARED_PLAN_ASSIGNMENTS",
+        "maximumAssignmentsPerElectiveSlotPerPlan": 1,
+        "rawCourseHistoryExcluded": true,
+        "silentReallocationPermitted": false
+      },
+      "effective": {
+        "from": "2026-09-26",
+        "through": null
+      },
+      "family": "ALLOCATION",
+      "messageKeys": {
+        "advisor": "allocation.advisor",
+        "move": "allocation.move",
+        "report": "allocation.report",
+        "student": "allocation.student"
+      },
+      "override": {
+        "authority": null,
+        "permitted": false,
+        "requiredEvidence": []
+      },
+      "policyVersion": "econ-2025-2026.1",
+      "reasonCode": "DUPLICATE_ELECTIVE_SLOT_ASSIGNMENT",
+      "requiredEvidence": [],
+      "requiredInputs": [
+        "submittedPlan"
+      ],
+      "ruleId": "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
+      "ruleType": "requirementAllocation",
+      "schemaVersion": "1.0.0",
+      "scope": {
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "program": "ECONOMICS",
+        "requirements": [
+          "eco-elective-1",
+          "eco-elective-2",
+          "eco-elective-3",
+          "eco-elective-4"
+        ]
+      },
+      "sourceRefs": [
+        "OWNER-PLAN-SLOT-CONTRACT-2026-09-26#Contract"
+      ],
+      "status": "ACTIVE",
+      "supersedes": [],
+      "testRefs": {
+        "approval": [],
+        "negative": [
+          "duplicate-requirement-assignment"
+        ],
+        "positive": [
+          "distinct-elective-slot-swap"
         ],
         "reviewState": []
       }

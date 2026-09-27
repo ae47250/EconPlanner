@@ -12,7 +12,7 @@ import {
   validateGeneratedPlan,
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
-import { normalizeScheduleSetByTerm, resolvePlanningContext, selectedPlanContext } from "../../../../lib/planning/horizon.js";
+import { validatePlanningInputs, normalizeScheduleSetByTerm, resolvePlanningContext, selectedPlanContext } from "../../../../lib/planning/horizon.js";
 import { applyEconomicsPlanEdit } from "../../../../lib/planning/termSolver.js";
 import { buildAcceleratedPlanningResult } from "../../../../lib/planning/acceleratedResult.js";
 import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
@@ -21,11 +21,29 @@ import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../.
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
 import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequisiteEvaluator.js";
 import { annotatePreliminaryScheduleEvidence } from "../../../../lib/policy/preliminary-schedule.js";
+import { loadPlannerFingerprint } from "../../../../lib/planning/fingerprint.js";
 
 export const runtime = "nodejs";
 
-function jsonResponse(payload, status = 200) {
-  return Response.json(payload, { status });
+async function jsonResponse(payload, status = 200, policyBundle = null) {
+  if (payload.programs || payload.economicsPlanResult?.category === "INPUT_BLOCKED") {
+    let plannerFingerprint = null;
+    try {
+      plannerFingerprint = await loadPlannerFingerprint(policyBundle);
+    } catch {
+      // Missing freshness evidence must prevent restoration, not hide input errors.
+    }
+    payload = { ...payload, plannerFingerprint };
+  }
+  return Response.json(payload, { status, headers: { "Cache-Control": "no-store" } });
+}
+
+export async function GET() {
+  try {
+    return Response.json({ plannerFingerprint: await loadPlannerFingerprint() }, { headers: { "Cache-Control": "no-store" } });
+  } catch {
+    return Response.json({ error: "Current planning policy could not be verified." }, { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
 }
 
 function sortResults(results) {
@@ -319,6 +337,16 @@ export async function POST(request) {
       throw error;
     }
     const submittedStudent = body?.student || {};
+    const inputValidation = validatePlanningInputs(submittedStudent, { requireDate: true });
+    if (!inputValidation.valid) {
+      const missingDate = inputValidation.issues[0].code === "MISSING_PLAN_CREATION_DATE";
+      const code = missingDate ? "MISSING_PLAN_CREATION_DATE" : "INVALID_PLANNING_INPUT";
+      const inputResolution = resolveInputResolution({ issueCode: code, issues: inputValidation.issues });
+      return jsonResponse({
+        error: inputValidation.issues[0].message, code, issues: inputValidation.issues,
+        inputResolution, economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
+      }, missingDate ? 400 : 422);
+    }
     const student = {
       ...submittedStudent,
       scheduleSetByTerm: normalizeScheduleSetByTerm(submittedStudent)
@@ -342,15 +370,6 @@ export async function POST(request) {
         inputResolution,
         economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
       }, 422);
-    }
-    if (!student.planCreationDate) {
-      const inputResolution = resolveInputResolution({student, planningContext, issueCode: "MISSING_PLAN_CREATION_DATE"});
-      return jsonResponse({
-        error: "Plan creation date is required before mapping majors.",
-        planningContext,
-        inputResolution,
-        economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
-      }, 400);
     }
     if (planningContext.isTransferStudent && !planningContext.transferValidation.valid) {
       const inputResolution = resolveInputResolution({student, planningContext, issueCode: "INVALID_TRANSFER_PLANNING_INPUT"});
@@ -539,7 +558,7 @@ export async function POST(request) {
         reviewRequiredProgramCount: results.filter(result => result.risk.class === "INSUFFICIENT_INFORMATION").length
       },
       programs: sortResults(results)
-    });
+    }, 200, catalog.policyBundle);
   } catch (error) {
     console.error(error);
     return jsonResponse({ error: "The major mapper could not read the request or catalog data." }, 500);

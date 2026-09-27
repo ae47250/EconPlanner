@@ -1,8 +1,8 @@
 # Dependency impact: econ-2025-2026.1
 
-Bundle digest: `sha256:9a5e6d408864cdf9bf252cad57adf9b8e83a7b67612020c697bf095b35a0f05d`
+Bundle digest: `sha256:fb5ee7105b9276d08bb3a85ba5b82d13d5203a8a938764aef221f6cf26466477`
 
-Compatibility data is generated from canonical Knowledge Hub inputs. Current catalog loading, planning, validation, editing, reports, and PDFs continue to use their existing runtime paths.
+The canonical policy hub compiles this pinned runtime bundle and its compatibility projections. The bundle digest includes scoped exact and preliminary schedule evidence.
 
 ## Declared rule dependencies
 
@@ -21,6 +21,7 @@ Compatibility data is generated from canonical Knowledge Hub inputs. Current cat
 | `ELECTIVE-ECO-260-COUNTS` | `REQ-ECO-ELECTIVES` |
 | `ELECTIVE-MAX-ONE-100-LEVEL` | `REQ-ECO-ELECTIVES` |
 | `ELECTIVE-NO-DOUBLE-COUNT` | `REQ-MAJOR-COURSE-COUNT` |
+| `ELECTIVE-SLOT-UNIQUE-ASSIGNMENT` | `REQ-ECO-ELECTIVES` |
 | `HISTORY-COMPLETED-ADVANCED-PRESERVED` | `REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE` |
 | `PERMISSION-ECO-357` | `PREREQ-ECO-357` |
 | `PLANNING-ECO-LOAD-PREFERENCE` | `CAPACITY-FALL`, `CAPACITY-WINTER` |
@@ -44,8 +45,10 @@ Compatibility data is generated from canonical Knowledge Hub inputs. Current cat
 | `REQ-STATISTICS` | `REQ-MAJOR-COURSE-COUNT` |
 | `SCHEDULE-AVAILABILITY-BEHAVIOR` | `REVIEW-ENROLLMENT-FULL-DISPOSITION` |
 
-## Future consumers
+## Active consumers
 
-- CP3 may load this exact bundle in shadow mode.
-- CP4 may replace normalized runtime reads only after differential approval.
-- UI, plan edits, reports, and PDFs are unchanged in CP2.
+- `lib/catalog/load.js` loads the pinned bundle for assignment, generation, validation and moves.
+- `app/api/majors/map/route.js` supplies the bundle to production planning and validates submitted edits.
+- `lib/reports/build-economics.js` revalidates the selected plan against the active bundle before JSON, HTML and PDF projection.
+- The interface displays these validated decisions; it does not define academic policy.
+- The Independent Oracle reads canonical sources separately and does not import production decisions.

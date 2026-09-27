@@ -319,13 +319,112 @@ test("pre-offering sessions regenerate while preserving saved course answers", a
     sessionStorage.setItem(key, JSON.stringify(saved));
   });
   await page.reload();
-  await expect(page.getByText("That generated plan is no longer available. Review your saved inputs and generate new plans.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.", { exact: true })).toBeVisible();
   await expect(page.getByRole("group", { name: "Status for ECO 113", exact: true })
     .getByRole("button", { name: "Completed", exact: true })).toHaveAttribute("aria-pressed", "true");
   await generatePlans(page);
   await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
   const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
-  expect(await control.locator("option").count()).toBeGreaterThan(1);
+  await expect.poll(() => control.locator("option").count()).toBeGreaterThan(1);
   await page.reload();
-  expect(await control.locator("option").count()).toBeGreaterThan(1);
+  await expect.poll(() => control.locator("option").count()).toBeGreaterThan(1);
 });
+
+for (const outcome of ["accepted", "rejected"]) {
+  test(`a delayed ${outcome} edit cannot change a regenerated report or its undo`, async ({ page }) => {
+    await openPlan(page, "freshman", { early: true });
+    const statistics = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
+    const firstMove = validationResponse(page);
+    await statistics.selectOption("winter-2027");
+    expect((await firstMove).status()).toBe(200);
+    await expect(page.getByRole("button", { name: "Undo last plan edit" })).toBeVisible();
+
+    // Model a transport that completes despite cancellation, so this tests the
+    // response-context guard as well as the normal AbortController path.
+    await page.evaluate(() => {
+      const originalFetch = window.fetch.bind(window);
+      window.fetch = async (input, init) => {
+        const isEdit = typeof init?.body === "string" && JSON.parse(init.body).action === "validate-plan";
+        const response = await originalFetch(input, isEdit ? { ...init, signal: undefined } : init);
+        if (isEdit) {
+          const readJson = response.json.bind(response);
+          response.json = async () => {
+            const data = await readJson();
+            requestAnimationFrame(() => requestAnimationFrame(() => { window.delayedEditConsumed = true; }));
+            return data;
+          };
+        }
+        return response;
+      };
+    });
+    let release;
+    const held = new Promise(resolve => { release = resolve; });
+    let received;
+    const intercepted = new Promise(resolve => { received = resolve; });
+    await page.route("**/api/majors/map", async route => {
+      if (route.request().method() !== "POST" || route.request().postDataJSON()?.action !== "validate-plan") return route.continue();
+      const response = await route.fetch();
+      expect(response.status()).toBe(outcome === "accepted" ? 200 : 422);
+      received();
+      await held;
+      await route.fulfill({ response });
+    });
+    if (outcome === "accepted") await statistics.selectOption("spring-2027");
+    else await page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true }).selectOption("fall-2027");
+    await intercepted;
+    await page.getByRole("button", { name: "Edit answers", exact: true }).click();
+    await page.getByRole("button", { name: "Back to about you", exact: true }).click();
+    const date = page.getByLabel("Plan creation date", { exact: true });
+    if (!await date.isVisible()) await page.locator("details.more-details > summary").first().click();
+    await date.fill("2027-09-23");
+    await continueToCourses(page);
+    await generatePlans(page);
+    await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
+    await expect(statistics).toHaveValue("spring-2028");
+    const visibleReport = await page.locator("main").innerText();
+    const savedReport = await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")).report);
+    release();
+    await page.waitForFunction(() => window.delayedEditConsumed === true);
+    await expect(statistics).toHaveValue("spring-2028");
+    expect(await page.locator("main").innerText()).toBe(visibleReport);
+    expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")).report)).toEqual(savedReport);
+    await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
+    await page.reload();
+    await expect(statistics).toHaveValue("spring-2028");
+    await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
+    await page.getByRole("button", { name: "Compare plans", exact: true }).click();
+    await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
+    await expect(statistics).toHaveValue("spring-2028");
+  });
+}
+
+for (const policyState of ["changed", "missing", "unavailable"]) {
+  test(`saved answers survive a ${policyState} policy fingerprint without restoring current plans`, async ({ page }) => {
+    await openPlan(page, "freshman", { early: true, completed: ["ECO 113"] });
+    const savedAnswers = await page.evaluate(() => JSON.parse(localStorage.getItem("econ-planner-ui-state")).formData);
+    if (policyState === "missing") {
+      await page.evaluate(() => {
+        const saved = JSON.parse(sessionStorage.getItem("econ-planner-generated-session"));
+        delete saved.plannerFingerprint;
+        sessionStorage.setItem("econ-planner-generated-session", JSON.stringify(saved));
+      });
+    } else {
+      await page.route("**/api/majors/map", route => {
+        if (route.request().method() !== "GET") return route.continue();
+        return route.fulfill({ status: policyState === "unavailable" ? 503 : 200,
+          contentType: "application/json", body: JSON.stringify({ plannerFingerprint: "sha256:changed-policy" }) });
+      });
+    }
+    await page.reload();
+    await expect(page.getByText("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.", { exact: true })).toBeVisible();
+    await expect(page.locator(".term-card")).toHaveCount(0);
+    await expect(page.getByRole("group", { name: "Status for ECO 113", exact: true }).getByRole("button", { name: "Completed", exact: true })).toHaveAttribute("aria-pressed", "true");
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem("econ-planner-ui-state")).formData)).toEqual(savedAnswers);
+    await page.unroute("**/api/majors/map");
+    await generatePlans(page);
+    await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
+    await expect(page.locator(".term-card").first()).toBeVisible();
+    await page.reload();
+    await expect(page.locator(".term-card").first()).toBeVisible();
+  });
+}

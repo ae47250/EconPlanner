@@ -218,7 +218,7 @@ async function validateSourceEvidence(repositoryRoot, provenance) {
 function policyDiff(bundle) {
   return `# Policy diff: ${bundle.bundleVersion}\n\n` +
     `Bundle digest: \`${bundle.contentHash}\`\n\n` +
-    `Runtime activation: **not changed by CP2**. Compatibility files preserve the current runtime shapes.\n\n` +
+    `Runtime activation: the active pinned bundle governs production decisions. Compatibility files are generated projections of the same canonical sources.\n\n` +
     `## Governed dispositions\n\n` +
     `- ECO 257 is statistics-only, cannot be an Economics elective, and has no advisor override. Current runtime behavior already agrees.\n` +
     `- ECO 213/214 recurring evidence projects unpublished years only; it is not a universal same-term prohibition.\n` +
@@ -239,9 +239,9 @@ function dependencyImpact(bundle) {
     .join("\n");
   return `# Dependency impact: ${bundle.bundleVersion}\n\n` +
     `Bundle digest: \`${bundle.contentHash}\`\n\n` +
-    `Compatibility data is generated from canonical Knowledge Hub inputs. Current catalog loading, planning, validation, editing, reports, and PDFs continue to use their existing runtime paths.\n\n` +
+    `The canonical policy hub compiles this pinned runtime bundle and its compatibility projections. The bundle digest includes scoped exact and preliminary schedule evidence.\n\n` +
     `## Declared rule dependencies\n\n| Rule | Depends on |\n|---|---|\n${rows || "| None | None |"}\n\n` +
-    `## Future consumers\n\n- CP3 may load this exact bundle in shadow mode.\n- CP4 may replace normalized runtime reads only after differential approval.\n- UI, plan edits, reports, and PDFs are unchanged in CP2.\n`;
+    `## Active consumers\n\n- \`lib/catalog/load.js\` loads the pinned bundle for assignment, generation, validation and moves.\n- \`app/api/majors/map/route.js\` supplies the bundle to production planning and validates submitted edits.\n- \`lib/reports/build-economics.js\` revalidates the selected plan against the active bundle before JSON, HTML and PDF projection.\n- The interface displays these validated decisions; it does not define academic policy.\n- The Independent Oracle reads canonical sources separately and does not import production decisions.\n`;
 }
 
 export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot } = {}) {
