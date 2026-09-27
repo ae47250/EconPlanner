@@ -537,6 +537,128 @@ test("ECO 213 and ECO 214 show canonical inline prerequisite follow-ups", async 
   await expect(eco214).not.toContainText("concurrency exception");
 });
 
+for (const course of ["ECO 213", "ECO 214"]) {
+  for (const targetStatus of ["Completed", "Taking now"]) {
+    test(`${course} ${targetStatus.toLowerCase()} requires every inline prerequisite answer`, async ({ page }) => {
+      await resetPlanner(page);
+      await chooseStanding(page, "freshman");
+      await continueToCourses(page);
+      await setCourseStatus(page, course, targetStatus);
+
+      const dependent = page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")}`);
+      const generate = page.getByRole("button", { name: "Generate my plans" });
+      await expect(dependent.locator(".inline-prerequisite")).toBeVisible();
+      await expect(generate).toBeDisabled();
+      await expect(page.locator(".cp7-summary").getByText("Needs attention")).toBeVisible();
+      await expect(page.locator(".cp7-summary")).toContainText(`${course} prerequisite question`);
+      const summaryRow = page.locator(".cp7-summary").getByText(targetStatus, { exact: true }).locator("..");
+      await expect(summaryRow).toContainText("None selected");
+
+      const unanswered = dependent.locator(".prerequisite-question").first();
+      const questionId = await unanswered.getAttribute("id");
+      await page.locator(".cp7-summary").getByRole("button", { name: new RegExp(`${course} prerequisite question`) }).first().click();
+      await expect(page.locator(`#${questionId}`)).toBeFocused();
+
+      let requests = 0;
+      await page.route("**/api/majors/map", async route => {
+        requests += 1;
+        await route.abort();
+      });
+      await page.locator("form").evaluate(form => form.requestSubmit());
+      await expect(page.locator(".summary-status")).toContainText("Answer the highlighted prerequisite questions");
+      expect(requests).toBe(0);
+
+      await expect.poll(() => page.evaluate(() => {
+        const saved = JSON.parse(localStorage.getItem("econ-planner-ui-state"));
+        return saved?.formData?.courses;
+      }).then(courses => courses?.find(item => item.code === course)?.status))
+        .toBe(targetStatus === "Completed" ? "completed" : "in_progress");
+      await page.reload();
+      await expect(generate).toBeDisabled();
+      await expect(dependent.locator(".inline-prerequisite")).toBeVisible();
+
+      const prerequisiteGroups = dependent.locator(".prerequisite-option");
+      const optionsCount = await prerequisiteGroups.count();
+      for (let index = 0; index < optionsCount; index += 1) {
+        await prerequisiteGroups.nth(index).getByRole("button", { name: "Not taken / not sure" }).click();
+      }
+      await expect(generate).toBeEnabled();
+      await expect(page.locator(".cp7-summary")).toContainText(course);
+
+      const group = prerequisiteGroups.first().getByRole("button", { name: "Not taken / not sure" });
+      await group.click();
+      await expect(generate).toBeDisabled();
+    });
+  }
+}
+
+test("completed prerequisites recorded on the course cards are not asked again", async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, "freshman");
+  await continueToCourses(page);
+  for (const course of ["ECO 113", "MAT 113", "ECO 114", "MAT 121"]) {
+    await setCourseStatus(page, course, "Completed");
+  }
+  for (const dependent of ["ECO 213", "ECO 214"]) {
+    await setCourseStatus(page, dependent, "Taking now");
+    await expect(page.locator(`#course-${dependent.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`)).toHaveCount(0);
+  }
+  await expect(page.getByRole("button", { name: "Generate my plans" })).toBeEnabled();
+  await expect(page.locator(".cp7-summary").getByText("Taking now").locator(".."))
+    .toContainText("ECO 213 · ECO 214");
+});
+
+for (const [math, economics] of [
+  ["MAT 113", "ECO 213"],
+  ["MAT 121", "ECO 213"],
+  ["MAT 113", "ECO 214"],
+  ["MAT 121", "ECO 214"]
+]) {
+  test(`accelerated plan explains ${math} before ${economics}`, async ({ page }) => {
+    const accelerated = fixturePlan({ id: "one-year-early", label: "Graduate One Year Early" });
+    accelerated.isEarlyGraduation = true;
+    accelerated.terms = [
+      { slotId: "math", academicYear: "2026-2027", termKey: "Fall", term: "Fall 2026", displayTerm: "Fall 2026", courses: [{ course: math, title: "College Algebra" }] },
+      { slotId: "eco", academicYear: "2026-2027", termKey: "Winter", term: "Winter 2027", displayTerm: "Winter 2027", courses: [{ course: economics, title: "Intermediate Economics" }] }
+    ];
+    await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
+    await page.getByRole("button", { name: "Review selected Graduate One Year Early" }).click();
+    await expect(page.locator(".accelerated-math-sequence-note")).toContainText(`${math} is scheduled before ${economics}`);
+    await expect(page.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
+    await expect(page.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
+  });
+}
+
+for (const [math, economics] of [
+  ["MAT 113", "ECO 213"],
+  ["MAT 121", "ECO 213"],
+  ["MAT 113", "ECO 214"],
+  ["MAT 121", "ECO 214"]
+]) {
+  test(`concurrent ${math} and ${economics} retains its instructor approval warning`, async ({ page }) => {
+    const accelerated = fixturePlan({ id: "one-year-early", label: "Graduate One Year Early" });
+    accelerated.isEarlyGraduation = true;
+    const approvalWarning = `${math} may be taken with ${economics} only with approval from the ${economics} instructor.`;
+    accelerated.studentMessages = [approvalWarning];
+    accelerated.terms = [{
+      slotId: "concurrent",
+      academicYear: "2026-2027",
+      termKey: "Fall",
+      term: "Fall 2026",
+      displayTerm: "Fall 2026",
+      courses: [
+        { course: math, title: "College Algebra" },
+        { course: economics, title: "Intermediate Economics", approvalRequired: [{ authority: `${economics} instructor` }] }
+      ]
+    }];
+    await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
+    await page.getByRole("button", { name: "Review selected Graduate One Year Early" }).click();
+    await expect(page.locator(".accelerated-math-sequence-note")).toHaveCount(0);
+    await expect(page.locator(".plan-course-approval")).toContainText("Approval required");
+    await expect(page.locator(".plan-notes")).toContainText(approvalWarning);
+  });
+}
+
 test("a prerequisite conflict preserves both choices and Generate focuses the dependent course", async ({ page }) => {
   await resetPlanner(page);
   await chooseStanding(page, "freshman");
@@ -554,6 +676,7 @@ test("a prerequisite conflict preserves both choices and Generate focuses the de
   await expect(page.locator("#course-eco-213 .inline-prerequisite")).toHaveClass(/has-conflict/);
   await expect(page.locator("#course-eco-213 .prerequisite-conflict")).toContainText("Update one of these course statuses");
 
+  await expect(page.getByRole("button", { name: "Generate my plans" })).toBeEnabled();
   await page.getByRole("button", { name: "Generate my plans" }).click();
   await expect(page.locator("#course-eco-213")).toBeFocused();
   await expect(dependent).toHaveAttribute("aria-pressed", "true");

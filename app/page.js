@@ -11,8 +11,10 @@ import {
 } from "../lib/planning/horizon.js";
 import {
   buildPrerequisiteFollowUp,
+  unansweredPrerequisiteQuestions,
   validateStudentPrerequisites
 } from "../lib/planning/prerequisiteFormValidation.js";
+import { acceleratedMathSequenceNotes } from "../lib/planning/acceleratedMathSequence.js";
 import {
   createGeneratedPlannerSession,
   economicsResultFromReport,
@@ -712,6 +714,7 @@ function PlanTimeline({
   }
 
   const activePlan = plans.find(plan => plan.id === activePlanId) || plans[0];
+  const mathSequenceNotes = acceleratedMathSequenceNotes(activePlan, COURSE_PREREQUISITES);
   const studentNoticeMessages = new Set((activePlan.studentNotices || []).map(notice => notice.message));
   const studentWarnings = (activePlan.studentMessages || []).filter(message => !studentNoticeMessages.has(message));
   const academicYearGroups = (activePlan.terms || []).reduce((groups, term) => {
@@ -752,6 +755,9 @@ function PlanTimeline({
           <div>
             <h2>Your Plan</h2>
             <p>{activePlan.description}</p>
+            {mathSequenceNotes.map(note => (
+              <p className="accelerated-math-sequence-note" role="note" key={note}>{note}</p>
+            ))}
             <p className="plan-source-note">Published course schedule: {formatAcademicYear(activePlan.academicYear)}. Later unpublished schedules are shown as planning projections.</p>
           </div>
         </div>
@@ -2076,6 +2082,7 @@ function ClearAllDialog({ open, onCancel, onConfirm }) {
 
 function PlannerSummary({
   courses,
+  pendingDependentCourseCodes = [],
   formData,
   planningContext,
   planningStart,
@@ -2089,8 +2096,9 @@ function PlannerSummary({
   onFocusAttention,
   onClearAll
 }) {
-  const completedCodes = courses.filter(isTaken).map(course => course.code);
-  const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
+  const pendingCodes = new Set(pendingDependentCourseCodes);
+  const completedCodes = courses.filter(course => isTaken(course) && !pendingCodes.has(course.code)).map(course => course.code);
+  const inProgressCodes = courses.filter(course => course.status === "in_progress" && !pendingCodes.has(course.code)).map(course => course.code);
   const earlyContext = planningContext?.earlyComparisonRequested
     ? buildEarlyGraduationContext(planningContext)
     : null;
@@ -2185,7 +2193,7 @@ function PlannerSummary({
           type="submit"
           className="primary-action generate-button"
           ref={generateButtonRef}
-          disabled={isGenerating}
+          disabled={isGenerating || pendingDependentCourseCodes.length > 0}
         >
           {isGenerating ? "Generating plans…" : "Generate my plans"}
         </button>
@@ -2239,6 +2247,23 @@ export default function Page() {
   const planningSlotIdSignature = planningSlots.map(slot => slot.id).join("|");
   const planningStart = planningSlots[0]?.label || "To be confirmed";
   const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
+  const unansweredDependentQuestions = formData.courses
+    .filter(course => ["ECO 213", "ECO 214"].includes(course.code)
+      && ["completed", "transfer", "in_progress"].includes(course.status))
+    .flatMap(course => {
+      const followUp = buildPrerequisiteFollowUp({
+        course: course.code,
+        targetStatus: course.status,
+        courses: formData.courses,
+        prerequisites: COURSE_PREREQUISITES
+      });
+      return unansweredPrerequisiteQuestions(followUp).map(question => ({
+        course: course.code,
+        id: question.id,
+        options: [...question.options]
+      }));
+    });
+  const pendingDependentCourseCodes = [...new Set(unansweredDependentQuestions.map(item => item.course))];
   const transferOptions = transferPlanningOptions(planningContext);
   const standingQuestion = planningContext.isSummer
     ? "What year will you be in this fall?"
@@ -2776,6 +2801,16 @@ export default function Page() {
       return;
     }
 
+    if (unansweredDependentQuestions.length > 0) {
+      setStatus("Answer the highlighted prerequisite questions before generating plans.");
+      focusAttention({
+        step: 2,
+        target: unansweredDependentQuestions[0].id,
+        message: `Answer the ${unansweredDependentQuestions[0].course} prerequisite question about ${unansweredDependentQuestions[0].options.join(" or ")}.`
+      });
+      return;
+    }
+
     if (!inputPrerequisiteValidation.valid) {
       setStatus("Correct the highlighted prerequisite issues before generating a plan.");
       focusAttention({
@@ -2973,6 +3008,13 @@ export default function Page() {
       message: issue.message
     });
   }
+  for (const question of unansweredDependentQuestions) {
+    attentionItems.push({
+      step: 2,
+      target: question.id,
+      message: `Answer the ${question.course} prerequisite question about ${question.options.join(" or ")}.`
+    });
+  }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -3049,7 +3091,13 @@ export default function Page() {
           <p><strong>Before we can use {course.code}, tell us about {followUp.questions.length === 1 ? "this prerequisite" : "these prerequisites"}.</strong></p>
         )}
         {followUp.questions.map(question => (
-          <section className="prerequisite-question" key={question.id} aria-labelledby={`${question.id}-label`}>
+          <section
+            className="prerequisite-question"
+            id={question.id}
+            tabIndex={-1}
+            key={question.id}
+            aria-labelledby={`${question.id}-label`}
+          >
             <div id={`${question.id}-label`} className="prerequisite-question-heading">
               <strong>{question.kind === "one_of" ? "Choose a prerequisite option" : "Required course"}</strong>
             </div>
@@ -4058,6 +4106,7 @@ export default function Page() {
           </div>
           <PlannerSummary
             courses={formData.courses}
+            pendingDependentCourseCodes={pendingDependentCourseCodes}
             formData={formData}
             planningContext={planningContext}
             planningStart={planningStart}
