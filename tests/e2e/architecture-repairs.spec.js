@@ -194,10 +194,13 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
 test('junior prerequisite correction preserves choices and explains next-year outcome', async ({page}) => {
   await intake(page,'junior');
   await setCourseStatus(page,'ECO 213','Taking now');
-  await page.getByRole('button',{name:'Generate my plans',exact:true}).click();
-  await expect(page.locator('#course-eco-213')).toBeFocused();
+  const generate = page.getByRole('button',{name:'Generate my plans',exact:true});
+  await expect(generate).toBeDisabled();
+  await expect(page.locator('.cp7-summary').getByText('Needs attention')).toBeVisible();
+  await page.locator('.cp7-summary').getByRole('button',{name:/ECO 213 prerequisite question/}).first().click();
   await setCourseStatus(page,'ECO 113','Completed','Status for prerequisite');
   await setCourseStatus(page,'MAT 113','Completed','Status for prerequisite');
+  await expect(generate).toBeEnabled();
   await page.getByRole('button',{name:'Back to about you',exact:true}).click();
   await page.getByRole('button',{name:'I’d like to graduate next year',exact:true}).click();
   await continueToCourses(page);
