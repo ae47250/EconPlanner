@@ -24,7 +24,10 @@
       "path": "data/raw/hanover/catalog/2025-2026/economics.php",
       "catalogYear": "2025-2026",
       "sha256": "aed345bf32d752a1c93bd4cc99a20fa2fc553598844cbfb7ad5e33c2465f5be3",
-      "effective": {"from": "2025-08-01", "through": null},
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
       "supersedes": null
     },
     {
@@ -36,7 +39,10 @@
       "confirmedOn": "2026-08-01",
       "reviewer": "Economics Department representative and project owner",
       "sha256": "7c53cf0f775fe97e0530864d790a6256f43b09bc141707889b335c2f830bc410",
-      "effective": {"from": "2026-08-01", "through": null},
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
       "supersedes": null
     },
     {
@@ -46,7 +52,10 @@
       "authorityBoundary": "ECONOMICS_REQUIREMENTS_AND_PREREQUISITE_TRANSCRIPTION",
       "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
       "sha256": "6da52642cf4fcaa8d9d10075cba1158347e831aacc98b21cf3fcc4b7ff06565f",
-      "effective": {"from": "2025-08-01", "through": null},
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
       "supersedes": null
     },
     {
@@ -56,7 +65,10 @@
       "authorityBoundary": "TERM_IDENTITY_AND_NORMAL_COURSE_CAPACITY",
       "path": "data/raw/economics/Term_Structure.md",
       "sha256": "2ef08b86aa2c4fa0f58fb213db21e3a99027bb833d0d4f52e23f51962f80acc3",
-      "effective": {"from": "2025-08-01", "through": null},
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
       "supersedes": null
     },
     {
@@ -68,7 +80,10 @@
       "retrievedOn": "2026-08-08",
       "reviewer": "Codex source review for CP5A",
       "sha256": "5b5fedcdeea9251d88b273eea30951836a71f8b33a776187b6a10e24888adef8",
-      "effective": {"from": "2025-08-01", "through": null},
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
       "supersedes": null
     },
     {
@@ -80,7 +95,10 @@
       "reviewedOn": "2026-08-08",
       "reviewer": "Codex visual review for CP5A",
       "sha256": "1bbeb9813637b9d065efc9cbf57cf4062cf471201616699d14c90cde94c23f48",
-      "effective": {"from": "2025-08-01", "through": null},
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
       "supersedes": null
     },
     {
@@ -92,7 +110,10 @@
       "reviewedOn": "2026-08-08",
       "reviewer": "Project owner supplied current registrar screenshot",
       "sha256": "33cae907c5aa8d802fa14612441152da25e8fac516061f661a4222c090727811",
-      "effective": {"from": "2026-08-24", "through": "2026-12-11"},
+      "effective": {
+        "from": "2026-08-24",
+        "through": "2026-12-11"
+      },
       "supersedes": null
     },
     {
@@ -104,7 +125,10 @@
       "reviewedOn": "2026-08-08",
       "reviewer": "Project owner supplied current registrar screenshot",
       "sha256": "f0c77994f973998164d0651b47736985190c8b1a7d984d93c1c2dec32262777a",
-      "effective": {"from": "2027-01-11", "through": "2027-05-28"},
+      "effective": {
+        "from": "2027-01-11",
+        "through": "2027-05-28"
+      },
       "supersedes": null
     },
     {
@@ -116,7 +140,10 @@
       "reviewedOn": "2026-08-08",
       "reviewer": "Project owner supplied current registrar screenshot",
       "sha256": "3a3a26b6e38936651310360b23a23301f5c48996b40855a9bfaa5d65119dd0ca",
-      "effective": {"from": "2026-08-24", "through": "2026-12-11"},
+      "effective": {
+        "from": "2026-08-24",
+        "through": "2026-12-11"
+      },
       "supersedes": null
     },
     {
@@ -128,7 +155,10 @@
       "reviewedOn": "2026-08-08",
       "reviewer": "Project owner supplied current registrar screenshot",
       "sha256": "fe59160d91c46acab8cf9dfcc91fecd9e6bb23573b25717bbcbda14fb04df410",
-      "effective": {"from": "2027-01-11", "through": "2027-05-28"},
+      "effective": {
+        "from": "2027-01-11",
+        "through": "2027-05-28"
+      },
       "supersedes": null
     },
     {
@@ -140,7 +170,10 @@
       "reviewedOn": "2026-08-08",
       "reviewer": "Project owner supplied current registrar screenshot",
       "sha256": "2aeadbb23318e0e71b643130a4cb667734e2bdfd3f8ed6ead9de6a13431c9ef3",
-      "effective": {"from": "2026-08-24", "through": "2026-12-11"},
+      "effective": {
+        "from": "2026-08-24",
+        "through": "2026-12-11"
+      },
       "supersedes": null
     },
     {
@@ -152,7 +185,10 @@
       "confirmedOn": "2026-08-05",
       "reviewer": "Project owner and Economics Department domain expert",
       "statement": "ECO 257 may satisfy the Statistics requirement only. ECO 257 must never count as an Economics elective. No advisor override permits elective treatment unless a future separately documented policy explicitly changes this rule.",
-      "effective": {"from": "2026-08-05", "through": null},
+      "effective": {
+        "from": "2026-08-05",
+        "through": null
+      },
       "supersedes": "Ambiguous older prose suggesting ECO 257 might receive elective treatment"
     },
     {
@@ -164,7 +200,10 @@
       "confirmedOn": "2026-09-22",
       "reviewer": "Economics Department chair and EconPlanner project owner",
       "statement": "A dated preliminary schedule may guide course-to-term planning only for its documented academic year, terms, and courses. Its omissions do not prove non-offering or block a plan. It supplies no verified section or seat information. Without such evidence, a labeled term-level workload projection is permitted but does not assert an actual offering. A verified exact schedule supersedes preliminary evidence within its covered scope; saved plans must be revalidated when it arrives.",
-      "effective": {"from": "2026-09-22", "through": null},
+      "effective": {
+        "from": "2026-09-22",
+        "through": null
+      },
       "supersedes": "Earlier academic-year-TBC-only wording for unpublished offering projections"
     },
     {
@@ -176,7 +215,10 @@
       "confirmedOn": "2026-08-09",
       "reviewer": "Project owner and Economics Department domain expert",
       "statement": "For the existing ECO 461 concurrency exception, exactly one of ECO 213 or ECO 214 must be successfully completed before the target ECO 461 term. Eligible completed and accepted-transfer evidence, a current in-progress course finishing before the target term, and an earlier generated-term course may count. Same-term or later courses and uncertain or unaccepted history, equivalency, substitution, waiver, or prerequisite evidence do not count. Earlier in-progress or planned completion remains conditional on success. This clarifies the existing 2026-08-01 department-confirmed exception and creates no new exception or alternate planning mode.",
-      "effective": {"from": "2026-08-09", "through": null},
+      "effective": {
+        "from": "2026-08-09",
+        "through": null
+      },
       "supersedes": "Ambiguous use of already completed in the 2026-08-01 ECO 461 concurrency wording"
     },
     {
@@ -191,6 +233,19 @@
         "through": null
       },
       "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
+    },
+    {
+      "sourceId": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION",
+      "path": "policy/provenance/canonical-consumption-2026-09-27.md",
+      "sha256": "9a5018fb2eb76643cc58b715dc93115f95aedea938b3e4f2ea3f8884246a8516",
+      "effective": {
+        "from": "2026-09-27",
+        "through": null
+      },
+      "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
     }
   ],
   "authorityHierarchy": [

@@ -1,11 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.6",
+  "policyVersion": "econ-planning-flexibility.7",
   "status": "OWNER_APPROVED",
   "confirmation": {
-    "date": "2026-09-26",
+    "date": "2026-09-27",
     "reviewer": "Project owner and Economics Department domain expert",
-    "source": "Existing CP5, CP7 and capacity-aware distribution approvals; current owner-authorized offering-policy consolidation recorded in policy/provenance/offering-policy-2026-09-26.md"
+    "source": "policy/provenance/canonical-consumption-2026-09-27.md"
   },
   "sourceRefs": [
     "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
@@ -13,7 +13,8 @@
     "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
     "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
     "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
-    "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING"
+    "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
+    "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
   ],
   "acceleratedSeniorStanding": {
     "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
@@ -27,7 +28,7 @@
     "readinessImpact": "NONE",
     "notice": {
       "code": "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED",
-      "message": "This plan assumes you will have senior standing in your final year so you can take ECO 461. Please check this with your advisor as you get closer to that year.",
+      "message": "This plan assumes you will have senior standing in your final year.",
       "audience": [
         "STUDENT",
         "ACADEMIC_ADVISOR"
@@ -220,7 +221,12 @@
         "publicLabel": "Balanced",
         "definition": "Distribute remaining planner-tracked major and supporting requirements as evenly as feasible across the remaining years and, secondarily, across Fall, Winter, and May.",
         "eligibility": {
-          "effectiveStandings": ["freshman", "sophomore", "junior", "senior"],
+          "effectiveStandings": [
+            "freshman",
+            "sophomore",
+            "junior",
+            "senior"
+          ],
           "horizon": "FIXED_SELECTED_GRADUATION_TERM"
         },
         "rankingPreferences": {
@@ -230,9 +236,32 @@
           "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES",
           "termShapePreferences": {
             "twoCourses": "SPREAD_ACROSS_TWO_TERMS_WHEN_FEASIBLE",
-            "threeCourses": [[1, 1, 1]],
-            "fourCourses": [[1, 2, 1], [2, 1, 1]],
-            "fiveCourses": [[2, 2, 1]],
+            "threeCourses": [
+              [
+                1,
+                1,
+                1
+              ]
+            ],
+            "fourCourses": [
+              [
+                1,
+                2,
+                1
+              ],
+              [
+                2,
+                1,
+                1
+              ]
+            ],
+            "fiveCourses": [
+              [
+                2,
+                2,
+                1
+              ]
+            ],
             "springMayPreferredMaximum": 1
           },
           "exactTargetIsFeasibilityRule": false
@@ -243,7 +272,10 @@
         "publicLabel": "Explore the Major",
         "definition": "Keep the first planned year lighter than the selected same-context Balanced plan while preserving safe prerequisite foundations and backloading remaining work when feasible.",
         "eligibility": {
-          "effectiveStandings": ["freshman", "sophomore"],
+          "effectiveStandings": [
+            "freshman",
+            "sophomore"
+          ],
           "horizon": "SAME_FIXED_GRADUATION_TERM_AS_BALANCED",
           "baselineStrategyId": "balanced",
           "firstPlannedYearIndex": 0,
@@ -258,19 +290,73 @@
           "strongerSafeBackloadingRemainsEligible": true,
           "foundationSequencingIsSoft": true,
           "avoidAdvancedEconomicsEarlyIsSoft": true,
-          "typicalFinalYearTrackedLoad": [2, 3],
+          "typicalFinalYearTrackedLoad": [
+            2,
+            3
+          ],
           "acceptableFinalYearTrackedLoad": 4,
           "finalYearGuidanceIsMinimum": false,
           "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES",
           "firstFullYearTwoCourseShapeTiers": [
-            [[1, 1, 0]],
-            [[1, 0, 1], [0, 1, 1]],
-            [[2, 0, 0], [0, 2, 0]]
+            [
+              [
+                1,
+                1,
+                0
+              ]
+            ],
+            [
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                1
+              ]
+            ],
+            [
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                0,
+                2,
+                0
+              ]
+            ]
           ],
           "termShapePreferences": {
-            "threeCourses": [[1, 1, 1]],
-            "fourCourses": [[1, 2, 1], [2, 1, 1]],
-            "fiveCourses": [[2, 2, 1]],
+            "threeCourses": [
+              [
+                1,
+                1,
+                1
+              ]
+            ],
+            "fourCourses": [
+              [
+                1,
+                2,
+                1
+              ],
+              [
+                2,
+                1,
+                1
+              ]
+            ],
+            "fiveCourses": [
+              [
+                2,
+                2,
+                1
+              ]
+            ],
             "springMayPreferredMaximum": 1
           },
           "exactTargetIsFeasibilityRule": false
@@ -281,7 +367,11 @@
         "publicLabel": "One Year Early",
         "definition": "Compress the complete prerequisite and offering sequence into the independently searched one-year-early graduation horizon.",
         "eligibility": {
-          "effectiveStandings": ["freshman", "sophomore", "junior"],
+          "effectiveStandings": [
+            "freshman",
+            "sophomore",
+            "junior"
+          ],
           "horizon": "SHORTENED_ONE_YEAR_EARLY",
           "separateSearch": true
         },

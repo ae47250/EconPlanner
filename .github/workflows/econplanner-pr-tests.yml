@@ -50,6 +50,9 @@ jobs:
           tests/decision-engine-oracle-differential.test.js
           tests/architecture-boundaries.test.js
 
+      - name: Run canonical consumption repair regressions
+        run: node --test tests/canonical-consumption-repairs.test.js
+
       - name: Run bounded deterministic regression suite
         shell: bash
         run: |

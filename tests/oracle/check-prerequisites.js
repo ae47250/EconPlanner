@@ -403,7 +403,7 @@ function validateNormalRule({ policy, entries, claims, approvals, usedApprovals,
   }
 }
 
-function seniorEligible(entry, student, expectedContext) {
+function seniorEligible(entry, student, expectedContext, policy) {
   if (entry.state === "inProgress" && sameText(student?.academicStanding, "Senior")) return true;
   const year = parseExternalAcademicYear(entry.academicYear);
   if (!year.valid) return false;
@@ -414,9 +414,10 @@ function seniorEligible(entry, student, expectedContext) {
     && rawEntryAcademicYearStart !== ""
     && Number.isInteger(entryAcademicYearStart);
   const reachesFourthCollegeYear = hasCanonicalEntryYear
-    && year.startYear - entryAcademicYearStart >= 3;
-  const isAcceleratedPlan = expectedContext?.acceleratedPlanAssumesSeniorStanding === true
-    || sameText(expectedContext?.planningPace, "one_year_early");
+    && year.startYear - entryAcademicYearStart + 1 >= ruleById(policy, "CAPSTONE-SENIOR-STANDING").normalStandingBeginsCollegeYear;
+  const isAcceleratedPlan = ruleById(policy, "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING").assumeSeniorStandingInFinalPlanningYear === true
+    && (expectedContext?.acceleratedPlanAssumesSeniorStanding === true
+      || sameText(expectedContext?.planningPace, "one_year_early"));
   const matchesAcceleratedFinalYear = isAcceleratedPlan
     && year.endYear === Number(expectedContext?.expectedGraduationYear)
     && `${year.startYear}/${year.endYear}` === expectedContext?.projectedSeniorStandingAcademicYear;
@@ -451,7 +452,7 @@ function validateCapstone({
     ));
   }
   const standingRule = ruleById(policy, "CAPSTONE-SENIOR-STANDING");
-  if (!seniorEligible(entry, student, expectedContext)) {
+  if (!seniorEligible(entry, student, expectedContext, policy)) {
     violations.push(makeFinding(
       policy,
       standingRule.ruleId,
@@ -470,8 +471,8 @@ function validateCapstone({
   }
   if (!Number.isFinite(entry.position)) return;
 
-  const statisticsRule = ruleById(policy, "CAPSTONE-STATISTICS-BEFORE");
-  const statistics = statisticsRule.mustBeCompletedBeforeOneOf || [];
+  const statisticsRule = ruleById(policy, "PREREQ-ECO-461");
+  const statistics = statisticsRule.oneOfGroups?.[0] || [];
   const statisticsEarlier = hasEarlierGroupEvidence(entries, statistics, entry.position);
   if (!statisticsEarlier && !claimCovers(claims, entry.course, statistics)) {
     violations.push(makeFinding(

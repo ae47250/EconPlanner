@@ -1,6 +1,6 @@
 # Owner-approved planning-flexibility contract
 
-Compiled policy: `econ-planning-flexibility.5` (`sha256:b63cc4c711750ef666bb2dfef4a5642b7e13944986cb4e11a758b60f6e0bcd29`).
+Compiled policy: `econ-planning-flexibility.7` (`sha256:821f6dfbbb0f694196debbe93f0082a9b703eec2f2d5b23c57df94d11174850e`).
 
 - Accelerated one-year-early plans assume senior standing in the final planning year; no student confirmation is requested and readiness is unchanged by the assumption alone.
 - Published schedules remain authoritative. Later unpublished schedules use academically checked placements with `PLANNING_PROJECTION` provenance and one informational notice.

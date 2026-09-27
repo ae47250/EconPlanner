@@ -14,6 +14,7 @@ export async function loadCanonicalPolicy({ repositoryRoot = DEFAULT_ROOT } = {}
   for (const input of manifest.inputs) documents[input.id] = await readJson(repositoryRoot, input.path);
   const rules = Object.values(documents).flatMap(document => document.records || []).filter(rule => rule.status === "ACTIVE").toSorted((left, right) => left.ruleId.localeCompare(right.ruleId));
   return Object.freeze({
+    calendar: await readJson(repositoryRoot, "policy/calendars/hanover-undergraduate.json"),
     manifest,
     documents,
     rules,
@@ -36,7 +37,7 @@ function requirementRuleId(requirementId) {
   return String(requirementId || "").startsWith("eco-elective") ? "REQ-ECO-ELECTIVES" : REQUIREMENT_RULE[requirementId];
 }
 
-export function oracleEvaluateAllocation(policy, course, requirementId) {
+export function oracleEvaluateAllocation(policy, course, requirementId, { assignments = [], level100Electives = 0 } = {}) {
   const placement = typeof course === "object" ? course : { course };
   const code = String(placement.course || "").toUpperCase();
   const ruleId = requirementRuleId(requirementId);
@@ -48,10 +49,17 @@ export function oracleEvaluateAllocation(policy, course, requirementId) {
       : { status: "BLOCK", ruleIds: [ruleId], reasonCode: "COURSE_NOT_ELIGIBLE_FOR_REQUIREMENT" };
   }
   if (ruleId === "REQ-ECO-ELECTIVES") {
-    const excluded = ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "ECO 307", "ECO 461"];
-    return excluded.includes(code) || !(code.startsWith("ECO ") || code === "PHI 234" || code === "ECO ELECTIVE")
-      ? { status: "BLOCK", ruleIds: [code === "ECO 257" ? "ELECTIVE-ECO-257-STATISTICS-ONLY" : ruleId], reasonCode: code === "ECO 257" ? "ECO_257_STATISTICS_ONLY" : "COURSE_NOT_ELIGIBLE_FOR_REQUIREMENT" }
-      : { status: "ALLOW", ruleIds: [ruleId], reasonCode: "REQUIREMENT_OPTION_MATCH" };
+    const equivalency = policy.rules.find(record => record.condition.equivalentCodes?.includes(code));
+    const canonical = equivalency?.effect.canonicalCourse || code;
+    const excludedByRule = policy.rules.find(record => record.condition.course === canonical && record.effect.excludedRequirementRuleIds?.includes(ruleId));
+    const required = policy.rules.some(record => record.effect.kind === "exact" && record.effect.options?.includes(canonical));
+    const tooSmall = policy.courses.some(record => record.code === canonical && record.units < rule.effect.minimumCourseUnits);
+    const pairing = policy.documents['compatibility-profile'].requirements.electiveConditionalCourses[canonical];
+    const maximum = policy.byRuleId['ELECTIVE-MAX-ONE-100-LEVEL'].effect.maximumAcrossElectiveSlots;
+    const tooMany100 = /^ECO 1\d\d$/.test(canonical) && level100Electives >= maximum;
+    const pairingMissing = pairing && !assignments.some(item => item.slotId === pairing.slotId && item.code === pairing.assignedCode);
+    const blocked = required || excludedByRule || tooSmall || tooMany100 || pairingMissing || !(canonical.startsWith(`${rule.effect.subject} `) || canonical === 'ECO ELECTIVE');
+    return { status: blocked ? 'BLOCK' : 'ALLOW', ruleIds: [excludedByRule?.ruleId || ruleId], reasonCode: excludedByRule?.reasonCode || (blocked ? 'COURSE_NOT_ELIGIBLE_FOR_REQUIREMENT' : 'REQUIREMENT_OPTION_MATCH') };
   }
   return (rule.effect.options || []).includes(code)
     ? { status: "ALLOW", ruleIds: [ruleId], reasonCode: "REQUIREMENT_OPTION_MATCH" }
@@ -199,13 +207,21 @@ export function oracleEvaluateTermLoad(policy, term) {
   return { status: blocked ? "BLOCK" : "ALLOW", ruleIds: [rule.ruleId], reasonCode: blocked ? "TERM_CAPACITY_EXCEEDED" : "TERM_CAPACITY_AVAILABLE" };
 }
 
-export function oracleEvaluateCanonicalPlan(policy, student, plan) {
+export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedContext = null) {
   const findings = [];
   const slotContract = policy.rules.find(rule => rule.ruleId === "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT");
   const declaredElectiveSlots = new Set();
+  const assignments = (plan.terms || []).flatMap(term => (term.courses || []).map(course => ({slotId:course.requirementId,code:course.course})));
+  let level100Electives = 0;
   const available = new Set((student.courses || []).filter(course => ["completed", "transfer", "in_progress"].includes(course.status)).map(course => String(course.code).toUpperCase()));
   for (const [termIndex, term] of (plan.terms || []).entries()) {
     const isTbc = canonicalTerm(term.termKey || term.term) === "TBC";
+    const termWindow = policy.calendar.initialDropAddWindows.find(window =>
+      window.academicYear.replace("-", "/") === String(term.academicYear).replace("-", "/")
+      && window.canonicalTerm === canonicalTerm(term.termKey));
+    if (termWindow && student.planCreationDate > termWindow.end && (term.courses || []).some(course => !course.fixedInProgress)) findings.push({
+      path: `$.terms[${termIndex}]`, status: "BLOCK", ruleIds: ["PLANNING-CURRENT-TERM-ADD-DROP"], reasonCode: "CURRENT_TERM_NEW_PLACEMENT_CLOSED"
+    });
     findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, term) });
     if (isTbc) {
       const projectedGroups = new Map();
@@ -243,7 +259,9 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan) {
         });
         declaredElectiveSlots.add(course.requirementId);
       }
-      findings.push({ path, ...oracleEvaluateAllocation(policy, course, course.requirementId) });
+      findings.push({ path, ...oracleEvaluateAllocation(policy, course, course.requirementId, {assignments, level100Electives}) });
+      if (String(course.requirementId).startsWith('eco-elective-') && /^ECO 1\d\d$/.test(course.course)) level100Electives++;
+      if (course.course === policy.byRuleId['CAPSTONE-SENIOR-STANDING'].condition.course && expectedContext) findings.push({path, ...oracleEvaluateStanding(policy, term, expectedContext)});
       findings.push({ path, ...oracleEvaluateOffering(policy, course, term) });
       if (course.course !== "ECO elective" && !String(course.source).includes("placeholder")) findings.push({ path, ...oracleEvaluatePrerequisite(policy, course.course, { available: [...available], sameTerm, approvals: course.approvalRequired || [] }) });
       if (isTbc) pendingCourses.push(course.course);
@@ -260,4 +278,18 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan) {
         : findings.some(item => item.status === "PRELIMINARY") ? "PRELIMINARY"
           : findings.some(item => item.status === "CONDITIONAL") ? "CONDITIONAL" : "ALLOW";
   return { status, valid: !["BLOCK", "UNKNOWN"].includes(status), findings };
+}
+
+// Independent interpretation of the owner-approved final-year boundary.
+export function oracleEvaluateStanding(policy, term, context) {
+  const year = Number(String(term.academicYear).slice(0,4));
+  const normal = policy.byRuleId['CAPSTONE-SENIOR-STANDING'];
+  const early = policy.byRuleId['ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING'];
+  const assumedFinal = early?.effect.assumeSeniorStandingInFinalPlanningYear === true
+    && context.acceleratedPlanAssumesSeniorStanding === true
+    && year + 1 === context.expectedGraduationYear
+    && context.projectedSeniorStandingAcademicYear === `${year}/${year+1}`;
+  const ordinarySenior = Number.isInteger(context.entryAcademicYearStart)
+    && year - context.entryAcademicYearStart + 1 >= normal.effect.normalStandingBeginsCollegeYear;
+  return {status: assumedFinal || ordinarySenior ? 'ALLOW' : 'BLOCK',ruleIds:[assumedFinal ? early.ruleId : normal.ruleId],reasonCode:assumedFinal ? early.reasonCode : normal.reasonCode};
 }

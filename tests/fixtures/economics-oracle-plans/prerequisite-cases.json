@@ -496,7 +496,7 @@
     {
       "fixtureId": "prereq-invalid-statistics-concurrent-capstone",
       "expectedStatus": "INVALID_PREREQUISITES",
-      "expectedCodes": ["CAPSTONE-STATISTICS-BEFORE"],
+      "expectedCodes": ["PREREQ-ECO-461"],
       "student": { "completedCourses": ["ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214"] },
       "terms": [
         {

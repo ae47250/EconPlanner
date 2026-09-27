@@ -25,6 +25,8 @@ import {
   replaceEconomicsPlan,
   restoreGeneratedPlannerSession
 } from "../lib/planning/uiState.js";
+import { requirementFormGroups } from "../lib/planning/requirementFormChoices.js";
+import economicsRequirements from "../data/normalized/economics/requirements.json";
 import economicsCourseData from "../data/normalized/economics/courses.json";
 import economicsPlanningConstraints from "../data/normalized/economics/planning-constraints.json";
 
@@ -56,9 +58,8 @@ const STANDING_LABELS = Object.freeze({
   senior: "Senior"
 });
 
-const GROUPED_COURSE_CODES = new Set([
-  "MAT 113", "MAT 121", "ECO 257", "MAT 217", "PSY 217", "ECO 321", "BUSN 323"
-]);
+const SUPPORTING_COURSE_GROUPS = requirementFormGroups(economicsRequirements, courseTitle);
+const GROUPED_COURSE_CODES = new Set(SUPPORTING_COURSE_GROUPS.flatMap(group => group.courseCodes));
 
 const COURSE_DISPLAY_GROUPS = [
   {
@@ -103,37 +104,7 @@ const COURSE_DISPLAY_GROUPS = [
     title: courseTitle("ECO 461"),
     courseCodes: ["ECO 461"]
   },
-  {
-    id: "math-requirement",
-    code: "MAT 113 / MAT 121",
-    title: "Required math course",
-    courseCodes: ["MAT 113", "MAT 121"],
-    options: [
-      { code: "MAT 113", title: courseTitle("MAT 113") },
-      { code: "MAT 121", title: courseTitle("MAT 121") }
-    ]
-  },
-  {
-    id: "statistics-requirement",
-    code: "ECO 257 / MAT 217 / PSY 217",
-    title: "Choose a statistics course",
-    courseCodes: ["ECO 257", "MAT 217", "PSY 217"],
-    options: [
-      { code: "ECO 257", title: courseTitle("ECO 257") },
-      { code: "MAT 217", title: courseTitle("MAT 217") },
-      { code: "PSY 217", title: courseTitle("PSY 217") }
-    ]
-  },
-  {
-    id: "finance-requirement",
-    code: "ECO 321 / BUSN 323",
-    title: "Choose a money and finance course",
-    courseCodes: ["ECO 321", "BUSN 323"],
-    options: [
-      { code: "ECO 321", title: courseTitle("ECO 321") },
-      { code: "BUSN 323", title: courseTitle("BUSN 323") }
-    ]
-  },
+  ...SUPPORTING_COURSE_GROUPS,
   ...COURSE_CATALOG
     .filter(course => course.studentSelectable !== false && !GROUPED_COURSE_CODES.has(course.code) && !["ECO 113", "ECO 114", "ECO 160", "ECO 161", "ECO 213", "ECO 214"].includes(course.code))
     .map(course => ({

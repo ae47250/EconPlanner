@@ -13,7 +13,7 @@ const MANIFESTS = [
 const EXPECTED_YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 const FLEXIBILITY_RULE_ID = "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK";
 const PLANNING_FLEXIBILITY_POLICY_PATH = "policy/rules/planning-flexibility.json";
-const PLANNING_FLEXIBILITY_PROVENANCE_PATH = "policy/provenance/planning-flexibility.6.json";
+// Historical CP4b catalog-compilation baseline, not a runtime selection.
 const ACTIVE_BUNDLE_VERSION = "econ-2025-2026.1";
 const ACTIVE_BUNDLE_HASH = "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7";
 
@@ -157,7 +157,7 @@ function historicalSourceReport(provenance, releases) {
 }
 
 function validatePlanningFlexibilityPolicy(policy) {
-  if (policy?.policyVersion !== "econ-planning-flexibility.6" || policy?.status !== "OWNER_APPROVED") {
+  if (!/^econ-planning-flexibility\.\d+$/.test(policy?.policyVersion || "") || policy?.status !== "OWNER_APPROVED") {
     fail("owner-approved planning flexibility policy is missing");
   }
   const senior = policy.acceleratedSeniorStanding;
@@ -262,6 +262,7 @@ function planningFlexibilityContract(bundle) {
 
 async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
   const policy = await readJson(root, PLANNING_FLEXIBILITY_POLICY_PATH);
+  const PLANNING_FLEXIBILITY_PROVENANCE_PATH = `policy/provenance/${policy.policyVersion.replace(/^econ-/, "")}.json`;
   const provenance = await readJson(root, PLANNING_FLEXIBILITY_PROVENANCE_PATH);
   validatePlanningFlexibilityPolicy(policy);
   if (provenance.policyVersion !== policy.policyVersion
@@ -316,12 +317,14 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
     },
     determinism: {canonicalFormat: "UTF-8 JSON with canonical key and ID-array ordering", requiredCleanCompilations: 3}
   };
+  await mkdir(path.join(compiledRoot, "planning-flexibility"), { recursive: true });
   await Promise.all([
     writeImmutable(path.join(outputRoot, "bundle.json"), canonicalJson(bundle)),
     writeImmutable(path.join(outputRoot, "bundle.sha256"), `${contentHash.slice(7)}\n`),
     writeImmutable(path.join(outputRoot, "compile-report.json"), canonicalJson(compileReport)),
     writeImmutable(path.join(outputRoot, "architecture-contract.md"), planningFlexibilityContract(bundle))
   ]);
+  await writeFile(path.join(compiledRoot, "planning-flexibility", "active.json"), canonicalJson(bundle));
   return bundle;
 }
 

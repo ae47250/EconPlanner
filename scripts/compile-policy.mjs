@@ -300,6 +300,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
     catalogApplicability: manifest.catalogApplicability,
     releaseRefs: { schedule: schedule.releaseId },
     rules,
+    requirementProfile: compatibilityProfile.requirements,
     indexes: {
       ...indexed,
       coursesByCode: Object.fromEntries(courses.courses.map(course => [course.code, course])),

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 7,
-    "confirmationDate": "2026-09-26",
+    "version": 8,
+    "confirmationDate": "2026-09-27",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -53,6 +53,12 @@
       "date": "2026-09-26",
       "reviewedBy": "Project owner, explicit repair task",
       "summary": "Submitted elective slots have at most one assigned course per plan. Unlabeled raw history and separate alternatives are outside this uniqueness check; academic eligibility is unchanged."
+    },
+    {
+      "id": "PROJECT-OWNER-2026-09-27",
+      "date": "2026-09-27",
+      "reviewedBy": "Project owner and Economics Department domain expert",
+      "summary": "Initial add/drop, nonblocking final-year standing, canonical consumption and statistics timing consolidation."
     }
   ],
   "sources": [
@@ -80,6 +86,11 @@
       "id": "OWNER-PLAN-SLOT-CONTRACT-2026-09-26",
       "path": "policy/provenance/plan-slot-contract-2026-09-26.md",
       "authority": "Project owner, explicit submitted-plan contract in the September 26, 2026 repair task"
+    },
+    {
+      "id": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
+      "path": "policy/provenance/canonical-consumption-2026-09-27.md",
+      "authority": "Project owner and Economics Department domain expert"
     }
   ],
   "requirementRules": [
@@ -457,10 +468,11 @@
     {
       "ruleId": "PREREQ-ECO-461",
       "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "confirmationRef": "PROJECT-OWNER-2026-09-27",
       "sourceRefs": [
         "ECONOMICS-REQUIREMENTS#Required Course Sequence Logic",
-        "DEPARTMENT-POLICIES#Confirmed policies 1 and 4"
+        "DEPARTMENT-POLICIES#Confirmed policies 1 and 4",
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Statistics-timing"
       ],
       "course": "ECO 461",
       "allOf": [
@@ -473,7 +485,9 @@
           "MAT 217",
           "PSY 217"
         ]
-      ]
+      ],
+      "timing": "PRIOR_TERM",
+      "statisticsMustBePrior": true
     },
     {
       "ruleId": "PREREQ-ECO-471",
@@ -662,19 +676,20 @@
         "DEPARTMENT-POLICIES#Confirmed policy 6"
       ],
       "course": "ECO 461",
-      "requiredStanding": "Senior"
+      "requiredStanding": "Senior",
+      "normalStandingBeginsCollegeYear": 4
     },
     {
-      "ruleId": "CAPSTONE-EARLY-GRADUATE-STANDING",
+      "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
       "status": "CONFIRMED",
-      "confirmationRef": "PROJECT-OWNER-2026-08-04",
+      "confirmationRef": "PROJECT-OWNER-2026-09-27",
       "sourceRefs": [
-        "DEPARTMENT-POLICIES#Confirmed policy 2"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
       ],
       "course": "ECO 461",
-      "compressedPlanRequiresReportedRegistrarOrAdvisorConfirmation": true,
-      "confirmedStandingAppliesOnlyToFinalAcademicYear": true,
-      "extendedPlanSeniorStandingBeginsInFourthAcademicYear": true
+      "extendedPlanSeniorStandingBeginsInFourthAcademicYear": true,
+      "assumeSeniorStandingInFinalPlanningYear": true,
+      "requiresStudentConfirmation": false
     },
     {
       "ruleId": "CAPSTONE-HANOVER-RESIDENCY",
@@ -685,20 +700,6 @@
       ],
       "course": "ECO 461",
       "requiredInstitution": "Hanover College"
-    },
-    {
-      "ruleId": "CAPSTONE-STATISTICS-BEFORE",
-      "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
-      "sourceRefs": [
-        "DEPARTMENT-POLICIES#Confirmed policies 1 and 4"
-      ],
-      "course": "ECO 461",
-      "mustBeCompletedBeforeOneOf": [
-        "ECO 257",
-        "MAT 217",
-        "PSY 217"
-      ]
     }
   ],
   "planningRules": [
@@ -733,13 +734,13 @@
       "maxTotalCourses": 1
     },
     {
-      "ruleId": "PLANNING-CURRENT-TERM-EXCLUDED",
+      "ruleId": "PLANNING-CURRENT-TERM-ADD-DROP",
       "status": "CONFIRMED",
-      "confirmationRef": "ECON-DEPARTMENT-2026-08-01",
+      "confirmationRef": "PROJECT-OWNER-2026-09-27",
       "sourceRefs": [
-        "ECONOMICS-REQUIREMENTS#Core Scheduling Rule"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"
       ],
-      "excludeTermContainingPlanDate": true
+      "allowOfficialInitialDropAddOnly": true
     },
     {
       "ruleId": "PLANNING-IN-PROGRESS-UNLOCKS-LATER",

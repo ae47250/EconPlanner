@@ -1,3 +1,4 @@
+import officialCalendar from "../../policy/calendars/hanover-undergraduate.json" with { type: "json" };
 import {
   canonicalExternalTermKey,
   externalTermPosition
@@ -395,11 +396,17 @@ function checkHorizon({ policy, plan, expectedContext, requirementAllocation, vi
   const latest = externalTermPosition(`${graduationYear - 1}/${graduationYear}`, "Spring/May");
   (plan.terms || []).forEach((term, termIndex) => {
     const position = externalTermPosition(term.academicYear, term.termKey);
+    const date = expectedContext.planCreationDate;
+    const key = String(term.termKey).toUpperCase().replace("SPRING/MAY", "MAY").replace("SPRING", "MAY");
+    const calendar = officialCalendar.initialDropAddWindows.find(window => window.academicYear.replace("-", "/") === String(term.academicYear).replace("-", "/") && window.canonicalTerm === key);
+    if (date && calendar && date > calendar.end && (term.courses || []).some(course => !course.fixedInProgress)) {
+      violations.push(finding(policy, "CURRENT_TERM_NEW_PLACEMENT_CLOSED", "PLANNING-CURRENT-TERM-ADD-DROP", `$.plan.terms[${termIndex}]`, "New placements are not permitted after the official initial add/drop window closes."));
+    }
     if (!Number.isFinite(position) || (position >= earliest && position <= latest)) return;
     violations.push(finding(
       policy,
       "GRADUATION_TERM_OUTSIDE_HORIZON",
-      "PLANNING-CURRENT-TERM-EXCLUDED",
+      "PLANNING-CURRENT-TERM-ADD-DROP",
       `$.plan.terms[${termIndex}]`,
       "This term is outside the permitted planning horizon or occurs after graduation."
     ));
@@ -505,7 +512,7 @@ export function checkExternalEconomicsScheduleAndHorizon(input) {
   checkHorizon({
     policy,
     plan,
-    expectedContext: args.expectedContext,
+    expectedContext: { ...args.expectedContext, planCreationDate: args.student?.planCreationDate || args.expectedContext?.planCreationDate },
     requirementAllocation: args.requirementAllocation,
     violations
   });

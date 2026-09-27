@@ -62,6 +62,12 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     expect(text).toMatch(/selected plan horizon/i);
     expect(text).toContain(report.planningHorizon);
     expect(text).toContain('ECO 461');
+    if (name.startsWith('early')) {
+      const standingNote = 'This plan assumes you will have senior standing in your final year.';
+      expect(JSON.stringify(report)).toContain(standingNote);
+      expect(html).toContain(standingNote);
+      expect(text).toContain(standingNote);
+    }
     for (const term of report.terms) for (const course of term.courses) expect(text).toContain(course.code);
     await writeFile(testInfo.outputPath(`${name}.json`), JSON.stringify(report,null,2));
     await writeFile(testInfo.outputPath(`${name}.html`), html);
