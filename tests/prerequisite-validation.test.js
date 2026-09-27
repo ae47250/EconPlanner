@@ -7,6 +7,7 @@ import {
 } from "../lib/planning/prerequisiteValidation.js";
 import {
   buildPrerequisiteFollowUp,
+  unansweredPrerequisiteQuestions,
   selectedStatus as selectedFormStatus
 } from "../lib/planning/prerequisiteFormValidation.js";
 
@@ -124,7 +125,7 @@ test("form follow-up builds canonical required and alternative questions for a c
   ]);
 });
 
-test("completed-course follow-up asks the same canonical questions without creating a new block", () => {
+test("completed-course follow-up asks the same canonical questions while the form gate awaits answers", () => {
   const result = buildPrerequisiteFollowUp({
     course: "ECO 214",
     targetStatus: "completed",
@@ -141,6 +142,57 @@ test("completed-course follow-up asks the same canonical questions without creat
   ]);
   assert.ok(result.questions.every(question => question.blocking === false));
   assert.deepEqual(result.conflicts, []);
+  assert.deepEqual(unansweredPrerequisiteQuestions(result).map(question => question.options), [
+    ["ECO 114"],
+    ["MAT 113", "MAT 121"]
+  ]);
+  assert.equal(result.status, "ALLOW");
+  assert.deepEqual(result.reviewFindings, []);
+});
+
+test("explicit uncertain answers resolve the form question, and clearing one restores it", () => {
+  const courses = [
+    { code: "ECO 114", status: "uncertain" },
+    { code: "MAT 113", status: "uncertain" },
+    { code: "MAT 121", status: "uncertain" }
+  ];
+  const answered = buildPrerequisiteFollowUp({
+    course: "ECO 214",
+    targetStatus: "completed",
+    courses,
+    prerequisites
+  });
+
+  assert.deepEqual(unansweredPrerequisiteQuestions(answered), []);
+  assert.equal(answered.questions.length, 2);
+  assert.ok(answered.questions.every(question => question.statuses.every(item => item.status === "uncertain")));
+
+  const cleared = buildPrerequisiteFollowUp({
+    course: "ECO 214",
+    targetStatus: "completed",
+    courses: courses.map(course => course.code === "MAT 121" ? { ...course, status: "not_started" } : course),
+    prerequisites
+  });
+  assert.deepEqual(unansweredPrerequisiteQuestions(cleared).map(question => question.options), [
+    ["MAT 113", "MAT 121"]
+  ]);
+});
+
+test("prerequisites answered on the course cards do not produce follow-up questions", () => {
+  for (const [course, prerequisite] of [["ECO 213", "ECO 113"], ["ECO 214", "ECO 114"]]) {
+    const math = course === "ECO 213" ? "MAT 113" : "MAT 121";
+    const result = buildPrerequisiteFollowUp({
+      course,
+      targetStatus: "in_progress",
+      courses: [
+        { code: prerequisite, status: "completed" },
+        { code: math, status: "completed" }
+      ],
+      prerequisites
+    });
+    assert.equal(result.required, false, course);
+    assert.deepEqual(unansweredPrerequisiteQuestions(result), [], course);
+  }
 });
 
 test("alternative follow-up preserves not-started and uncertain statuses as unsatisfied", () => {
