@@ -768,7 +768,9 @@ function PlanTimeline({
                               </div>
                               {onEditPlanCourse && !course.fixedInProgress && (
                                 <div className="plan-course-actions">
-                                  {course.alternativeOptions?.length > 1 && (
+                                  {course.alternativeOptions?.length > 1
+                                    && course.alternativeOptions.some(option => option.course !== course.course
+                                      && (!option.status || ["ALLOWED", "CONDITIONAL"].includes(option.status))) && (
                                     <label>
                                       <span className="sr-only">Choose the elective for {term.displayTerm || term.term}</span>
                                       <select
@@ -784,42 +786,68 @@ function PlanTimeline({
                                         }, event.currentTarget)}
                                       >
                                         {course.alternativeOptions.map(option => (
-                                          <option value={option.id} key={option.id}>
+                                          <option value={option.id} key={option.id} disabled={option.status === "BLOCKED"}>
                                             {option.course}{option.section ? `-${option.section}` : ""}: {option.title}
+                                            {option.status === "BLOCKED" ? ` — Unavailable: ${option.message}`
+                                              : option.status === "CONDITIONAL" ? ` — Conditional: ${option.message}` : ""}
                                           </option>
                                         ))}
                                       </select>
                                     </label>
                                   )}
-                                  <label>
-                                    <span className="sr-only">Move {course.course} to another term</span>
-                                    <select
-                                      aria-label={`Move ${course.course} to another term`}
-                                      disabled={Boolean(editingPlanCourseKey)}
-                                      value={termId}
-                                        onChange={event => onEditPlanCourse({
-                                          type: "move",
-                                          planId: activePlan.id,
-                                          fromTermId: termId,
-                                          toTermId: event.target.value,
-                                          courseId
-                                        }, event.currentTarget)}
-                                    >
-                                      {(activePlan.terms || []).filter(optionTerm => (optionTerm.slotId || optionTerm.term) === termId
-                                        || course.moveDestinationIds?.includes(optionTerm.slotId || optionTerm.term)).map(optionTerm => {
-                                        const optionTermId = optionTerm.slotId || optionTerm.term;
-                                        return (
-                                          <option value={optionTermId} key={optionTermId}>
-                                            {optionTerm.academicYear} {optionTerm.displayTerm || optionTerm.term}
-                                          </option>
-                                        );
-                                      })}
-                                    </select>
-                                  </label>
+                                  {course.alternativeOptions?.length > 1
+                                    && !course.alternativeOptions.some(option => option.course !== course.course
+                                      && (!option.status || ["ALLOWED", "CONDITIONAL"].includes(option.status)))
+                                    && course.replacementNotice?.studentMessage && (
+                                    <span className="required-course-note">{course.replacementNotice.studentMessage}</span>
+                                  )}
+                                  {(() => {
+                                    const moveOptions = course.moveDestinationOptions
+                                      || (activePlan.terms || []).filter(optionTerm => (optionTerm.slotId || optionTerm.term) === termId
+                                        || course.moveDestinationIds?.includes(optionTerm.slotId || optionTerm.term)).map(optionTerm => ({
+                                        id: optionTerm.slotId || optionTerm.term,
+                                        label: `${optionTerm.academicYear || ""} ${optionTerm.displayTerm || optionTerm.term}`.trim(),
+                                        status: (optionTerm.slotId || optionTerm.term) === termId ? "CURRENT" : "ALLOWED"
+                                      }));
+                                    const hasAlternativeMove = moveOptions.some(option => option.id !== termId
+                                      && ["ALLOWED", "CONDITIONAL"].includes(option.status));
+                                    if (!hasAlternativeMove) return (
+                                      <span className="required-course-note">
+                                        {course.moveNoAlternativeNotice?.studentMessage || "No other term currently passes complete plan checks for this course."}
+                                      </span>
+                                    );
+                                    return (
+                                      <label>
+                                        <span className="sr-only">Move {course.course} to another term</span>
+                                        <select
+                                          aria-label={`Move ${course.course} to another term`}
+                                          disabled={Boolean(editingPlanCourseKey)}
+                                          value={termId}
+                                          onChange={event => onEditPlanCourse({
+                                            type: "move",
+                                            planId: activePlan.id,
+                                            fromTermId: termId,
+                                            toTermId: event.target.value,
+                                            courseId
+                                          }, event.currentTarget)}
+                                        >
+                                          {moveOptions.map(option => (
+                                            <option value={option.id} key={option.id} disabled={option.status === "BLOCKED"}>
+                                              {option.label}{option.status === "CURRENT" ? " (current term)"
+                                                : option.status === "BLOCKED" ? ` — Unavailable: ${option.message}`
+                                                  : option.status === "CONDITIONAL" ? ` — Conditional: ${option.message}`
+                                                    : ` — ${option.message}`}
+                                            </option>
+                                          ))}
+                                        </select>
+                                      </label>
+                                    );
+                                  })()}
+                                  {course.moveGuidance?.studentMessage && (
+                                    <span className="required-course-note">{course.moveGuidance.studentMessage}</span>
+                                  )}
                                   {feedback && <span className="plan-course-edit-feedback" role="alert">{feedback}</span>}
-                                  <span className="required-course-note">
-                                    Required for this plan. Move it to another valid term{course.alternativeOptions?.length > 1 ? " or choose a replacement above" : ""}.
-                                  </span>
+                                  <span className="required-course-note">Required for this plan.</span>
                                 </div>
                               )}
                             </li>
@@ -2901,6 +2929,7 @@ export default function Page() {
         student: { ...formData, courses: selectedCourses(formData.courses) },
         preparedDate: formData.planCreationDate,
         selectedPlan,
+        plans: economicsResult(report)?.economicsPlans || [],
         format: "pdf",
         downloadOperationId: crypto.randomUUID()
       };

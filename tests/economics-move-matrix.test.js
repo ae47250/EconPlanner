@@ -100,6 +100,11 @@ function policyBoundary(student, course, destination) {
   const excluded = policy.offeringPatterns.find(pattern => [pattern.course].flat().includes(course.course)
     && pattern.hardExcludedTerms.includes(key));
   if (excluded) return { blocked: true, ruleIds: [excluded.patternId] };
+  const approvedProjection = policy.offeringPatterns.find(pattern => [pattern.course].flat().includes(course.course)
+    && pattern.projectionPolicy.unpublishedTermEligibility === "APPROVED_RECURRING_TERMS_ONLY");
+  if (approvedProjection && !approvedProjection.approvedRecurringTerms.includes(key) && !exact?.length) {
+    return { blocked: true, ruleIds: [approvedProjection.patternId] };
+  }
   return { blocked: false, ruleIds: [] };
 }
 
@@ -401,11 +406,8 @@ test("malformed requests fail and forged evidence cannot confirm a future offeri
   const forged = structuredClone(plan);
   forged.terms.find(term => term.slotId === from.slotId).courses.find(item => item.requirementId === course.requirementId).moveTermIds = [from.slotId, destination.slotId];
   const forgedResult = await post({ action: "validate-plan", student, plan: forged, plans, edit: { ...moveEdit(plan, from, course, destination), source: "verified-offering", section: "J" } });
-  assert.equal(forgedResult.status, 200, JSON.stringify(forgedResult.data));
-  const projection = placements(forgedResult.data.plan).find(item => item.course.requirementId === course.requirementId).course;
-  assert.equal(projection.source, "projected-offering");
-  assert.equal(projection.section, "");
-  assert.equal(projection.availability, null);
+  assert.equal(forgedResult.status, 422, JSON.stringify(forgedResult.data));
+  assert.match(forgedResult.data.error || "", /projected only in MAY when its schedule is unpublished/);
   for (const edit of [
     { ...moveEdit(plan, from, course, destination), fromTermId: "missing-term" },
     { ...moveEdit(plan, from, course, destination), toTermId: "missing-term" },

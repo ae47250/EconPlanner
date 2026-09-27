@@ -35,7 +35,7 @@
       "course": "ECO 222",
       "authority": "Hanover College official catalog",
       "authorityBoundary": "UNPUBLISHED_ECO_222_SPRING_PLANNING_PROJECTION",
-      "sourceRefs": ["OFFICIAL-CATALOG-ECONOMICS#ECO-222", "HANOVER-CP5A-OFFICIAL-EVIDENCE#Economics-course-statements"],
+      "sourceRefs": ["OFFICIAL-CATALOG-ECONOMICS#ECO-222", "HANOVER-CP5A-OFFICIAL-EVIDENCE#Economics-course-statements", "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27#ECO-222-term-scope"],
       "evidenceType": "OFFICIAL_CATALOG_STATEMENT",
       "hardExcludedTerms": [],
       "approvedRecurringTerms": ["MAY"],
@@ -48,6 +48,7 @@
         "scheduleCoverage": ["UNAVAILABLE", "UNKNOWN"],
         "normalTerms": ["MAY"],
         "fallback": "GENERIC_ELECTIVE_OR_TERM_TO_CONFIRM",
+        "unpublishedTermEligibility": "APPROVED_RECURRING_TERMS_ONLY",
         "activeExactScheduleOverrides": true,
         "probabilityEmitted": false
       },

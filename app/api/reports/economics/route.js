@@ -19,7 +19,8 @@ export async function handleEconomicsReportRequest(request, dependencies = {}) {
     const report = await buildEconomicsReportFromStudent(
       body?.student || body || {},
       body?.preparedDate,
-      body?.selectedPlan || null
+      body?.selectedPlan || null,
+      body?.plans || []
     );
     if (body?.format === "json") return Response.json(report, { headers: { "Cache-Control": "no-store" } });
 

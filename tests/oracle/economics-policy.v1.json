@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 8,
+    "version": 9,
     "confirmationDate": "2026-09-27",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
@@ -59,9 +59,25 @@
       "date": "2026-09-27",
       "reviewedBy": "Project owner and Economics Department domain expert",
       "summary": "Initial add/drop, nonblocking final-year standing, canonical consumption and statistics timing consolidation."
+    },
+    {
+      "id": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
+      "date": "2026-09-27",
+      "reviewedBy": "Project owner and Economics Department domain expert",
+      "summary": "ECO 222 may project only into May while a target schedule is unpublished; another term needs matching exact-schedule evidence, and no offering exception waives academic requirements."
     }
   ],
   "sources": [
+    {
+      "id": "OFFICIAL-CATALOG-ECONOMICS",
+      "path": "data/raw/hanover/catalog/2025-2026/economics.php",
+      "authority": "Hanover College official catalog"
+    },
+    {
+      "id": "HANOVER-CP5A-OFFICIAL-EVIDENCE",
+      "path": "data/raw/economics/CP5A_Official_Policy_Evidence.md",
+      "authority": "Hanover College official course and policy evidence"
+    },
     {
       "id": "DEPARTMENT-POLICIES",
       "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
@@ -90,6 +106,11 @@
     {
       "id": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
       "path": "policy/provenance/canonical-consumption-2026-09-27.md",
+      "authority": "Project owner and Economics Department domain expert"
+    },
+    {
+      "id": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
+      "path": "policy/provenance/planning-dropdown-repair-2026-09-27.md",
       "authority": "Project owner and Economics Department domain expert"
     }
   ],
@@ -782,6 +803,20 @@
       "universalSameTermProhibition": false,
       "verifiedScheduleControls": true,
       "separateTermsWithoutVerifiedSchedule": true
+    },
+    {
+      "ruleId": "CATALOG-ECO-222-SPRING",
+      "status": "CONFIRMED",
+      "confirmationRef": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
+      "sourceRefs": [
+        "OFFICIAL-CATALOG-ECONOMICS#ECO-222",
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#Economics-course-statements",
+        "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27#ECO-222-term-scope"
+      ],
+      "course": "ECO 222",
+      "unpublishedProjectionTerms": ["May"],
+      "matchingExactScheduleSectionPermitsAnotherTerm": true,
+      "annualAvailabilityGuaranteed": false
     },
     {
       "ruleId": "PLANNING-MAY-COURSE-EXCLUSIONS",

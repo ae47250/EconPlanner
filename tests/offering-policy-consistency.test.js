@@ -3,6 +3,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
 import { courseTermEligibility, evaluateCoursePlacement } from "../lib/decision-engine/placement.js";
+import { annotateEconomicsPlanChoices, validateGeneratedPlan } from "../lib/planning/economics.js";
+import { applyEconomicsPlanEdit } from "../lib/planning/termSolver.js";
+import { selectedPlanContext } from "../lib/planning/horizon.js";
+import { loadCatalog } from "../lib/catalog/load.js";
 import { buildTbcTemporalWitness } from "../lib/decision-engine/tbc-temporal.js";
 import { POST } from "../app/api/majors/map/route.js";
 import { buildEconomicsReportFromStudent } from "../lib/reports/build-economics.js";
@@ -81,6 +85,185 @@ test("matching exact May evidence overrides projection exclusions, not independe
     assert.equal(oracleEvaluateOffering(independent, { ...placement(code), source: "verified-offering" }, may).status, "ALLOW", code);
   }
   assert.equal(evaluateCoursePlacement(placement("ECO 461"), may, {}, bundle).status, "BLOCK");
+});
+
+test("ECO 222 uses its approved May projection scope and requires exact evidence for another term", () => {
+  const winter = { academicYear: "2027/2028", termKey: "Winter", slotId: "winter-2028", courses: [] };
+  const projected = placement("ECO 222");
+  const mayProjection = { ...may, courses: [projected] };
+  assert.equal(courseTermEligibility(projected, mayProjection, bundle).allowed, true);
+  assert.equal(oracleEvaluateOffering(policy, projected, mayProjection).status, "ALLOW");
+  const verifiedMay2027 = { academicYear: "2026-2027", termKey: "May", slotId: "spring-2027", courses: [] };
+  assert.equal(courseTermEligibility(projected, verifiedMay2027, bundle).allowed, true);
+  assert.equal(oracleEvaluateOffering(policy, projected, verifiedMay2027).status, "ALLOW");
+  assert.equal(courseTermEligibility(projected, winter, bundle).allowed, false);
+  assert.equal(oracleEvaluateOffering(policy, projected, winter).status, "BLOCK");
+
+  const knownMayAbsence = structuredClone(bundle);
+  knownMayAbsence.indexes.offeringByTerm["2028-MAY"] = { coverage: "COMPLETE", sections: [] };
+  const may2028 = { academicYear: "2027/2028", termKey: "May", slotId: "spring-2028", courses: [] };
+  assert.equal(courseTermEligibility(projected, may2028, knownMayAbsence).allowed, false);
+  const oracleKnownMayAbsence = structuredClone(policy);
+  oracleKnownMayAbsence.schedule.terms.push({ termId: "2028-MAY", coverage: "COMPLETE", sections: [] });
+  assert.equal(oracleEvaluateOffering(oracleKnownMayAbsence, projected, may2028).status, "BLOCK");
+
+  // Synthetic exact-schedule evidence exercises the exception without changing a dated release.
+  const exactAlternate = structuredClone(bundle);
+  exactAlternate.indexes.offeringByTerm["2028-WINTER"] = {
+    coverage: "COMPLETE",
+    sections: [{ course: "ECO 222", crossListedAs: [], sectionId: "2028-WINTER-ECO-222-J" }]
+  };
+  assert.equal(courseTermEligibility(projected, winter, exactAlternate).allowed, true);
+  const oracleExactAlternate = structuredClone(policy);
+  oracleExactAlternate.schedule.terms.push({
+    termId: "2028-WINTER", coverage: "COMPLETE",
+    sections: [{ course: "ECO 222", crossListedAs: [], sectionId: "2028-WINTER-ECO-222-J", enrollmentState: "OPEN" }]
+  });
+  assert.equal(oracleEvaluateOffering(oracleExactAlternate, projected, winter).status, "ALLOW");
+});
+
+test("ECO 222 exact alternate-term evidence passes complete edit validation", async () => {
+  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const generated = await post({ student });
+  const economics = generated.data.programs.find(item => item.program.id === "economics-base");
+  const plan = economics.economicsPlans.find(item => item.id === "one-year-early");
+  const original = entries(plan).find(row => row.course.course === "ECO 222");
+  const destination = plan.terms.find(term => term.slotId === "fall-2027");
+  const offeredCourses = [...destination.courses.map(course => course.course), "ECO 222"];
+  const sections = offeredCourses.map(code => ({
+    course: code,
+    sectionId: `2027-FALL-${code.replaceAll(" ", "-")}-S`,
+    crossListedAs: [],
+    enrollmentState: "OPEN",
+    sourceRefs: []
+  }));
+
+  const exactAlternate = structuredClone(bundle);
+  exactAlternate.indexes.offeringByTerm["2027-FALL"] = { coverage: "COMPLETE", sections };
+  const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);
+  const exactSchedule = structuredClone(catalog.economicsSchedule);
+  exactSchedule.academicYear = "";
+  exactSchedule.terms.Fall.push(...offeredCourses.map(code => ({
+    course: code,
+    section: "S",
+    academicYear: "2027-2028",
+    term: "Fall",
+    units: 1,
+    verificationStatus: "verified",
+    availability: { status: "open" },
+    crossListedAs: []
+  })));
+
+  const independentExactAlternate = structuredClone(policy);
+  independentExactAlternate.schedule.terms.push({
+    termId: "2027-FALL", coverage: "COMPLETE",
+    sections: sections.map(section => ({ ...section }))
+  });
+  const destinationTerm = { ...destination, courses: [...destination.courses, placement("ECO 222")] };
+  assert.equal(oracleEvaluateOffering(independentExactAlternate, placement("ECO 222"), destinationTerm).status, "ALLOW");
+  const externalCourse = {
+    course: "ECO 222", source: "verified-offering", section: "S",
+    title: "Economics of the European Union", units: 1,
+    canonicalCrossListIdentity: ["ECO 222"],
+    verificationStatus: "verified", academicYear: "2027-2028", term: "Fall",
+    availability: { status: "open", seatsOpen: null, capacity: null },
+    meeting: { days: [], startTime: null, endTime: null },
+    provenance: { verificationDate: "2027-01-01", sourceReference: "SYNTHETIC-EXACT-ALTERNATE-TEST" }
+  };
+  const externalExactAlternate = checkExternalEconomicsScheduleAndHorizon({
+    policy: specification,
+    verifiedSchedule: {
+      academicYear: "2027-2028",
+      sections: [{
+        academicYear: "2027-2028", term: "Fall", course: "ECO 222", section: "S",
+        canonicalCrossListIdentity: ["ECO 222"], title: "Economics of the European Union", units: 1,
+        availability: { state: "open", seatsOpen: null, capacity: null },
+        meeting: { days: [], startTime: null, endTime: null },
+        verificationDate: "2027-01-01", sourceReference: "SYNTHETIC-EXACT-ALTERNATE-TEST"
+      }]
+    },
+    plan: { terms: [{ academicYear: "2027/2028", termKey: "Fall", courses: [externalCourse] }] }
+  });
+  assert.equal(externalExactAlternate.valid, true, JSON.stringify(externalExactAlternate.violations));
+
+  const edited = applyEconomicsPlanEdit({
+    plan,
+    edit: { type: "move", fromTermId: original.term.slotId, toTermId: destination.slotId, courseId: original.course.requirementId },
+    student, mapping: economics, schedule: exactSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
+    policyBundle: exactAlternate, refreshAlternatives: false
+  });
+  const validation = validateGeneratedPlan(edited, {
+    student, mapping: economics, schedule: exactSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get("economics"),
+    context: selectedPlanContext(economics.planningContext, plan),
+    policyBundle: exactAlternate, enforcePlanIntegrity: true
+  });
+  assert.equal(validation.valid, true, JSON.stringify(validation.errors));
+  assert.equal(validation.errors.length, 0);
+  assert.equal(edited.terms.find(term => term.slotId === "fall-2027").courses
+    .find(course => course.course === "ECO 222").source, "verified-offering");
+});
+
+test("canonical pattern changes refresh both ECO 222 choices and full edit validation", async () => {
+  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const generated = await post({ student });
+  const economics = generated.data.programs.find(item => item.program.id === "economics-base");
+  const plan = economics.economicsPlans.find(item => item.id === "one-year-early");
+  const original = entries(plan).find(row => row.course.course === "ECO 222");
+  assert.equal(original.course.moveDestinationOptions.find(option => option.id === "winter-2028").status, "BLOCKED");
+
+  const modifiedCanonicalBundle = structuredClone(bundle);
+  modifiedCanonicalBundle.indexes.offeringPatternsById["CATALOG-ECO-222-SPRING"].approvedRecurringTerms.push("WINTER");
+  assert.equal(courseTermEligibility(placement("ECO 222"), {
+    academicYear: "2027/2028", termKey: "Winter", slotId: "winter-2028", courses: []
+  }, modifiedCanonicalBundle).allowed, true);
+
+  const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);
+  const context = selectedPlanContext(economics.planningContext, plan);
+  const changedChoices = annotateEconomicsPlanChoices({
+    plans: [plan], student, mapping: economics, schedule: catalog.economicsSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
+    context: economics.planningContext, policyBundle: modifiedCanonicalBundle
+  })[0];
+  assert.ok(changedChoices.terms.flatMap(term => term.courses)
+    .find(course => course.course === "ECO 222").moveDestinationIds.includes("winter-2028"));
+
+  const edited = applyEconomicsPlanEdit({
+    plan,
+    edit: { type: "move", fromTermId: original.term.slotId, toTermId: "winter-2028", courseId: original.course.requirementId },
+    student, mapping: economics, schedule: catalog.economicsSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
+    policyBundle: modifiedCanonicalBundle, refreshAlternatives: false
+  });
+  const validation = validateGeneratedPlan(edited, {
+    student, mapping: economics, schedule: catalog.economicsSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get("economics"), context, policyBundle: modifiedCanonicalBundle,
+    enforcePlanIntegrity: true
+  });
+  assert.equal(validation.valid, true, JSON.stringify(validation.errors));
+});
+
+test("a soft recurring-term pattern explains the usual term without excluding other terms", async () => {
+  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const generated = await post({ student });
+  const economics = generated.data.programs.find(item => item.program.id === "economics-base");
+  const plan = economics.economicsPlans.find(item => item.id === "one-year-early");
+  const modifiedCanonicalBundle = structuredClone(bundle);
+  delete modifiedCanonicalBundle.indexes.offeringPatternsById["CATALOG-ECO-222-SPRING"].projectionPolicy.unpublishedTermEligibility;
+  const winter = { academicYear: "2027/2028", termKey: "Winter", slotId: "winter-2028", courses: [] };
+  assert.equal(courseTermEligibility(placement("ECO 222"), winter, modifiedCanonicalBundle).allowed, true);
+
+  const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);
+  const annotated = annotateEconomicsPlanChoices({
+    plans: [plan], student, mapping: economics, schedule: catalog.economicsSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
+    context: economics.planningContext, policyBundle: modifiedCanonicalBundle
+  })[0];
+  const eco222 = entries(annotated).find(row => row.course.course === "ECO 222").course;
+  const winterChoice = eco222.moveDestinationOptions.find(option => option.id === "winter-2028");
+  assert.equal(winterChoice.status, "CONDITIONAL", winterChoice.message);
+  assert.match(winterChoice.message, /usual projection terms for ECO 222 are May.*Winter remains eligible.*no binding exclusion/);
 });
 
 test("year-only placeholders retain a distinct-term witness for the intermediates", () => {

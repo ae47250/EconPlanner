@@ -22,11 +22,11 @@ const facts = normalizeStudentFacts({ courses: [] });
 test("catalog projections require matching course, term and effective evidence; exact schedules win", () => {
   for (const [course, term, expected] of [
     [{course: "ECO 222", source: "catalog-statement"}, {academicYear: "2027-2028", termKey: "May"}, "ALLOW"],
-    [{course: "ECO 222", source: "catalog-statement"}, {academicYear: "2027-2028", termKey: "Winter"}, "UNKNOWN"],
+    [{course: "ECO 222", source: "catalog-statement"}, {academicYear: "2027-2028", termKey: "Winter"}, "BLOCK"],
     [{course: "ECO 221", source: "catalog-statement"}, {academicYear: "2027-2028", termKey: "May"}, "UNKNOWN"],
     [{course: "ECO 222", source: "catalog-statement"}, {academicYear: "2023-2024", termKey: "May"}, "UNKNOWN"],
     [{course: "ECO 222", section: "fictional", source: "catalog-statement"}, {academicYear: "2026-2027", termKey: "May"}, "BLOCK"],
-    [{course: "ECO 222", source: "projected-offering"}, {academicYear: "2027-2028", termKey: "Winter"}, "ALLOW"]
+    [{course: "ECO 222", source: "projected-offering"}, {academicYear: "2027-2028", termKey: "Winter"}, "BLOCK"]
   ]) {
     assert.equal(evaluateOffering(course, term, bundle.indexes.offeringByTerm, bundle).status, expected);
     assert.equal(oracleEvaluateOffering(oracle, course, term).status, expected);

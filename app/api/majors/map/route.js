@@ -1,4 +1,3 @@
-import { annotateEconomicsMoveDestinations } from "../../../../lib/planning/termSolver.js";
 import { availableCatalogYears, loadCatalog } from "../../../../lib/catalog/load.js";
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
@@ -7,6 +6,7 @@ import {
   buildFeasibilityDetails,
   buildEconomicsTermPlans,
   classifyFeasibility,
+  annotateEconomicsPlanChoices,
   FEASIBILITY_STATUS,
   SEARCH_INCOMPLETE_MESSAGE,
   validateGeneratedPlan,
@@ -250,6 +250,20 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     policyBundle: catalog.policyBundle,
     enforcePlanIntegrity: true
   };
+  const validatedPeers = (Array.isArray(plans) ? plans : [])
+    .filter(item => item.id !== plan.id)
+    .map(peer => {
+      const peerContext = selectedPlanContext(planningContext, peer);
+      if (!peerContext) return { ...peer, validation: { valid: false, errors: ["The comparison plan is no longer eligible."] } };
+      return {
+        ...peer,
+        planningContext: peerContext,
+        validation: validateGeneratedPlan(peer, { ...validationOptions, context: peerContext })
+      };
+    });
+  if (validatedPeers.some(peer => !peer.validation?.valid)) {
+    return { error: "A comparison plan no longer passes validation. Regenerate your plans." };
+  }
   if (edit) {
     const originalValidation = validateGeneratedPlan(plan, validationOptions);
     if (!originalValidation.valid) return { error: "The original plan no longer passes validation. Regenerate your plans." };
@@ -315,13 +329,25 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
     ...validatedPlan.feasibility.verification
   };
   const candidatePlans = Array.isArray(plans)
-    ? plans.map(item => item.id === validatedPlan.id ? validatedPlan : item)
+    ? plans.map(item => item.id === validatedPlan.id
+      ? validatedPlan
+      : validatedPeers.find(peer => peer.id === item.id))
     : [validatedPlan];
 
-  annotateEconomicsMoveDestinations(validatedPlan, catalog.policyBundle);
+  const choicesUpdatedPlans = annotateEconomicsPlanChoices({
+    plans: candidatePlans,
+    student,
+    mapping,
+    schedule: catalog.economicsSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get(program.id),
+    courseCatalog: catalog.economicsCourses,
+    context: planningContext,
+    policyBundle: catalog.policyBundle
+  });
+  const choiceUpdatedPlan = choicesUpdatedPlans.find(item => item.id === validatedPlan.id) || validatedPlan;
   return {
-    plan: validatedPlan,
-    planSetValidation: validatePlanSet(candidatePlans)
+    plan: choiceUpdatedPlan,
+    planSetValidation: validatePlanSet(choicesUpdatedPlans)
   };
 }
 

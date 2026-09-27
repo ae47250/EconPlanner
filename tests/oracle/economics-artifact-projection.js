@@ -45,7 +45,8 @@ function normalizedCourse(course = {}, term = {}) {
     approvals: (course.approvalRequired || [])
       .map(approval => normalizedApproval(approval, course, term))
       .sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right))),
-    availabilityState: text(course.availability?.status || course.availability?.state) || null
+    availabilityState: text(course.availability?.status || course.availability?.state) || null,
+    courseGuidance: text(course.moveGuidance?.studentMessage) || null
   };
 }
 
@@ -123,10 +124,15 @@ function htmlScheduleTerms(html) {
     for (let index = 0; index < headings.length; index += 1) {
       const courses = [];
       const coursePattern = /<span class="course"([^>]*)>([\s\S]*?)<\/span><span class="cell-note"([^>]*)>([\s\S]*?)<\/span>(?:<span class="availability-badge[^\"]*">([\s\S]*?)<\/span>)?/gi;
-      for (const entry of String(cells[index] || "").matchAll(coursePattern)) {
+      const cell = String(cells[index] || "");
+      const courseEntries = [...cell.matchAll(coursePattern)];
+      for (let entryIndex = 0; entryIndex < courseEntries.length; entryIndex += 1) {
+        const entry = courseEntries[entryIndex];
         const label = decodeHtml(entry[2]);
         const identity = label.match(/^([A-Z]{2,5}\s+\d{3})(?:-([^\s]+))?$/);
         const note = decodeHtml(entry[4]);
+        const suffix = cell.slice(entry.index + entry[0].length, courseEntries[entryIndex + 1]?.index ?? cell.length);
+        const guidance = suffix.match(/<span class="course-requirement" data-course-guidance>([\s\S]*?)<\/span>/i);
         const availability = decodeHtml(entry[5] || "").match(/\b(open|full)\b/i)
           || note.match(/ - (open|full|closed|waitlisted|unknown)(?:\s|\(|$)/i);
         const approval = note.match(/ - ([^-]+?) approval for concurrent ([A-Z]{2,5}\s+\d{3})/i);
@@ -142,7 +148,8 @@ function htmlScheduleTerms(html) {
             prerequisite: approval[2],
             term: headings[index]
           }] : [],
-          availabilityState: availability?.[1]?.toLowerCase() || null
+          availabilityState: availability?.[1]?.toLowerCase() || null,
+          courseGuidance: guidance ? decodeHtml(guidance[1]) : null
         });
       }
       terms.push({ academicYear, term: headings[index], courses });

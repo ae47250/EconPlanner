@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:704329a27c082615139566c0d54583add27007b68b2592fb04a393ed79f805ad",
+  "contentHash": "sha256:42b2aca901dd46caa869d59cc517062d48b62f29103a57fabfcaf83f6052d76a",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -6079,7 +6079,8 @@
           "scheduleCoverage": [
             "UNAVAILABLE",
             "UNKNOWN"
-          ]
+          ],
+          "unpublishedTermEligibility": "APPROVED_RECURRING_TERMS_ONLY"
         },
         "review": {
           "lastReviewDate": "2026-08-08",
@@ -6087,7 +6088,8 @@
         },
         "sourceRefs": [
           "OFFICIAL-CATALOG-ECONOMICS#ECO-222",
-          "HANOVER-CP5A-OFFICIAL-EVIDENCE#Economics-course-statements"
+          "HANOVER-CP5A-OFFICIAL-EVIDENCE#Economics-course-statements",
+          "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27#ECO-222-term-scope"
         ],
         "supersedes": [],
         "yearsObserved": []
@@ -6550,6 +6552,19 @@
         "path": "policy/provenance/plan-slot-contract-2026-09-26.md",
         "sha256": "1853b45d7138c6167e03e3f50d6a34d67759ed2fc273b1898303cd09bc437b40",
         "sourceId": "OWNER-PLAN-SLOT-CONTRACT-2026-09-26",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
+      },
+      {
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_PLANNING_DROPDOWN_AND_OFFERING_PROJECTION_SCOPE",
+        "effective": {
+          "from": "2026-09-27",
+          "through": null
+        },
+        "path": "policy/provenance/planning-dropdown-repair-2026-09-27.md",
+        "sha256": "2540a3f9edee2005e5dc06fd22058fb93311a0c2e735d3bc4928d0cbd6d88826",
+        "sourceId": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
       },

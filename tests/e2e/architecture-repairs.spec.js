@@ -122,12 +122,11 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   expect(invalid.error).toMatch(/prerequisite|statistics/i);
   expect(invalid.error).not.toMatch(/Fall 2028|projected standing/);
   await expect(page.getByRole('combobox',{name:'Move MAT 217 to another term',exact:true})).toHaveValue('winter-2027');
-  const moved = await move(page,'ECO 222','winter-2028');
-  const elective = moved.plan.terms.find(t => t.slotId === 'winter-2028').courses.find(c => c.course === 'ECO 222');
-  expect(elective.source).toBe('projected-offering');
-  expect(elective.availability).toBeNull();
-  expect(elective.section).toBe('');
-  expect(elective.preliminaryScheduleEvidence).toBeUndefined();
+  const unsupported = await move(page,'ECO 222','winter-2028',422);
+  expect(unsupported.error).toMatch(/projected only in MAY|verified schedule section/i);
+  const eco222Move = page.getByRole('combobox',{name:'Move ECO 222 to another term',exact:true});
+  await expect(eco222Move).toHaveValue('spring-2028');
+  await expect(eco222Move.locator('option[value="spring-2028"]')).toContainText('current term');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
   await page.getByRole('button',{name:'← Back to plan comparison',exact:true}).click();
@@ -164,17 +163,14 @@ test('required controls explain restrictions while mobile elective editing and k
   await page.screenshot({path:testInfo.outputPath('mobile-edited.png'),fullPage:true,animations:'disabled'});
 });
 
-test('course cards explain a rejected prerequisite move beside the course', async ({page}) => {
+test('course cards explain when no move preserves prerequisite validity', async ({page}) => {
   await intake(page, 'freshman', true);
   await generatePlans(page);
   await page.getByRole('button',{name:/^(Choose|Review selected) One Year Early$/}).click();
-  const coreMove = page.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true});
-  const response = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-  await coreMove.selectOption('fall-2027');
-  expect((await response).status()).toBe(422);
-  const coreCard = page.locator('.term-card li').filter({has:page.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true})});
-  await expect(coreCard.getByRole('alert')).toContainText('ECO 213 is missing prerequisites: ECO 113');
-  await expect(coreMove).toHaveValue('winter-2027');
+  const coreCard = page.locator('.term-card li').filter({hasText:'ECO 113'}).first();
+  await expect(coreCard).toContainText('No other term currently passes complete plan checks');
+  await expect(coreCard).toContainText('ECO 213 is missing prerequisites: ECO 113');
+  await expect(coreCard.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true})).toHaveCount(0);
 });
 
 test('senior statistics blocker is causal and saved answers survive revisiting', async ({page},testInfo) => {

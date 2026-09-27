@@ -452,6 +452,7 @@ function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, viola
   const actual = canonicalExternalTermKey(term.termKey);
   const may = policyRule(policy, "PLANNING-MAY-COURSE-EXCLUSIONS");
   const separation = policyRule(policy, "PLANNING-INTERMEDIATE-OFFERING-SEPARATION");
+  const springOnly = policyRule(policy, "CATALOG-ECO-222-SPRING");
   const courses = (term.courses || []).map(course => ({ ...course, course: upper(course.course) }));
   courses.forEach((course, index) => {
     if (course.fixedInProgress) return;
@@ -466,6 +467,11 @@ function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, viola
       && !(may.verifiedScheduleOverride && verified(course.course))) {
       violations.push(finding(policy, "COURSE_NOT_SUPPORTED_IN_MAY", may.ruleId, path,
         `${course.course} needs verified schedule evidence for May.`));
+    }
+    if (springOnly?.course === course.course && !verified(course.course)
+      && !springOnly.unpublishedProjectionTerms.includes(normalizeTerm(key))) {
+      violations.push(finding(policy, "COURSE_OUTSIDE_APPROVED_PROJECTION_TERM", springOnly.ruleId, path,
+        `${course.course} has no approved unpublished projection in ${normalizeTerm(key)}; a matching verified schedule section is required.`));
     }
     if (separation?.separateTermsWithoutVerifiedSchedule && separation.courses.includes(course.course)) {
       const others = courses.filter(row => row.course !== course.course && separation.courses.includes(row.course)
