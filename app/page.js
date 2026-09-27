@@ -14,6 +14,7 @@ import {
   unansweredPrerequisiteQuestions,
   validateStudentPrerequisites
 } from "../lib/planning/prerequisiteFormValidation.js";
+import { acceleratedMathSequenceNotes } from "../lib/planning/acceleratedMathSequence.js";
 import {
   createGeneratedPlannerSession,
   economicsResultFromReport,
@@ -299,25 +300,6 @@ function courseTitle(code) {
 
 function economicsResult(report) {
   return economicsResultFromReport(report);
-}
-
-function acceleratedMathSequenceNotes(plan = {}) {
-  if (!plan.isEarlyGraduation) return [];
-  const placements = new Map();
-  (plan.terms || []).forEach((term, termIndex) => {
-    for (const course of term.courses || []) {
-      const code = String(course.course || "").toUpperCase();
-      if (code) placements.set(code, termIndex);
-    }
-  });
-  const pairs = [["MAT 113", "ECO 213"], ["MAT 121", "ECO 214"]];
-  const scheduledPairs = pairs.filter(([math, economics]) => (
-    placements.has(math) && placements.has(economics)
-  ));
-  if (scheduledPairs.some(([math, economics]) => placements.get(math) === placements.get(economics))) return [];
-  return scheduledPairs
-    .filter(([math, economics]) => placements.get(math) < placements.get(economics))
-    .map(([math, economics]) => `${math} is scheduled before ${economics}, so you can take ${economics} later without special approval for concurrent math. Taking them at the same time is a last-resort option and requires approval from the ${economics} instructor; approval is not guaranteed.`);
 }
 
 function isPlainObject(value) {
@@ -732,7 +714,7 @@ function PlanTimeline({
   }
 
   const activePlan = plans.find(plan => plan.id === activePlanId) || plans[0];
-  const mathSequenceNotes = acceleratedMathSequenceNotes(activePlan);
+  const mathSequenceNotes = acceleratedMathSequenceNotes(activePlan, COURSE_PREREQUISITES);
   const studentNoticeMessages = new Set((activePlan.studentNotices || []).map(notice => notice.message));
   const studentWarnings = (activePlan.studentMessages || []).filter(message => !studentNoticeMessages.has(message));
   const academicYearGroups = (activePlan.terms || []).reduce((groups, term) => {

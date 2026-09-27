@@ -608,38 +608,54 @@ test("completed prerequisites recorded on the course cards are not asked again",
     .toContainText("ECO 213 · ECO 214");
 });
 
-for (const placement of ["front-loaded", "concurrent"]) {
-  test(`accelerated plan shows ${placement === "front-loaded" ? "prerequisite-first explanation" : "the concurrency approval warning"}`, async ({ page }) => {
+for (const [math, economics] of [
+  ["MAT 113", "ECO 213"],
+  ["MAT 121", "ECO 213"],
+  ["MAT 113", "ECO 214"],
+  ["MAT 121", "ECO 214"]
+]) {
+  test(`accelerated plan explains ${math} before ${economics}`, async ({ page }) => {
     const accelerated = fixturePlan({ id: "one-year-early", label: "Graduate One Year Early" });
     accelerated.isEarlyGraduation = true;
-    if (placement === "front-loaded") {
-      accelerated.terms = [
-        { slotId: "math", academicYear: "2026-2027", termKey: "Fall", term: "Fall 2026", displayTerm: "Fall 2026", courses: [{ course: "MAT 113", title: "College Algebra" }] },
-        { slotId: "eco", academicYear: "2026-2027", termKey: "Winter", term: "Winter 2027", displayTerm: "Winter 2027", courses: [{ course: "ECO 213", title: "Intermediate Economics" }] }
-      ];
-    } else {
-      accelerated.terms = [{
-        slotId: "concurrent",
-        academicYear: "2026-2027",
-        termKey: "Fall",
-        term: "Fall 2026",
-        displayTerm: "Fall 2026",
-        courses: [
-          { course: "MAT 113", title: "College Algebra" },
-          { course: "ECO 213", title: "Intermediate Economics", approvalRequired: [{ authority: "ECO 213 instructor" }] }
-        ]
-      }];
-    }
+    accelerated.terms = [
+      { slotId: "math", academicYear: "2026-2027", termKey: "Fall", term: "Fall 2026", displayTerm: "Fall 2026", courses: [{ course: math, title: "College Algebra" }] },
+      { slotId: "eco", academicYear: "2026-2027", termKey: "Winter", term: "Winter 2027", displayTerm: "Winter 2027", courses: [{ course: economics, title: "Intermediate Economics" }] }
+    ];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
     await page.getByRole("button", { name: "Review selected Graduate One Year Early" }).click();
-    if (placement === "front-loaded") {
-      await expect(page.locator(".accelerated-math-sequence-note")).toContainText("MAT 113 is scheduled before ECO 213");
-      await expect(page.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
-      await expect(page.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
-    } else {
-      await expect(page.locator(".accelerated-math-sequence-note")).toHaveCount(0);
-      await expect(page.locator(".plan-course-approval")).toContainText("Approval required");
-    }
+    await expect(page.locator(".accelerated-math-sequence-note")).toContainText(`${math} is scheduled before ${economics}`);
+    await expect(page.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
+    await expect(page.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
+  });
+}
+
+for (const [math, economics] of [
+  ["MAT 113", "ECO 213"],
+  ["MAT 121", "ECO 213"],
+  ["MAT 113", "ECO 214"],
+  ["MAT 121", "ECO 214"]
+]) {
+  test(`concurrent ${math} and ${economics} retains its instructor approval warning`, async ({ page }) => {
+    const accelerated = fixturePlan({ id: "one-year-early", label: "Graduate One Year Early" });
+    accelerated.isEarlyGraduation = true;
+    const approvalWarning = `${math} may be taken with ${economics} only with approval from the ${economics} instructor.`;
+    accelerated.studentMessages = [approvalWarning];
+    accelerated.terms = [{
+      slotId: "concurrent",
+      academicYear: "2026-2027",
+      termKey: "Fall",
+      term: "Fall 2026",
+      displayTerm: "Fall 2026",
+      courses: [
+        { course: math, title: "College Algebra" },
+        { course: economics, title: "Intermediate Economics", approvalRequired: [{ authority: `${economics} instructor` }] }
+      ]
+    }];
+    await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
+    await page.getByRole("button", { name: "Review selected Graduate One Year Early" }).click();
+    await expect(page.locator(".accelerated-math-sequence-note")).toHaveCount(0);
+    await expect(page.locator(".plan-course-approval")).toContainText("Approval required");
+    await expect(page.locator(".plan-notes")).toContainText(approvalWarning);
   });
 }
 

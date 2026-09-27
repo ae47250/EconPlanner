@@ -10,6 +10,7 @@ import {
   unansweredPrerequisiteQuestions,
   selectedStatus as selectedFormStatus
 } from "../lib/planning/prerequisiteFormValidation.js";
+import { acceleratedMathSequenceNotes } from "../lib/planning/acceleratedMathSequence.js";
 
 const prerequisites = JSON.parse(await readFile(
   new URL("../data/normalized/economics/prerequisites.json", import.meta.url),
@@ -193,6 +194,55 @@ test("prerequisites answered on the course cards do not produce follow-up questi
     assert.equal(result.required, false, course);
     assert.deepEqual(unansweredPrerequisiteQuestions(result), [], course);
   }
+});
+
+for (const [math, economics] of [
+  ["MAT 113", "ECO 213"],
+  ["MAT 121", "ECO 213"],
+  ["MAT 113", "ECO 214"],
+  ["MAT 121", "ECO 214"]
+]) {
+  test(`${math} before ${economics} produces the prerequisite-first note`, () => {
+    const notes = acceleratedMathSequenceNotes({
+      isEarlyGraduation: true,
+      terms: [
+        { courses: [{ course: math }] },
+        { courses: [{ course: economics }] }
+      ]
+    }, prerequisites);
+
+    assert.equal(notes.length, 1);
+    assert.match(notes[0], new RegExp(`${math} is scheduled before ${economics}`));
+  });
+}
+
+for (const [math, economics] of [
+  ["MAT 113", "ECO 213"],
+  ["MAT 121", "ECO 213"],
+  ["MAT 113", "ECO 214"],
+  ["MAT 121", "ECO 214"]
+]) {
+  test(`concurrent ${math} and ${economics} produces no optional alternative note`, () => {
+    const notes = acceleratedMathSequenceNotes({
+      isEarlyGraduation: true,
+      terms: [{ courses: [{ course: math }, { course: economics }] }]
+    }, prerequisites);
+
+    assert.deepEqual(notes, []);
+  });
+}
+
+test("concurrent math for one intermediate does not suppress an earlier-math note for the other", () => {
+  const notes = acceleratedMathSequenceNotes({
+    isEarlyGraduation: true,
+    terms: [
+      { courses: [{ course: "MAT 121" }, { course: "ECO 213" }] },
+      { courses: [{ course: "MAT 113" }, { course: "ECO 214" }] }
+    ]
+  }, prerequisites);
+
+  assert.equal(notes.length, 1);
+  assert.match(notes[0], /MAT 121 is scheduled before ECO 214/);
 });
 
 test("alternative follow-up preserves not-started and uncertain statuses as unsatisfied", () => {
