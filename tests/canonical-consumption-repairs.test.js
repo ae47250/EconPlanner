@@ -107,21 +107,63 @@ test('duplicate declared elective slots report the slot contract and exact reaso
   assert.ok(result.decisions.some(decision => decision.ruleIds.includes('ELECTIVE-SLOT-UNIQUE-ASSIGNMENT') && decision.reasonCode === 'DUPLICATE_ELECTIVE_SLOT_ASSIGNMENT'));
 });
 
-test('all active consumers select one flexibility bundle; obsolete direct versions are forbidden', async () => {
+function assertActiveFlexibilitySelection(canonical, selected, readers) {
+  assert.match(canonical.policyVersion, /^econ-planning-flexibility\.\d+$/);
+  assert.equal(selected.bundleVersion, canonical.policyVersion, 'active selection must match canonical policy');
+  assert.equal(selected.policy.policyVersion, canonical.policyVersion, 'selected policy must match canonical policy');
+  for (const [path, source] of readers) {
+    assert.doesNotMatch(source, /\becon-planning-flexibility\.\d+\b/,
+      `${path}: use the shared active selection instead of a numbered flexibility release`);
+  }
+}
+
+test('all active consumers select the canonical flexibility release without direct numbered references', async () => {
+  const canonical = await json('policy/rules/planning-flexibility.json');
   const selected = await json('data/compiled/policy/planning-flexibility/active.json');
-  assert.equal(selected.contentHash,loadPlanningFlexibilityPolicy().contentHash);
-  assert.equal(selected.bundleVersion,'econ-planning-flexibility.7');
+  const loaded = loadPlanningFlexibilityPolicy();
+  assert.equal(selected.contentHash, loaded.contentHash);
+  assert.equal(loaded.bundleVersion, canonical.policyVersion);
+  const readers = [];
   async function inspect(directory) {
     for (const entry of await readdir(new URL('../'+directory,import.meta.url),{withFileTypes:true})) {
       const path = directory+'/'+entry.name;
       if (entry.isDirectory()) await inspect(path);
-      else if (/\.(js|mjs)$/.test(path)) {
-        const text = await readFile(new URL('../'+path,import.meta.url),'utf8');
-        assert.doesNotMatch(text,/planning-flexibility\/econ-planning-flexibility\.[1-6]\//,path);
+      else if (/\.(?:[cm]?[jt]sx?|json|html)$/.test(path)) {
+        readers.push([path, await readFile(new URL('../'+path,import.meta.url),'utf8')]);
       }
     }
   }
-  await inspect('lib'); await inspect('app'); await inspect('scripts');
+  // Only active source/configuration/template paths are scanned. Canonical policy and
+  // compiled release metadata necessarily name releases; policy/provenance, docs,
+  // data/review and tests retain dated evidence or explicit regression fixtures.
+  // Those records are outside these roots; no active reader gets an exception.
+  for (const directory of ['lib', 'app', 'scripts', 'templates']) await inspect(directory);
+  assert.ok(readers.length > 0);
+  assertActiveFlexibilitySelection(canonical, selected, readers);
+});
+
+test('simulated next release rejects a previous-release reader and accepts shared active selection', async () => {
+  const canonical = await json('policy/rules/planning-flexibility.json');
+  const selected = await json('data/compiled/policy/planning-flexibility/active.json');
+  const readerPath = 'lib/planning/strategyEligibility.js';
+  const reader = await readFile(new URL('../'+readerPath, import.meta.url), 'utf8');
+  const activePath = 'planning-flexibility/active.json';
+  assert.ok(reader.includes(activePath), 'exercise the real browser reader import');
+  const currentNumber = Number(canonical.policyVersion.split('.').at(-1));
+  // Metadata and reader mutations exist only in memory: no shipped release changes.
+  for (const nextNumber of [currentNumber + 1, currentNumber + 100]) {
+    const nextVersion = `econ-planning-flexibility.${nextNumber}`;
+    const nextCanonical = {...canonical, policyVersion: nextVersion};
+    const nextSelection = {...selected, bundleVersion: nextVersion,
+      policy: {...selected.policy, policyVersion: nextVersion}};
+    assert.throws(() => assertActiveFlexibilitySelection(nextCanonical, selected, []),
+      /active selection must match canonical policy/);
+    const previousVersion = `econ-planning-flexibility.${nextNumber - 1}`;
+    const staleReader = reader.replace(activePath, `planning-flexibility/${previousVersion}/bundle.json`);
+    assert.throws(() => assertActiveFlexibilitySelection(nextCanonical, nextSelection, [[readerPath, staleReader]]),
+      /use the shared active selection/);
+    assert.doesNotThrow(() => assertActiveFlexibilitySelection(nextCanonical, nextSelection, [[readerPath, reader]]));
+  }
 });
 
 import { POST as mapPost } from '../app/api/majors/map/route.js';
