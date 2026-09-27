@@ -208,6 +208,8 @@ test("offering patterns project only unpublished years and exact schedules prese
   const eco222 = patterns.patterns.find(entry => entry.patternId === "CATALOG-ECO-222-SPRING");
   assert.equal(eco222.evidenceType, "OFFICIAL_CATALOG_STATEMENT");
   assert.deepEqual(eco222.approvedRecurringTerms, ["MAY"]);
+  assert.equal(eco222.projectionPolicy.unpublishedTermEligibility, "APPROVED_RECURRING_TERMS_ONLY");
+  assert.ok(eco222.sourceRefs.some(ref => ref.startsWith("OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27#")));
   assert.equal(eco222.projectionPolicy.probabilityEmitted, false);
 
   const schedule = await readJson("policy/schedules/2026-2027.json");

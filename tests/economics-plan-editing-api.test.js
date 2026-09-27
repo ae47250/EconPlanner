@@ -45,14 +45,21 @@ test("ordinary freshman plans agree with the independent policy Oracle and early
   assert.equal(invalid.response.status, 422);
   assert.match(invalid.data.error, /prerequisite|statistics/i);
   assert.doesNotMatch(invalid.data.error, /Fall 2028|projected standing/);
+  const capstone = early.terms.flatMap(term => term.courses.map(course => ({ term, course })))
+    .find(item => item.course.course === "ECO 461");
+  const earlierWinter = early.terms.find(term => term.termKey === "Winter" && term.yearIndex < capstone.term.yearIndex);
+  assert.ok(earlierWinter, "The accelerated horizon must contain an earlier Winter to assess.");
+  assert.ok(!capstone.course.moveDestinationIds.includes(earlierWinter.slotId),
+    "An accelerated plan must omit Winters before its final-year senior-standing assumption.");
+  const directEarlyWinter = await validateEdit(student, early, { plans, extraBody: { edit: {
+    type: "move", fromTermId: capstone.term.slotId, courseId: capstone.course.requirementId,
+    toTermId: earlierWinter.slotId
+  } } });
+  assert.equal(directEarlyWinter.response.status, 422);
+  assert.match(directEarlyWinter.data.error, /valid senior Winter slot/);
   const projected = await move("ECO 222", "winter-2028");
-  assert.equal(projected.response.status, 200, JSON.stringify(projected.data));
-  const elective = projected.data.plan.terms.find(term => term.slotId === "winter-2028").courses.find(course => course.course === "ECO 222");
-  assert.equal(elective.source, "projected-offering");
-  assert.equal(elective.section, "");
-  assert.equal(elective.availability, null);
-  assert.equal(elective.meeting, null);
-  assert.equal(elective.preliminaryScheduleEvidence, undefined);
+  assert.equal(projected.response.status, 422, JSON.stringify(projected.data));
+  assert.match(projected.data.error, /May|term|offering/i);
   assert.deepEqual(early, original, "failed and successful requests must not mutate the original plan");
 });
 
@@ -533,6 +540,42 @@ test("Task 15 API rejects a prerequisite-breaking move", async () => {
   await assertRejected(student, edited, /ECO 214 is missing prerequisites: ECO 114/);
 });
 
+test("Task 15 API rejects an elective replacement that breaks course prerequisites", async () => {
+  const { student, economics } = await generated("flexibleFourYearPlan");
+  const plan = structuredClone(economics.economicsPlans[0]);
+  const exactScheduleSlots = new Set(["fall-2026", "winter-2027", "spring-2027"]);
+  const elective = findCourse(plan, (course, term) => (
+    String(course.requirementId || "").startsWith("eco-elective") && !exactScheduleSlots.has(term.slotId)
+  ));
+  const candidate = {
+    id: `${elective.course.requirementId}@forged-ECO-471`,
+    course: "ECO 471",
+    title: "Senior Thesis",
+    section: "",
+    source: "projected-offering",
+    availability: null,
+    meeting: null,
+    verificationStatus: "unverified"
+  };
+  elective.course.alternativeOptions = [...(elective.course.alternativeOptions || []), candidate];
+  const result = await validateEdit(student, plan, {
+    plans: economics.economicsPlans.map(item => item.id === plan.id ? plan : item),
+    extraBody: {
+      edit: {
+        type: "option",
+        planId: plan.id,
+        fromTermId: elective.term.slotId,
+        courseId: elective.course.requirementId,
+        optionId: candidate.id
+      }
+    }
+  });
+  assert.equal(result.response.status, 422, JSON.stringify(result.data));
+  assert.equal(result.data.code, "INVALID_PLAN_EDIT", JSON.stringify(result.data));
+  assert.ok(result.data.validation.errors.some(error => /ECO 471 is missing prerequisites: ECO 321/.test(error)),
+    JSON.stringify(result.data.validation.errors));
+});
+
 test("Task 15 API rejects an offering-breaking move using the authoritative schedule", async () => {
   const { student, economics } = await generated("projectedMove");
   const edited = structuredClone(economics.economicsPlans[0]);
@@ -764,6 +807,12 @@ test("Task 15 API rejects ECO 257 assigned to an elective when MAT 217 or PSY 21
     const generatedResult = await postMap({ student: base });
     assert.equal(generatedResult.response.status, 200);
     const economics = generatedResult.data.programs.find(item => item.program?.id === "economics-base");
+    const electiveCourse = courseEntries(economics.economicsPlans[0]).find(({ course }) => (
+      String(course.requirementId || "").startsWith("eco-elective")
+    ))?.course;
+    assert.ok(electiveCourse, "The plan must expose an elective replacement choice.");
+    assert.equal(Boolean(electiveCourse.alternativeOptions?.some(option => option.course === "ECO 257")), false,
+      "ECO 257 cannot be offered as an elective replacement when it is assigned to statistics.");
     const edited = eco257ElectiveMutation(economics.economicsPlans[0]);
     const { result, audit } = await assertRejected(
       base,

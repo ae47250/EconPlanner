@@ -63,21 +63,26 @@ test("malformed edit requests preserve the saved plan and allow a later valid mo
 });
 
 test("move selectors, rejection feedback, successful move, undo, and reload agree", async ({ page }) => {
-  const { selected } = await openPlan(page, "freshman", { early: true });
-  const core = page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true });
-  const course = selected.terms.flatMap(term => term.courses).find(course => course.course === "ECO 113");
-  expect(await core.locator("option").evaluateAll(options => options.map(option => option.value))).toEqual(course.moveDestinationIds);
-  expect(course.moveDestinationIds.every(id => !id.startsWith("spring-"))).toBe(true);
-  await expect(page.getByRole("combobox", { name: "Move ECO 222 to another term", exact: true })).toBeVisible();
-  await expect(page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true })).toBeVisible();
+  const { selected, student, plans } = await openPlan(page, "freshman", { early: true });
+  const core = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
+  const course = selected.terms.flatMap(term => term.courses).find(course => course.course === "MAT 217");
+  expect(await core.locator("option").evaluateAll(options => options.map(option => option.value)))
+    .toEqual(course.moveDestinationOptions.map(option => option.id));
+  expect(await core.locator("option").evaluateAll(options => options.filter(option => !option.disabled).map(option => option.value)))
+    .toEqual(course.moveDestinationIds);
+  const unsupportedWinter = core.locator('option[value="winter-2029"]');
+  await expect(unsupportedWinter).toHaveAttribute("disabled", "");
+  await expect(unsupportedWinter).toContainText(/Unavailable:.*prerequisites/i);
+  await expect(page.getByRole("combobox", { name: "Move ECO 222 to another term", exact: true })).toHaveCount(0);
+  await expect(card(page, "ECO 222")).toContainText(/No other term currently passes complete plan checks/);
+  await expect(page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true })).toHaveCount(0);
+  await expect(card(page, "ECO 461")).toContainText(/No other term currently passes complete plan checks/);
 
-  await core.focus();
-  const rejectedResponse = validationResponse(page);
-  await core.selectOption("fall-2027");
-  expect((await rejectedResponse).status()).toBe(422);
-  await expect(core).toBeFocused();
-  await expect(core).toHaveValue("winter-2027");
-  await expect(card(page, "ECO 113").getByRole("alert")).toContainText("ECO 213 is missing prerequisites: ECO 113");
+  const directRejection = await page.request.post("/api/majors/map", { data: {
+    action: "validate-plan", student, plan: selected, plans,
+    edit: { type: "move", planId: selected.id, fromTermId: "winter-2027", toTermId: "fall-2027", courseId: "eco-113" }
+  } });
+  expect(directRejection.status()).toBe(422);
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
 
   const statistics = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
@@ -86,13 +91,21 @@ test("move selectors, rejection feedback, successful move, undo, and reload agre
   const moved = await movedResponse;
   expect(moved.status()).toBe(200);
   const movedPlan = (await moved.json()).plan;
+  const refreshedStatistics = movedPlan.terms.flatMap(term => term.courses).find(course => course.course === "MAT 217");
+  expect(refreshedStatistics.moveDestinationOptions.map(option => option.id)).toEqual(movedPlan.terms.map(term => term.slotId));
+  expect(refreshedStatistics.moveDestinationIds).toContain("winter-2027");
   expect(movedPlan.terms.find(term => term.slotId === "winter-2027").courses.some(course => course.course === "MAT 217")).toBe(true);
   await expect(page.locator("main")).not.toContainText("Seat availability for MAT 217-S was last checked");
   await expect(page.locator('.term-card[data-term-key="Spring"]', { hasText: "Spring/May" }).first()).toContainText("No courses placed");
   await expect(card(page, "ECO 113").getByRole("alert")).toHaveCount(0);
   const visibleCodes = await page.locator(".term-card .plan-course-summary > strong").allInnerTexts();
   expect(visibleCodes.sort()).toEqual(movedPlan.terms.flatMap(term => term.courses.map(course => course.course)).sort());
-  const reportInput = { student: moved.request().postDataJSON().student, preparedDate: "2026-09-23", selectedPlan: movedPlan };
+  const reportInput = {
+    student: moved.request().postDataJSON().student,
+    preparedDate: "2026-09-23",
+    selectedPlan: movedPlan,
+    plans: moved.request().postDataJSON().plans
+  };
   const jsonResponse = await page.request.post("/api/reports/economics", { data: { ...reportInput, format: "json" } });
   expect(jsonResponse.status()).toBe(200);
   const report = await jsonResponse.json();
@@ -108,6 +121,8 @@ test("move selectors, rejection feedback, successful move, undo, and reload agre
   const reportParity = projectionMismatches(expectedReport, projectReportJsonArtifact(report));
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
   await expect(page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true })).toHaveValue("spring-2027");
+  await expect(page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true }).locator('option[value="spring-2028"]'))
+    .toHaveAttribute("disabled", "");
 
   const savedResponse = validationResponse(page);
   await page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true }).selectOption("winter-2027");
@@ -140,7 +155,16 @@ test("after an elective replacement the May 2027 card still rejects an unsupport
   const updatedPlan = (await replacementResponse.json()).plan;
   await expect(may).toContainText("ECO 260");
   await expect(may.locator(".plan-course-summary > strong")).toHaveCount(1);
-  await expect(page.getByRole("combobox", { name: "Move ECO 260 to another term", exact: true })).toBeVisible();
+  const updatedElective = updatedPlan.terms.find(term => term.slotId === "spring-2027").courses.find(course => course.course === "ECO 260");
+  expect(updatedElective.alternativeOptions.some(option => option.course === "ECO 222"
+    && ["ALLOWED", "CONDITIONAL"].includes(option.status))).toBe(true);
+  expect(updatedElective.moveDestinationOptions.some(option => option.status === "BLOCKED")).toBe(true);
+  await expect(page.getByRole("combobox", { name: "Move ECO 260 to another term", exact: true })).toHaveCount(0);
+  await expect(card(page, "ECO 260")).toContainText(/No other term currently passes complete plan checks/);
+  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+  await expect(may).toContainText("ECO 222");
+  await page.reload();
+  await expect(page.locator('.term-card[data-academic-year="2026/2027"][data-term-key="Spring"]')).toContainText("ECO 222");
   const mayTerm = updatedPlan.terms.find(term => term.slotId === "spring-2027");
   const elective = mayTerm.courses.find(course => course.course === "ECO 260");
   const selected = await page.request.post("/api/majors/map", {
@@ -156,7 +180,7 @@ test("after an elective replacement the May 2027 card still rejects an unsupport
 });
 
 test("move controls stay disabled during an outstanding validation request", async ({ page }) => {
-  await openPlan(page, "freshman", { early: true });
+  const { selected } = await openPlan(page, "freshman", { early: true });
   let release;
   const gate = new Promise(resolve => { release = resolve; });
   let validationRequests = 0;
@@ -168,7 +192,9 @@ test("move controls stay disabled during an outstanding validation request", asy
     await route.continue();
   });
   const first = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
-  const second = page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true });
+  const second = page.getByRole("combobox", { name: "Move ECO 114 to another term", exact: true });
+  expect(selected.terms.flatMap(term => term.courses).find(course => course.course === "ECO 114").moveDestinationIds)
+    .toContain("fall-2027");
   const response = validationResponse(page);
   await first.selectOption("winter-2027");
   await expect(first).toBeDisabled();
@@ -182,14 +208,19 @@ test("move controls stay disabled during an outstanding validation request", asy
 test("a move error remains readable and announced at mobile width", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPlan(page, "freshman", { early: true });
-  const control = page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true });
+  const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
   await control.focus();
+  await page.route("**/api/majors/map", route => route.fulfill({
+    status: 422,
+    contentType: "application/json",
+    body: JSON.stringify({ error: "That plan change cannot be saved. The selected term fails complete plan validation." })
+  }), { times: 1 });
   const response = validationResponse(page);
-  await control.selectOption("fall-2027");
+  await control.selectOption("winter-2027");
   expect((await response).status()).toBe(422);
-  const feedback = card(page, "ECO 113").getByRole("alert");
+  const feedback = card(page, "MAT 217").getByRole("alert");
   await expect(feedback).toBeVisible();
-  await expect(feedback).toContainText("ECO 213 is missing prerequisites: ECO 113");
+  await expect(feedback).toContainText("fails complete plan validation");
   await expect(control).toBeFocused();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   const accessibility = await new AxeBuilder({ page }).include(".plan-course-edit-feedback")
@@ -200,17 +231,35 @@ test("a move error remains readable and announced at mobile width", async ({ pag
 for (const scenario of [
   { code: "ECO 461", options: { graduationYear: "2031" }, from: "winter-2030", to: "winter-2031" },
   { code: "ECO 222", options: { early: true }, from: "spring-2028", to: "winter-2028" }
-]) test(`ordinary freshman can move ${scenario.code} from ${scenario.from} to ${scenario.to}`, async ({ page }) => {
-  const { selected, student } = await openPlan(page, "freshman", scenario.options);
+]) test(`ordinary freshman ${scenario.code === "ECO 222" ? "cannot move" : "can move"} ${scenario.code} from ${scenario.from} to ${scenario.to}`, async ({ page }) => {
+  const { selected, plans, student } = await openPlan(page, "freshman", scenario.options);
   const control = page.getByRole("combobox", { name: `Move ${scenario.code} to another term`, exact: true });
+  if (scenario.code === "ECO 222") {
+    await expect(control).toHaveCount(0);
+    await expect(card(page, scenario.code)).toContainText(/No other term currently passes complete plan checks/);
+    const source = selected.terms.find(term => term.slotId === scenario.from);
+    const course = source.courses.find(item => item.course === scenario.code);
+    const rejected = await page.request.post("/api/majors/map", { data: {
+      action: "validate-plan", student, plan: selected, plans,
+      edit: { type: "move", planId: selected.id, fromTermId: source.slotId, toTermId: scenario.to, courseId: course.requirementId }
+    } });
+    expect(rejected.status()).toBe(422);
+    expect((await rejected.json()).error).toMatch(/May|term|offering/i);
+    return;
+  }
   await expect(control).toHaveValue(scenario.from);
-  await expect(control.locator(`option[value="${scenario.to}"]`)).toHaveCount(1);
+  await expect(control.locator(`option[value="${scenario.to}"]`)).toBeEnabled();
   if (scenario.code === "ECO 461") {
-    const rejected = validationResponse(page);
-    await control.selectOption("winter-2029");
-    expect((await rejected).status()).toBe(422);
-    await expect(control).toHaveValue(scenario.from);
-    await expect(card(page, scenario.code).getByRole("alert")).toContainText(/senior Winter/);
+    await expect(control.locator('option[value="winter-2029"]')).toHaveAttribute("disabled", "");
+    await expect(control.locator('option[value="winter-2029"]')).toContainText(/valid senior Winter slot/);
+    const source = selected.terms.find(term => term.slotId === scenario.from);
+    const course = source.courses.find(item => item.course === scenario.code);
+    const rejected = await page.request.post("/api/majors/map", { data: {
+      action: "validate-plan", student, plan: selected, plans,
+      edit: { type: "move", planId: selected.id, fromTermId: source.slotId, toTermId: "winter-2029", courseId: course.requirementId }
+    } });
+    expect(rejected.status()).toBe(422);
+    expect((await rejected.json()).error).toMatch(/valid senior Winter slot/);
   }
   const response = validationResponse(page);
   await control.selectOption(scenario.to);
@@ -245,28 +294,115 @@ for (const scenario of [
 });
 
 test("completed prerequisite timing does not allow a standard freshman capstone in junior Winter", async ({ page }) => {
-  const { selected } = await openPlan(page, "freshman");
+  const { selected, student } = await openPlan(page, "freshman");
   const control = page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true });
-  await expect(control).toHaveValue("winter-2030");
+  await expect(control).toHaveCount(0);
+  await expect(card(page, "ECO 461")).toContainText(/No other term currently passes complete plan checks/);
   const originalCards = await page.locator(".term-card").evaluateAll(cards => cards.map(item => ({
     year: item.dataset.academicYear, term: item.dataset.termKey,
     courses: [...item.querySelectorAll(".plan-course-summary > strong")].map(course => course.textContent)
   })));
-  const response = validationResponse(page);
-  await control.selectOption("winter-2029");
-  const rejected = await response;
+  const capstone = selected.terms.flatMap(term => term.courses.map(course => ({ term, course })))
+    .find(item => item.course.course === "ECO 461");
+  const rejected = await page.request.post("/api/majors/map", { data: {
+    action: "validate-plan", student,
+    plan: selected, edit: { type: "move", planId: selected.id, fromTermId: capstone.term.slotId,
+      toTermId: "winter-2029", courseId: capstone.course.requirementId }
+  } });
   expect(rejected.status()).toBe(422);
   expect((await rejected.json()).error).toContain("not in a valid senior Winter slot");
-  await expect(control).toHaveValue("winter-2030");
-  await expect(card(page, "ECO 461").getByRole("alert")).toContainText("senior Winter");
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
   await page.reload();
-  await expect(control).toHaveValue("winter-2030");
+  await expect(page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true })).toHaveCount(0);
   expect(await page.locator(".term-card").evaluateAll(cards => cards.map(item => ({
     year: item.dataset.academicYear, term: item.dataset.termKey,
     courses: [...item.querySelectorAll(".plan-course-summary > strong")].map(course => course.textContent)
   })))).toEqual(originalCards);
   expect(selected.id).toBe("balanced");
+});
+
+test("already-senior ECO 461 retains valid Winter moves", async ({ page }) => {
+  const { selected, student, plans } = await openPlan(page, "senior", {
+    date: "2026-09-23",
+    graduationYear: "2028",
+    completed: ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323", "ECO 221", "ECO 222", "ECO 234", "ECO 333"]
+  });
+  const control = page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true });
+  await expect(control).toHaveValue("winter-2028");
+  await expect(control.locator('option[value="winter-2027"]')).toBeEnabled();
+
+  const accepted = validationResponse(page);
+  await control.selectOption("winter-2027");
+  const response = await accepted;
+  expect(response.status()).toBe(200);
+  const edited = (await response.json()).plan;
+  const capstone = edited.terms.find(term => term.slotId === "winter-2027").courses
+    .find(course => course.course === "ECO 461");
+  expect(capstone.source).toBe("verified-offering");
+
+  const original = selected.terms.find(term => term.slotId === "winter-2028").courses.find(course => course.course === "ECO 461");
+  const direct = await page.request.post("/api/majors/map", { data: {
+    action: "validate-plan", student, plan: selected, plans,
+    edit: { type: "move", planId: selected.id, fromTermId: "winter-2028", toTermId: "winter-2027", courseId: original.requirementId }
+  } });
+  expect(direct.status()).toBe(200);
+});
+
+test("ECO 222 projected May options, disabled Winter, undo persistence, and report guidance agree", async ({ page }) => {
+  const { plans, student } = await openPlan(page, "freshman", { early: true });
+  const spring2029 = page.locator('.term-card[data-academic-year="2028/2029"][data-term-key="Spring"]');
+  const makeRoom = spring2029.getByRole("combobox", { name: "Move ECO elective to another term", exact: true });
+  await expect(makeRoom.locator('option[value="fall-2028"]')).toBeEnabled();
+  const freeMayResponse = validationResponse(page);
+  await makeRoom.selectOption("fall-2028");
+  const freeMay = await freeMayResponse;
+  expect(freeMay.status()).toBe(200);
+  const planWithFreeMay = (await freeMay.json()).plan;
+  const updatedPlans = plans.map(plan => plan.id === planWithFreeMay.id ? planWithFreeMay : plan);
+  const eco222 = planWithFreeMay.terms.flatMap(term => term.courses.map(course => ({ term, course })))
+    .find(item => item.course.course === "ECO 222");
+  expect(eco222.course.moveDestinationOptions.find(option => option.id === "spring-2029").status).toBe("CONDITIONAL");
+  expect(eco222.course.moveDestinationOptions.find(option => option.id === "spring-2029").message).toMatch(/future schedule is unpublished/i);
+
+  const control = page.getByRole("combobox", { name: "Move ECO 222 to another term", exact: true });
+  await expect(control.locator('option[value="spring-2029"]')).toBeEnabled();
+  await expect(control.locator('option[value="winter-2028"]')).toHaveAttribute("disabled", "");
+  const unsupportedWinter = await page.request.post("/api/majors/map", { data: {
+    action: "validate-plan", student, plan: planWithFreeMay, plans: updatedPlans,
+    edit: { type: "move", planId: planWithFreeMay.id, fromTermId: eco222.term.slotId,
+      toTermId: "winter-2028", courseId: eco222.course.requirementId }
+  } });
+  expect(unsupportedWinter.status()).toBe(422);
+
+  const acceptedResponse = validationResponse(page);
+  await control.selectOption("spring-2029");
+  const accepted = await acceptedResponse;
+  expect(accepted.status()).toBe(200);
+  const movedPlan = (await accepted.json()).plan;
+  const movedECO222 = movedPlan.terms.find(term => term.slotId === "spring-2029").courses.find(course => course.course === "ECO 222");
+  expect(["catalog-statement", "projected-offering"]).toContain(movedECO222.source);
+  expect(movedECO222.moveGuidance.studentMessage).toMatch(/Conditional move choices|No other term/i);
+  const persistedGuidance = movedECO222.moveGuidance.studentMessage;
+
+  await page.reload();
+  await expect(page.getByRole("combobox", { name: "Move ECO 222 to another term", exact: true })).toHaveValue("spring-2029");
+  await expect(card(page, "ECO 222")).toContainText(persistedGuidance);
+  const reportPlans = updatedPlans.map(plan => plan.id === movedPlan.id ? movedPlan : plan);
+  const reportInput = { student, preparedDate: "2026-09-23", selectedPlan: movedPlan, plans: reportPlans };
+  const reportResponse = await page.request.post("/api/reports/economics", { data: { ...reportInput, format: "json" } });
+  expect(reportResponse.status()).toBe(200);
+  const report = await reportResponse.json();
+  const reportECO222 = report.terms.find(term => term.slotId === "spring-2029").courses.find(course => course.code === "ECO 222");
+  expect(reportECO222.moveGuidance.studentMessage).toBe(persistedGuidance);
+  expect(report.catalog.advisorAttention.some(notice => notice.message.includes(`ECO 222: ${persistedGuidance}`))).toBe(true);
+  const htmlResponse = await page.request.post("/api/reports/economics", { data: { ...reportInput, format: "html" } });
+  expect(htmlResponse.status()).toBe(200);
+  const html = await htmlResponse.text();
+  expect(html).toContain(persistedGuidance);
+  const expected = projectSelectedPlanArtifact(movedPlan, { advisorNotices: report.catalog?.advisorAttention || [] });
+  expect(projectionMismatches(expected, projectReportJsonArtifact(report))).toEqual([]);
+  const occupied = projection => ({ ...projection, terms: projection.terms.filter(term => term.courses.length) });
+  expect(projectionMismatches(occupied(expected), occupied(projectReportHtmlArtifact(html)))).toEqual([]);
 });
 
 test("MAT 217 can move to an unpublished May and persist in the selected plan", async ({ page }) => {
@@ -301,9 +437,14 @@ test("unpublished intermediate dropdowns omit the counterpart's occupied term in
     expect(own.slotId).not.toBe(other.slotId);
     const control = page.getByRole("combobox", { name: `Move ${code} to another term`, exact: true });
     await expect(control).toHaveValue(own.slotId);
-    await expect(control.locator(`option[value="${other.slotId}"]`)).toHaveCount(0);
+    const counterpartOption = control.locator(`option[value="${other.slotId}"]`);
+    await expect(counterpartOption).toHaveAttribute("disabled", "");
+    await expect(counterpartOption).toContainText(/unpublished|verified schedule/i);
+    const course = own.courses.find(course => course.course === code);
     expect(await control.locator("option").evaluateAll(options => options.map(option => option.value)))
-      .toEqual(own.courses.find(course => course.course === code).moveDestinationIds);
+      .toEqual(course.moveDestinationOptions.map(option => option.id));
+    expect(await control.locator("option").evaluateAll(options => options.filter(option => !option.disabled).map(option => option.value)))
+      .toEqual(course.moveDestinationIds);
   }
 });
 
@@ -364,13 +505,18 @@ for (const outcome of ["accepted", "rejected"]) {
     await page.route("**/api/majors/map", async route => {
       if (route.request().method() !== "POST" || route.request().postDataJSON()?.action !== "validate-plan") return route.continue();
       const response = await route.fetch();
-      expect(response.status()).toBe(outcome === "accepted" ? 200 : 422);
+      expect(response.status()).toBe(200);
       received();
       await held;
-      await route.fulfill({ response });
+      if (outcome === "accepted") await route.fulfill({ response });
+      else await route.fulfill({
+        status: 422,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "That plan change cannot be saved. The selected term fails complete plan validation." })
+      });
     });
     if (outcome === "accepted") await statistics.selectOption("spring-2027");
-    else await page.getByRole("combobox", { name: "Move ECO 113 to another term", exact: true }).selectOption("fall-2027");
+    else await page.getByRole("combobox", { name: "Move ECO 114 to another term", exact: true }).selectOption("fall-2027");
     await intercepted;
     await page.getByRole("button", { name: "Edit answers", exact: true }).click();
     await page.getByRole("button", { name: "Back to about you", exact: true }).click();

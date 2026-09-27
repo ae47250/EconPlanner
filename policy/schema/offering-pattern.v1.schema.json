@@ -29,7 +29,12 @@
           "contradictoryYears": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
           "confidence": {"enum": ["CONFIRMED_PATTERN", "HISTORICAL_ONLY", "WEAK", "CONFLICTING", "NONE"]},
           "projectionGranularity": {"enum": ["EXACT_TERM", "LABELED_TERM_WORKLOAD_ESTIMATE", "ACADEMIC_YEAR_TBC", "NONE"]},
-          "projectionPolicy": {"type": "object"},
+          "projectionPolicy": {
+            "type": "object",
+            "properties": {
+              "unpublishedTermEligibility": {"enum": ["APPROVED_RECURRING_TERMS_ONLY"]}
+            }
+          },
           "effective": {"type": "object", "required": ["from", "through"], "properties": {"from": {"type": "string", "format": "date"}, "through": {"type": ["string", "null"], "format": "date"}}},
           "review": {"type": "object", "required": ["reviewer", "lastReviewDate"], "properties": {"reviewer": {"type": "string"}, "lastReviewDate": {"type": "string", "format": "date"}}},
           "supersedes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}

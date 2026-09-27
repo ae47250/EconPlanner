@@ -246,6 +246,19 @@
         "through": null
       },
       "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
+    },
+    {
+      "sourceId": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "ECONOMICS_PLANNING_DROPDOWN_AND_OFFERING_PROJECTION_SCOPE",
+      "path": "policy/provenance/planning-dropdown-repair-2026-09-27.md",
+      "sha256": "2540a3f9edee2005e5dc06fd22058fb93311a0c2e735d3bc4928d0cbd6d88826",
+      "effective": {
+        "from": "2026-09-27",
+        "through": null
+      },
+      "supersedes": null
     }
   ],
   "authorityHierarchy": [

@@ -143,7 +143,17 @@ export function oracleEvaluateOffering(policy, course, term) {
   for (const pattern of policy.offeringPatterns) {
     const codes = [pattern.course].flat();
     if (!codes.includes(course.course)) continue;
-    if (pattern.hardExcludedTerms.includes(key) && !(pattern.projectionPolicy.activeExactScheduleOverrides && verified(course.course))) {
+    const exactOverride = pattern.projectionPolicy.activeExactScheduleOverrides && verified(course.course);
+    if (pattern.projectionPolicy.unpublishedTermEligibility === "APPROVED_RECURRING_TERMS_ONLY") {
+      const releaseTerm = policy.schedule.terms.find(row => row.termId === termId(term));
+      if (releaseTerm?.coverage === "COMPLETE" && !verified(course.course)) {
+        return block("SCHEDULE-AVAILABILITY-BEHAVIOR", "NOT_OFFERED_IN_COMPLETE_SCHEDULE");
+      }
+      if (!pattern.approvedRecurringTerms.includes(key) && !exactOverride) {
+        return block(pattern.patternId, "UNAPPROVED_UNPUBLISHED_TERM");
+      }
+    }
+    if ((pattern.hardExcludedTerms || []).includes(key) && !exactOverride) {
       return block(pattern.patternId, "COURSE_TERM_EXCLUDED");
     }
     const others = (term.courses || []).filter(row => row.course !== course.course && codes.includes(row.course));

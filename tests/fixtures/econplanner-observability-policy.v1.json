@@ -131,6 +131,15 @@
       "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
     },
     {
+      "group": "eco-222-projection-scope",
+      "ruleIds": ["CATALOG-ECO-222-SPRING"],
+      "criticalFamilies": ["OFFERING_SECTION_AVAILABILITY_AND_CONFLICTS", "FUTURE_PLACEHOLDER_AND_PROJECTION_VALIDITY", "MATERIAL_UI_HTML_AND_PDF_PARITY"],
+      "implementationRefs": ["policy/offering-patterns/economics.json", "lib/decision-engine/placement.js", "lib/planning/economics.js", "app/api/majors/map/route.js", "app/page.js", "lib/reports/build-economics.js", "lib/reports/economics-html.js", "tests/oracle/check-schedule-and-horizon.js"],
+      "positiveTests": ["tests/offering-policy-consistency.test.js", "tests/e2e/course-moves.spec.js"],
+      "negativeTests": ["tests/economics-move-matrix.test.js", "tests/economics-plan-editing-api.test.js"],
+      "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "IMPLEMENTED", "html": "IMPLEMENTED", "pdf": "IMPLEMENTED" }
+    },
+    {
       "group": "schedule-evidence",
       "ruleIds": ["SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS", "SCHEDULE-EVIDENCE-PROVENANCE", "SCHEDULE-AVAILABILITY-BEHAVIOR"],
       "criticalFamilies": ["OFFERING_SECTION_AVAILABILITY_AND_CONFLICTS", "SCHEDULE_EVIDENCE_INTEGRITY", "SOURCE_AUTHORITY_EFFECTIVE_DATE_AND_RULE_IDENTITY"],
