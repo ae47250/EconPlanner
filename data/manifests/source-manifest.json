@@ -425,6 +425,21 @@
       "approvalStatus": "OFFICIAL_HANOVER_SOURCE",
       "path": "data/normalized/academic-calendars.json",
       "sha256": "5d0723be76b3ed208643969b689a5d60330e9715e3e2039749ff4c57de49b7dc"
+    },
+    {
+      "role": "economics_schedule_evidence",
+      "source": "user-provided-registrar-screenshot",
+      "path": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png",
+      "sha256": "1ebb767506862889dc2d47b1badb3b9d7c0cceeef4d068158f91de8ca6730d3d",
+      "visibleContent": "Eight Winter and three May 2027 Economics sections",
+      "sourceDocumentDate": null,
+      "capturedOn": null,
+      "screenshotRetrievedOn": "2026-09-27",
+      "repositoryIngestedOn": "2026-09-27",
+      "humanVerifiedOn": "2026-09-27",
+      "availabilityAsOf": null,
+      "supersedes": "data/raw/economics/schedule-2026-2027-winter-spring.png",
+      "authorityBoundary": "EXACT_2027_WINTER_AND_MAY_ECONOMICS_SECTIONS_ONLY"
     }
   ]
 }

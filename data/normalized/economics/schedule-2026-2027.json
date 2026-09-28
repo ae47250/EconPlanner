@@ -1,65 +1,1382 @@
 {
-  "schemaVersion": 2,
   "academicYear": "2026-2027",
-  "verifiedOn": "2026-08-08",
-  "lastVerifiedAt": "2026-08-08",
-  "availabilityAsOf": "2026-08-08",
-  "source": {
-    "type": "user_provided_schedule_screenshots",
-    "files": [
-      "data/raw/economics/schedule-2026-2027-fall.png",
-      "data/raw/economics/schedule-2026-2027-winter-spring.png",
-      "data/raw/economics/schedule-2026-2027-math-fall.png",
-      "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
-      "data/raw/economics/schedule-2026-2027-business-fall.png"
-    ],
-    "sectionCodeSMeans": "May",
-    "sourceDocumentDate": null,
-    "screenshotRetrievedOn": "2026-08-08",
-    "repositoryIngestedOn": "2026-08-08",
-    "repositoryIngestionEvidence": "Current registrar screenshots supplied by the project owner on August 8, 2026.",
-    "humanVerifiedOn": "2026-08-08"
-  },
+  "availabilityAsOf": null,
   "courseOfferingNotes": {
     "ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."
   },
+  "coverageByTerm": {
+    "Fall": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-FALL#image"
+          ],
+          "subject": "ECO"
+        },
+        {
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-FALL#image"
+          ],
+          "subject": "MAT"
+        },
+        {
+          "course": "BUSN 323",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "OWNER-BUSN323-2026-2027-2026-09-28"
+          ]
+        }
+      ]
+    },
+    "May": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+          ],
+          "subject": "ECO"
+        },
+        {
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+          ],
+          "subject": "MAT"
+        }
+      ]
+    },
+    "Summer": {
+      "coverage": "UNAVAILABLE",
+      "coverageScopes": []
+    },
+    "Winter": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+          ],
+          "subject": "ECO"
+        },
+        {
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+          ],
+          "subject": "MAT"
+        },
+        {
+          "course": "BUSN 323",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "OWNER-BUSN323-2026-2027-2026-09-28"
+          ]
+        }
+      ]
+    }
+  },
+  "lastVerifiedAt": null,
+  "schemaVersion": 2,
+  "source": {
+    "files": [
+      "data/raw/economics/schedule-2026-2027-fall.png",
+      "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png",
+      "data/raw/economics/schedule-2026-2027-math-fall.png",
+      "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "data/raw/economics/schedule-2026-2027-business-fall.png",
+      "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md"
+    ],
+    "sectionCodeSMeans": "May",
+    "sourceDocumentDate": null,
+    "type": "reviewed_schedule_evidence"
+  },
   "terms": {
     "Fall": [
-      {"course":"ECO 113","section":"A","title":"Principles of Microeconomics","faculty":"Dodge, Eric R.","instructor":"Dodge, Eric R.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":1,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"8:00 AM","endTime":"9:45 AM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 112"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 114","section":"A","title":"Principles of Macroeconomics","faculty":"Eiriksson, Agust","instructor":"Eiriksson, Agust","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":3,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 115"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 114","section":"B","title":"Principles of Macroeconomics","faculty":"Eiriksson, Agust","instructor":"Eiriksson, Agust","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":5,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 115"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 114","section":"C","title":"Principles of Macroeconomics","faculty":"Jaradat, Hamzeh A.","instructor":"Jaradat, Hamzeh A.","units":1,"availability":{"status":"full","rawStatus":"Full","seatsOpen":0,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 112"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 213","section":"A","title":"Intermediate Microeconomics","faculty":"Dodge, Eric R.","instructor":"Dodge, Eric R.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":11,"capacity":20,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 112"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 234","section":"A","title":"Rational Choices","crossListedAs":["PHI 234"],"faculty":"Bates, Jared G.","instructor":"Bates, Jared G.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":23,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Classic Hall - 213"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 333","section":"A","title":"International Trade & Finance","faculty":"Eiriksson, Agust","instructor":"Eiriksson, Agust","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":3,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"1:20 PM","endTime":"2:30 PM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 115"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 113","section":"A","title":"Essential Precalculus","faculty":"Setser, Jennifer C.","instructor":"Setser, Jennifer C.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":5,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"12:00 PM","endTime":"1:10 PM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 115"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 121","section":"A","title":"Calculus I","faculty":"Nguyen, Duong","instructor":"Nguyen, Duong","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":15,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"12:00 PM","endTime":"1:10 PM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 112"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 121","section":"B","title":"Calculus I","faculty":"Nguyen, Duong","instructor":"Nguyen, Duong","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":13,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"1:20 PM","endTime":"2:30 PM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 112"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 217","section":"A","title":"Applied Statistics","faculty":"Nguyen, Duong","instructor":"Nguyen, Duong","units":1,"availability":{"status":"full","rawStatus":"Full","seatsOpen":0,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"2:40 PM","endTime":"3:50 PM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 112"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 217","section":"B","title":"Applied Statistics","faculty":"Isom, April","instructor":"Isom, April","units":1,"availability":{"status":"full","rawStatus":"Full","seatsOpen":0,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Classic Hall - 102"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"BUSN 323","section":"A","title":"Investments","faculty":"Riddick Jr., John C.","instructor":"Riddick Jr., John C.","units":1,"availability":{"status":"full","rawStatus":"Full","seatsOpen":0,"capacity":26,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM","startDate":"2026-08-24","endDate":"2026-12-11","delivery":"in_person","location":"Hanover College Science Center - 136"},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-business-fall.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"}
-    ],
-    "Winter": [
-      {"course":"ECO 113","section":"J","title":"Principles of Microeconomics","faculty":"Jaradat, Hamzeh A.","instructor":"Jaradat, Hamzeh A.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 113","section":"K","title":"Principles of Microeconomics","faculty":"Dodge, Eric R.","instructor":"Dodge, Eric R.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"8:00 AM","endTime":"9:10 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 114","section":"J","title":"Principles of Macroeconomics","faculty":"Eiriksson, Agust","instructor":"Eiriksson, Agust","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"8:00 AM","endTime":"9:45 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 161","section":"J","title":"Foundations of Economics","faculty":"Eiriksson, Agust","instructor":"Eiriksson, Agust","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":20,"capacity":20,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 214","section":"J","title":"Intermediate Macroeconomics","faculty":"Eiriksson, Agust","instructor":"Eiriksson, Agust","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 221","section":"J","title":"Environmental Economics","faculty":"Dodge, Eric R.","instructor":"Dodge, Eric R.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":20,"capacity":20,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 321","section":"J","title":"Money & Financial Markets","faculty":"Jaradat, Hamzeh A.","instructor":"Jaradat, Hamzeh A.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":20,"capacity":20,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 461","section":"J","title":"Senior Seminar - Econometrics","faculty":"Dodge, Eric R.","instructor":"Dodge, Eric R.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":15,"capacity":15,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 113","section":"J","title":"Essential Precalculus","faculty":"Setser, Jennifer C.","instructor":"Setser, Jennifer C.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"2:15 PM","endTime":"4:00 PM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 121","section":"J","title":"Calculus I","faculty":"Jagels, Carl F.","instructor":"Jagels, Carl F.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"1:20 PM","endTime":"2:30 PM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 217","section":"J","title":"Applied Statistics","faculty":"Jagels, Carl F.","instructor":"Jagels, Carl F.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 217","section":"K","title":"Applied Statistics","faculty":"Wahl, Barbara J.","instructor":"Wahl, Barbara J.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 217","section":"L","title":"Applied Statistics","faculty":"Isom, April","instructor":"Isom, April","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 217","section":"M","title":"Applied Statistics","faculty":"Isom, April","instructor":"Isom, April","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":24,"capacity":24,"asOf":"2026-08-08"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM","startDate":"2027-01-11","endDate":"2027-04-23","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"}
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 1,
+          "status": "open"
+        },
+        "course": "ECO 113",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "9:45 AM",
+          "location": "Hanover College Science Center - 112",
+          "startDate": "2026-08-24",
+          "startTime": "8:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Principles of Microeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 3,
+          "status": "open"
+        },
+        "course": "ECO 114",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "10:30 AM",
+          "location": "Hanover College Science Center - 115",
+          "startDate": "2026-08-24",
+          "startTime": "9:20 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Principles of Macroeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 5,
+          "status": "open"
+        },
+        "course": "ECO 114",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "11:50 AM",
+          "location": "Hanover College Science Center - 115",
+          "startDate": "2026-08-24",
+          "startTime": "10:40 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "B",
+        "title": "Principles of Macroeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Full",
+          "seatsOpen": 0,
+          "status": "full"
+        },
+        "course": "ECO 114",
+        "faculty": "Jaradat, Hamzeh A.",
+        "instructor": "Jaradat, Hamzeh A.",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "2:05 PM",
+          "location": "Hanover College Science Center - 112",
+          "startDate": "2026-08-24",
+          "startTime": "12:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "C",
+        "title": "Principles of Macroeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 20,
+          "rawStatus": "Open",
+          "seatsOpen": 11,
+          "status": "open"
+        },
+        "course": "ECO 213",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "11:45 AM",
+          "location": "Hanover College Science Center - 112",
+          "startDate": "2026-08-24",
+          "startTime": "10:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Intermediate Microeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 23,
+          "status": "open"
+        },
+        "course": "ECO 234",
+        "crossListedAs": [
+          "PHI 234"
+        ],
+        "faculty": "Bates, Jared G.",
+        "instructor": "Bates, Jared G.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "11:50 AM",
+          "location": "Hanover College Classic Hall - 213",
+          "startDate": "2026-08-24",
+          "startTime": "10:40 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Rational Choices",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 3,
+          "status": "open"
+        },
+        "course": "ECO 333",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "2:30 PM",
+          "location": "Hanover College Science Center - 115",
+          "startDate": "2026-08-24",
+          "startTime": "1:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "International Trade & Finance",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 5,
+          "status": "open"
+        },
+        "course": "MAT 113",
+        "faculty": "Setser, Jennifer C.",
+        "instructor": "Setser, Jennifer C.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "1:10 PM",
+          "location": "Hanover College Science Center - 115",
+          "startDate": "2026-08-24",
+          "startTime": "12:00 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Essential Precalculus",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 15,
+          "status": "open"
+        },
+        "course": "MAT 121",
+        "faculty": "Nguyen, Duong",
+        "instructor": "Nguyen, Duong",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "1:10 PM",
+          "location": "Hanover College Science Center - 112",
+          "startDate": "2026-08-24",
+          "startTime": "12:00 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Calculus I",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 13,
+          "status": "open"
+        },
+        "course": "MAT 121",
+        "faculty": "Nguyen, Duong",
+        "instructor": "Nguyen, Duong",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "2:30 PM",
+          "location": "Hanover College Science Center - 112",
+          "startDate": "2026-08-24",
+          "startTime": "1:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "B",
+        "title": "Calculus I",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Full",
+          "seatsOpen": 0,
+          "status": "full"
+        },
+        "course": "MAT 217",
+        "faculty": "Nguyen, Duong",
+        "instructor": "Nguyen, Duong",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "3:50 PM",
+          "location": "Hanover College Science Center - 112",
+          "startDate": "2026-08-24",
+          "startTime": "2:40 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Applied Statistics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Full",
+          "seatsOpen": 0,
+          "status": "full"
+        },
+        "course": "MAT 217",
+        "faculty": "Isom, April",
+        "instructor": "Isom, April",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "2:05 PM",
+          "location": "Hanover College Classic Hall - 102",
+          "startDate": "2026-08-24",
+          "startTime": "12:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "B",
+        "title": "Applied Statistics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 26,
+          "rawStatus": "Full",
+          "seatsOpen": 0,
+          "status": "full"
+        },
+        "course": "BUSN 323",
+        "faculty": "Riddick Jr., John C.",
+        "instructor": "Riddick Jr., John C.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2026-12-11",
+          "endTime": "10:30 AM",
+          "location": "Hanover College Science Center - 136",
+          "startDate": "2026-08-24",
+          "startTime": "9:20 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-business-fall.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "A",
+        "title": "Investments",
+        "units": 1,
+        "verificationStatus": "verified"
+      }
     ],
     "May": [
-      {"course":"ECO 222","section":"S","title":"Economics of the European Union","faculty":"Eiriksson, Agust","instructor":"Eiriksson, Agust","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":15,"capacity":15,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Tue","Wed","Thu","Fri"],"startTime":"10:15 AM","endTime":"12:30 PM","startDate":"2027-05-03","endDate":"2027-05-28","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"ECO 260","section":"S","title":"Special Topics","faculty":"Dodge, Eric R.","instructor":"Dodge, Eric R.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":20,"capacity":20,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Tue","Wed","Thu","Fri"],"startTime":"8:00 AM","endTime":"10:15 AM","startDate":"2027-05-03","endDate":"2027-05-28","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"},
-      {"course":"MAT 217","section":"S","title":"Applied Statistics","faculty":"Wahl, Barbara J.","instructor":"Wahl, Barbara J.","units":1,"availability":{"status":"open","rawStatus":"Open","seatsOpen":18,"capacity":18,"asOf":"2026-08-08"},"meeting":{"days":["Mon","Tue","Wed","Thu","Fri"],"startTime":"8:00 AM","endTime":"12:30 PM","startDate":"2027-05-03","endDate":"2027-05-28","delivery":"in_person","location":""},"provenance":{"sourceType":"user_provided_schedule_screenshot","sourceFiles":["data/raw/economics/schedule-2026-2027-math-winter-spring.png"],"sourceDocumentDate":null,"screenshotRetrievedOn":"2026-08-08","repositoryIngestedOn":"2026-08-08","humanVerifiedOn":"2026-08-08","verifiedOn":"2026-08-08","normalizationCheck":"row_checked"},"verificationStatus":"verified"}
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 15,
+          "rawStatus": "Open",
+          "seatsOpen": 15,
+          "status": "open"
+        },
+        "course": "ECO 222",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-05-28",
+          "endTime": "12:30 PM",
+          "location": null,
+          "startDate": "2027-05-03",
+          "startTime": "10:15 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "S",
+        "title": "Economics of the European Union",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 20,
+          "rawStatus": "Open",
+          "seatsOpen": 20,
+          "status": "open"
+        },
+        "course": "ECO 224",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-05-28",
+          "endTime": "10:15 AM",
+          "location": null,
+          "startDate": "2027-05-03",
+          "startTime": "8:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "S",
+        "title": "Introduction to Sustainability",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 20,
+          "rawStatus": "Open",
+          "seatsOpen": 20,
+          "status": "open"
+        },
+        "course": "ECO 234",
+        "crossListedAs": [
+          "PHI 234"
+        ],
+        "faculty": "Bates, Jared G.",
+        "instructor": "Bates, Jared G.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-05-28",
+          "endTime": "12:30 PM",
+          "location": null,
+          "startDate": "2027-05-03",
+          "startTime": "10:15 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "S",
+        "title": "Rational Choices",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 18,
+          "rawStatus": "Open",
+          "seatsOpen": 18,
+          "status": "open"
+        },
+        "course": "MAT 217",
+        "faculty": "Wahl, Barbara J.",
+        "instructor": "Wahl, Barbara J.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2027-05-28",
+          "endTime": "12:30 PM",
+          "location": "",
+          "startDate": "2027-05-03",
+          "startTime": "8:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "S",
+        "title": "Applied Statistics",
+        "units": 1,
+        "verificationStatus": "verified"
+      }
     ],
-    "Summer": []
-  }
+    "Summer": [],
+    "Winter": [
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "ECO 113",
+        "faculty": "Jaradat, Hamzeh A.",
+        "instructor": "Jaradat, Hamzeh A.",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "11:45 AM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "10:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Principles of Microeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "ECO 113",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "9:10 AM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "8:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "K",
+        "title": "Principles of Microeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "ECO 114",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "9:45 AM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "8:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Principles of Macroeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 20,
+          "rawStatus": "Open",
+          "seatsOpen": 20,
+          "status": "open"
+        },
+        "course": "ECO 161",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "2:05 PM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "12:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Foundations of Economics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "ECO 214",
+        "faculty": "Eiriksson, Agust",
+        "instructor": "Eiriksson, Agust",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "11:45 AM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "10:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Intermediate Macroeconomics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 20,
+          "rawStatus": "Open",
+          "seatsOpen": 20,
+          "status": "open"
+        },
+        "course": "ECO 221",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "10:30 AM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "9:20 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Environmental Economics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 20,
+          "rawStatus": "Open",
+          "seatsOpen": 20,
+          "status": "open"
+        },
+        "course": "ECO 321",
+        "faculty": "Jaradat, Hamzeh A.",
+        "instructor": "Jaradat, Hamzeh A.",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "2:05 PM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "12:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Money & Financial Markets",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 15,
+          "rawStatus": "Open",
+          "seatsOpen": 15,
+          "status": "open"
+        },
+        "course": "ECO 461",
+        "faculty": "Dodge, Eric R.",
+        "instructor": "Dodge, Eric R.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-04-23",
+          "endTime": "11:50 AM",
+          "location": null,
+          "startDate": "2027-01-11",
+          "startTime": "10:40 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Senior Seminar - Econometrics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "MAT 113",
+        "faculty": "Setser, Jennifer C.",
+        "instructor": "Setser, Jennifer C.",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "in_person",
+          "endDate": "2027-04-23",
+          "endTime": "4:00 PM",
+          "location": "",
+          "startDate": "2027-01-11",
+          "startTime": "2:15 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Essential Precalculus",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "MAT 121",
+        "faculty": "Jagels, Carl F.",
+        "instructor": "Jagels, Carl F.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2027-04-23",
+          "endTime": "2:30 PM",
+          "location": "",
+          "startDate": "2027-01-11",
+          "startTime": "1:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Calculus I",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "MAT 217",
+        "faculty": "Jagels, Carl F.",
+        "instructor": "Jagels, Carl F.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2027-04-23",
+          "endTime": "10:30 AM",
+          "location": "",
+          "startDate": "2027-01-11",
+          "startTime": "9:20 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "J",
+        "title": "Applied Statistics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "MAT 217",
+        "faculty": "Wahl, Barbara J.",
+        "instructor": "Wahl, Barbara J.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Wed",
+            "Fri"
+          ],
+          "delivery": "in_person",
+          "endDate": "2027-04-23",
+          "endTime": "11:50 AM",
+          "location": "",
+          "startDate": "2027-01-11",
+          "startTime": "10:40 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "K",
+        "title": "Applied Statistics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "MAT 217",
+        "faculty": "Isom, April",
+        "instructor": "Isom, April",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "in_person",
+          "endDate": "2027-04-23",
+          "endTime": "11:45 AM",
+          "location": "",
+          "startDate": "2027-01-11",
+          "startTime": "10:00 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "L",
+        "title": "Applied Statistics",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
+          "capacity": 24,
+          "rawStatus": "Open",
+          "seatsOpen": 24,
+          "status": "open"
+        },
+        "course": "MAT 217",
+        "faculty": "Isom, April",
+        "instructor": "Isom, April",
+        "meeting": {
+          "days": [
+            "Tue",
+            "Thu"
+          ],
+          "delivery": "in_person",
+          "endDate": "2027-04-23",
+          "endTime": "2:05 PM",
+          "location": "",
+          "startDate": "2027-01-11",
+          "startTime": "12:20 PM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-08-08",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-08-08",
+          "screenshotRetrievedOn": "2026-08-08",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "M",
+        "title": "Applied Statistics",
+        "units": 1,
+        "verificationStatus": "verified"
+      }
+    ]
+  },
+  "verifiedOn": null
 }

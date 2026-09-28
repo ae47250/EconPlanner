@@ -100,10 +100,10 @@ test("sophomore One Year Early evaluates 12, 11, 10, and 9 remaining through the
 
   assert.deepEqual(statuses.map(item => item.remaining), [12, 11, 10, 9]);
   assert.deepEqual(statuses.map(item => item.outcome.status), [
-    "VERIFIED_FEASIBLE",
-    "VERIFIED_FEASIBLE",
-    "VERIFIED_FEASIBLE",
-    "VERIFIED_FEASIBLE"
+    "CONDITIONALLY_FEASIBLE",
+    "CONDITIONALLY_FEASIBLE",
+    "CONDITIONALLY_FEASIBLE",
+    "CONDITIONALLY_FEASIBLE"
   ]);
   assert.deepEqual(statuses[0].plan.feasibility.requiredApprovals, []);
   assert.equal(statuses[0].plan.feasibility.search.solutionFound, true);
@@ -133,8 +133,9 @@ test("eligible One Year Early uses canonical sections rather than injected extra
   const plan = result.plans.find(item => item.id === "one-year-early");
 
   assert.ok(plan);
-  assert.equal(result.candidateOutcomes.find(item => item.id === "one-year-early").status, "VERIFIED_FEASIBLE");
-  assert.ok(!plan.terms.flatMap(term => term.courses).some(course => ["ECO 224", "ECO 315"].includes(course.course)));
+  assert.equal(result.candidateOutcomes.find(item => item.id === "one-year-early").status, "CONDITIONALLY_FEASIBLE");
+  assert.ok(!plan.terms.filter(term => term.slotId === "fall-2026").flatMap(term => term.courses).some(course => ["ECO 224", "ECO 315"].includes(course.course)));
+  assert.ok(!plan.terms.flatMap(term => term.courses).some(course => course.course === "ECO 315"));
   assert.equal(mapping.strict.remainingUnits, 9);
 });
 

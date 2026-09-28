@@ -130,6 +130,12 @@ export function oracleEvaluateOffering(policy, course, term) {
   const key = canonicalTerm(term.termKey || term.term);
   const sections = policy.schedule.terms.find(row => row.termId === termId(term))?.sections || [];
   const verified = code => sections.some(row => row.course === code || (row.crossListedAs || []).includes(code));
+  const reviewedScope = release => {
+    const equivalency = policy.rules.find(record => record.condition.equivalentCodes?.includes(course.course));
+    const identity = equivalency?.effect.canonicalCourse || course.course;
+    const courseScope = (release?.coverageScopes || []).find(scope => scope.course === identity);
+    return courseScope || (release?.coverageScopes || []).find(scope => scope.subject === identity.split(" ")[0]);
+  };
   const block = (id, reason) => ({ status: "BLOCK", ruleIds: [id], reasonCode: reason });
   const capstone = policy.byRuleId["CAPSTONE-WINTER-ONLY"];
   if (course.course === capstone.condition.course && key !== "TBC" && !capstone.effect.allowedCanonicalTerms.includes(key)) {
@@ -146,7 +152,7 @@ export function oracleEvaluateOffering(policy, course, term) {
     const exactOverride = pattern.projectionPolicy.activeExactScheduleOverrides && verified(course.course);
     if (pattern.projectionPolicy.unpublishedTermEligibility === "APPROVED_RECURRING_TERMS_ONLY") {
       const releaseTerm = policy.schedule.terms.find(row => row.termId === termId(term));
-      if (releaseTerm?.coverage === "COMPLETE" && !verified(course.course)) {
+      if (reviewedScope(releaseTerm)?.coverage === "COMPLETE" && !verified(course.course)) {
         return block("SCHEDULE-AVAILABILITY-BEHAVIOR", "NOT_OFFERED_IN_COMPLETE_SCHEDULE");
       }
       if (!pattern.approvedRecurringTerms.includes(key) && !exactOverride) {
@@ -202,7 +208,11 @@ export function oracleEvaluateOffering(policy, course, term) {
   if (!releaseTerm) return { status: "UNKNOWN", ruleIds: [], reasonCode: "SCHEDULE_TERM_NOT_COVERED" };
   const section = releaseTerm.sections.find(candidate => (candidate.course === course.course || candidate.crossListedAs.includes(course.course))
     && (!course.section || candidate.sectionId.endsWith(`-${course.section}`)));
-  if (!section) return { status: releaseTerm.coverage === "COMPLETE" ? "BLOCK" : "UNKNOWN", ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"], reasonCode: releaseTerm.coverage === "COMPLETE" ? "NOT_OFFERED_IN_COMPLETE_SCHEDULE" : "OFFERING_UNKNOWN" };
+  if (!section) {
+    if (course.source === "verified-offering" && course.section) return {status:"BLOCK",ruleIds:["SCHEDULE-AVAILABILITY-BEHAVIOR"],reasonCode:"VERIFIED_SECTION_NOT_IN_ACTIVE_SCHEDULE"};
+    const scope = reviewedScope(releaseTerm);
+    return { status: scope?.coverage === "COMPLETE" ? "BLOCK" : "UNKNOWN", ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"], reasonCode: scope?.coverage === "COMPLETE" ? "NOT_OFFERED_IN_COMPLETE_SCHEDULE" : "OFFERING_UNKNOWN", sourceRefs: scope?.sourceRefs || [] };
+  }
   const outcome = policy.byRuleId["SCHEDULE-AVAILABILITY-BEHAVIOR"].effect[section.enrollmentState];
   return { status: outcome === "VERIFIED" ? "ALLOW" : outcome === "BLOCK" ? "BLOCK" : outcome === "CONDITIONAL" ? "CONDITIONAL" : outcome === "PRELIMINARY" ? "PRELIMINARY" : outcome, ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"], reasonCode: `ENROLLMENT_${section.enrollmentState}` };
 }
@@ -213,8 +223,19 @@ export function oracleEvaluateTermLoad(policy, term) {
   const rule = policy.rules.find(candidate => candidate.ruleType === "termLoad" && candidate.condition.canonicalTerm === key);
   if (!rule) return { status: "UNKNOWN", ruleIds: [], reasonCode: "TERM_CAPACITY_RULE_MISSING" };
   const economics = (term.courses || []).filter(course => String(course.course).startsWith("ECO ") || course.course === "ECO elective").length;
-  const blocked = term.courses.length > rule.effect.maxTotalCourses || (rule.effect.maxEconomicsCourses && economics > rule.effect.maxEconomicsCourses);
-  return { status: blocked ? "BLOCK" : "ALLOW", ruleIds: [rule.ruleId], reasonCode: blocked ? "TERM_CAPACITY_EXCEEDED" : "TERM_CAPACITY_AVAILABLE" };
+  const units = (term.courses || []).reduce((sum, course) => sum + Number(course.units ?? 1), 0) + Number(term.reservedCourseUnits || 0);
+  const normal = rule.effect.normalCourseUnits ?? rule.effect.maxTotalCourses;
+  const ceiling = rule.effect.conditionalMaximumCourseUnits ?? normal;
+  const approval = term.termLoadEvidence?.advisorApproval === "APPROVED" && term.termLoadEvidence?.academicProbationStatus === "NOT_ON_ACADEMIC_PROBATION";
+  if (units > ceiling || (rule.effect.maxEconomicsCourses && economics > rule.effect.maxEconomicsCourses)) return {status: "BLOCK", ruleIds: [rule.ruleId], reasonCode: "TERM_CAPACITY_EXCEEDED"};
+  if (units > normal && !approval) {
+    const probation = term.termLoadEvidence?.academicProbationStatus === "ON_ACADEMIC_PROBATION";
+    const denied = term.termLoadEvidence?.advisorApproval === "NOT_APPROVED";
+    return {status: probation || denied ? "BLOCK" : "UNKNOWN", ruleIds: [rule.ruleId], reasonCode: probation ? "TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION" : denied ? "TERM_OVERLOAD_APPROVAL_DENIED" : "TERM_OVERLOAD_EVIDENCE_REQUIRED"};
+  }
+  const preference = policy.byRuleId["PLANNING-ECO-LOAD-PREFERENCE"];
+  const abovePreference = ["FALL", "WINTER"].includes(key) && economics > preference.effect.preferredMaxEconomicsCourses;
+  return {status: units > normal ? "CONDITIONAL" : "ALLOW", ruleIds: abovePreference ? [rule.ruleId, preference.ruleId] : [rule.ruleId], reasonCode: units > normal ? "TERM_OVERLOAD_APPROVED" : abovePreference ? "ECONOMICS_LOAD_ABOVE_PREFERENCE" : "TERM_CAPACITY_AVAILABLE"};
 }
 
 export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedContext = null) {
@@ -222,9 +243,22 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
   const slotContract = policy.rules.find(rule => rule.ruleId === "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT");
   const declaredElectiveSlots = new Set();
   const assignments = (plan.terms || []).flatMap(term => (term.courses || []).map(course => ({slotId:course.requirementId,code:course.course})));
+  // The finance pairing can be satisfied by recorded work, not just a new
+  // placement. Select it independently from the canonical requirement and its
+  // recorded preference; never import the production mapper's assignments.
+  const financeRule = policy.byRuleId["REQ-FINANCE"];
+  const financePreference = policy.documents["compatibility-profile"].requirements.slots.find(slot => slot.id === "finance")?.preferredOptions || financeRule.effect.options;
+  const recorded = new Set((student.courses || []).filter(course => ["completed", "transfer", "in_progress"].includes(course.status)).map(course => String(course.code).toUpperCase()));
+  const recordedFinance = financePreference.find(code => financeRule.effect.options.includes(code) && recorded.has(code));
+  if (recordedFinance && !assignments.some(item => item.slotId === "finance")) assignments.push({slotId: "finance", code: recordedFinance});
   let level100Electives = 0;
-  const available = new Set((student.courses || []).filter(course => ["completed", "transfer", "in_progress"].includes(course.status)).map(course => String(course.code).toUpperCase()));
+  const completed = (student.courses || []).filter(course => ["completed", "transfer"].includes(course.status)).map(course => String(course.code).toUpperCase());
+  const inProgress = (student.courses || []).filter(course => course.status === "in_progress").map(course => String(course.code).toUpperCase());
+  const available = new Set(completed);
+  const currentTerm = policy.calendar.initialDropAddWindows.filter(window => window.start <= student.planCreationDate).toSorted((a, b) => b.start.localeCompare(a.start))[0];
+  const termPosition = term => Number(String(term.academicYear).slice(0, 4)) * 3 + ["FALL", "WINTER", "MAY"].indexOf(canonicalTerm(term.canonicalTerm || term.termKey));
   for (const [termIndex, term] of (plan.terms || []).entries()) {
+    if (currentTerm ? termPosition(term) > termPosition(currentTerm) : term.inProgressPrerequisitesAvailable === true) for (const code of inProgress) available.add(code);
     const isTbc = canonicalTerm(term.termKey || term.term) === "TBC";
     const termWindow = policy.calendar.initialDropAddWindows.find(window =>
       window.academicYear.replace("-", "/") === String(term.academicYear).replace("-", "/")
@@ -232,7 +266,7 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
     if (termWindow && student.planCreationDate > termWindow.end && (term.courses || []).some(course => !course.fixedInProgress)) findings.push({
       path: `$.terms[${termIndex}]`, status: "BLOCK", ruleIds: ["PLANNING-CURRENT-TERM-ADD-DROP"], reasonCode: "CURRENT_TERM_NEW_PLACEMENT_CLOSED"
     });
-    findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, term) });
+    findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, { ...term, termLoadEvidence: student.termLoadOverrides?.[term.slotId] || student.termLoadOverrides?.[term.term] || student.termLoadOverrides?.[canonicalTerm(term.termKey)] || null, reservedCourseUnits: student.reservedCourseUnits?.[term.slotId] ?? student.reservedCourseUnits?.[term.term] ?? 0 }) });
     if (isTbc) {
       const projectedGroups = new Map();
       for (const course of term.courses || []) {
@@ -248,6 +282,17 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
       ? indexedCourses.toSorted((left, right) => Number(left.course.planningSequence ?? Number.MAX_SAFE_INTEGER)
         - Number(right.course.planningSequence ?? Number.MAX_SAFE_INTEGER))
       : indexedCourses;
+    const exactTerm = policy.schedule.terms.find(row => row.termId === termId(term));
+    const sections = (term.courses || []).map(course => {
+      const choices = exactTerm?.sections.filter(row => (row.course === course.course || row.crossListedAs.includes(course.course)) && (!course.section || row.sectionId.endsWith(`-${course.section}`))) || [];
+      const scope = exactTerm?.coverageScopes.find(row => row.course === course.course)
+        || exactTerm?.coverageScopes.find(row => row.subject === course.course.split(" ")[0]);
+      return course.fixedInProgress && !course.section && (choices.length !== 1 || scope?.coverage !== "COMPLETE") ? null : choices[0];
+    }).filter(Boolean);
+    for (let left = 0; left < sections.length; left++) for (let right = left + 1; right < sections.length; right++) {
+      const a = sections[left].meeting, b = sections[right].meeting;
+      if (a?.days?.some(day => b?.days?.includes(day)) && a.startTime && a.endTime && b.startTime && b.endTime && a.startTime < b.endTime && b.startTime < a.endTime) findings.push({path: `$.terms[${termIndex}]`, status: "BLOCK", ruleIds: ["SCHEDULE-AVAILABILITY-BEHAVIOR"], reasonCode: "AUTHORITATIVE_MEETING_CONFLICT"});
+    }
     let currentProjectedTerm = null;
     let pendingCourses = [];
     for (const { course, courseIndex } of orderedCourses) {
@@ -262,6 +307,11 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
           ? candidate.options
           : [candidate.course]);
       const path = `$.terms[${termIndex}].courses[${courseIndex}]`;
+      if (course.fixedInProgress) {
+        const section = sections.find(row => row.course === course.course || row.crossListedAs.includes(course.course));
+        if (!section?.meeting?.days?.length || !section.meeting.startTime || !section.meeting.endTime) findings.push({path,status:"REVIEW_REQUIRED",ruleIds:["SCHEDULE-AVAILABILITY-BEHAVIOR"],reasonCode:"IN_PROGRESS_SECTION_MEETINGS_REVIEW"});
+        continue;
+      }
       if (slotContract?.scope.requirements.includes(course.requirementId)) {
         if (declaredElectiveSlots.has(course.requirementId)) findings.push({
           path: `${path}.requirementId`, status: "BLOCK", ruleIds: [slotContract.ruleId],

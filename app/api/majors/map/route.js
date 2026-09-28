@@ -173,13 +173,14 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
       ...economicsPlanningGaps.map(gap => gap.message || gap.reason).filter(Boolean),
       ...(economicsSearchIncomplete ? [SEARCH_INCOMPLETE_MESSAGE] : [])
     ];
-    const riskClass = economicsPlanBundle && !economicsPlanBundle.plans.length
+    let riskClass = economicsPlanBundle && !economicsPlanBundle.plans.length
       ? economicsSearchIncomplete ? "FEASIBLE_WITH_ASSUMPTIONS" : "NOT_CURRENTLY_FEASIBLE"
       : combinedRiskReasons.length
         ? "FEASIBLE_WITH_ASSUMPTIONS"
         : mapping.risk.class;
     const economicsPlanResult = economicsPlanBundle
       ? buildEconomicsPlanResult({
+          student,
           plans: economicsPlanBundle.plans,
           mapping,
           planningContext: economicsPlanBundle.context,
@@ -190,10 +191,12 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
           metricsDiagnostics: economicsPlanBundle.metricsDiagnostics
         })
       : null;
+    if (economicsPlanResult?.conclusion === "UNKNOWN" && !economicsPlanBundle.plans.length) riskClass = "FEASIBLE_WITH_ASSUMPTIONS";
     const economicsAcceleratedResult = economicsPlanBundle
       ? buildAcceleratedPlanningResult({
           planningContext: economicsPlanBundle.context,
           earlyGraduationContext: economicsPlanBundle.earlyGraduationContext,
+          mapping, student, policyBundle: catalog.policyBundle,
           candidateOutcomes: economicsPlanBundle.candidateOutcomes,
           metricsDiagnostics: economicsPlanBundle.metricsDiagnostics
         })

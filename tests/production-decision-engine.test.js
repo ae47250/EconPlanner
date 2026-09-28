@@ -81,12 +81,14 @@ test("offering evidence keeps FULL under review and ordinary future projections 
   assert.equal(projected.reasonCode, "FUTURE_SCHEDULE_PLANNING_PROJECTION");
 });
 
-test("term capacity is hard while a heavier Economics load is only a soft warning", () => {
+test("published capacity is hard, missing overload evidence needs review, and Economics preference is soft", () => {
   const heavy = evaluateTermLoad({ termKey: "Fall", academicYear: "2026-2027", courses: [{ course: "ECO 221" }, { course: "ECO 222" }, { course: "ECO 223" }] }, {}, bundle, { traceId: "fixture" });
   assert.equal(heavy.status, "ALLOW");
   assert.equal(heavy.classification, "SOFT");
   const overCapacity = evaluateTermLoad({ termKey: "Fall", academicYear: "2026-2027", courses: Array.from({ length: 5 }, (_, index) => ({ course: `ECO ${220 + index}` })) }, {}, bundle, { traceId: "fixture" });
-  assert.equal(overCapacity.status, "BLOCK");
+  assert.equal(overCapacity.status, "UNKNOWN");
+  assert.equal(overCapacity.reasonCode, "TERM_OVERLOAD_EVIDENCE_REQUIRED");
+  assert.equal(evaluateTermLoad({termKey:"Fall",courses:[{course:"MAT 217",units:5.26}]},{},bundle).status,"BLOCK");
 });
 
 test("completed advanced history is preserved as review rather than erased or inferred", () => {

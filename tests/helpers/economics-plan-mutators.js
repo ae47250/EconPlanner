@@ -219,7 +219,7 @@ const MUTATORS = Object.freeze({
   },
 
   SECOND_SPRING_MAY_COURSE(draft) {
-    moveCourse(draft, "ECO 260", "spring-2028");
+    moveCourse(draft, "ECO 224", "spring-2028");
   },
 
   CLOSED_SECTION(draft) {
@@ -260,8 +260,8 @@ const MUTATORS = Object.freeze({
   },
 
   COMPLETED_COURSE_RESCHEDULED(draft) {
-    const completed = draft.student.courses.filter(course => course.code === "ECO 260");
-    if (completed.length !== 1) fail(`expected one completed ECO 260; found ${completed.length}`);
+    const completed = draft.student.courses.filter(course => course.code === "ECO 224");
+    if (completed.length !== 1) fail(`expected one completed ECO 224; found ${completed.length}`);
     completed[0].code = "ECO 234";
   },
 

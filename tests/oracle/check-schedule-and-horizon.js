@@ -319,7 +319,7 @@ function capacityRule(policy, termKey) {
     && Number.isFinite(rule.maxTotalCourses));
 }
 
-function checkCapacity(policy, term, termIndex, violations) {
+function checkCapacity(policy, term, termIndex, violations, student = {}, reviewItems = [], conditions = []) {
   const termKey = canonicalExternalTermKey(term.termKey);
   if (termKey === "TBC") {
     const projectedGroups = new Map();
@@ -334,7 +334,7 @@ function checkCapacity(policy, term, termIndex, violations) {
         termKey: projectedTerm,
         courses,
         reservedOutsideCourseUnits: term.reservedOutsideCourseUnitsByProjectedTerm?.[projectedTerm] || 0
-      }, termIndex, violations);
+      }, termIndex, violations, student, reviewItems, conditions);
     }
     return;
   }
@@ -344,6 +344,12 @@ function checkCapacity(policy, term, termIndex, violations) {
   const planned = (term.courses || []).reduce((sum, course) => (
     sum + (Number.isFinite(course.units) ? Number(course.units) : 1)
   ), 0);
+  const evidence = student.termLoadOverrides?.[term.slotId] || student.termLoadOverrides?.[term.term] || student.termLoadOverrides?.[termKey.toUpperCase()] || null;
+  const approved = evidence?.advisorApproval === "APPROVED" && evidence?.academicProbationStatus === "NOT_ON_ACADEMIC_PROBATION";
+  const ceiling = rule.conditionalMaximumCourseUnits ?? rule.maxTotalCourses;
+  const maximum = approved ? ceiling : rule.maxTotalCourses;
+  const probation = evidence?.academicProbationStatus === "ON_ACADEMIC_PROBATION";
+  const denied = evidence?.advisorApproval === "NOT_APPROVED";
   if (reserved < 0 || !Number.isFinite(reserved)) {
     violations.push(finding(
       policy,
@@ -352,14 +358,21 @@ function checkCapacity(policy, term, termIndex, violations) {
       `$.plan.terms[${termIndex}].reservedOutsideCourseUnits`,
       "Reserved outside-course units must be a nonnegative number."
     ));
-  } else if (planned + reserved > rule.maxTotalCourses) {
+  } else if (planned + reserved > rule.maxTotalCourses && planned + reserved <= ceiling && !approved && !probation && !denied) {
+    reviewItems.push(finding(policy, "TERM_OVERLOAD_EVIDENCE_REQUIRED", rule.ruleId, `$.plan.terms[${termIndex}]`,
+      `More information needed: ${planned + reserved} units exceed the normal ${rule.maxTotalCourses}. Existing advisor approval and absence of academic probation must be established; no additional capacity is granted.`));
+  } else if (planned + reserved > maximum) {
     violations.push(finding(
       policy,
       "CAPACITY_EXCEEDED",
       rule.ruleId,
       `$.plan.terms[${termIndex}]`,
-      `${termKey} has ${planned} planned units plus ${reserved} reserved outside-course units; the confirmed maximum is ${rule.maxTotalCourses}.`
+      `${termKey} has ${planned} planned units plus ${reserved} reserved outside-course units; the applicable maximum is ${maximum}.`,
+      {reasonCode: planned + reserved > ceiling ? "TERM_CAPACITY_EXCEEDED" : probation ? "TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION" : "TERM_OVERLOAD_APPROVAL_DENIED"}
     ));
+  } else if (approved && planned + reserved > rule.maxTotalCourses) {
+    conditions.push(finding(policy, "TERM_OVERLOAD_APPROVED", rule.ruleId, `$.plan.terms[${termIndex}]`,
+      `Advisor-approved overload: ${planned + reserved} units, within the ${ceiling} ceiling; approval and absence of academic probation were recorded.`));
   }
 }
 
@@ -396,6 +409,15 @@ function checkHorizon({ policy, plan, expectedContext, requirementAllocation, vi
   const latest = externalTermPosition(`${graduationYear - 1}/${graduationYear}`, "Spring/May");
   (plan.terms || []).forEach((term, termIndex) => {
     const position = externalTermPosition(term.academicYear, term.termKey);
+    // Submitted standing metadata must match the authoritative regular-student
+    // horizon. An accelerated final year uses the owner's senior planning rule.
+    const standingIndex = ["freshman", "sophomore", "junior", "senior"].indexOf(String(expectedContext.effectiveStanding || "").toLowerCase());
+    const year = Number(String(term.academicYear).slice(0, 4));
+    if (!expectedContext.isTransferStudent && !expectedContext.customGraduationEnabled && standingIndex >= 0 && Number.isInteger(term.absoluteStandingIndex)) {
+      const acceleratedFinal = expectedContext.acceleratedPlanAssumesSeniorStanding === true && year + 1 === graduationYear;
+      const expectedStanding = acceleratedFinal ? 3 : Math.min(3, standingIndex + year - startYear);
+      if (term.absoluteStandingIndex !== expectedStanding) violations.push(finding(policy, "HORIZON_STANDING_METADATA_MISMATCH", "CAPSTONE-SENIOR-STANDING", `$.plan.terms[${termIndex}].absoluteStandingIndex`, "Submitted standing metadata does not match the authoritative planning horizon."));
+    }
     const date = expectedContext.planCreationDate;
     const key = String(term.termKey).toUpperCase().replace("SPRING/MAY", "MAY").replace("SPRING", "MAY");
     const calendar = officialCalendar.initialDropAddWindows.find(window => window.academicYear.replace("-", "/") === String(term.academicYear).replace("-", "/") && window.canonicalTerm === key);
@@ -486,6 +508,7 @@ function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, viola
 
 export function checkExternalEconomicsScheduleAndHorizon(input) {
   const args = isObject(input) ? input : {};
+  const student = isObject(args.student) ? args.student : {};
   const policy = isObject(args.policy) ? args.policy : {};
   const plan = isObject(args.plan) ? args.plan : {};
   const verifiedSchedule = isObject(args.verifiedSchedule) ? args.verifiedSchedule : {};
@@ -497,7 +520,7 @@ export function checkExternalEconomicsScheduleAndHorizon(input) {
 
   (plan.terms || []).forEach((term, termIndex) => {
     checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, violations);
-    checkCapacity(policy, term, termIndex, violations);
+    checkCapacity(policy, term, termIndex, violations, student, reviewItems, conditions);
     checkSummer(policy, term, termIndex, violations, reviewItems);
     (term.courses || []).forEach((course, courseIndex) => {
       const path = `$.plan.terms[${termIndex}].courses[${courseIndex}]`;

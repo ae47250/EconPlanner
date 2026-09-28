@@ -1,32 +1,106 @@
 {
   "academicYear": "2026-2027",
-  "availabilityAsOf": "2026-08-08",
+  "availabilityAsOf": null,
   "courseOfferingNotes": {
     "ECO 461": "Normally one Winter offering per academic year; verify future schedules before treating a later offering as confirmed."
   },
-  "lastVerifiedAt": "2026-08-08",
+  "coverageByTerm": {
+    "Fall": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-FALL#image"
+          ],
+          "subject": "ECO"
+        },
+        {
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-FALL#image"
+          ],
+          "subject": "MAT"
+        },
+        {
+          "course": "BUSN 323",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "OWNER-BUSN323-2026-2027-2026-09-28"
+          ]
+        }
+      ]
+    },
+    "May": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+          ],
+          "subject": "ECO"
+        },
+        {
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+          ],
+          "subject": "MAT"
+        }
+      ]
+    },
+    "Summer": {
+      "coverage": "UNAVAILABLE",
+      "coverageScopes": []
+    },
+    "Winter": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+          ],
+          "subject": "ECO"
+        },
+        {
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+          ],
+          "subject": "MAT"
+        },
+        {
+          "course": "BUSN 323",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "OWNER-BUSN323-2026-2027-2026-09-28"
+          ]
+        }
+      ]
+    }
+  },
+  "lastVerifiedAt": null,
   "schemaVersion": 2,
   "source": {
     "files": [
       "data/raw/economics/schedule-2026-2027-fall.png",
-      "data/raw/economics/schedule-2026-2027-winter-spring.png",
+      "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png",
       "data/raw/economics/schedule-2026-2027-math-fall.png",
       "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
-      "data/raw/economics/schedule-2026-2027-business-fall.png"
+      "data/raw/economics/schedule-2026-2027-business-fall.png",
+      "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md"
     ],
-    "humanVerifiedOn": "2026-08-08",
-    "repositoryIngestedOn": "2026-08-08",
-    "repositoryIngestionEvidence": "Current registrar screenshots supplied by the project owner on August 8, 2026.",
-    "screenshotRetrievedOn": "2026-08-08",
     "sectionCodeSMeans": "May",
     "sourceDocumentDate": null,
-    "type": "user_provided_schedule_screenshots"
+    "type": "reviewed_schedule_evidence"
   },
   "terms": {
     "Fall": [
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 1,
@@ -57,7 +131,7 @@
             "data/raw/economics/schedule-2026-2027-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Principles of Microeconomics",
@@ -66,7 +140,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 3,
@@ -98,7 +172,7 @@
             "data/raw/economics/schedule-2026-2027-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Principles of Macroeconomics",
@@ -107,7 +181,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 5,
@@ -139,7 +213,7 @@
             "data/raw/economics/schedule-2026-2027-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "B",
         "title": "Principles of Macroeconomics",
@@ -148,7 +222,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Full",
           "seatsOpen": 0,
@@ -179,7 +253,7 @@
             "data/raw/economics/schedule-2026-2027-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "C",
         "title": "Principles of Macroeconomics",
@@ -188,7 +262,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 20,
           "rawStatus": "Open",
           "seatsOpen": 11,
@@ -219,7 +293,7 @@
             "data/raw/economics/schedule-2026-2027-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Intermediate Microeconomics",
@@ -228,7 +302,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 23,
@@ -263,7 +337,7 @@
             "data/raw/economics/schedule-2026-2027-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Rational Choices",
@@ -272,7 +346,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 3,
@@ -304,7 +378,7 @@
             "data/raw/economics/schedule-2026-2027-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "International Trade & Finance",
@@ -313,7 +387,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 5,
@@ -345,7 +419,7 @@
             "data/raw/economics/schedule-2026-2027-math-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Essential Precalculus",
@@ -354,7 +428,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 15,
@@ -386,7 +460,7 @@
             "data/raw/economics/schedule-2026-2027-math-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Calculus I",
@@ -395,7 +469,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 13,
@@ -427,7 +501,7 @@
             "data/raw/economics/schedule-2026-2027-math-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "B",
         "title": "Calculus I",
@@ -436,7 +510,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Full",
           "seatsOpen": 0,
@@ -468,7 +542,7 @@
             "data/raw/economics/schedule-2026-2027-math-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Applied Statistics",
@@ -477,7 +551,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Full",
           "seatsOpen": 0,
@@ -508,7 +582,7 @@
             "data/raw/economics/schedule-2026-2027-math-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "B",
         "title": "Applied Statistics",
@@ -517,7 +591,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 26,
           "rawStatus": "Full",
           "seatsOpen": 0,
@@ -549,7 +623,7 @@
             "data/raw/economics/schedule-2026-2027-business-fall.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "A",
         "title": "Investments",
@@ -560,7 +634,7 @@
     "May": [
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 15,
           "rawStatus": "Open",
           "seatsOpen": 15,
@@ -577,24 +651,24 @@
             "Thu",
             "Fri"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-05-28",
           "endTime": "12:30 PM",
-          "location": "",
+          "location": null,
           "startDate": "2027-05-03",
           "startTime": "10:15 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "S",
         "title": "Economics of the European Union",
@@ -603,13 +677,13 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 20,
           "rawStatus": "Open",
           "seatsOpen": 20,
           "status": "open"
         },
-        "course": "ECO 260",
+        "course": "ECO 224",
         "faculty": "Dodge, Eric R.",
         "instructor": "Dodge, Eric R.",
         "meeting": {
@@ -620,33 +694,79 @@
             "Thu",
             "Fri"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-05-28",
           "endTime": "10:15 AM",
-          "location": "",
+          "location": null,
           "startDate": "2027-05-03",
           "startTime": "8:00 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "S",
-        "title": "Special Topics",
+        "title": "Introduction to Sustainability",
         "units": 1,
         "verificationStatus": "verified"
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
+          "capacity": 20,
+          "rawStatus": "Open",
+          "seatsOpen": 20,
+          "status": "open"
+        },
+        "course": "ECO 234",
+        "crossListedAs": [
+          "PHI 234"
+        ],
+        "faculty": "Bates, Jared G.",
+        "instructor": "Bates, Jared G.",
+        "meeting": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri"
+          ],
+          "delivery": "unknown",
+          "endDate": "2027-05-28",
+          "endTime": "12:30 PM",
+          "location": null,
+          "startDate": "2027-05-03",
+          "startTime": "10:15 AM"
+        },
+        "provenance": {
+          "humanVerifiedOn": "2026-09-27",
+          "normalizationCheck": "row_checked",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
+          "sourceDocumentDate": null,
+          "sourceFiles": [
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+          ],
+          "sourceType": "user_provided_schedule_screenshot",
+          "verifiedOn": null
+        },
+        "section": "S",
+        "title": "Rational Choices",
+        "units": 1,
+        "verificationStatus": "verified"
+      },
+      {
+        "availability": {
+          "asOf": null,
           "capacity": 18,
           "rawStatus": "Open",
           "seatsOpen": 18,
@@ -680,7 +800,7 @@
             "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "S",
         "title": "Applied Statistics",
@@ -692,7 +812,7 @@
     "Winter": [
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -706,24 +826,24 @@
             "Tue",
             "Thu"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "11:45 AM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "10:00 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Principles of Microeconomics",
@@ -732,7 +852,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -747,24 +867,24 @@
             "Wed",
             "Fri"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "9:10 AM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "8:00 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "K",
         "title": "Principles of Microeconomics",
@@ -773,7 +893,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -787,24 +907,24 @@
             "Tue",
             "Thu"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "9:45 AM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "8:00 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Principles of Macroeconomics",
@@ -813,7 +933,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 20,
           "rawStatus": "Open",
           "seatsOpen": 20,
@@ -827,24 +947,24 @@
             "Tue",
             "Thu"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "2:05 PM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "12:20 PM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Foundations of Economics",
@@ -853,7 +973,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -867,24 +987,24 @@
             "Tue",
             "Thu"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "11:45 AM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "10:00 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Intermediate Macroeconomics",
@@ -893,7 +1013,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 20,
           "rawStatus": "Open",
           "seatsOpen": 20,
@@ -908,24 +1028,24 @@
             "Wed",
             "Fri"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "10:30 AM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "9:20 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Environmental Economics",
@@ -934,7 +1054,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 20,
           "rawStatus": "Open",
           "seatsOpen": 20,
@@ -948,24 +1068,24 @@
             "Tue",
             "Thu"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "2:05 PM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "12:20 PM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Money & Financial Markets",
@@ -974,7 +1094,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 15,
           "rawStatus": "Open",
           "seatsOpen": 15,
@@ -989,24 +1109,24 @@
             "Wed",
             "Fri"
           ],
-          "delivery": "in_person",
+          "delivery": "unknown",
           "endDate": "2027-04-23",
           "endTime": "11:50 AM",
-          "location": "",
+          "location": null,
           "startDate": "2027-01-11",
           "startTime": "10:40 AM"
         },
         "provenance": {
-          "humanVerifiedOn": "2026-08-08",
+          "humanVerifiedOn": "2026-09-27",
           "normalizationCheck": "row_checked",
-          "repositoryIngestedOn": "2026-08-08",
-          "screenshotRetrievedOn": "2026-08-08",
+          "repositoryIngestedOn": "2026-09-27",
+          "screenshotRetrievedOn": "2026-09-27",
           "sourceDocumentDate": null,
           "sourceFiles": [
-            "data/raw/economics/schedule-2026-2027-winter-spring.png"
+            "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Senior Seminar - Econometrics",
@@ -1015,7 +1135,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -1046,7 +1166,7 @@
             "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Essential Precalculus",
@@ -1055,7 +1175,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -1087,7 +1207,7 @@
             "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Calculus I",
@@ -1096,7 +1216,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -1128,7 +1248,7 @@
             "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "J",
         "title": "Applied Statistics",
@@ -1137,7 +1257,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -1169,7 +1289,7 @@
             "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "K",
         "title": "Applied Statistics",
@@ -1178,7 +1298,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -1209,7 +1329,7 @@
             "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "L",
         "title": "Applied Statistics",
@@ -1218,7 +1338,7 @@
       },
       {
         "availability": {
-          "asOf": "2026-08-08",
+          "asOf": null,
           "capacity": 24,
           "rawStatus": "Open",
           "seatsOpen": 24,
@@ -1249,7 +1369,7 @@
             "data/raw/economics/schedule-2026-2027-math-winter-spring.png"
           ],
           "sourceType": "user_provided_schedule_screenshot",
-          "verifiedOn": "2026-08-08"
+          "verifiedOn": null
         },
         "section": "M",
         "title": "Applied Statistics",
@@ -1258,5 +1378,5 @@
       }
     ]
   },
-  "verifiedOn": "2026-08-08"
+  "verifiedOn": null
 }

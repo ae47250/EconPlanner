@@ -853,7 +853,7 @@ test("standard planning may use more than two Economics courses when total load 
     const may = plan.terms.find(term => term.term === "Spring/May 2027");
     assert.deepEqual(fall.courses.map(course => course.course), ["ECO 213", "ECO 234", "ECO 333", "MAT 217"]);
     assert.deepEqual(winter.courses.map(course => course.course), ["ECO 221", "ECO 321", "ECO 461"]);
-    assert.ok(["ECO 222", "ECO 260"].includes(may.courses[0].course));
+    assert.ok(schedule.terms.May.some(section => section.course === may.courses[0].course));
     assert.ok(plan.validation.warnings.some(warning => /more than two Economics courses/.test(warning)));
     assert.ok(plan.validation.warnings.some(warning => /MAT 217.*FULL|FULL.*MAT 217/i.test(warning)));
     assert.ok(plan.terms.every(term => term.courses.length <= (term.termKey === "May" ? 1 : 4)));
@@ -1103,9 +1103,9 @@ test("schedule provider normalizes provenance, cross-lists, and meeting conflict
   const eco321 = selectConflictFreeOffering(normalized, winter, "ECO 321");
 
   assert.equal(normalized.provider.schemaVersion, 2);
-  assert.equal(normalized.provider.verifiedOn, "2026-08-08");
-  assert.equal(normalized.provider.repositoryIngestedOn, "2026-08-08");
-  assert.equal(normalized.provider.availabilityAsOf, "2026-08-08");
+  assert.equal(normalized.provider.verifiedOn, null);
+  assert.equal(normalized.provider.repositoryIngestedOn, null);
+  assert.equal(normalized.provider.availabilityAsOf, null);
   assert.equal(canonicalScheduleCode(normalized, "PHI 234"), "ECO 234");
   assert.equal(selectConflictFreeOffering(normalized, winter, "ECO 161", [eco321]), null);
   assert.ok(eco321.meeting.startMinutes < eco321.meeting.endMinutes);

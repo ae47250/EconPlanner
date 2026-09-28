@@ -17,6 +17,7 @@ import { normalizeMathematicsEquivalencyDecision } from "../lib/policy/equivalen
 import { renderEconomicsHtml } from "../lib/reports/economics-html.js";
 
 const bundle = runtimePolicyBundle();
+const reviewedSchedule = JSON.parse(await readFile(new URL("./oracle/verified-schedule-2026-2027.json", import.meta.url), "utf8"));
 
 function courses(count, prefix = "ECO") {
   return Array.from({ length: count }, (_item, index) => ({ course: `${prefix} ${200 + index}`, units: 1 }));
@@ -27,7 +28,7 @@ test("normal and conditional College load remain separate authoritative states",
   assert.equal(evaluateTermLoad({ ...base, courses: courses(4) }, {}, bundle, { traceId: "normal" }).status, "ALLOW");
 
   const missing = evaluateTermLoad({ ...base, courses: courses(5) }, {}, bundle, { traceId: "missing" });
-  assert.equal(missing.status, "BLOCK");
+  assert.equal(missing.status, "UNKNOWN");
   assert.equal(missing.reasonCode, "TERM_OVERLOAD_EVIDENCE_REQUIRED");
 
   const approved = evaluateTermLoad({
@@ -55,7 +56,7 @@ test("normal and conditional College load remain separate authoritative states",
 
 test("the exact 2026-2027 May schedule retains ECO, statistics, and supporting sections", () => {
   const may = runtimeEconomicsSchedule().terms.May;
-  assert.deepEqual(may.map(course => `${course.course}-${course.section}`).sort(), ["ECO 222-S", "ECO 260-S", "MAT 217-S"]);
+  assert.deepEqual(may.map(course => `${course.course}-${course.section}`).sort(), reviewedSchedule.sections.filter(section => section.term === "May").map(section => `${section.course}-${section.section}`).sort());
 });
 
 function prerequisitePlan(prerequisiteTerm, dependentTerm) {

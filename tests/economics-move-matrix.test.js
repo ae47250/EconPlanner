@@ -228,7 +228,7 @@ function completeOracleAudit(student, plan) {
             ...course,
             canonicalCrossListIdentity: [course.course, ...(course.crossListedAs || [])],
             availability: { ...course.availability, ...(stale ? { freshness: "stale" } : {}) },
-            provenance: { verificationDate: course.provenance?.humanVerifiedOn ?? course.provenance?.verifiedOn ?? course.provenance?.screenshotRetrievedOn ?? null, sourceReference: course.provenance?.sourceFiles?.[0] ?? null },
+            provenance: { verificationDate: course.provenance?.verifiedOn ?? null, sourceReference: course.provenance?.sourceFiles?.[0] ?? null },
             ...(course.course === "ECO 461" && course.residency === "hanover" ? { institution: "Hanover College" } : {}),
             ...(Array.isArray(course.approvalRequired) ? { approvalRequired: course.approvalRequired.map(oracleApproval) } : {})
           };

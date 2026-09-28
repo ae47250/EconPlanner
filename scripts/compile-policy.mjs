@@ -116,6 +116,7 @@ function offeringIndex(schedule) {
   return Object.fromEntries(schedule.terms.map(term => [term.termId, {
     canonicalTerm: term.canonicalTerm,
     coverage: term.coverage,
+    coverageScopes: term.coverageScopes,
     displayLabel: term.displayLabel,
     sections: term.sections
   }]));
@@ -177,11 +178,23 @@ function validateCriticalConflicts({ rules, schedule, unresolved, offeringPatter
   }
 }
 
-function validateReferences({ rules, provenance, messages, unresolved }) {
+function validateReferences({ rules, schedule, provenance, messages, unresolved }) {
   const sourceIds = new Set(provenance.sources.map(source => source.sourceId));
   const messageKeys = new Set(Object.keys(messages.messages));
   const ruleIds = new Set();
   const unresolvedIds = new Set(unresolved.questions.map(question => question.ruleId));
+
+  for (const term of schedule.terms) {
+    const scopes = new Set();
+    for (const scope of term.coverageScopes) {
+      const key = scope.course ? `course:${scope.course}` : `subject:${scope.subject}`;
+      if (scopes.has(key)) fail(`${term.termId} has duplicate schedule coverage ${key}`);
+      scopes.add(key);
+      for (const ref of scope.sourceRefs) {
+        if (!sourceIds.has(ref.split("#")[0])) fail(`${term.termId} coverage references unknown source ${ref}`);
+      }
+    }
+  }
 
   for (const rule of rules) {
     if (ruleIds.has(rule.ruleId)) fail(`duplicate rule ID ${rule.ruleId}`);
@@ -275,7 +288,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
   const historicalOfferings = inputById["historical-offerings"];
   const compatibilityProfile = inputById["compatibility-profile"];
 
-  validateReferences({ rules, provenance, messages, unresolved });
+  validateReferences({ rules, schedule, provenance, messages, unresolved });
   await validateSourceEvidence(resolvedRepositoryRoot, provenance);
   if (new Set(courses.courses.map(course => course.code)).size !== courses.courses.length) fail("duplicate course code");
   if (schedule.releaseStatus !== "ACTIVE") fail(`schedule ${schedule.releaseId} is not active`);

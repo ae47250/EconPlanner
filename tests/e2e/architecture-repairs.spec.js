@@ -170,7 +170,9 @@ test('course cards explain when no move preserves prerequisite validity', async 
   const coreCard = page.locator('.term-card li').filter({hasText:'ECO 113'}).first();
   await expect(coreCard).toContainText('No other term currently passes complete plan checks');
   await expect(coreCard).toContainText('ECO 213 is missing prerequisites: ECO 113');
-  await expect(coreCard.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true})).toHaveCount(0);
+  const moves = coreCard.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true});
+  await expect(moves).toHaveCount(1);
+  for (const option of await moves.locator('option:not(:checked)').all()) await expect(option).toHaveAttribute('disabled','');
 });
 
 test('senior statistics blocker is causal and saved answers survive revisiting', async ({page},testInfo) => {
@@ -182,7 +184,7 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
   await page.getByRole('button',{name:'← Back to course selection',exact:true}).click();
   await setCourseStatus(page,'MAT 217','Completed');
   await generatePlans(page);
-  await expect(page.locator('.result-status-value')).toHaveText('No complete plan');
+  await expect(page.locator('.result-status-value')).toHaveText('Not possible');
   await page.locator('details.result-diagnostics > summary').click();
   await expect(page.locator('details.result-diagnostics')).toContainText('Your available planning terms start in Winter 2027');
   await expect(page.locator('details.result-diagnostics')).toContainText('statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term');
@@ -212,4 +214,30 @@ test('junior prerequisite correction preserves choices and explains next-year ou
   expect(economics.economicsPlans.some(p=>p.isEarlyGraduation)).toBe(false);
   await expect(page.getByRole('heading',{name:'Your feasible plan',exact:true})).toBeFocused();
   await expect(page.getByRole('heading',{name:'Graduate next year: Not possible',exact:true})).toBeVisible();
+});
+
+for (const standing of ['junior', 'senior']) test(`${standing} May 2027 explanation uses confirmed finance and Spring load evidence`, async ({page}) => {
+  await intake(page, standing);
+  if (standing === 'junior') {
+    await page.getByRole('button',{name:'Back to about you',exact:true}).click();
+    await page.getByRole('button',{name:'I’d like to graduate next year',exact:true}).click();
+    await continueToCourses(page);
+  }
+  await page.getByText('Other Economics courses',{exact:true}).click();
+  for (const code of ['ECO 113','ECO 114','ECO 161','ECO 213','ECO 214','ECO 221','MAT 113','MAT 217']) await setCourseStatus(page,code,'Completed');
+  const response = await (await generatePlans(page)).json();
+  const economics = response.programs.find(program => program.program.id === 'economics-base');
+  const result = standing === 'junior' ? economics.economicsAcceleratedResult : economics.economicsPlanResult;
+  expect(standing === 'junior' ? result.status : result.conclusion).toBe(standing === 'junior' ? 'NOT_POSSIBLE' : 'PROVEN_INFEASIBLE');
+  if (standing === 'senior') {
+    await expect(page.locator('.result-status-value')).toHaveText('Not possible');
+    await page.locator('details.result-diagnostics > summary').click();
+  } else {
+    await expect(page.getByRole('heading',{name:'Graduate next year: Not possible',exact:true})).toBeVisible();
+    expect(result.effectiveStanding).toBe('junior');
+  }
+  await expect(page.getByText(result.evidence.blockingReasons[0].message,{exact:true})).toBeVisible();
+  expect(result.evidence.blockingReasons[0].message).toContain('ECO 321 must fill finance');
+  expect(result.evidence.blockingReasons[0].message).toContain('ECO 222, ECO 224, ECO 234');
+  expect(result.evidence.blockingReasons[0].message).toContain('1.25-unit ceiling');
 });

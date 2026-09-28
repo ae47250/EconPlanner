@@ -2,25 +2,1668 @@
   "schemaVersion": "1.0.0",
   "policyVersion": "econ-2025-2026.1",
   "records": [
-    {"ruleId":"TERM-CANONICAL-MAY","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"termIdentity","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"COLLEGE_POLICY","owner":"Hanover College","boundary":"TERM_IDENTITY_AND_DISPLAY"},"sourceRefs":["TERM-STRUCTURE#May-Term"],"effective":{"from":"2025-08-01","through":null},"confidence":"VERIFIED_SOURCE","requiredInputs":["termInput"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"aliases":["May","May Term","Spring","Spring Term","Spring/May"]},"effect":{"canonicalTerm":"MAY","displayLabel":"Spring/May"},"reasonCode":"CANONICAL_TERM_MAY","messageKeys":{"student":"term.student","advisor":"term.advisor","move":"term.move","report":"term.report"},"dependencies":[],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["spring-may-aliases"],"negative":["term-identity-mixing"],"approval":[],"reviewState":[]}},
-    {"ruleId":"CAPACITY-FALL","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"LOAD","ruleType":"termLoad","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"COLLEGE_POLICY","owner":"Hanover College","boundary":"NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY"},"sourceRefs":["TERM-STRUCTURE#Fall-Term","HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"],"effective":{"from":"2025-08-01","through":null},"confidence":"VERIFIED_SOURCE","requiredInputs":["termPlan","advisorOverloadApproval","academicProbationStatus"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"canonicalTerm":"FALL"},"effect":{"maxTotalCourses":4,"normalCourseUnits":4,"conditionalMaximumCourseUnits":5.25,"conditionalRequirements":{"advisorApproval":"APPROVED","academicProbationStatus":"NOT_ON_ACADEMIC_PROBATION"},"missingOrUnsupportedDisposition":"REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY"},"reasonCode":"FALL_TOTAL_CAPACITY","messageKeys":{"student":"load.student","advisor":"load.advisor","move":"load.move","report":"load.report"},"dependencies":[],"supersedes":[],"confirmation":{"date":"2026-08-08","reviewer":"CP5A official-source review","lastReviewDate":"2026-08-08"},"testRefs":{"positive":["schedule-capacity-matrix","fall-approved-overload"],"negative":["fall-five-courses-without-evidence","fall-overload-on-probation"],"approval":["fall-overload-approval-and-standing"],"reviewState":["fall-overload-evidence-missing"]}},
-    {"ruleId":"CAPACITY-WINTER","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"LOAD","ruleType":"termLoad","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"COLLEGE_POLICY","owner":"Hanover College","boundary":"NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY"},"sourceRefs":["TERM-STRUCTURE#Winter-Term","HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"],"effective":{"from":"2025-08-01","through":null},"confidence":"VERIFIED_SOURCE","requiredInputs":["termPlan","advisorOverloadApproval","academicProbationStatus"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"canonicalTerm":"WINTER"},"effect":{"maxTotalCourses":4,"normalCourseUnits":4,"conditionalMaximumCourseUnits":5.25,"conditionalRequirements":{"advisorApproval":"APPROVED","academicProbationStatus":"NOT_ON_ACADEMIC_PROBATION"},"missingOrUnsupportedDisposition":"REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY"},"reasonCode":"WINTER_TOTAL_CAPACITY","messageKeys":{"student":"load.student","advisor":"load.advisor","move":"load.move","report":"load.report"},"dependencies":[],"supersedes":[],"confirmation":{"date":"2026-08-08","reviewer":"CP5A official-source review","lastReviewDate":"2026-08-08"},"testRefs":{"positive":["schedule-capacity-matrix","winter-approved-overload"],"negative":["winter-five-courses-without-evidence","winter-overload-on-probation"],"approval":["winter-overload-approval-and-standing"],"reviewState":["winter-overload-evidence-missing"]}},
-    {"ruleId":"CAPACITY-MAY","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"LOAD","ruleType":"termLoad","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"COLLEGE_POLICY","owner":"Hanover College","boundary":"NORMAL_AND_CONDITIONAL_MAY_TERM_TOTAL_CAPACITY"},"sourceRefs":["TERM-STRUCTURE#May-Term","HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"],"effective":{"from":"2025-08-01","through":null},"confidence":"VERIFIED_SOURCE","requiredInputs":["termPlan","advisorOverloadApproval","academicProbationStatus"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"canonicalTerm":"MAY"},"effect":{"maxTotalCourses":1,"normalCourseUnits":1,"conditionalMaximumCourseUnits":1.25,"maxEconomicsCourses":1,"conditionalRequirements":{"advisorApproval":"APPROVED","academicProbationStatus":"NOT_ON_ACADEMIC_PROBATION"},"missingOrUnsupportedDisposition":"REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY"},"reasonCode":"MAY_TOTAL_CAPACITY","messageKeys":{"student":"load.student","advisor":"load.advisor","move":"load.move","report":"load.report"},"dependencies":["TERM-CANONICAL-MAY"],"supersedes":[],"confirmation":{"date":"2026-08-08","reviewer":"CP5A official-source review","lastReviewDate":"2026-08-08"},"testRefs":{"positive":["schedule-capacity-matrix","may-approved-quarter-unit-overload"],"negative":["may-two-full-courses"],"approval":["may-overload-approval-and-standing"],"reviewState":["may-overload-evidence-missing"]}},
-    {"ruleId":"PLANNING-ECO-LOAD-PREFERENCE","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"LOAD","ruleType":"termLoad","classification":"SOFT","disposition":"PREFER","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"ECONOMICS_ADVISING_LOAD_PREFERENCE"},"sourceRefs":["DEPARTMENT-POLICIES#Confirmed-policy-7"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["termPlan","graduationNeed"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"canonicalTerms":["FALL","WINTER"]},"effect":{"preferredMaxEconomicsCourses":2,"graduationNeedMayUseTotalTermCapacity":true,"warningRequiredAbovePreference":true,"strategyMismatchInvalidatesPlan":false},"reasonCode":"HEAVY_ECONOMICS_LOAD_WARNING","messageKeys":{"student":"load.student","advisor":"load.advisor","move":"load.move","report":"load.report"},"dependencies":["CAPACITY-FALL","CAPACITY-WINTER"],"supersedes":["LEGACY-HARD-TWO-ECO-MAXIMUM"],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["graduation-heavy-load-valid"],"negative":["total-capacity-still-hard"],"approval":[],"reviewState":[]}},
-    {"ruleId":"CAPSTONE-WINTER-ONLY","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"graduationStanding","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":["ECO 461"],"requirements":["eco-461"]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"ECONOMICS_CAPSTONE_TERM"},"sourceRefs":["DEPARTMENT-POLICIES#Confirmed-policy-6"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["targetTerm"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"course":"ECO 461"},"effect":{"allowedCanonicalTerms":["WINTER"]},"reasonCode":"ECO_461_WINTER_ONLY","messageKeys":{"student":"term.student","advisor":"term.advisor","move":"term.move","report":"term.report"},"dependencies":[],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["eco-461-winter"],"negative":["eco-461-fall-or-may"],"approval":[],"reviewState":[]}},
-    {"ruleId":"CAPSTONE-SENIOR-STANDING","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"graduationStanding","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":["ECO 461"],"requirements":["eco-461"]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"ECONOMICS_CAPSTONE_STANDING"},"sourceRefs":["DEPARTMENT-POLICIES#Confirmed-policy-6"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["studentStanding","planningHorizon"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"course":"ECO 461"},"effect":{"requiredStanding":"SENIOR","normalStandingBeginsCollegeYear":4},"reasonCode":"ECO_461_SENIOR_STANDING","messageKeys":{"student":"term.student","advisor":"term.advisor","move":"term.move","report":"term.report"},"dependencies":["ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING"],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["senior-standing-capstone"],"negative":["junior-capstone"],"approval":["early-graduate-standing"],"reviewState":[]}},
-    {"ruleId":"CAPSTONE-EARLY-GRADUATE-STANDING","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"graduationStanding","classification":"HARD","disposition":"ENFORCE","status":"SUPERSEDED","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":["ECO 461"],"requirements":["eco-461"]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"COMPRESSED_PLAN_ECO_461_STANDING"},"sourceRefs":["DEPARTMENT-POLICIES#Confirmed-policy-2"],"effective":{"from":"2026-08-01","through":"2026-09-27"},"confidence":"CONFIRMED","requiredInputs":["studentStanding","planningHorizon","approvalInstances"],"requiredEvidence":["RegistrarOrAdvisorStandingConfirmation"],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"compressedPlan":true,"course":"ECO 461"},"effect":{"confirmedStandingAppliesOnlyToFinalAcademicYear":true,"extendedPlanSeniorStandingBeginsCollegeYear":4},"reasonCode":"EARLY_GRADUATE_STANDING_CONFIRMATION","messageKeys":{"student":"permission.student","advisor":"permission.advisor","move":"permission.move","report":"permission.report"},"dependencies":["CAPSTONE-SENIOR-STANDING"],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["early-graduate-confirmed"],"negative":["early-graduate-unconfirmed"],"approval":["standing-approval-scope"],"reviewState":[]}},
-    {"ruleId":"CAPSTONE-HANOVER-RESIDENCY","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"graduationStanding","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":["ECO 461"],"requirements":["eco-461"]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"ECONOMICS_CAPSTONE_RESIDENCY"},"sourceRefs":["DEPARTMENT-POLICIES#Confirmed-policy-6"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["completionEvidence"],"requiredEvidence":["HanoverCompletion"],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"course":"ECO 461"},"effect":{"requiredInstitution":"Hanover College","transferEquivalencyPermitted":false},"reasonCode":"ECO_461_HANOVER_RESIDENCY","messageKeys":{"student":"term.student","advisor":"term.advisor","move":"term.move","report":"term.report"},"dependencies":["REQ-ECO-461"],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["hanover-capstone"],"negative":["transfer-capstone"],"approval":[],"reviewState":[]}},
-    {"ruleId":"CAPSTONE-STATISTICS-BEFORE","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"graduationStanding","classification":"HARD","disposition":"ENFORCE","status":"SUPERSEDED","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":["ECO 257","MAT 217","PSY 217","ECO 461"],"requirements":["statistics","eco-461"]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"ECO_461_STATISTICS_TIMING"},"sourceRefs":["DEPARTMENT-POLICIES#Confirmed-policies-1-and-4"],"effective":{"from":"2026-08-01","through":"2026-09-27"},"confidence":"CONFIRMED","requiredInputs":["courseHistory","targetTerm"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"course":"ECO 461"},"effect":{"mustBeCompletedBeforeOneOf":["ECO 257","MAT 217","PSY 217"],"concurrencyPermitted":false},"reasonCode":"ECO_461_STATISTICS_MUST_BE_PRIOR","messageKeys":{"student":"prerequisite.student","advisor":"prerequisite.advisor","move":"prerequisite.move","report":"prerequisite.report"},"dependencies":["PREREQ-ECO-461"],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["statistics-before-capstone"],"negative":["statistics-concurrent-capstone"],"approval":[],"reviewState":[]}},
-    {"ruleId":"PLANNING-CURRENT-TERM-EXCLUDED","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"termIdentity","classification":"HARD","disposition":"ENFORCE","status":"SUPERSEDED","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"PLAN_CREATION_TERM"},"sourceRefs":["ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"],"effective":{"from":"2026-08-01","through":"2026-09-27"},"confidence":"CONFIRMED","requiredInputs":["planCreationDate","courseFacts"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"regularTermContainsPlanCreationDate":true},"effect":{"futurePlacementsExcluded":true,"currentCoursesMustBeInProgressFacts":true},"reasonCode":"CURRENT_TERM_NOT_FUTURE_PLANNING_DOMAIN","messageKeys":{"student":"term.student","advisor":"term.advisor","move":"term.move","report":"term.report"},"dependencies":[],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["current-term-in-progress"],"negative":["current-term-generated-placement"],"approval":[],"reviewState":[]}},
-    {"ruleId":"PLANNING-IN-PROGRESS-UNLOCKS-LATER","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"HISTORY","ruleType":"studentHistory","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"PLANNED_AND_IN_PROGRESS_PREREQUISITE_TIMING"},"sourceRefs":["ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["courseFacts","targetTerm"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"courseStatus":"IN_PROGRESS"},"effect":{"prerequisiteAvailableAfterCurrentTermOnly":true},"reasonCode":"IN_PROGRESS_UNLOCKS_LATER_TERM","messageKeys":{"student":"history.student","advisor":"history.advisor","move":"history.move","report":"history.report"},"dependencies":["PLANNING-CURRENT-TERM-ADD-DROP"],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["in-progress-unlocks-later"],"negative":["in-progress-same-term"],"approval":[],"reviewState":[]}},
-    {"ruleId":"HISTORY-COMPLETED-ADVANCED-PRESERVED","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"HISTORY","ruleType":"studentHistory","classification":"REVIEW","disposition":"REVIEW","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"COMPLETED_AND_TRANSFER_HISTORY_HANDLING"},"sourceRefs":["ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"],"effective":{"from":"2026-08-05","through":null},"confidence":"CONFIRMED","requiredInputs":["courseFacts","completionEvidence","prerequisiteEvidence"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"courseStatus":["COMPLETED","TRANSFER"],"historicalPrerequisiteEvidence":"MISSING"},"effect":{"preserveCourseFact":true,"decision":"REVIEW_REQUIRED","strictTimingForPlannedAndInProgress":true,"inferMissingPrerequisite":false},"reasonCode":"HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW","messageKeys":{"student":"history.student","advisor":"history.advisor","move":"history.move","report":"history.report"},"dependencies":["REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE"],"supersedes":["LEGACY-CLEAR-ADVANCED-HISTORY"],"confirmation":{"date":"2026-08-05","reviewer":"Project owner","lastReviewDate":"2026-08-05"},"testRefs":{"positive":["completed-advanced-preserved"],"negative":["planned-course-strict-timing"],"approval":[],"reviewState":["historical-prerequisite-review"]}},
-    {"ruleId":"PLANNING-MAY-COURSE-EXCLUSIONS","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"termIdentity","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":["ECO 113","ECO 114","ECO 213","ECO 214","ECO 321","BUSN 323","ECO 257","PSY 217","ECO 461","MAT 113","MAT 121"],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"ECONOMICS_MAY_PLACEMENTS"},"sourceRefs":["OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary"],"effective":{"from":"2026-09-26","through":null},"confidence":"CONFIRMED","requiredInputs":["course","targetTerm"],"requiredEvidence":[],"override":{"permitted":true,"authority":"ACTIVE_EXACT_SCHEDULE","requiredEvidence":["matchingScheduleSection"]},"condition":{"canonicalTerm":"MAY"},"effect":{"excludedCourses":["ECO 113","ECO 114","ECO 213","ECO 214","ECO 321","BUSN 323","ECO 257","PSY 217","ECO 461","MAT 113","MAT 121"]},"reasonCode":"COURSE_NOT_SUPPORTED_IN_MAY","messageKeys":{"student":"term.student","advisor":"term.advisor","move":"term.move","report":"term.report"},"dependencies":["TERM-CANONICAL-MAY"],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-09-26"},"testRefs":{"positive":["may-electives"],"negative":["may-course-exclusions"],"approval":[],"reviewState":[]}},
-    {"ruleId":"PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"SCHEDULE_EVIDENCE","ruleType":"scheduleEvidence","classification":"EVIDENCE","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"UNPUBLISHED_OFFERING_PROJECTION"},"sourceRefs":["ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule","OWNER-PRELIMINARY-SCHEDULE-2026-09-22#PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["scheduleRelease","targetAcademicYear","offeringPattern"],"requiredEvidence":[],"override":{"permitted":true,"authority":"ACTIVE_EXACT_SCHEDULE","requiredEvidence":["matchingScheduleSection"]},"condition":{"exactScheduleEvidence":"UNAVAILABLE"},"effect":{"releaseStatus":"PRELIMINARY","projectionGranularity":"LABELED_TERM_WORKLOAD_ESTIMATE","preliminaryScheduleEvidence":"SOFT_COURSE_TERM_GUIDE","preliminaryOmissionBlocks":false,"preliminarySectionsOrSeatsPermitted":false,"inventedExactTermPermitted":false,"unknownBecomesAllow":false},"reasonCode":"UNPUBLISHED_OFFERING_TERM_TBC","messageKeys":{"student":"offering.student","advisor":"offering.advisor","move":"offering.move","report":"offering.report"},"dependencies":["SCHEDULE-EVIDENCE-PROVENANCE"],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department chair and EconPlanner project owner","lastReviewDate":"2026-09-22"},"testRefs":{"positive":["future-term-tbc","dated-preliminary-course-term"],"negative":["unsupported-exact-future-term"],"approval":[],"reviewState":["unknown-schedule"]}},
-    {"ruleId":"SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"SCHEDULE_EVIDENCE","ruleType":"scheduleEvidence","classification":"EVIDENCE","disposition":"REFERENCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"ACCEPTABLE_ECONOMICS_SCHEDULE_EVIDENCE"},"sourceRefs":["DEPARTMENT-POLICIES#Schedule-evidence-policy"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["scheduleEvidence"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"evidenceType":["OFFICIAL_SCHEDULE_EXPORT","COMPLETE_LEGIBLE_SCREENSHOT"]},"effect":{"requiredScreenshotFields":["academicYear","term","course","section","title","instructor","credits","dates","meetingPattern","seats","sectionStatus"],"conditionalFields":["delivery","location"]},"reasonCode":"SCHEDULE_EVIDENCE_REQUIRED_FIELDS","messageKeys":{"student":"schedule.student","advisor":"schedule.advisor","move":"schedule.move","report":"schedule.report"},"dependencies":[],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["schedule-evidence-fields"],"negative":["incomplete-screenshot"],"approval":[],"reviewState":[]}},
-    {"ruleId":"SCHEDULE-EVIDENCE-PROVENANCE","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"SCHEDULE_EVIDENCE","ruleType":"scheduleEvidence","classification":"EVIDENCE","disposition":"REFERENCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"SCHEDULE_EVIDENCE_PROVENANCE"},"sourceRefs":["DEPARTMENT-POLICIES#Schedule-evidence-policy"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["scheduleEvidence"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{},"effect":{"requiredMetadata":["verificationTimestamp","sourceFileProvenance"],"missingMetadataMustRemainNull":true},"reasonCode":"SCHEDULE_PROVENANCE_REQUIRED","messageKeys":{"student":"schedule.student","advisor":"schedule.advisor","move":"schedule.move","report":"schedule.report"},"dependencies":[],"supersedes":[],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["schedule-source-provenance"],"negative":["invented-schedule-timestamp"],"approval":[],"reviewState":["missing-schedule-timestamps"]}},
-    {"ruleId":"SCHEDULE-AVAILABILITY-BEHAVIOR","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"SCHEDULE_EVIDENCE","ruleType":"scheduleEvidence","classification":"EVIDENCE","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"DEPARTMENT_CONFIRMED","owner":"Economics Department","boundary":"SCHEDULE_ENROLLMENT_STATE_INTERPRETATION"},"sourceRefs":["DEPARTMENT-POLICIES#Confirmed-policy-9"],"effective":{"from":"2026-08-01","through":null},"confidence":"CONFIRMED","requiredInputs":["scheduleRelease","sectionState"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{},"effect":{"OPEN":"VERIFIED","CLOSED":"BLOCK","WAITLISTED":"CONDITIONAL","UNKNOWN":"PRELIMINARY","STALE":"PRELIMINARY","FULL":"REVIEW_REQUIRED","absenceWithCompleteCoverage":"NOT_OFFERED","absenceWithoutCompleteCoverage":"UNKNOWN"},"reasonCode":"SCHEDULE_ENROLLMENT_STATE_DECISION","messageKeys":{"student":"schedule.student","advisor":"schedule.advisor","move":"schedule.move","report":"schedule.report"},"dependencies":["REVIEW-ENROLLMENT-FULL-DISPOSITION"],"supersedes":["LEGACY-FULL-AS-CLOSED"],"confirmation":{"date":"2026-08-01","reviewer":"Economics Department representative and project owner","lastReviewDate":"2026-08-01"},"testRefs":{"positive":["schedule-availability-states"],"negative":["full-not-open-or-closed"],"approval":[],"reviewState":["full-review-required"]}},
-    {"ruleId":"PLANNING-CURRENT-TERM-ADD-DROP","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"termIdentity","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":[],"requirements":[]},"authority":{"kind":"OWNER_CONFIRMATION","owner":"Project owner and Economics Department domain expert","boundary":"ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION"},"sourceRefs":["OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"],"effective":{"from":"2026-09-27","through":null},"confidence":"CONFIRMED","requiredInputs":["planningContext"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"regularTermContainsPlanCreationDate":true},"effect":{"allowNewCoursesDuringOfficialInitialDropAdd":true,"boundariesInclusive":true,"rejectAfterClosure":true,"preserveInProgressOccupancy":true},"reasonCode":"PLANNING_CURRENT_TERM_ADD_DROP","messageKeys":{"student":"term.student","advisor":"term.advisor","move":"term.move","report":"term.report"},"dependencies":[],"supersedes":["PLANNING-CURRENT-TERM-EXCLUDED"],"confirmation":{"date":"2026-09-27","reviewer":"Project owner and Economics Department domain expert","lastReviewDate":"2026-09-27"},"testRefs":{"positive":["current-term-in-progress"],"negative":["current-term-generated-placement"],"approval":[],"reviewState":[]}},
-    {"ruleId":"ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING","schemaVersion":"1.0.0","policyVersion":"econ-2025-2026.1","family":"TERM","ruleType":"graduationStanding","classification":"HARD","disposition":"ENFORCE","status":"ACTIVE","scope":{"program":"ECONOMICS","catalogYears":["2025-2026"],"courses":["ECO 461"],"requirements":["eco-461"]},"authority":{"kind":"OWNER_CONFIRMATION","owner":"Project owner and Economics Department domain expert","boundary":"ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION"},"sourceRefs":["OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"],"effective":{"from":"2026-09-27","through":null},"confidence":"CONFIRMED","requiredInputs":["planningContext"],"requiredEvidence":[],"override":{"permitted":false,"authority":null,"requiredEvidence":[]},"condition":{"compressedPlan":true,"course":"ECO 461"},"effect":{"assumeSeniorStandingInFinalPlanningYear":true,"requiresStudentConfirmation":false,"readinessImpact":"NONE"},"reasonCode":"ACCELERATED_PLAN_FINAL_YEAR_SENIOR_STANDING","messageKeys":{"student":"permission.student","advisor":"permission.advisor","move":"permission.move","report":"permission.report"},"dependencies":[],"supersedes":["CAPSTONE-EARLY-GRADUATE-STANDING"],"confirmation":{"date":"2026-09-27","reviewer":"Project owner and Economics Department domain expert","lastReviewDate":"2026-09-27"},"testRefs":{"positive":["early-graduate-confirmed"],"negative":["early-graduate-unconfirmed"],"approval":["standing-approval-scope"],"reviewState":[]}}
+    {
+      "ruleId": "TERM-CANONICAL-MAY",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "termIdentity",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "COLLEGE_POLICY",
+        "owner": "Hanover College",
+        "boundary": "TERM_IDENTITY_AND_DISPLAY"
+      },
+      "sourceRefs": [
+        "TERM-STRUCTURE#May-Term"
+      ],
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
+      "confidence": "VERIFIED_SOURCE",
+      "requiredInputs": [
+        "termInput"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "aliases": [
+          "May",
+          "May Term",
+          "Spring",
+          "Spring Term",
+          "Spring/May"
+        ]
+      },
+      "effect": {
+        "canonicalTerm": "MAY",
+        "displayLabel": "Spring/May"
+      },
+      "reasonCode": "CANONICAL_TERM_MAY",
+      "messageKeys": {
+        "student": "term.student",
+        "advisor": "term.advisor",
+        "move": "term.move",
+        "report": "term.report"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "spring-may-aliases"
+        ],
+        "negative": [
+          "term-identity-mixing"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "CAPACITY-FALL",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "LOAD",
+      "ruleType": "termLoad",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "COLLEGE_POLICY",
+        "owner": "Hanover College",
+        "boundary": "NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY"
+      },
+      "sourceRefs": [
+        "TERM-STRUCTURE#Fall-Term",
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy",
+        "HANOVER-CATALOG-COURSE-LOAD-TUITION#Course-Load-and-Enrollment-Status"
+      ],
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
+      "confidence": "VERIFIED_SOURCE",
+      "requiredInputs": [
+        "termPlan",
+        "advisorOverloadApproval",
+        "academicProbationStatus"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "canonicalTerm": "FALL"
+      },
+      "effect": {
+        "maxTotalCourses": 4,
+        "normalCourseUnits": 4,
+        "conditionalMaximumCourseUnits": 5.25,
+        "conditionalRequirements": {
+          "advisorApproval": "APPROVED",
+          "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION"
+        },
+        "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+        "tuitionAdvisory": {
+          "canonicalTerms": [
+            "FALL"
+          ],
+          "thresholdExclusive": 4.5,
+          "blocking": false,
+          "readinessImpact": "NONE",
+          "completeEnrollmentNotEstablishedByMajorPlan": true,
+          "chargeAmountProvided": false
+        }
+      },
+      "reasonCode": "FALL_TOTAL_CAPACITY",
+      "messageKeys": {
+        "student": "load.student",
+        "advisor": "load.advisor",
+        "move": "load.move",
+        "report": "load.report"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-08",
+        "reviewer": "CP5A official-source review",
+        "lastReviewDate": "2026-08-08"
+      },
+      "testRefs": {
+        "positive": [
+          "schedule-capacity-matrix",
+          "fall-approved-overload"
+        ],
+        "negative": [
+          "fall-five-courses-without-evidence",
+          "fall-overload-on-probation"
+        ],
+        "approval": [
+          "fall-overload-approval-and-standing"
+        ],
+        "reviewState": [
+          "fall-overload-evidence-missing"
+        ]
+      }
+    },
+    {
+      "ruleId": "CAPACITY-WINTER",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "LOAD",
+      "ruleType": "termLoad",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "COLLEGE_POLICY",
+        "owner": "Hanover College",
+        "boundary": "NORMAL_AND_CONDITIONAL_TERM_TOTAL_CAPACITY"
+      },
+      "sourceRefs": [
+        "TERM-STRUCTURE#Winter-Term",
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy",
+        "HANOVER-CATALOG-COURSE-LOAD-TUITION#Course-Load-and-Enrollment-Status"
+      ],
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
+      "confidence": "VERIFIED_SOURCE",
+      "requiredInputs": [
+        "termPlan",
+        "advisorOverloadApproval",
+        "academicProbationStatus"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "canonicalTerm": "WINTER"
+      },
+      "effect": {
+        "maxTotalCourses": 4,
+        "normalCourseUnits": 4,
+        "conditionalMaximumCourseUnits": 5.25,
+        "conditionalRequirements": {
+          "advisorApproval": "APPROVED",
+          "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION"
+        },
+        "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
+        "tuitionAdvisory": {
+          "canonicalTerms": [
+            "WINTER",
+            "MAY"
+          ],
+          "thresholdExclusive": 5.5,
+          "blocking": false,
+          "readinessImpact": "NONE",
+          "completeEnrollmentNotEstablishedByMajorPlan": true,
+          "chargeAmountProvided": false
+        }
+      },
+      "reasonCode": "WINTER_TOTAL_CAPACITY",
+      "messageKeys": {
+        "student": "load.student",
+        "advisor": "load.advisor",
+        "move": "load.move",
+        "report": "load.report"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-08",
+        "reviewer": "CP5A official-source review",
+        "lastReviewDate": "2026-08-08"
+      },
+      "testRefs": {
+        "positive": [
+          "schedule-capacity-matrix",
+          "winter-approved-overload"
+        ],
+        "negative": [
+          "winter-five-courses-without-evidence",
+          "winter-overload-on-probation"
+        ],
+        "approval": [
+          "winter-overload-approval-and-standing"
+        ],
+        "reviewState": [
+          "winter-overload-evidence-missing"
+        ]
+      }
+    },
+    {
+      "ruleId": "CAPACITY-MAY",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "LOAD",
+      "ruleType": "termLoad",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "COLLEGE_POLICY",
+        "owner": "Hanover College",
+        "boundary": "NORMAL_AND_CONDITIONAL_MAY_TERM_TOTAL_CAPACITY"
+      },
+      "sourceRefs": [
+        "TERM-STRUCTURE#May-Term",
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
+      ],
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
+      "confidence": "VERIFIED_SOURCE",
+      "requiredInputs": [
+        "termPlan",
+        "advisorOverloadApproval",
+        "academicProbationStatus"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "canonicalTerm": "MAY"
+      },
+      "effect": {
+        "maxTotalCourses": 1,
+        "normalCourseUnits": 1,
+        "conditionalMaximumCourseUnits": 1.25,
+        "maxEconomicsCourses": 1,
+        "conditionalRequirements": {
+          "advisorApproval": "APPROVED",
+          "academicProbationStatus": "NOT_ON_ACADEMIC_PROBATION"
+        },
+        "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY"
+      },
+      "reasonCode": "MAY_TOTAL_CAPACITY",
+      "messageKeys": {
+        "student": "load.student",
+        "advisor": "load.advisor",
+        "move": "load.move",
+        "report": "load.report"
+      },
+      "dependencies": [
+        "TERM-CANONICAL-MAY"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-08",
+        "reviewer": "CP5A official-source review",
+        "lastReviewDate": "2026-08-08"
+      },
+      "testRefs": {
+        "positive": [
+          "schedule-capacity-matrix",
+          "may-approved-quarter-unit-overload"
+        ],
+        "negative": [
+          "may-two-full-courses"
+        ],
+        "approval": [
+          "may-overload-approval-and-standing"
+        ],
+        "reviewState": [
+          "may-overload-evidence-missing"
+        ]
+      }
+    },
+    {
+      "ruleId": "PLANNING-ECO-LOAD-PREFERENCE",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "LOAD",
+      "ruleType": "termLoad",
+      "classification": "SOFT",
+      "disposition": "PREFER",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "ECONOMICS_ADVISING_LOAD_PREFERENCE"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed-policy-7"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "termPlan",
+        "graduationNeed"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "canonicalTerms": [
+          "FALL",
+          "WINTER"
+        ]
+      },
+      "effect": {
+        "preferredMaxEconomicsCourses": 2,
+        "graduationNeedMayUseTotalTermCapacity": true,
+        "warningRequiredAbovePreference": true,
+        "strategyMismatchInvalidatesPlan": false
+      },
+      "reasonCode": "HEAVY_ECONOMICS_LOAD_WARNING",
+      "messageKeys": {
+        "student": "load.student",
+        "advisor": "load.advisor",
+        "move": "load.move",
+        "report": "load.report"
+      },
+      "dependencies": [
+        "CAPACITY-FALL",
+        "CAPACITY-WINTER"
+      ],
+      "supersedes": [
+        "LEGACY-HARD-TWO-ECO-MAXIMUM"
+      ],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "graduation-heavy-load-valid"
+        ],
+        "negative": [
+          "total-capacity-still-hard"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "CAPSTONE-WINTER-ONLY",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "graduationStanding",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 461"
+        ],
+        "requirements": [
+          "eco-461"
+        ]
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "ECONOMICS_CAPSTONE_TERM"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed-policy-6"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "targetTerm"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "course": "ECO 461"
+      },
+      "effect": {
+        "allowedCanonicalTerms": [
+          "WINTER"
+        ]
+      },
+      "reasonCode": "ECO_461_WINTER_ONLY",
+      "messageKeys": {
+        "student": "term.student",
+        "advisor": "term.advisor",
+        "move": "term.move",
+        "report": "term.report"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "eco-461-winter"
+        ],
+        "negative": [
+          "eco-461-fall-or-may"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "CAPSTONE-SENIOR-STANDING",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "graduationStanding",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 461"
+        ],
+        "requirements": [
+          "eco-461"
+        ]
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "ECONOMICS_CAPSTONE_STANDING"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed-policy-6"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "studentStanding",
+        "planningHorizon"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "course": "ECO 461"
+      },
+      "effect": {
+        "requiredStanding": "SENIOR",
+        "normalStandingBeginsCollegeYear": 4
+      },
+      "reasonCode": "ECO_461_SENIOR_STANDING",
+      "messageKeys": {
+        "student": "term.student",
+        "advisor": "term.advisor",
+        "move": "term.move",
+        "report": "term.report"
+      },
+      "dependencies": [
+        "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "senior-standing-capstone"
+        ],
+        "negative": [
+          "junior-capstone"
+        ],
+        "approval": [
+          "early-graduate-standing"
+        ],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "CAPSTONE-EARLY-GRADUATE-STANDING",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "graduationStanding",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "SUPERSEDED",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 461"
+        ],
+        "requirements": [
+          "eco-461"
+        ]
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "COMPRESSED_PLAN_ECO_461_STANDING"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed-policy-2"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": "2026-09-27"
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "studentStanding",
+        "planningHorizon",
+        "approvalInstances"
+      ],
+      "requiredEvidence": [
+        "RegistrarOrAdvisorStandingConfirmation"
+      ],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "compressedPlan": true,
+        "course": "ECO 461"
+      },
+      "effect": {
+        "confirmedStandingAppliesOnlyToFinalAcademicYear": true,
+        "extendedPlanSeniorStandingBeginsCollegeYear": 4
+      },
+      "reasonCode": "EARLY_GRADUATE_STANDING_CONFIRMATION",
+      "messageKeys": {
+        "student": "permission.student",
+        "advisor": "permission.advisor",
+        "move": "permission.move",
+        "report": "permission.report"
+      },
+      "dependencies": [
+        "CAPSTONE-SENIOR-STANDING"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "early-graduate-confirmed"
+        ],
+        "negative": [
+          "early-graduate-unconfirmed"
+        ],
+        "approval": [
+          "standing-approval-scope"
+        ],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "CAPSTONE-HANOVER-RESIDENCY",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "graduationStanding",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 461"
+        ],
+        "requirements": [
+          "eco-461"
+        ]
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "ECONOMICS_CAPSTONE_RESIDENCY"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed-policy-6"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "completionEvidence"
+      ],
+      "requiredEvidence": [
+        "HanoverCompletion"
+      ],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "course": "ECO 461"
+      },
+      "effect": {
+        "requiredInstitution": "Hanover College",
+        "transferEquivalencyPermitted": false
+      },
+      "reasonCode": "ECO_461_HANOVER_RESIDENCY",
+      "messageKeys": {
+        "student": "term.student",
+        "advisor": "term.advisor",
+        "move": "term.move",
+        "report": "term.report"
+      },
+      "dependencies": [
+        "REQ-ECO-461"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "hanover-capstone"
+        ],
+        "negative": [
+          "transfer-capstone"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "CAPSTONE-STATISTICS-BEFORE",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "graduationStanding",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "SUPERSEDED",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 257",
+          "MAT 217",
+          "PSY 217",
+          "ECO 461"
+        ],
+        "requirements": [
+          "statistics",
+          "eco-461"
+        ]
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "ECO_461_STATISTICS_TIMING"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed-policies-1-and-4"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": "2026-09-27"
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "courseHistory",
+        "targetTerm"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "course": "ECO 461"
+      },
+      "effect": {
+        "mustBeCompletedBeforeOneOf": [
+          "ECO 257",
+          "MAT 217",
+          "PSY 217"
+        ],
+        "concurrencyPermitted": false
+      },
+      "reasonCode": "ECO_461_STATISTICS_MUST_BE_PRIOR",
+      "messageKeys": {
+        "student": "prerequisite.student",
+        "advisor": "prerequisite.advisor",
+        "move": "prerequisite.move",
+        "report": "prerequisite.report"
+      },
+      "dependencies": [
+        "PREREQ-ECO-461"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "statistics-before-capstone"
+        ],
+        "negative": [
+          "statistics-concurrent-capstone"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "PLANNING-CURRENT-TERM-EXCLUDED",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "termIdentity",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "SUPERSEDED",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "PLAN_CREATION_TERM"
+      },
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": "2026-09-27"
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "planCreationDate",
+        "courseFacts"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "regularTermContainsPlanCreationDate": true
+      },
+      "effect": {
+        "futurePlacementsExcluded": true,
+        "currentCoursesMustBeInProgressFacts": true
+      },
+      "reasonCode": "CURRENT_TERM_NOT_FUTURE_PLANNING_DOMAIN",
+      "messageKeys": {
+        "student": "term.student",
+        "advisor": "term.advisor",
+        "move": "term.move",
+        "report": "term.report"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "current-term-in-progress"
+        ],
+        "negative": [
+          "current-term-generated-placement"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "PLANNING-IN-PROGRESS-UNLOCKS-LATER",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "HISTORY",
+      "ruleType": "studentHistory",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "PLANNED_AND_IN_PROGRESS_PREREQUISITE_TIMING"
+      },
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "courseFacts",
+        "targetTerm"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "courseStatus": "IN_PROGRESS"
+      },
+      "effect": {
+        "prerequisiteAvailableAfterCurrentTermOnly": true
+      },
+      "reasonCode": "IN_PROGRESS_UNLOCKS_LATER_TERM",
+      "messageKeys": {
+        "student": "history.student",
+        "advisor": "history.advisor",
+        "move": "history.move",
+        "report": "history.report"
+      },
+      "dependencies": [
+        "PLANNING-CURRENT-TERM-ADD-DROP"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "in-progress-unlocks-later"
+        ],
+        "negative": [
+          "in-progress-same-term"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "HISTORY-COMPLETED-ADVANCED-PRESERVED",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "HISTORY",
+      "ruleType": "studentHistory",
+      "classification": "REVIEW",
+      "disposition": "REVIEW",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "COMPLETED_AND_TRANSFER_HISTORY_HANDLING"
+      },
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"
+      ],
+      "effective": {
+        "from": "2026-08-05",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "courseFacts",
+        "completionEvidence",
+        "prerequisiteEvidence"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "courseStatus": [
+          "COMPLETED",
+          "TRANSFER"
+        ],
+        "historicalPrerequisiteEvidence": "MISSING"
+      },
+      "effect": {
+        "preserveCourseFact": true,
+        "decision": "REVIEW_REQUIRED",
+        "strictTimingForPlannedAndInProgress": true,
+        "inferMissingPrerequisite": false
+      },
+      "reasonCode": "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW",
+      "messageKeys": {
+        "student": "history.student",
+        "advisor": "history.advisor",
+        "move": "history.move",
+        "report": "history.report"
+      },
+      "dependencies": [
+        "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE"
+      ],
+      "supersedes": [
+        "LEGACY-CLEAR-ADVANCED-HISTORY"
+      ],
+      "confirmation": {
+        "date": "2026-08-05",
+        "reviewer": "Project owner",
+        "lastReviewDate": "2026-08-05"
+      },
+      "testRefs": {
+        "positive": [
+          "completed-advanced-preserved"
+        ],
+        "negative": [
+          "planned-course-strict-timing"
+        ],
+        "approval": [],
+        "reviewState": [
+          "historical-prerequisite-review"
+        ]
+      }
+    },
+    {
+      "ruleId": "PLANNING-MAY-COURSE-EXCLUSIONS",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "termIdentity",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 113",
+          "ECO 114",
+          "ECO 213",
+          "ECO 214",
+          "ECO 321",
+          "BUSN 323",
+          "ECO 257",
+          "PSY 217",
+          "ECO 461",
+          "MAT 113",
+          "MAT 121"
+        ],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "ECONOMICS_MAY_PLACEMENTS"
+      },
+      "sourceRefs": [
+        "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary"
+      ],
+      "effective": {
+        "from": "2026-09-26",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "course",
+        "targetTerm"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": true,
+        "authority": "ACTIVE_EXACT_SCHEDULE",
+        "requiredEvidence": [
+          "matchingScheduleSection"
+        ]
+      },
+      "condition": {
+        "canonicalTerm": "MAY"
+      },
+      "effect": {
+        "excludedCourses": [
+          "ECO 113",
+          "ECO 114",
+          "ECO 213",
+          "ECO 214",
+          "ECO 321",
+          "BUSN 323",
+          "ECO 257",
+          "PSY 217",
+          "ECO 461",
+          "MAT 113",
+          "MAT 121"
+        ]
+      },
+      "reasonCode": "COURSE_NOT_SUPPORTED_IN_MAY",
+      "messageKeys": {
+        "student": "term.student",
+        "advisor": "term.advisor",
+        "move": "term.move",
+        "report": "term.report"
+      },
+      "dependencies": [
+        "TERM-CANONICAL-MAY"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-09-26"
+      },
+      "testRefs": {
+        "positive": [
+          "may-electives"
+        ],
+        "negative": [
+          "may-course-exclusions"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "SCHEDULE_EVIDENCE",
+      "ruleType": "scheduleEvidence",
+      "classification": "EVIDENCE",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "UNPUBLISHED_OFFERING_PROJECTION"
+      },
+      "sourceRefs": [
+        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
+        "OWNER-PRELIMINARY-SCHEDULE-2026-09-22#PRELIMINARY_SCHEDULE_PLANNING_EVIDENCE"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "scheduleRelease",
+        "targetAcademicYear",
+        "offeringPattern"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": true,
+        "authority": "ACTIVE_EXACT_SCHEDULE",
+        "requiredEvidence": [
+          "matchingScheduleSection"
+        ]
+      },
+      "condition": {
+        "exactScheduleEvidence": "UNAVAILABLE"
+      },
+      "effect": {
+        "releaseStatus": "PRELIMINARY",
+        "projectionGranularity": "LABELED_TERM_WORKLOAD_ESTIMATE",
+        "preliminaryScheduleEvidence": "SOFT_COURSE_TERM_GUIDE",
+        "preliminaryOmissionBlocks": false,
+        "preliminarySectionsOrSeatsPermitted": false,
+        "inventedExactTermPermitted": false,
+        "unknownBecomesAllow": false
+      },
+      "reasonCode": "UNPUBLISHED_OFFERING_TERM_TBC",
+      "messageKeys": {
+        "student": "offering.student",
+        "advisor": "offering.advisor",
+        "move": "offering.move",
+        "report": "offering.report"
+      },
+      "dependencies": [
+        "SCHEDULE-EVIDENCE-PROVENANCE"
+      ],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department chair and EconPlanner project owner",
+        "lastReviewDate": "2026-09-22"
+      },
+      "testRefs": {
+        "positive": [
+          "future-term-tbc",
+          "dated-preliminary-course-term"
+        ],
+        "negative": [
+          "unsupported-exact-future-term"
+        ],
+        "approval": [],
+        "reviewState": [
+          "unknown-schedule"
+        ]
+      }
+    },
+    {
+      "ruleId": "SCHEDULE-EVIDENCE-SCREENSHOT-FIELDS",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "SCHEDULE_EVIDENCE",
+      "ruleType": "scheduleEvidence",
+      "classification": "EVIDENCE",
+      "disposition": "REFERENCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "ACCEPTABLE_ECONOMICS_SCHEDULE_EVIDENCE"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Schedule-evidence-policy"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "scheduleEvidence"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "evidenceType": [
+          "OFFICIAL_SCHEDULE_EXPORT",
+          "COMPLETE_LEGIBLE_SCREENSHOT"
+        ]
+      },
+      "effect": {
+        "requiredScreenshotFields": [
+          "academicYear",
+          "term",
+          "course",
+          "section",
+          "title",
+          "instructor",
+          "credits",
+          "dates",
+          "meetingPattern",
+          "seats",
+          "sectionStatus"
+        ],
+        "conditionalFields": [
+          "delivery",
+          "location"
+        ]
+      },
+      "reasonCode": "SCHEDULE_EVIDENCE_REQUIRED_FIELDS",
+      "messageKeys": {
+        "student": "schedule.student",
+        "advisor": "schedule.advisor",
+        "move": "schedule.move",
+        "report": "schedule.report"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "schedule-evidence-fields"
+        ],
+        "negative": [
+          "incomplete-screenshot"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "SCHEDULE-EVIDENCE-PROVENANCE",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "SCHEDULE_EVIDENCE",
+      "ruleType": "scheduleEvidence",
+      "classification": "EVIDENCE",
+      "disposition": "REFERENCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "SCHEDULE_EVIDENCE_PROVENANCE"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Schedule-evidence-policy"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "scheduleEvidence"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {},
+      "effect": {
+        "requiredMetadata": [
+          "verificationTimestamp",
+          "sourceFileProvenance"
+        ],
+        "missingMetadataMustRemainNull": true
+      },
+      "reasonCode": "SCHEDULE_PROVENANCE_REQUIRED",
+      "messageKeys": {
+        "student": "schedule.student",
+        "advisor": "schedule.advisor",
+        "move": "schedule.move",
+        "report": "schedule.report"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "schedule-source-provenance"
+        ],
+        "negative": [
+          "invented-schedule-timestamp"
+        ],
+        "approval": [],
+        "reviewState": [
+          "missing-schedule-timestamps"
+        ]
+      }
+    },
+    {
+      "ruleId": "SCHEDULE-AVAILABILITY-BEHAVIOR",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "SCHEDULE_EVIDENCE",
+      "ruleType": "scheduleEvidence",
+      "classification": "EVIDENCE",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "SCHEDULE_ENROLLMENT_STATE_INTERPRETATION"
+      },
+      "sourceRefs": [
+        "DEPARTMENT-POLICIES#Confirmed-policy-9"
+      ],
+      "effective": {
+        "from": "2026-08-01",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "scheduleRelease",
+        "sectionState"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {},
+      "effect": {
+        "OPEN": "VERIFIED",
+        "CLOSED": "BLOCK",
+        "WAITLISTED": "CONDITIONAL",
+        "UNKNOWN": "PRELIMINARY",
+        "STALE": "PRELIMINARY",
+        "FULL": "REVIEW_REQUIRED",
+        "absenceWithCompleteCoverage": "NOT_OFFERED",
+        "absenceWithoutCompleteCoverage": "UNKNOWN"
+      },
+      "reasonCode": "SCHEDULE_ENROLLMENT_STATE_DECISION",
+      "messageKeys": {
+        "student": "schedule.student",
+        "advisor": "schedule.advisor",
+        "move": "schedule.move",
+        "report": "schedule.report"
+      },
+      "dependencies": [
+        "REVIEW-ENROLLMENT-FULL-DISPOSITION"
+      ],
+      "supersedes": [
+        "LEGACY-FULL-AS-CLOSED"
+      ],
+      "confirmation": {
+        "date": "2026-08-01",
+        "reviewer": "Economics Department representative and project owner",
+        "lastReviewDate": "2026-08-01"
+      },
+      "testRefs": {
+        "positive": [
+          "schedule-availability-states"
+        ],
+        "negative": [
+          "full-not-open-or-closed"
+        ],
+        "approval": [],
+        "reviewState": [
+          "full-review-required"
+        ]
+      }
+    },
+    {
+      "ruleId": "PLANNING-CURRENT-TERM-ADD-DROP",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "termIdentity",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "OWNER_CONFIRMATION",
+        "owner": "Project owner and Economics Department domain expert",
+        "boundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION"
+      },
+      "sourceRefs": [
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"
+      ],
+      "effective": {
+        "from": "2026-09-27",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "planningContext"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "regularTermContainsPlanCreationDate": true
+      },
+      "effect": {
+        "allowNewCoursesDuringOfficialInitialDropAdd": true,
+        "boundariesInclusive": true,
+        "rejectAfterClosure": true,
+        "preserveInProgressOccupancy": true
+      },
+      "reasonCode": "PLANNING_CURRENT_TERM_ADD_DROP",
+      "messageKeys": {
+        "student": "term.student",
+        "advisor": "term.advisor",
+        "move": "term.move",
+        "report": "term.report"
+      },
+      "dependencies": [],
+      "supersedes": [
+        "PLANNING-CURRENT-TERM-EXCLUDED"
+      ],
+      "confirmation": {
+        "date": "2026-09-27",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "lastReviewDate": "2026-09-27"
+      },
+      "testRefs": {
+        "positive": [
+          "current-term-in-progress"
+        ],
+        "negative": [
+          "current-term-generated-placement"
+        ],
+        "approval": [],
+        "reviewState": []
+      }
+    },
+    {
+      "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "TERM",
+      "ruleType": "graduationStanding",
+      "classification": "HARD",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 461"
+        ],
+        "requirements": [
+          "eco-461"
+        ]
+      },
+      "authority": {
+        "kind": "OWNER_CONFIRMATION",
+        "owner": "Project owner and Economics Department domain expert",
+        "boundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION"
+      },
+      "sourceRefs": [
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+      ],
+      "effective": {
+        "from": "2026-09-27",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "planningContext"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": false,
+        "authority": null,
+        "requiredEvidence": []
+      },
+      "condition": {
+        "compressedPlan": true,
+        "course": "ECO 461"
+      },
+      "effect": {
+        "assumeSeniorStandingInFinalPlanningYear": true,
+        "requiresStudentConfirmation": false,
+        "readinessImpact": "NONE"
+      },
+      "reasonCode": "ACCELERATED_PLAN_FINAL_YEAR_SENIOR_STANDING",
+      "messageKeys": {
+        "student": "permission.student",
+        "advisor": "permission.advisor",
+        "move": "permission.move",
+        "report": "permission.report"
+      },
+      "dependencies": [],
+      "supersedes": [
+        "CAPSTONE-EARLY-GRADUATE-STANDING"
+      ],
+      "confirmation": {
+        "date": "2026-09-27",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "lastReviewDate": "2026-09-27"
+      },
+      "testRefs": {
+        "positive": [
+          "early-graduate-confirmed"
+        ],
+        "negative": [
+          "early-graduate-unconfirmed"
+        ],
+        "approval": [
+          "standing-approval-scope"
+        ],
+        "reviewState": []
+      }
+    }
   ]
 }

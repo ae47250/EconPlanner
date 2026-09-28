@@ -132,6 +132,14 @@ test("impossible TBC precedence blocks and exact schedules override TBC", () => 
   const exact = buildTbcTemporalWitness(tbcPlan([{ course: "ECO 113", requirementId: "eco-113" }], "2026/2027"), facts(), {}, bundle);
   assert.equal(exact.status, "BLOCK");
   assert.equal(exact.decisions[0].reasonCode, "EXACT_SCHEDULE_OVERRIDES_TBC_WINDOW");
+  const unscoped = structuredClone(bundle);
+  for (const term of Object.values(unscoped.indexes.offeringByTerm)) {
+    term.coverage = "COMPLETE";
+    term.coverageScopes = [];
+  }
+  const unknown = buildTbcTemporalWitness(tbcPlan([{ course:"ECO 113", requirementId:"eco-113" }], "2026/2027"), facts(), {}, unscoped);
+  assert.equal(unknown.status,"PRELIMINARY");
+  assert.equal(unknown.decisions[0].reasonCode,"TBC_TEMPORAL_WITNESS_FEASIBLE");
 });
 
 test("readiness preserves complete review-dependent plans without authority approval", () => {

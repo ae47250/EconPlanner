@@ -25,8 +25,7 @@
       "offeringEvidence": {
         "2026-2027": [
           "Fall",
-          "Winter",
-          "Summer"
+          "Winter"
         ]
       },
       "prerequisites": {
@@ -237,7 +236,11 @@
       "canonicalId": "eco-224",
       "code": "ECO 224",
       "electiveEligibility": "eligible",
-      "offeringEvidence": {},
+      "offeringEvidence": {
+        "2026-2027": [
+          "May"
+        ]
+      },
       "prerequisites": {
         "all": [],
         "any": []
@@ -256,7 +259,8 @@
       "electiveEligibility": "eligible",
       "offeringEvidence": {
         "2026-2027": [
-          "Fall"
+          "Fall",
+          "May"
         ]
       },
       "prerequisites": {
@@ -293,11 +297,7 @@
       "canonicalId": "eco-260",
       "code": "ECO 260",
       "electiveEligibility": "eligible_subject_to_topic",
-      "offeringEvidence": {
-        "2026-2027": [
-          "May"
-        ]
-      },
+      "offeringEvidence": {},
       "prerequisites": {
         "all": [],
         "any": []

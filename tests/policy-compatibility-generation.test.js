@@ -38,6 +38,8 @@ test("all five compatibility documents are derived from canonical manifest input
   for (const name of compatibilityNames) {
     const current = await readJson(path.join(repositoryRoot, "data/normalized/economics", name));
     assert.equal(canonicalJson(generated[name]), canonicalJson(current), name);
+    const compiled = await readJson(path.join(repositoryRoot, "data/compiled/policy/releases/econ-2025-2026.1/compatibility", name));
+    assert.equal(canonicalJson(generated[name]), canonicalJson(compiled), `compiled ${name}`);
   }
 });
 
@@ -56,10 +58,10 @@ test("canonical schedule fields flow into every compatibility field, including m
   section.meeting.startTime = "08:15";
   section.enrollmentState = "FULL";
   section.sourceRefs = ["SCHEDULE-2026-2027-MATH-FALL#MAT-113-A"];
-  inputs.profile.schedule.verifiedOn = "2026-08-09";
-  inputs.profile.schedule.source.screenshotRetrievedOn = "2026-08-09";
-  inputs.profile.schedule.sections[section.sectionId].seatsOpen = 0;
-  inputs.profile.schedule.sections[section.sectionId].capacity = 25;
+  section.availabilityAsOf = "2026-08-09";
+  section.seatsOpen = 0;
+  section.capacity = 25;
+  inputs.provenance.sources.find(source => source.sourceId === "SCHEDULE-2026-2027-MATH-FALL").receivedOn = "2026-08-09";
 
   const projected = buildCompatibilityRepresentations(inputs)["schedule-2026-2027.json"].terms.Fall[0];
   assert.equal(projected.meeting.startTime, "8:15 AM");
@@ -92,4 +94,26 @@ test("the retired ingestion command fails before it can write compatibility data
     error => error.code === 1 && error.stderr.includes("legacy ingestion command is retired")
   );
   assert.deepEqual(await readFile(path.join(repositoryRoot, "data/normalized/economics/requirements.json")), before);
+});
+
+test("canonical comparisons detect changed, added, deleted rows and coverage drift even when mirrors agree", async () => {
+  const expected = buildCompatibilityRepresentations(await canonicalInputs())["schedule-2026-2027.json"];
+  for (const mutate of [
+    value => { value.terms.Winter[0].instructor = "Drift"; },
+    value => { value.terms.Winter.push(structuredClone(value.terms.Winter[0])); },
+    value => { value.terms.Winter.pop(); },
+    value => { value.coverageByTerm.Winter.coverageScopes = []; }
+  ]) {
+    const normalized = structuredClone(expected);
+    mutate(normalized);
+    const compiled = structuredClone(normalized);
+    assert.equal(canonicalJson(normalized), canonicalJson(compiled));
+    for (const mirror of [normalized, compiled]) assert.throws(() => assert.equal(canonicalJson(mirror), canonicalJson(expected)));
+  }
+  const schedule = (await canonicalInputs()).schedule;
+  const bundle = await readJson(path.join(repositoryRoot, "data/compiled/policy/releases/econ-2025-2026.1/bundle.json"));
+  for (const term of schedule.terms) {
+    assert.deepEqual(bundle.indexes.offeringByTerm[term.termId].sections, [...term.sections].sort((a,b) => a.sectionId.localeCompare(b.sectionId)));
+    assert.deepEqual(bundle.indexes.offeringByTerm[term.termId].coverageScopes, term.coverageScopes);
+  }
 });

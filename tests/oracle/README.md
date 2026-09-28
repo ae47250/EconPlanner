@@ -38,7 +38,29 @@ Task 1 intentionally contains no verified schedule rows and no independent plan-
 
 `verified-schedule-2026-2027.json` is a test-owned, independently reviewed transcription of the repository's source schedule screenshots. It is not generated from `data/normalized/economics/schedule-2026-2027.json`, and the drift test must never rewrite it.
 
-The source filenames do not match their visible contents: `schedule-2026-2027-winter-spring.png` contains the Fall rows, while `schedule-2026-2027-fall.png` visibly contains the Winter and May rows. Reviewers must inspect the image contents rather than trusting the filenames. The screenshots do not visibly supply a verification date, so the snapshot records that field as `null` and lists it in each row's `unknownFields`.
+Inspect visible contents rather than treating filenames as evidence. The archived
+`schedule-2026-2027-fall.png` shows Fall Economics; the former
+`schedule-2026-2027-winter-spring.png` shows the superseded Winter/May Economics
+listing. `schedule-2026-2027-winter-may-revision-2.png` is the owner-supplied
+replacement, independently transcribed from the September 27 attachment. Its
+three May rows include ECO 224 and ECO 234 and omit ECO 260. Supporting
+Mathematics and Business evidence remains separately scoped.
+
+None of these screenshots visibly supplies a capture, registrar verification,
+or seat-observation date. `verificationDate` and `availability.asOf` remain
+`null`, with entries in `unknownFields`. Receipt and human review dates are
+recorded separately and do not establish seat freshness. The owner supplied the
+primary row description; Codex's second review read the images directly rather
+than copying canonical or generated production rows.
+
+The September 28 owner confirmation for BUSN 323 is separately recorded in
+`offeringConfirmations`, with the exact 2026–27 Fall offered / Winter not offered
+boundary and its hashed canonical provenance document. It was reviewed directly
+from the owner's statement; no Business Winter screenshot or section is invented.
+`coverageByTerm` records reviewed subject/course scopes independently of production.
+An Economics COMPLETE scope cannot establish absence for BUSN or MAT. Cropped
+Mathematics evidence remains PARTIAL. Aggregate COMPLETE flags without a matching
+scope must never prove course absence.
 
 ### Row-by-row review and update procedure
 

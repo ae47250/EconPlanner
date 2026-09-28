@@ -44,6 +44,7 @@ jobs:
           tests/policy-compiler.test.js
           tests/policy-bundle-determinism.test.js
           tests/policy-source-bundle-parity.test.js
+          tests/policy-compatibility-generation.test.js
           tests/policy-source-to-bundle.test.js
           tests/production-decision-engine.test.js
           tests/decision-engine-shadow.test.js
@@ -51,7 +52,7 @@ jobs:
           tests/architecture-boundaries.test.js
 
       - name: Run canonical consumption repair regressions
-        run: node --test tests/canonical-consumption-repairs.test.js
+        run: node --test tests/canonical-consumption-repairs.test.js tests/schedule-correction-2027.test.js tests/requested-behaviors.test.js
 
       - name: Run bounded deterministic regression suite
         shell: bash
@@ -134,6 +135,7 @@ jobs:
           tests/e2e/econ-planner.spec.js
           tests/e2e/architecture-repairs.spec.js
           tests/e2e/course-moves.spec.js
+          tests/e2e/requested-behaviors.spec.js
 
       - name: Run targeted PDF-lock and malformed-response regressions
         run: >-
