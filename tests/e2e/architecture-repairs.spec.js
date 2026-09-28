@@ -93,6 +93,9 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
 }
 
 test('freshman early selection, persistence, evidence-aware moves, rollback and local PDF parity', async ({page,browser}, testInfo) => {
+  // Three PDF renders plus generation, edits and reloads can exceed the
+  // default allowance on CI; preserve any larger hosted-verification timeout.
+  test.setTimeout(Math.max(testInfo.timeout, 90_000));
   try {
     execFileSync(process.env.PDFTOTEXT || 'pdftotext', ['-v'], {stdio:'pipe'});
   } catch (error) {
@@ -142,11 +145,17 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
 test('required controls explain restrictions while mobile elective editing and keyboard flows remain usable', async ({page},testInfo) => {
   await page.setViewportSize({width:390,height:844});
   await intake(page,'freshman');
-  await page.getByRole('button',{name:'Generate my plans',exact:true}).focus();
+  const generateButton = page.getByRole('button',{name:'Generate my plans',exact:true});
+  await expect(generateButton).toBeEnabled();
+  await generateButton.focus();
+  await expect(generateButton).toBeFocused();
   const response = page.waitForResponse(r=>r.url().endsWith('/api/majors/map')&&r.status()===200);
   await page.keyboard.press('Enter');
   await response;
-  await page.getByRole('button',{name:/^(Choose|Review selected) Balanced$/}).focus();
+  const balancedButton = page.getByRole('button',{name:/^(Choose|Review selected) Balanced$/});
+  await expect(balancedButton).toBeEnabled();
+  await balancedButton.focus();
+  await expect(balancedButton).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading',{name:'Review Balanced',exact:true})).toBeFocused();
   await expect(page.getByRole('button',{name:'Remove ECO 113',exact:true})).toHaveCount(0);
