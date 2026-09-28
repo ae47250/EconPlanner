@@ -63,15 +63,15 @@ test("intermediate separation depends on verified same-year sections, never proj
   // Synthetic release fixture: test the exception without changing any real schedule.
   const sections = term.courses.map(course => ({ course: course.course, sectionId: `2028-WINTER-${course.course.replace(" ", "-")}-A`, crossListedAs: [], enrollmentState: "OPEN" }));
   const exact = structuredClone(bundle);
-  exact.indexes.offeringByTerm["2028-WINTER"] = { coverage: "COMPLETE", sections };
+  exact.indexes.offeringByTerm["2028-WINTER"] = { coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections };
   const independent = structuredClone(policy);
-  independent.schedule.terms.push({ termId: "2028-WINTER", coverage: "COMPLETE", sections });
+  independent.schedule.terms.push({ termId: "2028-WINTER", coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections });
   for (const course of term.courses) {
     assert.equal(courseTermEligibility(course, term, exact).allowed, true);
     assert.equal(oracleEvaluateOffering(independent, { ...course, source: "verified-offering" }, term).status, "ALLOW");
   }
   delete exact.indexes.offeringByTerm["2028-WINTER"];
-  exact.indexes.offeringByTerm["2029-WINTER"] = { coverage: "COMPLETE", sections };
+  exact.indexes.offeringByTerm["2029-WINTER"] = { coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections };
   assert.equal(courseTermEligibility(term.courses[0], term, exact).allowed, false);
 });
 
@@ -79,8 +79,8 @@ test("matching exact May evidence overrides projection exclusions, not independe
   for (const code of expectedExcluded.filter(code => code !== "ECO 461")) {
     const exact = structuredClone(bundle), independent = structuredClone(policy);
     const sections = [{ course: code, sectionId: `2028-MAY-${code.replace(" ", "-")}-S`, crossListedAs: [], enrollmentState: "OPEN" }];
-    exact.indexes.offeringByTerm["2028-MAY"] = { coverage: "COMPLETE", sections };
-    independent.schedule.terms.push({ termId: "2028-MAY", coverage: "COMPLETE", sections });
+    exact.indexes.offeringByTerm["2028-MAY"] = { coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections };
+    independent.schedule.terms.push({ termId: "2028-MAY", coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections });
     assert.equal(courseTermEligibility(placement(code), may, exact).allowed, true, code);
     assert.equal(oracleEvaluateOffering(independent, { ...placement(code), source: "verified-offering" }, may).status, "ALLOW", code);
   }
@@ -100,23 +100,23 @@ test("ECO 222 uses its approved May projection scope and requires exact evidence
   assert.equal(oracleEvaluateOffering(policy, projected, winter).status, "BLOCK");
 
   const knownMayAbsence = structuredClone(bundle);
-  knownMayAbsence.indexes.offeringByTerm["2028-MAY"] = { coverage: "COMPLETE", sections: [] };
+  knownMayAbsence.indexes.offeringByTerm["2028-MAY"] = { coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections: [] };
   const may2028 = { academicYear: "2027/2028", termKey: "May", slotId: "spring-2028", courses: [] };
   assert.equal(courseTermEligibility(projected, may2028, knownMayAbsence).allowed, false);
   const oracleKnownMayAbsence = structuredClone(policy);
-  oracleKnownMayAbsence.schedule.terms.push({ termId: "2028-MAY", coverage: "COMPLETE", sections: [] });
+  oracleKnownMayAbsence.schedule.terms.push({ termId: "2028-MAY", coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections: [] });
   assert.equal(oracleEvaluateOffering(oracleKnownMayAbsence, projected, may2028).status, "BLOCK");
 
   // Synthetic exact-schedule evidence exercises the exception without changing a dated release.
   const exactAlternate = structuredClone(bundle);
   exactAlternate.indexes.offeringByTerm["2028-WINTER"] = {
-    coverage: "COMPLETE",
+    coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}],
     sections: [{ course: "ECO 222", crossListedAs: [], sectionId: "2028-WINTER-ECO-222-J" }]
   };
   assert.equal(courseTermEligibility(projected, winter, exactAlternate).allowed, true);
   const oracleExactAlternate = structuredClone(policy);
   oracleExactAlternate.schedule.terms.push({
-    termId: "2028-WINTER", coverage: "COMPLETE",
+    termId: "2028-WINTER", coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}],
     sections: [{ course: "ECO 222", crossListedAs: [], sectionId: "2028-WINTER-ECO-222-J", enrollmentState: "OPEN" }]
   });
   assert.equal(oracleEvaluateOffering(oracleExactAlternate, projected, winter).status, "ALLOW");
@@ -139,7 +139,7 @@ test("ECO 222 exact alternate-term evidence passes complete edit validation", as
   }));
 
   const exactAlternate = structuredClone(bundle);
-  exactAlternate.indexes.offeringByTerm["2027-FALL"] = { coverage: "COMPLETE", sections };
+  exactAlternate.indexes.offeringByTerm["2027-FALL"] = { coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}], sections };
   const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);
   const exactSchedule = structuredClone(catalog.economicsSchedule);
   exactSchedule.academicYear = "";
@@ -156,7 +156,7 @@ test("ECO 222 exact alternate-term evidence passes complete edit validation", as
 
   const independentExactAlternate = structuredClone(policy);
   independentExactAlternate.schedule.terms.push({
-    termId: "2027-FALL", coverage: "COMPLETE",
+    termId: "2027-FALL", coverage: "PARTIAL", coverageScopes: [{subject:"ECO",coverage:"COMPLETE",sourceRefs:["SYNTHETIC-TEST-EVIDENCE"]}],
     sections: sections.map(section => ({ ...section }))
   });
   const destinationTerm = { ...destination, courses: [...destination.courses, placement("ECO 222")] };

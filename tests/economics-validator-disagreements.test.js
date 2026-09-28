@@ -228,7 +228,7 @@ function fullSequenceBaseline() {
       yearIndex: 0,
       termKey: "Spring",
       standing: "sophomore",
-      courses: [verifiedCourse("May", "ECO 260", "S", "eco-elective-3")]
+      courses: [verifiedCourse("May", "ECO 224", "S", "eco-elective-3")]
     }),
     planTerm({
       startYear: 2026,
@@ -290,7 +290,7 @@ function fullFallBaseline() {
   result.id = "full-fall";
   result.plan.id = "baseline-full-fall";
   const fall = findTerm(result.plan, "fall-2028");
-  fall.courses.push(asProjected(takeCourse(result.plan, "ECO 260")));
+  fall.courses.push(asProjected(takeCourse(result.plan, "ECO 224")));
   fall.courses.push(takeCourse(result.plan, "ECO 337"));
   assert.equal(fall.courses.length, 4);
   return result;
@@ -300,7 +300,7 @@ function fullMayBaseline() {
   const result = fullSequenceBaseline();
   result.id = "full-may";
   result.plan.id = "baseline-full-may";
-  findTerm(result.plan, "fall-2028").courses.push(asProjected(takeCourse(result.plan, "ECO 260")));
+  findTerm(result.plan, "fall-2028").courses.push(asProjected(takeCourse(result.plan, "ECO 224")));
   assert.equal(findTerm(result.plan, "spring-2028").courses.length, 1);
   return result;
 }
@@ -309,8 +309,8 @@ function completedElectiveBaseline() {
   const result = fullSequenceBaseline();
   result.id = "completed-elective";
   result.plan.id = "baseline-completed-elective";
-  takeCourse(result.plan, "ECO 260");
-  result.student.courses = completedCourses(["ECO 260"]);
+  takeCourse(result.plan, "ECO 224");
+  result.student.courses = completedCourses(["ECO 224"]);
   findPlannedCourse(result.plan, "ECO 234").requirementId = "eco-elective-2";
   findPlannedCourse(result.plan, "ECO 161").requirementId = "eco-elective-3";
   findPlannedCourse(result.plan, "ECO 337").requirementId = "eco-elective-4";
@@ -453,10 +453,7 @@ function oracleCourse(course) {
     canonicalCrossListIdentity: [course.course, ...(course.crossListedAs || [])],
     availability: { ...course.availability },
     provenance: {
-      verificationDate: course.provenance?.humanVerifiedOn
-        ?? course.provenance?.verifiedOn
-        ?? course.provenance?.screenshotRetrievedOn
-        ?? null,
+      verificationDate: course.provenance?.verifiedOn ?? null,
       sourceReference: course.provenance?.sourceFiles?.[0] ?? null
     },
     ...(course.course === "ECO 461" && course.residency === "hanover"
@@ -555,7 +552,7 @@ function diagnostic(entry, evaluation) {
 
 test("Task 10 registry is complete, stable, and contains no hidden mutation skips", () => {
   assert.equal(registry.schemaVersion, 1);
-  assert.equal(registry.registryVersion, 2);
+  assert.equal(registry.registryVersion, 3);
   assert.equal(registry.policyVersion, oraclePolicy.policy.version);
   assert.equal(registry.authorship, "handwritten-curated-mutations");
   assert.equal(registry.reviewedOn, "2026-08-06");

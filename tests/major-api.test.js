@@ -378,7 +378,7 @@ test("major mapper generation continues to enforce authoritative reserved term c
   )));
 });
 
-test("major mapper reports proven infeasibility only with exhaustive bounded-search evidence", async () => {
+test("exhaustive normal-capacity search preserves missing overload evidence instead of proving impossibility", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -406,9 +406,10 @@ test("major mapper reports proven infeasibility only with exhaustive bounded-sea
 
   assert.equal(response.status, 200);
   assert.equal(economics.economicsPlans.length, 0);
-  assert.equal(planResult.category, "INFEASIBLE_PROVEN");
-  assert.equal(planResult.conclusion, "PROVEN_INFEASIBLE");
-  assert.equal(planResult.reason, "COUNT_CAPACITY");
+  assert.equal(planResult.category, "NEEDS_ADVISOR_ATTENTION");
+  assert.equal(planResult.conclusion, "UNKNOWN");
+  assert.equal(planResult.reason, "TERM_OVERLOAD_EVIDENCE_REQUIRED");
+  assert.ok(planResult.evidence.pendingOverloadEvidence.length);
   assert.ok(planResult.evidence.strategyAttempts.length > 0);
   assert.ok(planResult.evidence.strategyAttempts.every(attempt => attempt.exhaustive));
   assert.ok(planResult.evidence.searchAttempts.length > 0);
@@ -507,7 +508,7 @@ test("major mapper retains a standard senior plan above the Economics load prefe
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
   assert.ok(data.catalog.advisorAttention.some(item => /more than two Economics courses/.test(item.message)));
   assert.ok(data.catalog.advisorAttention.some(item => /MAT 217 requires advisor review \(ENROLLMENT_FULL\)/.test(item.message)));
-  assert.equal(economics.economicsPlans[0].feasibilityStatus, "VERIFIED_FEASIBLE");
+  assert.equal(economics.economicsPlans[0].feasibilityStatus, "CONDITIONALLY_FEASIBLE");
 });
 
 test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async () => {

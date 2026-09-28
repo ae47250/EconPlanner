@@ -18,19 +18,20 @@ const offering = (termKey, course) => evaluateOffering(
   { traceId: "schedule-test" }
 );
 
-test("2026/2027 schedule preserves the August 8, 2026 verified Fall, Winter, and May offerings", () => {
+test("2026/2027 schedule preserves the independently reviewed Fall, Winter, and May offerings", () => {
   assert.ok(schedule.terms.Fall.some(course => course.course === "ECO 234"));
   assert.ok(schedule.terms.Fall.some(course => course.course === "MAT 121" && course.section === "B" && course.availability.rawStatus === "Open"));
   assert.ok(schedule.terms.Fall.some(course => course.course === "BUSN 323" && course.section === "A" && course.availability.rawStatus === "Full"));
   assert.ok(schedule.terms.Winter.some(course => course.course === "ECO 214"));
   assert.ok(schedule.terms.Winter.some(course => course.course === "MAT 217" && course.section === "M" && course.availability.rawStatus === "Open"));
   assert.ok(schedule.terms.May.some(course => course.course === "ECO 222" && course.section === "S"));
-  assert.ok(schedule.terms.May.some(course => course.course === "ECO 260" && course.section === "S"));
+  assert.equal(schedule.terms.May.some(course => course.course === "ECO 260"), false);
+  for (const code of ["ECO 224", "ECO 234"]) assert.ok(schedule.terms.May.some(course => course.course === code && course.section === "S"));
   assert.ok(schedule.terms.May.some(course => course.course === "MAT 217" && course.section === "S" && course.availability.rawStatus === "Open"));
   assert.equal(schedule.terms.Summer.some(course => course.verificationStatus === "verified"), false);
   assert.equal(schedule.source.sectionCodeSMeans, "May");
-  assert.equal(schedule.source.humanVerifiedOn, "2026-08-08");
-  assert.equal(schedule.availabilityAsOf, "2026-08-08");
+  assert.equal(schedule.verifiedOn, null);
+  assert.equal(schedule.availabilityAsOf, null);
 });
 
 test("ECO 213 and ECO 214 are separated and neither is a May offering", () => {
@@ -57,7 +58,7 @@ test("ECO 234 and PHI 234 are equivalent in Fall 2026", () => {
 });
 
 test("ECO 234 and PHI 234 are rejected from incorrect 2026/2027 terms", () => {
-  for (const term of ["Winter", "May"]) {
+  for (const term of ["Winter"]) {
     for (const code of ["ECO 234", "PHI 234"]) {
       const result = offering(term, code);
       assert.equal(result.status, "BLOCK", `${term}: ${code}`);
@@ -70,7 +71,7 @@ test("Spring/May 2026 ECO 234 remains a separate 2025/2026 occurrence", () => {
   assert.equal(historicalSchedule.academicYear, "2025-2026");
   assert.ok(historicalSchedule.terms.May.some(course => course.course === "ECO 234"));
   assert.equal(schedule.terms.Fall.some(course => course.course === "ECO 234"), true);
-  assert.equal(schedule.terms.May.some(course => course.course === "ECO 234"), false);
+  assert.equal(schedule.terms.May.some(course => course.course === "ECO 234"), true);
 });
 
 test("model schedule text is rendered from the canonical schedule", () => {

@@ -93,10 +93,7 @@ function oracleCourse(course, term, plan) {
     canonicalCrossListIdentity: [course.course, ...(course.crossListedAs || [])],
     availability: { ...course.availability, ...(stale ? { freshness: "stale" } : {}) },
     provenance: {
-      verificationDate: course.provenance?.humanVerifiedOn
-        ?? course.provenance?.verifiedOn
-        ?? course.provenance?.screenshotRetrievedOn
-        ?? null,
+      verificationDate: course.provenance?.verifiedOn ?? null,
       sourceReference: course.provenance?.sourceFiles?.[0] ?? null
     },
     ...(course.course === "ECO 461" && course.residency === "hanover"

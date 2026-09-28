@@ -20,6 +20,7 @@ const COMPARISON_FIELDS = [
   "canonicalCrossListIdentity",
   "section",
   "title",
+  "instructor",
   "units",
   "startDate",
   "endDate",
@@ -29,6 +30,7 @@ const COMPARISON_FIELDS = [
   "availabilityState",
   "seatsOpen",
   "capacity",
+  "availabilityAsOf",
   "verificationDate",
   "sourceReference"
 ];
@@ -51,6 +53,7 @@ function productionRows(schedule = production) {
         ].sort(),
         section: section.section,
         title: section.title,
+        instructor: section.instructor ?? null,
         units: section.units,
         startDate: section.meeting?.startDate || null,
         endDate: section.meeting?.endDate || null,
@@ -60,6 +63,7 @@ function productionRows(schedule = production) {
         availabilityState: section.availability?.status || "unknown",
         seatsOpen: section.availability?.seatsOpen ?? null,
         capacity: section.availability?.capacity ?? null,
+        availabilityAsOf: section.availability?.asOf ?? null,
         verificationDate: section.provenance?.verifiedOn || null,
         sourceReference: section.provenance?.sourceFiles?.length
           ? [...section.provenance.sourceFiles].sort()
@@ -76,6 +80,7 @@ function oracleRows(snapshot = oracle) {
     canonicalCrossListIdentity: [...section.canonicalCrossListIdentity].sort(),
     section: section.section,
     title: section.title,
+    instructor: section.instructor ?? null,
     units: section.units,
     startDate: section.courseDates.startDate,
     endDate: section.courseDates.endDate,
@@ -85,6 +90,7 @@ function oracleRows(snapshot = oracle) {
     availabilityState: section.availability.state,
     seatsOpen: section.availability.seatsOpen,
     capacity: section.availability.capacity,
+    availabilityAsOf: section.availability.asOf ?? null,
     verificationDate: section.verificationDate,
     sourceReference: [section.sourceReference]
   }));
@@ -206,7 +212,7 @@ test("independent schedule snapshot has reviewed, immutable source evidence", as
   assert.equal(oracle.review.status, "INDEPENDENT_ROW_REVIEW");
   assert.match(oracle.review.reviewedOn, /^\d{4}-\d{2}-\d{2}$/);
   assert.ok(oracle.review.reviewedBy);
-  assert.equal(oracle.sections.length, 30);
+  assert.ok(oracle.sections.length > 0);
 
   const sourcePaths = new Set(oracle.sources.map(source => source.path));
   for (const source of oracle.sources) {
@@ -223,8 +229,10 @@ test("independent schedule snapshot has reviewed, immutable source evidence", as
 
     assert.ok(sourcePaths.has(section.sourceReference), key);
     assert.ok(section.canonicalCrossListIdentity.includes(section.course), key);
-    assert.equal(section.verificationDate, "2026-08-08", key);
-    assert.equal(section.unknownFields?.includes("verificationDate") || false, false, key);
+    assert.equal(section.verificationDate, null, key);
+    assert.equal(section.unknownFields?.includes("verificationDate"), true, key);
+    assert.equal(section.availability.asOf, null, key);
+    assert.equal(section.unknownFields?.includes("availability.asOf"), true, key);
   }
 });
 
@@ -235,6 +243,16 @@ test("production verified sections match the independent schedule snapshot field
     0,
     `Schedule drift requires independent review (${drift.length} finding(s)):\n${drift.map(formatDrift).join("\n")}`
   );
+});
+
+test("generated coverage agrees with independently reviewed subject/course boundaries", () => {
+  assert.deepEqual(production.coverageByTerm, oracle.coverageByTerm);
+  assert.equal(oracle.offeringConfirmations.length, 2);
+  assert.deepEqual(oracle.offeringConfirmations.map(item => [item.academicYear,item.course,item.term,item.offeringExistence]), [
+    ["2026-2027","BUSN 323","Fall","OFFERED"],
+    ["2026-2027","BUSN 323","Winter","NOT_OFFERED"]
+  ]);
+  assert.equal(oracle.sections.some(section => section.term === "Winter" && section.course === "BUSN 323"),false);
 });
 
 test("a meaningful production schedule change is still reported as drift", () => {

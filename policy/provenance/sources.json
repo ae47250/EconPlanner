@@ -114,7 +114,12 @@
         "from": "2026-08-24",
         "through": "2026-12-11"
       },
-      "supersedes": null
+      "supersedes": null,
+      "sourceDocumentDate": null,
+      "capturedOn": null,
+      "registrarVerifiedOn": null,
+      "receivedOn": "2026-08-08",
+      "repositoryIngestedOn": "2026-08-08"
     },
     {
       "sourceId": "SCHEDULE-2026-2027-WINTER-MAY",
@@ -129,7 +134,34 @@
         "from": "2027-01-11",
         "through": "2027-05-28"
       },
-      "supersedes": null
+      "supersedes": null,
+      "sourceDocumentDate": null,
+      "capturedOn": null,
+      "registrarVerifiedOn": null,
+      "receivedOn": "2026-08-08",
+      "repositoryIngestedOn": "2026-08-08"
+    },
+    {
+      "sourceId": "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2",
+      "sourceType": "SCHEDULE_SCREENSHOT",
+      "authority": "Registrar screenshot supplied by the project owner",
+      "authorityBoundary": "EXACT_2027_WINTER_AND_MAY_ECONOMICS_SECTIONS_ONLY",
+      "path": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png",
+      "sha256": "1ebb767506862889dc2d47b1badb3b9d7c0cceeef4d068158f91de8ca6730d3d",
+      "receivedOn": "2026-09-27",
+      "repositoryIngestedOn": "2026-09-27",
+      "reviewedOn": "2026-09-27",
+      "reviewer": "Project owner supplied the row description; Codex separately reviewed every visible row against the attached image",
+      "sourceDocumentDate": null,
+      "capturedOn": null,
+      "registrarVerifiedOn": null,
+      "effective": {
+        "from": "2027-01-11",
+        "through": "2027-05-28"
+      },
+      "supersedes": "SCHEDULE-2026-2027-WINTER-MAY",
+      "supersessionScope": "Economics sections in Winter and May 2027 only; Fall, Mathematics, Business and unpublished years are unaffected",
+      "coverageBasis": "Owner-supplied replacement of the complete Economics Winter/Spring listing. Economics is the only department filter; other search fields are blank and all eleven rows are visible. Complete supporting-course evidence remains separately sourced."
     },
     {
       "sourceId": "SCHEDULE-2026-2027-MATH-FALL",
@@ -144,7 +176,12 @@
         "from": "2026-08-24",
         "through": "2026-12-11"
       },
-      "supersedes": null
+      "supersedes": null,
+      "sourceDocumentDate": null,
+      "capturedOn": null,
+      "registrarVerifiedOn": null,
+      "receivedOn": "2026-08-08",
+      "repositoryIngestedOn": "2026-08-08"
     },
     {
       "sourceId": "SCHEDULE-2026-2027-MATH-WINTER-MAY",
@@ -159,7 +196,12 @@
         "from": "2027-01-11",
         "through": "2027-05-28"
       },
-      "supersedes": null
+      "supersedes": null,
+      "sourceDocumentDate": null,
+      "capturedOn": null,
+      "registrarVerifiedOn": null,
+      "receivedOn": "2026-08-08",
+      "repositoryIngestedOn": "2026-08-08"
     },
     {
       "sourceId": "SCHEDULE-2026-2027-BUSINESS-FALL",
@@ -174,7 +216,12 @@
         "from": "2026-08-24",
         "through": "2026-12-11"
       },
-      "supersedes": null
+      "supersedes": null,
+      "sourceDocumentDate": null,
+      "capturedOn": null,
+      "registrarVerifiedOn": null,
+      "receivedOn": "2026-08-08",
+      "repositoryIngestedOn": "2026-08-08"
     },
     {
       "sourceId": "OWNER-ECO257-2026-08-05",
@@ -257,6 +304,55 @@
       "effective": {
         "from": "2026-09-27",
         "through": null
+      },
+      "supersedes": null
+    },
+    {
+      "sourceId": "OWNER-SCHEDULE-LOAD-CORRECTION-2026-09-27",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and verified Hanover catalog provision",
+      "authorityBoundary": "ECONOMICS_SCHEDULE_CORRECTION_LOAD_DISPLAY_AND_NONBLOCKING_TUITION_ADVISORY",
+      "path": "policy/provenance/schedule-load-correction-2026-09-27.md",
+      "confirmedOn": "2026-09-27",
+      "sha256": "302459c0663eb176f0d9b23602b85e200589b3130eab6835fc720f7c02bec87c",
+      "effective": {
+        "from": "2026-09-27",
+        "through": null
+      },
+      "supersedes": null
+    },
+    {
+      "sourceId": "HANOVER-CATALOG-COURSE-LOAD-TUITION",
+      "sourceType": "OFFICIAL_CATALOG",
+      "authority": "Hanover College",
+      "authorityBoundary": "COURSE_LOAD_CEILINGS_AND_TUITION_THRESHOLDS_ONLY",
+      "path": "data/raw/hanover/catalog/2025-2026/catalog.html",
+      "catalogYear": "2025-2026",
+      "url": "https://catalog.hanover.edu/",
+      "reviewedOn": "2026-09-27",
+      "sha256": "516798a6aa37bf8316564556e81582936ecc6da6319d1a8c45046f3814100847",
+      "effective": {
+        "from": "2025-08-01",
+        "through": null
+      },
+      "supersedes": null
+    },
+    {
+      "sourceId": "OWNER-BUSN323-2026-2027-2026-09-28",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "EconPlanner project owner, explicit authoritative schedule clarification",
+      "authorityBoundary": "BUSN 323 / 2026\u201327 / Fall offered / Winter not offered",
+      "path": "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md",
+      "confirmedOn": "2026-09-28",
+      "reviewedOn": "2026-09-28",
+      "reviewer": "Project owner confirmation; Codex scope review",
+      "sha256": "d3b5f859ad84aa1be4f2d29091a71c24062be7cc12dcb26347e3d48b3bfe2ed2",
+      "academicYear": "2026-2027",
+      "course": "BUSN 323",
+      "statement": "BUSN 323 is offered in Fall 2026 only. It is not offered in Winter 2027.",
+      "effective": {
+        "from": "2026-08-24",
+        "through": "2027-04-23"
       },
       "supersedes": null
     }

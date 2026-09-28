@@ -20,13 +20,28 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["termId", "canonicalTerm", "sourceAliases", "displayLabel", "coverage", "sections"],
+        "required": ["termId", "canonicalTerm", "sourceAliases", "displayLabel", "coverage", "coverageScopes", "sections"],
         "properties": {
           "termId": {"type": "string", "pattern": "^[0-9]{4}-(FALL|WINTER|MAY|SUMMER)$"},
           "canonicalTerm": {"enum": ["FALL", "WINTER", "MAY", "SUMMER"]},
           "sourceAliases": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
           "displayLabel": {"type": "string", "minLength": 1},
           "coverage": {"enum": ["COMPLETE", "PARTIAL", "UNAVAILABLE", "UNKNOWN"]},
+          "coverageScopes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["coverage", "sourceRefs"],
+              "oneOf": [{"properties": {"subject": {}}, "required": ["subject"]}, {"properties": {"course": {}}, "required": ["course"]}],
+              "properties": {
+                "subject": {"type": "string", "pattern": "^[A-Z]+$"},
+                "course": {"type": "string", "minLength": 1},
+                "coverage": {"enum": ["COMPLETE", "PARTIAL", "UNAVAILABLE", "UNKNOWN"]},
+                "sourceRefs": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
+              }
+            }
+          },
           "sections": {
             "type": "array",
             "items": {
@@ -39,6 +54,11 @@
                 "title": {"type": "string"},
                 "crossListedAs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
                 "units": {"type": "number", "exclusiveMinimum": 0},
+                "instructor": {"type": ["string", "null"]},
+                "seatsOpen": {"type": ["integer", "null"], "minimum": 0},
+                "capacity": {"type": ["integer", "null"], "minimum": 0},
+                "availabilityAsOf": {"type": ["string", "null"], "format": "date"},
+                "verificationDate": {"type": ["string", "null"], "format": "date"},
                 "offeringExistence": {"enum": ["OFFERED", "NOT_OFFERED", "UNKNOWN"]},
                 "enrollmentState": {"enum": ["OPEN", "FULL", "CLOSED", "WAITLISTED", "UNKNOWN", "STALE"]},
                 "meeting": {"type": "object"},

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "registryVersion": 2,
-  "policyVersion": 9,
+  "registryVersion": 3,
+  "policyVersion": 10,
   "authorship": "handwritten-curated-mutations",
   "reviewedOn": "2026-08-06",
   "reviewer": "Economics Department / EconPlanner testing review",
@@ -144,8 +144,9 @@
       "ruleId": "CAPACITY-FALL",
       "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
-      "status": "AGREEMENT",
-      "followUp": "Resolved in the CP4b-B follow-up: exact future projected terms enforce Fall and Winter load limits in both production and the independent Oracle."
+      "status": "POLICY_REVIEW",
+      "reviewedOn": "2026-09-28",
+      "followUp": "CAPACITY-FALL missingOrUnsupportedDisposition is REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY. Both validators withhold additional capacity while approval and absence of academic probation remain unestablished; this is pending evidence, not a published-ceiling violation. Direct API, move and Oracle regression cases cover the distinction."
     },
     {
       "id": "VAL-014-SECOND-SPRING-MAY-COURSE",

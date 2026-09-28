@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:42b2aca901dd46caa869d59cc517062d48b62f29103a57fabfcaf83f6052d76a",
+  "contentHash": "sha256:cf673f9ed5afa1147bc0fe55915f38d285f782f615276290a0c3c2145cb5abe6",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -294,7 +294,17 @@
           },
           "maxTotalCourses": 4,
           "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
-          "normalCourseUnits": 4
+          "normalCourseUnits": 4,
+          "tuitionAdvisory": {
+            "blocking": false,
+            "canonicalTerms": [
+              "FALL"
+            ],
+            "chargeAmountProvided": false,
+            "completeEnrollmentNotEstablishedByMajorPlan": true,
+            "readinessImpact": "NONE",
+            "thresholdExclusive": 4.5
+          }
         },
         "effective": {
           "from": "2025-08-01",
@@ -333,7 +343,8 @@
         },
         "sourceRefs": [
           "TERM-STRUCTURE#Fall-Term",
-          "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
+          "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy",
+          "HANOVER-CATALOG-COURSE-LOAD-TUITION#Course-Load-and-Enrollment-Status"
         ],
         "status": "ACTIVE",
         "supersedes": [],
@@ -468,7 +479,18 @@
           },
           "maxTotalCourses": 4,
           "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
-          "normalCourseUnits": 4
+          "normalCourseUnits": 4,
+          "tuitionAdvisory": {
+            "blocking": false,
+            "canonicalTerms": [
+              "WINTER",
+              "MAY"
+            ],
+            "chargeAmountProvided": false,
+            "completeEnrollmentNotEstablishedByMajorPlan": true,
+            "readinessImpact": "NONE",
+            "thresholdExclusive": 5.5
+          }
         },
         "effective": {
           "from": "2025-08-01",
@@ -507,7 +529,8 @@
         },
         "sourceRefs": [
           "TERM-STRUCTURE#Winter-Term",
-          "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
+          "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy",
+          "HANOVER-CATALOG-COURSE-LOAD-TUITION#Course-Load-and-Enrollment-Status"
         ],
         "status": "ACTIVE",
         "supersedes": [],
@@ -5278,13 +5301,39 @@
     "offeringByTerm": {
       "2026-FALL": {
         "canonicalTerm": "FALL",
-        "coverage": "COMPLETE",
+        "coverage": "PARTIAL",
+        "coverageScopes": [
+          {
+            "coverage": "COMPLETE",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-FALL#image"
+            ],
+            "subject": "ECO"
+          },
+          {
+            "coverage": "PARTIAL",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-FALL#image"
+            ],
+            "subject": "MAT"
+          },
+          {
+            "course": "BUSN 323",
+            "coverage": "COMPLETE",
+            "sourceRefs": [
+              "OWNER-BUSN323-2026-2027-2026-09-28"
+            ]
+          }
+        ],
         "displayLabel": "Fall 2026",
         "sections": [
           {
+            "availabilityAsOf": null,
+            "capacity": 26,
             "course": "BUSN 323",
             "crossListedAs": [],
             "enrollmentState": "FULL",
+            "instructor": "Riddick Jr., John C.",
             "meeting": {
               "days": [
                 "MON",
@@ -5299,17 +5348,22 @@
               "startTime": "09:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 0,
             "sectionId": "2026-FALL-BUSN-323-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-BUSINESS-FALL#BUSN-323-A"
             ],
             "title": "Investments",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 113",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Dodge, Eric R.",
             "meeting": {
               "days": [
                 "TUE",
@@ -5323,17 +5377,22 @@
               "startTime": "08:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 1,
             "sectionId": "2026-FALL-ECO-113-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-FALL#ECO-113-A"
             ],
             "title": "Principles of Microeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 114",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Eiriksson, Agust",
             "meeting": {
               "days": [
                 "MON",
@@ -5348,17 +5407,22 @@
               "startTime": "09:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 3,
             "sectionId": "2026-FALL-ECO-114-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-FALL#ECO-114-A"
             ],
             "title": "Principles of Macroeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 114",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Eiriksson, Agust",
             "meeting": {
               "days": [
                 "MON",
@@ -5373,17 +5437,22 @@
               "startTime": "10:40"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 5,
             "sectionId": "2026-FALL-ECO-114-B",
             "sourceRefs": [
               "SCHEDULE-2026-2027-FALL#ECO-114-B"
             ],
             "title": "Principles of Macroeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 114",
             "crossListedAs": [],
             "enrollmentState": "FULL",
+            "instructor": "Jaradat, Hamzeh A.",
             "meeting": {
               "days": [
                 "TUE",
@@ -5397,17 +5466,22 @@
               "startTime": "12:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 0,
             "sectionId": "2026-FALL-ECO-114-C",
             "sourceRefs": [
               "SCHEDULE-2026-2027-FALL#ECO-114-C"
             ],
             "title": "Principles of Macroeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 20,
             "course": "ECO 213",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Dodge, Eric R.",
             "meeting": {
               "days": [
                 "TUE",
@@ -5421,19 +5495,24 @@
               "startTime": "10:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 11,
             "sectionId": "2026-FALL-ECO-213-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-FALL#ECO-213-A"
             ],
             "title": "Intermediate Microeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 234",
             "crossListedAs": [
               "PHI 234"
             ],
             "enrollmentState": "OPEN",
+            "instructor": "Bates, Jared G.",
             "meeting": {
               "days": [
                 "MON",
@@ -5448,17 +5527,22 @@
               "startTime": "10:40"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 23,
             "sectionId": "2026-FALL-ECO-234-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-FALL#ECO-234-A"
             ],
             "title": "Rational Choices",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 333",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Eiriksson, Agust",
             "meeting": {
               "days": [
                 "MON",
@@ -5473,17 +5557,22 @@
               "startTime": "13:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 3,
             "sectionId": "2026-FALL-ECO-333-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-FALL#ECO-333-A"
             ],
             "title": "International Trade & Finance",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 113",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Setser, Jennifer C.",
             "meeting": {
               "days": [
                 "MON",
@@ -5498,17 +5587,22 @@
               "startTime": "12:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 5,
             "sectionId": "2026-FALL-MAT-113-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-FALL#MAT-113-A"
             ],
             "title": "Essential Precalculus",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 121",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Nguyen, Duong",
             "meeting": {
               "days": [
                 "MON",
@@ -5523,17 +5617,22 @@
               "startTime": "12:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 15,
             "sectionId": "2026-FALL-MAT-121-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-FALL#MAT-121-A"
             ],
             "title": "Calculus I",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 121",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Nguyen, Duong",
             "meeting": {
               "days": [
                 "MON",
@@ -5548,17 +5647,22 @@
               "startTime": "13:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 13,
             "sectionId": "2026-FALL-MAT-121-B",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-FALL#MAT-121-B"
             ],
             "title": "Calculus I",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 217",
             "crossListedAs": [],
             "enrollmentState": "FULL",
+            "instructor": "Nguyen, Duong",
             "meeting": {
               "days": [
                 "MON",
@@ -5573,17 +5677,22 @@
               "startTime": "14:40"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 0,
             "sectionId": "2026-FALL-MAT-217-A",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-FALL#MAT-217-A"
             ],
             "title": "Applied Statistics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 217",
             "crossListedAs": [],
             "enrollmentState": "FULL",
+            "instructor": "Isom, April",
             "meeting": {
               "days": [
                 "TUE",
@@ -5597,24 +5706,45 @@
               "startTime": "12:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 0,
             "sectionId": "2026-FALL-MAT-217-B",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-FALL#MAT-217-B"
             ],
             "title": "Applied Statistics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           }
         ]
       },
       "2027-MAY": {
         "canonicalTerm": "MAY",
-        "coverage": "COMPLETE",
+        "coverage": "PARTIAL",
+        "coverageScopes": [
+          {
+            "coverage": "COMPLETE",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+            ],
+            "subject": "ECO"
+          },
+          {
+            "coverage": "PARTIAL",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+            ],
+            "subject": "MAT"
+          }
+        ],
         "displayLabel": "Spring/May 2027",
         "sections": [
           {
+            "availabilityAsOf": null,
+            "capacity": 15,
             "course": "ECO 222",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Eiriksson, Agust",
             "meeting": {
               "days": [
                 "MON",
@@ -5623,25 +5753,30 @@
                 "THU",
                 "FRI"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-05-28",
               "endTime": "12:30",
-              "location": "",
+              "location": null,
               "startDate": "2027-05-03",
               "startTime": "10:15"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 15,
             "sectionId": "2027-MAY-ECO-222-S",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-222-S"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-222-S"
             ],
             "title": "Economics of the European Union",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
-            "course": "ECO 260",
+            "availabilityAsOf": null,
+            "capacity": 20,
+            "course": "ECO 224",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Dodge, Eric R.",
             "meeting": {
               "days": [
                 "MON",
@@ -5650,25 +5785,64 @@
                 "THU",
                 "FRI"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-05-28",
               "endTime": "10:15",
-              "location": "",
+              "location": null,
               "startDate": "2027-05-03",
               "startTime": "08:00"
             },
             "offeringExistence": "OFFERED",
-            "sectionId": "2027-MAY-ECO-260-S",
+            "seatsOpen": 20,
+            "sectionId": "2027-MAY-ECO-224-S",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-260-S"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-224-S"
             ],
-            "title": "Special Topics",
-            "units": 1
+            "title": "Introduction to Sustainability",
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 20,
+            "course": "ECO 234",
+            "crossListedAs": [
+              "PHI 234"
+            ],
+            "enrollmentState": "OPEN",
+            "instructor": "Bates, Jared G.",
+            "meeting": {
+              "days": [
+                "MON",
+                "TUE",
+                "WED",
+                "THU",
+                "FRI"
+              ],
+              "delivery": "UNKNOWN",
+              "endDate": "2027-05-28",
+              "endTime": "12:30",
+              "location": null,
+              "startDate": "2027-05-03",
+              "startTime": "10:15"
+            },
+            "offeringExistence": "OFFERED",
+            "seatsOpen": 20,
+            "sectionId": "2027-MAY-ECO-234-S",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-234-S"
+            ],
+            "title": "Rational Choices",
+            "units": 1,
+            "verificationDate": null
+          },
+          {
+            "availabilityAsOf": null,
+            "capacity": 18,
             "course": "MAT 217",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Wahl, Barbara J.",
             "meeting": {
               "days": [
                 "MON",
@@ -5685,225 +5859,294 @@
               "startTime": "08:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 18,
             "sectionId": "2027-MAY-MAT-217-S",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-S"
             ],
             "title": "Applied Statistics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           }
         ]
       },
       "2027-SUMMER": {
         "canonicalTerm": "SUMMER",
         "coverage": "UNAVAILABLE",
+        "coverageScopes": [],
         "displayLabel": "Summer 2027",
         "sections": []
       },
       "2027-WINTER": {
         "canonicalTerm": "WINTER",
-        "coverage": "COMPLETE",
+        "coverage": "PARTIAL",
+        "coverageScopes": [
+          {
+            "coverage": "COMPLETE",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+            ],
+            "subject": "ECO"
+          },
+          {
+            "coverage": "PARTIAL",
+            "sourceRefs": [
+              "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+            ],
+            "subject": "MAT"
+          },
+          {
+            "course": "BUSN 323",
+            "coverage": "COMPLETE",
+            "sourceRefs": [
+              "OWNER-BUSN323-2026-2027-2026-09-28"
+            ]
+          }
+        ],
         "displayLabel": "Winter 2027",
         "sections": [
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 113",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Jaradat, Hamzeh A.",
             "meeting": {
               "days": [
                 "TUE",
                 "THU"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "11:45",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "10:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-ECO-113-J",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-113-J"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-113-J"
             ],
             "title": "Principles of Microeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 113",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Dodge, Eric R.",
             "meeting": {
               "days": [
                 "MON",
                 "WED",
                 "FRI"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "09:10",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "08:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-ECO-113-K",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-113-K"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-113-K"
             ],
             "title": "Principles of Microeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 114",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Eiriksson, Agust",
             "meeting": {
               "days": [
                 "TUE",
                 "THU"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "09:45",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "08:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-ECO-114-J",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-114-J"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-114-J"
             ],
             "title": "Principles of Macroeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 20,
             "course": "ECO 161",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Eiriksson, Agust",
             "meeting": {
               "days": [
                 "TUE",
                 "THU"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "14:05",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "12:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 20,
             "sectionId": "2027-WINTER-ECO-161-J",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-161-J"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-161-J"
             ],
             "title": "Foundations of Economics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "ECO 214",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Eiriksson, Agust",
             "meeting": {
               "days": [
                 "TUE",
                 "THU"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "11:45",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "10:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-ECO-214-J",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-214-J"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-214-J"
             ],
             "title": "Intermediate Macroeconomics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 20,
             "course": "ECO 221",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Dodge, Eric R.",
             "meeting": {
               "days": [
                 "MON",
                 "WED",
                 "FRI"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "10:30",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "09:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 20,
             "sectionId": "2027-WINTER-ECO-221-J",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-221-J"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-221-J"
             ],
             "title": "Environmental Economics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 20,
             "course": "ECO 321",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Jaradat, Hamzeh A.",
             "meeting": {
               "days": [
                 "TUE",
                 "THU"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "14:05",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "12:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 20,
             "sectionId": "2027-WINTER-ECO-321-J",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-321-J"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-321-J"
             ],
             "title": "Money & Financial Markets",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 15,
             "course": "ECO 461",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Dodge, Eric R.",
             "meeting": {
               "days": [
                 "MON",
                 "WED",
                 "FRI"
               ],
-              "delivery": "IN_PERSON",
+              "delivery": "UNKNOWN",
               "endDate": "2027-04-23",
               "endTime": "11:50",
-              "location": "",
+              "location": null,
               "startDate": "2027-01-11",
               "startTime": "10:40"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 15,
             "sectionId": "2027-WINTER-ECO-461-J",
             "sourceRefs": [
-              "SCHEDULE-2026-2027-WINTER-MAY#ECO-461-J"
+              "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#ECO-461-J"
             ],
             "title": "Senior Seminar - Econometrics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 113",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Setser, Jennifer C.",
             "meeting": {
               "days": [
                 "TUE",
@@ -5917,17 +6160,22 @@
               "startTime": "14:15"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-MAT-113-J",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-113-J"
             ],
             "title": "Essential Precalculus",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 121",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Jagels, Carl F.",
             "meeting": {
               "days": [
                 "MON",
@@ -5942,17 +6190,22 @@
               "startTime": "13:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-MAT-121-J",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-121-J"
             ],
             "title": "Calculus I",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 217",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Jagels, Carl F.",
             "meeting": {
               "days": [
                 "MON",
@@ -5967,17 +6220,22 @@
               "startTime": "09:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-MAT-217-J",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-J"
             ],
             "title": "Applied Statistics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 217",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Wahl, Barbara J.",
             "meeting": {
               "days": [
                 "MON",
@@ -5992,17 +6250,22 @@
               "startTime": "10:40"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-MAT-217-K",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-K"
             ],
             "title": "Applied Statistics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 217",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Isom, April",
             "meeting": {
               "days": [
                 "TUE",
@@ -6016,17 +6279,22 @@
               "startTime": "10:00"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-MAT-217-L",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-L"
             ],
             "title": "Applied Statistics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           },
           {
+            "availabilityAsOf": null,
+            "capacity": 24,
             "course": "MAT 217",
             "crossListedAs": [],
             "enrollmentState": "OPEN",
+            "instructor": "Isom, April",
             "meeting": {
               "days": [
                 "TUE",
@@ -6040,12 +6308,14 @@
               "startTime": "12:20"
             },
             "offeringExistence": "OFFERED",
+            "seatsOpen": 24,
             "sectionId": "2027-WINTER-MAT-217-M",
             "sourceRefs": [
               "SCHEDULE-2026-2027-MATH-WINTER-MAY#MAT-217-M"
             ],
             "title": "Applied Statistics",
-            "units": 1
+            "units": 1,
+            "verificationDate": null
           }
         ]
       }
@@ -6342,6 +6612,9 @@
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
+    "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
+    "infeasibility.electives.spring": "You still need {remainingElectives} distinct Economics electives. After finance is allocated, no remaining eligible elective is offered in {winterTerm}. The {springTerm} options are {springOptions}. Each is {courseUnits} unit, so two exceed both the normal {normalCourseUnits}-unit load and the advisor-approved {conditionalMaximumCourseUnits}-unit ceiling.",
+    "infeasibility.finance.forced": "{financeCourse} must fill finance for this graduation target, so it cannot also count as an elective.",
     "load.advisor": "The plan exceeds the preferred Economics load but remains within total term capacity.",
     "load.move": "This term is within total capacity but carries a heavy Economics load warning.",
     "load.report": "A graduation-required heavy Economics load is valid within total term capacity and requires a warning.",
@@ -6377,7 +6650,17 @@
     "term.advisor": "Apply the canonical term identity and governing placement restriction.",
     "term.move": "This term is not allowed for the selected course.",
     "term.report": "The placement follows canonical term and graduation rules.",
-    "term.student": "This course must be placed in an allowed term."
+    "term.student": "This course must be placed in an allowed term.",
+    "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE": "Within normal capacity: {courseUnits} of {normalCourseUnits} modeled units. The Economics load is above the advising preference.",
+    "termLoad.TERM_CAPACITY_AVAILABLE": "Within normal capacity: {courseUnits} of {normalCourseUnits} modeled units.",
+    "termLoad.TERM_CAPACITY_EXCEEDED": "This move models {courseUnits} units and exceeds the published term limit ({conditionalMaximumCourseUnits} units, with any applicable Economics course limit). Additional tuition does not authorize this move.",
+    "termLoad.TERM_OVERLOAD_APPROVAL_DENIED": "An overload is blocked because advisor approval was not granted. This term models {courseUnits} units, above the normal {normalCourseUnits}.",
+    "termLoad.TERM_OVERLOAD_APPROVED": "Advisor-approved overload: {courseUnits} modeled units; the approved ceiling is {conditionalMaximumCourseUnits}. Approval and absence of academic probation were recorded for this term.",
+    "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "More information needed: {courseUnits} modeled units exceed the normal {normalCourseUnits}. Record existing advisor approval and confirmation that you are not on academic probation before using additional capacity; the conditional ceiling is {conditionalMaximumCourseUnits}.",
+    "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "An overload is not permitted while you are on academic probation. This move models {courseUnits} units, above the normal {normalCourseUnits}.",
+    "termLoad.pending": "More information needed: the normal-load search found no complete plan. Advisor overload approval and absence of academic probation have not been established for {terms}. No additional capacity has been granted; the search does not establish impossibility under an approved overload.",
+    "tuition.threshold.exceeded": "The modeled {period} load is {modeledUnits} units, above the published {threshold}-unit tuition threshold. Additional tuition applies to actual enrollment above that threshold; this major plan does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit.",
+    "tuition.threshold.possible": "Additional tuition applies above {threshold} registered units across {period}. This plan models {modeledUnits} units and does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit."
   },
   "provenance": {
     "authorityHierarchy": [
@@ -6458,6 +6741,22 @@
       },
       {
         "authority": "Hanover College",
+        "authorityBoundary": "COURSE_LOAD_CEILINGS_AND_TUITION_THRESHOLDS_ONLY",
+        "catalogYear": "2025-2026",
+        "effective": {
+          "from": "2025-08-01",
+          "through": null
+        },
+        "path": "data/raw/hanover/catalog/2025-2026/catalog.html",
+        "reviewedOn": "2026-09-27",
+        "sha256": "516798a6aa37bf8316564556e81582936ecc6da6319d1a8c45046f3814100847",
+        "sourceId": "HANOVER-CATALOG-COURSE-LOAD-TUITION",
+        "sourceType": "OFFICIAL_CATALOG",
+        "supersedes": null,
+        "url": "https://catalog.hanover.edu/"
+      },
+      {
+        "authority": "Hanover College",
         "authorityBoundary": "COURSE_LOAD_GENERAL_DEGREE_AND_CATALOG_COURSE_CLAIMS",
         "effective": {
           "from": "2025-08-01",
@@ -6483,6 +6782,25 @@
         "sha256": "aed345bf32d752a1c93bd4cc99a20fa2fc553598844cbfb7ad5e33c2465f5be3",
         "sourceId": "OFFICIAL-CATALOG-ECONOMICS",
         "sourceType": "OFFICIAL_CATALOG",
+        "supersedes": null
+      },
+      {
+        "academicYear": "2026-2027",
+        "authority": "EconPlanner project owner, explicit authoritative schedule clarification",
+        "authorityBoundary": "BUSN 323 / 2026–27 / Fall offered / Winter not offered",
+        "confirmedOn": "2026-09-28",
+        "course": "BUSN 323",
+        "effective": {
+          "from": "2026-08-24",
+          "through": "2027-04-23"
+        },
+        "path": "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md",
+        "reviewedOn": "2026-09-28",
+        "reviewer": "Project owner confirmation; Codex scope review",
+        "sha256": "d3b5f859ad84aa1be4f2d29091a71c24062be7cc12dcb26347e3d48b3bfe2ed2",
+        "sourceId": "OWNER-BUSN323-2026-2027-2026-09-28",
+        "sourceType": "OWNER_CONFIRMATION",
+        "statement": "BUSN 323 is offered in Fall 2026 only. It is not offered in Winter 2027.",
         "supersedes": null
       },
       {
@@ -6584,16 +6902,35 @@
         "supersedes": "Earlier academic-year-TBC-only wording for unpublished offering projections"
       },
       {
+        "authority": "Project owner and verified Hanover catalog provision",
+        "authorityBoundary": "ECONOMICS_SCHEDULE_CORRECTION_LOAD_DISPLAY_AND_NONBLOCKING_TUITION_ADVISORY",
+        "confirmedOn": "2026-09-27",
+        "effective": {
+          "from": "2026-09-27",
+          "through": null
+        },
+        "path": "policy/provenance/schedule-load-correction-2026-09-27.md",
+        "sha256": "302459c0663eb176f0d9b23602b85e200589b3130eab6835fc720f7c02bec87c",
+        "sourceId": "OWNER-SCHEDULE-LOAD-CORRECTION-2026-09-27",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
+      },
+      {
         "authority": "Verified department schedule source",
         "authorityBoundary": "EXACT_2026_FALL_ECONOMICS_SUPPORTING_BUSINESS_SECTION",
+        "capturedOn": null,
         "effective": {
           "from": "2026-08-24",
           "through": "2026-12-11"
         },
         "path": "data/raw/economics/schedule-2026-2027-business-fall.png",
+        "receivedOn": "2026-08-08",
+        "registrarVerifiedOn": null,
+        "repositoryIngestedOn": "2026-08-08",
         "reviewedOn": "2026-08-08",
         "reviewer": "Project owner supplied current registrar screenshot",
         "sha256": "2aeadbb23318e0e71b643130a4cb667734e2bdfd3f8ed6ead9de6a13431c9ef3",
+        "sourceDocumentDate": null,
         "sourceId": "SCHEDULE-2026-2027-BUSINESS-FALL",
         "sourceType": "SCHEDULE_SCREENSHOT",
         "supersedes": null
@@ -6601,14 +6938,19 @@
       {
         "authority": "Verified department schedule source",
         "authorityBoundary": "EXACT_2026_FALL_ECONOMICS_SECTIONS",
+        "capturedOn": null,
         "effective": {
           "from": "2026-08-24",
           "through": "2026-12-11"
         },
         "path": "data/raw/economics/schedule-2026-2027-fall.png",
+        "receivedOn": "2026-08-08",
+        "registrarVerifiedOn": null,
+        "repositoryIngestedOn": "2026-08-08",
         "reviewedOn": "2026-08-08",
         "reviewer": "Project owner supplied current registrar screenshot",
         "sha256": "33cae907c5aa8d802fa14612441152da25e8fac516061f661a4222c090727811",
+        "sourceDocumentDate": null,
         "sourceId": "SCHEDULE-2026-2027-FALL",
         "sourceType": "SCHEDULE_SCREENSHOT",
         "supersedes": null
@@ -6616,14 +6958,19 @@
       {
         "authority": "Verified department schedule source",
         "authorityBoundary": "EXACT_2026_FALL_ECONOMICS_SUPPORTING_MATHEMATICS_SECTIONS",
+        "capturedOn": null,
         "effective": {
           "from": "2026-08-24",
           "through": "2026-12-11"
         },
         "path": "data/raw/economics/schedule-2026-2027-math-fall.png",
+        "receivedOn": "2026-08-08",
+        "registrarVerifiedOn": null,
+        "repositoryIngestedOn": "2026-08-08",
         "reviewedOn": "2026-08-08",
         "reviewer": "Project owner supplied current registrar screenshot",
         "sha256": "3a3a26b6e38936651310360b23a23301f5c48996b40855a9bfaa5d65119dd0ca",
+        "sourceDocumentDate": null,
         "sourceId": "SCHEDULE-2026-2027-MATH-FALL",
         "sourceType": "SCHEDULE_SCREENSHOT",
         "supersedes": null
@@ -6631,14 +6978,19 @@
       {
         "authority": "Verified department schedule source",
         "authorityBoundary": "EXACT_2027_WINTER_AND_MAY_ECONOMICS_SUPPORTING_MATHEMATICS_SECTIONS",
+        "capturedOn": null,
         "effective": {
           "from": "2027-01-11",
           "through": "2027-05-28"
         },
         "path": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+        "receivedOn": "2026-08-08",
+        "registrarVerifiedOn": null,
+        "repositoryIngestedOn": "2026-08-08",
         "reviewedOn": "2026-08-08",
         "reviewer": "Project owner supplied current registrar screenshot",
         "sha256": "fe59160d91c46acab8cf9dfcc91fecd9e6bb23573b25717bbcbda14fb04df410",
+        "sourceDocumentDate": null,
         "sourceId": "SCHEDULE-2026-2027-MATH-WINTER-MAY",
         "sourceType": "SCHEDULE_SCREENSHOT",
         "supersedes": null
@@ -6646,17 +6998,44 @@
       {
         "authority": "Verified department schedule source",
         "authorityBoundary": "EXACT_2027_WINTER_AND_MAY_ECONOMICS_SECTIONS",
+        "capturedOn": null,
         "effective": {
           "from": "2027-01-11",
           "through": "2027-05-28"
         },
         "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
+        "receivedOn": "2026-08-08",
+        "registrarVerifiedOn": null,
+        "repositoryIngestedOn": "2026-08-08",
         "reviewedOn": "2026-08-08",
         "reviewer": "Project owner supplied current registrar screenshot",
         "sha256": "f0c77994f973998164d0651b47736985190c8b1a7d984d93c1c2dec32262777a",
+        "sourceDocumentDate": null,
         "sourceId": "SCHEDULE-2026-2027-WINTER-MAY",
         "sourceType": "SCHEDULE_SCREENSHOT",
         "supersedes": null
+      },
+      {
+        "authority": "Registrar screenshot supplied by the project owner",
+        "authorityBoundary": "EXACT_2027_WINTER_AND_MAY_ECONOMICS_SECTIONS_ONLY",
+        "capturedOn": null,
+        "coverageBasis": "Owner-supplied replacement of the complete Economics Winter/Spring listing. Economics is the only department filter; other search fields are blank and all eleven rows are visible. Complete supporting-course evidence remains separately sourced.",
+        "effective": {
+          "from": "2027-01-11",
+          "through": "2027-05-28"
+        },
+        "path": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png",
+        "receivedOn": "2026-09-27",
+        "registrarVerifiedOn": null,
+        "repositoryIngestedOn": "2026-09-27",
+        "reviewedOn": "2026-09-27",
+        "reviewer": "Project owner supplied the row description; Codex separately reviewed every visible row against the attached image",
+        "sha256": "1ebb767506862889dc2d47b1badb3b9d7c0cceeef4d068158f91de8ca6730d3d",
+        "sourceDocumentDate": null,
+        "sourceId": "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2",
+        "sourceType": "SCHEDULE_SCREENSHOT",
+        "supersedes": "SCHEDULE-2026-2027-WINTER-MAY",
+        "supersessionScope": "Economics sections in Winter and May 2027 only; Fall, Mathematics, Business and unpublished years are unaffected"
       },
       {
         "authority": "Hanover College",
@@ -6674,7 +7053,7 @@
     ]
   },
   "releaseRefs": {
-    "schedule": "schedule-2026-2027-v1"
+    "schedule": "schedule-2026-2027-v3"
   },
   "requirementProfile": {
     "electiveConditionalCourses": {
@@ -6860,7 +7239,17 @@
         },
         "maxTotalCourses": 4,
         "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
-        "normalCourseUnits": 4
+        "normalCourseUnits": 4,
+        "tuitionAdvisory": {
+          "blocking": false,
+          "canonicalTerms": [
+            "FALL"
+          ],
+          "chargeAmountProvided": false,
+          "completeEnrollmentNotEstablishedByMajorPlan": true,
+          "readinessImpact": "NONE",
+          "thresholdExclusive": 4.5
+        }
       },
       "effective": {
         "from": "2025-08-01",
@@ -6899,7 +7288,8 @@
       },
       "sourceRefs": [
         "TERM-STRUCTURE#Fall-Term",
-        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy",
+        "HANOVER-CATALOG-COURSE-LOAD-TUITION#Course-Load-and-Enrollment-Status"
       ],
       "status": "ACTIVE",
       "supersedes": [],
@@ -7034,7 +7424,18 @@
         },
         "maxTotalCourses": 4,
         "missingOrUnsupportedDisposition": "REVIEW_REQUIRED_NO_ADDITIONAL_CAPACITY",
-        "normalCourseUnits": 4
+        "normalCourseUnits": 4,
+        "tuitionAdvisory": {
+          "blocking": false,
+          "canonicalTerms": [
+            "WINTER",
+            "MAY"
+          ],
+          "chargeAmountProvided": false,
+          "completeEnrollmentNotEstablishedByMajorPlan": true,
+          "readinessImpact": "NONE",
+          "thresholdExclusive": 5.5
+        }
       },
       "effective": {
         "from": "2025-08-01",
@@ -7073,7 +7474,8 @@
       },
       "sourceRefs": [
         "TERM-STRUCTURE#Winter-Term",
-        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy"
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#College-course-load-policy",
+        "HANOVER-CATALOG-COURSE-LOAD-TUITION#Course-Load-and-Enrollment-Status"
       ],
       "status": "ACTIVE",
       "supersedes": [],

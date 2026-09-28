@@ -45,6 +45,19 @@
     "term.advisor": "Apply the canonical term identity and governing placement restriction.",
     "term.move": "This term is not allowed for the selected course.",
     "term.report": "The placement follows canonical term and graduation rules.",
-    "term.student": "This course must be placed in an allowed term."
+    "term.student": "This course must be placed in an allowed term.",
+    "termLoad.TERM_CAPACITY_AVAILABLE": "Within normal capacity: {courseUnits} of {normalCourseUnits} modeled units.",
+    "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE": "Within normal capacity: {courseUnits} of {normalCourseUnits} modeled units. The Economics load is above the advising preference.",
+    "termLoad.TERM_OVERLOAD_APPROVED": "Advisor-approved overload: {courseUnits} modeled units; the approved ceiling is {conditionalMaximumCourseUnits}. Approval and absence of academic probation were recorded for this term.",
+    "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "More information needed: {courseUnits} modeled units exceed the normal {normalCourseUnits}. Record existing advisor approval and confirmation that you are not on academic probation before using additional capacity; the conditional ceiling is {conditionalMaximumCourseUnits}.",
+    "termLoad.TERM_OVERLOAD_APPROVAL_DENIED": "An overload is blocked because advisor approval was not granted. This term models {courseUnits} units, above the normal {normalCourseUnits}.",
+    "termLoad.pending": "More information needed: the normal-load search found no complete plan. Advisor overload approval and absence of academic probation have not been established for {terms}. No additional capacity has been granted; the search does not establish impossibility under an approved overload.",
+    "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "An overload is not permitted while you are on academic probation. This move models {courseUnits} units, above the normal {normalCourseUnits}.",
+    "termLoad.TERM_CAPACITY_EXCEEDED": "This move models {courseUnits} units and exceeds the published term limit ({conditionalMaximumCourseUnits} units, with any applicable Economics course limit). Additional tuition does not authorize this move.",
+    "tuition.threshold.exceeded": "The modeled {period} load is {modeledUnits} units, above the published {threshold}-unit tuition threshold. Additional tuition applies to actual enrollment above that threshold; this major plan does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit.",
+    "tuition.threshold.possible": "Additional tuition applies above {threshold} registered units across {period}. This plan models {modeledUnits} units and does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit.",
+    "infeasibility.electives.spring": "You still need {remainingElectives} distinct Economics electives. After finance is allocated, no remaining eligible elective is offered in {winterTerm}. The {springTerm} options are {springOptions}. Each is {courseUnits} unit, so two exceed both the normal {normalCourseUnits}-unit load and the advisor-approved {conditionalMaximumCourseUnits}-unit ceiling.",
+    "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
+    "infeasibility.finance.forced": "{financeCourse} must fill finance for this graduation target, so it cannot also count as an elective."
   }
 }

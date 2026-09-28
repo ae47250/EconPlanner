@@ -183,6 +183,7 @@ function plannerInputSignature(formData) {
     transferExpectedGraduationYear: formData.transferExpectedGraduationYear,
     transferEntryAcademicYear: formData.transferEntryAcademicYear,
     reservedCourseUnits: formData.reservedCourseUnits,
+    termLoadOverrides: formData.termLoadOverrides,
     studyAbroadTerm: formData.studyAbroadTerm,
     currentTermScheduleSet: currentTermWindow
       ? [currentTermWindow.slotId, formData.scheduleSetByTerm?.[currentTermWindow.slotId] === true]
@@ -207,6 +208,7 @@ const initialForm = {
   transferEntryAcademicYear: "",
   expectedGraduationTerm: "",
   reservedCourseUnits: {},
+  termLoadOverrides: {},
   reservationMemory: {},
   scheduleSetByTerm: {},
   studyAbroadTerm: "",
@@ -786,9 +788,10 @@ function PlanTimeline({
                                         }, event.currentTarget)}
                                       >
                                         {course.alternativeOptions.map(option => (
-                                          <option value={option.id} key={option.id} disabled={option.status === "BLOCKED"}>
+                                          <option value={option.id} key={option.id} disabled={["BLOCKED", "REVIEW_REQUIRED"].includes(option.status)}>
                                             {option.course}{option.section ? `-${option.section}` : ""}: {option.title}
                                             {option.status === "BLOCKED" ? ` — Unavailable: ${option.message}`
+                                              : option.status === "REVIEW_REQUIRED" ? ` — More information needed: ${option.message}`
                                               : option.status === "CONDITIONAL" ? ` — Conditional: ${option.message}` : ""}
                                           </option>
                                         ))}
@@ -811,7 +814,7 @@ function PlanTimeline({
                                       }));
                                     const hasAlternativeMove = moveOptions.some(option => option.id !== termId
                                       && ["ALLOWED", "CONDITIONAL"].includes(option.status));
-                                    if (!hasAlternativeMove) return (
+                                    if (!hasAlternativeMove && moveOptions.length < 2) return (
                                       <span className="required-course-note">
                                         {course.moveNoAlternativeNotice?.studentMessage || "No other term currently passes complete plan checks for this course."}
                                       </span>
@@ -832,14 +835,16 @@ function PlanTimeline({
                                           }, event.currentTarget)}
                                         >
                                           {moveOptions.map(option => (
-                                            <option value={option.id} key={option.id} disabled={option.status === "BLOCKED"}>
+                                            <option value={option.id} key={option.id} disabled={["BLOCKED", "REVIEW_REQUIRED"].includes(option.status)}>
                                               {option.label}{option.status === "CURRENT" ? " (current term)"
                                                 : option.status === "BLOCKED" ? ` — Unavailable: ${option.message}`
+                                                  : option.status === "REVIEW_REQUIRED" ? ` — More information needed: ${option.message}`
                                                   : option.status === "CONDITIONAL" ? ` — Conditional: ${option.message}`
                                                     : ` — ${option.message}`}
                                             </option>
                                           ))}
                                         </select>
+                                        {!hasAlternativeMove && <span className="required-course-note">{course.moveNoAlternativeNotice?.studentMessage}</span>}
                                       </label>
                                     );
                                   })()}
@@ -1129,14 +1134,16 @@ function PlanComparisonScreen({
   const overallStatus = overallPlanReadiness(isPlanView && selectedPlan ? [selectedPlan] : plans);
   const hasProjectedOfferings = (isPlanView && selectedPlan ? [selectedPlan] : plans)
     .some(plan => plan.terms?.some(term => term.courses?.some(course => course.scheduleProvenance === "PLANNING_PROJECTION")));
-  const noPlan = noPlanPresentation(canonicalPlanResult?.category);
+  const noPlan = noPlanPresentation(canonicalPlanResult?.category, canonicalPlanResult?.reason);
   const displayedOverallStatus = plans.length
     ? overallStatus
     : canonicalPlanResult?.category === "INPUT_BLOCKED"
       ? "Needs one more detail"
       : canonicalPlanResult?.category === "INFEASIBLE_PROVEN"
-        ? "No complete plan"
-        : "Needs advisor attention";
+        ? "Not possible"
+        : ["MISSING_OFFERING", "TERM_OVERLOAD_EVIDENCE_REQUIRED"].includes(canonicalPlanResult?.reason) || canonicalPlanResult?.category === "SEARCH_INCOMPLETE"
+          ? "More information needed"
+          : "Needs advisor attention";
   const planBadge = plan => {
     if (plan.planningMode !== "graduation_priority") return plan.label || "Validated";
     const mayCourse = plan.terms
@@ -1986,7 +1993,7 @@ function overallPlanReadiness(plans = []) {
   return plans.length ? "Ready to plan" : "Not available";
 }
 
-function noPlanPresentation(category) {
+function noPlanPresentation(category, reason) {
   if (category === "INPUT_BLOCKED") {
     return {
       title: "We need one more detail before we can build your plan.",
@@ -2006,6 +2013,20 @@ function noPlanPresentation(category) {
     return {
       title: "We could not finish checking every possible plan.",
       message: "This does not mean a plan is impossible. Review your answers or ask an advisor to help check the remaining possibilities.",
+      action: "Review my answers"
+    };
+  }
+  if (reason === "MISSING_OFFERING") {
+    return {
+      title: "More information needed to decide whether this major can be completed by your target.",
+      message: "Course offering evidence is incomplete for this graduation target. This result does not establish that major completion is impossible.",
+      action: "Review my answers"
+    };
+  }
+  if (reason === "TERM_OVERLOAD_EVIDENCE_REQUIRED") {
+    return {
+      title: "More information needed to assess an advisor-approved overload.",
+      message: "The normal-load search found no complete plan. Record existing advisor approval and absence of academic probation before using additional capacity.",
       action: "Review my answers"
     };
   }
@@ -4007,6 +4028,30 @@ export default function Page() {
                           {formData.studyAbroadTerm && <p>No Economics courses will be scheduled in {planningSlotsLabel(formData.studyAbroadTerm, planningContext)}.</p>}
                         </div>
                       )}
+                      <h3>Recorded overload approval</h3>
+                      <p>Record existing advisor approval and academic probation status for each term. EconPlanner does not grant approval. An overload may add tuition; major courses do not establish your full enrollment or charge.</p>
+                      <div className="non-major-fields">
+                        {planningSlots.filter(slot => !slot.isSummer).map(slot => (
+                          <div key={slot.id}>
+                            <strong>{slot.label}</strong>
+                            {[
+                              ["advisorApproval", "Advisor overload approval", [["NOT_SUPPLIED", "Not supplied"], ["APPROVED", "Already approved"], ["NOT_APPROVED", "Not approved"]]],
+                              ["academicProbationStatus", "Academic probation status", [["NOT_SUPPLIED", "Not supplied"], ["NOT_ON_ACADEMIC_PROBATION", "Not on academic probation"], ["ON_ACADEMIC_PROBATION", "On academic probation"]]]
+                            ].map(([field, label, options]) => (
+                              <label key={field}>
+                                <span>{label}</span>
+                                <select aria-label={`${label} in ${slot.label}`} value={formData.termLoadOverrides?.[slot.id]?.[field] || "NOT_SUPPLIED"} onChange={event => {
+                                  const value = event.target.value;
+                                  setFormData(current => ({...current, termLoadOverrides: {...current.termLoadOverrides, [slot.id]: {...current.termLoadOverrides?.[slot.id], [field]: value}}}));
+                                  clearInputFeedback();
+                                }}>
+                                  {options.map(([value, text]) => <option key={value} value={value}>{text}</option>)}
+                                </select>
+                              </label>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
                       <h3>Leave room for other courses</h3>
                       <p className="custom-timeline-copy">Choose 0, 1, or 2 course units, within the normal capacity for each term.</p>
                       <div className="non-major-fields">

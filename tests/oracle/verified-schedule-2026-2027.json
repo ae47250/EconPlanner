@@ -1,52 +1,1307 @@
 {
   "schemaVersion": 1,
-  "snapshotId": "hanover-economics-verified-schedule-2026-2027",
+  "snapshotId": "registrar-2026-2027-reviewed-2026-09-28",
   "academicYear": "2026-2027",
   "review": {
     "status": "INDEPENDENT_ROW_REVIEW",
-    "reviewedOn": "2026-08-08",
-    "reviewedBy": "Project owner supplied current registrar screenshots",
-    "method": "Each section was transcribed row by row from the current repository-owned screenshots and checked independently of the production normalized schedule."
+    "reviewedOn": "2026-09-28",
+    "reviewedBy": "Project owner supplied the primary row description; Codex performed a second direct image review",
+    "method": "New Economics rows were independently transcribed from the September 27 attachment without reading production rows. Existing supporting and Fall faculty were checked directly against their archived images. Receipt/review dates are not registrar verification dates. September 28: separately reviewed the explicit owner confirmation of BUSN 323 Fall 2026 offering and Winter 2027 non-offering; no future-year absence is inferred."
   },
   "unknownValue": null,
   "sources": [
-    {"sourceId":"MYHANOVER-FALL-2026","path":"data/raw/economics/schedule-2026-2027-fall.png","sha256":"33cae907c5aa8d802fa14612441152da25e8fac516061f661a4222c090727811","visibleContent":"Fall 2026 Economics sections","reviewNote":"Current registrar screenshot supplied on August 8, 2026."},
-    {"sourceId":"MYHANOVER-WINTER-MAY-2027","path":"data/raw/economics/schedule-2026-2027-winter-spring.png","sha256":"f0c77994f973998164d0651b47736985190c8b1a7d984d93c1c2dec32262777a","visibleContent":"Winter and May 2027 Economics sections","reviewNote":"Current registrar screenshot supplied on August 8, 2026."},
-    {"sourceId":"MYHANOVER-MATH-FALL-2026","path":"data/raw/economics/schedule-2026-2027-math-fall.png","sha256":"3a3a26b6e38936651310360b23a23301f5c48996b40855a9bfaa5d65119dd0ca","visibleContent":"Fall 2026 Mathematics sections supporting Economics requirements","reviewNote":"Current registrar screenshot supplied on August 8, 2026."},
-    {"sourceId":"MYHANOVER-MATH-WINTER-MAY-2027","path":"data/raw/economics/schedule-2026-2027-math-winter-spring.png","sha256":"fe59160d91c46acab8cf9dfcc91fecd9e6bb23573b25717bbcbda14fb04df410","visibleContent":"Winter and May 2027 Mathematics sections supporting Economics requirements","reviewNote":"Current registrar screenshot supplied on August 8, 2026."},
-    {"sourceId":"MYHANOVER-BUSINESS-FALL-2026","path":"data/raw/economics/schedule-2026-2027-business-fall.png","sha256":"2aeadbb23318e0e71b643130a4cb667734e2bdfd3f8ed6ead9de6a13431c9ef3","visibleContent":"Fall 2026 BUSN 323-A Investments section","reviewNote":"Current registrar screenshot supplied on August 8, 2026."},
-    {"sourceId":"ECONOMICS-CROSSLIST-ECO-234","path":"data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md","sha256":"6da52642cf4fcaa8d9d10075cba1158347e831aacc98b21cf3fcc4b7ff06565f","visibleContent":"ECO 234 is cross-listed with PHI 234 and is counted once."}
+    {
+      "sourceId": "MYHANOVER-FALL-2026",
+      "path": "data/raw/economics/schedule-2026-2027-fall.png",
+      "sha256": "33cae907c5aa8d802fa14612441152da25e8fac516061f661a4222c090727811",
+      "visibleContent": "Fall 2026 Economics sections",
+      "reviewNote": "Current registrar screenshot supplied on August 8, 2026."
+    },
+    {
+      "sourceId": "MYHANOVER-WINTER-MAY-2027",
+      "path": "data/raw/economics/schedule-2026-2027-winter-spring.png",
+      "sha256": "f0c77994f973998164d0651b47736985190c8b1a7d984d93c1c2dec32262777a",
+      "visibleContent": "Winter and May 2027 Economics sections",
+      "reviewNote": "Current registrar screenshot supplied on August 8, 2026."
+    },
+    {
+      "sourceId": "MYHANOVER-MATH-FALL-2026",
+      "path": "data/raw/economics/schedule-2026-2027-math-fall.png",
+      "sha256": "3a3a26b6e38936651310360b23a23301f5c48996b40855a9bfaa5d65119dd0ca",
+      "visibleContent": "Fall 2026 Mathematics sections supporting Economics requirements",
+      "reviewNote": "Current registrar screenshot supplied on August 8, 2026."
+    },
+    {
+      "sourceId": "MYHANOVER-MATH-WINTER-MAY-2027",
+      "path": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "sha256": "fe59160d91c46acab8cf9dfcc91fecd9e6bb23573b25717bbcbda14fb04df410",
+      "visibleContent": "Winter and May 2027 Mathematics sections supporting Economics requirements",
+      "reviewNote": "Current registrar screenshot supplied on August 8, 2026."
+    },
+    {
+      "sourceId": "MYHANOVER-BUSINESS-FALL-2026",
+      "path": "data/raw/economics/schedule-2026-2027-business-fall.png",
+      "sha256": "2aeadbb23318e0e71b643130a4cb667734e2bdfd3f8ed6ead9de6a13431c9ef3",
+      "visibleContent": "Fall 2026 BUSN 323-A Investments section",
+      "reviewNote": "Current registrar screenshot supplied on August 8, 2026."
+    },
+    {
+      "sourceId": "ECONOMICS-CROSSLIST-ECO-234",
+      "path": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
+      "sha256": "6da52642cf4fcaa8d9d10075cba1158347e831aacc98b21cf3fcc4b7ff06565f",
+      "visibleContent": "ECO 234 is cross-listed with PHI 234 and is counted once."
+    },
+    {
+      "sourceId": "MYHANOVER-WINTER-MAY-2027-REVISION-2",
+      "path": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png",
+      "sha256": "1ebb767506862889dc2d47b1badb3b9d7c0cceeef4d068158f91de8ca6730d3d",
+      "visibleContent": "Eight Winter and three May 2027 Economics sections",
+      "reviewNote": "Supplied by the project owner on September 27, 2026; independent direct image review followed the owner row description. Capture and registrar verification dates are not visible.",
+      "capturedOn": null,
+      "registrarVerifiedOn": null,
+      "supersedes": "MYHANOVER-WINTER-MAY-2027"
+    },
+    {
+      "sourceId": "OWNER-BUSN323-2026-2027-2026-09-28",
+      "path": "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md",
+      "sha256": "d3b5f859ad84aa1be4f2d29091a71c24062be7cc12dcb26347e3d48b3bfe2ed2",
+      "visibleContent": "Owner authoritative statement: BUSN 323 is offered in Fall 2026 only. It is not offered in Winter 2027.",
+      "reviewNote": "Statement and explicit course/year/term boundaries independently reviewed September 28, 2026. This is not a registrar screenshot or a recurring offering rule."
+    }
   ],
   "sections": [
-    {"term":"Fall","course":"ECO 113","canonicalCrossListIdentity":["ECO 113"],"section":"A","title":"Principles of Microeconomics","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Tue","Thu"],"startTime":"8:00 AM","endTime":"9:45 AM"},"availability":{"state":"open","seatsOpen":1,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-fall.png"},
-    {"term":"Fall","course":"ECO 114","canonicalCrossListIdentity":["ECO 114"],"section":"A","title":"Principles of Macroeconomics","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM"},"availability":{"state":"open","seatsOpen":3,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-fall.png"},
-    {"term":"Fall","course":"ECO 114","canonicalCrossListIdentity":["ECO 114"],"section":"B","title":"Principles of Macroeconomics","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM"},"availability":{"state":"open","seatsOpen":5,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-fall.png"},
-    {"term":"Fall","course":"ECO 114","canonicalCrossListIdentity":["ECO 114"],"section":"C","title":"Principles of Macroeconomics","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM"},"availability":{"state":"full","seatsOpen":0,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-fall.png"},
-    {"term":"Fall","course":"ECO 213","canonicalCrossListIdentity":["ECO 213"],"section":"A","title":"Intermediate Microeconomics","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM"},"availability":{"state":"open","seatsOpen":11,"capacity":20},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-fall.png"},
-    {"term":"Fall","course":"ECO 234","canonicalCrossListIdentity":["ECO 234","PHI 234"],"canonicalIdentitySourceReference":"data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md#ECO-234","section":"A","title":"Rational Choices","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM"},"availability":{"state":"open","seatsOpen":23,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-fall.png"},
-    {"term":"Fall","course":"ECO 333","canonicalCrossListIdentity":["ECO 333"],"section":"A","title":"International Trade & Finance","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"1:20 PM","endTime":"2:30 PM"},"availability":{"state":"open","seatsOpen":3,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-fall.png"},
-    {"term":"Fall","course":"MAT 113","canonicalCrossListIdentity":["MAT 113"],"section":"A","title":"Essential Precalculus","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"12:00 PM","endTime":"1:10 PM"},"availability":{"state":"open","seatsOpen":5,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-fall.png"},
-    {"term":"Fall","course":"MAT 121","canonicalCrossListIdentity":["MAT 121"],"section":"A","title":"Calculus I","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"12:00 PM","endTime":"1:10 PM"},"availability":{"state":"open","seatsOpen":15,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-fall.png"},
-    {"term":"Fall","course":"MAT 121","canonicalCrossListIdentity":["MAT 121"],"section":"B","title":"Calculus I","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"1:20 PM","endTime":"2:30 PM"},"availability":{"state":"open","seatsOpen":13,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-fall.png"},
-    {"term":"Fall","course":"MAT 217","canonicalCrossListIdentity":["MAT 217"],"section":"A","title":"Applied Statistics","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"2:40 PM","endTime":"3:50 PM"},"availability":{"state":"full","seatsOpen":0,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-fall.png"},
-    {"term":"Fall","course":"MAT 217","canonicalCrossListIdentity":["MAT 217"],"section":"B","title":"Applied Statistics","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM"},"availability":{"state":"full","seatsOpen":0,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-fall.png"},
-    {"term":"Fall","course":"BUSN 323","canonicalCrossListIdentity":["BUSN 323"],"section":"A","title":"Investments","units":1,"courseDates":{"startDate":"2026-08-24","endDate":"2026-12-11"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM"},"availability":{"state":"full","seatsOpen":0,"capacity":26},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-business-fall.png"},
-    {"term":"Winter","course":"ECO 113","canonicalCrossListIdentity":["ECO 113"],"section":"J","title":"Principles of Microeconomics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"ECO 113","canonicalCrossListIdentity":["ECO 113"],"section":"K","title":"Principles of Microeconomics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"8:00 AM","endTime":"9:10 AM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"ECO 114","canonicalCrossListIdentity":["ECO 114"],"section":"J","title":"Principles of Macroeconomics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"8:00 AM","endTime":"9:45 AM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"ECO 161","canonicalCrossListIdentity":["ECO 161"],"section":"J","title":"Foundations of Economics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM"},"availability":{"state":"open","seatsOpen":20,"capacity":20},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"ECO 214","canonicalCrossListIdentity":["ECO 214"],"section":"J","title":"Intermediate Macroeconomics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"ECO 221","canonicalCrossListIdentity":["ECO 221"],"section":"J","title":"Environmental Economics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM"},"availability":{"state":"open","seatsOpen":20,"capacity":20},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"ECO 321","canonicalCrossListIdentity":["ECO 321"],"section":"J","title":"Money & Financial Markets","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM"},"availability":{"state":"open","seatsOpen":20,"capacity":20},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"ECO 461","canonicalCrossListIdentity":["ECO 461"],"section":"J","title":"Senior Seminar - Econometrics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM"},"availability":{"state":"open","seatsOpen":15,"capacity":15},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"Winter","course":"MAT 113","canonicalCrossListIdentity":["MAT 113"],"section":"J","title":"Essential Precalculus","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"2:15 PM","endTime":"4:00 PM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-winter-spring.png"},
-    {"term":"Winter","course":"MAT 121","canonicalCrossListIdentity":["MAT 121"],"section":"J","title":"Calculus I","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"1:20 PM","endTime":"2:30 PM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-winter-spring.png"},
-    {"term":"Winter","course":"MAT 217","canonicalCrossListIdentity":["MAT 217"],"section":"J","title":"Applied Statistics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"9:20 AM","endTime":"10:30 AM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-winter-spring.png"},
-    {"term":"Winter","course":"MAT 217","canonicalCrossListIdentity":["MAT 217"],"section":"K","title":"Applied Statistics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Mon","Wed","Fri"],"startTime":"10:40 AM","endTime":"11:50 AM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-winter-spring.png"},
-    {"term":"Winter","course":"MAT 217","canonicalCrossListIdentity":["MAT 217"],"section":"L","title":"Applied Statistics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"10:00 AM","endTime":"11:45 AM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-winter-spring.png"},
-    {"term":"Winter","course":"MAT 217","canonicalCrossListIdentity":["MAT 217"],"section":"M","title":"Applied Statistics","units":1,"courseDates":{"startDate":"2027-01-11","endDate":"2027-04-23"},"meeting":{"days":["Tue","Thu"],"startTime":"12:20 PM","endTime":"2:05 PM"},"availability":{"state":"open","seatsOpen":24,"capacity":24},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-winter-spring.png"},
-    {"term":"May","course":"ECO 222","canonicalCrossListIdentity":["ECO 222"],"section":"S","title":"Economics of the European Union","units":1,"courseDates":{"startDate":"2027-05-03","endDate":"2027-05-28"},"meeting":{"days":["Mon","Tue","Wed","Thu","Fri"],"startTime":"10:15 AM","endTime":"12:30 PM"},"availability":{"state":"open","seatsOpen":15,"capacity":15},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"May","course":"ECO 260","canonicalCrossListIdentity":["ECO 260"],"section":"S","title":"Special Topics","units":1,"courseDates":{"startDate":"2027-05-03","endDate":"2027-05-28"},"meeting":{"days":["Mon","Tue","Wed","Thu","Fri"],"startTime":"8:00 AM","endTime":"10:15 AM"},"availability":{"state":"open","seatsOpen":20,"capacity":20},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-winter-spring.png"},
-    {"term":"May","course":"MAT 217","canonicalCrossListIdentity":["MAT 217"],"section":"S","title":"Applied Statistics","units":1,"courseDates":{"startDate":"2027-05-03","endDate":"2027-05-28"},"meeting":{"days":["Mon","Tue","Wed","Thu","Fri"],"startTime":"8:00 AM","endTime":"12:30 PM"},"availability":{"state":"open","seatsOpen":18,"capacity":18},"verificationDate":"2026-08-08","sourceReference":"data/raw/economics/schedule-2026-2027-math-winter-spring.png"}
-  ]
+    {
+      "term": "Fall",
+      "course": "ECO 113",
+      "canonicalCrossListIdentity": [
+        "ECO 113"
+      ],
+      "section": "A",
+      "title": "Principles of Microeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "9:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 1,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png",
+      "instructor": "Dodge, Eric R.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "A",
+      "title": "Principles of Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 3,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png",
+      "instructor": "Eiriksson, Agust",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "B",
+      "title": "Principles of Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 5,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png",
+      "instructor": "Eiriksson, Agust",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "C",
+      "title": "Principles of Macroeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "full",
+        "seatsOpen": 0,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png",
+      "instructor": "Jaradat, Hamzeh A.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 213",
+      "canonicalCrossListIdentity": [
+        "ECO 213"
+      ],
+      "section": "A",
+      "title": "Intermediate Microeconomics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 11,
+        "capacity": 20,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png",
+      "instructor": "Dodge, Eric R.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 234",
+      "canonicalCrossListIdentity": [
+        "ECO 234",
+        "PHI 234"
+      ],
+      "canonicalIdentitySourceReference": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md#ECO-234",
+      "section": "A",
+      "title": "Rational Choices",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 23,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png",
+      "instructor": "Bates, Jared G.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "ECO 333",
+      "canonicalCrossListIdentity": [
+        "ECO 333"
+      ],
+      "section": "A",
+      "title": "International Trade & Finance",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "1:20 PM",
+        "endTime": "2:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 3,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-fall.png",
+      "instructor": "Eiriksson, Agust",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "MAT 113",
+      "canonicalCrossListIdentity": [
+        "MAT 113"
+      ],
+      "section": "A",
+      "title": "Essential Precalculus",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "12:00 PM",
+        "endTime": "1:10 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 5,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-fall.png",
+      "instructor": "Setser, Jennifer C.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "MAT 121",
+      "canonicalCrossListIdentity": [
+        "MAT 121"
+      ],
+      "section": "A",
+      "title": "Calculus I",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "12:00 PM",
+        "endTime": "1:10 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 15,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-fall.png",
+      "instructor": "Nguyen, Duong",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "MAT 121",
+      "canonicalCrossListIdentity": [
+        "MAT 121"
+      ],
+      "section": "B",
+      "title": "Calculus I",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "1:20 PM",
+        "endTime": "2:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 13,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-fall.png",
+      "instructor": "Nguyen, Duong",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "MAT 217",
+      "canonicalCrossListIdentity": [
+        "MAT 217"
+      ],
+      "section": "A",
+      "title": "Applied Statistics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "2:40 PM",
+        "endTime": "3:50 PM"
+      },
+      "availability": {
+        "state": "full",
+        "seatsOpen": 0,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-fall.png",
+      "instructor": "Nguyen, Duong",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "MAT 217",
+      "canonicalCrossListIdentity": [
+        "MAT 217"
+      ],
+      "section": "B",
+      "title": "Applied Statistics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "full",
+        "seatsOpen": 0,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-fall.png",
+      "instructor": "Isom, April",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Fall",
+      "course": "BUSN 323",
+      "canonicalCrossListIdentity": [
+        "BUSN 323"
+      ],
+      "section": "A",
+      "title": "Investments",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2026-08-24",
+        "endDate": "2026-12-11"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
+      },
+      "availability": {
+        "state": "full",
+        "seatsOpen": 0,
+        "capacity": 26,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-business-fall.png",
+      "instructor": "Riddick Jr., John C.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Winter",
+      "course": "MAT 113",
+      "canonicalCrossListIdentity": [
+        "MAT 113"
+      ],
+      "section": "J",
+      "title": "Essential Precalculus",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "2:15 PM",
+        "endTime": "4:00 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "instructor": "Setser, Jennifer C.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Winter",
+      "course": "MAT 121",
+      "canonicalCrossListIdentity": [
+        "MAT 121"
+      ],
+      "section": "J",
+      "title": "Calculus I",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "1:20 PM",
+        "endTime": "2:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "instructor": "Jagels, Carl F.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Winter",
+      "course": "MAT 217",
+      "canonicalCrossListIdentity": [
+        "MAT 217"
+      ],
+      "section": "J",
+      "title": "Applied Statistics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "instructor": "Jagels, Carl F.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Winter",
+      "course": "MAT 217",
+      "canonicalCrossListIdentity": [
+        "MAT 217"
+      ],
+      "section": "K",
+      "title": "Applied Statistics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "instructor": "Wahl, Barbara J.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Winter",
+      "course": "MAT 217",
+      "canonicalCrossListIdentity": [
+        "MAT 217"
+      ],
+      "section": "L",
+      "title": "Applied Statistics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "instructor": "Isom, April",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Winter",
+      "course": "MAT 217",
+      "canonicalCrossListIdentity": [
+        "MAT 217"
+      ],
+      "section": "M",
+      "title": "Applied Statistics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "instructor": "Isom, April",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 113",
+      "canonicalCrossListIdentity": [
+        "ECO 113"
+      ],
+      "section": "J",
+      "title": "Principles of Microeconomics",
+      "instructor": "Jaradat, Hamzeh A.",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 113",
+      "canonicalCrossListIdentity": [
+        "ECO 113"
+      ],
+      "section": "K",
+      "title": "Principles of Microeconomics",
+      "instructor": "Dodge, Eric R.",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "9:10 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 114",
+      "canonicalCrossListIdentity": [
+        "ECO 114"
+      ],
+      "section": "J",
+      "title": "Principles of Macroeconomics",
+      "instructor": "Eiriksson, Agust",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "9:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 161",
+      "canonicalCrossListIdentity": [
+        "ECO 161"
+      ],
+      "section": "J",
+      "title": "Foundations of Economics",
+      "instructor": "Eiriksson, Agust",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 214",
+      "canonicalCrossListIdentity": [
+        "ECO 214"
+      ],
+      "section": "J",
+      "title": "Intermediate Macroeconomics",
+      "instructor": "Eiriksson, Agust",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "10:00 AM",
+        "endTime": "11:45 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 24,
+        "capacity": 24,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 221",
+      "canonicalCrossListIdentity": [
+        "ECO 221"
+      ],
+      "section": "J",
+      "title": "Environmental Economics",
+      "instructor": "Dodge, Eric R.",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "9:20 AM",
+        "endTime": "10:30 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 321",
+      "canonicalCrossListIdentity": [
+        "ECO 321"
+      ],
+      "section": "J",
+      "title": "Money & Financial Markets",
+      "instructor": "Jaradat, Hamzeh A.",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Tue",
+          "Thu"
+        ],
+        "startTime": "12:20 PM",
+        "endTime": "2:05 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "Winter",
+      "course": "ECO 461",
+      "canonicalCrossListIdentity": [
+        "ECO 461"
+      ],
+      "section": "J",
+      "title": "Senior Seminar - Econometrics",
+      "instructor": "Dodge, Eric R.",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-01-11",
+        "endDate": "2027-04-23"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Wed",
+          "Fri"
+        ],
+        "startTime": "10:40 AM",
+        "endTime": "11:50 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 15,
+        "capacity": 15,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "May",
+      "course": "MAT 217",
+      "canonicalCrossListIdentity": [
+        "MAT 217"
+      ],
+      "section": "S",
+      "title": "Applied Statistics",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-05-03",
+        "endDate": "2027-05-28"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "12:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 18,
+        "capacity": 18,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "sourceReference": "data/raw/economics/schedule-2026-2027-math-winter-spring.png",
+      "instructor": "Wahl, Barbara J.",
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf"
+      ]
+    },
+    {
+      "term": "May",
+      "course": "ECO 222",
+      "canonicalCrossListIdentity": [
+        "ECO 222"
+      ],
+      "section": "S",
+      "title": "Economics of the European Union",
+      "instructor": "Eiriksson, Agust",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-05-03",
+        "endDate": "2027-05-28"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "startTime": "10:15 AM",
+        "endTime": "12:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 15,
+        "capacity": 15,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "May",
+      "course": "ECO 224",
+      "canonicalCrossListIdentity": [
+        "ECO 224"
+      ],
+      "section": "S",
+      "title": "Introduction to Sustainability",
+      "instructor": "Dodge, Eric R.",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-05-03",
+        "endDate": "2027-05-28"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "startTime": "8:00 AM",
+        "endTime": "10:15 AM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
+    },
+    {
+      "term": "May",
+      "course": "ECO 234",
+      "canonicalCrossListIdentity": [
+        "ECO 234",
+        "PHI 234"
+      ],
+      "section": "S",
+      "title": "Rational Choices",
+      "instructor": "Bates, Jared G.",
+      "units": 1,
+      "courseDates": {
+        "startDate": "2027-05-03",
+        "endDate": "2027-05-28"
+      },
+      "meeting": {
+        "days": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "startTime": "10:15 AM",
+        "endTime": "12:30 PM"
+      },
+      "availability": {
+        "state": "open",
+        "seatsOpen": 20,
+        "capacity": 20,
+        "asOf": null
+      },
+      "verificationDate": null,
+      "unknownFields": [
+        "verificationDate",
+        "availability.asOf",
+        "delivery",
+        "location"
+      ],
+      "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png",
+      "canonicalIdentitySourceReference": "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md#ECO-234"
+    }
+  ],
+  "offeringConfirmations": [
+    {
+      "academicYear": "2026-2027",
+      "course": "BUSN 323",
+      "term": "Fall",
+      "offeringExistence": "OFFERED",
+      "confirmedOn": "2026-09-28",
+      "sourceReference": "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md"
+    },
+    {
+      "academicYear": "2026-2027",
+      "course": "BUSN 323",
+      "term": "Winter",
+      "offeringExistence": "NOT_OFFERED",
+      "confirmedOn": "2026-09-28",
+      "sourceReference": "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md"
+    }
+  ],
+  "coverageByTerm": {
+    "Fall": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "subject": "ECO",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-FALL#image"
+          ]
+        },
+        {
+          "subject": "MAT",
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-FALL#image"
+          ]
+        },
+        {
+          "course": "BUSN 323",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "OWNER-BUSN323-2026-2027-2026-09-28"
+          ]
+        }
+      ]
+    },
+    "Winter": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "subject": "ECO",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+          ]
+        },
+        {
+          "subject": "MAT",
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+          ]
+        },
+        {
+          "course": "BUSN 323",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "OWNER-BUSN323-2026-2027-2026-09-28"
+          ]
+        }
+      ]
+    },
+    "May": {
+      "coverage": "PARTIAL",
+      "coverageScopes": [
+        {
+          "subject": "ECO",
+          "coverage": "COMPLETE",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-WINTER-MAY-REVISION-2#image"
+          ]
+        },
+        {
+          "subject": "MAT",
+          "coverage": "PARTIAL",
+          "sourceRefs": [
+            "SCHEDULE-2026-2027-MATH-WINTER-MAY#image"
+          ]
+        }
+      ]
+    },
+    "Summer": {
+      "coverage": "UNAVAILABLE",
+      "coverageScopes": []
+    }
+  }
 }

@@ -67,8 +67,8 @@
               "capacity": 15
             },
             "provenance": {
-              "verificationDate": "2026-08-08",
-              "sourceReference": "data/raw/economics/schedule-2026-2027-winter-spring.png"
+              "verificationDate": null,
+              "sourceReference": "data/raw/economics/schedule-2026-2027-winter-may-revision-2.png"
             }
           }
         ]
@@ -76,55 +76,254 @@
     ]
   },
   "verifiedFieldMutations": [
-    { "fixtureId": "schedule-invalid-crosslist", "path": "canonicalCrossListIdentity", "value": ["ECO 999"] },
-    { "fixtureId": "schedule-invalid-title", "path": "title", "value": "Wrong title" },
-    { "fixtureId": "schedule-invalid-units", "path": "units", "value": 0.5 },
-    { "fixtureId": "schedule-invalid-start-date", "path": "meeting.startDate", "value": "2027-01-12" },
-    { "fixtureId": "schedule-invalid-end-date", "path": "meeting.endDate", "value": "2027-04-22" },
-    { "fixtureId": "schedule-invalid-days", "path": "meeting.days", "value": ["Tue", "Thu"] },
-    { "fixtureId": "schedule-invalid-start-time", "path": "meeting.startTime", "value": "10:30 AM" },
-    { "fixtureId": "schedule-invalid-end-time", "path": "meeting.endTime", "value": "12:00 PM" },
-    { "fixtureId": "schedule-invalid-availability", "path": "availability.state", "value": "unknown" },
-    { "fixtureId": "schedule-invalid-seats", "path": "availability.seatsOpen", "value": 14 },
-    { "fixtureId": "schedule-invalid-capacity", "path": "availability.capacity", "value": 16 },
-    { "fixtureId": "schedule-invalid-verification-date", "path": "provenance.verificationDate", "value": "2026-08-02" },
-    { "fixtureId": "schedule-invalid-source-reference", "path": "provenance.sourceReference", "value": "wrong-source.png" },
-    { "fixtureId": "schedule-invalid-verification-status", "path": "verificationStatus", "value": "projected", "expectedCode": "SCHEDULE_VERIFICATION_STATUS_MISMATCH" },
-    { "fixtureId": "schedule-invalid-section", "path": "section", "value": "X", "expectedCode": "SCHEDULE_VERIFIED_SECTION_NOT_FOUND" }
+    {
+      "fixtureId": "schedule-invalid-crosslist",
+      "path": "canonicalCrossListIdentity",
+      "value": [
+        "ECO 999"
+      ]
+    },
+    {
+      "fixtureId": "schedule-invalid-title",
+      "path": "title",
+      "value": "Wrong title"
+    },
+    {
+      "fixtureId": "schedule-invalid-units",
+      "path": "units",
+      "value": 0.5
+    },
+    {
+      "fixtureId": "schedule-invalid-start-date",
+      "path": "meeting.startDate",
+      "value": "2027-01-12"
+    },
+    {
+      "fixtureId": "schedule-invalid-end-date",
+      "path": "meeting.endDate",
+      "value": "2027-04-22"
+    },
+    {
+      "fixtureId": "schedule-invalid-days",
+      "path": "meeting.days",
+      "value": [
+        "Tue",
+        "Thu"
+      ]
+    },
+    {
+      "fixtureId": "schedule-invalid-start-time",
+      "path": "meeting.startTime",
+      "value": "10:30 AM"
+    },
+    {
+      "fixtureId": "schedule-invalid-end-time",
+      "path": "meeting.endTime",
+      "value": "12:00 PM"
+    },
+    {
+      "fixtureId": "schedule-invalid-availability",
+      "path": "availability.state",
+      "value": "unknown"
+    },
+    {
+      "fixtureId": "schedule-invalid-seats",
+      "path": "availability.seatsOpen",
+      "value": 14
+    },
+    {
+      "fixtureId": "schedule-invalid-capacity",
+      "path": "availability.capacity",
+      "value": 16
+    },
+    {
+      "fixtureId": "schedule-invalid-verification-date",
+      "path": "provenance.verificationDate",
+      "value": "2026-08-02"
+    },
+    {
+      "fixtureId": "schedule-invalid-source-reference",
+      "path": "provenance.sourceReference",
+      "value": "wrong-source.png"
+    },
+    {
+      "fixtureId": "schedule-invalid-verification-status",
+      "path": "verificationStatus",
+      "value": "projected",
+      "expectedCode": "SCHEDULE_VERIFICATION_STATUS_MISMATCH"
+    },
+    {
+      "fixtureId": "schedule-invalid-section",
+      "path": "section",
+      "value": "X",
+      "expectedCode": "SCHEDULE_VERIFIED_SECTION_NOT_FOUND"
+    }
   ],
   "verifiedIdentityMutations": [
-    { "fixtureId": "schedule-invalid-academic-year", "path": "academicYear", "value": "2027/2028" },
-    { "fixtureId": "schedule-invalid-term", "path": "termKey", "value": "Fall" },
-    { "fixtureId": "schedule-invalid-course", "path": "courses.0.course", "value": "ECO 999" }
+    {
+      "fixtureId": "schedule-invalid-academic-year",
+      "path": "academicYear",
+      "value": "2027/2028"
+    },
+    {
+      "fixtureId": "schedule-invalid-term",
+      "path": "termKey",
+      "value": "Fall"
+    },
+    {
+      "fixtureId": "schedule-invalid-course",
+      "path": "courses.0.course",
+      "value": "ECO 999"
+    }
   ],
   "availabilityCases": [
-    { "fixtureId": "schedule-closed", "state": "closed", "seatsOpen": 0, "expectedStatus": "NOT_FEASIBLE", "expectedCode": "SCHEDULE_SECTION_CLOSED" },
-    { "fixtureId": "schedule-waitlisted", "state": "waitlisted", "seatsOpen": 0, "expectedStatus": "CONDITIONALLY_FEASIBLE", "expectedCode": "SCHEDULE_SECTION_WAITLISTED" },
-    { "fixtureId": "schedule-unknown", "state": "unknown", "seatsOpen": null, "expectedStatus": "CONDITIONALLY_FEASIBLE", "expectedCode": "SCHEDULE_AVAILABILITY_UNKNOWN" },
-    { "fixtureId": "schedule-stale", "state": "open", "seatsOpen": 15, "freshness": "stale", "expectedStatus": "CONDITIONALLY_FEASIBLE", "expectedCode": "SCHEDULE_AVAILABILITY_STALE" }
+    {
+      "fixtureId": "schedule-closed",
+      "state": "closed",
+      "seatsOpen": 0,
+      "expectedStatus": "NOT_FEASIBLE",
+      "expectedCode": "SCHEDULE_SECTION_CLOSED"
+    },
+    {
+      "fixtureId": "schedule-waitlisted",
+      "state": "waitlisted",
+      "seatsOpen": 0,
+      "expectedStatus": "CONDITIONALLY_FEASIBLE",
+      "expectedCode": "SCHEDULE_SECTION_WAITLISTED"
+    },
+    {
+      "fixtureId": "schedule-unknown",
+      "state": "unknown",
+      "seatsOpen": null,
+      "expectedStatus": "CONDITIONALLY_FEASIBLE",
+      "expectedCode": "SCHEDULE_AVAILABILITY_UNKNOWN"
+    },
+    {
+      "fixtureId": "schedule-stale",
+      "state": "open",
+      "seatsOpen": 15,
+      "freshness": "stale",
+      "expectedStatus": "CONDITIONALLY_FEASIBLE",
+      "expectedCode": "SCHEDULE_AVAILABILITY_STALE"
+    }
   ],
   "capacityCases": [
-    { "fixtureId": "capacity-fall-four", "termKey": "Fall", "planned": 4, "reserved": 0, "valid": true },
-    { "fixtureId": "capacity-fall-reserved-over", "termKey": "Fall", "planned": 3, "reserved": 2, "valid": false },
-    { "fixtureId": "capacity-winter-five", "termKey": "Winter", "planned": 5, "reserved": 0, "valid": false },
-    { "fixtureId": "capacity-may-one", "termKey": "Spring/May", "planned": 1, "reserved": 0, "valid": true },
-    { "fixtureId": "capacity-may-two", "termKey": "Spring/May", "planned": 2, "reserved": 0, "valid": false }
+    {
+      "fixtureId": "capacity-fall-four",
+      "termKey": "Fall",
+      "planned": 4,
+      "reserved": 0,
+      "valid": true
+    },
+    {
+      "fixtureId": "capacity-fall-reserved-over",
+      "termKey": "Fall",
+      "planned": 3,
+      "reserved": 2,
+      "valid": false
+    },
+    {
+      "fixtureId": "capacity-winter-five",
+      "termKey": "Winter",
+      "planned": 5,
+      "reserved": 0,
+      "valid": false
+    },
+    {
+      "fixtureId": "capacity-may-one",
+      "termKey": "Spring/May",
+      "planned": 1,
+      "reserved": 0,
+      "valid": true
+    },
+    {
+      "fixtureId": "capacity-may-two",
+      "termKey": "Spring/May",
+      "planned": 2,
+      "reserved": 0,
+      "valid": false
+    }
   ],
   "offeringCases": [
-    { "fixtureId": "future-projected", "academicYear": "2027/2028", "termKey": "Fall", "course": "ECO 333", "source": "projected-offering", "expectedStatus": "VERIFIED_FEASIBLE" },
-    { "fixtureId": "future-generic-elective-placeholder", "academicYear": "2027/2028", "termKey": "Fall", "course": "ECO elective", "source": "projected-offering", "expectedStatus": "VERIFIED_FEASIBLE" },
-    { "fixtureId": "verified-year-projected", "academicYear": "2026/2027", "termKey": "Fall", "course": "ECO 333", "source": "projected-offering", "expectedStatus": "NOT_FEASIBLE", "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR" },
-    { "fixtureId": "verified-year-generic-elective-placeholder", "academicYear": "2026/2027", "termKey": "Fall", "course": "ECO elective", "source": "projected-offering", "expectedStatus": "NOT_FEASIBLE", "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR" },
-    { "fixtureId": "verified-year-named-requirement-placeholder", "academicYear": "2026/2027", "termKey": "Fall", "course": "BUSN 323", "source": "requirement-placeholder", "expectedStatus": "NOT_FEASIBLE", "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR" },
-    { "fixtureId": "future-source-missing", "academicYear": "2027/2028", "termKey": "Fall", "course": "ECO 333", "source": "", "expectedStatus": "NOT_FEASIBLE" }
+    {
+      "fixtureId": "future-projected",
+      "academicYear": "2027/2028",
+      "termKey": "Fall",
+      "course": "ECO 333",
+      "source": "projected-offering",
+      "expectedStatus": "VERIFIED_FEASIBLE"
+    },
+    {
+      "fixtureId": "future-generic-elective-placeholder",
+      "academicYear": "2027/2028",
+      "termKey": "Fall",
+      "course": "ECO elective",
+      "source": "projected-offering",
+      "expectedStatus": "VERIFIED_FEASIBLE"
+    },
+    {
+      "fixtureId": "verified-year-projected",
+      "academicYear": "2026/2027",
+      "termKey": "Fall",
+      "course": "ECO 333",
+      "source": "projected-offering",
+      "expectedStatus": "NOT_FEASIBLE",
+      "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR"
+    },
+    {
+      "fixtureId": "verified-year-generic-elective-placeholder",
+      "academicYear": "2026/2027",
+      "termKey": "Fall",
+      "course": "ECO elective",
+      "source": "projected-offering",
+      "expectedStatus": "NOT_FEASIBLE",
+      "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR"
+    },
+    {
+      "fixtureId": "verified-year-named-requirement-placeholder",
+      "academicYear": "2026/2027",
+      "termKey": "Fall",
+      "course": "BUSN 323",
+      "source": "requirement-placeholder",
+      "expectedStatus": "NOT_FEASIBLE",
+      "expectedCode": "SCHEDULE_PROJECTED_SOURCE_IN_VERIFIED_YEAR"
+    },
+    {
+      "fixtureId": "future-source-missing",
+      "academicYear": "2027/2028",
+      "termKey": "Fall",
+      "course": "ECO 333",
+      "source": "",
+      "expectedStatus": "NOT_FEASIBLE"
+    }
   ],
   "summerCases": [
-    { "fixtureId": "summer-eco113-review", "course": "ECO 113", "expectedStatus": "POLICY_REVIEW" },
-    { "fixtureId": "summer-other-blocked", "course": "ECO 114", "expectedStatus": "NOT_FEASIBLE" }
+    {
+      "fixtureId": "summer-eco113-review",
+      "course": "ECO 113",
+      "expectedStatus": "POLICY_REVIEW"
+    },
+    {
+      "fixtureId": "summer-other-blocked",
+      "course": "ECO 114",
+      "expectedStatus": "NOT_FEASIBLE"
+    }
   ],
   "horizonCases": [
-    { "fixtureId": "horizon-before-start", "academicYear": "2025/2026", "termKey": "Winter" },
-    { "fixtureId": "horizon-after-graduation", "academicYear": "2027/2028", "termKey": "Fall" },
-    { "fixtureId": "horizon-summer-after-graduation", "academicYear": "2026/2027", "termKey": "Summer" }
+    {
+      "fixtureId": "horizon-before-start",
+      "academicYear": "2025/2026",
+      "termKey": "Winter"
+    },
+    {
+      "fixtureId": "horizon-after-graduation",
+      "academicYear": "2027/2028",
+      "termKey": "Fall"
+    },
+    {
+      "fixtureId": "horizon-summer-after-graduation",
+      "academicYear": "2026/2027",
+      "termKey": "Summer"
+    }
   ]
 }

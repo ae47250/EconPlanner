@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 9,
+    "version": 10,
     "confirmationDate": "2026-09-27",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
@@ -732,7 +732,13 @@
         "TERM-STRUCTURE#Fall Term"
       ],
       "term": "Fall",
-      "maxTotalCourses": 4
+      "maxTotalCourses": 4,
+      "normalCourseUnits": 4,
+      "conditionalMaximumCourseUnits": 5.25,
+      "conditionalRequirements": [
+        "ADVISOR_APPROVAL",
+        "NOT_ON_ACADEMIC_PROBATION"
+      ]
     },
     {
       "ruleId": "CAPACITY-WINTER",
@@ -742,7 +748,13 @@
         "TERM-STRUCTURE#Winter Term"
       ],
       "term": "Winter",
-      "maxTotalCourses": 4
+      "maxTotalCourses": 4,
+      "normalCourseUnits": 4,
+      "conditionalMaximumCourseUnits": 5.25,
+      "conditionalRequirements": [
+        "ADVISOR_APPROVAL",
+        "NOT_ON_ACADEMIC_PROBATION"
+      ]
     },
     {
       "ruleId": "CAPACITY-MAY",
@@ -752,7 +764,13 @@
         "TERM-STRUCTURE#May Term"
       ],
       "term": "May",
-      "maxTotalCourses": 1
+      "maxTotalCourses": 1,
+      "normalCourseUnits": 1,
+      "conditionalMaximumCourseUnits": 1.25,
+      "conditionalRequirements": [
+        "ADVISOR_APPROVAL",
+        "NOT_ON_ACADEMIC_PROBATION"
+      ]
     },
     {
       "ruleId": "PLANNING-CURRENT-TERM-ADD-DROP",
@@ -814,7 +832,9 @@
         "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27#ECO-222-term-scope"
       ],
       "course": "ECO 222",
-      "unpublishedProjectionTerms": ["May"],
+      "unpublishedProjectionTerms": [
+        "May"
+      ],
       "matchingExactScheduleSectionPermitsAnotherTerm": true,
       "annualAvailabilityGuaranteed": false
     },

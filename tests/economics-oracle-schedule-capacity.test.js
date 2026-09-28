@@ -244,7 +244,7 @@ test("4/4/1 capacity includes reserved outside-course units", () => {
       reserved: fixture.reserved
     });
     const result = checkExternalEconomicsScheduleAndHorizon(input);
-    const capacityViolation = result.violations.find(item => item.code === "CAPACITY_EXCEEDED");
+    const capacityViolation = [...result.violations, ...result.reviewItems].find(item => ["CAPACITY_EXCEEDED", "TERM_OVERLOAD_EVIDENCE_REQUIRED"].includes(item.code));
     assert.equal(Boolean(capacityViolation), !fixture.valid, fixture.fixtureId);
   }
 });

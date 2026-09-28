@@ -715,11 +715,25 @@ test("SEARCH_INCOMPLETE and INFEASIBLE_PROVEN remain visibly distinct", async ({
   await openFixtureResult(page, searchIncompleteFixture());
   await expect(page.locator(".no-plan-state")).toContainText("We could not finish checking every possible plan.");
   await expect(page.locator(".no-plan-state")).toContainText("This does not mean a plan is impossible.");
+  await expect(page.locator(".result-status-value")).toHaveText("More information needed");
 
   await page.unroute("**/api/majors/map");
   await openFixtureResult(page, infeasibleFixture());
   await expect(page.locator(".no-plan-state")).toContainText("No complete plan fits this graduation target under the current requirements and course timing.");
   await expect(page.locator(".no-plan-state")).toContainText("Review your graduation timeline");
+});
+
+test("missing scoped offering evidence is shown as More information needed", async ({page}) => {
+  const fixture = infeasibleFixture();
+  const economics = fixture.programs.find(program => program.economicsPlanResult);
+  economics.economicsPlanResult.category = "NEEDS_ADVISOR_ATTENTION";
+  economics.economicsPlanResult.conclusion = "UNKNOWN";
+  economics.economicsPlanResult.reason = "MISSING_OFFERING";
+  economics.economicsPlanResult.evidence.blockingReasons = [];
+  await openFixtureResult(page,fixture);
+  await expect(page.locator('.result-status-value')).toHaveText('More information needed');
+  await expect(page.locator('.no-plan-state')).toContainText('Course offering evidence is incomplete');
+  await expect(page.locator('.no-plan-state')).toContainText('does not establish that major completion is impossible');
 });
 
 test("a freshman receives the Balanced and Explore the Major normal comparisons", async ({ page }) => {
@@ -742,7 +756,7 @@ test("a freshman receives the Balanced and Explore the Major normal comparisons"
   await availability.locator("summary").click();
   await expect(availability.locator("li")).not.toHaveCount(0);
   await expect(availability.locator("li").first()).toContainText("✓ OPEN");
-  await expect(availability).toContainText("as of August 8, 2026");
+  await expect(availability).toContainText("verification date is unavailable");
 });
 
 test("CP5 displays distinct Balanced, Explore the Major, and One Year Early plans", async ({ page }) => {
