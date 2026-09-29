@@ -6,6 +6,8 @@ import { resolvePlanningContext } from "../lib/planning/horizon.js";
 import { auditExternalEconomicsPlanComplete } from "./oracle/audit-external-plan.js";
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan } from "./oracle/load-canonical-policy.js";
 
+import { compactEconomicsPlanForValidation } from "../lib/planning/validation-payload.js";
+
 const oraclePolicy = JSON.parse(await readFile(
   new URL("./oracle/economics-policy.v1.json", import.meta.url),
   "utf8"
@@ -873,4 +875,29 @@ test("Task 15 disagreement registry is explicit and contains no unclassified fin
     2
   );
   t.diagnostic(JSON.stringify({ task: 15, findings: TASK15_FINDINGS }));
+});
+
+
+test("compact saved inputs preserve canonical validation, controls and report evidence across all three plans", async () => {
+  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const result = await postMap({ student });
+  const plans = result.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
+  const inputs = plans.map(compactEconomicsPlanForValidation);
+  assert.ok(JSON.stringify(inputs).length < JSON.stringify(plans).length / 2, "derived control trees dominate the saved payload");
+  const policy = await loadCanonicalPolicy();
+  for (const plan of plans) {
+    const full = await validateEdit(student, plan, { plans });
+    const compact = await validateEdit(student, compactEconomicsPlanForValidation(plan), { plans: inputs });
+    assert.equal(compact.response.status, 200, plan.id);
+    assert.deepEqual(compact.data, full.data);
+    assert.equal(oracleEvaluateCanonicalPlan(policy, student, compact.data.plan).valid, true, plan.id);
+  }
+  const early = plans.find(plan => plan.id === "one-year-early");
+  const from = early.terms.find(term => term.courses.some(course => course.course === "MAT 217"));
+  const edit = toTermId => ({ type: "move", fromTermId: from.slotId, courseId: "statistics", toTermId });
+  const fullMove = await validateEdit(student, early, { plans, extraBody: { edit: edit("winter-2027") } });
+  const compactMove = await validateEdit(student, compactEconomicsPlanForValidation(early), { plans: inputs, extraBody: { edit: edit("winter-2027") } });
+  assert.equal(compactMove.response.status, 200);
+  assert.deepEqual(compactMove.data, fullMove.data);
+  assert.equal((await validateEdit(student, compactEconomicsPlanForValidation(early), { plans: inputs, extraBody: { edit: edit("winter-2029") } })).response.status, 422);
 });

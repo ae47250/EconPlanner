@@ -28,3 +28,16 @@ Report HTML draws the large green check, dark half-circle on the light-blue In p
 The new session regression is included in the existing deterministic CI gate. Full CI and actual Production verification follow the normal release; detailed results and hosted color/grayscale page renders are retained under ignored `output/economics-pdf-verification/production-restoration-symbol-repair/`.
 
 Actual screen-reader speech: **NOT RUN** because speech capture is unavailable. Keyboard, DOM live-region and Axe checks remain separate evidence.
+
+
+## Follow-up: complete hosted restoration
+
+Production verification of the first release confirmed the drawn PDF icons but exposed remaining restoration cost: a single edited-plan validation took 24,287 ms and all three concurrent reload requests aborted near 15 seconds. A controlled request comparison on the canonical URL then returned a compact, academically complete payload in 6,590 ms (345,173 bytes); the full annotated payload did not finish within the diagnostic 45-second bound. Saved move/replacement decision trees were being copied through repeated hypothetical edit validation even though the server independently rebuilds them.
+
+The follow-up removes those derived controls and prior validation output from request inputs in both the client and API. Course placements, sections, units, approvals, alternative identities and every comparison plan remain; canonical academic and plan-set checks still run. Restoration now checks one plan at a time, including recoverable undo, with brief “Checking saved plans: N of M…” progress. Its per-request deadline is 30 seconds; fingerprint verification remains five seconds. This accommodates measured hosted latency without relying on timeout alone. Vercel's published Node/Fluid defaults allow 300 seconds (https://vercel.com/docs/functions/configuring-functions/duration); no hosting limits or configuration are changed. The connector did not expose this project's configured duration. Actual hosted request measurements and release verification remain the controlling runtime evidence.
+
+Interruption during undo validation also retains the original recoverable session; academic rejection of undo still removes only the invalid undo. Cancellation and late-response guards remain intact. Focused regressions compare full/compact responses and independent Oracle results across all three plans, preserve input evidence without mutation, exercise progress/serialization, and check both successful validation after the former 15-second deadline and retained-data retry at the new bound.
+
+Follow-up focused checks: 49 session/API/option-equivalence checks passed before the added payload-equivalence case; the final session/API run passed all 32 cases. All 26 affected move/notes browser checks passed, followed by the new slow-success regression (one passed). Lint has zero errors and the same existing warning. The PDF dry-run remains green; the unchanged approved layout's ten-export/25-page inspection is reused. Broad test/build and release gates are recorded after completion.
+
+Follow-up broad gates: `pnpm test` passed 707 of 708 tests, with one existing optional nightly skip; `pnpm run build` passed. `git diff --check` passed.

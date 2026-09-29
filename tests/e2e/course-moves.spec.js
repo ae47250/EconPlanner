@@ -68,8 +68,12 @@ test("interrupted saved validation keeps edited plans recoverable and retry rest
     await route.continue().catch(() => {});
   });
   await page.reload();
-  await expect.poll(() => held).toBe(3);
+  await expect.poll(() => held).toBe(1);
+  await expect(page.getByRole("status")).toContainText("Checking saved plans: 1 of 4");
   await page.clock.fastForward(16000);
+  await expect(page.locator(".planner-loading")).toBeVisible();
+  expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBe(original);
+  await page.clock.fastForward(15000);
   await expect(page.locator(".summary-status")).toContainText("Your saved plans and edits are kept");
   await expect(control).toHaveCount(0);
   expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBe(original);
@@ -83,6 +87,29 @@ test("interrupted saved validation keeps edited plans recoverable and retry rest
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
   await reloadPlanner(page);
   await expect(control).toHaveValue("spring-2027");
+});
+
+test("a slow validation beyond the former deadline completes with progress and restores all plans", async ({ page }) => {
+  await openPlan(page, "sophomore", { early: true });
+  const original = await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"));
+  await page.clock.install();
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  let held = 0;
+  await page.route("**/api/majors/map", async route => {
+    if (route.request().postDataJSON()?.action === "validate-plan" && ++held === 1) await gate;
+    await route.continue().catch(() => {});
+  });
+  await page.reload();
+  await expect.poll(() => held).toBe(1);
+  await page.clock.fastForward(16000);
+  await expect(page.getByRole("status")).toContainText("Checking saved plans: 1 of 3");
+  expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBe(original);
+  release();
+  await expect(page.locator("[data-major-requirements-checklist]")).toBeVisible({ timeout: 30000 });
+  await page.unrouteAll({ behavior: "wait" });
+  expect(held).toBe(3);
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")).selectedPlanId)).toBe("one-year-early");
 });
 
 test("temporary policy verification failure survives reload, while obsolete and invalid saved plans require regeneration", async ({ page }) => {
@@ -130,7 +157,7 @@ test("late restoration responses cannot overwrite changed answers and newly gene
     await route.fulfill({ response }).catch(() => {});
   });
   await page.getByRole("button", { name: "Retry saved plans", exact: true }).click();
-  await expect.poll(() => held).toBe(3);
+  await expect.poll(() => held).toBe(1);
   await setCourseStatus(page, "ECO 113", "Completed");
   const generated = await generatePlans(page);
   expect(generated.status()).toBe(200);
