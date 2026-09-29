@@ -38,13 +38,13 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:cf673f9ed5afa1147bc0fe55915f38d285f782f615276290a0c3c2145cb5abe6",
+  "contentHash": "sha256:7219988d20b6f5a1f51a0644ec53f59db63254719c4e75e7c9461d552e223b10",
   "counts": {
-    "activeRules": 54,
+    "activeRules": 56,
     "courses": 31,
     "historicalOfferingRecords": 0,
     "scheduleSections": 31,
-    "sources": 22,
+    "sources": 25,
     "unresolvedReviewRecords": 5
   },
   "determinism": {
@@ -65,7 +65,8 @@
     "policy/offering-patterns/economics.json",
     "policy/historical-offerings/economics.json",
     "policy/messages/en-US.json",
-    "policy/unresolved/policy-questions.json"
+    "policy/unresolved/policy-questions.json",
+    "policy/historical-offerings/economics-advice.json"
   ],
   "manifestStatus": "ACTIVE",
   "performanceBudgetMs": 5000,

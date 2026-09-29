@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:cf673f9ed5afa1147bc0fe55915f38d285f782f615276290a0c3c2145cb5abe6",
+  "contentHash": "sha256:7219988d20b6f5a1f51a0644ec53f59db63254719c4e75e7c9461d552e223b10",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -1883,6 +1883,89 @@
           "reviewState": []
         }
       },
+      "PLANNING-FUTURE-COURSE-CONFIRMATION": {
+        "authority": {
+          "boundary": "UNPUBLISHED_ELECTIVE_AND_FINANCE_PLANNING",
+          "kind": "DEPARTMENT_CONFIRMED",
+          "owner": "Economics Department"
+        },
+        "classification": "EVIDENCE",
+        "condition": {
+          "electiveRequirementPrefix": "eco-elective",
+          "financeRequirementId": "finance"
+        },
+        "confidence": "CONFIRMED",
+        "confirmation": {
+          "date": "2026-09-28",
+          "lastReviewDate": "2026-09-28",
+          "reviewer": "Project owner and Economics Department domain expert"
+        },
+        "dependencies": [],
+        "disposition": "ENFORCE",
+        "effect": {
+          "namedFutureElectivesPermitted": false,
+          "preferredFinanceCourse": "BUSN 323",
+          "unconfirmedFinanceCourse": "ECO 321",
+          "unpublishedNamedFinanceAlternativePermitted": false
+        },
+        "effective": {
+          "from": "2026-09-28",
+          "through": null
+        },
+        "family": "SCHEDULE_EVIDENCE",
+        "messageKeys": {
+          "advisor": "electivePlanning.named",
+          "move": "electivePlanning.named",
+          "report": "electivePlanning.named",
+          "student": "electivePlanning.named"
+        },
+        "override": {
+          "authority": "ACTIVE_EXACT_SCHEDULE",
+          "permitted": true,
+          "requiredEvidence": [
+            "matchingScheduleSection"
+          ]
+        },
+        "policyVersion": "econ-2025-2026.1",
+        "reasonCode": "NAMED_FUTURE_COURSE_REQUIRES_VERIFIED_OFFERING",
+        "requiredEvidence": [],
+        "requiredInputs": [
+          "scheduleRelease",
+          "targetAcademicYear",
+          "offeringPattern"
+        ],
+        "ruleId": "PLANNING-FUTURE-COURSE-CONFIRMATION",
+        "ruleType": "scheduleEvidence",
+        "schemaVersion": "1.0.0",
+        "scope": {
+          "catalogYears": [
+            "2025-2026"
+          ],
+          "courses": [],
+          "program": "ECONOMICS",
+          "requirements": []
+        },
+        "sourceRefs": [
+          "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+        ],
+        "status": "ACTIVE",
+        "supersedes": [],
+        "testRefs": {
+          "approval": [],
+          "negative": [
+            "named-plus-generic-electives",
+            "unsupported-named-future-elective",
+            "unconfirmed-eco-321"
+          ],
+          "positive": [
+            "one-unpublished-elective",
+            "verified-elective-sections"
+          ],
+          "reviewState": [
+            "extra-elective-advisor-review"
+          ]
+        }
+      },
       "PLANNING-IN-PROGRESS-UNLOCKS-LATER": {
         "authority": {
           "boundary": "PLANNED_AND_IN_PROGRESS_PREREQUISITE_TIMING",
@@ -2053,6 +2136,92 @@
             "may-electives"
           ],
           "reviewState": []
+        }
+      },
+      "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT": {
+        "authority": {
+          "boundary": "UNPUBLISHED_ELECTIVE_AND_FINANCE_PLANNING",
+          "kind": "DEPARTMENT_CONFIRMED",
+          "owner": "Economics Department"
+        },
+        "classification": "EVIDENCE",
+        "condition": {
+          "canonicalTerms": [
+            "FALL",
+            "WINTER",
+            "MAY"
+          ]
+        },
+        "confidence": "CONFIRMED",
+        "confirmation": {
+          "date": "2026-09-28",
+          "lastReviewDate": "2026-09-28",
+          "reviewer": "Project owner and Economics Department domain expert"
+        },
+        "dependencies": [],
+        "disposition": "ENFORCE",
+        "effect": {
+          "countNamedAndGenericTogether": true,
+          "exception": "MATCHING_VERIFIED_TARGET_TERM_SECTIONS",
+          "maximumElectives": 1,
+          "otherAcademicChecksRemainRequired": true
+        },
+        "effective": {
+          "from": "2026-09-28",
+          "through": null
+        },
+        "family": "SCHEDULE_EVIDENCE",
+        "messageKeys": {
+          "advisor": "electivePlanning.limit",
+          "move": "electivePlanning.limit",
+          "report": "electivePlanning.limit",
+          "student": "electivePlanning.limit"
+        },
+        "override": {
+          "authority": "ACTIVE_EXACT_SCHEDULE",
+          "permitted": true,
+          "requiredEvidence": [
+            "matchingScheduleSection"
+          ]
+        },
+        "policyVersion": "econ-2025-2026.1",
+        "reasonCode": "UNPUBLISHED_TERM_ELECTIVE_LIMIT",
+        "requiredEvidence": [],
+        "requiredInputs": [
+          "scheduleRelease",
+          "targetAcademicYear",
+          "offeringPattern"
+        ],
+        "ruleId": "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT",
+        "ruleType": "scheduleEvidence",
+        "schemaVersion": "1.0.0",
+        "scope": {
+          "catalogYears": [
+            "2025-2026"
+          ],
+          "courses": [],
+          "program": "ECONOMICS",
+          "requirements": []
+        },
+        "sourceRefs": [
+          "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+        ],
+        "status": "ACTIVE",
+        "supersedes": [],
+        "testRefs": {
+          "approval": [],
+          "negative": [
+            "named-plus-generic-electives",
+            "unsupported-named-future-elective",
+            "unconfirmed-eco-321"
+          ],
+          "positive": [
+            "one-unpublished-elective",
+            "verified-elective-sections"
+          ],
+          "reviewState": [
+            "extra-elective-advisor-review"
+          ]
         }
       },
       "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY": {
@@ -4897,12 +5066,14 @@
         "CAPACITY-FALL",
         "CAPACITY-WINTER"
       ],
+      "PLANNING-FUTURE-COURSE-CONFIRMATION": [],
       "PLANNING-IN-PROGRESS-UNLOCKS-LATER": [
         "PLANNING-CURRENT-TERM-ADD-DROP"
       ],
       "PLANNING-MAY-COURSE-EXCLUSIONS": [
         "TERM-CANONICAL-MAY"
       ],
+      "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT": [],
       "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY": [
         "SCHEDULE-EVIDENCE-PROVENANCE"
       ],
@@ -5093,6 +5264,12 @@
         "report": "load.report",
         "student": "load.student"
       },
+      "PLANNING-FUTURE-COURSE-CONFIRMATION": {
+        "advisor": "electivePlanning.named",
+        "move": "electivePlanning.named",
+        "report": "electivePlanning.named",
+        "student": "electivePlanning.named"
+      },
       "PLANNING-IN-PROGRESS-UNLOCKS-LATER": {
         "advisor": "history.advisor",
         "move": "history.move",
@@ -5104,6 +5281,12 @@
         "move": "term.move",
         "report": "term.report",
         "student": "term.student"
+      },
+      "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT": {
+        "advisor": "electivePlanning.limit",
+        "move": "electivePlanning.limit",
+        "report": "electivePlanning.limit",
+        "student": "electivePlanning.limit"
       },
       "PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY": {
         "advisor": "offering.advisor",
@@ -6608,6 +6791,9 @@
     "allocation.move": "This move must preserve the approved requirement assignment.",
     "allocation.report": "Requirement allocation follows the governing Economics policy.",
     "allocation.student": "This course can count only in the requirement shown.",
+    "designation.applicability": "CCR/ACE applicability is unresolved for {catalogYear}. Confirm the cohort/catalog before relying on HS credit through ECO 113 or ECO 114, the different-discipline HS requirement, or W2 through ECO 461.",
+    "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
+    "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "history.advisor": "Historical prerequisite evidence is incomplete and requires review.",
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
@@ -6661,6 +6847,733 @@
     "termLoad.pending": "More information needed: the normal-load search found no complete plan. Advisor overload approval and absence of academic probation have not been established for {terms}. No additional capacity has been granted; the search does not establish impossibility under an approved overload.",
     "tuition.threshold.exceeded": "The modeled {period} load is {modeledUnits} units, above the published {threshold}-unit tuition threshold. Additional tuition applies to actual enrollment above that threshold; this major plan does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit.",
     "tuition.threshold.possible": "Additional tuition applies above {threshold} registered units across {period}. This plan models {modeledUnits} units and does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit."
+  },
+  "planningAdvice": {
+    "coverage": [
+      {
+        "academicYear": "2026-2027",
+        "sourceRange": "Term Coverage!D2:Y2",
+        "status": "PARTIAL",
+        "terms": [
+          "FALL"
+        ]
+      },
+      {
+        "academicYear": "2026-2027",
+        "sourceRange": "Term Coverage!D3:Y3",
+        "status": "COMPLETE",
+        "terms": [
+          "WINTER",
+          "MAY"
+        ]
+      },
+      {
+        "academicYear": "2025-2026",
+        "sourceRange": "Term Coverage!D4:Y4",
+        "status": "COMPLETE",
+        "terms": [
+          "FALL"
+        ]
+      },
+      {
+        "academicYear": "2025-2026",
+        "sourceRange": "Term Coverage!D5:Y5",
+        "status": "COMPLETE",
+        "terms": [
+          "WINTER",
+          "MAY"
+        ]
+      },
+      {
+        "academicYear": "2024-2025",
+        "sourceRange": "Term Coverage!D6:Y6",
+        "status": "COMPLETE",
+        "terms": [
+          "FALL"
+        ]
+      },
+      {
+        "academicYear": "2024-2025",
+        "sourceRange": "Term Coverage!D7:Y7",
+        "status": "COMPLETE",
+        "terms": [
+          "WINTER",
+          "MAY"
+        ]
+      },
+      {
+        "academicYear": "2023-2024",
+        "sourceRange": "Term Coverage!D8:Y8",
+        "status": "COMPLETE",
+        "terms": [
+          "FALL"
+        ]
+      },
+      {
+        "academicYear": "2023-2024",
+        "sourceRange": "Term Coverage!D9:Y9",
+        "status": "COMPLETE",
+        "terms": [
+          "WINTER",
+          "MAY"
+        ]
+      },
+      {
+        "academicYear": "2022-2023",
+        "sourceRange": "Term Coverage!D10:Y10",
+        "status": "COMPLETE",
+        "terms": [
+          "FALL"
+        ]
+      },
+      {
+        "academicYear": "2022-2023",
+        "sourceRange": "Term Coverage!D11:Y11",
+        "status": "COMPLETE",
+        "terms": [
+          "WINTER",
+          "MAY"
+        ]
+      }
+    ],
+    "display": {
+      "adjunct": "An extra Fall/Winter adjunct elective may be possible, but 2027–28 staffing, budget and offerings are unconfirmed. Advisor review and matching verified offerings are required.",
+      "caveat": "Past schedules show historical availability, not guaranteed future offerings.",
+      "completedAcademicYears": [
+        "2022-2023",
+        "2023-2024",
+        "2024-2025",
+        "2025-2026"
+      ],
+      "fallWinterYearCount": 2,
+      "finance": "Prefer BUSN 323 when it fits. Future BUSN 323 offerings need confirmation; future ECO 321 adjunct staffing is uncertain.",
+      "future": "Future schedules are unknown. Standard plans use at most one Economics elective per unpublished Fall, Winter or May term.",
+      "hs": "Either ECO 113 or ECO 114 counts as one of the two HS courses. The other must be from a different discipline.",
+      "intermediate": "ECO 213 and ECO 214 appeared in separate Fall/Winter terms historically; their order varied.",
+      "prerequisiteCompletion": "Complete planned prerequisites before their dependent courses.",
+      "seatConfirmation": "Confirm seat availability before registration; the published schedule is not current seat confirmation."
+    },
+    "observations": [
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 113",
+        "identity": "2025;20|27837",
+        "section": "ECO113-B",
+        "sourceRange": "All Offerings!I20:AC20",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 113",
+        "identity": "2025;20|27841",
+        "section": "ECO113-A",
+        "sourceRange": "All Offerings!I21:AC21",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 113",
+        "identity": "2025;40|27848",
+        "section": "ECO113-J",
+        "sourceRange": "All Offerings!I22:AC22",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 114",
+        "identity": "2025;20|27838",
+        "section": "ECO114-A",
+        "sourceRange": "All Offerings!I23:AC23",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 114",
+        "identity": "2025;20|28514",
+        "section": "ECO114-B",
+        "sourceRange": "All Offerings!I24:AC24",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 114",
+        "identity": "2025;40|27842",
+        "section": "ECO114-J",
+        "sourceRange": "All Offerings!I25:AC25",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 114",
+        "identity": "2025;40|27843",
+        "section": "ECO114-K",
+        "sourceRange": "All Offerings!I26:AC26",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 161",
+        "identity": "2025;40|27850",
+        "section": "ECO161-S",
+        "sourceRange": "All Offerings!I27:AC27",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 213",
+        "identity": "2025;40|27844",
+        "section": "ECO213-J",
+        "sourceRange": "All Offerings!I28:AC28",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 214",
+        "identity": "2025;20|27839",
+        "section": "ECO214-A",
+        "sourceRange": "All Offerings!I29:AC29",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 221",
+        "identity": "2025;40|27845",
+        "section": "ECO221-J",
+        "sourceRange": "All Offerings!I30:AC30",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 224",
+        "identity": "2025;40|28651",
+        "section": "ECO224-S",
+        "sourceRange": "All Offerings!I31:AC31",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 234",
+        "identity": "2025;20|28435",
+        "section": "ECO234-A",
+        "sourceRange": "All Offerings!I32:AC32",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 234",
+        "identity": "2025;40|28347",
+        "section": "ECO234-S",
+        "sourceRange": "All Offerings!I33:AC33",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 321",
+        "identity": "2025;40|27846",
+        "section": "ECO321-J",
+        "sourceRange": "All Offerings!I34:AC34",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 333",
+        "identity": "2025;20|27840",
+        "section": "ECO333-A",
+        "sourceRange": "All Offerings!I35:AC35",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 337",
+        "identity": "2025;40|28765",
+        "section": "ECO337-J",
+        "sourceRange": "All Offerings!I36:AC36",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 357",
+        "identity": "2025;20|28601",
+        "section": "ECO357-A",
+        "sourceRange": "All Offerings!I37:AC37",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2025-2026",
+        "course": "ECO 461",
+        "identity": "2025;40|27847",
+        "section": "ECO461-J",
+        "sourceRange": "All Offerings!I38:AC38",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 113",
+        "identity": "2024;20|26619",
+        "section": "ECO113-B",
+        "sourceRange": "All Offerings!I39:AC39",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 113",
+        "identity": "2024;20|26623",
+        "section": "ECO113-A",
+        "sourceRange": "All Offerings!I40:AC40",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 113",
+        "identity": "2024;40|26629",
+        "section": "ECO113-J",
+        "sourceRange": "All Offerings!I41:AC41",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 114",
+        "identity": "2024;20|26620",
+        "section": "ECO114-A",
+        "sourceRange": "All Offerings!I42:AC42",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 114",
+        "identity": "2024;20|26621",
+        "section": "ECO114-B",
+        "sourceRange": "All Offerings!I43:AC43",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 114",
+        "identity": "2024;40|26626",
+        "section": "ECO114-J",
+        "sourceRange": "All Offerings!I44:AC44",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 114",
+        "identity": "2024;40|27522",
+        "section": "ECO114-K",
+        "sourceRange": "All Offerings!I45:AC45",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 213",
+        "identity": "2024;40|26627",
+        "section": "ECO213-J",
+        "sourceRange": "All Offerings!I46:AC46",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 214",
+        "identity": "2024;20|26622",
+        "section": "ECO214-A",
+        "sourceRange": "All Offerings!I47:AC47",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 221",
+        "identity": "2024;40|26630",
+        "section": "ECO221-J",
+        "sourceRange": "All Offerings!I48:AC48",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 234",
+        "identity": "2024;40|26979",
+        "section": "ECO234-S",
+        "sourceRange": "All Offerings!I49:AC49",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 321",
+        "identity": "2024;40|27435",
+        "section": "ECO321-J",
+        "sourceRange": "All Offerings!I50:AC50",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 331",
+        "identity": "2024;40|26631",
+        "section": "ECO331-S",
+        "sourceRange": "All Offerings!I51:AC51",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 333",
+        "identity": "2024;20|26624",
+        "section": "ECO333-A",
+        "sourceRange": "All Offerings!I52:AC52",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 357",
+        "identity": "2024;40|28272",
+        "section": "ECO357-J",
+        "sourceRange": "All Offerings!I53:AC53",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2024-2025",
+        "course": "ECO 461",
+        "identity": "2024;40|26628",
+        "section": "ECO461-J",
+        "sourceRange": "All Offerings!I54:AC54",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 113",
+        "identity": "2023;20|25751",
+        "section": "ECO113-B",
+        "sourceRange": "All Offerings!I55:AC55",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 113",
+        "identity": "2023;20|25754",
+        "section": "ECO113-A",
+        "sourceRange": "All Offerings!I56:AC56",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 113",
+        "identity": "2023;40|25762",
+        "section": "ECO113-J",
+        "sourceRange": "All Offerings!I57:AC57",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 114",
+        "identity": "2023;20|25752",
+        "section": "ECO114-A",
+        "sourceRange": "All Offerings!I58:AC58",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 114",
+        "identity": "2023;20|25753",
+        "section": "ECO114-B",
+        "sourceRange": "All Offerings!I59:AC59",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 114",
+        "identity": "2023;40|25757",
+        "section": "ECO114-J",
+        "sourceRange": "All Offerings!I60:AC60",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 161",
+        "identity": "2023;40|25763",
+        "section": "ECO161-S",
+        "sourceRange": "All Offerings!I61:AC61",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 213",
+        "identity": "2023;40|25758",
+        "section": "ECO213-J",
+        "sourceRange": "All Offerings!I62:AC62",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 214",
+        "identity": "2023;20|25755",
+        "section": "ECO214-A",
+        "sourceRange": "All Offerings!I63:AC63",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 221",
+        "identity": "2023;20|25756",
+        "section": "ECO221-A",
+        "sourceRange": "All Offerings!I64:AC64",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 224",
+        "identity": "2023;40|26039",
+        "section": "ECO224-S",
+        "sourceRange": "All Offerings!I65:AC65",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 234",
+        "identity": "2023;40|25648",
+        "section": "ECO234-S",
+        "sourceRange": "All Offerings!I66:AC66",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 333",
+        "identity": "2023;40|25760",
+        "section": "ECO333-J",
+        "sourceRange": "All Offerings!I67:AC67",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 357",
+        "identity": "2023;20|26180",
+        "section": "ECO357-A",
+        "sourceRange": "All Offerings!I68:AC68",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 357",
+        "identity": "2023;20|26208",
+        "section": "ECO357-B",
+        "sourceRange": "All Offerings!I69:AC69",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 357",
+        "identity": "2023;20|26220",
+        "section": "ECO357-C",
+        "sourceRange": "All Offerings!I70:AC70",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 461",
+        "identity": "2023;40|25761",
+        "section": "ECO461-J",
+        "sourceRange": "All Offerings!I71:AC71",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2023-2024",
+        "course": "ECO 499",
+        "identity": "2023;40|26316",
+        "section": "ECO499",
+        "sourceRange": "All Offerings!I72:AC72",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 113",
+        "identity": "2022;20|24358",
+        "section": "ECO113-B",
+        "sourceRange": "All Offerings!I73:AC73",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 113",
+        "identity": "2022;20|24366",
+        "section": "ECO113-A",
+        "sourceRange": "All Offerings!I74:AC74",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 113",
+        "identity": "2022;40|24371",
+        "section": "ECO113-J",
+        "sourceRange": "All Offerings!I75:AC75",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 113",
+        "identity": "2022;40|24372",
+        "section": "ECO113-K",
+        "sourceRange": "All Offerings!I76:AC76",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 114",
+        "identity": "2022;20|24359",
+        "section": "ECO114-A",
+        "sourceRange": "All Offerings!I77:AC77",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 114",
+        "identity": "2022;20|24360",
+        "section": "ECO114-B",
+        "sourceRange": "All Offerings!I78:AC78",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 114",
+        "identity": "2022;40|24367",
+        "section": "ECO114-J",
+        "sourceRange": "All Offerings!I79:AC79",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 160",
+        "identity": "2022;40|24375",
+        "section": "ECO160-S",
+        "sourceRange": "All Offerings!I80:AC80",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 161",
+        "identity": "2022;20|24361",
+        "section": "ECO161-A",
+        "sourceRange": "All Offerings!I81:AC81",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 161",
+        "identity": "2022;20|24362",
+        "section": "ECO161-B",
+        "sourceRange": "All Offerings!I82:AC82",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 161",
+        "identity": "2022;40|24368",
+        "section": "ECO161-J",
+        "sourceRange": "All Offerings!I83:AC83",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 213",
+        "identity": "2022;20|24363",
+        "section": "ECO213-A",
+        "sourceRange": "All Offerings!I84:AC84",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 214",
+        "identity": "2022;40|24369",
+        "section": "ECO214-J",
+        "sourceRange": "All Offerings!I85:AC85",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 221",
+        "identity": "2022;40|24370",
+        "section": "ECO221-J",
+        "sourceRange": "All Offerings!I86:AC86",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 222",
+        "identity": "2022;40|24376",
+        "section": "ECO222-S",
+        "sourceRange": "All Offerings!I87:AC87",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 234",
+        "identity": "2022;40|24795",
+        "section": "ECO234-S",
+        "sourceRange": "All Offerings!I88:AC88",
+        "term": "MAY"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 257",
+        "identity": "2022;40|24373",
+        "section": "ECO257-J",
+        "sourceRange": "All Offerings!I89:AC89",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 321",
+        "identity": "2022;20|24364",
+        "section": "ECO321-A",
+        "sourceRange": "All Offerings!I90:AC90",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 333",
+        "identity": "2022;20|24365",
+        "section": "ECO333-A",
+        "sourceRange": "All Offerings!I91:AC91",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 357",
+        "identity": "2022;20|24992",
+        "section": "ECO357-A",
+        "sourceRange": "All Offerings!I92:AC92",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 461",
+        "identity": "2022;40|24374",
+        "section": "ECO461-J",
+        "sourceRange": "All Offerings!I93:AC93",
+        "term": "WINTER"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 499",
+        "identity": "2022;20|25035",
+        "section": "ECO499",
+        "sourceRange": "All Offerings!I94:AC94",
+        "term": "FALL"
+      },
+      {
+        "academicYear": "2022-2023",
+        "course": "ECO 499",
+        "identity": "2022;40|25127",
+        "section": "ECO499",
+        "sourceRange": "All Offerings!I95:AC95",
+        "term": "WINTER"
+      }
+    ],
+    "planningImpact": "NONE",
+    "schemaVersion": "1.0.0",
+    "sourceRefs": [
+      "OWNER-COURSE-PLANNING-2026-09-28#Workbook-observations"
+    ],
+    "status": "INFORMATIONAL_ONLY",
+    "workbook": {
+      "collectedOn": "2026-09-25",
+      "filename": "hanover-course-offerings (10).xlsx",
+      "sha256": "e8547bf9a695e5c21bb49a4b05fb113580bfbf9e96e389ab950d8ea20d2948d5"
+    }
   },
   "provenance": {
     "authorityHierarchy": [
@@ -6785,6 +7698,19 @@
         "supersedes": null
       },
       {
+        "authority": "Project owner; supplied approved portrait presentation package",
+        "authorityBoundary": "REPORT_PRESENTATION_AND_COMPLETE_CHECKLIST_WORDING_ONLY",
+        "effective": {
+          "from": "2026-09-28",
+          "through": null
+        },
+        "path": "policy/provenance/approved-pdf-presentation-2026-09-28.md",
+        "sha256": "1156d001ed7be1f0bff9323028f33253011cdd6e3015712a91a5fbb54b069c67",
+        "sourceId": "OWNER-APPROVED-PDF-PRESENTATION-2026-09-28",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Prior PDF year-card layout and Still needed standard checklist legend; internal unmet evidence and all academic rules retained"
+      },
+      {
         "academicYear": "2026-2027",
         "authority": "EconPlanner project owner, explicit authoritative schedule clarification",
         "authorityBoundary": "BUSN 323 / 2026–27 / Fall offered / Winter not offered",
@@ -6815,6 +7741,32 @@
         "sourceId": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
+      },
+      {
+        "authority": "Project owner; inspected local source workbooks and original PDF",
+        "authorityBoundary": "VALIDATED_PLAN_PRESENTATION_AND_RECORDED_EVIDENCE_GAPS",
+        "effective": {
+          "from": "2026-09-28",
+          "through": null
+        },
+        "path": "policy/provenance/checklist-review-2026-09-28.md",
+        "sha256": "9341ec484cb659b629ef02141fb4f92ee6c0ae4b174063b562648e43378c327e",
+        "sourceId": "OWNER-CHECKLIST-REVIEW-2026-09-28",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Blanket Advisor check cells, stale current-seat badges and duplicate plan-condition displays"
+      },
+      {
+        "authority": "Project owner and Economics Department domain expert; inspected registrar extract",
+        "authorityBoundary": "UNPUBLISHED_ELECTIVE_PLANNING_AND_INFORMATIONAL_HISTORY",
+        "effective": {
+          "from": "2026-09-28",
+          "through": null
+        },
+        "path": "policy/provenance/course-planning-2026-09-28.md",
+        "sha256": "6f70573bbe1c7eda6881bf4453c04574199fcaa39b4a29d9fe5d6f9200478c25",
+        "sourceId": "OWNER-COURSE-PLANNING-2026-09-28",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Named future elective projections and unsupported future ECO 321 finance assumptions"
       },
       {
         "authority": "Economics Department domain policy",
@@ -8830,6 +9782,89 @@
     },
     {
       "authority": {
+        "boundary": "UNPUBLISHED_ELECTIVE_AND_FINANCE_PLANNING",
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department"
+      },
+      "classification": "EVIDENCE",
+      "condition": {
+        "electiveRequirementPrefix": "eco-elective",
+        "financeRequirementId": "finance"
+      },
+      "confidence": "CONFIRMED",
+      "confirmation": {
+        "date": "2026-09-28",
+        "lastReviewDate": "2026-09-28",
+        "reviewer": "Project owner and Economics Department domain expert"
+      },
+      "dependencies": [],
+      "disposition": "ENFORCE",
+      "effect": {
+        "namedFutureElectivesPermitted": false,
+        "preferredFinanceCourse": "BUSN 323",
+        "unconfirmedFinanceCourse": "ECO 321",
+        "unpublishedNamedFinanceAlternativePermitted": false
+      },
+      "effective": {
+        "from": "2026-09-28",
+        "through": null
+      },
+      "family": "SCHEDULE_EVIDENCE",
+      "messageKeys": {
+        "advisor": "electivePlanning.named",
+        "move": "electivePlanning.named",
+        "report": "electivePlanning.named",
+        "student": "electivePlanning.named"
+      },
+      "override": {
+        "authority": "ACTIVE_EXACT_SCHEDULE",
+        "permitted": true,
+        "requiredEvidence": [
+          "matchingScheduleSection"
+        ]
+      },
+      "policyVersion": "econ-2025-2026.1",
+      "reasonCode": "NAMED_FUTURE_COURSE_REQUIRES_VERIFIED_OFFERING",
+      "requiredEvidence": [],
+      "requiredInputs": [
+        "scheduleRelease",
+        "targetAcademicYear",
+        "offeringPattern"
+      ],
+      "ruleId": "PLANNING-FUTURE-COURSE-CONFIRMATION",
+      "ruleType": "scheduleEvidence",
+      "schemaVersion": "1.0.0",
+      "scope": {
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "program": "ECONOMICS",
+        "requirements": []
+      },
+      "sourceRefs": [
+        "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+      ],
+      "status": "ACTIVE",
+      "supersedes": [],
+      "testRefs": {
+        "approval": [],
+        "negative": [
+          "named-plus-generic-electives",
+          "unsupported-named-future-elective",
+          "unconfirmed-eco-321"
+        ],
+        "positive": [
+          "one-unpublished-elective",
+          "verified-elective-sections"
+        ],
+        "reviewState": [
+          "extra-elective-advisor-review"
+        ]
+      }
+    },
+    {
+      "authority": {
         "boundary": "PLANNED_AND_IN_PROGRESS_PREREQUISITE_TIMING",
         "kind": "DEPARTMENT_CONFIRMED",
         "owner": "Economics Department"
@@ -8998,6 +10033,92 @@
           "may-electives"
         ],
         "reviewState": []
+      }
+    },
+    {
+      "authority": {
+        "boundary": "UNPUBLISHED_ELECTIVE_AND_FINANCE_PLANNING",
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department"
+      },
+      "classification": "EVIDENCE",
+      "condition": {
+        "canonicalTerms": [
+          "FALL",
+          "WINTER",
+          "MAY"
+        ]
+      },
+      "confidence": "CONFIRMED",
+      "confirmation": {
+        "date": "2026-09-28",
+        "lastReviewDate": "2026-09-28",
+        "reviewer": "Project owner and Economics Department domain expert"
+      },
+      "dependencies": [],
+      "disposition": "ENFORCE",
+      "effect": {
+        "countNamedAndGenericTogether": true,
+        "exception": "MATCHING_VERIFIED_TARGET_TERM_SECTIONS",
+        "maximumElectives": 1,
+        "otherAcademicChecksRemainRequired": true
+      },
+      "effective": {
+        "from": "2026-09-28",
+        "through": null
+      },
+      "family": "SCHEDULE_EVIDENCE",
+      "messageKeys": {
+        "advisor": "electivePlanning.limit",
+        "move": "electivePlanning.limit",
+        "report": "electivePlanning.limit",
+        "student": "electivePlanning.limit"
+      },
+      "override": {
+        "authority": "ACTIVE_EXACT_SCHEDULE",
+        "permitted": true,
+        "requiredEvidence": [
+          "matchingScheduleSection"
+        ]
+      },
+      "policyVersion": "econ-2025-2026.1",
+      "reasonCode": "UNPUBLISHED_TERM_ELECTIVE_LIMIT",
+      "requiredEvidence": [],
+      "requiredInputs": [
+        "scheduleRelease",
+        "targetAcademicYear",
+        "offeringPattern"
+      ],
+      "ruleId": "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT",
+      "ruleType": "scheduleEvidence",
+      "schemaVersion": "1.0.0",
+      "scope": {
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "program": "ECONOMICS",
+        "requirements": []
+      },
+      "sourceRefs": [
+        "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+      ],
+      "status": "ACTIVE",
+      "supersedes": [],
+      "testRefs": {
+        "approval": [],
+        "negative": [
+          "named-plus-generic-electives",
+          "unsupported-named-future-elective",
+          "unconfirmed-eco-321"
+        ],
+        "positive": [
+          "one-unpublished-elective",
+          "verified-elective-sections"
+        ],
+        "reviewState": [
+          "extra-elective-advisor-review"
+        ]
       }
     },
     {

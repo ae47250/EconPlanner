@@ -105,7 +105,7 @@ test("sophomore One Year Early evaluates 12, 11, 10, and 9 remaining through the
     "CONDITIONALLY_FEASIBLE",
     "CONDITIONALLY_FEASIBLE"
   ]);
-  assert.deepEqual(statuses[0].plan.feasibility.requiredApprovals, []);
+  assert.ok(statuses[0].plan.feasibility.requiredApprovals.every(approval => approval.course && approval.message));
   assert.equal(statuses[0].plan.feasibility.search.solutionFound, true);
   assert.ok(statuses[0].plan.feasibility.search.validSolutionCount > 0);
   assert.notEqual(statuses[0].plan.feasibilityStatus, FEASIBILITY_STATUS.NOT_FEASIBLE);

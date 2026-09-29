@@ -1664,6 +1664,175 @@
         ],
         "reviewState": []
       }
+    },
+    {
+      "ruleId": "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "SCHEDULE_EVIDENCE",
+      "ruleType": "scheduleEvidence",
+      "classification": "EVIDENCE",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "UNPUBLISHED_ELECTIVE_AND_FINANCE_PLANNING"
+      },
+      "sourceRefs": [
+        "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+      ],
+      "effective": {
+        "from": "2026-09-28",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "scheduleRelease",
+        "targetAcademicYear",
+        "offeringPattern"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": true,
+        "authority": "ACTIVE_EXACT_SCHEDULE",
+        "requiredEvidence": [
+          "matchingScheduleSection"
+        ]
+      },
+      "condition": {
+        "canonicalTerms": [
+          "FALL",
+          "WINTER",
+          "MAY"
+        ]
+      },
+      "effect": {
+        "maximumElectives": 1,
+        "countNamedAndGenericTogether": true,
+        "exception": "MATCHING_VERIFIED_TARGET_TERM_SECTIONS",
+        "otherAcademicChecksRemainRequired": true
+      },
+      "reasonCode": "UNPUBLISHED_TERM_ELECTIVE_LIMIT",
+      "messageKeys": {
+        "student": "electivePlanning.limit",
+        "advisor": "electivePlanning.limit",
+        "move": "electivePlanning.limit",
+        "report": "electivePlanning.limit"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-09-28",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "lastReviewDate": "2026-09-28"
+      },
+      "testRefs": {
+        "positive": [
+          "one-unpublished-elective",
+          "verified-elective-sections"
+        ],
+        "negative": [
+          "named-plus-generic-electives",
+          "unsupported-named-future-elective",
+          "unconfirmed-eco-321"
+        ],
+        "approval": [],
+        "reviewState": [
+          "extra-elective-advisor-review"
+        ]
+      }
+    },
+    {
+      "ruleId": "PLANNING-FUTURE-COURSE-CONFIRMATION",
+      "schemaVersion": "1.0.0",
+      "policyVersion": "econ-2025-2026.1",
+      "family": "SCHEDULE_EVIDENCE",
+      "ruleType": "scheduleEvidence",
+      "classification": "EVIDENCE",
+      "disposition": "ENFORCE",
+      "status": "ACTIVE",
+      "scope": {
+        "program": "ECONOMICS",
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [],
+        "requirements": []
+      },
+      "authority": {
+        "kind": "DEPARTMENT_CONFIRMED",
+        "owner": "Economics Department",
+        "boundary": "UNPUBLISHED_ELECTIVE_AND_FINANCE_PLANNING"
+      },
+      "sourceRefs": [
+        "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+      ],
+      "effective": {
+        "from": "2026-09-28",
+        "through": null
+      },
+      "confidence": "CONFIRMED",
+      "requiredInputs": [
+        "scheduleRelease",
+        "targetAcademicYear",
+        "offeringPattern"
+      ],
+      "requiredEvidence": [],
+      "override": {
+        "permitted": true,
+        "authority": "ACTIVE_EXACT_SCHEDULE",
+        "requiredEvidence": [
+          "matchingScheduleSection"
+        ]
+      },
+      "condition": {
+        "electiveRequirementPrefix": "eco-elective",
+        "financeRequirementId": "finance"
+      },
+      "effect": {
+        "namedFutureElectivesPermitted": false,
+        "preferredFinanceCourse": "BUSN 323",
+        "unconfirmedFinanceCourse": "ECO 321",
+        "unpublishedNamedFinanceAlternativePermitted": false
+      },
+      "reasonCode": "NAMED_FUTURE_COURSE_REQUIRES_VERIFIED_OFFERING",
+      "messageKeys": {
+        "student": "electivePlanning.named",
+        "advisor": "electivePlanning.named",
+        "move": "electivePlanning.named",
+        "report": "electivePlanning.named"
+      },
+      "dependencies": [],
+      "supersedes": [],
+      "confirmation": {
+        "date": "2026-09-28",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "lastReviewDate": "2026-09-28"
+      },
+      "testRefs": {
+        "positive": [
+          "one-unpublished-elective",
+          "verified-elective-sections"
+        ],
+        "negative": [
+          "named-plus-generic-electives",
+          "unsupported-named-future-elective",
+          "unconfirmed-eco-321"
+        ],
+        "approval": [],
+        "reviewState": [
+          "extra-elective-advisor-review"
+        ]
+      }
     }
   ]
 }

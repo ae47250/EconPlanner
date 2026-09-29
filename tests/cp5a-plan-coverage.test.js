@@ -130,7 +130,7 @@ test("CCR/ACE information is relevant-only, catalog-scoped, and informational", 
   const hs = information.items.find(item => item.code === "HS");
   assert.deepEqual(hs.courses, { completed: ["ECO 113"], inProgress: ["ECO 114"], planned: ["ECO 161"] });
   assert.doesNotMatch(hs.message, /ECO 260/);
-  assert.match(hs.message, /different disciplines/);
+  assert.match(hs.message, /Either ECO 113 or ECO 114 counts as one of the two HS courses\. The other must be from a different discipline\./);
   assert.equal(hs.feasibilityImpact, "NONE");
   assert.equal(hs.readinessImpact, "NONE");
   assert.equal(information.items.find(item => item.code === "W2").detail, "— planned through ECO 461.");
@@ -273,11 +273,13 @@ test("HTML and PDF renderers preserve structured HS/W2 codes with accessible bol
     unresolved: [],
     advisorChecks: [],
     studentNotices: [],
-    degreeRequirementInformation
+    degreeRequirementInformation,
+    planNotes: [{ id: "ccr-ace", title: "CCR/ACE information", description: "Core Curriculum Requirements (CCRs) / Areas of Competency and Engagement (ACEs)",
+      items: degreeRequirementInformation.items.map(item => ({ code: item.code, text: item.detail })) }]
   }, template);
   assert.match(html, /<strong>HS<\/strong>/);
   assert.match(html, /<strong>W2<\/strong>/);
   assert.match(html, /Core Curriculum Requirements \(CCRs\)/);
   const pdfRenderer = await readFile(new URL("../scripts/render-economics-pdf.py", import.meta.url), "utf8");
-  assert.match(pdfRenderer, /<b>\{escape\(str\(item\.get\('code'/);
+  assert.match(pdfRenderer, /<b>\{escape\(item\['code'\]/);
 });

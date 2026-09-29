@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 10,
-    "confirmationDate": "2026-09-27",
+    "version": 11,
+    "confirmationDate": "2026-09-28",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -65,6 +65,12 @@
       "date": "2026-09-27",
       "reviewedBy": "Project owner and Economics Department domain expert",
       "summary": "ECO 222 may project only into May while a target schedule is unpublished; another term needs matching exact-schedule evidence, and no offering exception waives academic requirements."
+    },
+    {
+      "id": "OWNER-COURSE-PLANNING-2026-09-28",
+      "date": "2026-09-28",
+      "reviewedBy": "Project owner and Economics Department domain expert",
+      "summary": "One elective per unpublished term; generic future electives, uncertain ECO 321 finance, BUSN 323 preference. History informational only."
     }
   ],
   "sources": [
@@ -111,6 +117,11 @@
     {
       "id": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
       "path": "policy/provenance/planning-dropdown-repair-2026-09-27.md",
+      "authority": "Project owner and Economics Department domain expert"
+    },
+    {
+      "id": "OWNER-COURSE-PLANNING-2026-09-28",
+      "path": "policy/provenance/course-planning-2026-09-28.md",
       "authority": "Project owner and Economics Department domain expert"
     }
   ],
@@ -870,6 +881,25 @@
         "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Owner-instructions"
       ],
       "unverifiedFutureOfferingStatus": "PRELIMINARY_ONLY"
+    },
+    {
+      "ruleId": "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT",
+      "status": "CONFIRMED",
+      "confirmationRef": "OWNER-COURSE-PLANNING-2026-09-28",
+      "sourceRefs": [
+        "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+      ],
+      "maximumElectives": 1
+    },
+    {
+      "ruleId": "PLANNING-FUTURE-COURSE-CONFIRMATION",
+      "status": "CONFIRMED",
+      "confirmationRef": "OWNER-COURSE-PLANNING-2026-09-28",
+      "sourceRefs": [
+        "OWNER-COURSE-PLANNING-2026-09-28#Elective-planning"
+      ],
+      "namedFutureElectivesPermitted": false,
+      "unconfirmedFinanceCourse": "ECO 321"
     }
   ],
   "scheduleEvidenceRules": [

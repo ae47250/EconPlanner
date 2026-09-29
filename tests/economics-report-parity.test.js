@@ -232,9 +232,8 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
   assert.equal(expected.feasibilityStatus, "CONDITIONALLY_FEASIBLE");
   assert.equal(expected.terms.flatMap(term => term.courses).filter(course => course.requirementRole).length, 8);
   assert.ok(expected.warnings.some(message => /unknown date|availability|seat/i.test(message)));
-  assert.equal(expected.advisorAttention.length, 2);
-  assert.ok(expected.advisorAttention.some(notice => notice.code.startsWith("PLAN_EDIT_OPTIONS_")
-    && notice.message.includes("Course-level planning options:")));
+  assert.equal(expected.advisorAttention.length, 1);
+  assert.ok(!expected.advisorAttention.some(notice => notice.code.startsWith("PLAN_EDIT_OPTIONS_")));
   assert.ok(expected.terms.some(term => term.courses.some(course => course.approvals.length > 0)));
 
   for (const projection of [projections.html, projections.pdfRequest]) {

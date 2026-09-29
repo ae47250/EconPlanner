@@ -27,7 +27,7 @@
         "minimumPdfPages": 3,
         "requiredPlanType": "standard",
         "requiredPlanningPace": "standard",
-        "requiredHtmlText": ["Fictional Zoë & José", "Plan warnings", "Advisor attention"],
+        "requiredHtmlText": ["Fictional Zoë & José", "Actions and conditions", "Major requirements checklist", "Plan Notes"],
         "requiredAvailabilityStates": ["open"],
         "requiredCourseRoles": [
           { "course": "MAT 217", "role": "statistics" }
@@ -187,7 +187,7 @@
         "minimumPdfPages": 1,
         "requiredPlanType": "standard",
         "requiredPlanningPace": "standard",
-        "requiredHtmlText": ["ECO 257", "Statistics requirement"],
+        "requiredHtmlText": ["ECO 257", "Statistics"],
         "requiredAvailabilityStates": [],
         "requiredCourseRoles": [
           { "course": "ECO 257", "role": "statistics" }

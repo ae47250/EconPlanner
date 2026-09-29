@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
-import { courseTermEligibility, evaluateCoursePlacement } from "../lib/decision-engine/placement.js";
+import { courseTermEligibility, evaluateCoursePlacement, evaluateOffering } from "../lib/decision-engine/placement.js";
 import { annotateEconomicsPlanChoices, validateGeneratedPlan } from "../lib/planning/economics.js";
 import { applyEconomicsPlanEdit } from "../lib/planning/termSolver.js";
 import { selectedPlanContext } from "../lib/planning/horizon.js";
@@ -87,12 +87,12 @@ test("matching exact May evidence overrides projection exclusions, not independe
   assert.equal(evaluateCoursePlacement(placement("ECO 461"), may, {}, bundle).status, "BLOCK");
 });
 
-test("ECO 222 uses its approved May projection scope and requires exact evidence for another term", () => {
+test("ECO 222 catalog term scope does not establish a future elective offering", () => {
   const winter = { academicYear: "2027/2028", termKey: "Winter", slotId: "winter-2028", courses: [] };
-  const projected = placement("ECO 222");
+  const projected = { ...placement("ECO 222"), requirementId: "eco-elective-1" };
   const mayProjection = { ...may, courses: [projected] };
   assert.equal(courseTermEligibility(projected, mayProjection, bundle).allowed, true);
-  assert.equal(oracleEvaluateOffering(policy, projected, mayProjection).status, "ALLOW");
+  assert.equal(oracleEvaluateOffering(policy, projected, mayProjection).status, "BLOCK");
   const verifiedMay2027 = { academicYear: "2026-2027", termKey: "May", slotId: "spring-2027", courses: [] };
   assert.equal(courseTermEligibility(projected, verifiedMay2027, bundle).allowed, true);
   assert.equal(oracleEvaluateOffering(policy, projected, verifiedMay2027).status, "ALLOW");
@@ -123,10 +123,10 @@ test("ECO 222 uses its approved May projection scope and requires exact evidence
 });
 
 test("ECO 222 exact alternate-term evidence passes complete edit validation", async () => {
-  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const student = { academicStanding: "junior", planCreationDate: "2026-07-30", courses: ["MAT 113", "ECO 161", "ECO 221"].map(code => ({code, status: "completed"})) };
   const generated = await post({ student });
   const economics = generated.data.programs.find(item => item.program.id === "economics-base");
-  const plan = economics.economicsPlans.find(item => item.id === "one-year-early");
+  const plan = economics.economicsPlans.find(item => item.id === "balanced");
   const original = entries(plan).find(row => row.course.course === "ECO 222");
   const destination = plan.terms.find(term => term.slotId === "fall-2027");
   const offeredCourses = [...destination.courses.map(course => course.course), "ECO 222"];
@@ -205,65 +205,31 @@ test("ECO 222 exact alternate-term evidence passes complete edit validation", as
     .find(course => course.course === "ECO 222").source, "verified-offering");
 });
 
-test("canonical pattern changes refresh both ECO 222 choices and full edit validation", async () => {
+for (const soften of [false, true]) test(`catalog/history patterns cannot activate named future electives (soft=${soften})`, async () => {
   const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
   const generated = await post({ student });
   const economics = generated.data.programs.find(item => item.program.id === "economics-base");
   const plan = economics.economicsPlans.find(item => item.id === "one-year-early");
-  const original = entries(plan).find(row => row.course.course === "ECO 222");
-  assert.equal(original.course.moveDestinationOptions.find(option => option.id === "winter-2028").status, "BLOCKED");
-
-  const modifiedCanonicalBundle = structuredClone(bundle);
-  modifiedCanonicalBundle.indexes.offeringPatternsById["CATALOG-ECO-222-SPRING"].approvedRecurringTerms.push("WINTER");
-  assert.equal(courseTermEligibility(placement("ECO 222"), {
-    academicYear: "2027/2028", termKey: "Winter", slotId: "winter-2028", courses: []
-  }, modifiedCanonicalBundle).allowed, true);
-
-  const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);
-  const context = selectedPlanContext(economics.planningContext, plan);
-  const changedChoices = annotateEconomicsPlanChoices({
-    plans: [plan], student, mapping: economics, schedule: catalog.economicsSchedule,
-    prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
-    context: economics.planningContext, policyBundle: modifiedCanonicalBundle
-  })[0];
-  assert.ok(changedChoices.terms.flatMap(term => term.courses)
-    .find(course => course.course === "ECO 222").moveDestinationIds.includes("winter-2028"));
-
-  const edited = applyEconomicsPlanEdit({
-    plan,
-    edit: { type: "move", fromTermId: original.term.slotId, toTermId: "winter-2028", courseId: original.course.requirementId },
-    student, mapping: economics, schedule: catalog.economicsSchedule,
-    prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
-    policyBundle: modifiedCanonicalBundle, refreshAlternatives: false
-  });
-  const validation = validateGeneratedPlan(edited, {
-    student, mapping: economics, schedule: catalog.economicsSchedule,
-    prerequisites: catalog.prerequisitesByProgram.get("economics"), context, policyBundle: modifiedCanonicalBundle,
-    enforcePlanIntegrity: true
-  });
-  assert.equal(validation.valid, true, JSON.stringify(validation.errors));
-});
-
-test("a soft recurring-term pattern explains the usual term without excluding other terms", async () => {
-  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
-  const generated = await post({ student });
-  const economics = generated.data.programs.find(item => item.program.id === "economics-base");
-  const plan = economics.economicsPlans.find(item => item.id === "one-year-early");
-  const modifiedCanonicalBundle = structuredClone(bundle);
-  delete modifiedCanonicalBundle.indexes.offeringPatternsById["CATALOG-ECO-222-SPRING"].projectionPolicy.unpublishedTermEligibility;
+  const modified = structuredClone(bundle);
+  const pattern = modified.indexes.offeringPatternsById["CATALOG-ECO-222-SPRING"];
+  if (soften) delete pattern.projectionPolicy.unpublishedTermEligibility;
+  else pattern.approvedRecurringTerms.push("WINTER");
   const winter = { academicYear: "2027/2028", termKey: "Winter", slotId: "winter-2028", courses: [] };
-  assert.equal(courseTermEligibility(placement("ECO 222"), winter, modifiedCanonicalBundle).allowed, true);
-
+  const named = { ...placement("ECO 222"), requirementId: "eco-elective-1" };
+  assert.equal(courseTermEligibility(named, winter, modified).allowed, true, "Catalog constraints remain separately represented.");
+  assert.equal(evaluateOffering(named, winter, modified.indexes.offeringByTerm, modified).status, "BLOCK");
   const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);
   const annotated = annotateEconomicsPlanChoices({
     plans: [plan], student, mapping: economics, schedule: catalog.economicsSchedule,
     prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
-    context: economics.planningContext, policyBundle: modifiedCanonicalBundle
+    context: economics.planningContext, policyBundle: modified
   })[0];
-  const eco222 = entries(annotated).find(row => row.course.course === "ECO 222").course;
-  const winterChoice = eco222.moveDestinationOptions.find(option => option.id === "winter-2028");
-  assert.equal(winterChoice.status, "CONDITIONAL", winterChoice.message);
-  assert.match(winterChoice.message, /usual projection terms for ECO 222 are May.*Winter remains eligible.*no binding exclusion/);
+  const future = entries(annotated).filter(row => row.term.publicationStatus === "PLANNING_PROJECTION"
+    && row.course.requirementId.startsWith("eco-elective"));
+  assert.ok(future.length);
+  assert.ok(future.every(row => row.course.course === "ECO elective"));
+  assert.ok(future.every(row => !(row.course.alternativeOptions || []).some(option => option.course === "ECO 222"
+    && ["ALLOWED", "CONDITIONAL"].includes(option.status))));
 });
 
 test("year-only placeholders retain a distinct-term witness for the intermediates", () => {
@@ -304,24 +270,20 @@ test("MAT 217 May survives move, saved-plan validation and selected-plan HTML re
   assert.ok(renderEconomicsHtml(report, await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8")).includes("MAT 217"));
 });
 
-test("ECO 321 May is omitted and rejected, including forged saved plans and reports", async () => {
+test("unconfirmed future ECO 321 is rejected in saved plans and reports, including May", async () => {
   const student = studentWith([...baseCompleted.filter(code => code !== "BUSN 323"), "MAT 217"]), plan = await generate(student);
   const finance = entries(plan).find(row => row.course.requirementId === "finance");
-  finance.course.course = "ECO 321"; finance.course.title = "Money and Financial Markets";
-  const baseline = await post({ action: "validate-plan", student, plan });
-  assert.equal(baseline.status, 200);
-  const from = entries(baseline.data.plan).find(row => row.course.requirementId === "finance");
-  assert.ok(!from.course.moveDestinationIds.includes("spring-2028"));
-  const rejected = await post({ action: "validate-plan", student, plan: baseline.data.plan, edit: {
-    type: "move", planId: plan.id, fromTermId: from.term.slotId, toTermId: "spring-2028", courseId: "finance"
-  } });
-  assert.equal(rejected.status, 422);
-  const forged = structuredClone(baseline.data.plan), source = forged.terms.find(term => term.slotId === from.term.slotId);
-  const course = source.courses.splice(source.courses.findIndex(course => course.requirementId === "finance"), 1)[0];
-  course.moveDestinationIds = ["spring-2028"];
-  forged.terms.find(term => term.slotId === "spring-2028").courses.push(course);
-  assert.equal((await post({ action: "validate-plan", student, plan: forged })).status, 422);
-  await assert.rejects(buildEconomicsReportFromStudent(student, "2027-07-30", forged), /validation/);
+  assert.equal(finance.course.course, "BUSN 323");
+  for (const target of [finance.term, plan.terms.find(term => term.slotId === "spring-2028")]) {
+    const forged = structuredClone(plan);
+    const source = forged.terms.find(term => term.slotId === finance.term.slotId);
+    const course = source.courses.splice(source.courses.findIndex(course => course.requirementId === "finance"), 1)[0];
+    course.course = "ECO 321"; course.title = "Money and Financial Markets";
+    course.moveDestinationIds = [target.slotId];
+    forged.terms.find(term => term.slotId === target.slotId).courses.push(course);
+    assert.equal((await post({ action: "validate-plan", student, plan: forged })).status, 422);
+    await assert.rejects(buildEconomicsReportFromStudent(student, "2027-07-30", forged), /validation/);
+  }
 });
 
 test("both intermediate dropdowns omit the counterpart's projected term and direct edits reject it", async () => {

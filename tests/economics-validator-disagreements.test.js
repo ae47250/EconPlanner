@@ -182,12 +182,6 @@ function takeCourse(plan, courseCode) {
   return located[0].course;
 }
 
-function asProjected(course) {
-  return projectedCourse(course.course, course.requirementId, {
-    ...(course.residency ? { residency: course.residency } : {})
-  });
-}
-
 function findTerm(plan, slotId) {
   const term = plan.terms.find(item => item.slotId === slotId);
   assert.ok(term, `baseline missing ${slotId}`);
@@ -252,7 +246,7 @@ function fullSequenceBaseline() {
       yearIndex: 1,
       termKey: "Spring",
       standing: "sophomore",
-      courses: [projectedCourse("ECO 337", "eco-elective-4")]
+      courses: [projectedCourse("ECO elective", "eco-elective-4", { minimumLevel: 200 })]
     }),
     planTerm({
       startYear: 2026,
@@ -290,8 +284,15 @@ function fullFallBaseline() {
   result.id = "full-fall";
   result.plan.id = "baseline-full-fall";
   const fall = findTerm(result.plan, "fall-2028");
-  fall.courses.push(asProjected(takeCourse(result.plan, "ECO 224")));
-  fall.courses.push(takeCourse(result.plan, "ECO 337"));
+  fall.courses.push(takeCourse(result.plan, "ECO 257"));
+  fall.courses.push(takeCourse(result.plan, "ECO elective"));
+  findTerm(result.plan, "winter-2029").courses.push(takeCourse(result.plan, "ECO 214"));
+  findPlannedCourse(result.plan, "ECO 461").approvalRequired = [{
+    code: "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL", type: "department", authority: "Economics Department",
+    course: "ECO 461", prerequisite: "ECO 214", term: "Winter 2029", reason: "concurrent_intermediate_with_capstone",
+    policySource: "department-confirmed-local-policy", sourceRef: "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4",
+    message: "ECO 214 is planned concurrently with ECO 461. Economics Department approval is required."
+  }];
   assert.equal(fall.courses.length, 4);
   return result;
 }
@@ -300,7 +301,8 @@ function fullMayBaseline() {
   const result = fullSequenceBaseline();
   result.id = "full-may";
   result.plan.id = "baseline-full-may";
-  findTerm(result.plan, "fall-2028").courses.push(asProjected(takeCourse(result.plan, "ECO 224")));
+  const statistics = findPlannedCourse(result.plan, "ECO 257");
+  statistics.course = "MAT 217"; statistics.title = "Applied Statistics";
   assert.equal(findTerm(result.plan, "spring-2028").courses.length, 1);
   return result;
 }
@@ -313,7 +315,7 @@ function completedElectiveBaseline() {
   result.student.courses = completedCourses(["ECO 224"]);
   findPlannedCourse(result.plan, "ECO 234").requirementId = "eco-elective-2";
   findPlannedCourse(result.plan, "ECO 161").requirementId = "eco-elective-3";
-  findPlannedCourse(result.plan, "ECO 337").requirementId = "eco-elective-4";
+  findPlannedCourse(result.plan, "ECO elective").requirementId = "eco-elective-4";
   return result;
 }
 

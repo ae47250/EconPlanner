@@ -85,7 +85,10 @@ test("a prerequisite error sends keyboard focus to the unresolved dependent row"
   await page.getByRole("button", { name: "Generate my plans" }).focus();
   await page.keyboard.press("Enter");
   await expect(page.locator("#course-eco-213")).toBeFocused();
-  await expect(page.locator("#course-eco-213 .prerequisite-conflict")).toHaveAttribute("role", "alert");
+  const alert = page.locator("#course-eco-213 .prerequisite-conflict [role='alert']");
+  await expect(alert).toBeVisible();
+  expect((await alert.innerText()).length).toBeLessThan(220);
+  await expect(page.locator("#course-eco-213 .prerequisite-conflict")).not.toHaveAttribute("role", "alert");
 });
 
 test("the desktop summary is sticky, bounded, and does not overlap the course column", async ({ page }) => {

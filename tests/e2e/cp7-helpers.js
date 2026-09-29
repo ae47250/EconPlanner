@@ -13,6 +13,13 @@ export async function resetPlanner(page) {
   await expect(page.getByRole("heading", { name: "Where are you in your degree?" })).toBeVisible();
 }
 
+// Saved plans are revalidated against current policy before the planner is shown.
+// Wait for that observable boundary, rather than racing it with a 5-second row check.
+export async function reloadPlanner(page) {
+  await page.reload();
+  await expect(page.locator(".planner-loading")).toHaveCount(0, { timeout: 30000 });
+}
+
 export async function chooseStanding(page, standing) {
   const label = standing[0].toUpperCase() + standing.slice(1);
   const button = page.getByRole("group", { name: "Class standing" })
@@ -67,6 +74,7 @@ export function fixturePlan({
     planDisposition,
     conditions,
     advisorActions,
+    planConditions: [...conditions, ...advisorActions].map((item, index) => ({ id: `fixture-condition-${index}`, kind: "review", message: item.message })),
     terms: [
       {
         slotId: "2026-FALL",
@@ -176,6 +184,11 @@ export async function fulfillPlanner(page, body, status = 200) {
   await page.route("**/api/majors/map", async route => {
     if (route.request().method() !== "POST") {
       await route.continue();
+      return;
+    }
+    if (status === 200 && route.request().postDataJSON()?.action === "validate-plan") {
+      const { plan } = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ plan: { ...plan, validation: { ...plan.validation, valid: true } }, planSetValidation: { valid: true }, plannerFingerprint }) });
       return;
     }
     await route.fulfill({

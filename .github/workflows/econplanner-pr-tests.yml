@@ -52,7 +52,7 @@ jobs:
           tests/architecture-boundaries.test.js
 
       - name: Run canonical consumption repair regressions
-        run: node --test tests/canonical-consumption-repairs.test.js tests/schedule-correction-2027.test.js tests/requested-behaviors.test.js
+        run: node --test tests/canonical-consumption-repairs.test.js tests/schedule-correction-2027.test.js tests/requested-behaviors.test.js tests/major-checklist-presentation.test.js tests/plan-notes-elective-evidence.test.js
 
       - name: Run bounded deterministic regression suite
         shell: bash
@@ -136,6 +136,7 @@ jobs:
           tests/e2e/architecture-repairs.spec.js
           tests/e2e/course-moves.spec.js
           tests/e2e/requested-behaviors.spec.js
+          tests/e2e/plan-notes-evidence.spec.js
 
       - name: Run targeted PDF-lock and malformed-response regressions
         run: >-

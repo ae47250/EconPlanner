@@ -24,12 +24,14 @@ test('a pending-overload move card is visibly disabled and requests evidence',as
     {id:'2026-FALL',label:'Fall 2026',status:'CURRENT',message:'Currently selected term.'},
     {id:'2027-WINTER',label:'Winter 2027',status:'REVIEW_REQUIRED',loadDecision,message:termLoadMessage(loadDecision,bundle)}
   ];
+  plan.terms[0].courses[0].moveGuidance = {studentMessage:termLoadMessage(loadDecision,bundle)};
   await openFixtureResult(page,plannerResultFixture({plans:[plan]}));
   await page.getByRole('button',{name:'Review selected Balanced',exact:true}).click();
   const destination = page.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true}).locator('option[value="2027-WINTER"]');
   await expect(destination).toHaveAttribute('disabled','');
-  await expect(destination).toContainText('More information needed');
-  await expect(destination).toContainText('Record existing advisor approval');
+  await expect(destination).toContainText('advisor check');
+  await page.getByText('Why are some choices unavailable?',{exact:true}).click();
+  await expect(page.locator('.course-choice-details')).toContainText('Record existing advisor approval');
 });
 async function clearAll(page) {
   await page.getByRole('button',{name:'Clear all',exact:true}).click();

@@ -27,6 +27,7 @@
     {"id": "offering-patterns", "path": "policy/offering-patterns/economics.json", "schema": "policy/schema/offering-pattern.v1.schema.json"},
     {"id": "historical-offerings", "path": "policy/historical-offerings/economics.json", "schema": "policy/schema/historical-offering.v1.schema.json"},
     {"id": "messages-en-US", "path": "policy/messages/en-US.json", "schema": "policy/schema/message-catalog.v1.schema.json"},
-    {"id": "unresolved", "path": "policy/unresolved/policy-questions.json", "schema": null}
+    {"id": "unresolved", "path": "policy/unresolved/policy-questions.json", "schema": null},
+    {"id": "planning-advice", "path": "policy/historical-offerings/economics-advice.json", "schema": null}
   ]
 }

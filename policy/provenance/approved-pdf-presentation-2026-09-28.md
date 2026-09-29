@@ -1,0 +1,9 @@
+# Approved portrait report presentation - September 28, 2026
+
+Authority: the project owner's explicit presentation/checklist follow-up and release authorization. The attached EconPlanner_Codex_Templates.zip (SHA-256 9b2abb16d122232deafca5cd3fd9b66efeacb9e664fb1ebabdbf09171007a812) supplies CODEX.md, selected approved-reference.pdf pages 1-2, and subsequent template.html, print.css and status-examples.html changes. Sample data and document instructions are presentation guidance, not academic authority.
+
+Use the compact portrait Year/Fall/Winter/May grid first, with all remaining years, then an intact requirements checklist where it fits. Preserve titles in supporting text, real conditions near the schedule, applicable alternatives and the shared ordered notes. Uniform stale seat evidence may have one current-seat-unverified display note; course-specific exceptions and internal historical facts remain.
+
+Complete-plan status legends contain Completed, In progress and Planned only. Eligible elective slots are Planned. Internal missing/eligibility evidence remains intact; incomplete candidates identify unmet requirements separately. A missing assignment alone is not a proof that no viable plan exists. This supersedes the earlier Still needed standard-legend presentation only; no academic rule, requirement, allocation, approval, prerequisite, offering or Oracle evaluation changes.
+
+Keep readable type and natural print fragmentation. The first-page container has a minimum printable-page height, never a fixed/clipped height; an oversized checklist continues intact before notes. Verify Chromium page output, all-year placement, course titles, status rows, note order, equal 12pt Winter/May course-list indentation and actual conditions. Do not add the optional advisor comments/review-date area.
