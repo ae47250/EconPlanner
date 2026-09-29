@@ -22,9 +22,9 @@ import {
   PLANNER_INPUT_STATE_VERSION,
   PLANNER_VIEWS,
   plannerViewFromSearch,
-  replaceEconomicsPlan,
-  restoreGeneratedPlannerSession
+  replaceEconomicsPlan
 } from "../lib/planning/uiState.js";
+import { validateSavedPlannerSession } from "../lib/planning/session-restoration.js";
 import { requirementFormGroups } from "../lib/planning/requirementFormChoices.js";
 import economicsRequirements from "../data/normalized/economics/requirements.json";
 import economicsCourseData from "../data/normalized/economics/courses.json";
@@ -1900,6 +1900,8 @@ function PlannerSummary({
   intakeStep,
   isGenerating,
   status,
+  onRetryRestoration,
+  isRetryingRestoration,
   migrationNotice,
   generateButtonRef,
   onContinue,
@@ -1992,6 +1994,9 @@ function PlannerSummary({
       )}
 
       {status && <p className="summary-status" role="status" aria-live="polite">{status}</p>}
+      {onRetryRestoration && <button type="button" className="clear-all-button" onClick={onRetryRestoration} disabled={isRetryingRestoration}>
+        {isRetryingRestoration ? "Checking saved plans…" : "Retry saved plans"}
+      </button>}
       <button type="button" className="clear-all-button" onClick={onClearAll}>Clear all</button>
       {intakeStep === 1 ? (
         <button key="continue" type="button" className="primary-action" onClick={onContinue}>
@@ -2032,6 +2037,11 @@ export default function Page() {
   const downloadButtonRef = useRef(null);
   const [failureFocusTarget, setFailureFocusTarget] = useState("");
   const latestFormRef = useRef(initialForm);
+  const restorationAbortRef = useRef(null);
+  const recoverableSessionRef = useRef(null);
+  const [restorationAttempt, setRestorationAttempt] = useState(0);
+  const [canRetryRestoration, setCanRetryRestoration] = useState(false);
+  const [isRetryingRestoration, setIsRetryingRestoration] = useState(false);
   const [courseSearch, setCourseSearch] = useState("");
   const [completionSourceCourseCode, setCompletionSourceCourseCode] = useState("");
   const [intakeStep, setIntakeStep] = useState(1);
@@ -2156,13 +2166,14 @@ export default function Page() {
   useEffect(() => {
     let cancelled = false;
     const controller = new AbortController();
+    restorationAbortRef.current = controller;
     async function restoreSession() {
-      let restoredForm = { ...initialForm, planCreationDate: localToday() };
+      let restoredForm = restorationAttempt ? latestFormRef.current : { ...initialForm, planCreationDate: localToday() };
       let restoredCourseSearch = "";
       let restoredIntakeStep = 1;
 
       try {
-        const saved = window.localStorage.getItem(PLANNER_STORAGE_KEY);
+        const saved = restorationAttempt ? null : window.localStorage.getItem(PLANNER_STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
           if (parsed.formData && Array.isArray(parsed.formData.courses)) {
@@ -2192,66 +2203,42 @@ export default function Page() {
         try { window.localStorage.removeItem(PLANNER_STORAGE_KEY); } catch { /* Storage may be disabled. */ }
       }
 
-      setFormData(restoredForm);
-      setCourseSearch(restoredCourseSearch);
-      setIntakeStep(restoredIntakeStep);
+      if (!restorationAttempt) {
+        setFormData(restoredForm);
+        setCourseSearch(restoredCourseSearch);
+        setIntakeStep(restoredIntakeStep);
+      }
 
       const requestedView = plannerViewFromSearch(window.location.search);
-      let savedSession = null;
-      let activeFingerprint = null;
+      let savedSession = recoverableSessionRef.current;
       try {
-        savedSession = window.sessionStorage.getItem(GENERATED_PLANNER_SESSION_KEY);
-        if (savedSession) {
-          const timeout = setTimeout(() => controller.abort(), 5000);
-          try {
-            const response = await fetch("/api/majors/map", { cache: "no-store", signal: controller.signal });
-            if (response.ok) activeFingerprint = (await response.json()).plannerFingerprint;
-          } finally {
-            clearTimeout(timeout);
-          }
-        }
-      } catch {
-        // Unavailable policy verification cannot authorize restoring old plans.
+        savedSession ||= window.sessionStorage.getItem(GENERATED_PLANNER_SESSION_KEY);
+      } catch { /* Storage may be disabled. */ }
+      const inputSignature = plannerInputSignature(restoredForm);
+      const generationRequest = generationRequestRef.current;
+      const result = await validateSavedPlannerSession({
+        rawSession: savedSession, inputSignature,
+        student: { ...restoredForm, courses: selectedCourses(restoredForm.courses) },
+        signal: controller.signal
+      });
+      if (cancelled || controller.signal.aborted
+        || generationRequest !== generationRequestRef.current
+        || (restorationAttempt && inputSignature !== plannerInputSignature(latestFormRef.current))) return;
+      setIsRetryingRestoration(false);
+      const restoredSession = result.kind === "restored" ? result.session : null;
+      if (result.kind === "unavailable") {
+        recoverableSessionRef.current = savedSession;
+        setCanRetryRestoration(true);
+        setStatus("Saved plans could not be checked right now. Your saved plans and edits are kept. Retry to validate and restore them.");
+        setIsHydrated(true);
+        return;
       }
-      if (cancelled) return;
-      let restoredSession = restoreGeneratedPlannerSession(
-        savedSession, plannerInputSignature(restoredForm), activeFingerprint
-      );
-      if (restoredSession?.report) {
-        const timeout = setTimeout(() => controller.abort(), 15000);
-        try {
-          const student = { ...restoredForm, courses: selectedCourses(restoredForm.courses) };
-          const revalidate = async plan => {
-            const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
-            const response = await fetch("/api/majors/map", {
-              method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
-              body: JSON.stringify({ action: "validate-plan", student, plan, plans })
-            });
-            const data = await response.json();
-            if (!response.ok || !data.plan?.validation?.valid) throw new Error("Saved plan failed validation.");
-            return data;
-          };
-          for (const plan of economicsResult(restoredSession.report)?.economicsPlans || []) {
-            const data = await revalidate(plan);
-            restoredSession.report = replaceEconomicsPlan(restoredSession.report, plan.id, data.plan, data.planSetValidation);
-          }
-          if (restoredSession.planEditUndo) {
-            try {
-              restoredSession.planEditUndo.plan = (await revalidate(restoredSession.planEditUndo.plan)).plan;
-            } catch {
-              restoredSession.planEditUndo = null;
-            }
-          }
-        } catch {
-          restoredSession = null;
-        } finally {
-          clearTimeout(timeout);
-        }
-      }
-      if (cancelled) return;
+      recoverableSessionRef.current = null;
+      setCanRetryRestoration(false);
       let initialView = PLANNER_VIEWS.INPUT;
       let initialPlanId = "";
       if (restoredSession) {
+        setStatus("");
         reportContextIdRef.current = restoredSession.reportContextId || crypto.randomUUID();
         setReport(restoredSession.report);
         setInputBlock(restoredSession.inputBlock);
@@ -2269,7 +2256,9 @@ export default function Page() {
       } else {
         try { window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY); } catch { /* Storage may be disabled. */ }
         if (savedSession || requestedView !== PLANNER_VIEWS.INPUT) {
-          setStatus("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.");
+          setStatus(result.kind === "invalid"
+            ? "The saved plan does not pass current academic checks. Your saved answers are kept; generate new plans."
+            : "Your saved answers are kept. Generate new plans to check them against the current policy and schedule.");
         }
       }
 
@@ -2284,7 +2273,7 @@ export default function Page() {
     }
     void restoreSession();
     return () => { cancelled = true; controller.abort(); };
-  }, []);
+  }, [restorationAttempt]);
 
   useEffect(() => {
     if (!isHydrated) return;
@@ -2322,6 +2311,7 @@ export default function Page() {
     if (!isHydrated) return;
     try {
       if ((report || inputBlock) && generatedInputSignatureRef.current) {
+        recoverableSessionRef.current = null;
         window.sessionStorage.setItem(GENERATED_PLANNER_SESSION_KEY, JSON.stringify(
           createGeneratedPlannerSession({
             report,
@@ -2333,7 +2323,7 @@ export default function Page() {
             reportContextId: reportContextIdRef.current
           })
         ));
-      } else {
+      } else if (!recoverableSessionRef.current) {
         window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY);
       }
     } catch {
@@ -2449,13 +2439,36 @@ export default function Page() {
     );
   }, [formData, inputBlock, report]);
 
+  function cancelRestoration() {
+    restorationAbortRef.current?.abort();
+    setIsRetryingRestoration(false);
+    setCanRetryRestoration(false);
+  }
+
+  function retryRestoration() {
+    setIsRetryingRestoration(true);
+    setStatus("Checking saved plans…");
+    setRestorationAttempt(attempt => attempt + 1);
+  }
+
+  useEffect(() => {
+    if (!isHydrated || !recoverableSessionRef.current) return;
+    try {
+      const saved = JSON.parse(recoverableSessionRef.current);
+      if (saved.inputSignature !== plannerInputSignature(formData)) cancelRestoration();
+    } catch { cancelRestoration(); }
+  }, [formData, isHydrated]);
+
   function clearInputFeedback() {
+    cancelRestoration();
     setStatus("");
     setInputBlock(null);
     setMigrationNotice("");
   }
 
   function clearAllPlanner() {
+    cancelRestoration();
+    recoverableSessionRef.current = null;
     invalidatePlanEdits();
     generationAbortRef.current?.abort();
     pdfDownloadAbortRef.current?.abort();
@@ -2670,6 +2683,7 @@ export default function Page() {
       return;
     }
 
+    cancelRestoration();
     invalidatePlanEdits();
     reportContextIdRef.current = crypto.randomUUID();
     generationInFlightRef.current = true;
@@ -3994,6 +4008,8 @@ export default function Page() {
             intakeStep={intakeStep}
             isGenerating={isGenerating}
             status={status}
+            onRetryRestoration={canRetryRestoration ? retryRestoration : null}
+            isRetryingRestoration={isRetryingRestoration}
             migrationNotice={migrationNotice}
             generateButtonRef={generateButtonRef}
             onContinue={continueToCourses}

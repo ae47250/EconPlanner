@@ -111,6 +111,15 @@ test("qualified completed credit and current enrollment are separate from future
       assert.equal(rows.find(row => row.id === "finance").status, "completed");
       assert.equal(rows.filter(row => row.id.startsWith("eco-elective") && row.status === "completed").length, 1);
       assert.ok(rows.filter(row => row.id.startsWith("eco-elective") && row.status === "planned").every(row => row.course === "ECO elective (200+)" || /ECO [2-9]\d\d/.test(row.course)));
+      const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, result.economicsPlans);
+      const html = renderEconomicsHtml(report, template);
+      // Hosted Open Sans lacks these glyphs. Every row and legend must draw its
+      // symbol independently of fonts and keep its accessible text label.
+      for (const row of rows) assert.ok(html.includes(`status-icon-${row.status}\" aria-hidden=\"true\"></span> ${row.statusLabel}`));
+      assert.equal((html.match(/class="status-icon status-icon-/g) || []).length, 15);
+      assert.doesNotMatch(html, /aria-hidden="true">[✓◐○]</);
+      assert.match(html, /status-icon-completed\{[^}]+border:/);
+      assert.match(html, /status-icon-in_progress:before\{[^}]+background:currentColor/);
     }
   }
 });

@@ -240,6 +240,24 @@ test("year-only placeholders retain a distinct-term witness for the intermediate
   assert.equal(new Set(result.placements.map(row => row.assignedTermKey)).size, 2);
 });
 
+test("targeted option rebuilding retains full comparison validation and identical selected-plan controls", async () => {
+  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const generated = await post({ student });
+  const economics = generated.data.programs.find(item => item.program.id === "economics-base");
+  const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);
+  const options = { plans: economics.economicsPlans, student, mapping: economics, schedule: catalog.economicsSchedule,
+    prerequisites: catalog.prerequisitesByProgram.get("economics"), courseCatalog: catalog.economicsCourses,
+    context: economics.planningContext, policyBundle: bundle };
+  const original = structuredClone(options.plans);
+  const full = annotateEconomicsPlanChoices(options);
+  for (const plan of options.plans) {
+    const targeted = annotateEconomicsPlanChoices({ ...options, annotatePlanIds: [plan.id] });
+    assert.deepEqual(targeted.find(item => item.id === plan.id), full.find(item => item.id === plan.id));
+    for (const peer of options.plans.filter(item => item.id !== plan.id)) assert.equal(targeted.find(item => item.id === peer.id), peer);
+  }
+  assert.deepEqual(options.plans, original);
+});
+
 test("generation can use May MAT 217 when all pre-capstone regular terms are full", async () => {
   const student = studentWith(baseCompleted);
   student.reservedCourseUnits = { "fall-2027": 4, "winter-2028": 4, "fall-2028": 4, "winter-2029": 4, "fall-2029": 4, "winter-2030": 3 };

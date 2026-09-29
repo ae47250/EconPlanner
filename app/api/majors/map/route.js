@@ -339,6 +339,7 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
 
   const choicesUpdatedPlans = annotateEconomicsPlanChoices({
     plans: candidatePlans,
+    annotatePlanIds: [validatedPlan.id],
     student,
     mapping,
     schedule: catalog.economicsSchedule,

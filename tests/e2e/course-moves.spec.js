@@ -48,6 +48,116 @@ function validationResponse(page) {
     && response.request().postDataJSON()?.action === "validate-plan");
 }
 
+test("interrupted saved validation keeps edited plans recoverable and retry restores selection and undo", async ({ page }) => {
+  await openPlan(page, "freshman", { early: true });
+  const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
+  const moved = validationResponse(page);
+  await control.selectOption("winter-2027");
+  expect((await moved).status()).toBe(200);
+  await expect(control).toHaveValue("winter-2027");
+  const original = await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"));
+  await page.clock.install();
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  let held = 0;
+  await page.route("**/api/majors/map", async route => {
+    if (route.request().postDataJSON()?.action === "validate-plan") {
+      held += 1;
+      await gate;
+    }
+    await route.continue().catch(() => {});
+  });
+  await page.reload();
+  await expect.poll(() => held).toBe(3);
+  await page.clock.fastForward(16000);
+  await expect(page.locator(".summary-status")).toContainText("Your saved plans and edits are kept");
+  await expect(control).toHaveCount(0);
+  expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBe(original);
+  release();
+  await page.unrouteAll({ behavior: "wait" });
+  await page.getByRole("button", { name: "Retry saved plans", exact: true }).click();
+  await expect(control).toHaveValue("winter-2027", { timeout: 30000 });
+  await expect(page.getByRole("button", { name: "Undo last plan edit" })).toBeVisible();
+  await reloadPlanner(page);
+  await expect(control).toHaveValue("winter-2027");
+  await page.getByRole("button", { name: "Undo last plan edit" }).click();
+  await reloadPlanner(page);
+  await expect(control).toHaveValue("spring-2027");
+});
+
+test("temporary policy verification failure survives reload, while obsolete and invalid saved plans require regeneration", async ({ page }) => {
+  await openPlan(page, "sophomore", { early: true });
+  const original = await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"));
+  await page.route("**/api/majors/map", route => route.fulfill({ status: 503, body: "temporarily unavailable" }));
+  for (let reload = 0; reload < 2; reload += 1) {
+    await reloadPlanner(page);
+    await expect(page.getByRole("button", { name: "Retry saved plans", exact: true })).toBeVisible();
+    expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBe(original);
+  }
+  await page.unrouteAll();
+  await page.getByRole("button", { name: "Retry saved plans", exact: true }).click();
+  await expect(page.locator("[data-major-requirements-checklist]")).toBeVisible({ timeout: 30000 });
+  await page.evaluate(() => {
+    const key = "econ-planner-generated-session";
+    const saved = JSON.parse(sessionStorage.getItem(key));
+    saved.plannerFingerprint = "sha256:obsolete";
+    sessionStorage.setItem(key, JSON.stringify(saved));
+  });
+  await reloadPlanner(page);
+  await expect(page.locator(".summary-status")).toContainText("Generate new plans");
+  expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBeNull();
+  await page.evaluate(raw => sessionStorage.setItem("econ-planner-generated-session", raw), original);
+  await page.route("**/api/majors/map", route => route.request().method() === "POST"
+    ? route.fulfill({ status: 422, json: { error: "Saved assignment fails academic validation" } }) : route.continue());
+  await reloadPlanner(page);
+  await expect(page.locator(".summary-status")).toContainText("does not pass current academic checks");
+  expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBeNull();
+});
+
+test("late restoration responses cannot overwrite changed answers and newly generated plans", async ({ page }) => {
+  await openPlan(page, "sophomore", { early: true });
+  await page.route("**/api/majors/map", route => route.fulfill({ status: 503, body: "unavailable" }));
+  await reloadPlanner(page);
+  await page.unrouteAll();
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  let held = 0;
+  await page.route("**/api/majors/map", async route => {
+    if (route.request().postDataJSON()?.action !== "validate-plan") return route.continue();
+    const response = await route.fetch();
+    held += 1;
+    await gate;
+    await route.fulfill({ response }).catch(() => {});
+  });
+  await page.getByRole("button", { name: "Retry saved plans", exact: true }).click();
+  await expect.poll(() => held).toBe(3);
+  await setCourseStatus(page, "ECO 113", "Completed");
+  const generated = await generatePlans(page);
+  expect(generated.status()).toBe(200);
+  release();
+  await page.unrouteAll({ behavior: "wait" });
+  await page.getByRole("button", { name: /^(Choose|Review selected) Balanced$/ }).click();
+  await expect(page.locator('[data-requirement-checklist-id="eco-113"]')).toContainText("Completed");
+  const saved = await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")));
+  expect(saved.selectedPlanId).toBe("balanced");
+  expect(saved.report.programs.find(program => program.economicsPlans).economicsPlans[0].majorRequirementsChecklist.rows[0].status).toBe("completed");
+});
+
+test("each plan selection, requirement states and notes survive repeated reloads", async ({ page }) => {
+  const { plans } = await openPlan(page, "sophomore", { early: true, completed: ["ECO 113", "MAT 113", "ECO 161"] });
+  for (const plan of plans) {
+    await page.getByRole("button", { name: "← Back to plan comparison", exact: true }).click();
+    await page.getByRole("button", { name: new RegExp(`^(Choose|Review selected) ${plan.label}$`) }).click();
+    for (let reload = 0; reload < 2; reload += 1) {
+      await reloadPlanner(page);
+      await expect(page.locator('[data-requirement-checklist-id="eco-113"]')).toContainText("Completed");
+      await expect(page.locator("[data-requirement-checklist-id]")).toHaveCount(12);
+      expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")).selectedPlanId)).toBe(plan.id);
+      await expect(page.getByRole("heading", { name: "Course offerings history", exact: true })).toBeVisible();
+    }
+  }
+});
+
 test("malformed edit requests preserve the saved plan and allow a later valid move", async ({ page }) => {
   await openPlan(page, "freshman", { early: true });
   const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
@@ -551,6 +661,7 @@ for (const policyState of ["changed", "missing", "unavailable"]) {
   test(`saved answers survive a ${policyState} policy fingerprint without restoring current plans`, async ({ page }) => {
     await openPlan(page, "freshman", { early: true, completed: ["ECO 113"] });
     const savedAnswers = await page.evaluate(() => JSON.parse(localStorage.getItem("econ-planner-ui-state")).formData);
+    const recoverable = await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"));
     if (policyState === "missing") {
       await page.evaluate(() => {
         const saved = JSON.parse(sessionStorage.getItem("econ-planner-generated-session"));
@@ -565,7 +676,13 @@ for (const policyState of ["changed", "missing", "unavailable"]) {
       });
     }
     await reloadPlanner(page);
-    await expect(page.getByText("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.", { exact: true })).toBeVisible();
+    if (policyState === "unavailable") {
+      await expect(page.locator(".summary-status")).toContainText("Your saved plans and edits are kept");
+      await expect(page.getByRole("button", { name: "Retry saved plans", exact: true })).toBeVisible();
+      expect(await page.evaluate(() => sessionStorage.getItem("econ-planner-generated-session"))).toBe(recoverable);
+    } else {
+      await expect(page.getByText("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.", { exact: true })).toBeVisible();
+    }
     await expect(page.locator(".term-card")).toHaveCount(0);
     await expect(page.getByRole("group", { name: "Status for ECO 113", exact: true }).getByRole("button", { name: "Completed", exact: true })).toHaveAttribute("aria-pressed", "true");
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem("econ-planner-ui-state")).formData)).toEqual(savedAnswers);
