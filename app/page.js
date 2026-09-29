@@ -25,6 +25,7 @@ import {
   replaceEconomicsPlan
 } from "../lib/planning/uiState.js";
 import { validateSavedPlannerSession } from "../lib/planning/session-restoration.js";
+import { compactEconomicsPlanForValidation } from "../lib/planning/validation-payload.js";
 import { requirementFormGroups } from "../lib/planning/requirementFormChoices.js";
 import economicsRequirements from "../data/normalized/economics/requirements.json";
 import economicsCourseData from "../data/normalized/economics/courses.json";
@@ -2042,6 +2043,7 @@ export default function Page() {
   const [restorationAttempt, setRestorationAttempt] = useState(0);
   const [canRetryRestoration, setCanRetryRestoration] = useState(false);
   const [isRetryingRestoration, setIsRetryingRestoration] = useState(false);
+  const [restorationProgress, setRestorationProgress] = useState("");
   const [courseSearch, setCourseSearch] = useState("");
   const [completionSourceCourseCode, setCompletionSourceCourseCode] = useState("");
   const [intakeStep, setIntakeStep] = useState(1);
@@ -2219,7 +2221,12 @@ export default function Page() {
       const result = await validateSavedPlannerSession({
         rawSession: savedSession, inputSignature,
         student: { ...restoredForm, courses: selectedCourses(restoredForm.courses) },
-        signal: controller.signal
+        signal: controller.signal,
+        onProgress: message => {
+          if (cancelled || controller.signal.aborted || generationRequest !== generationRequestRef.current) return;
+          setRestorationProgress(message);
+          if (restorationAttempt) setStatus(message);
+        }
       });
       if (cancelled || controller.signal.aborted
         || generationRequest !== generationRequestRef.current
@@ -3138,8 +3145,8 @@ export default function Page() {
               ...formData,
               courses: selectedCourses(formData.courses)
             },
-            plan: sourcePlan,
-            plans,
+            plan: compactEconomicsPlanForValidation(sourcePlan),
+            plans: plans.map(compactEconomicsPlanForValidation),
             edit
           }),
           signal: controller.signal
@@ -3231,9 +3238,10 @@ export default function Page() {
   if (!isHydrated) {
     return (
       <main className="planner-loading" aria-busy="true" aria-label="Loading EconPlanner">
+        <p role="status" aria-live="polite">{restorationProgress || "Loading EconPlanner…"}</p>
         <style jsx global>{`
           body { margin: 0; background: #f7f8fa; }
-          .planner-loading { min-height: 100vh; }
+          .planner-loading { min-height: 100vh; padding: 2rem; box-sizing: border-box; color: #344054; }
         `}</style>
       </main>
     );

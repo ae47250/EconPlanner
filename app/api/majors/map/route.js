@@ -22,6 +22,7 @@ import { validateStudentPrerequisites } from "../../../../lib/planning/prerequis
 import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequisiteEvaluator.js";
 import { annotatePreliminaryScheduleEvidence } from "../../../../lib/policy/preliminary-schedule.js";
 import { loadPlannerFingerprint } from "../../../../lib/planning/fingerprint.js";
+import { compactEconomicsPlanForValidation } from "../../../../lib/planning/validation-payload.js";
 
 export const runtime = "nodejs";
 
@@ -506,8 +507,8 @@ export async function POST(request) {
         catalog,
         student,
         planningContext: authoritativePlanningContext,
-        plan: body.plan,
-        plans: body.plans,
+        plan: compactEconomicsPlanForValidation(body.plan),
+        plans: Array.isArray(body.plans) ? body.plans.map(compactEconomicsPlanForValidation) : body.plans,
         edit: body.edit
       });
       if (editedPlanResult.error) {
