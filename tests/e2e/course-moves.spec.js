@@ -4,8 +4,12 @@ import {
   courseOccurrences, projectReportHtmlArtifact, projectReportJsonArtifact, projectSelectedPlanArtifact, projectionMismatches
 } from "../oracle/economics-artifact-projection.js";
 import {
-  resetPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus
+  resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus
 } from "./cp7-helpers.js";
+
+// These journeys include generation, edits and server revalidation of all saved plans.
+// Keep a bounded journey budget while retaining each state and rejection assertion.
+test.beforeEach(() => test.setTimeout(60000));
 
 async function openPlan(page, standing, { early = false, completed = [], date = "2026-09-23", graduationYear = null } = {}) {
   await resetPlanner(page);
@@ -53,12 +57,12 @@ test("malformed edit requests preserve the saved plan and allow a later valid mo
   expect((await rejected).status()).toBe(400);
   await expect(control).toHaveValue("spring-2027");
   await expect(card(page, "MAT 217").locator(".plan-course-edit-feedback")).toContainText("invalid JSON");
-  await page.reload();
+  await reloadPlanner(page);
   await expect(control).toHaveValue("spring-2027");
   const accepted = validationResponse(page);
   await control.selectOption("winter-2027");
   expect((await accepted).status()).toBe(200);
-  await page.reload();
+  await reloadPlanner(page);
   await expect(control).toHaveValue("winter-2027");
 });
 
@@ -126,7 +130,7 @@ test("move selectors, rejection feedback, successful move, undo, and reload agre
   const savedResponse = validationResponse(page);
   await page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true }).selectOption("winter-2027");
   expect((await savedResponse).status()).toBe(200);
-  await page.reload();
+  await reloadPlanner(page);
   await expect(page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true })).toHaveValue("winter-2027");
   await page.getByRole("button", { name: "← Back to plan comparison", exact: true }).click();
   await page.getByRole("button", { name: /^(Choose|Review selected) Balanced$/ }).click();
@@ -162,7 +166,7 @@ test("after an elective replacement the May 2027 card still rejects an unsupport
   await expect(card(page, "ECO 224")).toContainText(/No alternate term available/);
   await page.getByRole("button", { name: "Undo last plan edit" }).click();
   await expect(may).toContainText("ECO 222");
-  await page.reload();
+  await reloadPlanner(page);
   await expect(page.locator('.term-card[data-academic-year="2026/2027"][data-term-key="Spring"]')).toContainText("ECO 222");
   const mayTerm = updatedPlan.terms.find(term => term.slotId === "spring-2027");
   const elective = mayTerm.courses.find(course => course.course === "ECO 224");
@@ -275,7 +279,7 @@ for (const scenario of [
   const after = plan.terms.flatMap(term => term.courses.map(course => `${course.requirementId}:${term.slotId}`)).sort();
   expect(after).toEqual(before.map(value => value === `${moved.requirementId}:${scenario.from}` ? `${moved.requirementId}:${scenario.to}` : value).sort());
   await expect(page.locator("main")).toContainText("Later unpublished schedules are shown as planning projections");
-  await page.reload();
+  await reloadPlanner(page);
   await expect(control).toHaveValue(scenario.to);
   const input = { student, preparedDate: "2026-09-23", selectedPlan: plan };
   const json = await page.request.post("/api/reports/economics", { data: { ...input, format: "json" } });
@@ -310,7 +314,7 @@ test("completed prerequisite timing does not allow a standard freshman capstone 
   expect(rejected.status()).toBe(422);
   expect((await rejected.json()).error).toContain("not in a valid senior Winter slot");
   await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
-  await page.reload();
+  await reloadPlanner(page);
   await expect(page.getByRole("combobox", { name: "Move ECO 461 to another term", exact: true })).toHaveCount(1);
   expect(await page.locator(".term-card").evaluateAll(cards => cards.map(item => ({
     year: item.dataset.academicYear, term: item.dataset.termKey,
@@ -382,7 +386,7 @@ test("Generic elective May moves, one-elective limits, persistence, and concise 
   expect(movedECO222.moveGuidance.studentMessage).toMatch(/Conditional move choices|No other term/i);
   const persistedGuidance = movedECO222.moveGuidance.studentMessage;
 
-  await page.reload();
+  await reloadPlanner(page);
   await expect(spring2029.getByRole("combobox", { name: "Move ECO elective (200+) to another term", exact: true })).toHaveValue("spring-2029");
   await expect(spring2029.locator(".course-choice-details")).toContainText(persistedGuidance);
   const reportPlans = updatedPlans.map(plan => plan.id === movedPlan.id ? movedPlan : plan);
@@ -420,7 +424,7 @@ test("MAT 217 can move to an unpublished May and persist in the selected plan", 
   const course = plan.terms.find(term => term.slotId === "spring-2028").courses.find(course => course.course === "MAT 217");
   expect(course.source).toBe("projected-offering");
   expect(course.section).toBe("");
-  await page.reload();
+  await reloadPlanner(page);
   await expect(control).toHaveValue("spring-2028");
   await expect(page.locator("main")).toContainText("Later unpublished schedules are shown as planning projections");
 });
@@ -457,7 +461,7 @@ test("pre-offering sessions regenerate while preserving saved course answers", a
     }
     sessionStorage.setItem(key, JSON.stringify(saved));
   });
-  await page.reload();
+  await reloadPlanner(page);
   await expect(page.getByText("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.", { exact: true })).toBeVisible();
   await expect(page.getByRole("group", { name: "Status for ECO 113", exact: true })
     .getByRole("button", { name: "Completed", exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -465,7 +469,7 @@ test("pre-offering sessions regenerate while preserving saved course answers", a
   await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
   const control = page.getByRole("combobox", { name: "Move MAT 217 to another term", exact: true });
   await expect.poll(() => control.locator("option").count()).toBeGreaterThan(1);
-  await page.reload();
+  await reloadPlanner(page);
   await expect.poll(() => control.locator("option").count()).toBeGreaterThan(1);
 });
 
@@ -534,7 +538,7 @@ for (const outcome of ["accepted", "rejected"]) {
     expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")).report)).toEqual(savedReport);
     await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
     await page.unroute("**/api/majors/map");
-    await page.reload();
+    await reloadPlanner(page);
     await expect(statistics).toHaveValue("spring-2028");
     await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
     await page.getByRole("button", { name: "Compare plans", exact: true }).click();
@@ -560,7 +564,7 @@ for (const policyState of ["changed", "missing", "unavailable"]) {
           contentType: "application/json", body: JSON.stringify({ plannerFingerprint: "sha256:changed-policy" }) });
       });
     }
-    await page.reload();
+    await reloadPlanner(page);
     await expect(page.getByText("Your saved answers are kept. Generate new plans to check them against the current policy and schedule.", { exact: true })).toBeVisible();
     await expect(page.locator(".term-card")).toHaveCount(0);
     await expect(page.getByRole("group", { name: "Status for ECO 113", exact: true }).getByRole("button", { name: "Completed", exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -569,7 +573,7 @@ for (const policyState of ["changed", "missing", "unavailable"]) {
     await generatePlans(page);
     await page.getByRole("button", { name: /^(Choose|Review selected) One Year Early$/ }).click();
     await expect(page.locator(".term-card").first()).toBeVisible();
-    await page.reload();
+    await reloadPlanner(page);
     await expect(page.locator(".term-card").first()).toBeVisible();
   });
 }

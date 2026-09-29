@@ -1,7 +1,7 @@
 import { expect, test } from './nightly-observability.js';
 import AxeBuilder from '@axe-core/playwright';
 import { writeFile } from 'node:fs/promises';
-import { resetPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus } from './cp7-helpers.js';
+import { resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus } from './cp7-helpers.js';
 
 const normalize = value => value.replace(/\s+/g, ' ').trim();
 const expectedNoteText = note => normalize([note.title, note.description,
@@ -9,6 +9,7 @@ const expectedNoteText = note => normalize([note.title, note.description,
 
 for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile', {width:390,height:844}]]) {
   test(`${device}: actual generation, selected-plan notes, brief feedback, keyboard focus, undo and reload`, async ({ page }, testInfo) => {
+    test.setTimeout(Math.max(testInfo.timeout, 90000));
     await page.setViewportSize(viewport);
     await page.addInitScript(() => {
       window.__liveMessages = [];
@@ -121,7 +122,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     expect((await again).status()).toBe(200);
     await expect(page.locator('.plan-edit-status')).toHaveText('Change saved.');
     await recordLiveMessages('MAT 217: move again');
-    await page.reload();
+    await reloadPlanner(page);
     await expect(control).toHaveValue('winter-2027');
     await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText('MAT 217 — Winter 2027');
     // Saved display fields cannot manufacture credit; the API rebuilds them on reload.
@@ -133,7 +134,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       }
       sessionStorage.setItem(key,JSON.stringify(state));
     });
-    await page.reload();
+    await reloadPlanner(page);
     await expect(control).toHaveValue('winter-2027');
     await expect(page.locator('[data-major-requirements-checklist] tbody .checklist-status.is-completed')).toHaveCount(0);
     await expect(page.locator('[data-plan-conditions]')).toContainText('Senior standing is assumed');
@@ -161,7 +162,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       destination.courses.push(source.courses.splice(index,1)[0]);
       sessionStorage.setItem(key,JSON.stringify(state));
     });
-    await page.reload();
+    await reloadPlanner(page);
     await expect(page.getByRole('heading',{name:'Which courses have you finished or are taking now?'})).toBeVisible();
     await expect(page.locator('[data-major-requirements-checklist]')).toHaveCount(0);
     await expect(page.locator('.summary-status')).toContainText('Your saved answers are kept');
@@ -194,7 +195,7 @@ test('actual completed and current checklist credit stays distinct from future a
     await expect(page.locator('[data-plan-note="history"]')).not.toContainText('ECO 161');
     await page.setViewportSize({width:390,height:844});
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-    await page.reload();
+    await reloadPlanner(page);
     await expect(checklist.locator('tbody .is-completed')).toHaveCount(3);
     await expect(checklist.locator('tbody .is-in_progress')).toHaveCount(1);
     await page.setViewportSize({width:1440,height:900});

@@ -2,7 +2,7 @@ import {test, expect} from './nightly-observability.js';
 import AxeBuilder from '@axe-core/playwright';
 import {writeFile} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
-import {resetPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus} from './cp7-helpers.js';
+import {resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus} from './cp7-helpers.js';
 
 // These journeys establish reachability using ordinary controls. Only PDF transport
 // failures are simulated. Export JSON/HTML requests replay the actual UI request.
@@ -115,7 +115,7 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const target = page.locator('.comparison-course-status p').filter({hasText:'Graduation target'});
   await expect(target).toContainText('Spring/May 2029');
   await expect(page.getByText('Future course offerings are projected and must be confirmed.')).toBeVisible();
-  await page.reload();
+  await reloadPlanner(page);
   await expect(target).toContainText('Spring/May 2029');
   await page.getByRole('button',{name:'← Back to plan comparison',exact:true}).click();
   await page.getByRole('button',{name:/^(Choose|Review selected) One Year Early$/}).click();

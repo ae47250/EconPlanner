@@ -13,6 +13,13 @@ export async function resetPlanner(page) {
   await expect(page.getByRole("heading", { name: "Where are you in your degree?" })).toBeVisible();
 }
 
+// Saved plans are revalidated against current policy before the planner is shown.
+// Wait for that observable boundary, rather than racing it with a 5-second row check.
+export async function reloadPlanner(page) {
+  await page.reload();
+  await expect(page.locator(".planner-loading")).toHaveCount(0, { timeout: 30000 });
+}
+
 export async function chooseStanding(page, standing) {
   const label = standing[0].toUpperCase() + standing.slice(1);
   const button = page.getByRole("group", { name: "Class standing" })

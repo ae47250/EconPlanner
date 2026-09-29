@@ -31,6 +31,8 @@ Move feedback: `Checking change…` then live DOM status `Change saved.`; the af
 - `pnpm run build`: PASS.
 - `git diff --check`: PASS.
 
+- Release CI initially passed policy/Oracle and lint/build but exposed 13 browser timing failures: saved-plan assertions ran while the planner was still loading, and the two multi-profile notes journeys exceeded their 30-second budget. Trace evidence shows separate validation requests taking about 2.4 seconds each. Reload tests now wait for the visible restoration boundary (bounded at 30 seconds), with bounded 60/90-second journey budgets; every state, blocked-request, forged-session and persistence assertion is retained. `pnpm exec playwright test tests/e2e/architecture-repairs.spec.js tests/e2e/course-moves.spec.js tests/e2e/plan-notes-evidence.spec.js`: 29 PASS. Lint and diff checks PASS. Full CI is rerun before merge.
+
 Detailed local artifacts and page renders are retained under ignored `output/economics-pdf-verification/approved-portrait/`. The three requested fictional revised PDFs are under `output/pdf/`.
 
 ## Gaps and release follow-through
