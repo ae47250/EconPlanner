@@ -40,4 +40,4 @@ Interruption during undo validation also retains the original recoverable sessio
 
 Follow-up focused checks: 49 session/API/option-equivalence checks passed before the added payload-equivalence case; the final session/API run passed all 32 cases. All 26 affected move/notes browser checks passed, followed by the new slow-success regression (one passed). Lint has zero errors and the same existing warning. The PDF dry-run remains green; the unchanged approved layout's ten-export/25-page inspection is reused. Broad test/build and release gates are recorded after completion.
 
-Follow-up broad gates: `pnpm test` passed 707 of 708 tests, with one existing optional nightly skip; `pnpm run build` passed. `git diff --check` passed.
+Follow-up broad gates: `pnpm test` passed 708 of 709 tests, with one existing optional nightly skip; `pnpm run build` passed. `git diff --check` passed.
