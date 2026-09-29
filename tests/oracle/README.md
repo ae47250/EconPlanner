@@ -10,7 +10,7 @@ projection boundaries). It does not replace the external audit's completeness ch
 Neither path imports production decisions. Both derive meaning from `policy/`.
 
 Catalog projection evidence is course- and term-specific: `CATALOG-ECO-222-SPRING`
-supports unpublished May placements, not verified offerings or a Winter catalog claim.
+records the catalog seasonality statement, not a verified offering or a Winter catalog claim. The September 28 owner instruction supersedes named future elective generation: future elective assignments remain generic pending an exact section.
 The 2026-09-22 preliminary-schedule authority permits labeled workload projections
 without asserting an offering. A future term with no exact dates must fall wholly
 within the evidence's effective calendar years; a midyear boundary remains unresolved.

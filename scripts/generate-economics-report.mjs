@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { spawn } from "node:child_process";
+import { chromium } from "@playwright/test";
 import { buildEconomicsReportFromStudent } from "../lib/reports/build-economics.js";
 import { renderEconomicsHtml } from "../lib/reports/economics-html.js";
 
@@ -26,14 +26,18 @@ const pdfPath = path.join(pdfDir, "economics-plan.pdf");
 const template = await readFile(path.join(root, "templates/econplannertemplate.html"), "utf8");
 
 await writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
-await writeFile(htmlPath, renderEconomicsHtml(report, template), "utf8");
+const html = renderEconomicsHtml(report, template);
+await writeFile(htmlPath, html, "utf8");
 
-await new Promise((resolve, reject) => {
-  const python = process.env.PYTHON_EXECUTABLE || "python";
-  const child = spawn(python, [path.join(root, "scripts/render-economics-pdf.py"), jsonPath, pdfPath], { stdio: "inherit" });
-  child.on("error", reject);
-  child.on("exit", code => code === 0 ? resolve() : reject(new Error(`PDF renderer exited with code ${code}`)));
-});
+const browser = await chromium.launch({ channel: "chrome", headless: true });
+try {
+  const page = await browser.newPage();
+  await page.setContent(html, { waitUntil: "load" });
+  await page.evaluate(() => document.fonts.ready);
+  await page.pdf({ path: pdfPath, format: "Letter", printBackground: true, preferCSSPageSize: true, tagged: true });
+} finally {
+  await browser.close();
+}
 
 console.log(`Generated ${htmlPath}`);
 console.log(`Generated ${pdfPath}`);

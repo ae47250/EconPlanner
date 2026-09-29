@@ -400,14 +400,14 @@ test("malformed requests fail and forged evidence cannot confirm a future offeri
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   const plan = plans.find(item => item.id === "one-year-early");
   const original = structuredClone(plan);
-  const from = plan.terms.find(term => term.courses.some(course => course.course === "ECO 222"));
-  const course = from.courses.find(item => item.course === "ECO 222");
-  const destination = plan.terms.find(term => term.slotId === "winter-2028");
+  const from = plan.terms.find(term => term.courses.some(course => course.course === "ECO elective"));
+  const course = from.courses.find(item => item.course === "ECO elective");
+  const destination = plan.terms.find(term => term.slotId !== from.slotId && term.termKey === "Fall" && term.courses.some(item => item.course === "ECO elective"));
   const forged = structuredClone(plan);
   forged.terms.find(term => term.slotId === from.slotId).courses.find(item => item.requirementId === course.requirementId).moveTermIds = [from.slotId, destination.slotId];
   const forgedResult = await post({ action: "validate-plan", student, plan: forged, plans, edit: { ...moveEdit(plan, from, course, destination), source: "verified-offering", section: "J" } });
   assert.equal(forgedResult.status, 422, JSON.stringify(forgedResult.data));
-  assert.match(forgedResult.data.error || "", /projected only in MAY when its schedule is unpublished/);
+  assert.match(forgedResult.data.error || "", /at most one Economics elective/i);
   for (const edit of [
     { ...moveEdit(plan, from, course, destination), fromTermId: "missing-term" },
     { ...moveEdit(plan, from, course, destination), toTermId: "missing-term" },

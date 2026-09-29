@@ -1,10 +1,12 @@
-"""Render the canonical EconMapper Economics report JSON as a PDF."""
+"""Legacy ReportLab utility; report:economics uses the shared HTML/Chromium layout."""
 
 import json
+import re
 import sys
 from html import escape
 from pathlib import Path
 
+from reportlab.graphics.shapes import Circle, Drawing, Line, Path as ShapePath, String
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import letter
@@ -42,29 +44,31 @@ def main():
         Spacer(1, 8),
     ]
 
-    remaining = report["remaining"]
-    metrics = [
-        [paragraph("Strict remaining", table_header), paragraph("Optimistic remaining", table_header), paragraph("After in-progress", table_header)],
-        [paragraph(f"{remaining['strict']} units" if remaining["strict"] is not None else "Advisor check", body), paragraph(f"{remaining['optimistic']} units" if remaining["optimistic"] is not None else "Advisor check", body), paragraph(f"{remaining['projected']} units" if remaining["projected"] is not None else "Advisor check", body)],
-    ]
-    metric_table = Table(metrics, colWidths=[2.25 * inch] * 3)
-    metric_table.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#174d35")),
-        ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#c9d8cc")),
-        ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#c9d8cc")),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 7),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 7),
-        ("TOPPADDING", (0, 0), (-1, -1), 6),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
-    ]))
-    story.extend([metric_table, Spacer(1, 8), Paragraph("Term plan", heading)])
-
+    selected = report.get("selectedPlan") or {}
+    target = (selected.get("planningContext") or {}).get("expectedGraduationTerm")
+    if target:
+        story.append(Paragraph(f"Expected graduation: {escape(target)}", body))
+    conditions = report.get("planConditions", [])
+    if conditions:
+        story.append(Paragraph("Actions and conditions", heading))
+        for item in conditions:
+            story.append(Paragraph(f"- {escape(item['message'])}", body))
     terms = report.get("terms", [])
     term_rows = [[paragraph("Term", table_header), paragraph("Planned courses", table_header)]]
     for term in terms:
         courses = term.get("courses", [])
-        course_text = "<br/>".join(f"{escape(str(course.get('code', '')))} - {escape(str(course.get('title', '')))}" for course in courses) or "None placed"
+        course_lines = []
+        for course in courses:
+            line = f"{escape(str(course.get('displayLabel') or course.get('code', '')))} - {escape(str(course.get('title', '')))}"
+            if course.get("availabilityDisplayApplicable"):
+                line += "<br/>" + escape((course.get("seatStatusDisplay") or {}).get("label", "Current seat status unverified"))
+            markers = list(course.get("planningMarkers") or [])
+            if course.get("approvalRequired") and "Approval required" not in markers:
+                markers.append("Approval required")
+            for marker in markers:
+                line += "<br/>" + escape(marker)
+            course_lines.append(line)
+        course_text = "<br/>".join(course_lines) or "None placed"
         term_rows.append([paragraph(term.get("term", ""), body), Paragraph(course_text, body)])
     term_table = Table(term_rows, colWidths=[1.1 * inch, 5.65 * inch], repeatRows=1)
     term_table.setStyle(TableStyle([
@@ -77,12 +81,44 @@ def main():
         ("TOPPADDING", (0, 0), (-1, -1), 6),
         ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
     ]))
-    story.extend([term_table, Paragraph("S sections from the source schedule are displayed as May Term.", small), Paragraph("Requirement assignments", heading)])
+    story.extend([Paragraph("Term plan", heading), term_table])
+    story.append(Paragraph("Major requirements checklist", heading))
 
-    requirement_rows = [[paragraph(label, table_header) for label in ["Requirement", "Strict", "Optimistic", "In progress", "Evidence"]]]
-    for item in report.get("requirements", []):
-        requirement_rows.append([paragraph(item.get("label"), body), paragraph(item.get("strict") or "Remaining", body), paragraph(item.get("optimistic") or "Remaining", body), paragraph(item.get("projected") or "Remaining", body), paragraph(item.get("evidence") or "-", body)])
-    requirement_table = Table(requirement_rows, colWidths=[1.7 * inch, 1.1 * inch, 1.1 * inch, 1.1 * inch, 1.75 * inch], repeatRows=1)
+    checklist = report.get("majorRequirementsChecklist") or {"rows": []}
+    requirement_rows = [[paragraph(label, table_header) for label in ["Requirement", "Course / term", "Status"]]]
+    status_colors = {"completed": "#176333", "in_progress": "#174d7a", "planned": "#485365", "still_needed": "#76510b"}
+    status_backgrounds = {"completed": "#e9f6ed", "in_progress": "#e4f2ff", "planned": "#eef0f3", "still_needed": "#fff2d6"}
+    for item in checklist["rows"]:
+        if item["status"] == "still_needed":
+            continue
+        tone = status_colors[item["status"]]
+        status_text = f'<font color="{tone}">{escape(item["statusLabel"])}</font>'
+        markers = "<br/>".join(escape(marker) for marker in item.get("markers", []))
+        if markers:
+            status_text += f'<br/><font color="#76510b">{markers}</font>'
+        icon = Drawing(12, 12)
+        ink = colors.HexColor(tone)
+        if item["status"] == "completed":
+            icon.add(Line(1, 5, 4, 2, strokeColor=ink, strokeWidth=1.5))
+            icon.add(Line(4, 2, 11, 10, strokeColor=ink, strokeWidth=1.5))
+        elif item["status"] in ["in_progress", "planned"]:
+            icon.add(Circle(6, 6, 4.5, strokeColor=ink, fillColor=None))
+            if item["status"] == "in_progress":
+                half = ShapePath(fillColor=ink, strokeColor=None)
+                half.moveTo(6, 1.5)
+                half.curveTo(0, 1.5, 0, 10.5, 6, 10.5)
+                half.close()
+                icon.add(half)
+        else:
+            icon.add(String(5, 2, "!", fontName="Helvetica-Bold", fontSize=13, fillColor=ink))
+        status_cell = Table([[icon, Paragraph(status_text, body)]], colWidths=[15, 100])
+        status_cell.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0)]))
+        status_cell.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor(status_backgrounds[item["status"]]))]))
+        assignment = escape(item["courseTerm"])
+        if len(item.get("alternatives", [])) > 1:
+            assignment += "<br/>Requirement options: " + escape(" / ".join(item["alternatives"]))
+        requirement_rows.append([paragraph(item["label"], body), Paragraph(assignment, body), status_cell])
+    requirement_table = Table(requirement_rows, colWidths=[1.8 * inch, 3.15 * inch, 1.8 * inch], repeatRows=1)
     requirement_table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#174d35")),
         ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#c9d8cc")),
@@ -93,41 +129,34 @@ def main():
         ("TOPPADDING", (0, 0), (-1, -1), 5),
         ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
     ]))
-    story.append(requirement_table)
+    story.extend([requirement_table, Paragraph(escape(checklist.get("note", "")), small)])
+    if checklist.get("unmetRequirements"):
+        story.append(Paragraph("Incomplete candidate — unmet requirements", heading))
+        story.append(Paragraph("No qualifying assignment is recorded for the requirements below. This alone does not establish that no viable plan exists.", body))
+        for item in checklist["unmetRequirements"]:
+            story.append(paragraph(item["label"] + ": " + item["courseTerm"], body))
 
-    degree_information = report.get("degreeRequirementInformation") or {}
-    degree_items = degree_information.get("items", [])
-    if degree_items:
-        degree_story = [Paragraph("CCR/ACE information", heading)]
-        terminology = degree_information.get("terminology", {})
-        degree_story.append(Paragraph(
-            f"{escape(terminology.get('ccr', 'Core Curriculum Requirements (CCRs)'))} / {escape(terminology.get('ace', 'Areas of Competency and Engagement (ACEs)'))}",
-            body,
-        ))
-        for item in degree_items:
-            degree_story.append(Paragraph(
-                f"- <b>{escape(str(item.get('code', '')))}</b> {escape(str(item.get('detail', '')))}",
-                body,
-            ))
-        story.append(KeepTogether(degree_story))
+    def note_text(value):
+        return re.sub(r"\bECO \d{3}\b", lambda match: f"<b>{match.group()}</b>", escape(str(value or "")))
 
-    prerequisite_notices = report.get("prerequisiteNotices", [])
-    if prerequisite_notices:
-        prerequisite_story = [Paragraph("Prerequisite completion information", heading)]
-        prerequisite_story.extend(
-            Paragraph(f"- {escape(str(item.get('message', '')))}", body)
-            for item in prerequisite_notices
-        )
-        story.append(KeepTogether(prerequisite_story))
+    notes = report.get("planNotes", [])
+    if notes:
+        story.append(Paragraph("Plan Notes", heading))
+        for note in notes:
+            note_story = [Paragraph(escape(note["title"]), heading)]
+            if note.get("description"):
+                note_story.append(Paragraph(escape(note["description"]), body))
+            for item in note["items"]:
+                label = f"<b>{escape(item['code'])}</b> " if item.get("code") else ""
+                if item.get("label"):
+                    label += f"<b>{escape(item['label'])}</b>: "
+                lines = item.get("lines")
+                content = "<br/>".join(note_text(line) for line in lines) if lines else note_text(item.get("text"))
+                note_story.append(Paragraph(f"- {label}{content}", body))
+            if note.get("caveat"):
+                note_story.append(Paragraph(escape(note["caveat"]), small))
+            story.append(KeepTogether(note_story))
 
-    checks = [
-        *(f"{item.get('label', item.get('requirementId', 'Requirement'))}: {item.get('reason', 'Remaining')}" for item in report.get("unresolved", [])),
-        *(f"{item.get('course', 'Advisor check')}: {item.get('reason', '')}" for item in report.get("advisorChecks", [])),
-    ]
-    if checks:
-        check_story = [Paragraph("Advisor checks", heading)]
-        check_story.extend(Paragraph(f"- {escape(check)}", body) for check in checks)
-        story.append(KeepTogether(check_story))
     story.append(Spacer(1, 10))
     story.append(Paragraph("Confirm requirements, substitutions, prerequisites, and availability with Hanover Academic Advising.", small))
 

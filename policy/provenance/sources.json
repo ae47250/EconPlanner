@@ -355,6 +355,45 @@
         "through": "2027-04-23"
       },
       "supersedes": null
+    },
+    {
+      "sourceId": "OWNER-COURSE-PLANNING-2026-09-28",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert; inspected registrar extract",
+      "authorityBoundary": "UNPUBLISHED_ELECTIVE_PLANNING_AND_INFORMATIONAL_HISTORY",
+      "path": "policy/provenance/course-planning-2026-09-28.md",
+      "sha256": "6f70573bbe1c7eda6881bf4453c04574199fcaa39b4a29d9fe5d6f9200478c25",
+      "effective": {
+        "from": "2026-09-28",
+        "through": null
+      },
+      "supersedes": "Named future elective projections and unsupported future ECO 321 finance assumptions"
+    },
+    {
+      "sourceId": "OWNER-CHECKLIST-REVIEW-2026-09-28",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner; inspected local source workbooks and original PDF",
+      "authorityBoundary": "VALIDATED_PLAN_PRESENTATION_AND_RECORDED_EVIDENCE_GAPS",
+      "path": "policy/provenance/checklist-review-2026-09-28.md",
+      "sha256": "9341ec484cb659b629ef02141fb4f92ee6c0ae4b174063b562648e43378c327e",
+      "effective": {
+        "from": "2026-09-28",
+        "through": null
+      },
+      "supersedes": "Blanket Advisor check cells, stale current-seat badges and duplicate plan-condition displays"
+    },
+    {
+      "sourceId": "OWNER-APPROVED-PDF-PRESENTATION-2026-09-28",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner; supplied approved portrait presentation package",
+      "authorityBoundary": "REPORT_PRESENTATION_AND_COMPLETE_CHECKLIST_WORDING_ONLY",
+      "path": "policy/provenance/approved-pdf-presentation-2026-09-28.md",
+      "sha256": "1156d001ed7be1f0bff9323028f33253011cdd6e3015712a91a5fbb54b069c67",
+      "effective": {
+        "from": "2026-09-28",
+        "through": null
+      },
+      "supersedes": "Prior PDF year-card layout and Still needed standard checklist legend; internal unmet evidence and all academic rules retained"
     }
   ],
   "authorityHierarchy": [

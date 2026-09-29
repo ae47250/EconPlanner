@@ -1,0 +1,727 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "INFORMATIONAL_ONLY",
+  "planningImpact": "NONE",
+  "sourceRefs": [
+    "OWNER-COURSE-PLANNING-2026-09-28#Workbook-observations"
+  ],
+  "workbook": {
+    "filename": "hanover-course-offerings (10).xlsx",
+    "sha256": "e8547bf9a695e5c21bb49a4b05fb113580bfbf9e96e389ab950d8ea20d2948d5",
+    "collectedOn": "2026-09-25"
+  },
+  "coverage": [
+    {
+      "academicYear": "2026-2027",
+      "terms": [
+        "FALL"
+      ],
+      "status": "PARTIAL",
+      "sourceRange": "Term Coverage!D2:Y2"
+    },
+    {
+      "academicYear": "2026-2027",
+      "terms": [
+        "WINTER",
+        "MAY"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D3:Y3"
+    },
+    {
+      "academicYear": "2025-2026",
+      "terms": [
+        "FALL"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D4:Y4"
+    },
+    {
+      "academicYear": "2025-2026",
+      "terms": [
+        "WINTER",
+        "MAY"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D5:Y5"
+    },
+    {
+      "academicYear": "2024-2025",
+      "terms": [
+        "FALL"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D6:Y6"
+    },
+    {
+      "academicYear": "2024-2025",
+      "terms": [
+        "WINTER",
+        "MAY"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D7:Y7"
+    },
+    {
+      "academicYear": "2023-2024",
+      "terms": [
+        "FALL"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D8:Y8"
+    },
+    {
+      "academicYear": "2023-2024",
+      "terms": [
+        "WINTER",
+        "MAY"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D9:Y9"
+    },
+    {
+      "academicYear": "2022-2023",
+      "terms": [
+        "FALL"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D10:Y10"
+    },
+    {
+      "academicYear": "2022-2023",
+      "terms": [
+        "WINTER",
+        "MAY"
+      ],
+      "status": "COMPLETE",
+      "sourceRange": "Term Coverage!D11:Y11"
+    }
+  ],
+  "observations": [
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-B",
+      "identity": "2025;20|27837",
+      "sourceRange": "All Offerings!I20:AC20"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-A",
+      "identity": "2025;20|27841",
+      "sourceRange": "All Offerings!I21:AC21"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 113",
+      "section": "ECO113-J",
+      "identity": "2025;40|27848",
+      "sourceRange": "All Offerings!I22:AC22"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-A",
+      "identity": "2025;20|27838",
+      "sourceRange": "All Offerings!I23:AC23"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-B",
+      "identity": "2025;20|28514",
+      "sourceRange": "All Offerings!I24:AC24"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 114",
+      "section": "ECO114-J",
+      "identity": "2025;40|27842",
+      "sourceRange": "All Offerings!I25:AC25"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 114",
+      "section": "ECO114-K",
+      "identity": "2025;40|27843",
+      "sourceRange": "All Offerings!I26:AC26"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "MAY",
+      "course": "ECO 161",
+      "section": "ECO161-S",
+      "identity": "2025;40|27850",
+      "sourceRange": "All Offerings!I27:AC27"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 213",
+      "section": "ECO213-J",
+      "identity": "2025;40|27844",
+      "sourceRange": "All Offerings!I28:AC28"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 214",
+      "section": "ECO214-A",
+      "identity": "2025;20|27839",
+      "sourceRange": "All Offerings!I29:AC29"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 221",
+      "section": "ECO221-J",
+      "identity": "2025;40|27845",
+      "sourceRange": "All Offerings!I30:AC30"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "MAY",
+      "course": "ECO 224",
+      "section": "ECO224-S",
+      "identity": "2025;40|28651",
+      "sourceRange": "All Offerings!I31:AC31"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 234",
+      "section": "ECO234-A",
+      "identity": "2025;20|28435",
+      "sourceRange": "All Offerings!I32:AC32"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "MAY",
+      "course": "ECO 234",
+      "section": "ECO234-S",
+      "identity": "2025;40|28347",
+      "sourceRange": "All Offerings!I33:AC33"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 321",
+      "section": "ECO321-J",
+      "identity": "2025;40|27846",
+      "sourceRange": "All Offerings!I34:AC34"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 333",
+      "section": "ECO333-A",
+      "identity": "2025;20|27840",
+      "sourceRange": "All Offerings!I35:AC35"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 337",
+      "section": "ECO337-J",
+      "identity": "2025;40|28765",
+      "sourceRange": "All Offerings!I36:AC36"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "FALL",
+      "course": "ECO 357",
+      "section": "ECO357-A",
+      "identity": "2025;20|28601",
+      "sourceRange": "All Offerings!I37:AC37"
+    },
+    {
+      "academicYear": "2025-2026",
+      "term": "WINTER",
+      "course": "ECO 461",
+      "section": "ECO461-J",
+      "identity": "2025;40|27847",
+      "sourceRange": "All Offerings!I38:AC38"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-B",
+      "identity": "2024;20|26619",
+      "sourceRange": "All Offerings!I39:AC39"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-A",
+      "identity": "2024;20|26623",
+      "sourceRange": "All Offerings!I40:AC40"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 113",
+      "section": "ECO113-J",
+      "identity": "2024;40|26629",
+      "sourceRange": "All Offerings!I41:AC41"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-A",
+      "identity": "2024;20|26620",
+      "sourceRange": "All Offerings!I42:AC42"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-B",
+      "identity": "2024;20|26621",
+      "sourceRange": "All Offerings!I43:AC43"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 114",
+      "section": "ECO114-J",
+      "identity": "2024;40|26626",
+      "sourceRange": "All Offerings!I44:AC44"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 114",
+      "section": "ECO114-K",
+      "identity": "2024;40|27522",
+      "sourceRange": "All Offerings!I45:AC45"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 213",
+      "section": "ECO213-J",
+      "identity": "2024;40|26627",
+      "sourceRange": "All Offerings!I46:AC46"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "FALL",
+      "course": "ECO 214",
+      "section": "ECO214-A",
+      "identity": "2024;20|26622",
+      "sourceRange": "All Offerings!I47:AC47"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 221",
+      "section": "ECO221-J",
+      "identity": "2024;40|26630",
+      "sourceRange": "All Offerings!I48:AC48"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "MAY",
+      "course": "ECO 234",
+      "section": "ECO234-S",
+      "identity": "2024;40|26979",
+      "sourceRange": "All Offerings!I49:AC49"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 321",
+      "section": "ECO321-J",
+      "identity": "2024;40|27435",
+      "sourceRange": "All Offerings!I50:AC50"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "MAY",
+      "course": "ECO 331",
+      "section": "ECO331-S",
+      "identity": "2024;40|26631",
+      "sourceRange": "All Offerings!I51:AC51"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "FALL",
+      "course": "ECO 333",
+      "section": "ECO333-A",
+      "identity": "2024;20|26624",
+      "sourceRange": "All Offerings!I52:AC52"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 357",
+      "section": "ECO357-J",
+      "identity": "2024;40|28272",
+      "sourceRange": "All Offerings!I53:AC53"
+    },
+    {
+      "academicYear": "2024-2025",
+      "term": "WINTER",
+      "course": "ECO 461",
+      "section": "ECO461-J",
+      "identity": "2024;40|26628",
+      "sourceRange": "All Offerings!I54:AC54"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-B",
+      "identity": "2023;20|25751",
+      "sourceRange": "All Offerings!I55:AC55"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-A",
+      "identity": "2023;20|25754",
+      "sourceRange": "All Offerings!I56:AC56"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "WINTER",
+      "course": "ECO 113",
+      "section": "ECO113-J",
+      "identity": "2023;40|25762",
+      "sourceRange": "All Offerings!I57:AC57"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-A",
+      "identity": "2023;20|25752",
+      "sourceRange": "All Offerings!I58:AC58"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-B",
+      "identity": "2023;20|25753",
+      "sourceRange": "All Offerings!I59:AC59"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "WINTER",
+      "course": "ECO 114",
+      "section": "ECO114-J",
+      "identity": "2023;40|25757",
+      "sourceRange": "All Offerings!I60:AC60"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "MAY",
+      "course": "ECO 161",
+      "section": "ECO161-S",
+      "identity": "2023;40|25763",
+      "sourceRange": "All Offerings!I61:AC61"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "WINTER",
+      "course": "ECO 213",
+      "section": "ECO213-J",
+      "identity": "2023;40|25758",
+      "sourceRange": "All Offerings!I62:AC62"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 214",
+      "section": "ECO214-A",
+      "identity": "2023;20|25755",
+      "sourceRange": "All Offerings!I63:AC63"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 221",
+      "section": "ECO221-A",
+      "identity": "2023;20|25756",
+      "sourceRange": "All Offerings!I64:AC64"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "MAY",
+      "course": "ECO 224",
+      "section": "ECO224-S",
+      "identity": "2023;40|26039",
+      "sourceRange": "All Offerings!I65:AC65"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "MAY",
+      "course": "ECO 234",
+      "section": "ECO234-S",
+      "identity": "2023;40|25648",
+      "sourceRange": "All Offerings!I66:AC66"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "WINTER",
+      "course": "ECO 333",
+      "section": "ECO333-J",
+      "identity": "2023;40|25760",
+      "sourceRange": "All Offerings!I67:AC67"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 357",
+      "section": "ECO357-A",
+      "identity": "2023;20|26180",
+      "sourceRange": "All Offerings!I68:AC68"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 357",
+      "section": "ECO357-B",
+      "identity": "2023;20|26208",
+      "sourceRange": "All Offerings!I69:AC69"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "FALL",
+      "course": "ECO 357",
+      "section": "ECO357-C",
+      "identity": "2023;20|26220",
+      "sourceRange": "All Offerings!I70:AC70"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "WINTER",
+      "course": "ECO 461",
+      "section": "ECO461-J",
+      "identity": "2023;40|25761",
+      "sourceRange": "All Offerings!I71:AC71"
+    },
+    {
+      "academicYear": "2023-2024",
+      "term": "WINTER",
+      "course": "ECO 499",
+      "section": "ECO499",
+      "identity": "2023;40|26316",
+      "sourceRange": "All Offerings!I72:AC72"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-B",
+      "identity": "2022;20|24358",
+      "sourceRange": "All Offerings!I73:AC73"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 113",
+      "section": "ECO113-A",
+      "identity": "2022;20|24366",
+      "sourceRange": "All Offerings!I74:AC74"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 113",
+      "section": "ECO113-J",
+      "identity": "2022;40|24371",
+      "sourceRange": "All Offerings!I75:AC75"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 113",
+      "section": "ECO113-K",
+      "identity": "2022;40|24372",
+      "sourceRange": "All Offerings!I76:AC76"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-A",
+      "identity": "2022;20|24359",
+      "sourceRange": "All Offerings!I77:AC77"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 114",
+      "section": "ECO114-B",
+      "identity": "2022;20|24360",
+      "sourceRange": "All Offerings!I78:AC78"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 114",
+      "section": "ECO114-J",
+      "identity": "2022;40|24367",
+      "sourceRange": "All Offerings!I79:AC79"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "MAY",
+      "course": "ECO 160",
+      "section": "ECO160-S",
+      "identity": "2022;40|24375",
+      "sourceRange": "All Offerings!I80:AC80"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 161",
+      "section": "ECO161-A",
+      "identity": "2022;20|24361",
+      "sourceRange": "All Offerings!I81:AC81"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 161",
+      "section": "ECO161-B",
+      "identity": "2022;20|24362",
+      "sourceRange": "All Offerings!I82:AC82"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 161",
+      "section": "ECO161-J",
+      "identity": "2022;40|24368",
+      "sourceRange": "All Offerings!I83:AC83"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 213",
+      "section": "ECO213-A",
+      "identity": "2022;20|24363",
+      "sourceRange": "All Offerings!I84:AC84"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 214",
+      "section": "ECO214-J",
+      "identity": "2022;40|24369",
+      "sourceRange": "All Offerings!I85:AC85"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 221",
+      "section": "ECO221-J",
+      "identity": "2022;40|24370",
+      "sourceRange": "All Offerings!I86:AC86"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "MAY",
+      "course": "ECO 222",
+      "section": "ECO222-S",
+      "identity": "2022;40|24376",
+      "sourceRange": "All Offerings!I87:AC87"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "MAY",
+      "course": "ECO 234",
+      "section": "ECO234-S",
+      "identity": "2022;40|24795",
+      "sourceRange": "All Offerings!I88:AC88"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 257",
+      "section": "ECO257-J",
+      "identity": "2022;40|24373",
+      "sourceRange": "All Offerings!I89:AC89"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 321",
+      "section": "ECO321-A",
+      "identity": "2022;20|24364",
+      "sourceRange": "All Offerings!I90:AC90"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 333",
+      "section": "ECO333-A",
+      "identity": "2022;20|24365",
+      "sourceRange": "All Offerings!I91:AC91"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 357",
+      "section": "ECO357-A",
+      "identity": "2022;20|24992",
+      "sourceRange": "All Offerings!I92:AC92"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 461",
+      "section": "ECO461-J",
+      "identity": "2022;40|24374",
+      "sourceRange": "All Offerings!I93:AC93"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "FALL",
+      "course": "ECO 499",
+      "section": "ECO499",
+      "identity": "2022;20|25035",
+      "sourceRange": "All Offerings!I94:AC94"
+    },
+    {
+      "academicYear": "2022-2023",
+      "term": "WINTER",
+      "course": "ECO 499",
+      "section": "ECO499",
+      "identity": "2022;40|25127",
+      "sourceRange": "All Offerings!I95:AC95"
+    }
+  ],
+  "display": {
+    "completedAcademicYears": [
+      "2022-2023",
+      "2023-2024",
+      "2024-2025",
+      "2025-2026"
+    ],
+    "fallWinterYearCount": 2,
+    "caveat": "Past schedules show historical availability, not guaranteed future offerings.",
+    "intermediate": "ECO 213 and ECO 214 appeared in separate Fall/Winter terms historically; their order varied.",
+    "future": "Future schedules are unknown. Standard plans use at most one Economics elective per unpublished Fall, Winter or May term.",
+    "adjunct": "An extra Fall/Winter adjunct elective may be possible, but 2027\u201328 staffing, budget and offerings are unconfirmed. Advisor review and matching verified offerings are required.",
+    "finance": "Prefer BUSN 323 when it fits. Future BUSN 323 offerings need confirmation; future ECO 321 adjunct staffing is uncertain.",
+    "hs": "Either ECO 113 or ECO 114 counts as one of the two HS courses. The other must be from a different discipline.",
+    "prerequisiteCompletion": "Complete planned prerequisites before their dependent courses.",
+    "seatConfirmation": "Confirm seat availability before registration; the published schedule is not current seat confirmation."
+  }
+}

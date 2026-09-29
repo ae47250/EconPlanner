@@ -314,6 +314,7 @@ export async function compilePolicy({ repositoryRoot = SCRIPT_ROOT, outputRoot }
     releaseRefs: { schedule: schedule.releaseId },
     rules,
     requirementProfile: compatibilityProfile.requirements,
+    planningAdvice: inputById["planning-advice"],
     indexes: {
       ...indexed,
       coursesByCode: Object.fromEntries(courses.courses.map(course => [course.code, course])),

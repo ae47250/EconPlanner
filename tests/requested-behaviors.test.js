@@ -176,19 +176,19 @@ test("verified ECO 161-J and ECO 321-J conflict in Winter 2027 across validator,
     term.courses.push({...section,requirementId,slotId:term.slotId,source:"verified-offering",scheduleProvenance:"PUBLISHED_SCHEDULE",publicationStatus:"PUBLISHED_SCHEDULE",offeringStatus:"verified"});
   };
   place("ECO 161","winter-2027",electiveIds[0]);
-  plan.terms.find(term => term.slotId === "winter-2028").courses.push({course:"ECO 321",units:1,title:bundle.indexes.coursesByCode["ECO 321"].title,requirementId:electiveIds[1],slotId:"winter-2028",source:"projected-offering",scheduleProvenance:"PLANNING_PROJECTION",publicationStatus:"PLANNING_PROJECTION",offeringStatus:"planning_projection",meeting:null,availability:null});
+  plan.terms.find(term => term.slotId === "winter-2028").courses.push({course:"ECO elective",minimumLevel:200,units:1,requirementId:electiveIds[1],slotId:"winter-2028",source:"projected-offering",scheduleProvenance:"PLANNING_PROJECTION",publicationStatus:"PLANNING_PROJECTION",offeringStatus:"planning_projection",meeting:null,availability:null});
   const confirmed = await post({action:"validate-plan",student,plan,plans:[plan]});
   assert.equal(confirmed.response.status,200,JSON.stringify(confirmed.data));
   plan = confirmed.data.plan;
   assert.ok(plan.terms.every(term => !(term.courses.some(course => course.course === "ECO 161") && term.courses.some(course => course.course === "ECO 321"))));
   const source = plan.terms.find(term => term.slotId === "winter-2028");
-  const row = source.courses.find(course => course.course === "ECO 321");
+  const row = source.courses.find(course => course.course === "ECO elective");
   assert.equal(row.moveDestinationOptions.find(option => option.id === "winter-2027").status,"BLOCKED");
-  assert.match(row.moveDestinationOptions.find(option => option.id === "winter-2027").message,/conflict/);
+  assert.match(row.moveDestinationOptions.find(option => option.id === "winter-2027").message,/no verified/);
   const rejected = await post({action:"validate-plan",student,plan,plans:[plan],edit:{type:"move",fromTermId:source.slotId,toTermId:"winter-2027",courseId:row.requirementId}});
   assert.equal(rejected.response.status,422);
   const forged = structuredClone(plan);
-  forged.terms.find(term => term.slotId === source.slotId).courses = source.courses.filter(course => course.course !== "ECO 321");
+  forged.terms.find(term => term.slotId === source.slotId).courses = source.courses.filter(course => course.course !== "ECO elective");
   forged.terms.find(term => term.slotId === "winter-2027").courses.push({...sections[1],requirementId:row.requirementId,slotId:"winter-2027",source:"verified-offering",section:"J",scheduleProvenance:"PUBLISHED_SCHEDULE",publicationStatus:"PUBLISHED_SCHEDULE",offeringStatus:"verified"});
   const validation = validateGeneratedPlan(forged,{student,mapping:mappingFor(student),schedule:runtimeEconomicsSchedule(),prerequisites,context:resolvePlanningContext(student),policyBundle:bundle});
   assert.equal(validation.valid,false);
@@ -199,7 +199,7 @@ test("verified ECO 161-J and ECO 321-J conflict in Winter 2027 across validator,
 });
 
 test("move annotations, direct API edits and report rejection agree at every Winter overload boundary", async () => {
-  const student = {academicStanding:"senior",customGraduationEnabled:true,customExpectedGraduationYear:"2028",planCreationDate:"2026-09-28",courses:completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","BUSN 323","ECO 221","ECO 234"])};
+  const student = {academicStanding:"senior",customGraduationEnabled:true,customExpectedGraduationYear:"2028",planCreationDate:"2026-09-28",courses:completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","BUSN 323","ECO 221","ECO 234"])};
   const generated = economics((await post({student})).data);
   const plan = structuredClone(generated.economicsPlans[0]);
   const schedule = normalizeEconomicsSchedule(runtimeEconomicsSchedule());
@@ -210,25 +210,26 @@ test("move annotations, direct API edits and report rejection agree at every Win
     const section = schedule.terms[term.termKey === "Spring" ? "May" : term.termKey].find(row => row.course === code);
     term.courses.push({...section,slotId,requirementId:id,source:"verified-offering",scheduleProvenance:"PUBLISHED_SCHEDULE",publicationStatus:"PUBLISHED_SCHEDULE",offeringStatus:"verified",...(code === "ECO 461" ? {residency:"hanover"} : {})});
   };
-  place("ECO 461","winter-2027","eco-461");
+  plan.terms.find(term => term.slotId === "winter-2028").courses.push({course:"ECO 461",requirementId:"eco-461",units:1,residency:"hanover",source:"recurring-rule-unconfirmed",publicationStatus:"PLANNING_PROJECTION",scheduleProvenance:"PLANNING_PROJECTION"});
   place("ECO 224","spring-2027",ids[0]);
-  plan.terms.find(term => term.slotId === "winter-2028").courses.push({course:"ECO 321",units:1,requirementId:ids[1],slotId:"winter-2028",source:"projected-offering",scheduleProvenance:"PLANNING_PROJECTION",publicationStatus:"PLANNING_PROJECTION",offeringStatus:"planning_projection",meeting:null,availability:null});
+  plan.terms.find(term => term.slotId === "fall-2027").courses.push({course:"MAT 217",units:1,requirementId:"statistics",slotId:"fall-2027",source:"projected-offering",scheduleProvenance:"PLANNING_PROJECTION",publicationStatus:"PLANNING_PROJECTION",offeringStatus:"planning_projection",meeting:null,availability:null});
+  plan.terms.find(term => term.slotId === "fall-2027").courses.push({course:"ECO elective",minimumLevel:200,units:1,requirementId:ids[1],slotId:"fall-2027",source:"projected-offering",scheduleProvenance:"PLANNING_PROJECTION",publicationStatus:"PLANNING_PROJECTION",meeting:null,availability:null});
   for (const [reserved,evidence,status,cardStatus,reason] of [
-    [2,null,"ALLOW","ALLOWED","TERM_CAPACITY_AVAILABLE"],
-    [2.25,null,"UNKNOWN","REVIEW_REQUIRED","TERM_OVERLOAD_EVIDENCE_REQUIRED"],
-    [2.25,{advisorApproval:"APPROVED"},"UNKNOWN","REVIEW_REQUIRED","TERM_OVERLOAD_EVIDENCE_REQUIRED"],
-    [3.25,approval,"CONDITIONAL","CONDITIONAL","TERM_OVERLOAD_APPROVED"],
-    [2.25,{...approval,advisorApproval:"NOT_APPROVED"},"BLOCK","BLOCKED","TERM_OVERLOAD_APPROVAL_DENIED"],
-    [2.25,{...approval,academicProbationStatus:"ON_ACADEMIC_PROBATION"},"BLOCK","BLOCKED","TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION"],
-    [3.26,approval,"BLOCK","BLOCKED","TERM_CAPACITY_EXCEEDED"]
+    [3,null,"ALLOW","ALLOWED","TERM_CAPACITY_AVAILABLE"],
+    [3.25,null,"UNKNOWN","REVIEW_REQUIRED","TERM_OVERLOAD_EVIDENCE_REQUIRED"],
+    [3.25,{advisorApproval:"APPROVED"},"UNKNOWN","REVIEW_REQUIRED","TERM_OVERLOAD_EVIDENCE_REQUIRED"],
+    [4.25,approval,"CONDITIONAL","CONDITIONAL","TERM_OVERLOAD_APPROVED"],
+    [3.25,{...approval,advisorApproval:"NOT_APPROVED"},"BLOCK","BLOCKED","TERM_OVERLOAD_APPROVAL_DENIED"],
+    [3.25,{...approval,academicProbationStatus:"ON_ACADEMIC_PROBATION"},"BLOCK","BLOCKED","TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION"],
+    [4.26,approval,"BLOCK","BLOCKED","TERM_CAPACITY_EXCEEDED"]
   ]) {
     const facts = {...student,reservedCourseUnits:{"winter-2027":reserved},termLoadOverrides:evidence ? {"winter-2027":evidence} : {},tuitionPaid:true};
     const mapped = mappingFor(facts), context = resolvePlanningContext(facts);
     const annotated = annotateEconomicsPlanChoices({plans:[plan],student:facts,mapping:mapped,schedule:runtimeEconomicsSchedule(),prerequisites,courseCatalog:catalog.economicsCourses,context,policyBundle:bundle})[0];
-    const choice = annotated.terms.find(term => term.slotId === "winter-2028").courses.find(course => course.course === "ECO 321").moveDestinationOptions.find(option => option.id === "winter-2027");
+    const choice = annotated.terms.find(term => term.slotId === "fall-2027").courses.find(course => course.course === "MAT 217").moveDestinationOptions.find(option => option.id === "winter-2027");
     assert.equal(choice.loadDecision.status,status);
     assert.equal(choice.status,cardStatus,JSON.stringify(choice));
-    const edited = await post({action:"validate-plan",student:facts,plan,plans:[plan],edit:{type:"move",fromTermId:"winter-2028",toTermId:"winter-2027",courseId:ids[1]}});
+    const edited = await post({action:"validate-plan",student:facts,plan,plans:[plan],edit:{type:"move",fromTermId:"fall-2027",toTermId:"winter-2027",courseId:"statistics"}});
     assert.equal(edited.response.status,["ALLOW","CONDITIONAL"].includes(status) ? 200 : 422,JSON.stringify(edited.data.error));
     const validation = edited.data.plan?.validation || edited.data.validation;
     const decision = validation.policyDecision.decisions.find(item => item.subject.termId === "2027-WINTER" && item.ruleIds.includes("CAPACITY-WINTER"));

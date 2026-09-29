@@ -476,15 +476,40 @@ function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, viola
   const separation = policyRule(policy, "PLANNING-INTERMEDIATE-OFFERING-SEPARATION");
   const springOnly = policyRule(policy, "CATALOG-ECO-222-SPRING");
   const courses = (term.courses || []).map(course => ({ ...course, course: upper(course.course) }));
+  const limit = policyRule(policy, "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT");
+  const electives = courses.filter(course => String(course.requirementId || "").startsWith("eco-elective") || course.course === "ECO ELECTIVE");
+  if (limit && ["Fall", "Winter", "May"].includes(normalizeTerm(actual)) && electives.length > limit.maximumElectives
+    && !electives.every(course => course.source === VERIFIED_SOURCE && course.section && snapshotSection(verifiedSchedule, term, course))) {
+    violations.push(finding(policy, "UNPUBLISHED_TERM_ELECTIVE_LIMIT", limit.ruleId, `$.plan.terms[${termIndex}]`,
+      "Extra elective assignments need matching verified target-term sections."));
+  }
+  if (limit && actual === "TBC") {
+    if (electives.length > 3 * limit.maximumElectives) violations.push(finding(policy,
+      "UNPUBLISHED_TERM_ELECTIVE_LIMIT", limit.ruleId, `$.plan.terms[${termIndex}]`,
+      "A year-only elective plan has no legal one-elective-per-term assignment."));
+    const groups = new Map();
+    for (const course of courses) {
+      const key = canonicalExternalTermKey(course.projectedTerm);
+      if (["FALL", "WINTER", "MAY"].includes(String(key).toUpperCase())) groups.set(key, [...(groups.get(key) || []), course]);
+    }
+    for (const [termKey, courses] of groups) checkOfferingTermRules(policy, verifiedSchedule, {...term,termKey,courses}, termIndex, violations);
+  }
   courses.forEach((course, index) => {
     if (course.fixedInProgress) return;
     const key = actual === "TBC" ? canonicalExternalTermKey(course.projectedTerm) : actual;
-    if (!key || key === "TBC") return; // A year-only row does not assert a shared term.
     const verified = code => (verifiedSchedule.sections || []).some(row =>
       normalizeYear(row.academicYear) === normalizeYear(term.academicYear)
       && normalizeTerm(row.term) === normalizeTerm(key)
       && (row.course === code || (row.canonicalCrossListIdentity || []).includes(code)));
     const path = `$.plan.terms[${termIndex}].courses[${index}]`;
+    const confirmation = policyRule(policy, "PLANNING-FUTURE-COURSE-CONFIRMATION");
+    const namedElective = String(course.requirementId || "").startsWith("eco-elective") && course.course !== "ECO ELECTIVE";
+    if (confirmation && (namedElective || (course.requirementId === "finance" && course.course === confirmation.unconfirmedFinanceCourse))
+      && !snapshotSection(verifiedSchedule, term, course)) {
+      violations.push(finding(policy, "NAMED_FUTURE_COURSE_REQUIRES_VERIFIED_OFFERING", confirmation.ruleId, path,
+        "A future named elective or ECO 321 finance assignment requires an exact section."));
+    }
+    if (!key || key === "TBC") return; // A year-only row does not assert a shared term.
     if (normalizeTerm(key) === "May" && may?.excludedCourses.includes(course.course)
       && !(may.verifiedScheduleOverride && verified(course.course))) {
       violations.push(finding(policy, "COURSE_NOT_SUPPORTED_IN_MAY", may.ruleId, path,

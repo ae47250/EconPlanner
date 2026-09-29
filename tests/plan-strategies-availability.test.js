@@ -166,7 +166,7 @@ test("generic elective identity does not create a strategy difference, but risk 
   assert.equal(materialPlanDistance(base, riskChanged).availability, 1);
 });
 
-test("report JSON and HTML preserve selected-section OPEN, FULL, unknown, and missing-date evidence", () => {
+test("report preserves recorded OPEN/FULL evidence while undated or unverified seats have no current-state claim", () => {
   const economicsPlan = {
     id: "balanced",
     label: "Balanced",
@@ -209,8 +209,9 @@ test("report JSON and HTML preserve selected-section OPEN, FULL, unknown, and mi
   assert.equal(report.terms[0].courses[1].availabilityDisplayEligible, true);
   assert.equal(report.terms[0].courses[2].availabilityDisplayEligible, false);
   const html = renderEconomicsHtml(report, template);
-  assert.match(html, /✓ OPEN/);
-  assert.match(html, /FULL/);
-  assert.match(html, /Status unavailable/);
-  assert.match(html, /verification date is unavailable/i);
+  assert.equal(report.terms[0].courses[0].availability.status, "open");
+  assert.equal(report.terms[0].courses[1].availability.status, "full");
+  assert.equal((html.match(/Current seat status unverified/g) || []).length, 1);
+  assert.equal((html.match(/data-availability-state=/g) || []).length, 3);
+  assert.doesNotMatch(html, /availability-(?:open|full)"/);
 });

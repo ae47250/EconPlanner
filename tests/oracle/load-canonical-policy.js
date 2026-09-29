@@ -168,10 +168,20 @@ export function oracleEvaluateOffering(policy, course, term) {
       return block(pattern.patternId, "INTERMEDIATE_SAME_TERM_REQUIRES_VERIFIED_SCHEDULE");
     }
   }
+  const releaseTerm = policy.schedule.terms.find(candidate => candidate.termId === termId(term));
+  const confirmation = policy.byRuleId["PLANNING-FUTURE-COURSE-CONFIRMATION"];
+  const electiveNamed = String(course.requirementId || "").startsWith(confirmation.condition.electiveRequirementPrefix)
+    && String(course.course).toUpperCase() !== "ECO ELECTIVE";
+  const uncertainFinance = course.requirementId === confirmation.condition.financeRequirementId
+    && course.course === confirmation.effect.unconfirmedFinanceCourse;
+  if ((electiveNamed || uncertainFinance) && !course.fixedInProgress
+    && !releaseTerm?.sections.some(row => (row.course === course.course || row.crossListedAs.includes(course.course))
+      && (!course.section || row.sectionId.endsWith(`-${course.section}`)))) {
+    return { status: "BLOCK", ruleIds: [confirmation.ruleId], reasonCode: confirmation.reasonCode };
+  }
   if (course.source === "requirement-placeholder") {
     return { status: "PRELIMINARY", ruleIds: ["PLANNING-UNPUBLISHED-OFFERINGS-PRELIMINARY"], reasonCode: "UNPUBLISHED_OFFERING_TBC" };
   }
-  const releaseTerm = policy.schedule.terms.find(candidate => candidate.termId === termId(term));
   if (!releaseTerm && ["catalog-statement", "recurring-rule-unconfirmed", "historical-pattern"].includes(course.source)) {
     const key = canonicalTerm(term.termKey || term.term);
     const year = termId(term)?.split("-")[0];
@@ -238,6 +248,18 @@ export function oracleEvaluateTermLoad(policy, term) {
   return {status: units > normal ? "CONDITIONAL" : "ALLOW", ruleIds: abovePreference ? [rule.ruleId, preference.ruleId] : [rule.ruleId], reasonCode: units > normal ? "TERM_OVERLOAD_APPROVED" : abovePreference ? "ECONOMICS_LOAD_ABOVE_PREFERENCE" : "TERM_CAPACITY_AVAILABLE"};
 }
 
+export function oracleEvaluateElectiveTerm(policy, term) {
+  const rule = policy.byRuleId["PLANNING-UNPUBLISHED-ELECTIVE-LIMIT"];
+  const key = canonicalTerm(term.termKey || term.term);
+  const assigned = (term.courses || []).filter(row => String(row.requirementId || "").startsWith("eco-elective") || String(row.course).toUpperCase() === "ECO ELECTIVE");
+  const exact = policy.schedule.terms.find(row => row.termId === termId(term));
+  const matches = assigned.every(row => row.source === "verified-offering" && row.section && exact?.sections.some(section =>
+    (section.course === row.course || section.crossListedAs.includes(row.course)) && section.sectionId.endsWith(`-${row.section}`)));
+  const blocked = key === "TBC" ? assigned.length > rule.condition.canonicalTerms.length * rule.effect.maximumElectives
+    : rule.condition.canonicalTerms.includes(key) && assigned.length > rule.effect.maximumElectives && !matches;
+  return { status: blocked ? "BLOCK" : "ALLOW", ruleIds: [rule.ruleId], reasonCode: blocked ? rule.reasonCode : "ELECTIVE_TERM_CAPACITY_AVAILABLE" };
+}
+
 export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedContext = null) {
   const findings = [];
   const slotContract = policy.rules.find(rule => rule.ruleId === "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT");
@@ -267,6 +289,7 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
       path: `$.terms[${termIndex}]`, status: "BLOCK", ruleIds: ["PLANNING-CURRENT-TERM-ADD-DROP"], reasonCode: "CURRENT_TERM_NEW_PLACEMENT_CLOSED"
     });
     findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, { ...term, termLoadEvidence: student.termLoadOverrides?.[term.slotId] || student.termLoadOverrides?.[term.term] || student.termLoadOverrides?.[canonicalTerm(term.termKey)] || null, reservedCourseUnits: student.reservedCourseUnits?.[term.slotId] ?? student.reservedCourseUnits?.[term.term] ?? 0 }) });
+    findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateElectiveTerm(policy, term) });
     if (isTbc) {
       const projectedGroups = new Map();
       for (const course of term.courses || []) {
@@ -274,7 +297,10 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
         projectedGroups.set(projectedTerm, [...(projectedGroups.get(projectedTerm) || []), course]);
       }
       for (const [projectedTerm, courses] of projectedGroups) {
-        if (projectedTerm !== "TBC") findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, { ...term, termKey: projectedTerm, courses }) });
+        if (projectedTerm !== "TBC") {
+          findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateTermLoad(policy, { ...term, termKey: projectedTerm, courses }) });
+          findings.push({ path: `$.terms[${termIndex}]`, ...oracleEvaluateElectiveTerm(policy, { ...term, termKey: projectedTerm, courses }) });
+        }
       }
     }
     const indexedCourses = (term.courses || []).map((course, courseIndex) => ({ course, courseIndex }));

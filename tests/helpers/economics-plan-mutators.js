@@ -215,11 +215,17 @@ const MUTATORS = Object.freeze({
   },
 
   FIFTH_FALL_WINTER_COURSE(draft) {
-    moveCourse(draft, "ECO 234", "fall-2028", { projected: true });
+    moveCourse(draft, "MAT 113", "fall-2028", { projected: true });
+    findCourse(draft, "ECO 213").course.approvalRequired = [{
+      code: "CONCURRENT_MATH_INSTRUCTOR_APPROVAL", type: "instructor", authority: "ECO 213 instructor",
+      course: "ECO 213", prerequisite: "MAT 113", term: "Fall 2028", reason: "concurrent_math",
+      policySource: "department-confirmed-local-policy", sourceRef: "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-3",
+      message: "MAT 113 is planned concurrently with ECO 213. Approval from the ECO 213 instructor is required."
+    }];
   },
 
   SECOND_SPRING_MAY_COURSE(draft) {
-    moveCourse(draft, "ECO 224", "spring-2028");
+    moveCourse(draft, "MAT 217", "spring-2028");
   },
 
   CLOSED_SECTION(draft) {
@@ -243,20 +249,20 @@ const MUTATORS = Object.freeze({
 
   ECO_321_DOUBLE_COUNTED(draft) {
     replaceCourse(draft, "BUSN 323", "ECO 321", "finance");
-    replaceCourse(draft, "ECO 337", "ECO 321", "eco-elective-4");
+    replaceCourse(draft, "ECO elective", "ECO 321", "eco-elective-4");
   },
 
   ECO_257_ASSIGNED_TO_ELECTIVE(draft) {
-    replaceCourse(draft, "ECO 337", "ECO 257", "eco-elective-4");
+    replaceCourse(draft, "ECO elective", "ECO 257", "eco-elective-4");
   },
 
   ECO_257_ELECTIVE_AFTER_OTHER_STATISTICS(draft) {
     replaceCourse(draft, "ECO 257", "MAT 217", "statistics");
-    replaceCourse(draft, "ECO 337", "ECO 257", "eco-elective-4");
+    replaceCourse(draft, "ECO elective", "ECO 257", "eco-elective-4");
   },
 
   SECOND_100_LEVEL_ELECTIVE(draft) {
-    replaceCourse(draft, "ECO 337", "ECO 160", "eco-elective-4");
+    replaceCourse(draft, "ECO elective", "ECO 160", "eco-elective-4");
   },
 
   COMPLETED_COURSE_RESCHEDULED(draft) {

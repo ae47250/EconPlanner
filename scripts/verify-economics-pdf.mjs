@@ -325,7 +325,7 @@ function validateProfileExpectations(profile, prepared) {
 
   invariant(years.size >= expectations.minimumAcademicYears, `${profile.id}: too few academic years.`);
   invariant(courses.length >= expectations.minimumCourses, `${profile.id}: too few planned courses.`);
-  invariant(projection.warnings.length >= expectations.minimumWarnings, `${profile.id}: too few warnings.`);
+  invariant(projection.warnings.length + (report.selectedPlan?.planningDetailMessages?.length || 0) >= expectations.minimumWarnings, `${profile.id}: missing warning evidence.`);
   invariant(
     (projection.advisorAttention || []).length >= (expectations.minimumAdvisorNotices || 0),
     `${profile.id}: too few advisor notices.`
@@ -348,7 +348,9 @@ function validateProfileExpectations(profile, prepared) {
     invariant(renderedText.includes(normalizedText(requiredText)), `${profile.id}: HTML is missing required text: ${requiredText}`);
   }
   for (const code of expectations.requiredAdvisorNoticeCodes || []) {
-    invariant(advisorNoticeCodes.has(code), `${profile.id}: missing advisor notice ${code}.`);
+    if (code === "FUTURE_SCHEDULE_PROJECTION_NOTICE") {
+      invariant(report.planNotes?.some(note => note.id === "future"), `${profile.id}: missing future schedule note.`);
+    } else invariant(advisorNoticeCodes.has(code), `${profile.id}: missing advisor notice ${code}.`);
   }
   for (const status of expectations.requiredAvailabilityStates) {
     invariant(courses.some(course => course.availabilityState === status), `${profile.id}: missing ${status} availability.`);
@@ -445,7 +447,8 @@ async function runLiveProfile(profile, prepared, tools) {
       prepared.projection,
       headers.pageCount,
       profile.expectations,
-      tools
+      tools,
+      prepared.report
     );
     Object.assign(benchmark, {
       status: "pass",
@@ -514,13 +517,13 @@ function verifyPdfBytes(pdf, expectedSha256) {
   invariant(actualSha256 === expectedSha256, "PDF SHA-256 does not match the integrity header.");
 }
 
-async function inspectWithPoppler(pdfPath, workDirectory, projection, expectedPageCount, expectations, tools) {
+async function inspectWithPoppler(pdfPath, workDirectory, projection, expectedPageCount, expectations, tools, report) {
   const textPath = path.join(workDirectory, "extracted.txt");
   const bboxPath = path.join(workDirectory, "bounding-boxes.html");
   runCommand(tools.pdftotext, ["-layout", "-enc", "UTF-8", pdfPath, textPath], "pdftotext");
   runCommand(tools.pdftotext, ["-bbox-layout", "-enc", "UTF-8", pdfPath, bboxPath], "pdftotext bbox");
   const extractedText = await readFile(textPath, "utf8");
-  compareExtractedText(extractedText, projection);
+  compareExtractedText(extractedText, projection, report);
   const pageText = extractedText.split("\f").filter((value, index, values) => (
     normalizedText(value) || index < values.length - 1
   ));
@@ -544,9 +547,9 @@ async function inspectWithPoppler(pdfPath, workDirectory, projection, expectedPa
   return { renderedPages: pageFiles.length };
 }
 
-function compareExtractedText(extractedText, projection) {
+function compareExtractedText(extractedText, projection, report) {
   const haystack = normalizedText(extractedText);
-  for (const expected of expectedPdfText(projection)) {
+  for (const expected of expectedPdfText(projection, report)) {
     const found = haystack.includes(normalizedText(expected.value))
       || (expected.label === "title" && containsTokensInOrder(extractedText, expected.value));
     invariant(found, `PDF text is missing ${expected.label}: ${expected.value}`);
@@ -574,11 +577,12 @@ function containsTokensInOrder(text, expected) {
   return expectedTokens.length === 0;
 }
 
-function expectedPdfText(projection) {
+function expectedPdfText(projection, report) {
+  const statusLabel = { VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" }[projection.feasibilityStatus] || "Plan needs confirmation";
   const expected = [
-    { label: "selected plan ID", value: projection.selectedPlanId },
+    { label: "selected plan", value: report.selectedPlan.label },
     { label: "graduation target", value: projection.graduationTarget },
-    { label: "feasibility status", value: projection.feasibilityStatus.replaceAll("_", " ") }
+    { label: "plan status", value: statusLabel }
   ];
   for (const term of projection.terms) {
     expected.push({ label: "academic year", value: term.academicYear });
@@ -587,30 +591,24 @@ function expectedPdfText(projection) {
       expected.push({ label: "course", value: course.code });
       if (course.section) expected.push({ label: "section", value: `${course.code}-${course.section}` });
       expected.push({ label: "title", value: course.title });
-      expected.push({ label: "requirement role", value: requirementLabel(course.requirementRole) });
-      if (course.availabilityState) expected.push({ label: "availability", value: course.availabilityState });
-      for (const approval of course.approvals) {
-        expected.push({
-          label: "approval",
-          value: `${approval.authority} approval for concurrent ${approval.prerequisite}`
-        });
-      }
+      const requirement = report.majorRequirementsChecklist?.rows.find(row => row.id === course.requirementRole);
+      if (requirement) expected.push({ label: "requirement role", value: requirement.label });
+      const displayedCourse = report.terms.find(item => item.academicYear === term.academicYear && String(item.termKey || item.displayTerm).startsWith(term.term === "Spring/May" ? "May" : term.term))?.courses.find(item => item.code === course.code && item.section === course.section);
+      if (displayedCourse?.seatStatusDisplay) expected.push({ label: "current seat status", value: displayedCourse.seatStatusDisplay.label });
+      if (course.approvals.length) expected.push({ label: "approval marker", value: "Approval required" });
     }
   }
   for (const warning of projection.warnings) expected.push({ label: "warning", value: warning });
   for (const notice of projection.advisorAttention) expected.push({ label: "advisor attention", value: notice.message });
+  for (const row of report.majorRequirementsChecklist?.rows || []) {
+    const values = row.status === "still_needed" ? [row.label, ...row.markers] : [row.label, row.courseTerm, row.statusLabel, ...row.markers];
+    for (const value of values) expected.push({ label: "checklist", value });
+  }
+  for (const note of report.planNotes || []) {
+    expected.push({ label: "plan note", value: note.title });
+    for (const item of note.items) for (const value of [item.code, item.label, ...(item.lines || [item.text])]) expected.push({ label: "plan note", value });
+  }
   return expected.filter(item => item.value);
-}
-
-function requirementLabel(requirementId) {
-  const value = String(requirementId || "").trim();
-  if (!value) return "Requirement";
-  if (value === "statistics") return "Statistics requirement";
-  if (value === "finance") return "Finance requirement";
-  if (value.startsWith("eco-elective")) return "ECO elective";
-  if (value.startsWith("supporting-elective")) return "Supporting-course elective";
-  const course = value.match(/^([a-z]+)-(\d{3})$/i);
-  return course ? `${course[1].toUpperCase()} ${course[2]} requirement` : `${value.replaceAll("-", " ")} requirement`;
 }
 
 function detectOutOfBoundsText(bboxHtml) {

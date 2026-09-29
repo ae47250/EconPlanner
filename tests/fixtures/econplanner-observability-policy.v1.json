@@ -165,7 +165,8 @@
       "positiveTests": ["tests/economics-independent-oracle-structure.test.js"],
       "negativeTests": ["tests/economics-independent-oracle-structure.test.js"],
       "layers": { "requirement_mapping": "NOT_APPLICABLE", "planner_pruning": "NOT_APPLICABLE", "production_validator": "NOT_APPLICABLE", "independent_oracle": "IMPLEMENTED", "ui_parity": "NOT_APPLICABLE", "html": "NOT_APPLICABLE", "pdf": "NOT_APPLICABLE" }
-    }
+    },
+    {"group":"unpublished-elective-and-finance-evidence","ruleIds":["PLANNING-UNPUBLISHED-ELECTIVE-LIMIT","PLANNING-FUTURE-COURSE-CONFIRMATION"],"criticalFamilies":["ELECTIVE_LIMITS_AND_CROSSLIST_COUNT_ONCE","FUTURE_PLACEHOLDER_AND_PROJECTION_VALIDITY"],"implementationRefs":["policy/provenance/course-planning-2026-09-28.md","lib/decision-engine/placement.js","lib/planning/termSolver.js","tests/oracle/load-canonical-policy.js"],"positiveTests":["tests/plan-notes-elective-evidence.test.js"],"negativeTests":["tests/plan-notes-elective-evidence.test.js"],"layers":{"requirement_mapping":"NOT_APPLICABLE","planner_pruning":"IMPLEMENTED","production_validator":"IMPLEMENTED","independent_oracle":"IMPLEMENTED","ui_parity":"IMPLEMENTED","html":"IMPLEMENTED","pdf":"IMPLEMENTED"}}
   ],
   "syntheticCriticalEvents": [
     { "code": "INVALID_DISPLAYED_PLAN", "criticalFamily": "MATERIAL_UI_HTML_AND_PDF_PARITY" },

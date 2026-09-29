@@ -16,7 +16,7 @@ async function intake(page, standing, early = false) {
 }
 
 async function move(page, course, destination, status = 200) {
-  const menu = page.getByRole('combobox', {name:`Move ${course} to another term`, exact:true});
+  const menu = page.getByRole('combobox', {name:`Move ${course === "ECO elective" ? "ECO elective (200+)" : course} to another term`, exact:true}).first();
   const response = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
   await menu.selectOption(destination);
   const result = await response;
@@ -25,7 +25,7 @@ async function move(page, course, destination, status = 200) {
   if (status !== 200) {
     await expect(menu).toBeFocused();
     await expect(page.locator('.plan-edit-status')).toHaveAttribute('role','status');
-  } else await expect(page.locator('.plan-edit-status')).toContainText('updated and remains valid');
+  } else await expect(page.locator('.plan-edit-status')).toHaveText('Change saved.');
   return body;
 }
 
@@ -59,14 +59,18 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     await renderer.close();
     const text = execFileSync(process.env.PDFTOTEXT || 'pdftotext', ['-','-'], {input:bytes}).toString().replace(/\s+/g,' ');
     expect(text).toContain(expectedTarget);
-    expect(text).toMatch(/selected plan horizon/i);
+    expect(text).toMatch(/Major requirements checklist/i);
+    expect(text).toContain('Planned courses are not completed requirements. Future offerings need confirmation.');
     expect(text).toContain(report.planningHorizon);
     expect(text).toContain('ECO 461');
     if (name.startsWith('early')) {
       const standingNote = 'This plan assumes you will have senior standing in your final year.';
       expect(JSON.stringify(report)).toContain(standingNote);
-      expect(html).toContain(standingNote);
-      expect(text).toContain(standingNote);
+      const standingCondition = report.planConditions.find(item => item.kind === 'standing').message;
+      expect(html).toContain(standingCondition);
+      expect(text).toContain(standingCondition);
+      expect(html).not.toContain(standingNote);
+      expect(text).not.toContain(standingNote);
     }
     for (const term of report.terms) for (const course of term.courses) expect(text).toContain(course.code);
     await writeFile(testInfo.outputPath(`${name}.json`), JSON.stringify(report,null,2));
@@ -125,11 +129,11 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   expect(invalid.error).toMatch(/prerequisite|statistics/i);
   expect(invalid.error).not.toMatch(/Fall 2028|projected standing/);
   await expect(page.getByRole('combobox',{name:'Move MAT 217 to another term',exact:true})).toHaveValue('winter-2027');
-  const unsupported = await move(page,'ECO 222','winter-2028',422);
-  expect(unsupported.error).toMatch(/projected only in MAY|verified schedule section/i);
-  const eco222Move = page.getByRole('combobox',{name:'Move ECO 222 to another term',exact:true});
-  await expect(eco222Move).toHaveValue('spring-2028');
-  await expect(eco222Move.locator('option[value="spring-2028"]')).toContainText('current term');
+  const unsupported = await move(page,'ECO elective','fall-2028',422);
+  expect(unsupported.error).toMatch(/elective|term limit/i);
+  const eco222Move = page.getByRole('combobox',{name:'Move ECO elective (200+) to another term',exact:true}).first();
+  await expect(eco222Move).toHaveValue('fall-2027');
+  await expect(eco222Move.locator('option[value="fall-2027"]')).toContainText('current term');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
   await page.getByRole('button',{name:'← Back to plan comparison',exact:true}).click();
@@ -161,11 +165,11 @@ test('required controls explain restrictions while mobile elective editing and k
   await expect(page.getByRole('button',{name:'Remove ECO 113',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:'Remove BUSN 323',exact:true})).toHaveCount(0);
   await expect(page.locator('.required-course-note').first()).toBeVisible();
-  const menu = page.getByRole('combobox',{name:'Move ECO elective to another term',exact:true}).last();
+  const menu = page.getByRole('combobox',{name:'Move ECO elective (200+) to another term',exact:true}).last();
   const edited = page.waitForResponse(r=>r.url().endsWith('/api/majors/map')&&r.request().postDataJSON()?.action==='validate-plan');
   await menu.selectOption('fall-2029');
   expect((await edited).status()).toBe(200);
-  await expect(page.locator('.plan-edit-status')).toContainText('remains valid');
+  await expect(page.locator('.plan-edit-status')).toHaveText('Change saved.');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await page.locator('main').evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
   expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);
@@ -177,7 +181,7 @@ test('course cards explain when no move preserves prerequisite validity', async 
   await generatePlans(page);
   await page.getByRole('button',{name:/^(Choose|Review selected) One Year Early$/}).click();
   const coreCard = page.locator('.term-card li').filter({hasText:'ECO 113'}).first();
-  await expect(coreCard).toContainText('No other term currently passes complete plan checks');
+  await expect(coreCard).toContainText('No alternate term available');
   await expect(coreCard).toContainText('ECO 213 is missing prerequisites: ECO 113');
   const moves = coreCard.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true});
   await expect(moves).toHaveCount(1);

@@ -46,7 +46,7 @@ function normalizedCourse(course = {}, term = {}) {
       .map(approval => normalizedApproval(approval, course, term))
       .sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right))),
     availabilityState: text(course.availability?.status || course.availability?.state) || null,
-    courseGuidance: text(course.moveGuidance?.studentMessage) || null
+    courseGuidance: null
   };
 }
 
@@ -59,16 +59,20 @@ function normalizedTerms(terms = []) {
 }
 
 function selectedPlanWarnings(plan = {}) {
+  if (Array.isArray(plan.planConditions)) return uniqueSorted(plan.planConditions.map(item => item.message));
+  if (Array.isArray(plan.displayWarnings)) return uniqueSorted(plan.displayWarnings);
   const noticeMessages = new Set((plan.studentNotices || []).map(notice => text(notice.message)));
   return uniqueSorted([
     ...(plan.warnings || []),
     ...(plan.studentMessages || []),
     ...(plan.feasibility?.warnings || [])
-  ].map(text).filter(message => !noticeMessages.has(message)));
+  ].map(text).filter(message => !noticeMessages.has(message) && !/projected placement/i.test(message)));
 }
 
 function advisorAttention(report = {}) {
-  return (report.catalog?.advisorAttention || []).map(notice => ({
+  const coveredNotices = new Set((report.selectedPlan?.planConditions || []).flatMap(item => item.noticeCodes || []));
+  const coveredMessages = new Set((report.selectedPlan?.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
+  return (report.catalog?.advisorAttention || []).filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(notice.code) && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
     code: text(notice.code) || null,
     title: text(notice.title) || null,
     severity: text(notice.severity) || null,
@@ -77,6 +81,8 @@ function advisorAttention(report = {}) {
 }
 
 export function projectSelectedPlanArtifact(selectedPlan, { advisorNotices = [] } = {}) {
+  const coveredNotices = new Set((selectedPlan?.planConditions || []).flatMap(item => item.noticeCodes || []));
+  const coveredMessages = new Set((selectedPlan?.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
   return {
     selectedPlanId: text(selectedPlan?.id) || null,
     graduationTarget: text(selectedPlan?.planningContext?.expectedGraduationTerm) || null,
@@ -86,7 +92,7 @@ export function projectSelectedPlanArtifact(selectedPlan, { advisorNotices = [] 
     feasibilityStatus: text(selectedPlan?.feasibilityStatus) || null,
     terms: normalizedTerms(selectedPlan?.terms || []),
     warnings: selectedPlanWarnings(selectedPlan),
-    advisorAttention: advisorNotices.map(notice => ({
+    advisorAttention: advisorNotices.filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(notice.code) && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
       code: text(notice.code) || null,
       title: text(notice.title) || null,
       severity: text(notice.severity) || null,
@@ -116,6 +122,14 @@ function attributeValue(attributes, name) {
 
 function htmlScheduleTerms(html) {
   const terms = [];
+  // Read the portrait grid independently from its semantic row/cell metadata.
+  const gridRows = [...String(html || "").matchAll(/<tr data-schedule-year="([^"]+)">([\s\S]*?)<\/tr>/gi)];
+  if (gridRows.length) {
+    const legacyBlocks = gridRows.flatMap(row => [...row[2].matchAll(/<td([^>]*)>([\s\S]*?)<\/td>/gi)]
+      .filter(cell => attributeValue(cell[1], "data-schedule-term"))
+      .map(cell => `<section class="year-block"><div class="year-heading"><h2>Economics schedule <span>- ${row[1]}</span></h2></div><div class="table-wrap"><table><thead><tr><th>${attributeValue(cell[1], "data-schedule-term")}</th></tr></thead><tbody><tr><td>${cell[2]}</td></tr>`)).join("");
+    return htmlScheduleTerms(legacyBlocks);
+  }
   const blockPattern = /<section class="year-block"><div class="year-heading"><h2>Economics schedule <span>- ([^<]+)<\/span><\/h2><\/div><div class="table-wrap"><table><thead><tr>([\s\S]*?)<\/tr><\/thead><tbody><tr>([\s\S]*?)<\/tr>/gi;
   for (const block of String(html || "").matchAll(blockPattern)) {
     const academicYear = decodeHtml(block[1]);
@@ -123,7 +137,7 @@ function htmlScheduleTerms(html) {
     const cells = [...block[3].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map(match => match[1]);
     for (let index = 0; index < headings.length; index += 1) {
       const courses = [];
-      const coursePattern = /<span class="course"([^>]*)>([\s\S]*?)<\/span><span class="cell-note"([^>]*)>([\s\S]*?)<\/span>(?:<span class="availability-badge[^\"]*">([\s\S]*?)<\/span>)?/gi;
+      const coursePattern = /<span class="course"([^>]*)>([\s\S]*?)<\/span><span class="cell-note"([^>]*)>([\s\S]*?)<\/span>(?:<span class="availability-badge[^\"]*"([^>]*)>([\s\S]*?)<\/span>)?/gi;
       const cell = String(cells[index] || "");
       const courseEntries = [...cell.matchAll(coursePattern)];
       for (let entryIndex = 0; entryIndex < courseEntries.length; entryIndex += 1) {
@@ -133,22 +147,26 @@ function htmlScheduleTerms(html) {
         const note = decodeHtml(entry[4]);
         const suffix = cell.slice(entry.index + entry[0].length, courseEntries[entryIndex + 1]?.index ?? cell.length);
         const guidance = suffix.match(/<span class="course-requirement" data-course-guidance>([\s\S]*?)<\/span>/i);
-        const availability = decodeHtml(entry[5] || "").match(/\b(open|full)\b/i)
+        const availability = decodeHtml(entry[6] || "").match(/\b(open|full)\b/i)
           || note.match(/ - (open|full|closed|waitlisted|unknown)(?:\s|\(|$)/i);
         const approval = note.match(/ - ([^-]+?) approval for concurrent ([A-Z]{2,5}\s+\d{3})/i);
-        const title = note.split(/ - (?:open|full|closed|waitlisted|unknown)(?:\s|\(|$)| - [^-]+? approval for concurrent /i)[0].trim();
+        const markers = [...suffix.matchAll(/<span[^>]+data-approval-authority="([^"]*)"[^>]+data-approval-prerequisite="([^"]*)"[^>]*>Approval required<\/span>/gi)];
+        const title = attributeValue(entry[3], "data-course-title") || note.split(/ - (?:open|full|closed|waitlisted|unknown)(?:\s|\(|$)| - [^-]+? approval for concurrent /i)[0].trim();
         courses.push({
-          code: identity?.[1] || label || null,
+          code: identity?.[1] || label.replace(/ \(200\+\)$/, "") || null,
           section: identity?.[2] || null,
           title: title || null,
           requirementRole: attributeValue(entry[1], "data-requirement-id") || attributeValue(entry[3], "data-requirement-id"),
-          approvals: approval ? [{
+          approvals: markers.length ? markers.map(marker => ({
+            authority: decodeHtml(marker[1]), course: identity?.[1] || label || null,
+            prerequisite: decodeHtml(marker[2]), term: headings[index]
+          })) : approval ? [{
             authority: approval[1].trim(),
             course: identity?.[1] || label || null,
             prerequisite: approval[2],
             term: headings[index]
           }] : [],
-          availabilityState: availability?.[1]?.toLowerCase() || null,
+          availabilityState: attributeValue(entry[5], "data-availability-state") || availability?.[1]?.toLowerCase() || null,
           courseGuidance: guidance ? decodeHtml(guidance[1]) : null
         });
       }
@@ -181,6 +199,7 @@ export function projectReportHtmlArtifact(html) {
   const graduation = source.match(/data-graduation-target="([^"]+)"/i)
     || source.match(/Expected graduation(?: target)?:?\s*(Spring\/May\s+\d{4})/i);
   const status = decodeHtml(source).match(/Plan status:\s*([A-Z_ ]+?)\./i);
+  const statusAttribute = source.match(/data-feasibility-status="([^"]+)"/i);
   const planningPace = source.match(/data-planning-pace="([^"]+)"/i);
   const seniorStandingAcademicYear = source.match(/data-senior-standing-academic-year="([^"]+)"/i);
   const seniorStandingBasis = source.match(/data-senior-standing-basis="([^"]+)"/i);
@@ -190,7 +209,7 @@ export function projectReportHtmlArtifact(html) {
     planningPace: planningPace ? decodeHtml(planningPace[1]) : null,
     projectedSeniorStandingAcademicYear: seniorStandingAcademicYear ? decodeHtml(seniorStandingAcademicYear[1]) : null,
     projectedSeniorStandingBasis: seniorStandingBasis ? decodeHtml(seniorStandingBasis[1]) : null,
-    feasibilityStatus: status ? status[1].trim().toUpperCase().replaceAll(" ", "_") : null,
+    feasibilityStatus: statusAttribute ? decodeHtml(statusAttribute[1]) : status ? status[1].trim().toUpperCase().replaceAll(" ", "_") : null,
     terms: htmlScheduleTerms(source),
     warnings: htmlWarnings(source),
     advisorAttention: htmlAdvisorAttention(source)

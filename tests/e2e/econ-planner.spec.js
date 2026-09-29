@@ -65,7 +65,8 @@ for (const responseStatus of [422, 200]) {
 
     await expect(moveControl.locator('option[value="2027-WINTER"]')).toHaveCount(1);
     await moveControl.selectOption("2027-WINTER");
-    await expect(page.locator(".plan-edit-status")).toContainText("same material schedule");
+    await expect(page.locator(".plan-course-edit-feedback")).toContainText("same material schedule");
+    await expect(page.locator(".plan-edit-status")).toHaveText("Change could not be saved.");
     await expect(page.locator(".plan-edit-status")).not.toContainText("updated and remains valid");
     await expect.poll(() => visibleSchedule(page)).toEqual(originalSchedule);
     await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
@@ -640,6 +641,7 @@ for (const [math, economics] of [
     accelerated.isEarlyGraduation = true;
     const approvalWarning = `${math} may be taken with ${economics} only with approval from the ${economics} instructor.`;
     accelerated.studentMessages = [approvalWarning];
+    accelerated.planConditions = [{ id: "instructor-approval", kind: "approval", message: approvalWarning }];
     accelerated.terms = [{
       slotId: "concurrent",
       academicYear: "2026-2027",
@@ -648,7 +650,7 @@ for (const [math, economics] of [
       displayTerm: "Fall 2026",
       courses: [
         { course: math, title: "College Algebra" },
-        { course: economics, title: "Intermediate Economics", approvalRequired: [{ authority: `${economics} instructor` }] }
+        { course: economics, title: "Intermediate Economics", planningMarkers: ["Approval required"], approvalRequired: [{ authority: `${economics} instructor` }] }
       ]
     }];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
@@ -749,14 +751,14 @@ test("a freshman receives the Balanced and Explore the Major normal comparisons"
   await page.getByRole("button", { name: "Choose Explore the Major" }).click();
   await expect(page.getByRole("heading", { name: "Review Explore the Major" })).toBeVisible();
   await expect(page.locator(".plan-course-availability")).not.toHaveCount(0);
-  await expect(page.locator(".plan-course-availability").first()).toHaveText(/(?:OPEN|FULL|Status unavailable)/);
+  await expect(page.locator(".plan-course-availability").first()).toHaveText("Current seat status unverified");
 
   const availability = page.locator("details.schedule-availability");
   await expect(availability).toBeVisible();
   await availability.locator("summary").click();
   await expect(availability.locator("li")).not.toHaveCount(0);
-  await expect(availability.locator("li").first()).toContainText("✓ OPEN");
-  await expect(availability).toContainText("verification date is unavailable");
+  await expect(availability.locator("li").first()).toContainText("Current seat status unverified");
+  await expect(availability).toContainText("observation date unavailable");
 });
 
 test("CP5 displays distinct Balanced, Explore the Major, and One Year Early plans", async ({ page }) => {
@@ -833,7 +835,7 @@ test("backend conditions and advisor actions retain their student-facing distinc
   });
   await openFixtureResult(page, plannerResultFixture({ plans: [conditional] }));
   await expect(page.locator(".result-status-value")).toHaveText("Ready with conditions");
-  await expect(page.locator(".plan-conditions")).toContainText("Confirm successful completion of the current course.");
+  await expect(page.locator("[data-plan-conditions]")).toContainText("Confirm successful completion of the current course.");
 
   await page.unroute("**/api/majors/map");
   const advisor = fixturePlan({
@@ -843,5 +845,5 @@ test("backend conditions and advisor actions retain their student-facing distinc
   });
   await openFixtureResult(page, plannerResultFixture({ plans: [advisor] }));
   await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
-  await expect(page.locator(".plan-advisor-actions")).toContainText("Meet with your advisor to confirm this approval.");
+  await expect(page.locator("[data-plan-conditions]")).toContainText("Meet with your advisor to confirm this approval.");
 });

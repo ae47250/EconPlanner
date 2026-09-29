@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { buildEconomicsTermPlan, buildEconomicsTermPlans, validateGeneratedPlan, validatePlanSet } from "../lib/planning/economics.js";
 import { mapStudentToProgram } from "../lib/assignment/solve.js";
 import { buildPlanningSlots, resolvePlanningContext } from "../lib/planning/horizon.js";
-import { assessCoursePrerequisites } from "../lib/planning/prerequisiteEvaluator.js";
+import { assessCoursePrerequisites, evaluatePlanPrerequisites } from "../lib/planning/prerequisiteEvaluator.js";
 import { validateStudentPrerequisites } from "../lib/planning/prerequisiteValidation.js";
 import { evaluatePrerequisites } from "../lib/decision-engine/prerequisites.js";
 import { normalizeStudentFacts } from "../lib/decision-engine/student-facts.js";
@@ -701,6 +701,14 @@ test("every prerequisite option marked in progress unlocks its dependent course 
           unresolved: [{ requirementId, options: [code] }]
         }
       };
+      if (requirementId.startsWith("eco-elective") || code === "ECO 321") {
+        const assessment = evaluatePlanPrerequisites({ student, prerequisites,
+          plan: { terms: [{ termKey: "Winter", term: "Winter 2028", yearIndex: 1, academicYear: "2027/2028",
+            courses: [{ course: code }] }] }, requireRecordedApprovals: false });
+        assert.equal(assessment.valid, true, `${code}/${focus.code}: ${assessment.errors.join(" | ")}`);
+        checkedScenarioCount += 1;
+        continue;
+      }
       const plan = buildEconomicsTermPlan({
         student,
         mapping,

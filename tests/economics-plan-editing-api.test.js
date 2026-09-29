@@ -57,13 +57,13 @@ test("ordinary freshman plans agree with the independent policy Oracle and early
   } } });
   assert.equal(directEarlyWinter.response.status, 422);
   assert.match(directEarlyWinter.data.error, /valid senior Winter slot/);
-  const projected = await move("ECO 222", "winter-2028");
+  const projected = await move("ECO elective", "fall-2028");
   assert.equal(projected.response.status, 422, JSON.stringify(projected.data));
-  assert.match(projected.data.error, /May|term|offering/i);
+  assert.match(projected.data.error, /elective|term|offering/i);
   assert.deepEqual(early, original, "failed and successful requests must not mutate the original plan");
 });
 
-test("moving ECO 214 before ECO 461 removes a no-longer-required concurrent approval", async () => {
+test("moving a concurrent intermediate before ECO 461 removes a no-longer-required concurrent approval", async () => {
   const student = {
     academicStanding: "junior", planCreationDate: "2026-07-30",
     courses: completed(["MAT 113", "ECO 161", "ECO 221"])
@@ -71,18 +71,37 @@ test("moving ECO 214 before ECO 461 removes a no-longer-required concurrent appr
   const generated = await postMap({ student });
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   const plan = plans.find(item => item.id === "balanced");
-  const original = structuredClone(plan);
-  const source = plan.terms.find(term => term.slotId === "winter-2028");
+  // A saved, legal concurrent plan must remain editable even when generation prefers the opposite order.
+  const intermediate = plan.terms.flatMap(term => term.courses).filter(item => ["ECO 213", "ECO 214"].includes(item.course));
+  for (const item of intermediate) {
+    item.course = item.course === "ECO 213" ? "ECO 214" : "ECO 213";
+    item.requirementId = item.course === "ECO 213" ? "eco-213" : "eco-214";
+    item.title = item.course === "ECO 213" ? "Intermediate Microeconomics" : "Intermediate Macroeconomics";
+  }
+  for (const item of plan.terms.flatMap(term => term.courses).filter(item => item.course === "ECO 461")) {
+    for (const approval of item.approvalRequired || []) {
+      approval.prerequisite = "ECO 214";
+      approval.message = approval.message.replaceAll("ECO 213", "ECO 214");
+    }
+  }
+  const baseline = await validateEdit(student, plan, { plans });
+  assert.equal(baseline.response.status, 200, JSON.stringify(baseline.data));
+  const editable = baseline.data.plan;
+  const original = structuredClone(editable);
+  const source = editable.terms.find(term => term.slotId === "winter-2028");
   const course = source.courses.find(item => item.course === "ECO 214");
   assert.ok(source.courses.find(item => item.course === "ECO 461").approvalRequired?.length);
-  const edited = await validateEdit(student, plan, { plans, extraBody: { edit: {
+  const edited = await validateEdit(student, editable, { plans, extraBody: { edit: {
     type: "move", fromTermId: source.slotId, toTermId: "winter-2027", courseId: course.requirementId
   } } });
   assert.equal(edited.response.status, 200, JSON.stringify(edited.data));
   const capstone = edited.data.plan.terms.flatMap(term => term.courses).find(item => item.course === "ECO 461");
   assert.equal(capstone.approvalRequired?.length || 0, 0);
   assert.equal(edited.data.plan.feasibility.requiredApprovals.some(item => item.course === "ECO 461"), false);
-  assert.deepEqual(plan, original);
+  assert.equal(edited.data.plan.planConditions.some(item => item.kind === "approval"), false);
+  assert.equal(edited.data.plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-461").markers.includes("Approval required"), false);
+  assert.ok(!edited.data.plan.displayWarnings.some(message => /concurrent.*approval/i.test(message)));
+  assert.deepEqual(editable, original);
 });
 
 test("senior statistics explanation follows the actual horizon and disappears when statistics are satisfied", async () => {

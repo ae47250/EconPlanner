@@ -67,6 +67,7 @@ export function fixturePlan({
     planDisposition,
     conditions,
     advisorActions,
+    planConditions: [...conditions, ...advisorActions].map((item, index) => ({ id: `fixture-condition-${index}`, kind: "review", message: item.message })),
     terms: [
       {
         slotId: "2026-FALL",
@@ -176,6 +177,11 @@ export async function fulfillPlanner(page, body, status = 200) {
   await page.route("**/api/majors/map", async route => {
     if (route.request().method() !== "POST") {
       await route.continue();
+      return;
+    }
+    if (status === 200 && route.request().postDataJSON()?.action === "validate-plan") {
+      const { plan } = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ plan: { ...plan, validation: { ...plan.validation, valid: true } }, planSetValidation: { valid: true }, plannerFingerprint }) });
       return;
     }
     await route.fulfill({

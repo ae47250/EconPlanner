@@ -15,7 +15,7 @@ test("the CP4 active bundle loads without a shadow-mode override", async () => {
 
 test("the independent canonical loader projects every active source rule into the bundle", () => {
   assert.equal(canonicalJson(source.rules), canonicalJson(bundle.rules));
-  assert.equal(source.rules.length, 54);
+  assert.equal(source.rules.length, 56);
   assert.deepEqual(source.rules.map(rule => rule.ruleId), Object.keys(bundle.indexes.byRuleId).sort());
 });
 

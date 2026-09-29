@@ -29,6 +29,7 @@ import { requirementFormGroups } from "../lib/planning/requirementFormChoices.js
 import economicsRequirements from "../data/normalized/economics/requirements.json";
 import economicsCourseData from "../data/normalized/economics/courses.json";
 import economicsPlanningConstraints from "../data/normalized/economics/planning-constraints.json";
+import { seatStatusPresentation } from "../lib/planning/seat-status.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
@@ -336,16 +337,6 @@ function localToday() {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-function formatAvailabilityVerificationDate(value) {
-  const [year, month, day] = String(value || "").split("-").map(Number);
-  if (!year || !month || !day) return value || "Status unavailable";
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  }).format(new Date(year, month - 1, day));
-}
-
 function formatAcademicYear(value) {
   return value ? String(value).replace("-", "/") : "Academic year";
 }
@@ -357,7 +348,7 @@ function formatAcademicYearCompact(startYear) {
 function PlanningGaps({ items = [] }) {
   if (!items.length) return null;
   return (
-    <div className="plan-notes planning-gaps" role="status">
+    <div className="plan-notes planning-gaps">
       <strong>What still needs attention</strong>
       <ul>
         {items.map((item, index) => (
@@ -368,27 +359,6 @@ function PlanningGaps({ items = [] }) {
       </ul>
     </div>
   );
-}
-
-function warningCourseCodes(message) {
-  return [...new Set(String(message || "").match(/\b(?:BUSN|ECO|MAT|PSY)\s+\d{3}\b/g) || [])]
-    .sort((left, right) => left.localeCompare(right));
-}
-
-function projectedWarningDetails(message) {
-  const match = String(message || "").match(
-    /^(.+?) in ((?:(?:Fall|Winter|Spring\/May|May|Summer) \d{4})|(?:\d{4}\/\d{4} term to be confirmed)) is a projected placement/i
-  );
-  return match ? { course: match[1].trim(), term: match[2] } : null;
-}
-
-function projectedTermOrder(term) {
-  const academicYear = String(term || "").match(/^(\d{4})\/(\d{4}) term to be confirmed$/i);
-  if (academicYear) return Number(academicYear[1]) * 10 + 4;
-  const match = String(term || "").match(/^(Fall|Winter|Spring\/May|May|Summer) (\d{4})$/i);
-  if (!match) return Number.MAX_SAFE_INTEGER;
-  const termOrder = { winter: 0, "spring/may": 1, may: 1, summer: 2, fall: 3 };
-  return Number(match[2]) * 10 + termOrder[match[1].toLowerCase()];
 }
 
 function isFlattenedPlanNotice(notice) {
@@ -404,48 +374,6 @@ function scheduleTermKey(term) {
   const value = String(term?.termKey || term?.scheduleTerm || term?.displayTerm || term?.term || "");
   if (/spring|may/i.test(value)) return "May";
   return value;
-}
-
-function planPublishedScheduleNotices(plan, schedule) {
-  const scheduleYear = academicYearKey(schedule?.academicYear);
-  if (!scheduleYear || !plan) return [];
-  const scheduleTerms = schedule?.terms || {};
-  return (plan.terms || []).flatMap(term => {
-    if (academicYearKey(term.academicYear) !== scheduleYear) return [];
-    const sections = scheduleTerms[scheduleTermKey(term)] || [];
-    return (term.courses || []).flatMap(course => {
-      if (!course.course || course.course === "ECO elective" || course.course.includes("requirement")) return [];
-      const selectedSection = sections.find(section => (
-        section.course === course.course && String(section.section || "") === String(course.section || "")
-      ));
-      if (!selectedSection) return [];
-      return [{
-        code: `SELECTED_PLAN_SCHEDULE_${term.slotId || term.term}_${course.course}`.replace(/[^A-Z0-9_]/gi, "_"),
-        title: "Graduation planning assumption",
-        severity: "warning",
-        message: `${course.course}${course.section ? `-${course.section}` : ""} in ${term.term || term.displayTerm}: current seat availability is ${courseAvailabilityLabel(selectedSection)}. Confirm before registration.`
-      }];
-    });
-  });
-}
-
-function selectedPlanNotices(plan, schedule) {
-  if (!plan) return [];
-  const messages = [
-    ...(plan.validation?.warnings || []).filter(message => !/^Seat availability for /i.test(message)),
-    ...(plan.advisorChecks || []).map(item => item.reason).filter(Boolean)
-  ];
-  const notices = messages.map((message, index) => ({
-    code: `SELECTED_PLAN_WARNING_${plan.id}_${index}`,
-    title: "Graduation planning assumption",
-    severity: "warning",
-    message
-  }));
-  return [...new Map([
-    ...(plan.advisorNotifications || []),
-    ...notices,
-    ...planPublishedScheduleNotices(plan, schedule)
-  ].map(notice => [notice.message, notice])).values()];
 }
 
 function termReservationLimit(slot = {}) {
@@ -468,204 +396,76 @@ function plainCodeText(value) {
   return words ? `${words[0].toUpperCase()}${words.slice(1)}` : "";
 }
 
-function planningTermText(value) {
-  const match = /^(\d{4})-(FALL|WINTER|SPRING|MAY|SUMMER)$/u.exec(String(value || "").trim().toUpperCase());
-  return match ? `${plainCodeText(match[2])} ${match[1]}` : String(value || "").trim();
+function PlanNoteText({ text = "" }) {
+  return String(text).split(/(ECO \d{3})/g).map((part, index) =>
+    /^ECO \d{3}$/.test(part) ? <strong key={index}>{part}</strong> : part);
 }
 
-function affectedPlanningItemText(item) {
-  const affected = item?.affectedObject || item?.subject || {};
-  const parts = [
-    affected.course,
-    affected.termId ? `in ${planningTermText(affected.termId)}` : "",
-    !affected.course && affected.requirementId ? `requirement ${affected.requirementId}` : "",
-    !affected.course && !affected.requirementId && affected.catalogDecision
-      ? plainCodeText(affected.catalogDecision)
-      : ""
-  ].filter(Boolean);
-  return parts.join(" ");
-}
-
-function conditionText(condition) {
-  const supplied = structuredItemText(condition, "");
-  if (supplied) return supplied;
-  const affected = affectedPlanningItemText(condition);
-  const reason = plainCodeText(condition?.reasonCode || condition?.type);
-  return affected && reason
-    ? `${affected}: ${reason}.`
-    : affected || (reason ? `${reason}.` : "Confirm this plan condition.");
-}
-
-function advisorActionText(action) {
-  const supplied = structuredItemText(action, "");
-  if (supplied) return supplied;
-  const affected = affectedPlanningItemText(action);
-  const reason = plainCodeText(action?.reasonCode);
-  const authority = plainCodeText(action?.responsibleAuthority);
-  const evidence = (action?.evidenceRequired || []).map(plainCodeText).filter(Boolean);
-  const summary = affected && reason ? `${affected}: ${reason}.` : affected || (reason ? `${reason}.` : "Review this plan item.");
-  return [
-    summary,
-    authority ? `Review with ${authority.toLowerCase()}.` : "",
-    evidence.length ? `Evidence needed: ${evidence.join(", ")}.` : ""
-  ].filter(Boolean).join(" ");
-}
-
-function AdvisorAttention({ catalog, plan, schedule }) {
-  const degreeInformation = plan?.degreeRequirementInformation;
-  const degreeItems = degreeInformation?.items || [];
-  const advisorActions = plan?.advisorActions || plan?.validation?.advisorActions || [];
-  const conditions = plan?.conditions || plan?.validation?.conditions || [];
-  const globalNotices = (catalog?.advisorAttention || []).filter(notice => !isFlattenedPlanNotice(notice));
-  const notices = [...new Map([
-    ...globalNotices,
-    ...selectedPlanNotices(plan, schedule)
-  ].map(notice => [notice.message, notice])).values()];
-  if (!notices.length && !degreeItems.length && !advisorActions.length && !conditions.length) return null;
-  const planningNotices = notices.filter(notice => notice.title === "Graduation planning assumption");
-  const otherNotices = notices.filter(notice => notice.title !== "Graduation planning assumption");
-  const projectedNotices = planningNotices.filter(notice => /projected placement/i.test(notice.message || ""));
-  const publishedScheduleNotices = planningNotices.filter(notice => !/projected placement/i.test(notice.message || ""));
-  const seatAvailabilityCourses = [...new Set(publishedScheduleNotices
-    .filter(notice => /seat|availability|waitlist|closed/i.test(notice.message || ""))
-    .flatMap(notice => warningCourseCodes(notice.message)))].sort((left, right) => left.localeCompare(right));
-  const scheduleConfirmationCourses = [...new Set(publishedScheduleNotices
-    .filter(notice => !/seat|availability|waitlist|closed/i.test(notice.message || ""))
-    .flatMap(notice => warningCourseCodes(notice.message)))].sort((left, right) => left.localeCompare(right));
-  const publishedScheduleMessages = [...new Set(publishedScheduleNotices
-    .filter(notice => warningCourseCodes(notice.message).length === 0)
-    .map(notice => notice.message))];
-  const projectedNoticeDetails = projectedNotices.map(notice => ({
-    message: notice.message,
-    placement: projectedWarningDetails(notice.message)
-  }));
-  const projectedPlacementByTerm = new Map();
-  for (const placement of projectedNoticeDetails.map(item => item.placement).filter(Boolean)) {
-    if (!projectedPlacementByTerm.has(placement.term)) projectedPlacementByTerm.set(placement.term, new Set());
-    projectedPlacementByTerm.get(placement.term).add(placement.course);
-  }
-  const projectedPlacementTerms = [...projectedPlacementByTerm.entries()]
-    .map(([term, courses]) => ({ term, courses: [...courses].sort((left, right) => left.localeCompare(right)) }))
-    .sort((left, right) => projectedTermOrder(left.term) - projectedTermOrder(right.term) || left.term.localeCompare(right.term));
-  const ungroupedProjectedMessages = [...new Set(projectedNoticeDetails
-    .filter(item => !item.placement)
-    .map(item => item.message))];
-  const hasPublishedScheduleChecks = seatAvailabilityCourses.length > 0
-    || scheduleConfirmationCourses.length > 0
-    || publishedScheduleMessages.length > 0;
-  const hasProjectedPlacementChecks = projectedPlacementTerms.length > 0
-    || ungroupedProjectedMessages.length > 0;
-  const plannedCourses = new Set((plan?.terms || []).flatMap(term => (
-    (term.courses || []).map(course => course.course)
-  )));
-  const bothIntermediatesRemain = plannedCourses.has("ECO 213") && plannedCourses.has("ECO 214");
-  const publishedScheduleLabel = schedule?.academicYear
-    ? `Published ${formatAcademicYear(schedule.academicYear)} schedule checks`
-    : "Published schedule checks";
-  const advisorActionRequired = Boolean(
-    advisorActions.length
-    || plan?.advisorActionRequired
-    || plan?.readinessStatus === "ADVISOR_ACTION_REQUIRED"
-    || plan?.validation?.readinessStatus === "ADVISOR_ACTION_REQUIRED"
-  );
-  const sectionHeading = advisorActionRequired
-    ? "Advisor Attention"
-    : conditions.length
-      ? "Plan Conditions"
-      : "Plan Notes";
-
+function AdvisorAttention({ plan }) {
+  const notes = plan?.planNotes || [];
+  if (!notes.length) return null;
   return (
-    <section className="advisor-attention" aria-live="polite" data-plan-id={plan?.id || ""}>
-      <h2>{sectionHeading}</h2>
-      {plan?.label && <p className="advisor-attention-scope">Information and warnings shown for {plan.label}.</p>}
-      {conditions.length > 0 && (
-        <div className="advisor-attention-item plan-conditions" data-plan-conditions>
-          <h3>Conditions to confirm</h3>
-          <ul>
-            {conditions.map((condition, index) => (
-              <li key={condition.conditionId || `${condition.code || "condition"}-${index}`}>{conditionText(condition)}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {advisorActions.length > 0 && (
-        <div className="advisor-attention-item plan-advisor-actions" data-plan-advisor-actions>
-          <h3>Actions for you and your advisor</h3>
-          <ul>
-            {advisorActions.map((action, index) => (
-              <li key={action.actionId || `${action.code || "action"}-${index}`}>{advisorActionText(action)}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {degreeItems.length > 0 && (
-        <div className="advisor-attention-item degree-requirement-information" data-degree-requirement-information>
-          <h3>CCR/ACE information</h3>
-          <p>{degreeInformation.terminology?.ccr} / {degreeInformation.terminology?.ace}</p>
-          <ul>
-            {degreeItems.map(item => (
-              <li key={item.code} data-degree-designation-code={item.code}><strong>{item.code}</strong> {item.detail}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {otherNotices.map(notice => (
-        <div className={`advisor-attention-item is-${notice.severity || "warning"}`} key={notice.code}>
-          {notice.title && notice.title !== "Advisor Attention" && <strong>{notice.title}</strong>}
-          <p>{notice.message}</p>
-          {notice.findings?.length > 0 && (
-            <ul>
-              {notice.findings.map(finding => <li key={`${finding.code}-${finding.message}`}>{finding.message}</li>)}
-            </ul>
-          )}
-        </div>
-      ))}
-      {planningNotices.length > 0 && (
-        <div className="advisor-attention-item graduation-assumptions">
-          <h3>Things to confirm</h3>
-          <div className="advisor-attention-groups">
-            {hasPublishedScheduleChecks && (
-              <section>
-                <h4>{publishedScheduleLabel}</h4>
-                <ul>
-                  {seatAvailabilityCourses.length > 0 && (
-                    <li><strong>Confirm seat availability:</strong> {seatAvailabilityCourses.join(", ")}.</li>
-                  )}
-                  {scheduleConfirmationCourses.length > 0 && (
-                    <li><strong>Confirm offerings and time conflicts:</strong> {scheduleConfirmationCourses.join(", ")}.</li>
-                  )}
-                  {publishedScheduleMessages.map(message => <li key={message}>{message}</li>)}
-                </ul>
-              </section>
-            )}
-            {hasProjectedPlacementChecks && (
-              <section>
-                <h4>Projected placement</h4>
-                <p>Later schedules are not yet published. Confirm these planned courses when their official schedules become available:</p>
-                {projectedPlacementTerms.length > 0 && (
-                  <ul className="projected-placement-list">
-                    {projectedPlacementTerms.map(({ term, courses }) => (
-                      <li key={term} data-term={term}><strong>{term}:</strong> {courses.join(", ")}</li>
-                    ))}
-                  </ul>
-                )}
-                {ungroupedProjectedMessages.length > 0 && (
-                  <ul className="projected-placement-fallback">
-                    {ungroupedProjectedMessages.map(message => <li key={message}>{message}</li>)}
-                  </ul>
-                )}
-                {bothIntermediatesRemain && (
-                  <p className="offering-pattern-note">
-                    <strong>Known pattern:</strong> ECO 213 and ECO 214 tend to be offered in different terms. The available evidence does not yet establish which course will be offered first.
-                  </p>
-                )}
-              </section>
-            )}
+    <section className="advisor-attention" data-plan-id={plan?.id || ""}>
+      <h2>Plan Notes</h2>
+      <div data-plan-notes>
+        {notes.map(note => (
+          <div className="advisor-attention-item" data-plan-note={note.id}
+            data-degree-requirement-information={note.id === "ccr-ace" ? "" : undefined} key={note.id}>
+            <h3>{note.title}</h3>
+            {note.description && <p>{note.description}</p>}
+            <ul>{note.items.map((item, index) => (
+              <li key={index} data-degree-designation-code={item.code}>
+                {item.code && <><strong>{item.code}</strong> </>}
+                {item.label && <><strong>{item.label}</strong>: </>}
+                {item.lines ? item.lines.map(line => <div key={line}><PlanNoteText text={line} /></div>) : <PlanNoteText text={item.text} />}
+              </li>
+            ))}</ul>
+            {note.caveat && <p>{note.caveat}</p>}
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </section>
   );
+}
+
+function PlanConditions({ plan, catalog }) {
+  const conditions = plan?.planConditions || [];
+  const messages = new Set(conditions.flatMap(item => [item.message, ...(item.sourceMessages || [])]));
+  const coveredNotices = new Set(conditions.flatMap(item => item.noticeCodes || []));
+  const notices = (catalog?.advisorAttention || []).filter(item => !isFlattenedPlanNotice(item)
+    && !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(item.code)
+    && !coveredNotices.has(item.code) && !messages.has(item.message));
+  if (!conditions.length && !notices.length) return null;
+  return <section className="plan-notes upfront-conditions" data-plan-conditions>
+    <h2>Actions and conditions</h2>
+    <ul>{conditions.map(item => <li key={item.id}>{item.message}</li>)}
+      {notices.map(item => <li key={item.code}>{item.message}</li>)}
+    </ul>
+  </section>;
+}
+
+function MajorRequirementsChecklist({ plan }) {
+  const checklist = plan?.majorRequirementsChecklist;
+  if (!checklist?.rows?.length) return null;
+  return <section className="major-checklist" data-major-requirements-checklist>
+    <h2>{checklist.title}</h2>
+    <table>
+      <thead><tr><th scope="col">Requirement</th><th scope="col">Course / term</th><th scope="col">Status</th></tr></thead>
+      <tbody>{checklist.rows.filter(row => row.status !== "still_needed").map(row => <tr key={row.id} data-requirement-checklist-id={row.id}>
+        <th scope="row">{row.label}</th>
+        <td>{row.course ? <><strong>{row.course}</strong>{row.term && ` — ${row.term}`}</> : row.courseTerm}{row.alternatives.length > 1 && <span className="checklist-alternatives">Requirement options: {row.alternatives.join(" / ")}</span>}</td>
+        <td><span className={`checklist-status is-${row.status}`}><span className="checklist-symbol" aria-hidden="true">{row.symbol}</span> {row.statusLabel}</span>
+          {row.markers.map(marker => <span className="checklist-marker" key={marker}>{marker}</span>)}</td>
+      </tr>)}</tbody>
+    </table>
+    {checklist.unmetRequirements?.length > 0 && <div className="incomplete-candidate" data-incomplete-candidate>
+      <h3>Incomplete candidate — unmet requirements</h3>
+      <p>No qualifying assignment is recorded for the requirements below. This alone does not establish that no viable plan exists.</p>
+      <ul>{checklist.unmetRequirements.map(row => <li key={row.id}><strong>{row.label}</strong>: {row.courseTerm}{row.markers.length > 0 && `; ${row.markers.join("; ")}`}</li>)}</ul>
+    </div>}
+    <div className="checklist-legend" aria-label="Checklist status legend">{checklist.legend?.map(state => <span key={state.status} className={`checklist-status is-${state.status}`}><span aria-hidden="true">{state.symbol}</span> {state.label}</span>)}</div>
+    <p className="checklist-note">{checklist.note}</p>
+  </section>;
 }
 
 function PlanTimeline({
@@ -680,7 +480,7 @@ function PlanTimeline({
 }) {
   if (!plans.length) {
     return planningGaps.length ? (
-      <section className="plan-section" aria-live="polite">
+      <section className="plan-section">
         <PlanningGaps items={planningGaps} />
       </section>
     ) : null;
@@ -688,8 +488,6 @@ function PlanTimeline({
 
   const activePlan = plans.find(plan => plan.id === activePlanId) || plans[0];
   const mathSequenceNotes = acceleratedMathSequenceNotes(activePlan, COURSE_PREREQUISITES);
-  const studentNoticeMessages = new Set((activePlan.studentNotices || []).map(notice => notice.message));
-  const studentWarnings = (activePlan.studentMessages || []).filter(message => !studentNoticeMessages.has(message));
   const academicYearGroups = (activePlan.terms || []).reduce((groups, term) => {
     const label = term.academicYear || formatAcademicYear(activePlan.academicYear);
     const group = groups.find(item => item.label === label);
@@ -702,7 +500,7 @@ function PlanTimeline({
   }, []);
 
   return (
-    <section className="plan-section" aria-live="polite">
+    <section className="plan-section">
       {plans.length > 1 && (
         <div className="plan-tabs" role="group" aria-label="Generated plans">
           {plans.map(plan => (
@@ -728,9 +526,6 @@ function PlanTimeline({
           <div>
             <h2>Your Plan</h2>
             <p>{activePlan.description}</p>
-            {mathSequenceNotes.map(note => (
-              <p className="accelerated-math-sequence-note" role="note" key={note}>{note}</p>
-            ))}
             <p className="plan-source-note">Published course schedule: {formatAcademicYear(activePlan.academicYear)}. Later unpublished schedules are shown as planning projections.</p>
           </div>
         </div>
@@ -761,12 +556,12 @@ function PlanTimeline({
                           return (
                             <li key={`${termId}-${courseId}`}>
                               <div className="plan-course-summary">
-                                <strong>{course.course}</strong>
+                                <strong>{compactPlanCourse(course)}</strong>
                                 <span>{course.title}</span>
                                 {course.fixedInProgress && <span>Taking now — fixed in this term</span>}
-                                <CourseAvailabilityStatus course={course} term={term} schedule={schedule} />
+                                <CourseAvailabilityStatus course={course} term={term} schedule={schedule} referenceDate={new Date().toISOString()} />
                                 {course.preliminaryScheduleEvidence && <span className="plan-course-availability">Preliminary schedule ({course.preliminaryScheduleEvidence.issuedOn}); course and term subject to change</span>}
-                                {course.approvalRequired?.length > 0 && <span className="plan-course-approval">Approval required</span>}
+                                {(course.planningMarkers || []).map(marker => <span className="plan-course-approval" key={marker}>{marker}</span>)}
                               </div>
                               {onEditPlanCourse && !course.fixedInProgress && (
                                 <div className="plan-course-actions">
@@ -777,6 +572,7 @@ function PlanTimeline({
                                       <span className="sr-only">Choose the elective for {term.displayTerm || term.term}</span>
                                       <select
                                         aria-label={`Choose elective for ${term.displayTerm || term.term}`}
+                                        data-course-edit-id={`${activePlan.id}:${courseId}:option`}
                                         disabled={Boolean(editingPlanCourseKey)}
                                         value={course.selectedOptionId || ""}
                                         onChange={event => onEditPlanCourse({
@@ -789,10 +585,10 @@ function PlanTimeline({
                                       >
                                         {course.alternativeOptions.map(option => (
                                           <option value={option.id} key={option.id} disabled={["BLOCKED", "REVIEW_REQUIRED"].includes(option.status)}>
-                                            {option.course}{option.section ? `-${option.section}` : ""}: {option.title}
-                                            {option.status === "BLOCKED" ? ` — Unavailable: ${option.message}`
-                                              : option.status === "REVIEW_REQUIRED" ? ` — More information needed: ${option.message}`
-                                              : option.status === "CONDITIONAL" ? ` — Conditional: ${option.message}` : ""}
+                                            {compactPlanCourse(option)}{option.section ? `-${option.section}` : ""}
+                                            {option.status === "BLOCKED" ? " (blocked)"
+                                              : option.status === "REVIEW_REQUIRED" ? " (advisor check)"
+                                              : option.status === "CONDITIONAL" ? " (conditional)" : ""}
                                           </option>
                                         ))}
                                       </select>
@@ -802,7 +598,7 @@ function PlanTimeline({
                                     && !course.alternativeOptions.some(option => option.course !== course.course
                                       && (!option.status || ["ALLOWED", "CONDITIONAL"].includes(option.status)))
                                     && course.replacementNotice?.studentMessage && (
-                                    <span className="required-course-note">{course.replacementNotice.studentMessage}</span>
+                                    <span className="required-course-note">No alternative course available.</span>
                                   )}
                                   {(() => {
                                     const moveOptions = course.moveDestinationOptions
@@ -816,15 +612,16 @@ function PlanTimeline({
                                       && ["ALLOWED", "CONDITIONAL"].includes(option.status));
                                     if (!hasAlternativeMove && moveOptions.length < 2) return (
                                       <span className="required-course-note">
-                                        {course.moveNoAlternativeNotice?.studentMessage || "No other term currently passes complete plan checks for this course."}
+                                        No alternate term available.
                                       </span>
                                     );
                                     return (
                                       <label>
-                                        <span className="sr-only">Move {course.course} to another term</span>
+                                        <span className="sr-only">Move {compactPlanCourse(course)} to another term</span>
                                         <select
-                                          aria-label={`Move ${course.course} to another term`}
+                                          aria-label={`Move ${compactPlanCourse(course)} to another term`}
                                           disabled={Boolean(editingPlanCourseKey)}
+                                          data-course-edit-id={`${activePlan.id}:${courseId}:move`}
                                           value={termId}
                                           onChange={event => onEditPlanCourse({
                                             type: "move",
@@ -837,21 +634,25 @@ function PlanTimeline({
                                           {moveOptions.map(option => (
                                             <option value={option.id} key={option.id} disabled={["BLOCKED", "REVIEW_REQUIRED"].includes(option.status)}>
                                               {option.label}{option.status === "CURRENT" ? " (current term)"
-                                                : option.status === "BLOCKED" ? ` — Unavailable: ${option.message}`
-                                                  : option.status === "REVIEW_REQUIRED" ? ` — More information needed: ${option.message}`
-                                                  : option.status === "CONDITIONAL" ? ` — Conditional: ${option.message}`
-                                                    : ` — ${option.message}`}
+                                                : option.status === "BLOCKED" ? " (blocked)"
+                                                  : option.status === "REVIEW_REQUIRED" ? " (advisor check)"
+                                                  : option.status === "CONDITIONAL" ? " (conditional)"
+                                                    : ""}
                                             </option>
                                           ))}
                                         </select>
-                                        {!hasAlternativeMove && <span className="required-course-note">{course.moveNoAlternativeNotice?.studentMessage}</span>}
+                                        {!hasAlternativeMove && <span className="required-course-note">No alternate term available.</span>}
                                       </label>
                                     );
                                   })()}
-                                  {course.moveGuidance?.studentMessage && (
-                                    <span className="required-course-note">{course.moveGuidance.studentMessage}</span>
+                                  {(course.moveGuidance?.studentMessage || course.replacementNotice?.studentMessage) && (
+                                    <details className="course-choice-details">
+                                      <summary>Why are some choices unavailable?</summary>
+                                      {course.moveGuidance?.studentMessage && <p>{course.moveGuidance.studentMessage}</p>}
+                                      {!course.moveGuidance?.studentMessage && course.replacementNotice?.studentMessage && <p>{course.replacementNotice.studentMessage}</p>}
+                                    </details>
                                   )}
-                                  {feedback && <span className="plan-course-edit-feedback" role="alert">{feedback}</span>}
+                                  {feedback && <span className="plan-course-edit-feedback">{feedback}</span>}
                                   <span className="required-course-note">Required for this plan.</span>
                                 </div>
                               )}
@@ -875,32 +676,13 @@ function PlanTimeline({
           ))}
         </div>
         {activePlan.validation?.valid === false && (
-          <div className="plan-validation-errors" role="alert">
-            <strong>This edited plan needs attention.</strong>
+          <div className="plan-validation-errors">
+            <strong role="alert">This edited plan needs attention.</strong>
             <ul>
               {activePlan.validation.errors.map(error => <li key={error}>{error}</li>)}
             </ul>
           </div>
         )}
-        {activePlan.feasibility && (
-          <div className="plan-notes" aria-label="Plan feasibility details">
-            <strong>Plan verification and conditions</strong>
-            <ul>
-              <li>Offerings: {activePlan.feasibility.verification?.offerings || "unknown"}</li>
-              <li>Meeting times: {activePlan.feasibility.verification?.meetings || "unknown"}</li>
-              <li>Availability: {activePlan.feasibility.verification?.availability || "unknown"}</li>
-              {activePlan.feasibility.requiredApprovals?.map(item => (
-                <li key={`${item.course}-${item.prerequisite}-${item.term}`}>{item.message}</li>
-              ))}
-              {activePlan.feasibility.enrollmentConditions?.map(item => (
-                <li key={`${item.type}-${item.course}-${item.section}-${item.term}`}>
-                  {item.course}{item.section ? `-${item.section}` : ""} in {item.term}: {item.type.replaceAll("_", " ")}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <PlanningGaps items={activePlan.unscheduled || []} />
         {activePlan.summerFallbacks?.length > 0 && (
           <div className="plan-notes summer-fallback-note">
             <strong>Summer fallback used</strong>
@@ -913,22 +695,20 @@ function PlanTimeline({
             </ul>
           </div>
         )}
-        {studentWarnings.length > 0 && (
-          <div className="plan-notes" role="status">
-            <strong>Plan conditions and warnings</strong>
-            <ul>{studentWarnings.map(message => <li key={message}>{message}</li>)}</ul>
-          </div>
-        )}
+        {(mathSequenceNotes.length > 0 || activePlan.planningDetailMessages?.length > 0) && <details className="plan-notes">
+          <summary>More planning details</summary>
+          <ul>
+            {mathSequenceNotes.map(note => <li className="accelerated-math-sequence-note" role="note" key={note}>{note}</li>)}
+            {(activePlan.planningDetailMessages || []).map(message => <li key={message}>{message}</li>)}
+          </ul>
+        </details>}
       </div>
     </section>
   );
 }
 
 function compactPlanCourse(course) {
-  if (course.course === "ECO elective" && course.minimumLevel === 200) {
-    return "ECO elective (200+)";
-  }
-  return course.course;
+  return course.course === "ECO elective" && course.minimumLevel >= 200 ? "ECO elective (200+)" : course.course;
 }
 
 function feasibilityLabel(status) {
@@ -955,34 +735,18 @@ function exactPublishedScheduleSection(course, term, schedule) {
   )) || null;
 }
 
-function courseAvailabilityLabel(course, exactSection = false) {
-  const availability = course?.availability;
-  if (!exactSection || !hasExactAvailabilityEvidence(course) || !availability?.status) return "Status unavailable";
-  if (availability.status === "open") return "✓ OPEN";
-  if (availability.status === "full") return "FULL";
-  return "Status unavailable";
+function courseAvailabilityLabel(course, exactSection = false, referenceDate) {
+  return seatStatusPresentation(course?.availability, { verified: exactSection && hasExactAvailabilityEvidence(course), referenceDate }).label;
 }
 
-function availabilityClassName(course, exactSection = false) {
-  if (!exactSection || !hasExactAvailabilityEvidence(course)) return "is-unavailable";
-  if (course?.availability?.status === "open") return "is-open";
-  if (course?.availability?.status === "full") return "is-full";
-  return "is-unavailable";
+function availabilityClassName(course, exactSection = false, referenceDate) {
+  return `is-${seatStatusPresentation(course?.availability, { verified: exactSection && hasExactAvailabilityEvidence(course), referenceDate }).tone}`;
 }
 
-function scheduleVerificationDate(schedule) {
-  return schedule?.availabilityAsOf
-    || schedule?.verifiedOn
-    || schedule?.lastVerifiedAt
-    || schedule?.source?.humanVerifiedOn
-    || schedule?.source?.screenshotRetrievedOn
-    || null;
-}
-
-function CourseAvailabilityStatus({ course, term, schedule }) {
+function CourseAvailabilityStatus({ course, term, schedule, referenceDate }) {
   if (academicYearKey(term?.academicYear) !== academicYearKey(schedule?.academicYear)) return null;
   const selectedSection = exactPublishedScheduleSection(course, term, schedule);
-  return <span className={`plan-course-availability ${availabilityClassName(selectedSection, Boolean(selectedSection))}`}>{courseAvailabilityLabel(selectedSection, Boolean(selectedSection))}</span>;
+  return <span className={`plan-course-availability ${availabilityClassName(selectedSection, Boolean(selectedSection), referenceDate)}`}>{courseAvailabilityLabel(selectedSection, Boolean(selectedSection), referenceDate)}</span>;
 }
 
 function CandidateOutcomes({ outcomes = [], convergences = [] }) {
@@ -1023,26 +787,25 @@ function ScheduleAvailability({ schedule, plan }) {
     }))])
     .filter(([, courses]) => courses.length > 0);
   if (!terms.length) return null;
-  const verificationDate = scheduleVerificationDate(schedule);
+  const referenceDate = new Date().toISOString();
   return (
     <details className="schedule-availability">
-      <summary>Current section availability for {plan?.label || "this plan"} ({formatAcademicYear(schedule.academicYear)})</summary>
+      <summary>Seat evidence for {plan?.label || "this plan"} ({formatAcademicYear(schedule.academicYear)})</summary>
       {terms.map(([term, courses]) => (
         <section key={term}>
           <h3>{term}</h3>
           <ul>
             {courses.map(({ course, section }, index) => (
               <li key={`${term}-${course.course}-${course.section || index}`}>
-                <strong>{course.course}{course.section ? `-${course.section}` : ""}</strong>: <span className={availabilityClassName(section || course, Boolean(section))}>{courseAvailabilityLabel(section || course, Boolean(section))}</span>
+                <strong>{course.course}{course.section ? `-${course.section}` : ""}</strong>: <span className={availabilityClassName(section || course, Boolean(section), referenceDate)}>{courseAvailabilityLabel(section || course, Boolean(section), referenceDate)}</span>
+                {section?.availability?.status && <span className="seat-evidence-detail">Recorded observation: {section.availability.status}; observation date {section.availability.asOf || "unavailable"}.</span>}
               </li>
             ))}
           </ul>
         </section>
       ))}
       <p className="schedule-availability-note">
-        {verificationDate
-          ? `Course schedule and seat availability verified from the published Hanover schedule as of ${formatAvailabilityVerificationDate(verificationDate)}. OPEN and FULL can change. Courses in later years are projections and do not have verified seat availability.`
-          : "Course schedule and seat availability verification date is unavailable in the published Hanover schedule. OPEN and FULL can change. Courses in later years are projections and do not have verified seat availability."}
+        Section existence and seat freshness are separate. Confirm seats before registration.
       </p>
     </details>
   );
@@ -1468,7 +1231,32 @@ function PlanComparisonScreen({
         .comparison-page .plan-course-availability.is-full,
         .comparison-page .schedule-availability .is-full { color: #b42318; font-weight: 700; }
         .comparison-page .plan-course-availability.is-unavailable,
+        .comparison-page .plan-course-availability.is-unverified,
+        .comparison-page .schedule-availability .is-unverified,
         .comparison-page .schedule-availability .is-unavailable { color: #53627a; }
+        .major-checklist { margin: 1rem 0; padding: 1rem; border: 1px solid #cfd8e6; border-radius: 12px; background: #fff; }
+        .major-checklist h2,.upfront-conditions h2 { margin: 0 0 .6rem; font-size: 19px; }
+        .major-checklist table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .major-checklist th,.major-checklist td { padding: .65rem .5rem; text-align: left; vertical-align: top; border-bottom: 1px solid #dde3eb; font-size: 14px; overflow-wrap: anywhere; }
+        .major-checklist thead { background: #eef3f8; }
+        .major-checklist th:first-child { width: 31%; }
+        .major-checklist th:nth-child(2) { width: 45%; }
+        .major-checklist th:last-child { width: 24%; }
+        .checklist-status { display: inline-block; padding: .2rem .35rem; border-radius: 5px; font-weight: 700; }
+        .checklist-symbol { font-size: 20px; line-height: 1; vertical-align: middle; }
+        .checklist-legend { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .7rem; font-size: 12px; }
+        .incomplete-candidate { padding: .6rem; border-left: 3px solid #a16d13; margin-top: .7rem; }
+        .checklist-status.is-completed { background: #e9f6ed; color: #176333; }
+        .checklist-status.is-in_progress { background: #e4f2ff; color: #174d7a; }
+        .checklist-status.is-planned { background: #eef0f3; color: #485365; }
+        .checklist-status.is-still_needed,.checklist-marker { background: #fff2d5; color: #76510b; }
+        .checklist-marker,.checklist-alternatives,.seat-evidence-detail { display: block; margin-top: .3rem; font-size: 12px; }
+        .checklist-note { margin-bottom: 0; font-size: 13px; color: #53627a; }
+        @media (max-width: 520px) {
+          .major-checklist { padding: .65rem; }
+          .major-checklist th,.major-checklist td { padding: .5rem .25rem; font-size: 12px; }
+          .checklist-marker,.checklist-alternatives { font-size: 11px; }
+        }
         .comparison-page .plan-course-summary .plan-course-approval { color: #8a4c00; font-weight: 700; }
         .comparison-page .plan-course-actions { display: grid; gap: .35rem; margin-top: .5rem; }
         .comparison-page .plan-course-actions select,
@@ -1790,12 +1578,14 @@ function PlanComparisonScreen({
         </div>
 
         {highlightDifferences && (
-          <p className="comparison-difference-key" role="status">
+          <p className="comparison-difference-key">
             <strong>Blue courses are shared by every plan in the same term.</strong> They remain visible so you can compare the complete timeline; the darker courses are the schedule differences to review.
           </p>
         )}
 
         {planEditStatus && <p className="plan-edit-status" role="status">{planEditStatus}</p>}
+        {selectedPlan && <PlanConditions plan={selectedPlan} catalog={report?.catalog} />}
+        {selectedPlan && <MajorRequirementsChecklist plan={selectedPlan} />}
         {isPlanView && canUndoPlanEdit && (
           <button
             type="button"
@@ -1907,8 +1697,8 @@ function PlanComparisonScreen({
             })}
           </div>
         ) : (
-          <section className="no-plan-state" aria-live="polite">
-            <h2>{noPlan.title}</h2>
+          <section className="no-plan-state">
+            <h2 role="status">{noPlan.title}</h2>
             <p>{noPlan.message}</p>
             {canonicalPlanResult?.questions?.length > 0 && (
               <ul className="no-plan-question-list">
@@ -1940,7 +1730,7 @@ function PlanComparisonScreen({
 
         {selectedPlan && (
           <>
-            <AdvisorAttention catalog={report?.catalog} plan={selectedPlan} schedule={result?.annualSchedule} />
+            <AdvisorAttention plan={selectedPlan} />
             <ScheduleAvailability schedule={result?.annualSchedule} plan={selectedPlan} />
           </>
         )}
@@ -2186,8 +1976,8 @@ function PlannerSummary({
       </dl>
 
       {(migrationNotice || attentionItems.length > 0) && (
-        <div className="summary-attention" aria-live="polite">
-          <strong>Needs attention</strong>
+        <div className="summary-attention">
+          <strong role="status">Needs attention</strong>
           {migrationNotice && <p>{migrationNotice}</p>}
           {attentionItems.length > 0 && (
             <ul>
@@ -2359,7 +2149,7 @@ export default function Page() {
     );
     setSelectedPlanId(safePlanId);
     setPlannerView(safeView);
-    setPlanEditStatus("");
+    setPlanEditStatus(safeView === PLANNER_VIEWS.PLAN ? `${plans.find(plan => plan.id === safePlanId)?.label || "Plan"} selected.` : "");
     window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
   }
 
@@ -2424,9 +2214,41 @@ export default function Page() {
         // Unavailable policy verification cannot authorize restoring old plans.
       }
       if (cancelled) return;
-      const restoredSession = restoreGeneratedPlannerSession(
+      let restoredSession = restoreGeneratedPlannerSession(
         savedSession, plannerInputSignature(restoredForm), activeFingerprint
       );
+      if (restoredSession?.report) {
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+          const student = { ...restoredForm, courses: selectedCourses(restoredForm.courses) };
+          const revalidate = async plan => {
+            const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
+            const response = await fetch("/api/majors/map", {
+              method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
+              body: JSON.stringify({ action: "validate-plan", student, plan, plans })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.plan?.validation?.valid) throw new Error("Saved plan failed validation.");
+            return data;
+          };
+          for (const plan of economicsResult(restoredSession.report)?.economicsPlans || []) {
+            const data = await revalidate(plan);
+            restoredSession.report = replaceEconomicsPlan(restoredSession.report, plan.id, data.plan, data.planSetValidation);
+          }
+          if (restoredSession.planEditUndo) {
+            try {
+              restoredSession.planEditUndo.plan = (await revalidate(restoredSession.planEditUndo.plan)).plan;
+            } catch {
+              restoredSession.planEditUndo = null;
+            }
+          }
+        } catch {
+          restoredSession = null;
+        } finally {
+          clearTimeout(timeout);
+        }
+      }
+      if (cancelled) return;
       let initialView = PLANNER_VIEWS.INPUT;
       let initialPlanId = "";
       if (restoredSession) {
@@ -2584,6 +2406,13 @@ export default function Page() {
     setFailureFocusTarget("");
     window.requestAnimationFrame(() => control.focus());
   }, [editingPlanCourseKey, failureFocusTarget, isDownloadingPdf, isGenerating, pdfStatus, planEditStatus, status]);
+
+  useEffect(() => {
+    if (editingPlanCourseKey || !planEditFeedback?.controlKey) return;
+    const control = document.querySelector(`[data-course-edit-id="${CSS.escape(planEditFeedback.controlKey)}"]`);
+    const frame = window.requestAnimationFrame(() => control?.focus({ preventScroll: true }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [editingPlanCourseKey, planEditFeedback]);
 
   function invalidatePlanEdits() {
     planEditRequestRef.current += 1;
@@ -2901,6 +2730,7 @@ export default function Page() {
       setInputBlock(null);
       setReport(data);
       setSelectedPlanId(firstPlanId);
+      setPlanEditStatus(plans.length ? "Plans generated." : "Plan review ready.");
       setPlannerView(PLANNER_VIEWS.COMPARE);
       setPlanEditUndo(null);
       window.history.pushState(
@@ -3107,9 +2937,9 @@ export default function Page() {
     const hasExplicitConflict = followUp.questions.some(hasExplicitPrerequisiteConflict);
 
     return (
-      <div className={`inline-prerequisite${hasExplicitConflict ? " has-conflict" : ""}`} aria-live="polite">
+      <div className={`inline-prerequisite${hasExplicitConflict ? " has-conflict" : ""}`}>
         {followUp.questions.length > 0 && (
-          <p><strong>Before we can use {course.code}, tell us about {followUp.questions.length === 1 ? "this prerequisite" : "these prerequisites"}.</strong></p>
+          <p role="status"><strong>Before we can use {course.code}, tell us about {followUp.questions.length === 1 ? "this prerequisite" : "these prerequisites"}.</strong></p>
         )}
         {followUp.questions.map(question => (
           <section
@@ -3132,8 +2962,8 @@ export default function Page() {
               </div>
             ))}
             {hasExplicitPrerequisiteConflict(question) && (
-              <div className="prerequisite-conflict" role="alert">
-                <p>{question.issueMessage}</p>
+              <div className="prerequisite-conflict">
+                <p role="alert">{question.issueMessage}</p>
                 <p>You marked {course.code} as {prerequisiteStatusLabel(targetStatus)}, but {explicitPrerequisiteStatusText(question)}.</p>
                 <p>Update one of these course statuses before generating your plan.</p>
               </div>
@@ -3283,7 +3113,7 @@ export default function Page() {
 
       setEditingPlanCourseKey(editKey);
       setPlanEditFeedback(null);
-      setPlanEditStatus("Checking this plan edit against the Economics planning rules...");
+      setPlanEditStatus("Checking change…");
       try {
         const response = await fetch("/api/majors/map", {
           method: "POST",
@@ -3319,7 +3149,11 @@ export default function Page() {
         const nextReport = replaceEconomicsPlan(sourceReport, sourcePlan.id, data.plan, data.planSetValidation);
         latestReportRef.current = nextReport;
         setReport(nextReport);
-        setPlanEditStatus(`${sourcePlan.label} was updated and remains valid.`);
+        const targetTerm = data.plan.terms.find(term => (term.slotId || term.term) === (edit.toTermId || edit.fromTermId));
+        const changedCourse = targetTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
+        const resultMessage = `${edit.type === "move" ? `Moved to ${targetTerm?.term || "selected term"}` : "Course updated"}.${changedCourse?.publicationStatus === "PLANNING_PROJECTION" ? " Offering needs confirmation." : " Plan checks pass."}`;
+        setPlanEditStatus("Change saved.");
+        setPlanEditFeedback({ planId: sourcePlan.id, fromTermId: edit.toTermId || edit.fromTermId, courseId: edit.courseId, message: resultMessage, controlKey: `${sourcePlan.id}:${edit.courseId}:${edit.type}` });
       } catch (error) {
         if (!isCurrent()) return;
         const message = studentFacingRequestError(
@@ -3327,7 +3161,7 @@ export default function Page() {
           "The plan edit could not be validated.",
           "The plan edit could not be validated. Please try again."
         );
-        setPlanEditStatus(message);
+        setPlanEditStatus("Change could not be saved.");
         setPlanEditFeedback({ planId: sourcePlan.id, fromTermId: edit.fromTermId, courseId: edit.courseId, message });
         restoreFocusAfterFailure("plan-edit");
       } finally {
@@ -3353,6 +3187,7 @@ export default function Page() {
       planEditUndo.planSetValidation
     ));
     setPlanEditUndo(null);
+    setPlanEditFeedback(null);
     setPlanEditStatus(`${restoredPlan.label} was restored.`);
   }
 
