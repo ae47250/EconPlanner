@@ -8,7 +8,7 @@ const plans = ["balanced", "explore-first", "one-year-early"].map(id => ({ id, v
 const saved = () => JSON.stringify(createGeneratedPlannerSession({
   report: { plannerFingerprint: fingerprint, programs: [{ program: { name: "Economics" }, economicsPlans: plans }] },
   inputSignature: "student", selectedPlanId: "one-year-early", view: "plan", reportContextId: "report",
-  planEditUndo: { reportContextId: "report", inputSignature: "student", planId: "one-year-early", plan: { ...plans[2], undo: true } }
+  planEditUndo: { reportContextId: "report", inputSignature: "student", planId: "one-year-early", plan: { ...plans[2], undo: true }, planSetValidation: { valid: false } }
 }));
 const run = (fetchImpl, options = {}) => validateSavedPlannerSession({ rawSession: saved(), inputSignature: "student", student: {}, fetchImpl, ...options });
 const validFetch = async (_url, options) => options.method === "POST"
@@ -25,6 +25,7 @@ test("all plans and undo are revalidated with the complete comparison set before
   assert.equal(result.kind, "restored");
   assert.equal(result.session.selectedPlanId, "one-year-early");
   assert.equal(result.session.planEditUndo.plan.undo, true);
+  assert.deepEqual(result.session.planEditUndo.planSetValidation, { valid: true });
   assert.equal(checked.length, 4);
   for (const body of checked) assert.deepEqual(body.plans, plans);
   assert.equal(rawSession, saved(), "restoration cannot mutate the original saved data");
@@ -48,6 +49,7 @@ test("interrupted and slow validation are recoverable, and a later retry validat
 
 test("fingerprint interruption is unavailable; stale policy, mismatched inputs and malformed saved data are obsolete", async () => {
   assert.equal((await run(async () => new Response("", { status: 503 }))).kind, "unavailable");
+  assert.equal((await run(async () => Response.json({ plannerFingerprint: 123 }))).kind, "unavailable");
   for (const options of [{ inputSignature: "new answers" }, { rawSession: "{" }, { rawSession: saved().replace(fingerprint, "sha256:old") }]) {
     assert.equal((await run(validFetch, options)).kind, "obsolete");
   }
