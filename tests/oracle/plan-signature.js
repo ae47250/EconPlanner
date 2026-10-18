@@ -90,6 +90,7 @@ function meaningfulCourse(course) {
   return {
     course: text(course.course, { upper: true }),
     requirementId: text(course.requirementId),
+    extra: course.extra === true,
     section: text(course.section, { upper: true }),
     selectedOptionId: text(course.selectedOptionId),
     source: text(course.source),

@@ -1,3 +1,4 @@
+import { visitPlan } from "./cp7-helpers.js";
 import { expect, test } from "./nightly-observability.js";
 import {
   chooseStanding,
@@ -22,7 +23,7 @@ async function reviewBalanced(page) {
   await chooseStanding(page, "freshman");
   await continueToCourses(page);
   await generatePlans(page);
-  await page.getByRole("button", { name: "Review this plan: Balanced" }).click();
+  await visitPlan(page, "balanced");
   await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
 }
 
@@ -47,11 +48,11 @@ for (const responseStatus of [422, 200]) {
     explore.terms[1].courses.push(...explore.terms[0].courses);
     explore.terms[0].courses = [];
     await openFixtureResult(page, plannerResultFixture({ plans: [balanced, explore] }));
-    await page.getByRole("button", { name: "Review this plan: Balanced" }).click();
+    await visitPlan(page, "balanced");
     await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
     const originalSchedule = await visibleSchedule(page);
     await page.getByRole("button",{name:"Change ECO 113",exact:true}).click();
-    const moveControl = page.getByRole("combobox", { name: "Change ECO 113 to" });
+    const moveControl = page.locator('.plan-course-actions[aria-label="Changes for ECO 113"]');
 
     await page.unroute("**/api/majors/map");
     await page.route("**/api/majors/map", async route => {
@@ -67,15 +68,14 @@ for (const responseStatus of [422, 200]) {
       });
     });
 
-    await expect(moveControl.locator('option[value="move:2027-WINTER"]')).toHaveCount(1);
-    await moveControl.selectOption("move:2027-WINTER");
-    await page.getByRole("button",{name:"Apply change",exact:true}).click();
+    await expect(moveControl.locator('button[data-change-choice="move:2027-WINTER"]')).toHaveCount(1);
+    await moveControl.locator('[data-change-choice="move:2027-WINTER"]').click();
     await expect(page.locator(".plan-course-edit-feedback")).toContainText("same material schedule");
     await expect(page.locator(".plan-edit-status")).toHaveText("Change could not be saved.");
     await expect(page.locator(".plan-edit-status")).not.toContainText("updated and remains valid");
     await expect.poll(() => visibleSchedule(page)).toEqual(originalSchedule);
     await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
-    await expect(page.getByRole("button",{name:"Apply change",exact:true})).toBeFocused();
+    await expect(moveControl.locator('[data-change-choice="move:2027-WINTER"]')).toBeFocused();
   });
 }
 
@@ -117,7 +117,7 @@ test("the standard target is shared by the standing feedback and live summary", 
     .innerText();
 
   expect(feedback).toBe(summaryTarget);
-  expect(summaryTarget).toMatch(/^Spring\/May \d{4}$/);
+  expect(summaryTarget).toMatch(/^May \d{4}$/);
   await expect(page.getByText(/Are you a transfer student/i)).toHaveCount(0);
 });
 
@@ -218,7 +218,7 @@ test("the custom timeline asks only for required fields and maps them to the exi
   await expect(graduation).toBeFocused();
   await graduation.selectOption({ index: 1 });
   const expectedGraduationYear = await graduation.inputValue();
-  await expect(page.locator(".custom-target")).toContainText(`Spring/May ${expectedGraduationYear}`);
+  await expect(page.locator(".custom-target")).toContainText(`May ${expectedGraduationYear}`);
 
   await continueToCourses(page);
   await generatePlans(page);
@@ -433,17 +433,17 @@ test("accelerated results expose the backend Possible, Not possible, and More in
       await expect(page.locator(".accelerated-result")).toHaveCount(0);
       await expect(earlyPlan.locator(".early-plan-status")).toHaveText(label);
       await expect(earlyPlan).toContainText("Standard plan");
-      await expect(earlyPlan).toContainText("Spring/May 2030");
+      await expect(earlyPlan).toContainText("May 2030");
       await expect(earlyPlan).toContainText("This plan");
-      await expect(earlyPlan).toContainText("Spring/May 2029");
+      await expect(earlyPlan).toContainText("May 2029");
       await expect(earlyPlan.locator(".comparison-plan-summary > p")).toHaveCount(0);
     } else {
       await expect(page.locator(".accelerated-result-status")).toHaveText(label);
       await expect(page.locator(".accelerated-result")).toContainText(`Backend accelerated finding: ${label}.`);
       await expect(page.locator(".accelerated-result")).toContainText("Standard target");
       await expect(page.locator(".accelerated-result")).toContainText("Accelerated target");
-      await expect(page.locator(".accelerated-result")).toContainText("Spring/May 2030");
-      await expect(page.locator(".accelerated-result")).toContainText("Spring/May 2029");
+      await expect(page.locator(".accelerated-result")).toContainText("May 2030");
+      await expect(page.locator(".accelerated-result")).toContainText("May 2029");
     }
   }
 });
@@ -518,103 +518,25 @@ test("completion source choices are compact, eligibility-limited, saved, and cle
   })).toEqual({ status: "not_started", source: "manual_code" });
 });
 
-test("ECO 213 and ECO 214 show canonical inline prerequisite follow-ups", async ({ page }) => {
-  await resetPlanner(page);
-  await chooseStanding(page, "freshman");
-  await continueToCourses(page);
-
-  await setCourseStatus(page, "ECO 213", "Taking now");
-  const eco213 = page.locator("#course-eco-213 .inline-prerequisite");
-  await expect(eco213).toBeVisible();
-  await expect(eco213).not.toHaveClass(/has-conflict/);
-  await expect(eco213).toContainText("Before we can use ECO 213");
-  const choiceHeading = eco213.locator(".prerequisite-question-heading")
-    .filter({ hasText: "Choose a prerequisite option" });
-  await expect(choiceHeading).toHaveText("Choose a prerequisite option");
-  await expect(eco213).not.toContainText("One of the current valid options is needed.");
-  await expect(courseStatusGroup(page, "ECO 113", "Status for prerequisite")).toBeVisible();
-  await expect(courseStatusGroup(page, "MAT 113", "Status for prerequisite")).toBeVisible();
-  await expect(courseStatusGroup(page, "MAT 121", "Status for prerequisite")).toBeVisible();
-
-  const headingBox = await choiceHeading.locator("strong").boundingBox();
-  const controlsBox = await courseStatusGroup(page, "MAT 113", "Status for prerequisite").boundingBox();
-  expect(headingBox).not.toBeNull();
-  expect(controlsBox).not.toBeNull();
-  expect(Math.abs(
-    headingBox.x + headingBox.width / 2 - (controlsBox.x + controlsBox.width / 2)
-  )).toBeLessThan(3);
-
-  await setCourseStatus(page, "MAT 113", "Not taken / not sure", "Status for prerequisite");
-  const mat113 = courseStatusGroup(page, "MAT 113", "Status for prerequisite");
-  await expect(mat113.locator(".is-selected")).toHaveCount(1);
-  await expect(mat113.getByRole("button", { name: "Completed" })).toHaveAttribute("aria-pressed", "false");
-  await expect(mat113.getByRole("button", { name: "Taking now" })).toHaveAttribute("aria-pressed", "false");
-  await expect(mat113.getByRole("button", { name: "Not taken / not sure" })).toHaveAttribute("aria-pressed", "true");
-  await mat113.getByRole("button", { name: "Not taken / not sure" }).click();
-  await expect(mat113.locator(".is-selected")).toHaveCount(0);
-
-  await setCourseStatus(page, "ECO 213", "Taking now");
-  await setCourseStatus(page, "ECO 214", "Taking now");
-  const eco214 = page.locator("#course-eco-214 .inline-prerequisite");
-  await expect(eco214).toBeVisible();
-  await expect(eco214).toContainText("Before we can use ECO 214");
-  await expect(courseStatusGroup(page, "ECO 114", "Status for prerequisite")).toBeVisible();
-  await expect(eco214).not.toContainText("concurrency exception");
-});
-
 for (const course of ["ECO 213", "ECO 214"]) {
-  for (const targetStatus of ["Completed", "Taking now"]) {
-    test(`${course} ${targetStatus.toLowerCase()} requires every inline prerequisite answer`, async ({ page }) => {
-      await resetPlanner(page);
-      await chooseStanding(page, "freshman");
-      await continueToCourses(page);
-      await setCourseStatus(page, course, targetStatus);
-
-      const dependent = page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")}`);
-      const generate = page.getByRole("button", { name: "Generate my plans" });
-      await expect(dependent.locator(".inline-prerequisite")).toBeVisible();
-      await expect(generate).toBeDisabled();
-      await expect(page.locator(".cp7-summary").getByText("Needs attention")).toBeVisible();
-      await expect(page.locator(".cp7-summary")).toContainText(`${course} prerequisite question`);
-      const summaryRow = page.locator(".cp7-summary").getByText(targetStatus, { exact: true }).locator("..");
-      await expect(summaryRow).toContainText("None selected");
-
-      const unanswered = dependent.locator(".prerequisite-question").first();
-      const questionId = await unanswered.getAttribute("id");
-      await page.locator(".cp7-summary").getByRole("button", { name: new RegExp(`${course} prerequisite question`) }).first().click();
-      await expect(page.locator(`#${questionId}`)).toBeFocused();
-
-      let requests = 0;
-      await page.route("**/api/majors/map", async route => {
-        requests += 1;
-        await route.abort();
-      });
-      await page.locator("form").evaluate(form => form.requestSubmit());
-      await expect(page.locator(".summary-status")).toContainText("Answer the highlighted prerequisite questions");
-      expect(requests).toBe(0);
-
-      await expect.poll(() => page.evaluate(() => {
-        const saved = JSON.parse(localStorage.getItem("econ-planner-ui-state"));
-        return saved?.formData?.courses;
-      }).then(courses => courses?.find(item => item.code === course)?.status))
-        .toBe(targetStatus === "Completed" ? "completed" : "in_progress");
-      await page.reload();
-      await expect(generate).toBeDisabled();
-      await expect(dependent.locator(".inline-prerequisite")).toBeVisible();
-
-      const prerequisiteGroups = dependent.locator(".prerequisite-option");
-      const optionsCount = await prerequisiteGroups.count();
-      for (let index = 0; index < optionsCount; index += 1) {
-        await prerequisiteGroups.nth(index).getByRole("button", { name: "Not taken / not sure" }).click();
-      }
-      await expect(generate).toBeEnabled();
-      await expect(page.locator(".cp7-summary")).toContainText(course);
-
-      const group = prerequisiteGroups.first().getByRole("button", { name: "Not taken / not sure" });
-      await group.click();
-      await expect(generate).toBeDisabled();
-    });
-  }
+  test(`${course} prerequisite controls use the same two choices as other courses`, async ({ page }) => {
+    await resetPlanner(page);
+    await chooseStanding(page, "freshman");
+    await continueToCourses(page);
+    await setCourseStatus(page, course, "Taking now");
+    const panel = page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`);
+    await expect(panel).toContainText(`Prerequisites for ${course}`);
+    for (const group of await panel.getByRole('group').all()) {
+      await expect(group.getByRole('button')).toHaveCount(2);
+      await expect(group.getByRole('button', { name: 'Completed', exact: true })).toBeVisible();
+      await expect(group.getByRole('button', { name: 'Taking now', exact: true })).toBeVisible();
+    }
+    await expect(panel.getByText('Not taken / not sure')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Generate my plans' })).toBeDisabled();
+    await setCourseStatus(page, course === 'ECO 213' ? 'ECO 113' : 'ECO 114', 'Completed', 'Status for prerequisite');
+    await setCourseStatus(page, 'MAT 113', 'Completed', 'Status for prerequisite');
+    await expect(page.getByRole('button', { name: 'Generate my plans' })).toBeEnabled();
+  });
 }
 
 test("completed prerequisites recorded on the course cards are not asked again", async ({ page }) => {
@@ -647,7 +569,7 @@ for (const [math, economics] of [
       { slotId: "eco", academicYear: "2026-2027", termKey: "Winter", term: "Winter 2027", displayTerm: "Winter 2027", courses: [{ course: economics, title: "Intermediate Economics" }] }
     ];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
-    await page.getByRole("button", { name: "Review this plan: Graduate One Year Early" }).click();
+    await visitPlan(page, "one-year-early");
     await expect(page.locator(".accelerated-math-sequence-note")).toContainText(`${math} is scheduled before ${economics}`);
     await expect(page.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
     await expect(page.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
@@ -678,37 +600,12 @@ for (const [math, economics] of [
       ]
     }];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
-    await page.getByRole("button", { name: "Review this plan: Graduate One Year Early" }).click();
+    await visitPlan(page, "one-year-early");
     await expect(page.locator(".accelerated-math-sequence-note")).toHaveCount(0);
     await expect(page.locator(".plan-course-approval")).toContainText("Advisor approval needed");
     await expect(page.locator("[data-plan-conditions]")).toContainText(approvalWarning);
   });
 }
-
-test("a prerequisite conflict preserves both choices and Generate focuses the dependent course", async ({ page }) => {
-  await resetPlanner(page);
-  await chooseStanding(page, "freshman");
-  await continueToCourses(page);
-
-  await setCourseStatus(page, "ECO 213", "Taking now");
-  await setCourseStatus(page, "MAT 113", "Completed", "Status for prerequisite");
-  await setCourseStatus(page, "ECO 113", "Not taken / not sure", "Status for prerequisite");
-
-  const dependent = courseStatusGroup(page, "ECO 213").getByRole("button", { name: "Taking now" });
-  const prerequisite = courseStatusGroup(page, "ECO 113", "Status for prerequisite")
-    .getByRole("button", { name: "Not taken / not sure" });
-  await expect(dependent).toHaveAttribute("aria-pressed", "true");
-  await expect(prerequisite).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator("#course-eco-213 .inline-prerequisite")).toHaveClass(/has-conflict/);
-  await expect(page.locator("#course-eco-213 .prerequisite-conflict")).toContainText("Update one of these course statuses");
-
-  await expect(page.getByRole("button", { name: "Generate my plans" })).toBeEnabled();
-  await page.getByRole("button", { name: "Generate my plans" }).click();
-  await expect(page.locator("#course-eco-213")).toBeFocused();
-  await expect(dependent).toHaveAttribute("aria-pressed", "true");
-  await expect(prerequisite).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".cp7-summary")).toContainText("Correct the highlighted prerequisite issues");
-});
 
 test("ordinary results show backend readiness and explain the plan once in its card", async ({ page }) => {
   const fixture = plannerResultFixture({
@@ -771,7 +668,7 @@ test("a freshman receives the Balanced and Explore the Major normal comparisons"
   await expect(page.locator('article[data-plan-id="explore-first"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="one-year-early"]')).toHaveCount(0);
 
-  await page.getByRole("button", { name: "Review this plan: Explore the Major" }).click();
+  await visitPlan(page, "explore-first");
   await expect(page.getByRole("heading", { name: "Review Explore the Major" })).toBeVisible();
   await expect(page.locator(".plan-course-availability")).not.toHaveCount(0);
   await expect(page.locator(".plan-course-availability").first()).toHaveText("Seat availability not confirmed");
@@ -866,7 +763,7 @@ test("backend conditions and advisor actions retain their student-facing distinc
     conditions: [{ code: "CONFIRM_COURSE", message: "Confirm successful completion of the current course." }]
   });
   await openFixtureResult(page, plannerResultFixture({ plans: [conditional] }));
-  await expect(page.locator(".result-status-value")).toHaveText("Ready with conditions");
+  await expect(page.locator(".result-status-value")).toHaveText("Needs confirmation");
   await expect(page.locator("[data-plan-conditions]")).toContainText("Confirm successful completion of the current course.");
 
   await page.unroute("**/api/majors/map");

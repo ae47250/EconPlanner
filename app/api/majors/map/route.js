@@ -90,7 +90,12 @@ function electiveAdvisorAttention(results) {
 }
 
 function prerequisiteAdvisorAttention(validation, student, policyBundle) {
-  const approvals = validation.conditionalApprovals.map(item => ({
+  // Existing enrollment is course history, not a proposed concurrent placement.
+  // Keep its validation evidence; do not present it as a new registration task.
+  const takingNow = new Set((student.courses || []).filter(course => course.status === "in_progress").map(course => course.code));
+  const approvals = validation.conditionalApprovals
+    .filter(item => !(takingNow.has(item.course) && takingNow.has(item.prerequisite)))
+    .map(item => ({
     code: `${item.code}_${item.course.replace(/\s/g, "_")}_${item.prerequisite.replace(/\s/g, "_")}`,
     title: "Concurrent enrollment approval",
     severity: "warning",

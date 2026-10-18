@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:7219988d20b6f5a1f51a0644ec53f59db63254719c4e75e7c9461d552e223b10",
+  "contentHash": "sha256:902486311257fffcfec9f81bee60abfda575d6d11c99736b0297d05f1645d978",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -6938,6 +6938,7 @@
     ],
     "display": {
       "adjunct": "An extra Fall/Winter adjunct elective may be possible, but 2027–28 staffing, budget and offerings are unconfirmed. Advisor review and matching verified offerings are required.",
+      "capstone": "Senior capstone · Winter. Final year preferred.",
       "caveat": "Past schedules show historical availability, not guaranteed future offerings.",
       "completedAcademicYears": [
         "2022-2023",
@@ -7566,7 +7567,8 @@
     "planningImpact": "NONE",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
-      "OWNER-COURSE-PLANNING-2026-09-28#Workbook-observations"
+      "OWNER-COURSE-PLANNING-2026-09-28#Workbook-observations",
+      "OWNER-CAPSTONE-TIMING-2026-10-17"
     ],
     "status": "INFORMATIONAL_ONLY",
     "workbook": {
@@ -7743,6 +7745,20 @@
         "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
       },
       {
+        "authority": "Project owner and Economics domain expert",
+        "authorityBoundary": "CAPSTONE_TIMING_DISPLAY_PREFERENCE",
+        "confirmedOn": "2026-10-17",
+        "effective": {
+          "from": "2026-10-17",
+          "through": null
+        },
+        "path": "policy/provenance/capstone-timing-2026-10-17.md",
+        "sha256": "307d2927163166d1fff3a67b80c846f3e3f7f7c196655db0112eca418f3748fd",
+        "sourceId": "OWNER-CAPSTONE-TIMING-2026-10-17",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
+      },
+      {
         "authority": "Project owner; inspected local source workbooks and original PDF",
         "authorityBoundary": "VALIDATED_PLAN_PRESENTATION_AND_RECORDED_EVIDENCE_GAPS",
         "effective": {
@@ -7797,6 +7813,20 @@
         "sourceType": "OWNER_CONFIRMATION",
         "statement": "For the existing ECO 461 concurrency exception, exactly one of ECO 213 or ECO 214 must be successfully completed before the target ECO 461 term. Eligible completed and accepted-transfer evidence, a current in-progress course finishing before the target term, and an earlier generated-term course may count. Same-term or later courses and uncertain or unaccepted history, equivalency, substitution, waiver, or prerequisite evidence do not count. Earlier in-progress or planned completion remains conditional on success. This clarifies the existing 2026-08-01 department-confirmed exception and creates no new exception or alternate planning mode.",
         "supersedes": "Ambiguous use of already completed in the 2026-08-01 ECO 461 concurrency wording"
+      },
+      {
+        "authority": "Project owner and Economics domain expert",
+        "authorityBoundary": "OPTIONAL_EXTRA_COURSE_SOFTWARE_CONTRACT",
+        "confirmedOn": "2026-10-17",
+        "effective": {
+          "from": "2026-10-17",
+          "through": null
+        },
+        "path": "policy/provenance/extra-courses-contract-2026-10-17.md",
+        "sha256": "ba01843e2d1bc150c0b14754af0b0607ac7c25492a0420254ebc3ba5fd1adf95",
+        "sourceId": "OWNER-EXTRA-COURSES-2026-10-17",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
       },
       {
         "authority": "Project owner and Economics Department domain expert",

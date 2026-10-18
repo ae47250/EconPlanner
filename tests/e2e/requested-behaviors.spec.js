@@ -1,3 +1,4 @@
+import { visitPlan } from "./cp7-helpers.js";
 import {expect,test} from './nightly-observability.js';
 import {resetPlanner,chooseStanding,continueToCourses,setCourseStatus,courseStatusGroup,generatePlans,fixturePlan,openFixtureResult,plannerResultFixture} from './cp7-helpers.js';
 import {evaluateTermLoad} from '../../lib/decision-engine/placement.js';
@@ -26,13 +27,12 @@ test('a pending-overload move card is visibly disabled and requests evidence',as
   ];
   plan.terms[0].courses[0].moveGuidance = {studentMessage:termLoadMessage(loadDecision,bundle)};
   await openFixtureResult(page,plannerResultFixture({plans:[plan]}));
-  await page.getByRole('button',{name:'Review this plan: Balanced',exact:true}).click();
+  await visitPlan(page, "balanced");
   const destination = page.locator('select[aria-label="Change ECO 113 to"]').locator('option[value="move:2027-WINTER"]');
   await expect(destination).toHaveCount(0);
-  await expect(page.locator('.course-choice-details')).toContainText('Record existing advisor approval');
   await page.getByRole('button',{name:'Change ECO 113',exact:true}).click();
-  await page.getByText(/Why can’t I choose other terms/).click();
-  await expect(page.locator('.course-choice-details')).toContainText('Record existing advisor approval');
+  await expect(page.getByRole('region', {name:'Change ECO 113 options'})).toContainText('An advisor needs to check this move.');
+  await expect(page.locator('.course-choice-details')).toHaveCount(0);
 });
 async function clearAll(page) {
   await page.getByRole('button',{name:'Clear all',exact:true}).click();
@@ -47,7 +47,7 @@ test('fresh and reset sessions submit no selected courses; saved selections surv
   const first = await generatePlans(page);
   expect(first.request().postDataJSON().student.courses).toEqual([]);
   const regeneration = page.waitForResponse(response => response.url().endsWith('/api/majors/map'));
-  await page.getByRole('button',{name:'Regenerate plans',exact:true}).click();
+  await page.getByRole('button',{name:'Regenerate all plans',exact:true}).click();
   expect((await regeneration).request().postDataJSON().student.courses).toEqual([]);
   await page.getByRole('button',{name:'Edit answers',exact:true}).click();
   await setCourseStatus(page,'ECO 113','Completed');
@@ -58,7 +58,7 @@ test('fresh and reset sessions submit no selected courses; saved selections surv
   const restored = await generatePlans(page);
   expect(restored.request().postDataJSON().student.courses.map(course=>[course.code,course.status]).sort()).toEqual([['ECO 113','completed'],['MAT 113','in_progress']]);
   const restoredRegeneration = page.waitForResponse(response => response.url().endsWith('/api/majors/map'));
-  await page.getByRole('button',{name:'Regenerate plans',exact:true}).click();
+  await page.getByRole('button',{name:'Regenerate all plans',exact:true}).click();
   expect((await restoredRegeneration).request().postDataJSON().student.courses).toEqual(restored.request().postDataJSON().student.courses);
   await clearAll(page);
   await chooseStanding(page,'freshman');
@@ -82,9 +82,9 @@ for (const dependent of ['ECO 213','ECO 214']) for (const math of ['MAT 113','MA
 });
 
 for (const scenario of [
-  {name:'normal four Winter units',reserved:'0',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'Ready'},
+  {name:'normal four Winter units',reserved:'0',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'Needs confirmation'},
   {name:'missing overload evidence',reserved:'1',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'More information needed'},
-  {name:'approved five Winter units',reserved:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Ready with conditions'},
+  {name:'approved five Winter units',reserved:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs confirmation'},
   {name:'denied Winter approval',reserved:'1',approval:'NOT_APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Not possible'},
   {name:'Winter overload on probation',reserved:'1',approval:'APPROVED',probation:'ON_ACADEMIC_PROBATION',expected:'Not possible'},
   {name:'six Winter units above ceiling',reserved:'2',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Not possible'},
@@ -109,7 +109,7 @@ for (const scenario of [
   expect(response.request().postDataJSON().student.termLoadOverrides['winter-2027']).toMatchObject({advisorApproval:scenario.approval,academicProbationStatus:scenario.probation});
   await expect(page.locator('.result-status-value')).toContainText(scenario.expected);
   const result = (await response.json()).programs.find(item=>item.economicsPlans);
-  if (scenario.expected.startsWith('Ready')) {
+  if (scenario.expected === 'Needs confirmation') {
     const plan = result.economicsPlans[0];
     expect(plan.validation.valid).toBe(true);
     const winter = plan.validation.policyDecision.decisions.find(decision=>decision.subject.termId==='2027-WINTER'&&decision.ruleIds.includes('CAPACITY-WINTER'));

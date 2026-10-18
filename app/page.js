@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   buildEarlyGraduationContext,
   buildPlanningSlots,
@@ -11,7 +11,6 @@ import {
 } from "../lib/planning/horizon.js";
 import {
   buildPrerequisiteFollowUp,
-  unansweredPrerequisiteQuestions,
   validateStudentPrerequisites
 } from "../lib/planning/prerequisiteFormValidation.js";
 import { acceleratedMathSequenceNotes } from "../lib/planning/acceleratedMathSequence.js";
@@ -31,7 +30,7 @@ import economicsRequirements from "../data/normalized/economics/requirements.jso
 import economicsCourseData from "../data/normalized/economics/courses.json";
 import economicsPlanningConstraints from "../data/normalized/economics/planning-constraints.json";
 import { seatStatusPresentation } from "../lib/planning/seat-status.js";
-import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason } from "../lib/planning/student-language.js";
+import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentTermLabel } from "../lib/planning/student-language.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
@@ -456,7 +455,7 @@ function AdvisorAttention({ plan }) {
   );
 }
 
-function PlanConditions({ plan, catalog }) {
+function PlanConditions({ plan, catalog, showPlanName = false, hideHeading = false }) {
   const conditions = (plan?.planConditions || []).filter(item => item.kind !== "unmet"
     || !plan?.majorRequirementsChecklist?.unmetRequirements?.some(row => row.id === item.requirementId));
   const prerequisiteConditions = conditions.filter(item => item.kind === "prerequisite");
@@ -469,7 +468,7 @@ function PlanConditions({ plan, catalog }) {
     && !coveredNotices.has(item.code) && !messages.has(item.message));
   if (!conditions.length && !notices.length) return null;
   return <section className="plan-notes upfront-conditions" data-plan-conditions>
-    <h2>Things to keep in mind</h2>
+    {!hideHeading && <h2>Things to keep in mind{showPlanName && ` — ${plan.label}`}</h2>}
     {prerequisiteConditions.length > 0 && <div><h3>Classes to finish first</h3><ul>{prerequisiteConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul></div>}
     {seatConditions.length > 0 && <div><h3>Before you register</h3><ul>{seatConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul></div>}
     {otherConditions.length > 0 && <ul>{otherConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul>}
@@ -479,17 +478,17 @@ function PlanConditions({ plan, catalog }) {
   </section>;
 }
 
-function MajorRequirementsChecklist({ plan }) {
+function MajorRequirementsChecklist({ plan, showPlanName = false }) {
   const checklist = plan?.majorRequirementsChecklist;
   if (!checklist?.rows?.length) return null;
   return <section className="major-checklist" data-major-requirements-checklist>
-    <details className="comparison-disclosure"><summary>{checklist.title}</summary>
+    <details className="comparison-disclosure"><summary>{checklist.title}{showPlanName && ` — ${plan.label}`}</summary>
     <div className="comparison-disclosure-content">
     <table>
       <thead><tr><th scope="col">Requirement</th><th scope="col">Course / term</th><th scope="col">Status</th></tr></thead>
       <tbody>{checklist.rows.filter(row => row.status !== "still_needed").map(row => <tr key={row.id} data-requirement-checklist-id={row.id}>
         <th scope="row">{row.label}</th>
-        <td>{row.course ? <><strong>{row.course}</strong>{row.term && ` — ${row.term}`}</> : row.courseTerm}{row.alternatives.length > 1 && <span className="checklist-alternatives">Requirement options: {row.alternatives.join(" / ")}</span>}</td>
+        <td>{row.course ? <><strong>{row.course}</strong>{row.term && ` — ${studentTermLabel(row.term)}`}</> : studentTermLabel(row.courseTerm)}{row.alternatives.length > 1 && <span className="checklist-alternatives">Requirement options: {row.alternatives.join(" / ")}</span>}</td>
         <td><span className={`checklist-status is-${row.status}`}><span className="checklist-symbol" aria-hidden="true">{row.symbol}</span> {row.statusLabel}</span>
           {row.markers.map(marker => <span className="checklist-marker" key={marker}>{marker}</span>)}</td>
       </tr>)}</tbody>
@@ -506,10 +505,115 @@ function MajorRequirementsChecklist({ plan }) {
   </section>;
 }
 
-function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, canUndo }) {
-  const [open, setOpen] = useState(false);
+const CourseMenuContext = createContext(null);
+
+function useEditorPosition(open, anchorRef, placement = "left") {
+  const [position, setPosition] = useState({});
+  useLayoutEffect(() => {
+    if (!open || !anchorRef.current) return;
+    const place = () => {
+      const rect = anchorRef.current.getBoundingClientRect();
+      const width = placement === "button"
+        ? Math.min(320, window.innerWidth - 24)
+        : Math.min(260, Math.max(100, rect.left - 18));
+      const left = placement === "button"
+        ? Math.max(12, Math.min(rect.left, window.innerWidth - width - 12))
+        : Math.max(8, rect.left - width - 8);
+      const top = Math.max(12, Math.min(rect.top, window.innerHeight - 280));
+      setPosition({ position: "fixed", left, top, width,
+        maxHeight: Math.min(320, window.innerHeight - top - 12), overflowY: "auto", margin: 0, zIndex: 20 });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => { window.removeEventListener("resize", place); window.removeEventListener("scroll", place, true); };
+  }, [open, anchorRef, placement]);
+  return position;
+}
+
+function ExtraCoursePicker({ plan, onEdit, busy }) {
+  const planId = plan.id;
+  const [termId, setTermId] = useState("");
+  const term = plan.terms.find(item => item.slotId === termId);
+  const menu = useContext(CourseMenuContext);
+  const menuId = `${planId}:add`;
+  const open = menu.openId === menuId;
+  const trigger = useRef(null);
+  const editorPosition = useEditorPosition(open, trigger, "button");
+  const panel = useRef(null);
+  const container = useRef(null);
+  const [selected, setSelected] = useState(null);
+  const close = () => { menu.setOpenId(current => current === menuId ? null : current); setSelected(null); setTermId(""); };
+  useEffect(() => {
+    if (!open) { setSelected(null); return; }
+    const dismiss = event => { if (!event.composedPath().includes(container.current)) close(); };
+    document.addEventListener("click", dismiss);
+    return () => document.removeEventListener("click", dismiss);
+  }, [open]);
+  const add = async (item, control) => {
+    if (await onEdit({type:"add-extra",planId,toTermId:term.slotId,course:item.course},control)) close();
+  };
+  const usable = (term?.extraCourseOptions || []).filter(item => ["ALLOWED", "CONDITIONAL"].includes(item.status));
+  const blocked = (term?.extraCourseOptions || []).find(item => !["ALLOWED", "CONDITIONAL"].includes(item.status));
+  return <div className="plan-course-actions extra-course-picker" ref={container} onKeyDown={event => {
+    if (event.key === "Escape") { event.stopPropagation(); close(); trigger.current?.focus(); }
+  }}>
+    <button type="button" ref={trigger} aria-expanded={open} aria-label={`Add Econ course: ${plan.label}`} disabled={busy}
+      onClick={() => menu.setOpenId(open ? null : menuId)}>Add Econ course</button>
+    <div hidden={!open} ref={panel} style={editorPosition} className="course-change-panel" role="region" aria-label={`Add Econ course options: ${plan.label}`}>
+      <button type="button" className="close-course-options" onClick={close}>Close ×</button>
+      <strong className="change-menu-heading">{selected ? "Add Extra course" : "Add Economics course"}</strong>
+      {!term ? <>
+        <span>Which term?</span>
+        {plan.terms.map(item => <button type="button" className="change-menu-option" key={item.slotId} onClick={() => setTermId(item.slotId)}>{studentTermLabel(item.term)}</button>)}
+      </> : <>
+      <button type="button" className="change-menu-option" onClick={() => { setTermId(""); setSelected(null); }}>← {studentTermLabel(term.term)}</button>
+      {selected ? <>
+        <strong>{selected.course === "ECO elective" ? "200+ Economics elective" : selected.course}</strong>
+        <p className="change-confirm-warning">{studentFriendlyMoveCondition(selected, selected.course)}</p>
+        <div className="change-confirm-actions"><button type="button" disabled={busy} onClick={event => add(selected,event.currentTarget)}>Add course</button><button type="button" onClick={close}>Cancel</button></div>
+      </> : <>
+        {usable.length ? <section aria-label={usable[0].evidence === "published" ? "Published for this term" : "Future elective"}>
+          <strong className="change-menu-heading">{usable[0].evidence === "published" ? "Published for this term" : "Schedule not yet published"}</strong>
+          {usable.map(item => <button type="button" className="change-menu-option" key={item.course} disabled={busy} onClick={event => item.status === "CONDITIONAL" ? setSelected(item) : add(item,event.currentTarget)}>
+            <span>{item.course === "ECO elective" ? "Add a 200+ elective" : item.course}</span><small>{item.title}</small>
+          </button>)}
+        </section> : <p>{blocked ? studentFriendlyUnavailableReason(blocked) : "No eligible extra course is available in this term."} {blocked && studentFriendlyMoveNextStep(blocked)}</p>}
+        {term.extraCourseHistory?.length > 0 && <details><summary>Previously scheduled — not confirmed</summary>
+          <ul>{term.extraCourseHistory.map(item => <li key={item.course}>{item.course} · {item.title}</li>)}</ul>
+        </details>}
+      </>}
+      </>}
+    </div>
+  </div>;
+}
+
+function courseHasMoveControl(course) {
+  return course.course !== "ECO 461" || (course.moveDestinationOptions || [])
+    .some(option => ["ALLOWED", "CONDITIONAL"].includes(option.status));
+}
+
+function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, canUndo, compact = false }) {
+  const menu = useContext(CourseMenuContext);
+  const menuId = `${planId}:${planCourseIdentity(course)}`;
+  const open = menu.openId === menuId;
+  const setOpen = value => menu.setOpenId(current => value ? menuId : current === menuId ? null : current);
   const [choice, setChoice] = useState("");
   const trigger = useRef(null);
+  const editorPosition = useEditorPosition(open, trigger);
+  const container = useRef(null);
+  const panel = useRef(null);
+  const dismissTimer = useRef(null);
+  useEffect(() => () => clearTimeout(dismissTimer.current), []);
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = event => {
+      if (!event.composedPath().includes(container.current)) { setOpen(false); setChoice(""); }
+    };
+    document.addEventListener("click", dismiss);
+    return () => document.removeEventListener("click", dismiss);
+  }, [open]);
+  useEffect(() => { if (!open) setChoice(""); }, [open]);
   const moves = (course.moveDestinationOptions || []).filter(item => item.status !== "CURRENT")
     .map(item => ({ ...item, key: `move:${item.id}`, edit: { type: "move", toTermId: item.id },
       action: `Keep ${compactPlanCourse(course)} — ${item.label}` }));
@@ -520,58 +624,182 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
       : `Replace with ${item.course} — ${item.label}` }));
   const all = [...moves, ...replacements];
   const usable = all.filter(item => ["ALLOWED", "CONDITIONAL"].includes(item.status));
-  const unavailable = all.filter(item => !["ALLOWED", "CONDITIONAL"].includes(item.status));
+  const guidance = [...new Set(all.filter(item => !["ALLOWED", "CONDITIONAL"].includes(item.status))
+    .map(item => studentFriendlyUnavailableReason({ ...item, movingCourse: course.course }))
+    .filter(reason => /Move .* (?:out|later|first)|needs .* first/i.test(reason)))].slice(0, 2);
+  const optionGroups = usable.reduce((groups, item) => {
+    const label = item.edit.type === "move" ? "Move to"
+      : item.edit.replacementCourse === "ECO elective" ? "Move as a 200+ elective"
+        : studentTermLabel(item.label).replace(/^(\d{4})\/(\d{4}) (.*)$/, (_, start, end, season) => `${season} ${season === "Fall" ? start : end}`);
+    const group = groups.find(group => group.label === label);
+    if (group) group.items.push(item);
+    else groups.push({ label, items: [item] });
+    return groups;
+  }, []);
   const selected = usable.find(item => item.key === choice);
+  useEffect(() => {
+    menu.setConfirmingId(current => open && selected ? menuId : current === menuId ? null : current);
+  }, [open, selected, menuId]);
+  useLayoutEffect(() => {
+    if (open && selected) {
+      clearTimeout(dismissTimer.current);
+      panel.current?.querySelector(".change-confirm-actions button")?.focus({ preventScroll: true });
+    }
+  }, [open, choice]);
   const close = () => { setOpen(false); setChoice(""); trigger.current?.focus(); };
-  return <div className="plan-course-actions">
+  const apply = async (item, control) => {
+    const saved = await onEdit({ ...item.edit, planId, fromTermId: termId, courseId: planCourseIdentity(course) }, control);
+    if (saved) close();
+  };
+  return <div className="plan-course-actions" ref={container}
+    data-current-term={`move:${termId}`} aria-label={`Changes for ${compactPlanCourse(course)}`}
+    onPointerEnter={() => clearTimeout(dismissTimer.current)}
+    onPointerLeave={event => {
+      if (event.pointerType !== "mouse" || busy || selected) return;
+      dismissTimer.current = setTimeout(() => { setOpen(false); setChoice(""); }, 350);
+    }}
+    onKeyDown={event => {
+      if (event.key === "Escape" && !busy) { event.stopPropagation(); close(); }
+      if (event.key === "ArrowDown" && event.target === trigger.current) {
+        event.preventDefault(); setOpen(true);
+        requestAnimationFrame(() => container.current?.querySelector("[data-change-choice]")?.focus());
+      }
+    }}>
     <button type="button" ref={trigger} data-course-edit-id={`${planId}:${planCourseIdentity(course)}:change`}
       aria-label={`Change ${compactPlanCourse(course)}`} aria-expanded={open}
-      disabled={busy} onClick={() => { setOpen(!open); setChoice(""); }}>Change</button>
-    <div hidden={!open} className="course-change-panel" onKeyDown={event => { if (event.key === "Escape" && !busy) { event.stopPropagation(); close(); } }}>
-      {usable.length ? <>
-        <label>Course and destination
-          <select aria-label={`Change ${compactPlanCourse(course)} to`} value={choice || `move:${termId}`} disabled={busy}
-            onChange={event => setChoice(event.target.value)}>
-            <option value={`move:${termId}`}>Choose a change…</option>
-            {usable.map(item => <option key={item.key} value={item.key}>{item.action}{item.status === "CONDITIONAL" ? " (check before applying)" : ""}</option>)}
-          </select>
-        </label>
-        {selected && <>
-          <p className="change-preview">{selected.action}</p>
-          {selected.edit.replacementCourse === "ECO elective" && <p>This replaces the named class with a 200+ Economics elective. You’ll choose the exact class later; the same requirement stays in your plan.</p>}
-          <details className="course-choice-details" open={selected.status === "CONDITIONAL"}>
-            <summary>{selected.status === "CONDITIONAL" ? "Before you apply" : "Why this move works"}</summary>
-            <p>{studentFriendlyUnavailableReason(selected)}</p>
-            <details className="course-reason-details"><summary>Full check details</summary>
-              <p>{selected.message}</p>
-              {selected.sourceRefs?.length > 0 && <details className="course-source-details"><summary>Sources for this check</summary><p>{selected.sourceRefs.join("; ")}</p></details>}
-            </details>
-          </details>
-        </>}
-        <button type="button" disabled={busy || !selected} onClick={async event => {
-          const saved = await onEdit({ ...selected.edit, planId, fromTermId: termId, courseId: planCourseIdentity(course) }, event.currentTarget);
-          if (saved) close();
-        }}>{busy ? "Checking…" : "Apply change"}</button>
-      </> : <p>No other move is available for this class right now.</p>}
-      <button type="button" disabled={busy} onClick={close}>Cancel</button>
-      {unavailable.length > 0 && <details className="course-choice-details">
-        <summary>Why can’t I choose other terms? ({unavailable.length})</summary>
-        <ul>{unavailable.map(item => <li key={item.key}>
-          <strong>{item.edit.type === "move" ? item.label : item.action}</strong>
-          <p>{studentFriendlyUnavailableReason(item)}</p>
-          <details className="course-reason-details"><summary>Full check details</summary>
-            <p>{item.message}</p>
-            {item.sourceRefs?.length > 0 && <details className="course-source-details"><summary>Sources for this check</summary><p>{item.sourceRefs.join("; ")}</p></details>}
-          </details>
-        </li>)}</ul>
-      </details>}
-      {course.offeringInformation && <details className="course-offering-details">
-        <summary>{course.offeringInformation.label}</summary><p>{course.offeringInformation.detail}</p>
-        {course.offeringInformation.sourceRefs?.length > 0 && <details className="course-source-details"><summary>Sources</summary><p>{course.offeringInformation.sourceRefs.join("; ")}</p></details>}
-      </details>}
+      disabled={busy} onClick={() => { setOpen(true); setChoice(""); }}>{compact ? compactPlanCourse(course) : "Change"} ▾</button>
+    <div hidden={!open} ref={panel} style={editorPosition} className="course-change-panel" role="region" aria-label={`Change ${compactPlanCourse(course)} options`}>
+      <div className="course-editor-title"><strong>{compactPlanCourse(course)}</strong><button type="button" className="close-course-options" onClick={close} aria-label="Close course options">Close ×</button></div>
+      {course.course === "ECO 461" && <p>{course.capstoneTimingDisplay || "Senior capstone · Winter."}</p>}
+      {!selected && (course.course !== "ECO 461" || optionGroups.length > 0) && (optionGroups.length ? optionGroups.map((group, groupIndex) => <section className="change-option-group" aria-label={group.label} key={group.label}>
+        {group.items[0].edit.type === "replace-move" && group.items[0].edit.replacementCourse !== "ECO elective" && !optionGroups.slice(0, groupIndex).some(item => item.items[0].edit.type === "replace-move" && item.items[0].edit.replacementCourse !== "ECO elective") && <strong className="change-menu-heading">Take a different course</strong>}
+        <strong className="change-menu-heading">{group.label}</strong>
+        {group.items.map(item => <button type="button" className="change-menu-option"
+          data-change-choice={item.key} data-change-status={item.status} key={item.key} disabled={busy}
+          onClick={event => {
+            if (item.status === "CONDITIONAL" || item.edit.type === "replace-move") { clearTimeout(dismissTimer.current); setChoice(item.key); }
+            else apply(item, event.currentTarget);
+          }}>
+          <span>{item.edit.type === "replace-move" && item.edit.replacementCourse !== "ECO elective" ? item.edit.replacementCourse : studentTermLabel(item.label)}</span>
+          {item.status === "CONDITIONAL" && studentFriendlyMoveCondition(item, course.course) !== "Schedule not yet published." && <small>{studentFriendlyMoveCondition(item, course.course)}</small>}
+        </button>)}
+        {group.items.some(item => item.status === "CONDITIONAL" && studentFriendlyMoveCondition(item, course.course) === "Schedule not yet published.") && <small className="change-confirm-warning">Schedule not yet published.</small>}
+      </section>) : <p>{all.length ? studentFriendlyUnavailableReason({ ...all[0], movingCourse: course.course }) : "No other move is available right now."}</p>)}
+      {selected && <>
+        <strong className="change-confirm-title">{selected.edit.type === "move" ? `Move ${compactPlanCourse(course)}` : `Replace with ${selected.edit.replacementCourse === "ECO elective" ? "a 200+ elective" : selected.edit.replacementCourse}`}</strong>
+        <span className="change-confirm-term">{studentTermLabel(selected.label)}</span>
+        {selected.edit.replacementCourse === "ECO elective" && <p>Choose the exact course later.</p>}
+        <p className="change-confirm-warning">{studentFriendlyMoveCondition(selected, course.course)}</p>
+        <details className="course-reason-details"><summary>Full check details</summary><p>{studentFriendlyMoveDetails(selected)}</p>
+        </details>
+        <div className="change-confirm-actions">
+          <button type="button" aria-label="Apply change" disabled={busy} onClick={event => apply(selected, event.currentTarget)}>{busy ? "Checking…" : selected.edit.type === "move" ? "Move" : "Replace"}</button>
+          <button type="button" disabled={busy} onClick={close}>Cancel</button>
+        </div>
+      </>}
+      {!selected && usable.length === 0 && course.course !== "ECO 461" && guidance.slice(0, 1).map(reason => <p className="change-menu-guidance" key={reason}>{reason}</p>)}
+      {!selected && course.extra === true && <button type="button" disabled={busy} onClick={async event => {
+        if (await onEdit({type:"remove-extra",planId,fromTermId:termId,courseId:planCourseIdentity(course)},event.currentTarget)) close();
+      }}>Remove Extra course</button>}
+
     </div>
     {feedback && <p className={`plan-course-edit-feedback${feedback.failed ? " is-error" : ""}`} role={feedback.failed ? "alert" : "status"}>{feedback.message}</p>}
     {canUndo && <button type="button" disabled={busy} onClick={onUndo}>Undo last plan edit</button>}
+  </div>;
+}
+
+function CourseDragHandle({ course, termId, planId, compact = false, busy, setPendingDrop, setDropMessage, setDraggedCourse, applyDrop }) {
+  const pointerDragRef = useRef(null);
+  useEffect(() => {
+    const cancel = event => {
+      if (event.key === "Escape" && pointerDragRef.current) {
+        pointerDragRef.current = null; setDraggedCourse(null); setDropMessage("Move cancelled.");
+      }
+    };
+    window.addEventListener("keydown", cancel);
+    return () => window.removeEventListener("keydown", cancel);
+  }, [setDraggedCourse, setDropMessage]);
+  return <span
+                                className="course-drag-handle"
+                                title={`Drag ${compactPlanCourse(course)} to another term`}
+                                aria-hidden="true"
+                                onPointerDown={event => {
+                                  if (busy || event.button !== 0) return;
+                                  event.preventDefault();
+                                  event.currentTarget.setPointerCapture(event.pointerId);
+                                  pointerDragRef.current = { x: event.clientX, y: event.clientY, active: false,
+                                    planId: planId, fromTermId: termId, course,
+                                    trigger: event.currentTarget.parentElement.querySelector("[data-course-edit-id]") };
+                                }}
+                                onPointerMove={event => {
+                                  const moving = pointerDragRef.current;
+                                  if (!moving) return;
+                                  if (!moving.active && Math.hypot(event.clientX - moving.x, event.clientY - moving.y) > 5) {
+                                    moving.active = true;
+                                    setPendingDrop(null);
+                                    setDropMessage(`Moving ${compactPlanCourse(course)}. Release over a destination term.`);
+                                    setDraggedCourse(moving);
+                                  }
+                                  if (moving.active) {
+                                    if (event.clientY < 80) window.scrollBy(0, -20);
+                                    else if (event.clientY > window.innerHeight - 80) window.scrollBy(0, 20);
+                                  }
+                                }}
+                                onPointerUp={event => {
+                                  const moving = pointerDragRef.current;
+                                  pointerDragRef.current = null;
+                                  setDraggedCourse(null);
+                                  setDropMessage("");
+                                  if (!moving?.active || busy || moving.planId !== planId) return;
+                                  const target = document.elementFromPoint(event.clientX, event.clientY)?.closest("[data-term-id]");
+                                  const destination = moving.course.moveDestinationOptions?.find(option => option.id === target?.dataset.termId);
+                                  if (!target || target.dataset.planScope !== planId || destination?.status === "CURRENT") return;
+                                  if (!["ALLOWED", "CONDITIONAL"].includes(destination?.status)) {
+                                    setDropMessage(studentFriendlyUnavailableReason(destination));
+                                    return;
+                                  }
+                                  const drop = { ...moving, destination, anchorElement: target };
+                                  if (destination.status === "CONDITIONAL") setPendingDrop(drop);
+                                  else applyDrop(drop, moving.trigger);
+                                }}
+                                onPointerCancel={() => { pointerDragRef.current = null; setDraggedCourse(null); setDropMessage(""); }}
+                              >{compact ? "⠿" : "⠿ Drag"}</span>;
+}
+
+function MoveConfirmation({ drop, onApply, onCancel, busy }) {
+  const panel = useRef(null);
+  const [position, setPosition] = useState({});
+  useLayoutEffect(() => {
+    const place = () => {
+      const margin = 12;
+      const width = Math.min(340, window.innerWidth - margin * 2);
+      const height = panel.current?.getBoundingClientRect().height || 200;
+      const anchor = drop.anchorElement?.getBoundingClientRect();
+      const rightFits = anchor && anchor.right + width + margin <= window.innerWidth;
+      const leftFits = anchor && anchor.left - width - margin >= margin;
+      const left = rightFits ? anchor.right + 6 : leftFits ? anchor.left - width - 6 : anchor?.left || margin;
+      const top = rightFits || leftFits ? anchor.top : anchor?.bottom || margin;
+      setPosition({ width,
+        left: Math.max(margin, Math.min(left, window.innerWidth - width - margin)),
+        top: Math.max(margin, Math.min(top, window.innerHeight - height - margin))
+      });
+    };
+    place();
+    panel.current?.focus({ preventScroll: true });
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => { window.removeEventListener("resize", place); window.removeEventListener("scroll", place, true); };
+  }, [drop]);
+  return <div className="drop-confirmation drop-confirmation-popover" role="region"
+    aria-label="Review move conditions" ref={panel} style={position} tabIndex={-1}
+    onKeyDown={event => { if (event.key === "Escape" && !busy) { event.stopPropagation(); onCancel(); } }}>
+    <strong>Move {compactPlanCourse(drop.course)} to {studentTermLabel(drop.destination.label)}?</strong>
+    <p>{studentFriendlyMoveCondition(drop.destination, drop.course.course)}</p>
+    <details><summary>Check details</summary><p>{drop.destination.message}</p></details>
+    <div className="drop-confirmation-actions">
+      <button type="button" disabled={busy} onClick={event => onApply(drop, event.currentTarget)}>Apply move</button>
+      <button type="button" disabled={busy} onClick={onCancel}>Cancel move</button>
+    </div>
   </div>;
 }
 
@@ -587,6 +815,15 @@ function PlanTimeline({
   onUndoPlanEdit,
   undoCourseId
 }) {
+  const [draggedCourse, setDraggedCourse] = useState(null);
+  const [pendingDrop, setPendingDrop] = useState(null);
+  const [dropMessage, setDropMessage] = useState("");
+  useEffect(() => { if (editingPlanCourseKey) setPendingDrop(null); }, [editingPlanCourseKey]);
+  useEffect(() => {
+    setDraggedCourse(null);
+    setPendingDrop(null);
+    setDropMessage("");
+  }, [activePlanId]);
   if (!plans.length) {
     return planningGaps.length ? (
       <section className="plan-section">
@@ -596,6 +833,14 @@ function PlanTimeline({
   }
 
   const activePlan = plans.find(plan => plan.id === activePlanId) || plans[0];
+  const drag = draggedCourse?.planId === activePlan.id ? draggedCourse : null;
+  const destinationFor = term => drag?.course.moveDestinationOptions?.find(option => option.id === (term.slotId || term.term));
+  const applyDrop = async (drop, trigger) => {
+    setPendingDrop(null);
+    setDropMessage("");
+    await onEditPlanCourse({ type: "move", planId: drop.planId, fromTermId: drop.fromTermId,
+      courseId: planCourseIdentity(drop.course), toTermId: drop.destination.id }, trigger);
+  };
   const mathSequenceNotes = acceleratedMathSequenceNotes(activePlan, COURSE_PREREQUISITES);
   const academicYearGroups = (activePlan.terms || []).reduce((groups, term) => {
     const label = term.academicYear || formatAcademicYear(activePlan.academicYear);
@@ -626,6 +871,9 @@ function PlanTimeline({
           ))}
         </div>
       )}
+      {onEditPlanCourse && <p className="drag-plan-help">Drag a course by its ⠿ handle into another term. Destinations show whether it can move. You can also use Change.</p>}
+      <p className="drag-plan-status" role="status">{dropMessage}</p>
+      {pendingDrop && <MoveConfirmation drop={pendingDrop} onApply={applyDrop} onCancel={() => setPendingDrop(null)} busy={Boolean(editingPlanCourseKey)} />}
       <div
         id={activePlan.id}
         role="region"
@@ -638,14 +886,17 @@ function PlanTimeline({
               <div className="plan-grid">
                 {group.terms.map(term => (
                   <article
-                    className={`term-card${term.isPlaceholder ? " is-placeholder" : ""}`}
+                    className={`term-card${term.isPlaceholder ? " is-placeholder" : ""}${pendingDrop?.destination.id === (term.slotId || term.term) ? " drop-pending" : ""}${drag ? ` drop-${(destinationFor(term)?.status || "unavailable").toLowerCase()}` : ""}`}
+                    data-term-id={term.slotId || term.term}
+                    data-plan-scope={activePlan.id}
                     data-academic-year={term.academicYear || ""}
                     data-placeholder={term.isPlaceholder ? "true" : "false"}
                     data-term-key={term.termKey || ""}
                     data-publication-status={term.publicationStatus || ""}
                     key={term.slotId || term.term}
                   >
-                    <h4>{term.displayTerm || term.term}</h4>
+                    <h4>{studentTermLabel(term.displayTerm || term.term)}</h4>
+                    {drag && <p className="drop-term-hint">{destinationFor(term)?.status === "CURRENT" ? "Current term" : destinationFor(term)?.status === "ALLOWED" ? "Drop to move here" : destinationFor(term)?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(destinationFor(term))}</p>}
                     {term.courses.length > 0 ? (
                       <ul>
                         {term.courses.map(course => {
@@ -657,6 +908,10 @@ function PlanTimeline({
                             ? planEditFeedback : null;
                           return (
                             <li data-requirement-id={courseId} key={`${activePlan.id}-${termId}-${courseId}`}>
+                              {onEditPlanCourse && !course.fixedInProgress && courseHasMoveControl(course) && <CourseDragHandle
+                                course={course} termId={termId} planId={activePlan.id} busy={Boolean(editingPlanCourseKey)}
+                                setPendingDrop={setPendingDrop} setDropMessage={setDropMessage}
+                                setDraggedCourse={setDraggedCourse} applyDrop={applyDrop} />}
                               <div className="plan-course-summary">
                                 <strong>{compactPlanCourse(course)}</strong>
                                 <span>{course.title}</span>
@@ -666,7 +921,7 @@ function PlanTimeline({
                                 {(course.planningMarkers || []).map(marker => <span className="plan-course-approval" key={marker}>{studentFriendlyCourseMarker(marker)}</span>)}
                               </div>
                               {course.offeringInformation && <span className="offering-pattern">{course.offeringInformation.label}</span>}
-                              {onEditPlanCourse && !course.fixedInProgress && <CourseChange
+                              {onEditPlanCourse && !course.fixedInProgress && courseHasMoveControl(course) && <CourseChange
                                 course={course} termId={termId} planId={activePlan.id} onEdit={onEditPlanCourse}
                                 busy={Boolean(editingPlanCourseKey)} feedback={feedback}
                                 onUndo={onUndoPlanEdit} canUndo={undoCourseId === courseId} />}
@@ -836,7 +1091,8 @@ function comparisonScheduleRows(plan) {
     .map(term => ({
       key: `${term.academicYear || ""}-${term.isPlaceholder ? "TBC" : term.displayTerm || term.term}`,
       academicYear: formatAcademicYear(term.academicYear),
-      term: term.isPlaceholder ? "Term to be confirmed" : term.displayTerm || term.term,
+      term: term.isPlaceholder ? "Term to be confirmed" : studentTermLabel(term.displayTerm || term.term),
+      sourceTerm: term,
       courses: (term.courses || []).map(compactPlanCourse)
     }));
 
@@ -864,6 +1120,7 @@ function PlanComparisonScreen({
   planEditStatus,
   planEditFeedback,
   canUndoPlanEdit,
+  undoPlanId,
   onEditCourses,
   onReviewTimeline,
   onClearAll,
@@ -871,6 +1128,7 @@ function PlanComparisonScreen({
   onChoosePlan,
   onSelectPlan,
   onRegenerate,
+  onRegeneratePlan,
   onDownloadPdf,
   downloadButtonRef,
   isDownloadingPdf,
@@ -888,6 +1146,19 @@ function PlanComparisonScreen({
   const acceleratedResult = result?.economicsAcceleratedResult || null;
   const mergePossibleEarlyResult = acceleratedResult?.status === "POSSIBLE"
     && plans.some(plan => plan.id === "one-year-early");
+  const [comparisonDrag, setComparisonDrag] = useState(null);
+  const [comparisonDrop, setComparisonDrop] = useState(null);
+  const [comparisonDropMessage, setComparisonDropMessage] = useState("");
+  useEffect(() => { if (editingPlanCourseKey) setComparisonDrop(null); }, [editingPlanCourseKey]);
+  const applyComparisonDrop = async (drop, trigger) => {
+    setComparisonDrop(null); setComparisonDropMessage("");
+    await onEditPlanCourse({ type: "move", planId: drop.planId, fromTermId: drop.fromTermId,
+      courseId: planCourseIdentity(drop.course), toTermId: drop.destination.id }, trigger);
+  };
+  const [openCourseMenuId, setOpenCourseMenuId] = useState(null);
+  const [confirmingCourseMenuId, setConfirmingCourseMenuId] = useState(null);
+  useEffect(() => { setOpenCourseMenuId(null); setConfirmingCourseMenuId(null); }, [selectedPlanId, view]);
+  useEffect(() => { if (openCourseMenuId) setComparisonDropMessage(""); }, [openCourseMenuId]);
   const [highlightDifferences, setHighlightDifferences] = useState(false);
   const resultHeadingRef = useRef(null);
   const isPlanView = view === PLANNER_VIEWS.PLAN;
@@ -905,15 +1176,14 @@ function PlanComparisonScreen({
     const courseSets = plans.map(plan => new Set(
       rowsByPlan.get(plan.id)?.find(item => item.key === key)?.courses || []
     ));
-    const shared = courseSets.length > 1
-      ? [...courseSets[0]].filter(course => courseSets.every(set => set.has(course)))
-      : [];
+    const shared = [...new Set(courseSets.flatMap(set => [...set]))]
+      .filter(course => courseSets.filter(set => set.has(course)).length > 1);
     return [key, new Set(shared)];
   }));
   const standing = displayName?.trim() || (planningContext?.customGraduationEnabled ? "Custom timeline" : planningContext?.effectiveStandingLabel)
     || planningContext?.standingLabel
     || "Student";
-  const graduationTarget = planningContext?.expectedGraduationTerm || "To be confirmed";
+  const graduationTarget = studentTermLabel(planningContext?.expectedGraduationTerm || "To be confirmed");
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
   const overallStatus = overallPlanReadiness(isPlanView && selectedPlan ? [selectedPlan] : plans);
@@ -944,6 +1214,7 @@ function PlanComparisonScreen({
   })[plan.id] || plan.description;
 
   return (
+    <CourseMenuContext.Provider value={{ openId: openCourseMenuId, setOpenId: setOpenCourseMenuId, confirmingId: confirmingCourseMenuId, setConfirmingId: setConfirmingCourseMenuId }}>
     <main className={`comparison-page${isExiting ? " is-exiting" : ""}`}>
       <style jsx global>{`
         body {
@@ -1121,6 +1392,15 @@ function PlanComparisonScreen({
           font-size: 13px;
         }
         .comparison-difference-key strong { color: #4169a6; }
+        .course-editor-title { display: flex; justify-content: space-between; align-items: center; gap: .25rem; font-size: 13px; }
+        .comparison-plan-details { margin: .6rem 0; text-align: left; }
+        .comparison-plan-details .major-checklist { margin: .4rem 0; padding: 0; border: 0; box-shadow: none; }
+        .comparison-plan-details .comparison-disclosure { margin: .25rem 0; }
+        .comparison-plan-details .comparison-disclosure > summary { padding: .5rem; font-size: 13px; }
+        .comparison-plan-details .plan-notes { margin: 0; padding: .5rem; font-size: 13px; }
+        .comparison-page .plan-edit-instructions { margin: .7rem 0 0; padding: .65rem .85rem; border-left: 3px solid #8065b0; background: #eee9f6; border-radius: 0 .4rem .4rem 0; color: #30234c; }
+        .comparison-page .plan-edit-instructions strong { display: block; font-size: 17px; line-height: 1.4; }
+        .comparison-page .plan-edit-instructions span { display: block; margin-top: .2rem; font-size: 13px; color: #53617a; }
         .comparison-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
@@ -1131,7 +1411,7 @@ function PlanComparisonScreen({
           display: flex;
           min-width: 0;
           flex-direction: column;
-          overflow: hidden;
+          overflow: visible;
           border: 1px solid #d9d9df;
           border-radius: 1rem;
           background: #fff;
@@ -1204,7 +1484,7 @@ function PlanComparisonScreen({
         }
         .compact-schedule th,
         .compact-schedule td {
-          padding: .48rem .5rem;
+          padding: .3rem .4rem;
           border: 1px solid #d9dce2;
           text-align: left;
           vertical-align: top;
@@ -1216,10 +1496,11 @@ function PlanComparisonScreen({
           text-transform: uppercase;
           letter-spacing: .035em;
         }
-        .compact-schedule th:first-child,
-        .compact-schedule td:first-child { width: 29%; white-space: nowrap; }
-        .compact-schedule th:nth-child(2),
-        .compact-schedule td:nth-child(2) { width: 26%; }
+        .compact-schedule th:first-child { width: 6.4rem; }
+        .compact-schedule th:nth-child(2) { width: 5.2rem; }
+        .compact-schedule tbody tr[data-year-start="true"]:not(:first-child) > td { border-top: 2px solid #b7a8cf; }
+        .compact-schedule td { font-size: 13px; }
+        .compact-schedule td[rowspan] { white-space: nowrap; }
         .compact-schedule td:last-child {
           color: #111d36;
           font-weight: 700;
@@ -1276,6 +1557,24 @@ function PlanComparisonScreen({
         .comparison-page .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
         .comparison-page .term-card { align-self: start; min-width: 0; min-height: 8rem; padding: .8rem; border: 1px solid #cbd5e1; border-radius: .5rem; }
         .comparison-page .term-card.is-placeholder { border-style: dashed; background: #f7fbff; }
+        .comparison-page .drag-plan-help { color: #475569; font-size: .9rem; }
+        .comparison-page .drag-plan-status:empty { display: none; }
+        .comparison-page .course-drag-handle { display: inline-block; padding: .35rem .55rem; margin-bottom: .4rem; border: 1px solid #c4b5df; border-radius: .4rem; color: #49317c; background: #f7f3ff; cursor: grab; user-select: none; touch-action: none; font-size: .8rem; }
+        .comparison-page .course-drag-handle:active { cursor: grabbing; }
+        .comparison-page .term-card.drop-allowed { border: 2px solid #168264; background: #effbf5; }
+        .comparison-page .term-card.drop-conditional { border: 2px dashed #946200; background: #fffbeb; }
+        .comparison-page .term-card.drop-unavailable, .comparison-page .term-card.drop-blocked, .comparison-page .term-card.drop-review_required { border-color: #a6a6af; background: #f3f3f5; }
+        .comparison-page .drop-term-hint { font-size: .8rem; line-height: 1.4; }
+        .comparison-page .drop-confirmation { padding: 1rem; margin-bottom: 1rem; border: 1px solid #946200; border-radius: .75rem; background: #fffbeb; }
+        .comparison-page .drop-confirmation button { margin: .5rem .5rem 0 0; }
+        .comparison-page .term-card.drop-pending, .comparison-page .compact-schedule tr.drop-pending { outline: 2px solid #946200; background: #fffbeb; }
+        .comparison-page .drop-confirmation-popover { position: fixed; z-index: 50; margin: 0; padding: .75rem; max-height: calc(100vh - 24px); overflow-y: auto; box-shadow: 0 8px 28px #24174330; font-size: 14px; line-height: 1.4; }
+        .comparison-page .drop-confirmation-popover p { margin: .5rem 0; font-size: 13px; overflow-wrap: anywhere; }
+        .comparison-page .drop-confirmation-popover details { margin: .4rem 0; font-size: 12px; }
+        .comparison-page .drop-confirmation-actions { display: flex; gap: .5rem; }
+        .comparison-page .drop-confirmation-actions button { margin: .25rem 0 0; padding: .4rem .65rem; min-height: 36px; font-size: 13px; }
+        .comparison-page .drop-confirmation-actions button:first-child { background: #49317c; border-color: #49317c; }
+        .comparison-page .drop-confirmation-actions button:last-child { background: white; color: #49317c; border-color: #b8a7d0; }
         .comparison-page .term-card h4 { margin: 0 0 .65rem; color: #17345b; }
         .comparison-page .term-card ul { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
         .comparison-page .term-card li { padding: .55rem; border: 1px solid #d2dbe6; border-radius: .35rem; }
@@ -1321,7 +1620,41 @@ function PlanComparisonScreen({
         .comparison-page .plan-course-actions button { border: 1px solid #b8b8c0; border-radius: .7rem; background: #fff; color: #253753; cursor: pointer; }
         .comparison-page .plan-course-edit-feedback.is-error { padding: .45rem .55rem; border: 1px solid #c85a4c; border-radius: .25rem; background: #fff2ef; color: #6f2119; font-weight: 600; }
         .comparison-page .plan-course-edit-feedback { padding: .65rem; margin: .25rem 0; background: #edf7f0; color: #195e36; border: 1px solid #a5c9b1; border-radius: .7rem; }
-        .comparison-page .course-change-panel { padding: .75rem; border: 1px solid #d9dce2; border-radius: .85rem; background: #f7f7fa; display: grid; gap: .6rem; }
+        .comparison-page .compact-schedule .comparison-editable-course { display: flex; flex-wrap: nowrap; align-items: flex-start; gap: .1rem; padding: 0; font-size: 13px; }
+        .comparison-page .comparison-editable-course .plan-course-actions { display: block; flex: 1; margin: 0; min-width: 0; }
+        .comparison-page .comparison-editable-course .course-drag-handle { flex: 0 0 20px; padding: 2px; margin: 0; font-size: 15px; line-height: 24px; border: 0; background: transparent; text-align: center; }
+        .comparison-page .comparison-editable-course .plan-course-actions > button { display: block; padding: 3px 2px; margin: 0; font-size: 13px; font-weight: 700; line-height: 1.35; min-height: 30px; width: auto; text-align: left; border: 0; border-radius: 4px; background: transparent; box-shadow: none; }
+        .comparison-page .comparison-editable-course .plan-course-actions > button:hover { background: #f1ebfa; }
+        .comparison-page .comparison-editable-course.comparison-different-course { background: #eee3ff; box-shadow: inset 4px 0 #6b3fa0; border-radius: 4px; }
+        .comparison-page .comparison-editable-course.comparison-different-course button { color: #351b57; }
+        .comparison-page .comparison-editable-course.comparison-shared-course button { color: #334155; }
+        .comparison-page .comparison-fixed-course { display: grid; gap: 2px; margin-left: calc(20px + .1rem); padding: 3px 2px; line-height: 1.35; }
+        .comparison-page .comparison-fixed-course strong { font-size: 13px; }
+        .comparison-page .comparison-fixed-course small { font-size: 11px; font-weight: 400; color: #64748b; }
+        .comparison-page .comparison-edit-status { margin: .25rem .7rem; font-size: 12px; }
+        .comparison-page .comparison-undo { margin: .25rem .7rem; padding: .25rem .5rem; font-size: 12px; }
+        .comparison-page .compact-schedule tr.drop-allowed { background: #eaf8f0; outline: 2px solid #168264; }
+        .comparison-page .compact-schedule tr.drop-conditional { background: #fffbeb; outline: 2px dashed #946200; }
+        .comparison-page .comparison-drop-hint { display: block; font-size: .7rem; font-weight: normal; }
+        .comparison-page .download-plan-button { margin: .5rem 0; width: 100%; background: #49317c; border-color: #49317c; color: white; }
+        .comparison-page .plan-course-actions { position: relative; }
+        .comparison-page .course-change-panel { position: static; width: 100%; min-width: 0; box-sizing: border-box; margin: .25rem 0 .5rem; padding: .4rem; border: 1px solid #e4dfee; border-radius: .4rem; background: #faf8fd; display: grid; gap: .3rem; overflow-wrap: anywhere; }
+        .comparison-page .course-change-panel .close-course-options { justify-self: end; width: auto; border: 0; background: transparent; padding: .2rem; font-size: 12px; min-height: 30px; }
+        .comparison-page .change-option-group { margin: 0; padding: 0; }
+        .comparison-page .change-option-group + .change-option-group { border-top: 1px solid #e4dfee; margin-top: .3rem; padding-top: .3rem; }
+        .comparison-page .course-change-panel .change-menu-heading { display: block; padding: .3rem .5rem; font-size: 13px; color: #49317c; }
+        .comparison-page .course-change-panel .change-menu-option { display: flex; align-items: center; justify-content: space-between; gap: .5rem; width: 100%; padding: .4rem .5rem; border: 0; border-radius: .35rem; background: transparent; box-shadow: none; color: #30234c; text-align: left; font-size: .85rem; min-height: 44px; }
+        .comparison-page .course-change-panel .change-menu-option:hover,
+        .comparison-page .course-change-panel .change-menu-option:focus-visible { background: #f1ebfa; }
+        .comparison-page .change-menu-option small { display: block; flex-basis: 100%; color: #775715; font-size: 11px; font-weight: 400; }
+        .comparison-page .course-change-panel .change-menu-option { flex-wrap: wrap; gap: .1rem; min-height: 36px; font-size: 13px; }
+        .comparison-page .change-confirm-title { font-size: 14px; }
+        .comparison-page .change-confirm-term { font-size: 13px; color: #53627a; }
+        .comparison-page .change-confirm-actions { display: flex; gap: .5rem; }
+        .comparison-page .course-change-panel .change-confirm-actions button { width: auto; min-height: 36px; padding: .35rem .75rem; font-size: 13px; }
+        .comparison-page .change-confirm-actions button:first-child { background: #49317c; border-color: #49317c; color: white; }
+        .comparison-page .course-change-panel .change-confirm-warning { color: #775715; font-size: 12px; }
+        .comparison-page .course-change-panel > details { padding: .4rem .5rem; font-size: .75rem; }
         .comparison-page .course-change-panel[hidden] { display: none; }
         .comparison-page .course-change-panel button, .comparison-page .course-change-panel details,
         .comparison-page .course-change-panel label, .comparison-page .course-change-panel select { margin: 0; }
@@ -1702,7 +2035,7 @@ function PlanComparisonScreen({
                 disabled={isDownloadingPdf || Boolean(editingPlanCourseKey)}
                 onClick={() => onDownloadPdf()}
               >
-                {isDownloadingPdf ? "Creating PDF..." : "Download PDF"}
+                {isDownloadingPdf ? "Creating PDF..." : "Download PDF Report"}
               </button>
               <button type="button" className="compare-plans-button" onClick={onBackToCompare}>
                 Compare plans
@@ -1715,7 +2048,7 @@ function PlanComparisonScreen({
             disabled={isGenerating || Boolean(editingPlanCourseKey)}
             onClick={onRegenerate}
           >
-            {isGenerating ? "Regenerating..." : "Regenerate plans"}
+            {isGenerating ? "Regenerating..." : "Regenerate all plans"}
           </button>
           <button type="button" className="edit-courses-button" onClick={onEditCourses}>
             Edit answers
@@ -1752,10 +2085,10 @@ function PlanComparisonScreen({
                 : plans.length === 1
                   ? "Your feasible plan"
                   : "Your planning result"}</h1>
-            <p>{isPlanView
-              ? "Choose Change beside a course to see valid options."
+            <p className={!isPlanView && plans.length > 1 ? "plan-edit-instructions" : undefined}>{isPlanView
+              ? "Drag courses between terms to adjust your schedule."
               : plans.length > 1
-                ? "See when you’d take each class and when each plan could get you to graduation."
+                ? <><strong>Drag ⠿ to move a course, or click a course for options.</strong><span>Moves depend on prerequisites, term limits, and when courses are offered.</span></>
                 : plans.length === 1
                   ? "The planner returned one validated schedule for this graduation target."
                   : "Review this result and the next step below."}</p>
@@ -1774,11 +2107,14 @@ function PlanComparisonScreen({
 
         {!isPlanView && highlightDifferences && (
           <p className="comparison-difference-key">
-            <strong>Blue courses are shared by every plan in the same term.</strong> They remain visible so you can compare the complete timeline; the darker courses are the schedule differences to review.
+            <strong>Purple bars mark placements unique to one plan.</strong> Matching courses in the same year and term stay plain.
           </p>
         )}
 
         {planEditStatus && <p className="plan-edit-status" role="status">{planEditStatus}</p>}
+        {!isPlanView && <p role="status">{comparisonDropMessage}</p>}
+        {!isPlanView && comparisonDrop && <MoveConfirmation drop={comparisonDrop} onApply={applyComparisonDrop}
+          onCancel={() => setComparisonDrop(null)} busy={Boolean(editingPlanCourseKey)} />}
         {isPlanView ? (
           <PlanTimeline
             plans={plans}
@@ -1814,8 +2150,8 @@ function PlanComparisonScreen({
                     {!showEarlyGraduationDetails && <p>{planDescription(plan)}</p>}
                     {showEarlyGraduationDetails && (
                       <dl className="accelerated-target-list early-plan-graduation-dates" aria-label="Graduation dates">
-                        <div><dt>Standard plan</dt><dd>{acceleratedResult.standardTarget}</dd></div>
-                        <div><dt>This plan</dt><dd>{acceleratedResult.acceleratedTarget || "To be confirmed"}</dd></div>
+                        <div><dt>Standard plan</dt><dd>{studentTermLabel(acceleratedResult.standardTarget)}</dd></div>
+                        <div><dt>This plan</dt><dd>{studentTermLabel(acceleratedResult.acceleratedTarget || "To be confirmed")}</dd></div>
                       </dl>
                     )}
                   </div>
@@ -1831,22 +2167,30 @@ function PlanComparisonScreen({
                       </thead>
                       <tbody>
                         {rows.map(row => (
-                          <tr key={`${plan.id}-${row.key}`}>
+                          <tr key={`${plan.id}-${row.key}`} data-year-start={row.yearRowSpan ? "true" : "false"} data-term-id={row.sourceTerm.slotId || row.sourceTerm.term} data-plan-scope={plan.id}
+                            className={comparisonDrop?.planId === plan.id && comparisonDrop.destination.id === (row.sourceTerm.slotId || row.sourceTerm.term) ? "drop-pending" : comparisonDrag?.planId === plan.id ? `drop-${(comparisonDrag.course.moveDestinationOptions?.find(option => option.id === (row.sourceTerm.slotId || row.sourceTerm.term))?.status || "unavailable").toLowerCase()}` : undefined}>
                             {row.yearRowSpan && <td rowSpan={row.yearRowSpan}>{row.academicYear}</td>}
                             <td>{row.term}</td>
                             <td>
-                              {row.courses.length > 0
-                                ? row.courses.map((course, index) => (
-                                    <span
-                                      className={highlightDifferences && sharedCoursesByRow.get(row.key)?.has(course)
-                                        ? "comparison-shared-course"
-                                        : undefined}
-                                      key={`${row.key}-${course}-${index}`}
-                                    >
-                                      {index > 0 ? ", " : ""}{course}
-                                    </span>
-                                  ))
-                                : <span className="comparison-empty-term">No major course assigned</span>}
+                              {row.sourceTerm.courses.length > 0 ? row.sourceTerm.courses.map(course => {
+                                const courseId = planCourseIdentity(course);
+                                const termId = row.sourceTerm.slotId || row.sourceTerm.term;
+                                return <div className={`comparison-editable-course${highlightDifferences ? sharedCoursesByRow.get(row.key)?.has(compactPlanCourse(course)) ? " comparison-shared-course" : " comparison-different-course" : ""}`} data-requirement-id={courseId} key={courseId}>
+                                  {!course.fixedInProgress && courseHasMoveControl(course) ? <>
+                                    <CourseDragHandle compact course={course} termId={termId} planId={plan.id}
+                                      busy={Boolean(editingPlanCourseKey) || isGenerating || isDownloadingPdf}
+                                      setPendingDrop={setComparisonDrop} setDropMessage={setComparisonDropMessage}
+                                      setDraggedCourse={setComparisonDrag} applyDrop={applyComparisonDrop} />
+                                    <CourseChange compact course={course} termId={termId} planId={plan.id} onEdit={onEditPlanCourse}
+                                      busy={Boolean(editingPlanCourseKey) || isGenerating || isDownloadingPdf} />
+                                    {course.extra === true && <small>Extra</small>}
+                                  </> : <span className="comparison-fixed-course"><strong>{compactPlanCourse(course)}</strong>{course.fixedInProgress && <small>Taking now</small>}</span>}
+                                </div>;
+                              }) : <span className="comparison-empty-term">No major course assigned</span>}
+                              {comparisonDrag?.planId === plan.id && <small className="comparison-drop-hint">{(() => {
+                                const option = comparisonDrag.course.moveDestinationOptions?.find(item => item.id === (row.sourceTerm.slotId || row.sourceTerm.term));
+                                return option?.status === "CURRENT" ? "Current term" : option?.status === "ALLOWED" ? "Drop here" : option?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(option);
+                              })()}</small>}
                             </td>
                           </tr>
                         ))}
@@ -1854,18 +2198,35 @@ function PlanComparisonScreen({
                     </table>
                   ) : null}
 
+                  {planEditFeedback?.planId === plan.id && <p className="comparison-edit-status" role={planEditFeedback.failed ? "alert" : "status"}>{planEditFeedback.message}</p>}
+                  {undoPlanId === plan.id && <button className="comparison-undo" type="button" disabled={Boolean(editingPlanCourseKey)} onClick={onUndoPlanEdit}>Undo last plan edit</button>}
+                  <ExtraCoursePicker plan={plan} onEdit={onEditPlanCourse} busy={Boolean(editingPlanCourseKey) || isGenerating || isDownloadingPdf} />
+                  <button type="button" className="comparison-undo" disabled={isGenerating || Boolean(editingPlanCourseKey) || isDownloadingPdf}
+                    aria-label={`Regenerate this plan: ${plan.label}`} onClick={() => onRegeneratePlan(plan.id)}>Regenerate this plan</button>
+                  <div className="comparison-plan-details">
+                    <details className="comparison-disclosure"><summary>Things to keep in mind</summary>
+                      <PlanConditions plan={plan} catalog={report?.catalog} hideHeading />
+                    </details>
+                    <MajorRequirementsChecklist plan={plan} />
+                    <details className="comparison-disclosure"><summary>More about this plan</summary>
+                      <div className="comparison-disclosure-content"><AdvisorAttention plan={plan} /></div>
+                      <ScheduleAvailability schedule={result?.annualSchedule} plan={plan} />
+                    </details>
+                  </div>
                   <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
                     {planReadinessLabel(plan)}
                   </p>
-                  <button
+                  <button type="button" className="download-plan-button" disabled={invalid || isGenerating || isDownloadingPdf || Boolean(editingPlanCourseKey)}
+                    aria-label={`Download PDF Report: ${plan.label}`} onClick={() => onDownloadPdf(plan.id)}>{isDownloadingPdf ? "Creating PDF…" : "Download PDF Report"}</button>
+                  {invalid && <button
                     type="button"
                     className="choose-plan-button"
                     aria-pressed={selected}
-                    aria-label={invalid ? `Review plan issues: ${plan.label}` : `Review this plan: ${plan.label}`}
+                    aria-label={`Review plan issues: ${plan.label}`}
                     onClick={() => onChoosePlan(plan.id)}
                   >
-                    {invalid ? "Review plan issues" : "Review this plan"}
-                  </button>
+                    Review plan issues
+                  </button>}
                 </article>
               );
             })}
@@ -1913,20 +2274,20 @@ function PlanComparisonScreen({
               })[acceleratedResult.status] || "More information needed"}</span>
             </h2>
             <dl className="accelerated-target-list">
-              <div><dt>Standard target</dt><dd>{acceleratedResult.standardTarget}</dd></div>
-              <div><dt>Accelerated target</dt><dd>{acceleratedResult.acceleratedTarget || "To be confirmed"}</dd></div>
+              <div><dt>Standard target</dt><dd>{studentTermLabel(acceleratedResult.standardTarget)}</dd></div>
+              <div><dt>Accelerated target</dt><dd>{studentTermLabel(acceleratedResult.acceleratedTarget || "To be confirmed")}</dd></div>
             </dl>
             {acceleratedResult.status !== "POSSIBLE" && acceleratedResult.message && <p>{acceleratedResult.message}</p>}
           </section>
         )}
-        {selectedPlan?.majorRequirementsChecklist?.unmetRequirements?.length > 0 && <section className="incomplete-candidate">
+        {isPlanView && selectedPlan?.majorRequirementsChecklist?.unmetRequirements?.length > 0 && <section className="incomplete-candidate">
           <strong>Unmet requirements</strong><ul>{selectedPlan.majorRequirementsChecklist.unmetRequirements.map(row => <li key={row.id}>{row.label}: {row.courseTerm}{row.markers?.length > 0 && `; ${row.markers.join("; ")}`}</li>)}</ul>
         </section>}
-        {selectedPlan && <PlanConditions plan={selectedPlan} catalog={report?.catalog} />}
+        {isPlanView && selectedPlan && <PlanConditions plan={selectedPlan} catalog={report?.catalog} showPlanName={!isPlanView} />}
 
-        {selectedPlan && (
+        {isPlanView && selectedPlan && (
           <>
-            <MajorRequirementsChecklist plan={selectedPlan} />
+            <MajorRequirementsChecklist plan={selectedPlan} showPlanName={!isPlanView} />
             <details className="comparison-disclosure"><summary>More about this plan</summary><div className="comparison-disclosure-content"><AdvisorAttention plan={selectedPlan} /></div></details>
             <ScheduleAvailability schedule={result?.annualSchedule} plan={selectedPlan} />
           </>
@@ -1942,6 +2303,7 @@ function PlanComparisonScreen({
         <p className="planning-guide-disclaimer">EconPlanner is a planning guide, not an official degree audit.</p>
       </div>
     </main>
+    </CourseMenuContext.Provider>
   );
 }
 
@@ -1967,7 +2329,7 @@ function planReadinessLabel(plan) {
     return "Needs advisor attention";
   }
   if (readiness === "READY_WITH_CONDITIONS" || disposition.includes("READY_WITH_CONDITIONS")) {
-    return "Ready with conditions";
+    return "Needs confirmation";
   }
   if (readiness === "STUDENT_READY" || disposition.includes("STUDENT_READY")) return "Ready to plan";
   return "Needs advisor attention";
@@ -1976,7 +2338,7 @@ function planReadinessLabel(plan) {
 function overallPlanReadiness(plans = []) {
   const labels = plans.map(planReadinessLabel);
   if (labels.includes("Needs advisor attention")) return "Needs advisor attention";
-  if (labels.includes("Ready with conditions")) return "Ready with conditions";
+  if (labels.includes("Needs confirmation")) return "Needs confirmation";
   return plans.length ? "Ready to plan" : "Not available";
 }
 
@@ -2133,18 +2495,18 @@ function PlannerSummary({
         </div>
         <div>
           <dt>Standard graduation target</dt>
-          <dd>{standardPlanningContext?.expectedGraduationTerm || "To be confirmed"}</dd>
+          <dd>{studentTermLabel(standardPlanningContext?.expectedGraduationTerm || "To be confirmed")}</dd>
         </div>
         {earlyContext?.expectedGraduationTerm && (
           <div>
             <dt>One-year-early target</dt>
-            <dd>{earlyContext.expectedGraduationTerm}</dd>
+            <dd>{studentTermLabel(earlyContext.expectedGraduationTerm)}</dd>
           </div>
         )}
         {planningContext.customGraduationEnabled && (
           <div>
             <dt>Custom graduation target</dt>
-            <dd>{planningContext.customGraduationValidation.valid ? planningContext.expectedGraduationTerm : "Needs more information"}</dd>
+            <dd>{studentTermLabel(planningContext.customGraduationValidation.valid ? planningContext.expectedGraduationTerm : "Needs more information")}</dd>
           </div>
         )}
         <div>
@@ -2267,23 +2629,7 @@ export default function Page() {
   const planningSlotIdSignature = planningSlots.map(slot => slot.id).join("|");
   const planningStart = planningSlots[0]?.label || "To be confirmed";
   const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
-  const unansweredDependentQuestions = formData.courses
-    .filter(course => ["ECO 213", "ECO 214"].includes(course.code)
-      && ["completed", "transfer", "in_progress"].includes(course.status))
-    .flatMap(course => {
-      const followUp = buildPrerequisiteFollowUp({
-        course: course.code,
-        targetStatus: course.status,
-        courses: formData.courses,
-        prerequisites: COURSE_PREREQUISITES
-      });
-      return unansweredPrerequisiteQuestions(followUp).map(question => ({
-        course: course.code,
-        id: question.id,
-        options: [...question.options]
-      }));
-    });
-  const pendingDependentCourseCodes = [...new Set(unansweredDependentQuestions.map(item => item.course))];
+  const pendingDependentCourseCodes = [...new Set(inputPrerequisiteValidation.issues.map(item => item.course))];
   const transferOptions = transferPlanningOptions(planningContext);
   const standingQuestion = planningContext.isSummer
     ? "What year will you be in this fall?"
@@ -2835,7 +3181,7 @@ export default function Page() {
     window.requestAnimationFrame(() => document.getElementById("course-search")?.focus());
   }
 
-  async function mapMajors(event) {
+  async function mapMajors(event, regeneratePlanId = null) {
     event?.preventDefault();
 
     if (generationInFlightRef.current) return;
@@ -2873,16 +3219,6 @@ export default function Page() {
 
     if (!planningContext.planningValidation.valid) {
       setStatus(planningContext.planningValidation.errors[0]);
-      return;
-    }
-
-    if (unansweredDependentQuestions.length > 0) {
-      setStatus("Answer the highlighted prerequisite questions before generating plans.");
-      focusAttention({
-        step: 2,
-        target: unansweredDependentQuestions[0].id,
-        message: `Answer the ${unansweredDependentQuestions[0].course} prerequisite question about ${unansweredDependentQuestions[0].options.join(" or ")}.`
-      });
       return;
     }
 
@@ -2951,13 +3287,34 @@ export default function Page() {
         throw new Error("The planner returned an invalid response. Please try again.");
       }
       const plans = economicsResult(data).economicsPlans;
+      if (regeneratePlanId) {
+        const replacement = plans.find(plan => plan.id === regeneratePlanId);
+        if (!replacement) throw new Error("This plan could not be regenerated. Your existing plan is unchanged.");
+        const peers = (economicsResult(report)?.economicsPlans || []).map(plan => plan.id === regeneratePlanId ? replacement : plan);
+        const checkedResponse = await fetch("/api/majors/map", {
+          method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
+          body: JSON.stringify({ action: "validate-plan", student, plan: compactEconomicsPlanForValidation(replacement), plans: peers.map(compactEconomicsPlanForValidation) })
+        });
+        const checked = await checkedResponse.json();
+        if (requestId !== generationRequestRef.current || controller.signal.aborted) return;
+        if (!checkedResponse.ok || !checked.plan?.validation?.valid || !checked.planSetValidation?.valid) throw new Error(checked.error || "The regenerated plan could not be validated. Your existing plans are unchanged.");
+        if (plannerInputSignature(latestFormRef.current) !== requestSignature) throw new Error("Your answers changed. Generate again with your current answers.");
+        const updated = replaceEconomicsPlan(report,regeneratePlanId,checked.plan,checked.planSetValidation);
+        latestReportRef.current = updated;
+        setReport(updated);
+        setPlanEditUndo(null);
+        setPlanEditFeedback({planId:regeneratePlanId,message:"This plan was regenerated."});
+        setPlanEditStatus("");
+        setStatus("");
+        return;
+      }
       const firstPlanId = plans[0]?.id || "";
       generatedInputSignatureRef.current = requestSignature;
       setIsComparisonExiting(false);
       setInputBlock(null);
       setReport(data);
       setSelectedPlanId(firstPlanId);
-      setPlanEditStatus(plans.length ? "Plans generated." : "Plan review ready.");
+      setPlanEditStatus(plans.length ? "" : "Plan review ready.");
       setPlannerView(PLANNER_VIEWS.COMPARE);
       setPlanEditUndo(null);
       window.history.pushState(
@@ -2988,10 +3345,10 @@ export default function Page() {
     }
   }
 
-  async function downloadSelectedPlanPdf() {
-    if (pdfDownloadInFlightRef.current) return;
+  async function downloadSelectedPlanPdf(planId = selectedPlanId) {
+    if (pdfDownloadInFlightRef.current || planEditInFlightRef.current || generationInFlightRef.current) return;
     const selectedPlan = (economicsResult(report)?.economicsPlans || [])
-      .find(plan => plan.id === selectedPlanId);
+      .find(plan => plan.id === planId);
     if (!selectedPlan) {
       setPdfStatus("Choose a plan before downloading its PDF.");
       return;
@@ -3002,6 +3359,7 @@ export default function Page() {
     pdfDownloadAbortRef.current = controller;
     setIsDownloadingPdf(true);
     setPdfStatus("Creating your PDF...");
+    if (pdfOperationRef.current?.selectedPlan?.id !== selectedPlan.id) pdfOperationRef.current = null;
     if (!pdfOperationRef.current) {
       pdfOperationRef.current = {
         student: { ...formData, courses: selectedCourses(formData.courses) },
@@ -3086,13 +3444,6 @@ export default function Page() {
       message: issue.message
     });
   }
-  for (const question of unansweredDependentQuestions) {
-    attentionItems.push({
-      step: 2,
-      target: question.id,
-      message: `Answer the ${question.course} prerequisite question about ${question.options.join(" or ")}.`
-    });
-  }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -3122,16 +3473,15 @@ export default function Page() {
     );
   }
 
-  function renderStatusControls(code, labelPrefix = code, compact = false, includeUncertain = false) {
+  function renderStatusControls(code, labelPrefix = code, compact = false) {
     const course = formData.courses.find(item => item.code === code) || blankCourse({ code, title: courseTitle(code), units: 1 });
     const activeStatus = visibleCourseStatus(course);
     const statusChoices = [
       ["completed", "Completed"],
-      ["in_progress", "Taking now"],
-      ...(includeUncertain ? [["uncertain", "Not taken / not sure"]] : [])
+      ["in_progress", "Taking now"]
     ];
     return (
-      <div className={`course-toggles${compact ? " is-compact" : ""}${includeUncertain ? " has-three" : ""}`} role="group" aria-label={`Status for ${labelPrefix}`}>
+      <div className={`course-toggles${compact ? " is-compact" : ""}`} role="group" aria-label={`Status for ${labelPrefix}`}>
         {statusChoices.map(([value, label]) => {
           const selected = activeStatus === value;
           return (
@@ -3166,7 +3516,7 @@ export default function Page() {
     return (
       <div className={`inline-prerequisite${hasExplicitConflict ? " has-conflict" : ""}`}>
         {followUp.questions.length > 0 && (
-          <p role="status"><strong>Before we can use {course.code}, tell us about {followUp.questions.length === 1 ? "this prerequisite" : "these prerequisites"}.</strong></p>
+          <p role="status"><strong>Prerequisites for {course.code}</strong></p>
         )}
         {followUp.questions.map(question => (
           <section
@@ -3185,7 +3535,7 @@ export default function Page() {
                   <strong>{option}</strong>
                   <small>{courseTitle(option)}</small>
                 </div>
-                {renderStatusControls(option, `prerequisite ${option}`, true, true)}
+                {renderStatusControls(option, `prerequisite ${option}`, true)}
               </div>
             ))}
             {hasExplicitPrerequisiteConflict(question) && (
@@ -3197,9 +3547,7 @@ export default function Page() {
             )}
           </section>
         ))}
-        {followUp.conditionalApprovals.map(approval => (
-          <p className="prerequisite-approval" key={`${approval.course}-${approval.prerequisite}`}>{approval.message}</p>
-        ))}
+
       </div>
     );
   }
@@ -3331,7 +3679,7 @@ export default function Page() {
 
       const sourceTerm = sourcePlan.terms.find(term => (term.slotId || term.term) === edit.fromTermId);
       const selectedCourse = sourceTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
-      if (!selectedCourse) {
+      if (!selectedCourse && edit.type !== "add-extra") {
         setPlanEditStatus("That course could not be found in the selected plan.");
         return;
       }
@@ -3379,7 +3727,7 @@ export default function Page() {
         setReport(nextReport);
         const targetTerm = data.plan.terms.find(term => (term.slotId || term.term) === (edit.toTermId || edit.fromTermId));
         const changedCourse = targetTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
-        const resultMessage = `${edit.type === "move" ? `Moved to ${targetTerm?.term || "selected term"}` : "Course updated"}.${changedCourse?.publicationStatus === "PLANNING_PROJECTION" ? "" : " Plan checks pass."}`;
+        const resultMessage = `${edit.type === "move" ? `Moved to ${targetTerm?.term || "selected term"}` : edit.type === "add-extra" ? "Extra course added" : edit.type === "remove-extra" ? "Extra course removed" : "Course updated"}.${changedCourse?.publicationStatus === "PLANNING_PROJECTION" ? "" : " Plan checks pass."}`;
         setPlanEditStatus("");
         setPlanEditFeedback({ planId: sourcePlan.id, fromTermId: edit.toTermId || edit.fromTermId, courseId: edit.courseId, message: resultMessage, controlKey: `${sourcePlan.id}:${edit.courseId}:change` });
         return true;
@@ -3473,6 +3821,7 @@ export default function Page() {
           editingPlanCourseKey={editingPlanCourseKey}
           planEditStatus={planEditStatus}
           planEditFeedback={planEditFeedback}
+          undoPlanId={planEditUndo?.planId}
           canUndoPlanEdit={planEditUndo?.planId === selectedPlanId ? (planEditUndo.courseId || "__plan__") : null}
           onEditCourses={returnToCourseSelection}
           onReviewTimeline={() => returnToInputStep(1)}
@@ -3481,6 +3830,7 @@ export default function Page() {
           onChoosePlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
           onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
           onRegenerate={() => mapMajors()}
+          onRegeneratePlan={planId => mapMajors(null, planId)}
           onDownloadPdf={downloadSelectedPlanPdf}
           downloadButtonRef={downloadButtonRef}
           isDownloadingPdf={isDownloadingPdf}
@@ -3942,7 +4292,7 @@ export default function Page() {
                 </fieldset>
                 {formData.academicStanding && !formData.isTransferStudent && !formData.customGraduationEnabled && (
                   <p className="standing-feedback">
-                    Based on {planningContext.standingLabel.toLowerCase()} standing, we’ll plan through <strong>{planningContext.expectedGraduationTerm}</strong>.
+                    Based on {planningContext.standingLabel.toLowerCase()} standing, we’ll plan through <strong>{studentTermLabel(planningContext.expectedGraduationTerm)}</strong>.
                   </p>
                 )}
                 {planningContext.currentTermPlanningWindow && (
@@ -3964,7 +4314,7 @@ export default function Page() {
                           clearInputFeedback();
                         }}
                       />
-                      <span>My schedule for {planningContext.currentTermPlanningWindow.displayTerm} is already set — don&apos;t add courses to this term.</span>
+                      <span>My schedule for {studentTermLabel(planningContext.currentTermPlanningWindow.displayTerm)} is already set — don&apos;t add courses to this term.</span>
                     </label>
                   </div>
                 )}
@@ -3987,7 +4337,7 @@ export default function Page() {
                         ? "I’d like to graduate next year"
                         : "I’d like to graduate one year early"}
                     </button>
-                    <p>Standard target: {planningContext.expectedGraduationTerm}. Accelerated target: {buildEarlyGraduationContext(planningContext)?.expectedGraduationTerm}.</p>
+                    <p>Standard target: {studentTermLabel(planningContext.expectedGraduationTerm)}. Accelerated target: {studentTermLabel(buildEarlyGraduationContext(planningContext)?.expectedGraduationTerm)}.</p>
                   </div>
                 )}
                 <div className="custom-timeline-disclosure">
@@ -4029,12 +4379,12 @@ export default function Page() {
                           >
                             <option value="">Choose a graduation year</option>
                             {[...transferOptions.graduationYears, transferOptions.otherGraduationYear].map(year => (
-                              <option value={year} key={year}>Spring/May {year}</option>
+                              <option value={year} key={year}>May {year}</option>
                             ))}
                           </select>
                         </label>
                       </div>
-                      <p className="custom-target"><strong>Custom target:</strong> {planningContext.customGraduationValidation.valid ? planningContext.expectedGraduationTerm : "Choose a graduation year above."}</p>
+                      <p className="custom-target"><strong>Custom target:</strong> {studentTermLabel(planningContext.customGraduationValidation.valid ? planningContext.expectedGraduationTerm : "Choose a graduation year above.")}</p>
                       {!planningContext.customGraduationValidation.valid && (
                         <ul className="custom-errors">
                           {planningContext.customGraduationValidation.errors.map(error => <li key={error}>{error}</li>)}

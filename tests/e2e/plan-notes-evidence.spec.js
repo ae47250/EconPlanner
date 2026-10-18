@@ -1,3 +1,4 @@
+import { visitPlan } from "./cp7-helpers.js";
 import { expect, test } from './nightly-observability.js';
 import AxeBuilder from '@axe-core/playwright';
 import { writeFile } from 'node:fs/promises';
@@ -53,7 +54,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     }
     await recordLiveMessages('sophomore: generation');
     for (const plan of plans) {
-      await page.getByRole('button', {name:new RegExp(`^Review this plan: ${plan.label}$`)}).click();
+      await visitPlan(page, plan.id);
       await expect(page.locator('[data-plan-notes] [data-plan-note]')).toHaveCount(plan.planNotes.length);
       if (await page.locator('[data-major-requirements-checklist] > details').getAttribute('open') === null) await page.locator('[data-major-requirements-checklist] > details > summary').click();
       const evidenceSummary = page.getByText('More about this plan', {exact:true});
@@ -64,7 +65,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       for (const row of plan.majorRequirementsChecklist.rows) {
         const rendered = checklist.locator(`[data-requirement-checklist-id="${row.id}"]`);
         await expect(rendered.getByRole('rowheader')).toHaveText(row.label);
-        await expect(rendered).toContainText(row.courseTerm);
+        await expect(rendered).toContainText(row.courseTerm.replaceAll("Spring/May", "May"));
         await expect(rendered.locator('.checklist-status')).toContainText(row.statusLabel);
         for (const marker of row.markers) await expect(rendered).toContainText(marker);
       }
@@ -122,9 +123,8 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     plans = (await moveProfile.json()).programs.find(item => item.program.id === 'economics-base').economicsPlans;
       await expect(page.getByRole('heading', {name:'Compare your course plans',exact:true})).toBeVisible();
     await recordLiveMessages('freshman: generation');
-    await page.getByRole('button', {name:/^Review this plan: One Year Early$/}).click();
-    const control = page.locator('select[aria-label="Change MAT 217 to"]');
-    await expect(control.locator('option[value="move:winter-2027"]')).toBeEnabled();
+    await visitPlan(page, "one-year-early");
+    const control = page.locator('.plan-course-actions[aria-label="Changes for MAT 217"]');
     await expect(page.locator('.accelerated-math-sequence-note').first()).toBeHidden();
     await page.getByText('More planning details', {exact:true}).click();
     await expect(page.locator('.accelerated-math-sequence-note').first()).toBeVisible();
@@ -136,32 +136,36 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       edit:{type:'move',fromTermId:from.slotId,toTermId:'winter-2029',courseId:'statistics'}}});
     expect(rejected.status()).toBe(422);
     await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
-    await control.focus();
+
     const validated = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-    if (!await control.isVisible()) await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
-    await control.selectOption('move:winter-2027');
-    await page.getByRole('button',{name:'Apply change',exact:true}).click();
+    const menu = control.getByRole('region', {name:'Change MAT 217 options',exact:true});
+    if (!await menu.isVisible()) await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
+    const option = menu.locator('[data-change-choice="move:winter-2027"]');
+    const conditional = await option.getAttribute('data-change-status') === 'CONDITIONAL';
+    await option.focus();
+    await page.keyboard.press('Enter');
+    if (conditional) await menu.getByRole('button',{name:'Apply change',exact:true}).click();
     expect((await validated).status()).toBe(200);
     await expect(page.getByRole('button',{name:'Change MAT 217',exact:true})).toBeFocused();
     await expect(page.locator('.plan-course-edit-feedback')).toContainText('Moved to');
     await expect(page.locator('.plan-course-edit-feedback')).toHaveText('Moved to Winter 2027. Plan checks pass.');
     await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText('MAT 217 — Winter 2027');
     await recordLiveMessages('MAT 217: move to Winter 2027');
-    expect(await control.locator('option').evaluateAll(options => Math.max(...options.map(option => option.text.length)))).toBeLessThan(80);
+    expect(await control.locator('[data-change-choice]').evaluateAll(options => Math.max(...options.map(option => option.innerText.length)))).toBeLessThan(120);
     await page.getByRole('button', {name:'Undo last plan edit'}).click();
-    await expect(control).toHaveValue(`move:${from.slotId}`);
-    await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText(`MAT 217 — ${from.term}`);
+    await expect(control).toHaveAttribute('data-current-term',`move:${from.slotId}`);
+    await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText(`MAT 217 — ${from.term.replaceAll("Spring/May", "May")}`);
     await expect(page.locator('.plan-course-edit-feedback')).toHaveText('Change undone.');
     await recordLiveMessages('MAT 217: undo');
     const again = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-    if (!await control.isVisible()) await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
-    await control.selectOption('move:winter-2027');
-    await page.getByRole('button',{name:'Apply change',exact:true}).click();
+    await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
+    await option.click();
+    if (conditional) await menu.getByRole('button',{name:'Apply change',exact:true}).click();
     expect((await again).status()).toBe(200);
     await expect(page.locator('.plan-course-edit-feedback')).toContainText('Moved to');
     await recordLiveMessages('MAT 217: move again');
     await reloadPlanner(page);
-    await expect(control).toHaveValue('move:winter-2027');
+    await expect(control).toHaveAttribute('data-current-term','move:winter-2027');
     await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText('MAT 217 — Winter 2027');
     // Saved display fields cannot manufacture credit; the API rebuilds them on reload.
     await page.evaluate(() => {
@@ -173,7 +177,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       sessionStorage.setItem(key,JSON.stringify(state));
     });
     await reloadPlanner(page);
-    await expect(control).toHaveValue('move:winter-2027');
+    await expect(control).toHaveAttribute('data-current-term','move:winter-2027');
     await expect(page.locator('[data-major-requirements-checklist] tbody .checklist-status.is-completed')).toHaveCount(0);
     await expect(page.locator('[data-plan-conditions]')).toContainText('Senior standing is assumed');
     await recordLiveMessages('MAT 217: reload');
@@ -221,7 +225,7 @@ test('actual completed and current checklist credit stays distinct from future a
   const plans=(await response.json()).programs.find(program=>program.economicsPlans).economicsPlans;
   expect(plans).toHaveLength(3);
   for(const plan of plans) {
-    await page.getByRole('button',{name:new RegExp(`^Review this plan: ${plan.label}$`)}).click();
+    await visitPlan(page, plan.id);
     const checklist=page.locator('[data-major-requirements-checklist]');
     await expect(checklist.locator('[data-requirement-checklist-id="eco-113"] .checklist-status')).toHaveText('✓ Completed');
     await expect(checklist.locator('[data-requirement-checklist-id="eco-114"] .checklist-status')).toHaveText('◐ In progress');

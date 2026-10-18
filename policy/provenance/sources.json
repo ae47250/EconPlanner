@@ -394,6 +394,34 @@
         "through": null
       },
       "supersedes": "Prior PDF year-card layout and Still needed standard checklist legend; internal unmet evidence and all academic rules retained"
+    },
+    {
+      "sourceId": "OWNER-EXTRA-COURSES-2026-10-17",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics domain expert",
+      "authorityBoundary": "OPTIONAL_EXTRA_COURSE_SOFTWARE_CONTRACT",
+      "path": "policy/provenance/extra-courses-contract-2026-10-17.md",
+      "confirmedOn": "2026-10-17",
+      "sha256": "ba01843e2d1bc150c0b14754af0b0607ac7c25492a0420254ebc3ba5fd1adf95",
+      "effective": {
+        "from": "2026-10-17",
+        "through": null
+      },
+      "supersedes": null
+    },
+    {
+      "sourceId": "OWNER-CAPSTONE-TIMING-2026-10-17",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics domain expert",
+      "authorityBoundary": "CAPSTONE_TIMING_DISPLAY_PREFERENCE",
+      "path": "policy/provenance/capstone-timing-2026-10-17.md",
+      "confirmedOn": "2026-10-17",
+      "sha256": "307d2927163166d1fff3a67b80c846f3e3f7f7c196655db0112eca418f3748fd",
+      "effective": {
+        "from": "2026-10-17",
+        "through": null
+      },
+      "supersedes": null
     }
   ],
   "authorityHierarchy": [

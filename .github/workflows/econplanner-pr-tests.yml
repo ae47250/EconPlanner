@@ -107,7 +107,8 @@ jobs:
   browser:
     name: Browser accessibility and adversarial tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # The full serial browser suite exceeded 20 minutes on hosted runners.
+    timeout-minutes: 30
     env:
       PLAYWRIGHT_PORT: 3100
     steps:
