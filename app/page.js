@@ -1677,7 +1677,7 @@ function PlanComparisonScreen({
         .comparison-page .comparison-brand-logo { width: 110px; }
         .comparison-page .comparison-actions { flex-wrap: wrap; margin-left: auto; gap: .5rem; }
         .comparison-page .comparison-actions > button { flex: 0 0 auto; white-space: nowrap; min-height: 40px; }
-        .comparison-page .result-progress { flex-shrink: 0; }
+        .comparison-page .result-progress { min-width: 0; max-width: 100%; }
         .comparison-page .comparison-student { flex-shrink: 0; }
         .comparison-page summary { cursor: pointer; }
         .comparison-page button:focus-visible, .comparison-page select:focus-visible, .comparison-page summary:focus-visible { outline: 3px solid #365fba; outline-offset: 3px; }
@@ -1736,7 +1736,7 @@ function PlanComparisonScreen({
           background: #fff;
           color: #41506a;
         }
-        .result-progress ol { display: flex; gap: .65rem; margin: 0; padding: 0; list-style: none; }
+        .result-progress ol { display: flex; flex-wrap: wrap; gap: .65rem; margin: 0; padding: 0; list-style: none; }
         .result-progress li { color: #667085; font-size: 14.4px; }
         .result-progress li::before { content: "✓ "; color: #4b2e83; }
         .result-progress li.is-current { color: #18202b; font-weight: 700; }
@@ -2218,15 +2218,15 @@ function PlanComparisonScreen({
                   </p>
                   <button type="button" className="download-plan-button" disabled={invalid || isGenerating || isDownloadingPdf || Boolean(editingPlanCourseKey)}
                     aria-label={`Download PDF Report: ${plan.label}`} onClick={() => onDownloadPdf(plan.id)}>{isDownloadingPdf ? "Creating PDF…" : "Download PDF Report"}</button>
-                  {invalid && <button
+                  <button
                     type="button"
                     className="choose-plan-button"
                     aria-pressed={selected}
-                    aria-label={`Review plan issues: ${plan.label}`}
+                    aria-label={`${invalid ? "Review plan issues" : "View/edit this plan"}: ${plan.label}`}
                     onClick={() => onChoosePlan(plan.id)}
                   >
-                    Review plan issues
-                  </button>}
+                    {invalid ? "Review plan issues" : "View/edit this plan"}
+                  </button>
                 </article>
               );
             })}
@@ -2611,6 +2611,8 @@ export default function Page() {
   const [migrationNotice, setMigrationNotice] = useState("");
   const [inputBlock, setInputBlock] = useState(null);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [answersSaveFailed, setAnswersSaveFailed] = useState(false);
+  const [planSaveFailed, setPlanSaveFailed] = useState(false);
   const [status, setStatus] = useState("");
   const [report, setReport] = useState(null);
   const [plannerView, setPlannerView] = useState(PLANNER_VIEWS.INPUT);
@@ -2844,8 +2846,9 @@ export default function Page() {
         courseSearch,
         intakeStep
       }));
+      setAnswersSaveFailed(false);
     } catch {
-      // Local storage may be unavailable in restricted browser sessions.
+      setAnswersSaveFailed(true);
     }
   }, [courseSearch, formData, intakeStep, isHydrated]);
 
@@ -2882,11 +2885,13 @@ export default function Page() {
             reportContextId: reportContextIdRef.current
           })
         ));
+        setPlanSaveFailed(false);
       } else if (!recoverableSessionRef.current) {
         window.sessionStorage.removeItem(GENERATED_PLANNER_SESSION_KEY);
+        setPlanSaveFailed(false);
       }
     } catch {
-      // Session storage may be unavailable in restricted browser sessions.
+      setPlanSaveFailed(true);
     }
   }, [inputBlock, isHydrated, planEditUndo, plannerView, report, selectedPlanId]);
 
@@ -3793,6 +3798,13 @@ export default function Page() {
     returnToInputStep(2);
   }
 
+  const saveWarning = (answersSaveFailed || planSaveFailed) ? (
+    <div role="alert" style={{ margin: "1rem", padding: "1rem", border: "2px solid #946200", background: "#fff8e8", color: "#503600", lineHeight: 1.5 }}>
+      Your {answersSaveFailed && planSaveFailed ? "answers and plan changes are" : answersSaveFailed ? "answers are" : "plan changes are"} unsaved.
+      {" "}You can keep working here, but these changes may be lost if you reload or close this page.
+    </div>
+  ) : null;
+
   if (!isHydrated) {
     return (
       <main className="planner-loading" aria-busy="true" aria-label="Loading EconPlanner">
@@ -3808,6 +3820,7 @@ export default function Page() {
   if (isHydrated && (report || inputBlock) && plannerView !== PLANNER_VIEWS.INPUT) {
     return (
       <>
+        {saveWarning}
         <PlanComparisonScreen
           report={report}
           planResult={inputBlock?.economicsPlanResult}
@@ -3846,6 +3859,7 @@ export default function Page() {
   return (
     <>
     <main className="container cp7-container">
+      {saveWarning}
       <style jsx global>{`
         :root {
           --cp7-ink: #18202b;

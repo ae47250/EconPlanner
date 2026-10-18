@@ -1290,3 +1290,94 @@ for (const width of [390, 1440]) {
     await expect(picker.getByRole('button', { name: /ECO 161/ })).toBeVisible();
   });
 }
+
+for (const width of [320, 1440]) {
+  test(`ordinary plan selection and editing journey at ${width}px preserves both plans and agrees with reports`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await resetPlanner(page);
+    await chooseStanding(page, 'freshman');
+    await page.locator('details.more-details > summary').first().click();
+    await page.getByLabel('Plan creation date', {exact:true}).fill('2026-07-30');
+    await continueToCourses(page);
+    const response = await generatePlans(page);
+    const student = response.request().postDataJSON().student;
+    const result = await response.json();
+    const plans = result.programs.find(p=>p.economicsPlans).economicsPlans;
+    const plan = plans.find(p=>p.label==='Explore the Major');
+    expect(plan).toBeTruthy();
+    const may = plan.terms.find(t=>t.termKey==='Spring' && t.courses.some(c=>c.course==='ECO elective' && c.moveDestinationOptions?.some(o=>['ALLOWED','CONDITIONAL'].includes(o.status))));
+    expect(may).toBeTruthy();
+    const course = may.courses.find(c=>c.course==='ECO elective' && c.moveDestinationOptions?.some(o=>['ALLOWED','CONDITIONAL'].includes(o.status)));
+    for (const candidate of plans) {
+      const open = page.getByRole('button', {name:`View/edit this plan: ${candidate.label}`,exact:true});
+      await expect(open).toBeVisible();
+      await open.press('Enter');
+      await expect(page.getByRole('button',{name:candidate.label,exact:true})).toHaveAttribute('aria-pressed','true');
+      await page.getByRole('button',{name:'Compare plans',exact:true}).press('Enter');
+    }
+    await page.getByRole('button', {name:`View/edit this plan: ${plan.label}`,exact:true}).press('Enter');
+    const scope = page.locator('.plan-section');
+    const row = () => scope.locator(`.term-card > ul > li[data-requirement-id="${course.requirementId}"]`);
+    await row().getByRole('button',{name:/^Change /}).press('Enter');
+    const move = row().locator('[data-change-choice^="move:"]').first();
+    const conditional = await move.getAttribute('data-change-status') === 'CONDITIONAL';
+    let pending = validationResponse(page);
+    await move.press('Enter');
+    if(conditional) await row().getByRole('button',{name:'Apply change',exact:true}).press('Enter');
+    expect((await pending).status()).toBe(200);
+    await row().getByRole('button',{name:/^Change /}).press('Enter');
+    // Select a confirmed named May offering before exercising conversion back
+    // to an unnamed elective in an unpublished term.
+    await row().locator('[data-change-choice="replace:spring-2027:ECO 222"]').press('Enter');
+    pending = validationResponse(page);
+    await row().getByRole('button',{name:'Apply change',exact:true}).press('Enter');
+    expect((await pending).status()).toBe(200);
+    await row().getByRole('button',{name:'Change ECO 222',exact:true}).press('Enter');
+    const replacement = row().locator('[data-change-choice="replace:fall-2027:ECO elective"]');
+    await expect(replacement).toBeVisible();
+    await replacement.press('Enter');
+    await expect(row()).toContainText('Replace with a 200+ elective');
+    await expect(row()).toContainText('Choose the exact course later.');
+    pending = validationResponse(page);
+    await row().getByRole('button',{name:'Apply change',exact:true}).press('Enter');
+    const edited = await pending;
+    expect(edited.status()).toBe(200);
+    const updated = (await edited.json()).plan;
+    const reportInput = { student, preparedDate:'2026-07-30',selectedPlan:updated,plans:plans.map(p=>p.id===updated.id?updated:p) };
+    const json = await page.request.post('/api/reports/economics',{data:{...reportInput,format:'json'}});
+    expect(json.status()).toBe(200);
+    const report = await json.json();
+    const expected = projectSelectedPlanArtifact(updated,{advisorNotices:report.catalog?.advisorAttention||[]});
+    expect(projectionMismatches(expected,projectReportJsonArtifact(report))).toEqual([]);
+    const html = await page.request.post('/api/reports/economics',{data:{...reportInput,format:'html'}});
+    expect(html.status()).toBe(200);
+    const occupied = p=>({...p,terms:p.terms.filter(t=>t.courses.length)});
+    expect(projectionMismatches(occupied(expected),occupied(projectReportHtmlArtifact(await html.text())))).toEqual([]);
+    await scope.getByRole('button',{name:'Undo last plan edit',exact:true}).press('Enter');
+    await expect(row().getByRole('button',{name:'Change ECO 222',exact:true})).toBeVisible();
+    await expect(scope.getByRole('button',{name:'Undo last plan edit',exact:true})).toHaveCount(0);
+    await reloadPlanner(page);
+    await expect(row().getByRole('button',{name:'Change ECO 222',exact:true})).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    const savedPlans = () => page.evaluate(() => JSON.parse(sessionStorage.getItem('econ-planner-generated-session')).report.programs.find(p=>p.economicsPlans).economicsPlans);
+    const exploreBefore = (await savedPlans()).find(p=>p.id===plan.id);
+    await page.getByRole('button',{name:'Balanced',exact:true}).press('Enter');
+    const balancedRow = scope.locator('.term-card > ul > li[data-requirement-id="eco-elective-1"]');
+    await balancedRow.getByRole('button',{name:/^Change /}).press('Enter');
+    const balancedMove = balancedRow.locator('[data-change-choice^="move:"]').first();
+    const balancedDestination = await balancedMove.getAttribute('data-change-choice');
+    const balancedConditional = await balancedMove.getAttribute('data-change-status') === 'CONDITIONAL';
+    pending = validationResponse(page);
+    await balancedMove.press('Enter');
+    if (balancedConditional) await balancedRow.getByRole('button',{name:'Apply change',exact:true}).press('Enter');
+    expect((await pending).status()).toBe(200);
+    const balancedBefore = (await savedPlans()).find(p=>p.id==='balanced');
+    await page.getByRole('button',{name:'Explore the Major',exact:true}).press('Enter');
+    await expect(row().getByRole('button',{name:'Change ECO 222',exact:true})).toBeVisible();
+    await reloadPlanner(page);
+    expect((await savedPlans()).find(p=>p.id===plan.id).terms).toEqual(exploreBefore.terms);
+    await page.getByRole('button',{name:'Balanced',exact:true}).press('Enter');
+    await expect(balancedRow.locator('.plan-course-actions')).toHaveAttribute('data-current-term',balancedDestination);
+    expect((await savedPlans()).find(p=>p.id==='balanced').terms).toEqual(balancedBefore.terms);
+  });
+}

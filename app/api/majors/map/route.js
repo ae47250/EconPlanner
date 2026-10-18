@@ -375,6 +375,15 @@ export async function POST(request) {
       throw error;
     }
     const submittedStudent = body?.student || {};
+    if (submittedStudent.courses !== undefined && (
+      !Array.isArray(submittedStudent.courses) ||
+      submittedStudent.courses.some(course => !course || typeof course !== "object" || Array.isArray(course))
+    )) {
+      return jsonResponse({
+        error: "Courses must be a list of course records. Each course must be an object, not an empty value or text.",
+        code: "INVALID_COURSE_INPUT"
+      }, 400);
+    }
     const inputValidation = validatePlanningInputs(submittedStudent, { requireDate: true });
     if (!inputValidation.valid) {
       const missingDate = inputValidation.issues[0].code === "MISSING_PLAN_CREATION_DATE";
