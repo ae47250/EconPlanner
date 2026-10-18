@@ -36,10 +36,12 @@ async function move(page, course, destination, status = 200) {
   }
   const label = course === 'ECO elective' ? 'ECO elective (200+)' : course;
   await page.getByRole('button',{name:`Change ${label}`,exact:true}).first().click();
-  const menu = page.getByRole('combobox',{name:`Change ${label} to`,exact:true}).first();
+  const menu = page.getByRole('region',{name:`Change ${label} options`,exact:true}).first();
   const response = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-  await menu.selectOption(`move:${destination}`);
-  await page.getByRole('button',{name:'Apply change',exact:true}).click();
+  const option = menu.locator(`[data-change-choice="move:${destination}"]`);
+  const conditional = await option.getAttribute('data-change-status') === 'CONDITIONAL';
+  await option.click();
+  if (conditional) await menu.getByRole('button',{name:'Apply change',exact:true}).click();
   const result = await response;
   const body = await result.json();
   expect(result.status(), JSON.stringify(body)).toBe(status);
@@ -97,7 +99,7 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     await writeFile(testInfo.outputPath(`${name}.txt`), text);
     await route.fulfill({contentType:'application/pdf', body:bytes});
   });
-  const button = page.getByRole('button', {name:'Download PDF', exact:true});
+  const button = page.getByRole('button', {name:'Download PDF Report', exact:true});
   if (failFirst) {
     await button.focus();
     await page.keyboard.press('Enter');
@@ -129,7 +131,7 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const payload = await response.json();
   const plans = payload.programs.find(p => p.program.id === 'economics-base').economicsPlans;
   expect(plans.map(p => p.id)).toEqual(['balanced','explore-first','one-year-early']);
-  await expect(page.getByText('See when you’d take each class and when each plan could get you to graduation.')).toBeVisible();
+  await expect(page.getByText('Drag ⠿ to move a course, or click a course for options.')).toBeVisible();
   await expect(page.locator('.projection-readiness-note')).toHaveCount(0);
   await expect(page.locator('.comparison-grid')).toBeVisible();
   const conditionsFollowPlans = await page.locator('.comparison-grid').evaluate(grid => {
@@ -140,19 +142,19 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const earlyPlanCard = page.locator('article[data-plan-id="one-year-early"]');
   await expect(earlyPlanCard.locator('.early-plan-status')).toHaveText('Possible');
   await expect(earlyPlanCard).toContainText('Standard plan');
-  await expect(earlyPlanCard).toContainText('Spring/May 2030');
+  await expect(earlyPlanCard).toContainText('May 2030');
   await expect(earlyPlanCard).toContainText('This plan');
-  await expect(earlyPlanCard).toContainText('Spring/May 2029');
+  await expect(earlyPlanCard).toContainText('May 2029');
   await expect(earlyPlanCard.locator('.comparison-plan-summary > p')).toHaveCount(0);
   await expect(page.locator('.accelerated-result')).toHaveCount(0);
   await visitPlan(page, "one-year-early");
   const target = page.locator('.comparison-course-status p').filter({hasText:'Graduation target'});
-  await expect(target).toContainText('Spring/May 2029');
+  await expect(target).toContainText('May 2029');
   await reloadPlanner(page);
-  await expect(target).toContainText('Spring/May 2029');
+  await expect(target).toContainText('May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
   await visitPlan(page, "one-year-early");
-  await expect(target).toContainText('Spring/May 2029');
+  await expect(target).toContainText('May 2029');
   await exportLocalPdf(page,browser,testInfo,'early','Spring/May 2029',{failFirst:true});
   const valid = await move(page,'MAT 217','winter-2027');
   const statistics = valid.plan.terms.find(t => t.slotId === 'winter-2027').courses.find(c => c.course === 'MAT 217');
@@ -161,17 +163,16 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const invalid = await move(page,'MAT 217','winter-2029',422);
   expect(invalid.error).toMatch(/prerequisite|statistics/i);
   expect(invalid.error).not.toMatch(/Fall 2028|projected standing/);
-  await expect(page.locator('select[aria-label="Change MAT 217 to"]')).toHaveValue('move:winter-2027');
+  await expect(page.locator('.plan-course-actions[aria-label="Changes for MAT 217"]')).toHaveAttribute('data-current-term','move:winter-2027');
   const unsupported = await move(page,'ECO elective','fall-2028',422);
   expect(unsupported.error).toMatch(/elective|term limit/i);
-  const eco222Move = page.locator('select[aria-label="Change ECO elective (200+) to"]').first();
-  await expect(eco222Move).toHaveValue('move:fall-2027');
-  await expect(eco222Move.locator('option[value="move:fall-2027"]')).toContainText('Choose a change');
+  const electiveControl = page.locator('.plan-course-actions[aria-label="Changes for ECO elective (200+)"]').first();
+  await expect(electiveControl).toHaveAttribute('data-current-term','move:fall-2027');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
   await visitPlan(page, "balanced");
-  await expect(target).toContainText('Spring/May 2030');
+  await expect(target).toContainText('May 2030');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   const balanced = await exportLocalPdf(page,browser,testInfo,'balanced','Spring/May 2030');
   expect(balanced.inputSummary).toContain('Planning pace: standard');
@@ -189,15 +190,18 @@ test('required controls explain restrictions while mobile elective editing and k
   const response = page.waitForResponse(r=>r.url().endsWith('/api/majors/map')&&r.status()===200);
   await page.keyboard.press('Enter');
   await response;
+  await expect(page.locator(".comparison-page")).toBeVisible();
   await visitPlan(page, "balanced");
   await expect(page.getByRole('button',{name:'Remove ECO 113',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:'Remove BUSN 323',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:'Change ECO 113',exact:true})).toBeVisible();
-  const menu = page.locator('select[aria-label="Change ECO elective (200+) to"]').last();
   const edited = page.waitForResponse(r=>r.url().endsWith('/api/majors/map')&&r.request().postDataJSON()?.action==='validate-plan');
   await page.getByRole('button',{name:'Change ECO elective (200+)',exact:true}).last().click();
-  await menu.selectOption('move:fall-2029');
-  await page.getByRole('button',{name:'Apply change',exact:true}).click();
+  const menu = page.getByRole('region',{name:'Change ECO elective (200+) options',exact:true}).last();
+  const option = menu.locator('[data-change-choice="move:fall-2029"]');
+  const conditional = await option.getAttribute('data-change-status') === 'CONDITIONAL';
+  await option.click();
+  if (conditional) await menu.getByRole('button',{name:'Apply change',exact:true}).click();
   expect((await edited).status()).toBe(200);
   await expect(page.locator('.plan-course-edit-feedback')).toContainText('Moved to');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
@@ -212,11 +216,11 @@ test('course cards explain when no move preserves prerequisite validity', async 
   await visitPlan(page, "one-year-early");
   const coreCard = page.locator('.term-card li').filter({hasText:'ECO 113'}).first();
   await coreCard.getByRole('button',{name:'Change ECO 113',exact:true}).click();
-  await expect(coreCard).toContainText('No other move is available');
-  await expect(coreCard).toContainText('ECO 213 is missing prerequisites: ECO 113');
+  await expect(coreCard).toContainText('Not confirmed for May.');
+  await expect(coreCard).toContainText('ECO 213 needs ECO 113 first. Move ECO 213 later, then try again.');
   const moves = coreCard.getByRole('combobox');
   await expect(moves).toHaveCount(0);
-  await expect(coreCard.getByText(/Why can’t I choose other terms/)).toBeVisible();
+  await expect(coreCard.getByText(/Why can’t I choose other terms/)).toHaveCount(0);
 });
 
 test('senior statistics blocker is causal and saved answers survive revisiting', async ({page},testInfo) => {
@@ -245,7 +249,7 @@ test('junior prerequisite correction preserves choices and explains next-year ou
   const generate = page.getByRole('button',{name:'Generate my plans',exact:true});
   await expect(generate).toBeDisabled();
   await expect(page.locator('.cp7-summary').getByText('Needs attention')).toBeVisible();
-  await page.locator('.cp7-summary').getByRole('button',{name:/ECO 213 prerequisite question/}).first().click();
+  await page.locator('.cp7-summary').getByRole('button',{name:/ECO 213/}).first().click();
   await setCourseStatus(page,'ECO 113','Completed','Status for prerequisite');
   await setCourseStatus(page,'MAT 113','Completed','Status for prerequisite');
   await expect(generate).toBeEnabled();
