@@ -19,6 +19,7 @@ import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.
 import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
 import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../../lib/catalog/input-resolution.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
+import { studentFacingPlanReviewMessage } from "../../../../lib/planning/plan-presentation.js";
 import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequisiteEvaluator.js";
 import { annotatePreliminaryScheduleEvidence } from "../../../../lib/policy/preliminary-schedule.js";
 import { loadPlannerFingerprint } from "../../../../lib/planning/fingerprint.js";
@@ -88,7 +89,7 @@ function electiveAdvisorAttention(results) {
   }];
 }
 
-function prerequisiteAdvisorAttention(validation) {
+function prerequisiteAdvisorAttention(validation, student, policyBundle) {
   const approvals = validation.conditionalApprovals.map(item => ({
     code: `${item.code}_${item.course.replace(/\s/g, "_")}_${item.prerequisite.replace(/\s/g, "_")}`,
     title: "Concurrent enrollment approval",
@@ -97,9 +98,10 @@ function prerequisiteAdvisorAttention(validation) {
   }));
   const reviews = (validation.reviewFindings || []).map((finding, index) => ({
     code: `HISTORY_REVIEW_${finding.subject?.course?.replace(/\s/g, "_") || index}`,
-    title: "Academic history review",
+    title: `${finding.subject?.course || "Course history"} prerequisite check`,
     severity: "warning",
-    message: `${finding.subject?.course || "A recorded course"} is retained, but its historical prerequisite or transfer evidence requires advisor review.`
+    message: studentFacingPlanReviewMessage(finding, { student, policyBundle })
+      || `${finding.subject?.course || "A recorded class"} needs an advisor to check whether its prerequisites were met.`
   }));
   return [...approvals, ...reviews];
 }
@@ -547,7 +549,7 @@ export async function POST(request) {
     const advisorAttention = [
       ...catalogAdvisorAttention(authoritativePlanningContext),
       ...electiveAdvisorAttention(results),
-      ...prerequisiteAdvisorAttention(prerequisiteValidation),
+      ...prerequisiteAdvisorAttention(prerequisiteValidation, student, catalog.policyBundle),
       ...planAdvisorAttention(results)
     ];
 

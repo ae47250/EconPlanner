@@ -40,14 +40,14 @@ test("zero-course input: all three checklists use validated future assignments, 
     assert.ok(!/Requirement assignments|<th>Strict|<th>Optimistic|<td>Advisor check<\/td>|CONDITIONALLY FEASIBLE|planning_projection|stale availability/.test(html));
     assert.equal((html.match(/data-requirement-checklist-id=/g) || []).length, 12);
     for (const item of report.planConditions) assert.equal(html.split(item.message).length - 1, 1);
-    assert.ok(html.indexOf("Remaining years at a glance") < html.indexOf("Actions and conditions"));
-    assert.ok(html.indexOf("Actions and conditions") < html.indexOf("Major requirements checklist"));
+    assert.ok(html.indexOf("Remaining years at a glance") < html.indexOf("Things to keep in mind"));
+    assert.ok(html.indexOf("Things to keep in mind") < html.indexOf("Major requirements checklist"));
     assert.ok(!/availability-open">|availability-full">/.test(html));
-    assert.ok(html.includes("Current seat status unverified"));
+    assert.ok(html.includes("We don’t know if there are open seats in "));
     const capstone = checklist.rows.find(row => row.id === "eco-461");
     if (plan.id === "one-year-early") {
-      assert.deepEqual(capstone.markers, ["Approval required", "Confirm senior standing"]);
-      assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Approval required"));
+      assert.deepEqual(capstone.markers, ["Advisor approval needed", "Ask an advisor to confirm senior standing"]);
+      assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Advisor approval needed"));
       assert.ok(plan.planConditions.some(item => item.message.includes("ECO 213 with ECO 461 in Winter 2028. Approval has not been recorded.")));
       assert.ok(plan.planConditions.some(item => /Senior standing is assumed for 2027–2028/.test(item.message)));
       assert.ok(!html.includes("This plan assumes you will have senior standing in your final year."));
@@ -63,8 +63,8 @@ test("incomplete candidates retain unmet eligibility separately without assertin
   assert.equal(checklist.unmetRequirements[0].id, "finance");
   assert.deepEqual(checklist.legend.map(state => state.label), ["Completed", "In progress", "Planned"]);
   const html = renderEconomicsHtml({ student: { displayName: "Fictional <student>", academicStanding: "senior" }, terms: [], unresolved: [], requirements: [], majorRequirementsChecklist: checklist, planConditions: [], planNotes: [] }, template);
-  assert.ok(html.includes("Incomplete candidate — unmet requirements"));
-  assert.ok(html.includes("This alone does not establish that no viable plan exists."));
+  assert.ok(html.includes("Requirements without a planned class"));
+  assert.ok(html.includes("A complete plan may still be possible."));
   assert.ok(html.includes("Fictional &lt;student&gt;"));
   assert.ok(!html.includes("is-still_needed"));
 });
@@ -131,7 +131,7 @@ test("completed ECO 461 keeps qualifying credit without a future senior-standing
   for (const plan of result.economicsPlans) {
     const row = plan.majorRequirementsChecklist.rows.find(item => item.id === "eco-461");
     assert.equal(row.status, "completed");
-    assert.ok(!row.markers.includes("Confirm senior standing"));
+    assert.ok(!row.markers.includes("Ask an advisor to confirm senior standing"));
     assert.ok(!plan.planConditions.some(item => item.kind === "standing"));
     const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, result.economicsPlans);
     assert.ok(!renderEconomicsHtml(report, template).includes("This plan assumes you will have senior standing in your final year."));
@@ -144,15 +144,15 @@ test("provisional transfer credit, missing work and an invalid double allocation
   const mapping = { requirements: [requirement], assignments: [provisional], strict: { assignments: [] } };
   let row = buildMajorRequirementsChecklist({ mapping }).rows[0];
   assert.equal(row.status, "still_needed");
-  assert.deepEqual(row.markers, ["Eligibility review required"]);
+  assert.deepEqual(row.markers, ["Ask an advisor whether this class counts"]);
   row = buildMajorRequirementsChecklist({ mapping: { requirements: [requirement], assignments: [] } }).rows[0];
   assert.equal(row.status, "still_needed");
-  assert.equal(row.courseTerm, "No qualifying assignment");
+  assert.equal(row.courseTerm, "No class matched yet");
   const duplicate = { validation: { valid: false, requirementAllocation: { assignments: [
     { slotId: "eco-113", code: "ECO 113", source: "planned" }, { slotId: "eco-elective-1", code: "ECO 113", source: "planned" }
   ] } }, terms: [{ term: "Winter 2028", courses: [{ course: "ECO 113", requirementId: "eco-113" }, { course: "ECO 113", requirementId: "eco-elective-1" }] }] };
   const rows = buildMajorRequirementsChecklist({ plan: duplicate, mapping: { requirements: [requirement, { id: "eco-elective-1", label: "Elective", kind: "elective" }] } }).rows;
-  assert.ok(rows.every(item => item.status === "still_needed" && item.markers.includes("Eligibility review required")));
+  assert.ok(rows.every(item => item.status === "still_needed" && item.markers.includes("Ask an advisor whether this class counts")));
 });
 
 test("saved/direct API data cannot forge checklist credit or remove real approval and standing conditions", async () => {
@@ -197,8 +197,8 @@ for (const state of ["open", "full", "closed", "waitlisted", "unknown"]) {
       const availability = { status: state, asOf };
       const display = seatStatusPresentation(availability, { verified: true, referenceDate: sample.planCreationDate });
       const unverified = freshness !== "current" || state === "unknown";
-      assert.equal(display.label, unverified ? "Current seat status unverified" : { open: "OPEN", full: "FULL", closed: "CLOSED", waitlisted: "Waitlist" }[state]);
-      assert.equal(seatStatusPresentation(availability, { verified: false, referenceDate: sample.planCreationDate }).label, "Current seat status unverified");
+      assert.equal(display.label, unverified ? "Seat availability not confirmed" : { open: "OPEN", full: "FULL", closed: "CLOSED", waitlisted: "Waitlist" }[state]);
+      assert.equal(seatStatusPresentation(availability, { verified: false, referenceDate: sample.planCreationDate }).label, "Seat availability not confirmed");
       assert.equal(availabilityIsStale(availability, sample.planCreationDate), freshness !== "current");
       const schedule = { academicYear: "2026-2027", terms: { Winter: [{ course: "ECO 113", section: "J", availability }] } };
       const plan = { id: "seat-fixture", validation: { valid: true }, terms: [{ term: "Winter 2027", termKey: "Winter", academicYear: "2026-2027", courses: [{ course: "ECO 113", section: "J", title: "Principles of Microeconomics" }] }] };
@@ -217,6 +217,6 @@ test("an old plan creation date cannot make historical seats current in a newly 
   const schedule = { academicYear: "2026-2027", terms: { Winter: [{ course: "ECO 113", section: "J", availability }] } };
   const plan = { id: "old-seat-fixture", validation: { valid: true }, terms: [{ term: "Winter 2027", termKey: "Winter", academicYear: "2026-2027", courses: [{ course: "ECO 113", section: "J" }] }] };
   const report = buildEconomicsReport({ student: { ...sample, planCreationDate: "2026-07-30" }, mapping: { requirements: [], optimistic: { unresolved: [] } }, schedule, economicsPlan: plan, preparedDate: "2026-09-28" });
-  assert.equal(report.terms[0].courses[0].seatStatusDisplay.label, "Current seat status unverified");
+  assert.equal(report.terms[0].courses[0].seatStatusDisplay.label, "Seat availability not confirmed");
   assert.deepEqual(report.terms[0].courses[0].availability, availability);
 });

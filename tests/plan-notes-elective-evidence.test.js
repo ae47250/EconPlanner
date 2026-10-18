@@ -13,6 +13,7 @@ import { loadCanonicalPolicy, oracleEvaluateElectiveTerm, oracleEvaluateOffering
 const bundle = runtimePolicyBundle();
 const oracle = await loadCanonicalPolicy();
 const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
+const economicsCourses = JSON.parse(await readFile(new URL("../policy/courses/economics.json", import.meta.url), "utf8")).courses;
 const completed = codes => codes.map(code => ({ code, status: "completed", units: 1 }));
 const sample = { displayName: "Fictional PDF sample", academicStanding: "sophomore", entryCatalogYear: "2025-2026",
   planCreationDate: "2026-09-28", planningPace: "one_year_early", courses: [] };
@@ -85,16 +86,19 @@ test("fictional PDF sample: all plans preserve requirements, generic future elec
     assert.equal(history.items.length, 3);
     assert.equal(history.items[1].text, "2024-25: Fall ECO 333; Winter ECO 221, ECO 357. 2025-26: Fall ECO 333, ECO 357; Winter ECO 221, ECO 337.");
     assert.deepEqual(history.items[1].lines, ["2024-25: Fall ECO 333; Winter ECO 221, ECO 357.", "2025-26: Fall ECO 333, ECO 357; Winter ECO 221, ECO 337."]);
-    assert.equal(history.items[2].text, "ECO 160, ECO 161, ECO 222, ECO 224, ECO 234, ECO 331.");
+    assert.equal(history.items[2].text, "ECO 160, 161, 222, 224, 234, 331.");
     const upcoming = plan.planNotes.find(note => note.id === "upcoming");
     assert.deepEqual(upcoming.items.map(item => item.label), ["Winter 2027", "May 2027"]);
-    assert.ok(upcoming.items[0].lines.some(line => line === "ECO 113 — J: Tue, Thu 10:00 AM–11:45 AM; K: Mon, Wed, Fri 8:00 AM–9:10 AM"));
+    assert.ok(upcoming.items[0].lines.some(line => line === "ECO 113 · Principles of Microeconomics — J: Tue, Thu 10:00 AM–11:45 AM; K: Mon, Wed, Fri 8:00 AM–9:10 AM"));
     const report = await buildEconomicsReportFromStudent(sample, sample.planCreationDate, plan, result.economicsPlans);
     assert.deepEqual(report.planNotes, plan.planNotes);
     const html = renderEconomicsHtml(report, template);
     assert.ok(!html.includes("Course-level planning options") && !html.includes("Conditional move choices"));
     assert.ok(html.includes("ECO elective (200+)"));
     assert.ok(!html.includes("depends on successful completion"));
+    assert.ok(html.includes("<strong>J:</strong>"));
+    assert.ok(html.includes("<strong>K:</strong>"));
+    assert.ok(!html.includes("<strong>S:</strong>"));
     assert.ok(plan.planningDetailMessages.length);
     assert.ok(plan.displayWarnings.includes(bundle.planningAdvice.display.prerequisiteCompletion));
     for (const message of plan.warnings.filter(message => /approval is required/i.test(message))) assert.ok(plan.displayWarnings.includes(message));
@@ -125,19 +129,23 @@ test("upcoming notes include every exact ECO section and never borrow a missing 
   const section = winter.sections.find(row => row.course === "ECO 113" && row.sectionId.endsWith("-J"));
   delete section.meeting.startTime;
   delete section.meeting.endTime;
-  const notes = buildEconomicsPlanNotes({ plan: { terms: [] }, student: sample,
+  const notes = buildEconomicsPlanNotes({ plan: { terms: [] }, student: sample, courseCatalog: economicsCourses,
     mapping: { requirements: [], optimistic: { unresolved: [] } }, policyBundle: withMissingTime });
   const upcoming = notes.find(note => note.id === "upcoming");
   const lines = upcoming.items.find(item => item.label === "Winter 2027").lines;
-  assert.equal(lines.find(line => line.startsWith("ECO 113 —")),
-    "ECO 113 — J: meeting time unavailable; K: Mon, Wed, Fri 8:00 AM–9:10 AM");
+  assert.equal(lines.find(line => line.startsWith("ECO 113 ·")),
+    "ECO 113 · Principles of Microeconomics — J: meeting time unavailable; K: Mon, Wed, Fri 8:00 AM–9:10 AM");
+  assert.ok(upcoming.items.find(item => item.label === "May 2027").lines.includes(
+    "ECO 222 · Economics of the European Union — Mon, Tue, Wed, Thu, Fri 10:15 AM–12:30 PM"));
   for (const item of upcoming.items) {
     const termId = `${item.label.split(" ")[1]}-${item.label.split(" ")[0].toUpperCase()}`;
     const eco = withMissingTime.indexes.offeringByTerm[termId].sections.filter(row => row.course.startsWith("ECO "));
     assert.equal(item.lines.length, new Set(eco.map(row => row.course)).size);
     for (const row of eco) {
-      const line = item.lines.find(text => text.startsWith(`${row.course} —`));
-      assert.ok(line.includes(`${row.sectionId.split("-").at(-1)}:`));
+      const line = item.lines.find(text => text.startsWith(`${row.course} ·`));
+      const sameCourseSections = eco.filter(candidate => candidate.course === row.course);
+      if (sameCourseSections.length > 1) assert.ok(line.includes(`${row.sectionId.split("-").at(-1)}:`));
+      else assert.ok(!line.includes(`${row.sectionId.split("-").at(-1)}:`));
     }
     assert.ok(item.lines.every(line => !/seats|available now|closed|waitlist/i.test(line)));
   }

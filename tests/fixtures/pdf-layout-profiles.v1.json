@@ -27,7 +27,7 @@
         "minimumPdfPages": 3,
         "requiredPlanType": "standard",
         "requiredPlanningPace": "standard",
-        "requiredHtmlText": ["Fictional Zoë & José", "Actions and conditions", "Major requirements checklist", "Plan Notes"],
+        "requiredHtmlText": ["Fictional Zoë & José", "Things to keep in mind", "Major requirements checklist", "Plan Notes"],
         "requiredAvailabilityStates": ["open"],
         "requiredCourseRoles": [
           { "course": "MAT 217", "role": "statistics" }

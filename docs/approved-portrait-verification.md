@@ -10,7 +10,7 @@ The accumulated task preserves requirements, prerequisites, load limits, capston
 
 - Old Strict/Optimistic/In progress/Evidence comparison becomes `Requirement | Course / term | Status`, in canonical requested order, with separate elective rows and `ECO 461 / Senior Seminar`.
 - Completed, In progress and Planned use symbols plus text/color on each qualifying row. Complete-plan legends omit Still needed. Incomplete candidates identify unmet requirements separately: `This alone does not establish that no viable plan exists.`
-- Stale or undated OPEN/FULL display becomes `Current seat status unverified`; historical observations remain preserved. Uniform PDF uncertainty is explained once.
+- Stale or undated OPEN/FULL display becomes `Seat availability not confirmed`; historical observations remain preserved. Uniform PDF uncertainty is explained once.
 - Hypothetical course-option dumps and repeated prerequisite prose become concise actual conditions, affected-course markers and details on demand. Required approval explicitly remains unrecorded.
 - Schedule comes first in the approved portrait Year/Fall/Winter/May grid, with all remaining years on page 1 and an intact checklist. Titles/options remain readable supporting text. Notes follow in CCR/ACE, history, upcoming courses and future-years order, with equal 12pt Winter/May listing indentation.
 - Missing-plan reports no longer substitute the entire published offering list for student assignments. They show empty planning terms and actual unmet requirements.

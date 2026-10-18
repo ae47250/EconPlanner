@@ -211,7 +211,7 @@ test("report preserves recorded OPEN/FULL evidence while undated or unverified s
   const html = renderEconomicsHtml(report, template);
   assert.equal(report.terms[0].courses[0].availability.status, "open");
   assert.equal(report.terms[0].courses[1].availability.status, "full");
-  assert.equal((html.match(/Current seat status unverified/g) || []).length, 1);
+  assert.equal((html.match(/Seat availability not confirmed/g) || []).length, 1);
   assert.equal((html.match(/data-availability-state=/g) || []).length, 3);
   assert.doesNotMatch(html, /availability-(?:open|full)"/);
 });

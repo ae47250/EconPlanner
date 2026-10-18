@@ -150,7 +150,7 @@ function htmlScheduleTerms(html) {
         const availability = decodeHtml(entry[6] || "").match(/\b(open|full)\b/i)
           || note.match(/ - (open|full|closed|waitlisted|unknown)(?:\s|\(|$)/i);
         const approval = note.match(/ - ([^-]+?) approval for concurrent ([A-Z]{2,5}\s+\d{3})/i);
-        const markers = [...suffix.matchAll(/<span[^>]+data-approval-authority="([^"]*)"[^>]+data-approval-prerequisite="([^"]*)"[^>]*>Approval required<\/span>/gi)];
+        const markers = [...suffix.matchAll(/<span[^>]+data-approval-authority="([^"]*)"[^>]+data-approval-prerequisite="([^"]*)"[^>]*>(?:Approval required|Advisor approval needed)<\/span>/gi)];
         const title = attributeValue(entry[3], "data-course-title") || note.split(/ - (?:open|full|closed|waitlisted|unknown)(?:\s|\(|$)| - [^-]+? approval for concurrent /i)[0].trim();
         courses.push({
           code: identity?.[1] || label.replace(/ \(200\+\)$/, "") || null,

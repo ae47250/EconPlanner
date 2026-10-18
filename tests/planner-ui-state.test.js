@@ -33,7 +33,8 @@ function sampleReport() {
 
 test("comparison badges use the policy-backed generated plan label", async () => {
   const source = await readFile(new URL("../app/page.js", import.meta.url), "utf8");
-  assert.match(source, /return plan\.label \|\| "Validated"/);
+  assert.match(source, /function planReadinessLabel\(plan\)/);
+  assert.match(source, /readiness === "STUDENT_READY".*return "Ready to plan"/s);
   assert.doesNotMatch(source, /"explore-first":\s*"Explore/);
 });
 

@@ -76,6 +76,8 @@ jobs:
             tests/economics-candidate-pools.test.js \
             tests/economics-planning.test.js \
             tests/economics-plan-editing-api.test.js \
+            tests/economics-replacement-moves.test.js \
+            tests/student-facing-language.test.js \
             tests/planner-session-restoration.test.js \
             tests/offering-policy-consistency.test.js \
             tests/economics-move-matrix.test.js \

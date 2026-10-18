@@ -507,11 +507,11 @@ test("major mapper retains a standard senior plan above the Economics load prefe
   assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "standard"));
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
   assert.ok(data.catalog.advisorAttention.some(item => /more than two Economics courses/.test(item.message)));
-  assert.ok(data.catalog.advisorAttention.some(item => /MAT 217 requires advisor review \(ENROLLMENT_FULL\)/.test(item.message)));
+  assert.ok(data.catalog.advisorAttention.some(item => /listed section for MAT 217 was recorded as full/i.test(item.message)));
   const plan = economics.economicsPlans[0];
   assert.ok(plan.advisorActions.some(action => action.reasonCode === "ENROLLMENT_FULL"));
-  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "statistics").markers.includes("Enrollment review required"));
-  assert.ok(plan.planConditions.some(item => item.course === "MAT 217" && /schedule and enrollment status/i.test(item.message)));
+  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "statistics").markers.includes("Check this class’s enrollment status"));
+  assert.ok(plan.planConditions.some(item => item.course === "MAT 217" && /listed section for MAT 217 was recorded as full/i.test(item.message)));
   assert.ok(plan.planConditions.every(item => !item.message.includes("ENROLLMENT_FULL")));
   assert.equal(economics.economicsPlans[0].feasibilityStatus, "CONDITIONALLY_FEASIBLE");
 });

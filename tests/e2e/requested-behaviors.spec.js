@@ -26,11 +26,12 @@ test('a pending-overload move card is visibly disabled and requests evidence',as
   ];
   plan.terms[0].courses[0].moveGuidance = {studentMessage:termLoadMessage(loadDecision,bundle)};
   await openFixtureResult(page,plannerResultFixture({plans:[plan]}));
-  await page.getByRole('button',{name:'Review selected Balanced',exact:true}).click();
-  const destination = page.getByRole('combobox',{name:'Move ECO 113 to another term',exact:true}).locator('option[value="2027-WINTER"]');
-  await expect(destination).toHaveAttribute('disabled','');
-  await expect(destination).toContainText('advisor check');
-  await page.getByText('Why are some choices unavailable?',{exact:true}).click();
+  await page.getByRole('button',{name:'Review this plan: Balanced',exact:true}).click();
+  const destination = page.locator('select[aria-label="Change ECO 113 to"]').locator('option[value="move:2027-WINTER"]');
+  await expect(destination).toHaveCount(0);
+  await expect(page.locator('.course-choice-details')).toContainText('Record existing advisor approval');
+  await page.getByRole('button',{name:'Change ECO 113',exact:true}).click();
+  await page.getByText(/Why can’t I choose other terms/).click();
   await expect(page.locator('.course-choice-details')).toContainText('Record existing advisor approval');
 });
 async function clearAll(page) {
