@@ -133,6 +133,10 @@ test("readiness, conditions, and advisor actions are projected from the returned
     const returnedItems = scenario.plan.conditions.length
       ? scenario.plan.conditions.map(item => item.message)
       : scenario.plan.advisorActions.map(item => item.message);
+    await page.getByText("Things to keep in mind", { exact: true }).click();
+    for (const message of returnedItems) {
+      await expect(page.locator(scenario.expectedSelector).getByText(message, { exact: true })).toBeVisible();
+    }
     const displayedItems = await page.locator(`${scenario.expectedSelector} li`).allInnerTexts();
     const displayedStatus = await page.locator(".result-status-value").innerText();
     const result = {

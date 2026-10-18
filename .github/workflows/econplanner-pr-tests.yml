@@ -141,6 +141,7 @@ jobs:
           tests/e2e/course-moves.spec.js
           tests/e2e/requested-behaviors.spec.js
           tests/e2e/plan-notes-evidence.spec.js
+          tests/e2e/econ-planner-parity.spec.js
 
       - name: Run targeted PDF-lock and malformed-response regressions
         run: >-

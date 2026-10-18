@@ -1,7 +1,9 @@
+import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan, oracleEvaluateOffering } from "../oracle/load-canonical-policy.js";
 import { visitPlan } from "./cp7-helpers.js";
 import {test, expect} from './nightly-observability.js';
 import AxeBuilder from '@axe-core/playwright';
-import {writeFile} from 'node:fs/promises';
+import {writeFile, readFile} from 'node:fs/promises';
+import { auditExternalEconomicsPlanComplete } from '../oracle/audit-external-plan.js';
 import {execFileSync} from 'node:child_process';
 import {resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus} from './cp7-helpers.js';
 
@@ -56,6 +58,25 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
   await page.route('**/api/reports/economics', async route => {
     const actual = route.request().postDataJSON();
     requests.push(actual);
+    const academicAudit = oracleEvaluateCanonicalPlan(await loadCanonicalPolicy(), actual.student, actual.selectedPlan);
+    expect(academicAudit.valid, JSON.stringify(academicAudit)).toBe(true);
+    const completeAudit = auditExternalEconomicsPlanComplete({
+      student: { academicStanding:actual.student.academicStanding, completedCourses:actual.student.courses.filter(c=>c.status==='completed').map(c=>({course:c.code})), reservedCourseUnits:actual.student.reservedCourseUnits },
+      expectedContext:actual.selectedPlan.planningContext,
+      plan:{id:actual.selectedPlan.id,terms:actual.selectedPlan.terms.map(term=>({...term,courses:term.courses.map(course=>{
+        const value={...course,canonicalCrossListIdentity:[course.course,...(course.crossListedAs||[])],provenance:{verificationDate:course.provenance?.verifiedOn??null,sourceReference:course.provenance?.sourceFiles?.[0]??null},...(course.course==='ECO 461'&&course.residency==='hanover'?{institution:'Hanover College'}:{})};
+        if(!value.section) delete value.section;
+        return value;
+      })})),requirementClaims:[]},
+      policy:JSON.parse(await readFile(new URL('../oracle/economics-policy.v1.json',import.meta.url),'utf8')),
+      verifiedSchedule:JSON.parse(await readFile(new URL('../oracle/verified-schedule-2026-2027.json',import.meta.url),'utf8'))
+    });
+    expect(completeAudit.violations,JSON.stringify(completeAudit)).toEqual([]);
+    expect(completeAudit.uncheckedRuleFamilies,JSON.stringify(completeAudit)).toEqual([]);
+    for (const term of actual.selectedPlan.terms) {
+      const displayed = await page.locator(`[data-term-id="${term.slotId}"] .plan-course-summary > strong`).allTextContents();
+      expect(displayed.map(text=>text.replace(' (200+)', '')).sort()).toEqual(term.courses.map(course=>course.course).sort());
+    }
     if (failFirst && ++attempt === 1) {
       await route.fulfill({status:504, contentType:'application/json', body:JSON.stringify({error:'PDF creation timed out. Please try again.'})});
       return;
@@ -127,6 +148,7 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
     throw new Error('PDF verification requires Poppler pdftotext. Install Poppler or set PDFTOTEXT to its executable path. See docs/testing.md.', {cause:error});
   }
   await intake(page, 'freshman', true);
+  await setCourseStatus(page, 'ECO 113', 'Completed');
   const response = await generatePlans(page);
   const payload = await response.json();
   const plans = payload.programs.find(p => p.program.id === 'economics-base').economicsPlans;
@@ -147,36 +169,44 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   await expect(earlyPlanCard).toContainText('May 2029');
   await expect(earlyPlanCard.locator('.comparison-plan-summary > p')).toHaveCount(0);
   await expect(page.locator('.accelerated-result')).toHaveCount(0);
-  await visitPlan(page, "one-year-early");
+  await page.getByRole('button',{name:`View/edit this plan: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
   const target = page.locator('.comparison-course-status p').filter({hasText:'Graduation target'});
   await expect(target).toContainText('May 2029');
   await reloadPlanner(page);
   await expect(target).toContainText('May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await visitPlan(page, "one-year-early");
+  await page.getByRole('button',{name:`View/edit this plan: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
   await expect(target).toContainText('May 2029');
   await exportLocalPdf(page,browser,testInfo,'early','Spring/May 2029',{failFirst:true});
   const valid = await move(page,'MAT 217','winter-2027');
   const statistics = valid.plan.terms.find(t => t.slotId === 'winter-2027').courses.find(c => c.course === 'MAT 217');
   expect(['J','K','L','M']).toContain(statistics.section);
   expect(statistics.source).toBe('verified-offering');
+  const beforeRejection = await page.evaluate(()=>JSON.parse(sessionStorage.getItem('econ-planner-generated-session')).report);
   const invalid = await move(page,'MAT 217','winter-2029',422);
   expect(invalid.error).toMatch(/prerequisite|statistics/i);
   expect(invalid.error).not.toMatch(/Fall 2028|projected standing/);
   await expect(page.locator('.plan-course-actions[aria-label="Changes for MAT 217"]')).toHaveAttribute('data-current-term','move:winter-2027');
   const unsupported = await move(page,'ECO elective','fall-2028',422);
   expect(unsupported.error).toMatch(/elective|term limit/i);
+  await page.locator('.term-card li').filter({has:page.locator('.plan-course-summary > strong',{hasText:'MAT 217'})}).first().locator('.course-drag-handle').dragTo(page.locator('[data-term-id="winter-2029"] h4'));
+  expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('econ-planner-generated-session')).report)).toEqual(beforeRejection);
   const electiveControl = page.locator('.plan-course-actions[aria-label="Changes for ECO elective (200+)"]').first();
   await expect(electiveControl).toHaveAttribute('data-current-term','move:fall-2027');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await visitPlan(page, "balanced");
+  await page.getByRole('button',{name:'View/edit this plan: Balanced',exact:true}).click();
   await expect(target).toContainText('May 2030');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   const balanced = await exportLocalPdf(page,browser,testInfo,'balanced','Spring/May 2030');
   expect(balanced.inputSummary).toContain('Planning pace: standard');
   expect(balanced.inputSummary).not.toContain('one year early');
+  await page.getByRole('button',{name:plans.find(plan=>plan.id==='one-year-early').label,exact:true}).click();
+  await page.getByRole('button',{name:'Undo last plan edit',exact:true}).click();
+  await reloadPlanner(page);
+  await expect(page.locator('.plan-course-actions[aria-label="Changes for MAT 217"]')).toHaveAttribute('data-current-term','move:spring-2027');
+  await exportLocalPdf(page,browser,testInfo,'early-undone','Spring/May 2029');
   await page.screenshot({path:testInfo.outputPath('balanced-review.png'),fullPage:true,animations:'disabled'});
 });
 
@@ -288,4 +318,101 @@ for (const standing of ['junior', 'senior']) test(`${standing} May 2027 explanat
   expect(result.evidence.blockingReasons[0].message).toContain('ECO 321 must fill finance');
   expect(result.evidence.blockingReasons[0].message).toContain('ECO 222, ECO 224, ECO 234');
   expect(result.evidence.blockingReasons[0].message).toContain('1.25-unit ceiling');
+});
+
+for (const storage of ['localStorage', 'sessionStorage']) {
+  test(`${storage} failed saves preserve live work and warn until a successful save`, async ({ page }) => {
+    await resetPlanner(page);
+    await page.evaluate(storage => {
+      const original = Storage.prototype.setItem;
+      window.failPlannerSave = true;
+      Storage.prototype.setItem = function (key, value) {
+        if (window.failPlannerSave && this === window[storage]) throw new DOMException('Quota exceeded', 'QuotaExceededError');
+        return original.call(this, key, value);
+      };
+    }, storage);
+    await chooseStanding(page, 'freshman');
+    await continueToCourses(page);
+    await setCourseStatus(page, 'ECO 113', 'Completed');
+    if (storage === 'sessionStorage') await generatePlans(page);
+    const warning = page.getByRole('alert').filter({ hasText: 'unsaved' });
+    await expect(warning).toContainText('may be lost if you reload');
+    if (storage === 'localStorage') {
+      await setCourseStatus(page, 'ECO 114', 'Completed');
+      await expect(warning).toBeVisible();
+      await page.evaluate(() => { window.failPlannerSave = false; });
+      await setCourseStatus(page, 'ECO 214', 'Completed');
+    } else {
+      await expect(page.locator('.comparison-page')).toBeVisible();
+      await page.evaluate(() => { window.failPlannerSave = false; });
+      await page.getByRole('button', { name: 'Your courses', exact: true }).click();
+    }
+    await expect(warning).toHaveCount(0);
+    if (storage === 'sessionStorage') {
+      expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('econ-planner-generated-session')).report.programs.some(p => p.economicsPlans?.length))).toBe(true);
+    }
+    await page.reload();
+    if (storage === 'sessionStorage') {
+      await expect(page.locator('.comparison-page')).toBeVisible();
+      await page.getByRole('button', { name: 'Your courses', exact: true }).click();
+    }
+    await expect(page.getByRole('group', { name: 'Status for ECO 113', exact: true }).getByRole('button', { name: 'Completed', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('alert').filter({ hasText: 'unsaved' })).toHaveCount(0);
+  });
+}
+
+test('malformed course containers return actionable client errors through the real API', async ({ request }) => {
+  const student = { academicStanding: 'freshman', planCreationDate: '2026-09-23' };
+  for (const courses of [[null], {}, 'ECO 113']) {
+    const response = await request.post('/api/majors/map', { data: { student: { ...student, courses } } });
+    expect(response.status()).toBe(400);
+    expect(await response.json()).toMatchObject({ code: 'INVALID_COURSE_INPUT', error: expect.stringContaining('Courses must be a list') });
+  }
+  const response = await request.post('/api/majors/map', { data: { student: { ...student, courses: [{ code: 'ECO 113', status: 'completed' }] } } });
+  expect(response.status()).toBe(200);
+});
+
+test('results navigation reflows and remains keyboard accessible at all required widths', async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, 'freshman');
+  await continueToCourses(page);
+  await generatePlans(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    const navigation = page.getByRole('navigation', { name: 'Planner progress' });
+    for (const button of await navigation.getByRole('button').all()) {
+      await button.focus();
+      await expect(button).toBeFocused();
+      await expect(button).toBeInViewport();
+    }
+  }
+});
+
+
+test('one missing ECO 213 prerequisite prevents the otherwise finishable senior horizon', async ({request}) => {
+  const common = ['ECO 113','ECO 114','ECO 214','MAT 113','MAT 217','BUSN 323','ECO 161','ECO 234','ECO 222','ECO 224'];
+  const student = {academicStanding:'senior',planCreationDate:'2026-09-23',courses:[...common,'ECO 213'].map(code=>({code,status:'completed'}))};
+  const readyResponse = await request.post('/api/majors/map',{data:{student}});
+  expect(readyResponse.status()).toBe(200);
+  const ready = (await readyResponse.json()).programs.find(p=>p.economicsPlans);
+  expect(ready.economicsPlanResult.category).toBe('PLANS_READY');
+  expect(ready.economicsPlans).toHaveLength(1);
+  const plan = ready.economicsPlans[0];
+  expect(plan.terms.flatMap(t=>t.courses.map(c=>c.course))).toEqual(['ECO 461']);
+  const policy = await loadCanonicalPolicy();
+  expect(oracleEvaluateCanonicalPlan(policy,student,plan).valid).toBe(true);
+  const missing = {...student,courses:student.courses.filter(c=>c.code!=='ECO 213')};
+  const blockedResponse = await request.post('/api/majors/map',{data:{student:missing}});
+  expect(blockedResponse.status()).toBe(200);
+  const blocked = (await blockedResponse.json()).programs.find(p=>p.economicsPlans);
+  expect(blocked.economicsPlans).toEqual([]);
+  expect(oracleEvaluateCanonicalPlan(policy,missing,plan).valid).toBe(false);
+  for(const term of plan.terms) {
+    expect(oracleEvaluateOffering(policy,{course:'ECO 213'},term).status).toBe('BLOCK');
+  }
+  // Preserve the application's cautious classification: no approved overload
+  // has been established. A missing plan is not itself a global proof.
+  expect(blocked.economicsPlanResult.category).toBe('NEEDS_ADVISOR_ATTENTION');
 });
