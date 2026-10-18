@@ -42,6 +42,7 @@ function normalizedCourse(course = {}, term = {}) {
     section: text(course.section) || null,
     title: text(course.title) || null,
     requirementRole: text(course.requirementId || course.requirementRole) || null,
+    extra: course.extra === true,
     approvals: (course.approvalRequired || [])
       .map(approval => normalizedApproval(approval, course, term))
       .sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right))),
@@ -157,6 +158,7 @@ function htmlScheduleTerms(html) {
           section: identity?.[2] || null,
           title: title || null,
           requirementRole: attributeValue(entry[1], "data-requirement-id") || attributeValue(entry[3], "data-requirement-id"),
+          extra: /<span class="course-requirement">Extra<\/span>/.test(suffix),
           approvals: markers.length ? markers.map(marker => ({
             authority: decodeHtml(marker[1]), course: identity?.[1] || label || null,
             prerequisite: decodeHtml(marker[2]), term: headings[index]

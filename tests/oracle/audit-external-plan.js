@@ -126,6 +126,12 @@ function validateCourseEntries(term, termIndex, termIdentity, violations, seenCo
       return;
     }
 
+    // Separate Extra-course contract approved by the owner on 2026-10-17.
+    if (course.extra === true && (!/^extra-economics-[1-9]\d*$/.test(course.requirementId || "") || !/^ECO (?:\d{3}|elective)$/.test(course.course || "") || course.fixedInProgress)) addViolation(violations, {
+      code: "EXTRA_COURSE_IDENTITY_INVALID", ruleId: RULE_IDS.course, objectPath: path,
+      message: "An Extra course must have a separate identity and cannot claim a required slot.",
+      sourceReference: "policy/provenance/extra-courses-contract-2026-10-17.md"
+    });
     const courseValid = nonemptyString(course.course);
     const requirementValid = nonemptyString(course.requirementId);
     if (!courseValid) addViolation(violations, {

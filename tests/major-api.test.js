@@ -584,7 +584,7 @@ test("major mapper rejects an in-progress course with missing prerequisites", as
   assert.equal(data.economicsPlanResult.evidence.inputResolution.issueCode, "INVALID_STUDENT_PREREQUISITES");
 });
 
-test("major mapper reports instructor approval for current concurrent math", async () => {
+test("major mapper does not request new approval for current concurrent math", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -605,8 +605,7 @@ test("major mapper reports instructor approval for current concurrent math", asy
   const notice = data.catalog.advisorAttention.find(item => item.title === "Concurrent enrollment approval");
 
   assert.equal(response.status, 200);
-  assert.match(notice.message, /MAT 113/);
-  assert.match(notice.message, /ECO 213 instructor/);
+  assert.equal(notice, undefined);
   assert.ok(economics.economicsPlans.length > 0);
   assert.equal(economics.economicsCandidateOutcomes.length, 2);
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));

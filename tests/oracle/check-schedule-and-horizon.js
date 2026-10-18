@@ -477,7 +477,7 @@ function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, viola
   const springOnly = policyRule(policy, "CATALOG-ECO-222-SPRING");
   const courses = (term.courses || []).map(course => ({ ...course, course: upper(course.course) }));
   const limit = policyRule(policy, "PLANNING-UNPUBLISHED-ELECTIVE-LIMIT");
-  const electives = courses.filter(course => String(course.requirementId || "").startsWith("eco-elective") || course.course === "ECO ELECTIVE");
+  const electives = courses.filter(course => course.extra === true || String(course.requirementId || "").startsWith("eco-elective") || course.course === "ECO ELECTIVE");
   if (limit && ["Fall", "Winter", "May"].includes(normalizeTerm(actual)) && electives.length > limit.maximumElectives
     && !electives.every(course => course.source === VERIFIED_SOURCE && course.section && snapshotSection(verifiedSchedule, term, course))) {
     violations.push(finding(policy, "UNPUBLISHED_TERM_ELECTIVE_LIMIT", limit.ruleId, `$.plan.terms[${termIndex}]`,
@@ -503,7 +503,7 @@ function checkOfferingTermRules(policy, verifiedSchedule, term, termIndex, viola
       && (row.course === code || (row.canonicalCrossListIdentity || []).includes(code)));
     const path = `$.plan.terms[${termIndex}].courses[${index}]`;
     const confirmation = policyRule(policy, "PLANNING-FUTURE-COURSE-CONFIRMATION");
-    const namedElective = String(course.requirementId || "").startsWith("eco-elective") && course.course !== "ECO ELECTIVE";
+    const namedElective = (course.extra === true || String(course.requirementId || "").startsWith("eco-elective")) && course.course !== "ECO ELECTIVE";
     if (confirmation && (namedElective || (course.requirementId === "finance" && course.course === confirmation.unconfirmedFinanceCourse))
       && !snapshotSection(verifiedSchedule, term, course)) {
       violations.push(finding(policy, "NAMED_FUTURE_COURSE_REQUIRES_VERIFIED_OFFERING", confirmation.ruleId, path,

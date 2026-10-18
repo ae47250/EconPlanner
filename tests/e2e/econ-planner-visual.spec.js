@@ -114,7 +114,7 @@ const visualStates = [
       await continueToCourses(page);
       await setCourseStatus(page, "ECO 213", "Taking now");
       await setCourseStatus(page, "MAT 113", "Completed", "Status for prerequisite");
-      await setCourseStatus(page, "ECO 113", "Not taken / not sure", "Status for prerequisite");
+      await setCourseStatus(page, "ECO 113", "Taking now", "Status for prerequisite");
       await page.locator("#course-eco-213").scrollIntoViewIfNeeded();
       await expect(page.locator("#course-eco-213 .prerequisite-conflict")).toBeVisible();
     }

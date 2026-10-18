@@ -1,3 +1,4 @@
+import { visitPlan } from "./cp7-helpers.js";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "./nightly-observability.js";
 import {
@@ -80,10 +81,10 @@ test("a prerequisite error sends keyboard focus to the unresolved dependent row"
   await continueToCourses(page);
   await setCourseStatus(page, "ECO 213", "Taking now");
   await setCourseStatus(page, "MAT 113", "Completed", "Status for prerequisite");
-  await setCourseStatus(page, "ECO 113", "Not taken / not sure", "Status for prerequisite");
+  await setCourseStatus(page, "ECO 113", "Taking now", "Status for prerequisite");
 
-  await page.getByRole("button", { name: "Generate my plans" }).focus();
-  await page.keyboard.press("Enter");
+  await expect(page.getByRole("button", { name: "Generate my plans" })).toBeDisabled();
+  await page.locator("form").evaluate(form => form.requestSubmit());
   await expect(page.locator("#course-eco-213")).toBeFocused();
   const alert = page.locator("#course-eco-213 .prerequisite-conflict [role='alert']");
   await expect(alert).toBeVisible();
@@ -150,7 +151,7 @@ test("the mobile summary is inline, non-sticky, and causes no horizontal overflo
 test("a single returned plan has an accessible named region and results pass axe", async ({ page }) => {
   await openFixtureResult(page, plannerResultFixture());
   await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
-  await page.getByRole("button", { name: "Review this plan: Balanced" }).click();
+  await visitPlan(page, "balanced");
   await expect(page.getByRole("region", { name: "Balanced plan" })).toBeVisible();
   await expectNoAxeViolations(page);
 });

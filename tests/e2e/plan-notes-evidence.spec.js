@@ -1,3 +1,4 @@
+import { visitPlan } from "./cp7-helpers.js";
 import { expect, test } from './nightly-observability.js';
 import AxeBuilder from '@axe-core/playwright';
 import { writeFile } from 'node:fs/promises';
@@ -53,7 +54,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     }
     await recordLiveMessages('sophomore: generation');
     for (const plan of plans) {
-      await page.getByRole('button', {name:new RegExp(`^Review this plan: ${plan.label}$`)}).click();
+      await visitPlan(page, plan.id);
       await expect(page.locator('[data-plan-notes] [data-plan-note]')).toHaveCount(plan.planNotes.length);
       if (await page.locator('[data-major-requirements-checklist] > details').getAttribute('open') === null) await page.locator('[data-major-requirements-checklist] > details > summary').click();
       const evidenceSummary = page.getByText('More about this plan', {exact:true});
@@ -122,7 +123,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     plans = (await moveProfile.json()).programs.find(item => item.program.id === 'economics-base').economicsPlans;
       await expect(page.getByRole('heading', {name:'Compare your course plans',exact:true})).toBeVisible();
     await recordLiveMessages('freshman: generation');
-    await page.getByRole('button', {name:/^Review this plan: One Year Early$/}).click();
+    await visitPlan(page, "one-year-early");
     const control = page.locator('select[aria-label="Change MAT 217 to"]');
     await expect(control.locator('option[value="move:winter-2027"]')).toBeEnabled();
     await expect(page.locator('.accelerated-math-sequence-note').first()).toBeHidden();
@@ -221,7 +222,7 @@ test('actual completed and current checklist credit stays distinct from future a
   const plans=(await response.json()).programs.find(program=>program.economicsPlans).economicsPlans;
   expect(plans).toHaveLength(3);
   for(const plan of plans) {
-    await page.getByRole('button',{name:new RegExp(`^Review this plan: ${plan.label}$`)}).click();
+    await visitPlan(page, plan.id);
     const checklist=page.locator('[data-major-requirements-checklist]');
     await expect(checklist.locator('[data-requirement-checklist-id="eco-113"] .checklist-status')).toHaveText('✓ Completed');
     await expect(checklist.locator('[data-requirement-checklist-id="eco-114"] .checklist-status')).toHaveText('◐ In progress');

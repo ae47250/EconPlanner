@@ -1,3 +1,4 @@
+import { visitPlan } from "./cp7-helpers.js";
 import { expect, test } from "./nightly-observability.js";
 import {
   chooseStanding,
@@ -26,7 +27,7 @@ function difference(expected, actual) {
 function readinessLabel(status) {
   return ({
     STUDENT_READY: "Ready to plan",
-    READY_WITH_CONDITIONS: "Ready with conditions",
+    READY_WITH_CONDITIONS: "Needs confirmation",
     ADVISOR_ACTION_REQUIRED: "Needs advisor attention"
   })[status] || "Needs advisor attention";
 }
@@ -50,7 +51,7 @@ test("API and selected-plan UI retain material academic content", async ({ page 
   const economics = body.programs.find(program => program.program?.id === "economics-base");
   const selectedPlan = economics.economicsPlans[0];
   await expect(page.getByRole("heading", { name: /Compare your course plans|Your feasible plan/ })).toBeVisible({ timeout: 15000 });
-  await page.getByRole("button", { name: new RegExp(`Review this plan: ${selectedPlan.label}`) }).click();
+  await visitPlan(page, selectedPlan.id);
   await expect(page.getByRole("heading", { name: new RegExp(`Review ${selectedPlan.label}`) })).toBeVisible();
 
   const displayed = await page.evaluate(() => ({
@@ -106,7 +107,7 @@ test("readiness, conditions, and advisor actions are projected from the returned
           { code: "FINAL_SCHEDULE_CHECK", message: "Confirm the published schedule when it is released." }
         ]
       }),
-      expectedStatus: "Ready with conditions",
+      expectedStatus: "Needs confirmation",
       expectedSelector: "[data-plan-conditions]"
     },
     {

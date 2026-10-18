@@ -53,6 +53,7 @@ export async function generatePlans(page, expectedStatus = 200) {
   await page.getByRole("button", { name: "Generate my plans" }).click();
   const response = await responsePromise;
   expect(response.status()).toBe(expectedStatus);
+  if (expectedStatus === 200) await expect(page.locator(".comparison-page")).toBeVisible();
   return response;
 }
 
@@ -206,4 +207,14 @@ export async function openFixtureResult(page, fixture, status = 200) {
   await continueToCourses(page);
   await generatePlans(page, status);
   await expect(page.getByRole("heading", { name: /Compare your course plans|Your feasible plan|Your planning result/ })).toBeVisible();
+}
+
+// Keep the legacy detail route covered without restoring the redundant comparison button.
+export async function visitPlan(page, planId) {
+  await page.evaluate(id => {
+    const state = { econPlanner: true, view: "plan", planId: id };
+    window.history.pushState(state, "", `/?layout=apple&view=plan&plan=${id}`);
+    window.dispatchEvent(new PopStateEvent("popstate", { state }));
+  }, planId);
+  await expect(page.locator(".plan-section")).toBeVisible();
 }

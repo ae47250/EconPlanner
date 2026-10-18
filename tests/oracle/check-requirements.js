@@ -454,7 +454,8 @@ export function checkExternalEconomicsRequirements(input) {
     return requirementResult({ violations });
   }
 
-  const courses = collectCourses(student, plan, policy);
+  // Extra placements remain subject to the schedule/prerequisite auditors, but never fill a degree slot.
+  const courses = collectCourses(student, plan, policy).filter(course => course.extra !== true);
   const slots = makeSlots(policy);
   const claims = requirementClaims(plan, policy);
   const capstone = courses.find(course => course.canonicalCourse === "ECO 461");

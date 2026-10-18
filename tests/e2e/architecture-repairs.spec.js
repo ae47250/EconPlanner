@@ -1,3 +1,4 @@
+import { visitPlan } from "./cp7-helpers.js";
 import {test, expect} from './nightly-observability.js';
 import AxeBuilder from '@axe-core/playwright';
 import {writeFile} from 'node:fs/promises';
@@ -144,13 +145,13 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   await expect(earlyPlanCard).toContainText('Spring/May 2029');
   await expect(earlyPlanCard.locator('.comparison-plan-summary > p')).toHaveCount(0);
   await expect(page.locator('.accelerated-result')).toHaveCount(0);
-  await page.getByRole('button',{name:/^Review this plan: One Year Early$/}).click();
+  await visitPlan(page, "one-year-early");
   const target = page.locator('.comparison-course-status p').filter({hasText:'Graduation target'});
   await expect(target).toContainText('Spring/May 2029');
   await reloadPlanner(page);
   await expect(target).toContainText('Spring/May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await page.getByRole('button',{name:/^Review this plan: One Year Early$/}).click();
+  await visitPlan(page, "one-year-early");
   await expect(target).toContainText('Spring/May 2029');
   await exportLocalPdf(page,browser,testInfo,'early','Spring/May 2029',{failFirst:true});
   const valid = await move(page,'MAT 217','winter-2027');
@@ -169,7 +170,7 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await page.getByRole('button',{name:/^Review this plan: Balanced$/}).click();
+  await visitPlan(page, "balanced");
   await expect(target).toContainText('Spring/May 2030');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   const balanced = await exportLocalPdf(page,browser,testInfo,'balanced','Spring/May 2030');
@@ -188,12 +189,7 @@ test('required controls explain restrictions while mobile elective editing and k
   const response = page.waitForResponse(r=>r.url().endsWith('/api/majors/map')&&r.status()===200);
   await page.keyboard.press('Enter');
   await response;
-  const balancedButton = page.getByRole('button',{name:/^Review this plan: Balanced$/});
-  await expect(balancedButton).toBeEnabled();
-  await balancedButton.focus();
-  await expect(balancedButton).toBeFocused();
-  await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading',{name:'Review Balanced',exact:true})).toBeFocused();
+  await visitPlan(page, "balanced");
   await expect(page.getByRole('button',{name:'Remove ECO 113',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:'Remove BUSN 323',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:'Change ECO 113',exact:true})).toBeVisible();
@@ -213,7 +209,7 @@ test('required controls explain restrictions while mobile elective editing and k
 test('course cards explain when no move preserves prerequisite validity', async ({page}) => {
   await intake(page, 'freshman', true);
   await generatePlans(page);
-  await page.getByRole('button',{name:/^Review this plan: One Year Early$/}).click();
+  await visitPlan(page, "one-year-early");
   const coreCard = page.locator('.term-card li').filter({hasText:'ECO 113'}).first();
   await coreCard.getByRole('button',{name:'Change ECO 113',exact:true}).click();
   await expect(coreCard).toContainText('No other move is available');

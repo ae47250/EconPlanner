@@ -170,7 +170,7 @@ export function oracleEvaluateOffering(policy, course, term) {
   }
   const releaseTerm = policy.schedule.terms.find(candidate => candidate.termId === termId(term));
   const confirmation = policy.byRuleId["PLANNING-FUTURE-COURSE-CONFIRMATION"];
-  const electiveNamed = String(course.requirementId || "").startsWith(confirmation.condition.electiveRequirementPrefix)
+  const electiveNamed = (course.extra === true || String(course.requirementId || "").startsWith(confirmation.condition.electiveRequirementPrefix))
     && String(course.course).toUpperCase() !== "ECO ELECTIVE";
   const uncertainFinance = course.requirementId === confirmation.condition.financeRequirementId
     && course.course === confirmation.effect.unconfirmedFinanceCourse;
@@ -251,7 +251,7 @@ export function oracleEvaluateTermLoad(policy, term) {
 export function oracleEvaluateElectiveTerm(policy, term) {
   const rule = policy.byRuleId["PLANNING-UNPUBLISHED-ELECTIVE-LIMIT"];
   const key = canonicalTerm(term.termKey || term.term);
-  const assigned = (term.courses || []).filter(row => String(row.requirementId || "").startsWith("eco-elective") || String(row.course).toUpperCase() === "ECO ELECTIVE");
+  const assigned = (term.courses || []).filter(row => row.extra === true || String(row.requirementId || "").startsWith("eco-elective") || String(row.course).toUpperCase() === "ECO ELECTIVE");
   const exact = policy.schedule.terms.find(row => row.termId === termId(term));
   const matches = assigned.every(row => row.source === "verified-offering" && row.section && exact?.sections.some(section =>
     (section.course === row.course || section.crossListedAs.includes(row.course)) && section.sectionId.endsWith(`-${row.section}`)));
@@ -264,7 +264,7 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
   const findings = [];
   const slotContract = policy.rules.find(rule => rule.ruleId === "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT");
   const declaredElectiveSlots = new Set();
-  const assignments = (plan.terms || []).flatMap(term => (term.courses || []).map(course => ({slotId:course.requirementId,code:course.course})));
+  const assignments = (plan.terms || []).flatMap(term => (term.courses || []).filter(course => course.extra !== true).map(course => ({slotId:course.requirementId,code:course.course})));
   // The finance pairing can be satisfied by recorded work, not just a new
   // placement. Select it independently from the canonical requirement and its
   // recorded preference; never import the production mapper's assignments.
@@ -345,7 +345,10 @@ export function oracleEvaluateCanonicalPlan(policy, student, plan, expectedConte
         });
         declaredElectiveSlots.add(course.requirementId);
       }
-      findings.push({ path, ...oracleEvaluateAllocation(policy, course, course.requirementId, {assignments, level100Electives}) });
+      // Owner-approved Extra contract, 2026-10-17: no degree allocation.
+      if (course.extra === true) {
+        if (!/^extra-economics-[1-9]\d*$/.test(course.requirementId || "") || !/^ECO (?:\d{3}|elective)$/.test(course.course || "")) findings.push({path,status:"BLOCK",ruleIds:[],reasonCode:"INVALID_EXTRA_COURSE"});
+      } else findings.push({ path, ...oracleEvaluateAllocation(policy, course, course.requirementId, {assignments, level100Electives}) });
       if (String(course.requirementId).startsWith('eco-elective-') && /^ECO 1\d\d$/.test(course.course)) level100Electives++;
       if (course.course === policy.byRuleId['CAPSTONE-SENIOR-STANDING'].condition.course && expectedContext) findings.push({path, ...oracleEvaluateStanding(policy, term, expectedContext)});
       findings.push({ path, ...oracleEvaluateOffering(policy, course, term) });
