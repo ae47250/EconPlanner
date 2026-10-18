@@ -4,7 +4,9 @@ import { writeFile } from 'node:fs/promises';
 import { resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus } from './cp7-helpers.js';
 
 const normalize = value => value.replace(/\s+/g, ' ').trim();
-const expectedNoteText = note => normalize([note.title, note.description,
+const studentNoteTitles = { 'ccr-ace':'Other graduation requirements', history:'When these classes ran before',
+  upcoming:'Upcoming courses', future:'Courses in future years' };
+const expectedNoteText = note => normalize([studentNoteTitles[note.id] || note.title, note.description,
   ...note.items.map(item => [item.code, item.label ? item.label + ':' : '', ...(item.lines || [item.text])].filter(Boolean).join(' ')), note.caveat].filter(Boolean).join(' '));
 
 for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile', {width:390,height:844}]]) {
@@ -34,11 +36,28 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     let student = response.request().postDataJSON().student;
     let plans = payload.programs.find(item => item.program.id === 'economics-base').economicsPlans;
     expect(plans.length).toBe(3);
-    await expect(page.getByRole('heading', {name:'Compare your plans',exact:true})).toBeVisible();
+    await expect(page.getByRole('heading', {name:'Compare your course plans',exact:true})).toBeVisible();
+    await expect(page.locator('.projection-readiness-note')).toHaveCount(0);
+    await expect(page.locator('.comparison-grid')).toBeVisible();
+    const plansBeforeConditions = await page.locator('.comparison-grid').evaluate(grid => {
+      const conditions = document.querySelector('[data-plan-conditions]');
+      return Boolean(conditions && (grid.compareDocumentPosition(conditions) & Node.DOCUMENT_POSITION_FOLLOWING));
+    });
+    expect(plansBeforeConditions).toBe(true);
+    if (device === 'desktop') {
+      await page.setViewportSize({width:832,height:900});
+      const viewportWidth = await page.locator('html').evaluate(element => ({scroll:element.scrollWidth, client:element.clientWidth}));
+      expect(viewportWidth.scroll).toBeLessThanOrEqual(viewportWidth.client);
+      await expect(page.locator('.difference-toggle')).toBeVisible();
+      await page.setViewportSize(viewport);
+    }
     await recordLiveMessages('sophomore: generation');
     for (const plan of plans) {
-      await page.getByRole('button', {name:new RegExp(`^(Choose|Review selected) ${plan.label}$`)}).click();
+      await page.getByRole('button', {name:new RegExp(`^Review this plan: ${plan.label}$`)}).click();
       await expect(page.locator('[data-plan-notes] [data-plan-note]')).toHaveCount(plan.planNotes.length);
+      if (await page.locator('[data-major-requirements-checklist] > details').getAttribute('open') === null) await page.locator('[data-major-requirements-checklist] > details > summary').click();
+      const evidenceSummary = page.getByText('More about this plan', {exact:true});
+      if (await evidenceSummary.locator('..').getAttribute('open') === null) await evidenceSummary.click();
       const checklist = page.locator('[data-major-requirements-checklist]');
       await expect(checklist.getByRole('columnheader')).toHaveText(['Requirement','Course / term','Status']);
       await expect(checklist.locator('tbody tr')).toHaveCount(12);
@@ -49,7 +68,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
         await expect(rendered.locator('.checklist-status')).toContainText(row.statusLabel);
         for (const marker of row.markers) await expect(rendered).toContainText(marker);
       }
-      await expect(page.locator('.term-card .plan-course-availability').first()).toHaveText('Current seat status unverified');
+      await expect(page.locator('.term-card .plan-course-availability').first()).toHaveText('Seat availability not confirmed');
       await expect(page.locator('[data-plan-conditions]')).toHaveCount(1);
       await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       if (plan.id === 'one-year-early') {
@@ -62,13 +81,27 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       }
       expect(await page.locator('[data-plan-note]').evaluateAll(nodes => nodes.map(node => node.dataset.planNote)))
         .toEqual(plan.planNotes.map(note => note.id));
+      await expect(page.locator('[data-plan-note] summary')).toHaveCount(0);
+      await expect(page.locator('[data-plan-note="upcoming"] h3')).toHaveText('Upcoming courses');
+      const sectionLabels = await page.locator('[data-plan-note="upcoming"] strong').allTextContents();
+      expect(sectionLabels).toContain('J:');
+      expect(sectionLabels).toContain('K:');
+      expect(sectionLabels).not.toContain('S:');
+      const firstUpcomingCourse = page.locator('[data-plan-note="upcoming"] .upcoming-course-entry').first();
+      await expect(firstUpcomingCourse.locator('.upcoming-course-heading')).toContainText('ECO 113');
+      await expect(firstUpcomingCourse.locator('.upcoming-course-heading')).toContainText('Principles of Microeconomics');
+      await expect(firstUpcomingCourse.locator('.upcoming-course-title')).toHaveCSS('text-decoration-line', 'underline');
+      await expect(firstUpcomingCourse.locator('.upcoming-course-times')).toContainText('Tue, Thu');
       await expect(page.locator('main')).not.toContainText('Course-level planning options');
       await expect(page.locator('main')).not.toContainText('potential Economics');
       await expect(page.locator('main')).not.toContainText('current seat availability is');
       await expect(page.locator('.section-heading .accelerated-math-sequence-note')).toHaveCount(0);
       for (const warning of plan.displayWarnings.filter(message =>
         /^(Complete planned prerequisites|Confirm seat availability)/.test(message))) {
-        await expect(page.getByText(warning, {exact:true})).toHaveCount(1);
+        await expect(page.getByText(warning, {exact:true})).toHaveCount(0);
+      }
+      for (const condition of plan.planConditions.filter(item => ["prerequisite", "seat"].includes(item.kind))) {
+        await expect(page.locator('[data-plan-conditions]').getByText(condition.message, {exact:true})).toHaveCount(1);
       }
       await expect(page.locator('.term-card .plan-course-summary')).toContainText(Array.from({length:1}, () => 'ECO elective (200+)'));
       expect(await page.locator('[data-plan-notes]').evaluate(node => Boolean(node.closest('[aria-live], [role="status"]')))).toBe(false);
@@ -76,7 +109,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       expect(json.status()).toBe(200);
       expect((await json.json()).planNotes).toEqual(plan.planNotes);
       await recordLiveMessages(`sophomore: select ${plan.label}`);
-      await page.getByRole('button', {name:'← Back to plan comparison',exact:true}).click();
+      await page.getByRole('button', {name:'Compare plans',exact:true}).click();
     }
     await resetPlanner(page);
     await chooseStanding(page, 'freshman');
@@ -87,11 +120,11 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     const moveProfile = await generatePlans(page);
     student = moveProfile.request().postDataJSON().student;
     plans = (await moveProfile.json()).programs.find(item => item.program.id === 'economics-base').economicsPlans;
-    await expect(page.getByRole('heading', {name:'Compare your plans',exact:true})).toBeVisible();
+      await expect(page.getByRole('heading', {name:'Compare your course plans',exact:true})).toBeVisible();
     await recordLiveMessages('freshman: generation');
-    await page.getByRole('button', {name:/^(Choose|Review selected) One Year Early$/}).click();
-    const control = page.getByRole('combobox', {name:'Move MAT 217 to another term',exact:true});
-    await expect(control.locator('option[value="winter-2027"]')).toBeEnabled();
+    await page.getByRole('button', {name:/^Review this plan: One Year Early$/}).click();
+    const control = page.locator('select[aria-label="Change MAT 217 to"]');
+    await expect(control.locator('option[value="move:winter-2027"]')).toBeEnabled();
     await expect(page.locator('.accelerated-math-sequence-note').first()).toBeHidden();
     await page.getByText('More planning details', {exact:true}).click();
     await expect(page.locator('.accelerated-math-sequence-note').first()).toBeVisible();
@@ -102,28 +135,33 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     const rejected = await page.request.post('/api/majors/map', {data:{action:'validate-plan',student,plan:selected,plans,
       edit:{type:'move',fromTermId:from.slotId,toTermId:'winter-2029',courseId:'statistics'}}});
     expect(rejected.status()).toBe(422);
+    await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
     await control.focus();
     const validated = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-    await control.selectOption('winter-2027');
+    if (!await control.isVisible()) await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
+    await control.selectOption('move:winter-2027');
+    await page.getByRole('button',{name:'Apply change',exact:true}).click();
     expect((await validated).status()).toBe(200);
-    await expect(control).toBeFocused();
-    await expect(page.locator('.plan-edit-status')).toHaveText('Change saved.');
+    await expect(page.getByRole('button',{name:'Change MAT 217',exact:true})).toBeFocused();
+    await expect(page.locator('.plan-course-edit-feedback')).toContainText('Moved to');
     await expect(page.locator('.plan-course-edit-feedback')).toHaveText('Moved to Winter 2027. Plan checks pass.');
     await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText('MAT 217 — Winter 2027');
     await recordLiveMessages('MAT 217: move to Winter 2027');
     expect(await control.locator('option').evaluateAll(options => Math.max(...options.map(option => option.text.length)))).toBeLessThan(80);
     await page.getByRole('button', {name:'Undo last plan edit'}).click();
-    await expect(control).toHaveValue(from.slotId);
+    await expect(control).toHaveValue(`move:${from.slotId}`);
     await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText(`MAT 217 — ${from.term}`);
-    await expect(page.locator('.plan-course-edit-feedback')).toHaveCount(0);
+    await expect(page.locator('.plan-course-edit-feedback')).toHaveText('Change undone.');
     await recordLiveMessages('MAT 217: undo');
     const again = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-    await control.selectOption('winter-2027');
+    if (!await control.isVisible()) await page.getByRole('button',{name:'Change MAT 217',exact:true}).click();
+    await control.selectOption('move:winter-2027');
+    await page.getByRole('button',{name:'Apply change',exact:true}).click();
     expect((await again).status()).toBe(200);
-    await expect(page.locator('.plan-edit-status')).toHaveText('Change saved.');
+    await expect(page.locator('.plan-course-edit-feedback')).toContainText('Moved to');
     await recordLiveMessages('MAT 217: move again');
     await reloadPlanner(page);
-    await expect(control).toHaveValue('winter-2027');
+    await expect(control).toHaveValue('move:winter-2027');
     await expect(page.locator('[data-requirement-checklist-id="statistics"]')).toContainText('MAT 217 — Winter 2027');
     // Saved display fields cannot manufacture credit; the API rebuilds them on reload.
     await page.evaluate(() => {
@@ -135,7 +173,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       sessionStorage.setItem(key,JSON.stringify(state));
     });
     await reloadPlanner(page);
-    await expect(control).toHaveValue('winter-2027');
+    await expect(control).toHaveValue('move:winter-2027');
     await expect(page.locator('[data-major-requirements-checklist] tbody .checklist-status.is-completed')).toHaveCount(0);
     await expect(page.locator('[data-plan-conditions]')).toContainText('Senior standing is assumed');
     await recordLiveMessages('MAT 217: reload');
@@ -151,7 +189,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     }, null, 2));
     for (const observation of liveObservations) for (const message of observation.messages) {
       expect(message.length).toBeLessThan(220);
-      expect(message).not.toMatch(/Major requirements checklist|Course offerings history|Upcoming Economics courses/);
+      expect(message).not.toMatch(/Major requirements checklist|Past Economics schedules|Upcoming Economics courses/);
     }
     // Saved academic edits also receive full validation before any plan is displayed.
     await page.evaluate(() => {
@@ -183,7 +221,7 @@ test('actual completed and current checklist credit stays distinct from future a
   const plans=(await response.json()).programs.find(program=>program.economicsPlans).economicsPlans;
   expect(plans).toHaveLength(3);
   for(const plan of plans) {
-    await page.getByRole('button',{name:new RegExp(`^(Choose|Review selected) ${plan.label}$`)}).click();
+    await page.getByRole('button',{name:new RegExp(`^Review this plan: ${plan.label}$`)}).click();
     const checklist=page.locator('[data-major-requirements-checklist]');
     await expect(checklist.locator('[data-requirement-checklist-id="eco-113"] .checklist-status')).toHaveText('✓ Completed');
     await expect(checklist.locator('[data-requirement-checklist-id="eco-114"] .checklist-status')).toHaveText('◐ In progress');
@@ -199,6 +237,6 @@ test('actual completed and current checklist credit stays distinct from future a
     await expect(checklist.locator('tbody .is-completed')).toHaveCount(3);
     await expect(checklist.locator('tbody .is-in_progress')).toHaveCount(1);
     await page.setViewportSize({width:1440,height:900});
-    await page.getByRole('button',{name:'← Back to plan comparison',exact:true}).click();
+    await page.getByRole('button',{name:'Compare plans',exact:true}).click();
   }
 });

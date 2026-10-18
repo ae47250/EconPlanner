@@ -150,7 +150,7 @@ test("the mobile summary is inline, non-sticky, and causes no horizontal overflo
 test("a single returned plan has an accessible named region and results pass axe", async ({ page }) => {
   await openFixtureResult(page, plannerResultFixture());
   await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
-  await page.getByRole("button", { name: "Review selected Balanced" }).click();
+  await page.getByRole("button", { name: "Review this plan: Balanced" }).click();
   await expect(page.getByRole("region", { name: "Balanced plan" })).toBeVisible();
   await expectNoAxeViolations(page);
 });

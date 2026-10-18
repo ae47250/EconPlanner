@@ -70,7 +70,7 @@ const visualStates = [
       await chooseStanding(page, "freshman");
       await page.locator("details.more-details > summary", { hasText: "More details" }).first().click();
       await page.getByText("Adjust your schedule (optional)", { exact: true }).click();
-      const reservation = page.locator(".non-major-fields select").first();
+      const reservation = page.getByRole("combobox", {name:/^Course units reserved in /}).first();
       await reservation.selectOption("1");
       await expect(page.locator(".cp7-summary")).toContainText("Room for other courses");
     }
@@ -157,6 +157,7 @@ const visualStates = [
     id: "accelerated-result",
     setup: async page => {
       await openFixtureResult(page, plannerResultFixture({
+        plans: [fixturePlan(), fixturePlan({ id: "one-year-early", label: "One Year Early" })],
         acceleratedResult: {
           requested: true,
           status: "POSSIBLE",
@@ -166,7 +167,8 @@ const visualStates = [
           message: "Graduate one year early appears possible under the current requirements and planning evidence."
         }
       }));
-      await expect(page.locator(".accelerated-result-status")).toHaveText("Possible");
+      await expect(page.locator('article[data-plan-id="one-year-early"] .early-plan-status')).toHaveText("Possible");
+      await expect(page.locator(".accelerated-result")).toHaveCount(0);
     }
   },
   {
@@ -186,9 +188,10 @@ const visualStates = [
         advisorActions: [{ code: "APPROVAL", message: "Meet with your advisor to confirm the required approval." }]
       });
       await openFixtureResult(page, plannerResultFixture({ plans: [plan] }));
-      await expect(page.locator(".plan-conditions")).toBeVisible();
-      await expect(page.locator(".plan-advisor-actions")).toBeVisible();
-      await page.locator(".plan-conditions").scrollIntoViewIfNeeded();
+      const conditions = page.locator("[data-plan-conditions]");
+      await expect(conditions).toContainText("Confirm successful completion of the current course.");
+      await expect(conditions).toContainText("Meet with your advisor to confirm the required approval.");
+      await conditions.scrollIntoViewIfNeeded();
     }
   }
 ];

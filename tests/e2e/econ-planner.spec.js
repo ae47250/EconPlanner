@@ -22,7 +22,7 @@ async function reviewBalanced(page) {
   await chooseStanding(page, "freshman");
   await continueToCourses(page);
   await generatePlans(page);
-  await page.getByRole("button", { name: "Review selected Balanced" }).click();
+  await page.getByRole("button", { name: "Review this plan: Balanced" }).click();
   await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
 }
 
@@ -37,17 +37,21 @@ async function visibleSchedule(page) {
 for (const responseStatus of [422, 200]) {
   test(`a duplicate-plan edit response (${responseStatus}) leaves the visible comparison unchanged`, async ({ page }) => {
     const balanced = fixturePlan();
-    balanced.terms[0].courses[0].moveDestinationIds = ["2026-FALL", "2027-WINTER"];
+    balanced.terms[0].courses[0].moveDestinationOptions = [
+      {id:"2026-FALL",status:"CURRENT",label:"Fall 2026"},
+      {id:"2027-WINTER",status:"ALLOWED",label:"Winter 2027"}
+    ];
     const explore = structuredClone(balanced);
     explore.id = "explore-first";
     explore.label = "Explore the Major";
     explore.terms[1].courses.push(...explore.terms[0].courses);
     explore.terms[0].courses = [];
     await openFixtureResult(page, plannerResultFixture({ plans: [balanced, explore] }));
-    await page.getByRole("button", { name: "Review selected Balanced" }).click();
+    await page.getByRole("button", { name: "Review this plan: Balanced" }).click();
     await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
     const originalSchedule = await visibleSchedule(page);
-    const moveControl = page.getByRole("combobox", { name: "Move ECO 113 to another term" });
+    await page.getByRole("button",{name:"Change ECO 113",exact:true}).click();
+    const moveControl = page.getByRole("combobox", { name: "Change ECO 113 to" });
 
     await page.unroute("**/api/majors/map");
     await page.route("**/api/majors/map", async route => {
@@ -63,14 +67,15 @@ for (const responseStatus of [422, 200]) {
       });
     });
 
-    await expect(moveControl.locator('option[value="2027-WINTER"]')).toHaveCount(1);
-    await moveControl.selectOption("2027-WINTER");
+    await expect(moveControl.locator('option[value="move:2027-WINTER"]')).toHaveCount(1);
+    await moveControl.selectOption("move:2027-WINTER");
+    await page.getByRole("button",{name:"Apply change",exact:true}).click();
     await expect(page.locator(".plan-course-edit-feedback")).toContainText("same material schedule");
     await expect(page.locator(".plan-edit-status")).toHaveText("Change could not be saved.");
     await expect(page.locator(".plan-edit-status")).not.toContainText("updated and remains valid");
     await expect.poll(() => visibleSchedule(page)).toEqual(originalSchedule);
     await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
-    await expect(moveControl).toBeFocused();
+    await expect(page.getByRole("button",{name:"Apply change",exact:true})).toBeFocused();
   });
 }
 
@@ -294,7 +299,7 @@ test("intake and generated results survive a normal reload", async ({ page }) =>
 
   await fulfillPlanner(page, plannerResultFixture());
   await generatePlans(page);
-  await expect(page.getByRole("heading", { name: /Your feasible plan|Compare your plans/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Your feasible plan|Compare your course plans/ })).toBeVisible();
   await page.reload();
   await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
   await expect(page.getByText("EconPlanner is a planning guide, not an official degree audit.", { exact: true })).toHaveCount(1);
@@ -409,7 +414,11 @@ test("accelerated results expose the backend Possible, Not possible, and More in
     ["MORE_INFORMATION_NEEDED", "More information needed"]
   ]) {
     await page.unroute("**/api/majors/map").catch(() => {});
+    const plans = status === "POSSIBLE"
+      ? [fixturePlan(), fixturePlan({ id: "one-year-early", label: "One Year Early" })]
+      : [fixturePlan()];
     await openFixtureResult(page, plannerResultFixture({
+      plans,
       acceleratedResult: {
         requested: true,
         status,
@@ -419,8 +428,23 @@ test("accelerated results expose the backend Possible, Not possible, and More in
         message: `Backend accelerated finding: ${label}.`
       }
     }));
-    await expect(page.locator(".accelerated-result-status")).toHaveText(label);
-    await expect(page.locator(".accelerated-result")).toContainText(`Backend accelerated finding: ${label}.`);
+    if (status === "POSSIBLE") {
+      const earlyPlan = page.locator('article[data-plan-id="one-year-early"]');
+      await expect(page.locator(".accelerated-result")).toHaveCount(0);
+      await expect(earlyPlan.locator(".early-plan-status")).toHaveText(label);
+      await expect(earlyPlan).toContainText("Standard plan");
+      await expect(earlyPlan).toContainText("Spring/May 2030");
+      await expect(earlyPlan).toContainText("This plan");
+      await expect(earlyPlan).toContainText("Spring/May 2029");
+      await expect(earlyPlan.locator(".comparison-plan-summary > p")).toHaveCount(0);
+    } else {
+      await expect(page.locator(".accelerated-result-status")).toHaveText(label);
+      await expect(page.locator(".accelerated-result")).toContainText(`Backend accelerated finding: ${label}.`);
+      await expect(page.locator(".accelerated-result")).toContainText("Standard target");
+      await expect(page.locator(".accelerated-result")).toContainText("Accelerated target");
+      await expect(page.locator(".accelerated-result")).toContainText("Spring/May 2030");
+      await expect(page.locator(".accelerated-result")).toContainText("Spring/May 2029");
+    }
   }
 });
 
@@ -623,7 +647,7 @@ for (const [math, economics] of [
       { slotId: "eco", academicYear: "2026-2027", termKey: "Winter", term: "Winter 2027", displayTerm: "Winter 2027", courses: [{ course: economics, title: "Intermediate Economics" }] }
     ];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
-    await page.getByRole("button", { name: "Review selected Graduate One Year Early" }).click();
+    await page.getByRole("button", { name: "Review this plan: Graduate One Year Early" }).click();
     await expect(page.locator(".accelerated-math-sequence-note")).toContainText(`${math} is scheduled before ${economics}`);
     await expect(page.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
     await expect(page.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
@@ -654,10 +678,10 @@ for (const [math, economics] of [
       ]
     }];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
-    await page.getByRole("button", { name: "Review selected Graduate One Year Early" }).click();
+    await page.getByRole("button", { name: "Review this plan: Graduate One Year Early" }).click();
     await expect(page.locator(".accelerated-math-sequence-note")).toHaveCount(0);
-    await expect(page.locator(".plan-course-approval")).toContainText("Approval required");
-    await expect(page.locator(".plan-notes")).toContainText(approvalWarning);
+    await expect(page.locator(".plan-course-approval")).toContainText("Advisor approval needed");
+    await expect(page.locator("[data-plan-conditions]")).toContainText(approvalWarning);
   });
 }
 
@@ -686,18 +710,17 @@ test("a prerequisite conflict preserves both choices and Generate focuses the de
   await expect(page.locator(".cp7-summary")).toContainText("Correct the highlighted prerequisite issues");
 });
 
-test("ordinary results show backend readiness and hide diagnostics by default", async ({ page }) => {
+test("ordinary results show backend readiness and explain the plan once in its card", async ({ page }) => {
   const fixture = plannerResultFixture({
     candidateOutcomes: [{ id: "balanced", label: "Balanced", status: "VERIFIED_FEASIBLE", displayed: true }]
   });
   await openFixtureResult(page, fixture);
 
   await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
-  const diagnostics = page.locator("details.result-diagnostics");
-  await expect(diagnostics).not.toHaveAttribute("open", "");
-  await expect(diagnostics.getByText("Plan candidate results")).not.toBeVisible();
-  await diagnostics.locator("summary").click();
-  await expect(diagnostics.getByText("Plan candidate results")).toBeVisible();
+  await expect(page.locator("details.result-diagnostics")).toHaveCount(0);
+  const description = page.getByText("Spreads the required classes you still need across the years before you graduate.", {exact:true});
+  await expect(description).toHaveCount(1);
+  await expect(description).toBeVisible();
 });
 
 test("structured INPUT_BLOCKED asks for the missing detail and preserves a return path", async ({ page }) => {
@@ -748,17 +771,28 @@ test("a freshman receives the Balanced and Explore the Major normal comparisons"
   await expect(page.locator('article[data-plan-id="explore-first"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="one-year-early"]')).toHaveCount(0);
 
-  await page.getByRole("button", { name: "Choose Explore the Major" }).click();
+  await page.getByRole("button", { name: "Review this plan: Explore the Major" }).click();
   await expect(page.getByRole("heading", { name: "Review Explore the Major" })).toBeVisible();
   await expect(page.locator(".plan-course-availability")).not.toHaveCount(0);
-  await expect(page.locator(".plan-course-availability").first()).toHaveText("Current seat status unverified");
+  await expect(page.locator(".plan-course-availability").first()).toHaveText("Seat availability not confirmed");
 
   const availability = page.locator("details.schedule-availability");
   await expect(availability).toBeVisible();
-  await availability.locator("summary").click();
-  await expect(availability.locator("li")).not.toHaveCount(0);
-  await expect(availability.locator("li").first()).toContainText("Current seat status unverified");
-  await expect(availability).toContainText("observation date unavailable");
+  await expect(availability).not.toHaveAttribute("open", "");
+  await availability.locator(":scope > summary").click();
+  await expect(availability.getByText("Seat availability hasn’t been confirmed. Check the registration system before you register.")).toBeVisible();
+  await expect(availability.locator(".seat-term-list dd")).not.toHaveCount(0);
+  await expect(availability.locator(".recorded-seat-information")).not.toHaveAttribute("open", "");
+  await availability.getByText("Recorded seat information", { exact: true }).click();
+  await expect(availability).toContainText("These sections were recorded as open, but the observation dates are unavailable.");
+  await expect(page.locator(".result-diagnostics")).toHaveCount(0);
+  await expect(page.locator("body")).not.toContainText("validated options retained");
+  await availability.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: test.info().outputPath("compact-panels-desktop.png") });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await availability.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: test.info().outputPath("compact-panels-mobile.png") });
 });
 
 test("CP5 displays distinct Balanced, Explore the Major, and One Year Early plans", async ({ page }) => {
@@ -775,10 +809,8 @@ test("CP5 displays distinct Balanced, Explore the Major, and One Year Early plan
   await expect(page.locator('article[data-plan-id="explore-first"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="one-year-early"]')).toBeVisible();
   await expect(page.locator("article[data-plan-id]")).toHaveCount(3);
-  const diagnostics = page.locator("details.result-diagnostics");
-  await expect(diagnostics.getByText("One Year Early:", { exact: true })).not.toBeVisible();
-  await diagnostics.locator("summary").click();
-  await expect(diagnostics.getByText("One Year Early:", { exact: true })).toBeVisible();
+  await expect(page.locator("details.result-diagnostics")).toHaveCount(0);
+  await expect(page.locator('article[data-plan-id="one-year-early"] .early-plan-status')).toHaveText("Possible");
 
   const displayedSchedules = await page.locator("article[data-plan-id] .compact-schedule tbody")
     .evaluateAll(tables => tables.map(table => table.innerText));
