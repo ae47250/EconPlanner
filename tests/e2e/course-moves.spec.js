@@ -1370,14 +1370,19 @@ for (const width of [320, 1440]) {
     pending = validationResponse(page);
     await balancedMove.press('Enter');
     if (balancedConditional) await balancedRow.getByRole('button',{name:'Apply change',exact:true}).press('Enter');
-    expect((await pending).status()).toBe(200);
+    const balancedEdit = await pending;
+    expect(balancedEdit.status()).toBe(200);
+    const expectedBalanced = (await balancedEdit.json()).plan;
+    const savedBalanced = async () => (await savedPlans()).find(p=>p.id==='balanced');
+    await expect.poll(async () => (await savedBalanced()).terms).toEqual(expectedBalanced.terms);
     const balancedBefore = (await savedPlans()).find(p=>p.id==='balanced');
+    expect(balancedBefore.terms).toEqual(expectedBalanced.terms);
     await page.getByRole('button',{name:'Explore the Major',exact:true}).press('Enter');
     await expect(row().getByRole('button',{name:'Change ECO 222',exact:true})).toBeVisible();
     await reloadPlanner(page);
     expect((await savedPlans()).find(p=>p.id===plan.id).terms).toEqual(exploreBefore.terms);
     await page.getByRole('button',{name:'Balanced',exact:true}).press('Enter');
     await expect(balancedRow.locator('.plan-course-actions')).toHaveAttribute('data-current-term',balancedDestination);
-    expect((await savedPlans()).find(p=>p.id==='balanced').terms).toEqual(balancedBefore.terms);
+    expect((await savedBalanced()).terms).toEqual(expectedBalanced.terms);
   });
 }
