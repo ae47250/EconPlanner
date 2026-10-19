@@ -1117,8 +1117,9 @@ test('only one course menu stays open and expanded details remain on screen', as
   await triggers.first().click();
   const menu = plan.locator('.course-change-panel:not([hidden])');
   const menuBox = await menu.boundingBox();
-  const triggerBox = await triggers.first().boundingBox();
-  expect(menuBox.x + menuBox.width).toBeLessThanOrEqual(triggerBox.x);
+  expect(menuBox.width).toBeGreaterThanOrEqual(280);
+  expect(menuBox.x).toBeGreaterThanOrEqual(12);
+  expect(menuBox.x + menuBox.width).toBeLessThanOrEqual(820 - 12);
   await expect(menu.getByRole('button', { name: 'Close course options' })).toBeVisible();
   await triggers.first().press('Escape');
   await expect(page.locator('.course-change-panel:not([hidden])')).toHaveCount(0);
