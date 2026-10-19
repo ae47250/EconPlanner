@@ -391,7 +391,7 @@ test('results navigation reflows and remains keyboard accessible at all required
 });
 
 
-test('one missing ECO 213 prerequisite prevents the otherwise finishable senior horizon', async ({request}) => {
+test('one missing ECO 213 prerequisite prevents the otherwise finishable senior horizon', async ({request, page}) => {
   const common = ['ECO 113','ECO 114','ECO 214','MAT 113','MAT 217','BUSN 323','ECO 161','ECO 234','ECO 222','ECO 224'];
   const student = {academicStanding:'senior',planCreationDate:'2026-09-23',courses:[...common,'ECO 213'].map(code=>({code,status:'completed'}))};
   const readyResponse = await request.post('/api/majors/map',{data:{student}});
@@ -415,4 +415,67 @@ test('one missing ECO 213 prerequisite prevents the otherwise finishable senior 
   // Preserve the application's cautious classification: no approved overload
   // has been established. A missing plan is not itself a global proof.
   expect(blocked.economicsPlanResult.category).toBe('NEEDS_ADVISOR_ATTENTION');
+  await intake(page, 'senior');
+  for (const code of common) {
+    await page.getByRole('searchbox', {name:'Search courses',exact:true}).fill(code);
+    await setCourseStatus(page, code, 'Completed');
+  }
+  await page.getByRole('searchbox', {name:'Search courses',exact:true}).fill('');
+  const response = await generatePlans(page);
+  const result = (await response.json()).programs.find(p=>p.economicsPlans);
+  expect(result.economicsPlans).toEqual([]);
+  expect(result.economicsPlanResult.reason).toBe(blocked.economicsPlanResult.reason);
+  await expect(page.locator('.no-plan-state h2')).toHaveText('Missing prerequisite: ECO 213 could not be scheduled within your graduation target.');
+  await expect(page.locator('.no-plan-state > p')).toContainText('Overload approval does not replace prerequisite requirements or authorize taking courses together.');
+  await expect(page.getByRole('button', {name:/Download PDF Report/})).toHaveCount(0);
+});
+
+
+test('student readiness and exported feasibility are distinct and the course menu fits the viewport', async ({page, browser}, testInfo) => {
+  test.setTimeout(60000);
+  await intake(page, 'freshman');
+  const response = await generatePlans(page);
+  const result = (await response.json()).programs.find(p=>p.economicsPlans);
+  const plan = result.economicsPlans.find(plan=>plan.id === 'balanced');
+  expect(plan.readinessStatus).toBe('STUDENT_READY');
+  expect(plan.feasibilityStatus).toBe('CONDITIONALLY_FEASIBLE');
+  await visitPlan(page, plan.id);
+  await expect(page.locator('.result-status-value')).toHaveText('Ready to plan');
+  await expect(page.locator('.comparison-course-status')).toContainText('Student readiness');
+  await expect(page.locator('.result-feasibility-value')).toHaveText('Plan feasibility: Conditional plan');
+  await expect(page.locator('.result-status-reason')).toContainText('does not mean registration is confirmed');
+  const report = await page.request.post('/api/reports/economics', {data:{
+    student:response.request().postDataJSON().student, selectedPlan:plan,
+    plans:result.economicsPlans, format:'html'
+  }});
+  expect(report.status()).toBe(200);
+  const reportPage = await browser.newPage();
+  await reportPage.setContent(await report.text());
+  await expect(reportPage.locator('.plan-details h2')).toHaveText(await page.locator('.result-feasibility-value').textContent());
+  await reportPage.close();
+  for (const compare of [false, true]) {
+    if (compare) await page.getByRole('button', {name:'Compare plans',exact:true}).click();
+    for (const width of [1440, 1280, 820, 390]) {
+      await page.setViewportSize({width,height:900});
+      const trigger = page.getByRole('button', {name:/^Change /}).first();
+      await trigger.click();
+      const menu = page.locator('.course-change-panel:not([hidden])');
+      const box = await menu.boundingBox();
+      expect(box.width).toBeGreaterThanOrEqual(280);
+      expect(box.x).toBeGreaterThanOrEqual(12);
+      expect(box.x + box.width).toBeLessThanOrEqual(width - 12);
+      expect(box.y).toBeGreaterThanOrEqual(0);
+      expect(box.y + box.height).toBeLessThanOrEqual(900);
+      const close = menu.getByRole('button', {name:'Close course options'});
+      await expect(close).toBeInViewport();
+      expect(await close.evaluate(button => {
+        const r = button.getBoundingClientRect();
+        return button.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+      })).toBe(true);
+      if (width === 1440) await testInfo.attach(compare ? 'comparison-menu' : 'plan-menu', {body:await page.screenshot({path:testInfo.outputPath(compare ? 'comparison-menu.png' : 'plan-menu.png')}),contentType:'image/png'});
+      await close.click();
+      await expect(menu).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+    }
+  }
 });

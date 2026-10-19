@@ -513,12 +513,12 @@ function useEditorPosition(open, anchorRef, placement = "left") {
     if (!open || !anchorRef.current) return;
     const place = () => {
       const rect = anchorRef.current.getBoundingClientRect();
-      const width = placement === "button"
-        ? Math.min(320, window.innerWidth - 24)
-        : Math.min(260, Math.max(100, rect.left - 18));
+      const width = Math.min(320, window.innerWidth - 24);
       const left = placement === "button"
         ? Math.max(12, Math.min(rect.left, window.innerWidth - width - 12))
-        : Math.max(8, rect.left - width - 8);
+        : rect.left >= width + 20
+          ? rect.left - width - 8
+          : Math.max(12, Math.min(rect.right + 8, window.innerWidth - width - 12));
       const top = Math.max(12, Math.min(rect.top, window.innerHeight - 280));
       setPosition({ position: "fixed", left, top, width,
         maxHeight: Math.min(320, window.innerHeight - top - 12), overflowY: "auto", margin: 0, zIndex: 20 });
@@ -1187,7 +1187,7 @@ function PlanComparisonScreen({
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
   const overallStatus = overallPlanReadiness(isPlanView && selectedPlan ? [selectedPlan] : plans);
-  const noPlan = noPlanPresentation(canonicalPlanResult?.category, canonicalPlanResult?.reason);
+  const noPlan = noPlanPresentation(canonicalPlanResult?.category, canonicalPlanResult?.reason, canonicalPlanResult?.evidence);
   const displayedOverallStatus = plans.length
     ? overallStatus
     : canonicalPlanResult?.category === "INPUT_BLOCKED"
@@ -2072,7 +2072,9 @@ function PlanComparisonScreen({
           <p><strong>Graduation target</strong><span>{graduationTarget}</span></p>
           <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
-          <p><strong>Overall status</strong><span className="result-status-value">{displayedOverallStatus}</span>
+          <p><strong>{plans.length ? "Student readiness" : "Overall status"}</strong><span className="result-status-value">{displayedOverallStatus}</span>
+            {isPlanView && selectedPlan && <span className="result-feasibility-value">Plan feasibility: {({ VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" })[selectedPlan.feasibilityStatus] || "Plan needs confirmation"}</span>}
+            {plans.length > 0 && <span className="result-status-reason">Ready to plan does not mean registration is confirmed. Check each plan’s feasibility and conditions.</span>}
             {displayedOverallStatus === "Needs advisor attention" && statusReason && <span className="result-status-reason">Why: {statusReason}</span>}
           </p>
         </section>
@@ -2342,7 +2344,22 @@ function overallPlanReadiness(plans = []) {
   return plans.length ? "Ready to plan" : "Not available";
 }
 
-function noPlanPresentation(category, reason) {
+function noPlanPresentation(category, reason, evidence = {}) {
+  // Surface an existing search obstruction; do not reclassify the result or
+  // infer that overload or concurrency can repair an unscheduled prerequisite.
+  const attempts = evidence?.searchAttempts || [];
+  const gaps = evidence?.planningGaps || [];
+  const prerequisiteGap = gaps.find(gap => attempts.length > 0
+    && attempts.every(attempt => attempt.complete && !attempt.solutionFound && attempt.emptyDomains?.includes(gap.requirementId))
+    && gaps.some(dependent => COURSE_PREREQUISITES[dependent.course]?.all?.includes(gap.course)));
+  if (category !== "INPUT_BLOCKED" && category !== "SEARCH_INCOMPLETE" && prerequisiteGap) {
+    return {
+      title: `Missing prerequisite: ${prerequisiteGap.course} could not be scheduled within your graduation target.`,
+      message: "No complete plan is available. Review your course answers and graduation timeline with your advisor. Overload approval does not replace prerequisite requirements or authorize taking courses together.",
+      action: "Review graduation timeline",
+      actionTarget: "timeline"
+    };
+  }
   if (category === "INPUT_BLOCKED") {
     return {
       title: "We need one more detail before we can build your plan.",
