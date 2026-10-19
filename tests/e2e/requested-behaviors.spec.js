@@ -39,7 +39,9 @@ async function clearAll(page) {
   await page.getByRole('dialog',{name:'Clear all answers and generated plans?'}).getByRole('button',{name:'Clear all',exact:true}).click();
 }
 
-test('fresh and reset sessions submit no selected courses; saved selections survive reload and regeneration', async ({page}) => {
+test('fresh and reset sessions submit no selected courses; saved selections survive reload and regeneration', async ({page}, testInfo) => {
+  // Five plan generations plus reload/reset exceeded 30 seconds on the CI runner.
+  test.setTimeout(Math.max(testInfo.timeout, 60000));
   await resetPlanner(page);
   await chooseStanding(page,'freshman');
   await continueToCourses(page);

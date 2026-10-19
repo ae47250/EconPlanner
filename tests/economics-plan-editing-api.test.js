@@ -101,7 +101,7 @@ test("moving a concurrent intermediate before ECO 461 removes a no-longer-requir
   assert.equal(capstone.approvalRequired?.length || 0, 0);
   assert.equal(edited.data.plan.feasibility.requiredApprovals.some(item => item.course === "ECO 461"), false);
   assert.equal(edited.data.plan.planConditions.some(item => item.kind === "approval"), false);
-  assert.equal(edited.data.plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-461").markers.includes("Advisor approval needed"), false);
+  assert.equal(edited.data.plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-461").markers.includes("Approval needed"), false);
   assert.ok(!edited.data.plan.displayWarnings.some(message => /concurrent.*approval/i.test(message)));
   assert.deepEqual(editable, original);
 });

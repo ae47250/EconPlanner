@@ -46,8 +46,8 @@ test("zero-course input: all three checklists use validated future assignments, 
     assert.ok(html.includes("We don’t know if there are open seats in "));
     const capstone = checklist.rows.find(row => row.id === "eco-461");
     if (plan.id === "one-year-early") {
-      assert.deepEqual(capstone.markers, ["Advisor approval needed", "Ask an advisor to confirm senior standing"]);
-      assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Advisor approval needed"));
+      assert.deepEqual(capstone.markers, ["Approval needed", "Ask an advisor to confirm senior standing"]);
+      assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Approval needed"));
       assert.ok(plan.planConditions.some(item => item.message.includes("ECO 213 with ECO 461 in Winter 2028. Approval has not been recorded.")));
       assert.ok(plan.planConditions.some(item => /Senior standing is assumed for 2027–2028/.test(item.message)));
       assert.ok(!html.includes("This plan assumes you will have senior standing in your final year."));
