@@ -372,3 +372,48 @@ test("Task 17 rejects malformed PDF results and preserves stable service error m
   assert.equal(network.status, 502);
   assert.equal((await network.json()).code, "PDF_CREATION_FAILED");
 });
+
+for (const authority of ["ECO 213 instructor", "Economics Department"]) {
+  test(`approval badges preserve ${authority} evidence across the edited plan and reports`, async () => {
+    const instructor = authority === "ECO 213 instructor";
+    const student = instructor
+      ? { academicStanding: "freshman", planCreationDate: "2026-10-19", courses: [] }
+      : { academicStanding: "junior", planCreationDate: PREPARED_DATE, courses: completed(["MAT 113", "ECO 161", "ECO 221"]) };
+    const economics = await generateEconomics(student);
+    let selectedPlan = economics.economicsPlans.find(plan => plan.id === "balanced");
+    if (instructor) {
+      const { response, data } = await postJson(majorPost, "http://localhost/api/majors/map", {
+        action: "validate-plan", student, plan: selectedPlan, plans: economics.economicsPlans,
+        edit: { type: "move", fromTermId: "winter-2028", courseId: "eco-213", toTermId: "fall-2027" }
+      });
+      assert.equal(response.status, 200, JSON.stringify(data));
+      selectedPlan = data.plan;
+    }
+    const courseCode = instructor ? "ECO 213" : "ECO 461";
+    const prerequisite = instructor ? "MAT 113" : "ECO 213";
+    const term = instructor ? "Fall 2027" : "Winter 2028";
+    const message = `${authority} approval is required for ${prerequisite} with ${courseCode} in ${term}. Approval has not been recorded.`;
+    assert.equal(selectedPlan.feasibilityStatus, "CONDITIONALLY_FEASIBLE");
+    const course = selectedPlan.terms.flatMap(term => term.courses).find(course => course.course === courseCode);
+    assert.ok(course.approvalRequired.some(item => item.authority === authority && item.prerequisite === prerequisite));
+    const condition = selectedPlan.planConditions.find(item => item.kind === "approval" && item.course === courseCode);
+    assert.equal(condition.message, message);
+    assert.equal(condition.authority, authority);
+    assert.equal(condition.prerequisite, prerequisite);
+    assert.ok(selectedPlan.majorRequirementsChecklist.rows.find(row => row.course === courseCode || row.id === course.requirementId).markers.includes("Approval needed"));
+    const original = structuredClone(selectedPlan);
+    const json = await reportJson(student, selectedPlan);
+    const html = await reportHtml(student, selectedPlan);
+    const pdfRequest = await reportPdf(student, selectedPlan);
+    assert.ok(json.planConditions.some(item => item.message === message));
+    assert.match(html, new RegExp(`data-approval-authority="${authority}" data-approval-prerequisite="${prerequisite}">Approval needed</span>`));
+    assert.ok(html.includes(message));
+    assert.ok(!html.includes("Advisor approval needed"));
+    const expected = projectSelectedPlanArtifact(selectedPlan, { advisorNotices: json.catalog?.advisorAttention || [] });
+    assert.deepEqual(projectionMismatches(expected, projectReportJsonArtifact(json)), []);
+    assert.deepEqual(projectionMismatches(expected, projectReportHtmlArtifact(html)), []);
+    assert.deepEqual(projectionMismatches(expected, projectPdfCreatorRequestArtifact(pdfRequest)), []);
+    assert.equal(pdfRequest.html, html);
+    assert.deepEqual(selectedPlan, original, "Presentation must not mutate approval evidence or academic decisions.");
+  });
+}

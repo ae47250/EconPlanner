@@ -105,6 +105,7 @@ test("blocked-move summaries and course markers use student-facing language", ()
     "Term full. Move a course out first.");
   assert.equal(studentFriendlyUnavailableReason({ message: "ECO 214 is missing prerequisites: ECO 114." }),
     "Take ECO 114 before this class.");
+  assert.equal(studentFriendlyCourseMarker("Approval required"), "Approval needed");
   assert.equal(studentFriendlyCourseMarker("Eligibility review required"), "Ask an advisor whether this class counts");
   assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask an advisor to confirm senior standing");
 });

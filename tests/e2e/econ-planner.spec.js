@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { visitPlan } from "./cp7-helpers.js";
 import { expect, test } from "./nightly-observability.js";
 import {
@@ -602,7 +603,7 @@ for (const [math, economics] of [
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
     await visitPlan(page, "one-year-early");
     await expect(page.locator(".accelerated-math-sequence-note")).toHaveCount(0);
-    await expect(page.locator(".plan-course-approval")).toContainText("Advisor approval needed");
+    await expect(page.locator(".plan-course-approval")).toContainText("Approval needed");
     await expect(page.locator("[data-plan-conditions]")).toContainText(approvalWarning);
   });
 }
@@ -776,3 +777,66 @@ test("backend conditions and advisor actions retain their student-facing distinc
   await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
   await expect(page.locator("[data-plan-conditions]")).toContainText("Meet with your advisor to confirm this approval.");
 });
+
+for (const authority of ["ECO 213 instructor", "Economics Department"]) {
+  test(`real plan approval badges retain ${authority} details in the UI and rendered PDF`, async ({ page, browser }, testInfo) => {
+    test.setTimeout(60000);
+    const instructor = authority === "ECO 213 instructor";
+    const course = instructor ? "ECO 213" : "ECO 461";
+    const prerequisite = instructor ? "MAT 113" : "ECO 213";
+    const term = instructor ? "Fall 2027" : "Winter 2028";
+    const message = `${authority} approval is required for ${prerequisite} with ${course} in ${term}. Approval has not been recorded.`;
+    await resetPlanner(page);
+    await chooseStanding(page, instructor ? "freshman" : "junior");
+    await page.locator("details.more-details > summary").first().click();
+    await page.getByLabel("Plan creation date", { exact: true }).fill(instructor ? "2026-10-19" : "2026-07-30");
+    await continueToCourses(page);
+    if (!instructor) {
+      for (const code of ["MAT 113", "ECO 161", "ECO 221"]) {
+        await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill(code);
+        await setCourseStatus(page, code, "Completed");
+      }
+      await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill("");
+    }
+    const generated = await generatePlans(page);
+    const student = generated.request().postDataJSON().student;
+    let selectedPlan = (await generated.json()).programs.find(item => item.program.id === "economics-base").economicsPlans.find(plan => plan.id === "balanced");
+    await visitPlan(page, "balanced");
+    if (instructor) {
+      await page.getByRole("button", { name: "Change ECO 213", exact: true }).click();
+      const actions = page.locator('.plan-course-actions[aria-label="Changes for ECO 213"]');
+      await actions.locator('[data-change-choice="move:fall-2027"]').click();
+      await expect(actions).toContainText("instructor permission");
+      const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/majors/map") && response.request().postDataJSON()?.action === "validate-plan");
+      await actions.getByRole("button", { name: "Apply change", exact: true }).click();
+      const response = await responsePromise;
+      expect(response.status()).toBe(200);
+      selectedPlan = (await response.json()).plan;
+    }
+    expect(selectedPlan.feasibilityStatus).toBe("CONDITIONALLY_FEASIBLE");
+    await expect(page.locator("[data-plan-conditions]")).toContainText(message);
+    const badges = page.locator(".plan-course-approval");
+    expect(await badges.count()).toBeGreaterThan(0);
+    for (const badge of await badges.all()) await expect(badge).toHaveText("Approval needed");
+    await expect(page.locator(`[data-requirement-checklist-id="${course.toLowerCase().replace(" ", "-")}"] .checklist-marker`).filter({ hasText: "Approval needed" })).toHaveCount(1);
+    await expect(page.locator("body")).not.toContainText("Advisor approval needed");
+    await page.screenshot({ path: testInfo.outputPath("approval-ui.png"), fullPage: true });
+    const htmlResponse = await page.request.post("/api/reports/economics", { data: { student, selectedPlan, preparedDate: student.planCreationDate, format: "html" } });
+    expect(htmlResponse.status()).toBe(200);
+    const renderer = await browser.newPage();
+    try {
+      await renderer.setContent(await htmlResponse.text(), { waitUntil: "load" });
+      await expect(renderer.locator(`.approval-marker[data-approval-authority="${authority}"][data-approval-prerequisite="${prerequisite}"]`)).toHaveText("Approval needed");
+      const bytes = await renderer.pdf({ path: testInfo.outputPath("approval-report.pdf"), format: "Letter", printBackground: true,
+        margin: { top: "0.42in", right: "0.42in", bottom: "0.42in", left: "0.42in" } });
+      const text = execFileSync(process.env.PDFTOTEXT || "pdftotext", ["-", "-"], { input: bytes }).toString().replace(/\s+/g, " ");
+      expect(text).toContain(message);
+      expect(text).not.toContain("Advisor approval needed");
+      const [grid, checklist] = text.split("Major requirements checklist");
+      expect(grid).toContain("Approval needed");
+      expect(checklist).toContain("Approval needed");
+    } finally {
+      await renderer.close();
+    }
+  });
+}
