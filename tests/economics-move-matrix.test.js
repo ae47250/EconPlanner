@@ -1,12 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import fc from "fast-check";
 import { POST } from "../app/api/majors/map/route.js";
 import { resolvePlanningContext, selectedPlanContext } from "../lib/planning/horizon.js";
 import { checkExternalEconomicsScheduleAndHorizon } from "./oracle/check-schedule-and-horizon.js";
 import { auditExternalEconomicsPlanComplete } from "./oracle/audit-external-plan.js";
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan } from "./oracle/load-canonical-policy.js";
+import { coverageKeys, selectProfiles } from "../scripts/ci/move-matrix-coverage.mjs";
 
 const policy = await loadCanonicalPolicy();
 const oracleSpecification = JSON.parse(await readFile(new URL("./oracle/economics-policy.v1.json", import.meta.url), "utf8"));
@@ -14,6 +15,8 @@ const verifiedSchedule = JSON.parse(await readFile(new URL("./oracle/verified-sc
 const profileFixture = JSON.parse(await readFile(new URL("./fixtures/economics-planning-profile-matrix.json", import.meta.url), "utf8"));
 const fullMode = process.env.ECONOMICS_MOVE_MATRIX_MODE === "full";
 const profileFilter = process.env.ECONOMICS_MOVE_MATRIX_PROFILE || null;
+const shard = process.env.ECONOMICS_MOVE_MATRIX_SHARD || null;
+assert.ok(!shard || (!fullMode && !profileFilter), "Sharding requires the complete PR profile set");
 const completed = codes => codes.map(code => ({ code, status: "completed" }));
 const baseSenior = completed(["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323"]);
 
@@ -37,6 +40,8 @@ if (fullMode) for (const standing of profileFixture.standings) for (const fixtur
     courses: completed(fixture.courses)
   }]);
 }
+
+const selectedProfiles = shard ? selectProfiles(profiles.map(([name]) => name), shard) : null;
 
 async function post(body) {
   const response = await POST(new Request("http://localhost/api/majors/map", {
@@ -302,9 +307,11 @@ test(`course-to-term move matrix [${fullMode ? "full" : "PR"}]`, async t => {
   const expectedCells = new Set();
   const exercisedCells = new Set();
   const uncoveredProfiles = [];
+  const exercisedProfiles = [];
   const findings = [];
   for (const [profileName, student] of profiles) {
     if (profileFilter && profileName !== profileFilter) continue;
+    if (selectedProfiles && !selectedProfiles.includes(profileName)) continue;
     const generated = await post({ student });
     assert.equal(generated.status, 200, `${profileName}: ${JSON.stringify(generated.data)}`);
     const economics = generated.data.programs.find(item => item.program?.id === "economics-base");
@@ -315,6 +322,7 @@ test(`course-to-term move matrix [${fullMode ? "full" : "PR"}]`, async t => {
     }
     assert.ok(plans.length, `${profileName}: no complete generated plan`);
     coverage.profiles += 1;
+    exercisedProfiles.push(profileName);
     for (const plan of plans) {
       coverage.plans += 1;
       const original = structuredClone(plan);
@@ -360,13 +368,17 @@ test(`course-to-term move matrix [${fullMode ? "full" : "PR"}]`, async t => {
       }
     }
   }
-  for (const key of (profileFilter ? ["profiles", "plans", "pairs"] : ["profiles", "plans", "pairs", "listed", "hidden", "accepted", "rejected", "may2027", "capstone", "capstoneAccepted", "capstoneRejected", "fixed"])) {
+  for (const key of ((profileFilter || shard) ? ["profiles", "plans", "pairs"] : coverageKeys)) {
     assert.ok(coverage[key] > 0, `Missing move-matrix coverage: ${key}`);
   }
   const uncoveredCells = [...expectedCells].filter(cell => !exercisedCells.has(cell));
   t.diagnostic(JSON.stringify({ mode: fullMode ? "full" : "PR", profileFilter, coverage, uncoveredCells, uncoveredProfiles, findingCount: findings.length, findings }));
   assert.deepEqual(uncoveredCells, [], "Generated course-to-term cells were not exercised");
   assert.equal(findings.length, 0, `${findings.length} move cells failed; first: ${JSON.stringify(findings[0])}`);
+  if (shard) {
+    assert.ok(process.env.ECONOMICS_MOVE_MATRIX_REPORT, "Shards require a coverage report path");
+    await writeFile(process.env.ECONOMICS_MOVE_MATRIX_REPORT, JSON.stringify({ shard, profiles: exercisedProfiles, coverage, uncoveredCells, uncoveredProfiles, findingCount: findings.length }));
+  }
 });
 
 test("an invalid move leaves the plan usable for two consecutive valid moves", async () => {
