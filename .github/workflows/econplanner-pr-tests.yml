@@ -18,8 +18,8 @@ env:
   PDF_CREATION_ENABLED: "false"
 
 jobs:
-  deterministic:
-    name: Deterministic policy, oracle, and planner tests
+  deterministic-suite:
+    name: Deterministic regression suite
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -80,11 +80,14 @@ jobs:
             tests/student-facing-language.test.js \
             tests/planner-session-restoration.test.js \
             tests/offering-policy-consistency.test.js \
-            tests/economics-move-matrix.test.js \
+            tests/ci-move-matrix-coverage.test.js \
             tests/major-api.test.js \
             tests/economics-report.test.js \
             tests/economics-report-parity.test.js \
             2>&1 | tee test-results/deterministic/regression.log
+
+      - name: Run move-matrix companion regressions
+        run: node --test --test-skip-pattern="course-to-term move matrix" tests/economics-move-matrix.test.js
 
       - name: Validate fictional PDF fixtures without a hosted service
         shell: bash
@@ -104,11 +107,14 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-  browser:
-    name: Browser accessibility and adversarial tests
+  browser-shards:
+    name: Browser tests (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
-    # The full serial browser suite exceeded 20 minutes on hosted runners.
-    timeout-minutes: 30
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     env:
       PLAYWRIGHT_PORT: 3100
     steps:
@@ -142,24 +148,82 @@ jobs:
           tests/e2e/requested-behaviors.spec.js
           tests/e2e/plan-notes-evidence.spec.js
           tests/e2e/econ-planner-parity.spec.js
-
-      - name: Run targeted PDF-lock and malformed-response regressions
-        run: >-
-          pnpm exec playwright test
-          tests/e2e/econ-planner.spec.js
-          --grep
-          "PDF download recovers cleanly after failed and aborted requests|a structurally malformed successful planner response is rejected before storage"
+          --fully-parallel --workers=1 --shard=${{ matrix.shard }}/4
 
       - name: Upload Playwright failure evidence
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: browser-failure-evidence
+          name: browser-failure-evidence-${{ matrix.shard }}
           path: |
             test-results/
             playwright-report/
           if-no-files-found: ignore
           retention-days: 7
+
+  move-matrix:
+    name: Move matrix (${{ matrix.shard }}/2)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/setup@v1
+        with:
+          version: 11.9.0
+          runtime: node@24.18.0
+          cache: true
+          install: false
+      - run: pnpm install --frozen-lockfile
+      - name: Exercise every move in the selected profiles
+        env:
+          ECONOMICS_MOVE_MATRIX_SHARD: ${{ matrix.shard }}
+          ECONOMICS_MOVE_MATRIX_REPORT: move-matrix-${{ matrix.shard }}.json
+        run: node --test --test-name-pattern="course-to-term move matrix" tests/economics-move-matrix.test.js
+      - name: Upload coverage for the combined gate
+        uses: actions/upload-artifact@v7
+        with:
+          name: move-matrix-${{ matrix.shard }}
+          path: move-matrix-${{ matrix.shard }}.json
+          if-no-files-found: error
+          retention-days: 7
+
+  # Preserve the original check names; skipped or failed dependencies must fail.
+  deterministic:
+    name: Deterministic policy, oracle, and planner tests
+    if: always()
+    needs: [deterministic-suite, move-matrix]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require all deterministic jobs to succeed
+        env:
+          SUITE_RESULT: ${{ needs.deterministic-suite.result }}
+          MATRIX_RESULT: ${{ needs.move-matrix.result }}
+        run: test "$SUITE_RESULT" = success && test "$MATRIX_RESULT" = success
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: move-matrix-*
+          path: move-matrix-coverage
+          merge-multiple: true
+      - name: Verify combined profile and move coverage
+        run: node scripts/ci/move-matrix-coverage.mjs move-matrix-coverage/*.json
+
+  browser:
+    name: Browser accessibility and adversarial tests
+    if: always()
+    needs: browser-shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require all four browser shards to succeed
+        env:
+          RESULT: ${{ needs.browser-shards.result }}
+        run: test "$RESULT" = success
 
   quality:
     name: Lint and production build
