@@ -30,6 +30,7 @@ import economicsRequirements from "../data/normalized/economics/requirements.jso
 import economicsCourseData from "../data/normalized/economics/courses.json";
 import economicsPlanningConstraints from "../data/normalized/economics/planning-constraints.json";
 import { seatStatusPresentation } from "../lib/planning/seat-status.js";
+import { noPlanPresentation } from "../lib/planning/no-plan-presentation.js";
 import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentTermLabel } from "../lib/planning/student-language.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
@@ -1187,7 +1188,7 @@ function PlanComparisonScreen({
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
   const overallStatus = overallPlanReadiness(isPlanView && selectedPlan ? [selectedPlan] : plans);
-  const noPlan = noPlanPresentation(canonicalPlanResult?.category, canonicalPlanResult?.reason, canonicalPlanResult?.evidence);
+  const noPlan = noPlanPresentation(canonicalPlanResult?.category, canonicalPlanResult?.reason, canonicalPlanResult?.evidence, COURSE_PREREQUISITES);
   const displayedOverallStatus = plans.length
     ? overallStatus
     : canonicalPlanResult?.category === "INPUT_BLOCKED"
@@ -2343,65 +2344,6 @@ function overallPlanReadiness(plans = []) {
   if (labels.includes("Needs advisor attention")) return "Needs advisor attention";
   if (labels.includes("Needs confirmation")) return "Needs confirmation";
   return plans.length ? "Ready to plan" : "Not available";
-}
-
-function noPlanPresentation(category, reason, evidence = {}) {
-  // Surface an existing search obstruction; do not reclassify the result or
-  // infer that overload or concurrency can repair an unscheduled prerequisite.
-  const attempts = evidence?.searchAttempts || [];
-  const gaps = evidence?.planningGaps || [];
-  const prerequisiteGap = gaps.find(gap => attempts.length > 0
-    && attempts.every(attempt => attempt.complete && !attempt.solutionFound && attempt.emptyDomains?.includes(gap.requirementId))
-    && gaps.some(dependent => COURSE_PREREQUISITES[dependent.course]?.all?.includes(gap.course)));
-  if (category !== "INPUT_BLOCKED" && category !== "SEARCH_INCOMPLETE" && prerequisiteGap) {
-    return {
-      title: `Missing prerequisite: ${prerequisiteGap.course} could not be scheduled within your graduation target.`,
-      message: "No complete plan is available. Review your course answers and graduation timeline with your advisor. Overload approval does not replace prerequisite requirements or authorize taking courses together.",
-      action: "Review graduation timeline",
-      actionTarget: "timeline"
-    };
-  }
-  if (category === "INPUT_BLOCKED") {
-    return {
-      title: "We need one more detail before we can build your plan.",
-      message: "Review the question below. Your previous answers are still saved.",
-      action: "Review my answers"
-    };
-  }
-  if (category === "INFEASIBLE_PROVEN") {
-    return {
-      title: "No complete plan fits this graduation target under the current requirements and course timing.",
-      message: "Review your graduation timeline and bring this result to your academic advisor.",
-      action: "Review graduation timeline",
-      actionTarget: "timeline"
-    };
-  }
-  if (category === "SEARCH_INCOMPLETE") {
-    return {
-      title: "We could not finish checking every possible plan.",
-      message: "This does not mean a plan is impossible. Review your answers or ask an advisor to help check the remaining possibilities.",
-      action: "Review my answers"
-    };
-  }
-  if (reason === "MISSING_OFFERING") {
-    return {
-      title: "More information needed to decide whether this major can be completed by your target.",
-      message: "Course offering evidence is incomplete for this graduation target. This result does not establish that major completion is impossible.",
-      action: "Review my answers"
-    };
-  }
-  if (reason === "TERM_OVERLOAD_EVIDENCE_REQUIRED") {
-    return {
-      title: "More information needed to assess an advisor-approved overload.",
-      message: "The normal-load search found no complete plan. Record existing advisor approval and absence of academic probation before using additional capacity.",
-      action: "Review my answers"
-    };
-  }
-  return {
-    title: "This planning result needs advisor attention before we can show a complete schedule.",
-    message: "Your answers are saved. Review the details below with your academic advisor.",
-    action: "Review my answers"
-  };
 }
 
 function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, plans = [] }) {

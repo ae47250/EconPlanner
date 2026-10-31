@@ -1,12 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { loadPlannerFingerprint } from "../lib/planning/fingerprint.js";
 import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
 import { POST, GET } from "../app/api/majors/map/route.js";
 import { handleEconomicsReportRequest } from "../app/api/reports/economics/route.js";
-import { buildPlanningSlots, isValidPlanningDate, normalizeStanding, resolvePlanningContext, validatePlanningInputs } from "../lib/planning/horizon.js";
+import { buildPlanningSlots, isValidPlanningDate, MAX_STUDENT_COURSE_RECORDS, normalizeStanding, resolvePlanningContext, validatePlanningInputs, validateStudentCourseHistoryLimit } from "../lib/planning/horizon.js";
 
 const student = { academicStanding: "freshman", planCreationDate: "2026-09-23", courses: [] };
+const reportStudentFixture = JSON.parse(await readFile(new URL("./fixtures/economics-report-student.json", import.meta.url), "utf8")).student;
 const request = body => new Request("http://localhost/api/local-test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
 test("calendar validation checks real Gregorian dates without host-clock substitution", () => {
@@ -74,6 +76,78 @@ test("supported standings, leap day, optional standing and report date defaults 
   }
   const response = await handleEconomicsReportRequest(request({ student: { academicStanding: "freshman", courses: [] }, preparedDate: "2026-09-23", format: "json" }));
   assert.equal(response.status, 200);
+});
+
+test("100 course records reach all local routes and 101 are rejected without truncation", async () => {
+  const baseStudent = { ...reportStudentFixture, academicStanding: "freshman", planCreationDate: "2026-09-23" };
+  const history = [...baseStudent.courses];
+  const repeatedStatuses = ["repeated", "failed", "withdrawn"];
+  for (let index = 0; index < 96; index += 1) {
+    history.push({
+      code: baseStudent.courses[index % baseStudent.courses.length].code,
+      status: repeatedStatuses[index % repeatedStatuses.length],
+      units: 1,
+      source: "manual_code",
+      attemptNumber: index + 1
+    });
+  }
+  const atLimit = { ...baseStudent, courses: history.slice(0, MAX_STUDENT_COURSE_RECORDS) };
+  const overLimit = { ...baseStudent, courses: history.slice(0, MAX_STUDENT_COURSE_RECORDS + 1) };
+  assert.equal(atLimit.courses.length, 100);
+  assert.equal(overLimit.courses.length, 101);
+  assert.equal(validateStudentCourseHistoryLimit(atLimit).valid, true);
+  assert.deepEqual(
+    (({ valid, count, limit }) => ({ valid, count, limit }))(validateStudentCourseHistoryLimit(overLimit)),
+    { valid: false, count: 101, limit: 100 }
+  );
+
+  const generatedResponse = await POST(request({ student: atLimit }));
+  const generated = await generatedResponse.json();
+  assert.equal(generatedResponse.status, 200, JSON.stringify(generated));
+  assert.ok(Array.isArray(generated.programs));
+  const economics = generated.programs.find(program => program.program?.id === "economics-base");
+  assert.ok(economics);
+  const plan = economics.economicsPlans[0];
+  assert.ok(plan);
+
+  const validatedResponse = await POST(request({ student: atLimit, action: "validate-plan", plan, plans: economics.economicsPlans }));
+  const validated = await validatedResponse.json();
+  assert.equal(validatedResponse.status, 200, JSON.stringify(validated));
+  assert.equal(validated.plan.validation.valid, true);
+
+  const reportAtLimit = await handleEconomicsReportRequest(request({ student: atLimit, preparedDate: "2026-10-31", format: "json" }));
+  const report = await reportAtLimit.json();
+  assert.equal(reportAtLimit.status, 200, JSON.stringify(report));
+  assert.equal(report.schemaVersion, "econmapper-economics-report-v1");
+
+  for (const [route, run] of [
+    ["map-generation", () => POST(request({ student: overLimit }))],
+    ["map-plan-validation", () => POST(request({ student: overLimit, action: "validate-plan", plan, plans: economics.economicsPlans }))],
+    ["report-json", () => handleEconomicsReportRequest(request({ student: overLimit, preparedDate: "2026-10-31", format: "json" }))]
+  ]) {
+    const response = await run();
+    const error = await response.json();
+    assert.equal(response.status, 413, route);
+    assert.deepEqual({ code: error.code, field: error.field, count: error.count, limit: error.limit }, {
+      code: "COURSE_HISTORY_LIMIT_EXCEEDED", field: "courses", count: 101, limit: 100
+    }, route);
+    assert.match(error.error, /101 course history records/, route);
+    assert.equal(error.programs, undefined, `${route} must not process a truncated history`);
+  }
+});
+
+test("a larger legitimate-style history with repeats, transfer, and supporting courses reaches planning", async () => {
+  const courses = Array.from({ length: 40 }, (_, index) => ({
+    code: ["ECO 113", "MAT 113", "ECO 114", "ECO 213"][index % 4],
+    status: index % 4 === 3 ? "repeated" : index === 1 ? "transfer" : "completed",
+    academicYear: `${2016 + Math.floor(index / 4)}/${2017 + Math.floor(index / 4)}`,
+    termKey: ["Fall", "Winter", "Spring", "May"][index % 4],
+    ...(index === 1 ? { source: "transfer_equivalency" } : {})
+  }));
+  const response = await POST(request({ student: { ...student, courses } }));
+  const data = await response.json();
+  assert.equal(response.status, 200, JSON.stringify(data));
+  assert.ok(data.programs.some(program => program.program?.id === "economics-base"));
 });
 
 test("current fingerprint and generated plans identify the same policy/schedule context", async () => {

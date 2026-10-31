@@ -12,7 +12,7 @@ import {
   validateGeneratedPlan,
   validatePlanSet
 } from "../../../../lib/planning/economics.js";
-import { validatePlanningInputs, normalizeScheduleSetByTerm, resolvePlanningContext, selectedPlanContext } from "../../../../lib/planning/horizon.js";
+import { validatePlanningInputs, validateStudentCourseHistoryLimit, normalizeScheduleSetByTerm, resolvePlanningContext, selectedPlanContext } from "../../../../lib/planning/horizon.js";
 import { applyEconomicsPlanEdit } from "../../../../lib/planning/termSolver.js";
 import { buildAcceleratedPlanningResult } from "../../../../lib/planning/acceleratedResult.js";
 import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
@@ -383,6 +383,16 @@ export async function POST(request) {
         error: "Courses must be a list of course records. Each course must be an object, not an empty value or text.",
         code: "INVALID_COURSE_INPUT"
       }, 400);
+    }
+    const courseHistoryLimit = validateStudentCourseHistoryLimit(submittedStudent);
+    if (!courseHistoryLimit.valid) {
+      return jsonResponse({
+        error: courseHistoryLimit.issue.message,
+        code: courseHistoryLimit.issue.code,
+        field: courseHistoryLimit.issue.field,
+        count: courseHistoryLimit.count,
+        limit: courseHistoryLimit.limit
+      }, 413);
     }
     const inputValidation = validatePlanningInputs(submittedStudent, { requireDate: true });
     if (!inputValidation.valid) {
