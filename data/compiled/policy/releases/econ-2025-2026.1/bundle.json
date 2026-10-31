@@ -3,10 +3,11 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:902486311257fffcfec9f81bee60abfda575d6d11c99736b0297d05f1645d978",
+  "contentHash": "sha256:1369a2f2a1061fe0cf66a5179e88a2864150897604ebb5a637f9fb56e7000ce8",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
+        "ELECTIVE-BUSN-323-FINANCE-ONLY",
         "PLANNING-MAY-COURSE-EXCLUSIONS",
         "REQ-FINANCE"
       ],
@@ -60,6 +61,7 @@
         "PREREQ-ECO-316"
       ],
       "ECO 321": [
+        "ELECTIVE-ECO-321-FINANCE-ONLY",
         "PLANNING-MAY-COURSE-EXCLUSIONS",
         "PREREQ-ECO-321",
         "REQ-FINANCE"
@@ -143,33 +145,41 @@
         "REQ-ECO-461"
       ],
       "eco-elective-1": [
+        "ELECTIVE-BUSN-323-FINANCE-ONLY",
         "ELECTIVE-CROSSLIST-ECO-234-PHI-234",
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
+        "ELECTIVE-ECO-321-FINANCE-ONLY",
         "ELECTIVE-MAX-ONE-100-LEVEL",
         "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
       ],
       "eco-elective-2": [
+        "ELECTIVE-BUSN-323-FINANCE-ONLY",
         "ELECTIVE-CROSSLIST-ECO-234-PHI-234",
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
+        "ELECTIVE-ECO-321-FINANCE-ONLY",
         "ELECTIVE-MAX-ONE-100-LEVEL",
         "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
       ],
       "eco-elective-3": [
+        "ELECTIVE-BUSN-323-FINANCE-ONLY",
         "ELECTIVE-CROSSLIST-ECO-234-PHI-234",
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
+        "ELECTIVE-ECO-321-FINANCE-ONLY",
         "ELECTIVE-MAX-ONE-100-LEVEL",
         "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
       ],
       "eco-elective-4": [
+        "ELECTIVE-BUSN-323-FINANCE-ONLY",
         "ELECTIVE-CROSSLIST-ECO-234-PHI-234",
         "ELECTIVE-ECO-257-STATISTICS-ONLY",
         "ELECTIVE-ECO-260-COUNTS",
+        "ELECTIVE-ECO-321-FINANCE-ONLY",
         "ELECTIVE-MAX-ONE-100-LEVEL",
         "ELECTIVE-SLOT-UNIQUE-ASSIGNMENT",
         "REQ-ECO-ELECTIVES"
@@ -179,6 +189,8 @@
         "REQ-MAJOR-COURSE-COUNT"
       ],
       "finance": [
+        "ELECTIVE-BUSN-323-FINANCE-ONLY",
+        "ELECTIVE-ECO-321-FINANCE-ONLY",
         "REQ-FINANCE"
       ],
       "statistics": [
@@ -1066,6 +1078,96 @@
           "reviewState": []
         }
       },
+      "ELECTIVE-BUSN-323-FINANCE-ONLY": {
+        "authority": {
+          "boundary": "FINANCE_ALLOCATION_AND_ELECTIVE_PETITION",
+          "kind": "OWNER_CONFIRMATION",
+          "owner": "Project owner and Economics Department domain expert"
+        },
+        "classification": "HARD",
+        "condition": {
+          "course": "BUSN 323"
+        },
+        "confidence": "CONFIRMED",
+        "confirmation": {
+          "date": "2026-10-31",
+          "lastReviewDate": "2026-10-31",
+          "reviewer": "Project owner, explicit implementation instruction"
+        },
+        "dependencies": [
+          "REQ-FINANCE",
+          "REQ-ECO-ELECTIVES"
+        ],
+        "disposition": "ENFORCE",
+        "effect": {
+          "advisorOverridePermitted": false,
+          "allowedRequirementRuleIds": [
+            "REQ-FINANCE"
+          ],
+          "excludedRequirementRuleIds": [
+            "REQ-ECO-ELECTIVES"
+          ]
+        },
+        "effective": {
+          "from": "2026-10-31",
+          "through": null
+        },
+        "family": "ALLOCATION",
+        "messageKeys": {
+          "advisor": "allocation.advisor",
+          "move": "allocation.move",
+          "report": "allocation.report",
+          "student": "allocation.student"
+        },
+        "override": {
+          "authority": null,
+          "permitted": false,
+          "requiredEvidence": []
+        },
+        "policyVersion": "econ-2025-2026.1",
+        "reasonCode": "BUSN_323_FINANCE_ONLY",
+        "requiredEvidence": [],
+        "requiredInputs": [
+          "courseEvidence",
+          "requirementAllocation"
+        ],
+        "ruleId": "ELECTIVE-BUSN-323-FINANCE-ONLY",
+        "ruleType": "requirementAllocation",
+        "schemaVersion": "1.0.0",
+        "scope": {
+          "catalogYears": [
+            "2025-2026"
+          ],
+          "courses": [
+            "BUSN 323"
+          ],
+          "program": "ECONOMICS",
+          "requirements": [
+            "finance",
+            "eco-elective-1",
+            "eco-elective-2",
+            "eco-elective-3",
+            "eco-elective-4"
+          ]
+        },
+        "sourceRefs": [
+          "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+        ],
+        "status": "ACTIVE",
+        "supersedes": [
+          "AUTOMATIC-FINANCE-ELECTIVE-PAIRING"
+        ],
+        "testRefs": {
+          "approval": [],
+          "negative": [
+            "finance-elective-correction"
+          ],
+          "positive": [
+            "finance-elective-correction"
+          ],
+          "reviewState": []
+        }
+      },
       "ELECTIVE-CROSSLIST-ECO-234-PHI-234": {
         "authority": {
           "boundary": "FORMAL_CROSS_LISTING_AND_ELECTIVE_CREDIT",
@@ -1327,6 +1429,110 @@
           ],
           "positive": [
             "eco-260-elective"
+          ],
+          "reviewState": []
+        }
+      },
+      "ELECTIVE-ECO-321-FINANCE-ONLY": {
+        "authority": {
+          "boundary": "FINANCE_ALLOCATION_AND_ELECTIVE_PETITION",
+          "kind": "OWNER_CONFIRMATION",
+          "owner": "Project owner and Economics Department domain expert"
+        },
+        "classification": "HARD",
+        "condition": {
+          "course": "ECO 321"
+        },
+        "confidence": "CONFIRMED",
+        "confirmation": {
+          "date": "2026-10-31",
+          "lastReviewDate": "2026-10-31",
+          "reviewer": "Project owner, explicit implementation instruction"
+        },
+        "dependencies": [
+          "REQ-FINANCE",
+          "REQ-ECO-ELECTIVES"
+        ],
+        "disposition": "ENFORCE",
+        "effect": {
+          "advisorOverridePermitted": false,
+          "allowedRequirementRuleIds": [
+            "REQ-FINANCE"
+          ],
+          "excludedRequirementRuleIds": [
+            "REQ-ECO-ELECTIVES"
+          ],
+          "petitionNotice": {
+            "audience": [
+              "STUDENT",
+              "ACADEMIC_ADVISOR"
+            ],
+            "code": "BUSN_323_ELECTIVE_PETITION",
+            "messageKey": "allocation.financePetition",
+            "minimumUnits": 1,
+            "requiredCompletedCourses": [
+              "ECO 321",
+              "BUSN 323"
+            ],
+            "title": "BUSN 323 elective petition"
+          }
+        },
+        "effective": {
+          "from": "2026-10-31",
+          "through": null
+        },
+        "family": "ALLOCATION",
+        "messageKeys": {
+          "advisor": "allocation.advisor",
+          "move": "allocation.move",
+          "report": "allocation.report",
+          "student": "allocation.student"
+        },
+        "override": {
+          "authority": null,
+          "permitted": false,
+          "requiredEvidence": []
+        },
+        "policyVersion": "econ-2025-2026.1",
+        "reasonCode": "ECO_321_FINANCE_ONLY",
+        "requiredEvidence": [],
+        "requiredInputs": [
+          "courseEvidence",
+          "requirementAllocation"
+        ],
+        "ruleId": "ELECTIVE-ECO-321-FINANCE-ONLY",
+        "ruleType": "requirementAllocation",
+        "schemaVersion": "1.0.0",
+        "scope": {
+          "catalogYears": [
+            "2025-2026"
+          ],
+          "courses": [
+            "ECO 321"
+          ],
+          "program": "ECONOMICS",
+          "requirements": [
+            "finance",
+            "eco-elective-1",
+            "eco-elective-2",
+            "eco-elective-3",
+            "eco-elective-4"
+          ]
+        },
+        "sourceRefs": [
+          "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+        ],
+        "status": "ACTIVE",
+        "supersedes": [
+          "AUTOMATIC-FINANCE-ELECTIVE-PAIRING"
+        ],
+        "testRefs": {
+          "approval": [],
+          "negative": [
+            "finance-elective-correction"
+          ],
+          "positive": [
+            "finance-elective-correction"
           ],
           "reviewState": []
         }
@@ -5036,6 +5242,10 @@
       "CONCURRENT-MATH-ECO-214": [
         "PREREQ-ECO-214"
       ],
+      "ELECTIVE-BUSN-323-FINANCE-ONLY": [
+        "REQ-ECO-ELECTIVES",
+        "REQ-FINANCE"
+      ],
       "ELECTIVE-CROSSLIST-ECO-234-PHI-234": [
         "REQ-ECO-ELECTIVES"
       ],
@@ -5045,6 +5255,10 @@
       ],
       "ELECTIVE-ECO-260-COUNTS": [
         "REQ-ECO-ELECTIVES"
+      ],
+      "ELECTIVE-ECO-321-FINANCE-ONLY": [
+        "REQ-ECO-ELECTIVES",
+        "REQ-FINANCE"
       ],
       "ELECTIVE-MAX-ONE-100-LEVEL": [
         "REQ-ECO-ELECTIVES"
@@ -5204,6 +5418,12 @@
         "report": "permission.report",
         "student": "permission.student"
       },
+      "ELECTIVE-BUSN-323-FINANCE-ONLY": {
+        "advisor": "allocation.advisor",
+        "move": "allocation.move",
+        "report": "allocation.report",
+        "student": "allocation.student"
+      },
       "ELECTIVE-CROSSLIST-ECO-234-PHI-234": {
         "advisor": "allocation.advisor",
         "move": "allocation.move",
@@ -5217,6 +5437,12 @@
         "student": "allocation.student"
       },
       "ELECTIVE-ECO-260-COUNTS": {
+        "advisor": "allocation.advisor",
+        "move": "allocation.move",
+        "report": "allocation.report",
+        "student": "allocation.student"
+      },
+      "ELECTIVE-ECO-321-FINANCE-ONLY": {
         "advisor": "allocation.advisor",
         "move": "allocation.move",
         "report": "allocation.report",
@@ -6788,6 +7014,7 @@
   },
   "messages": {
     "allocation.advisor": "Review how this course is assigned across requirements.",
+    "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.",
     "allocation.move": "This move must preserve the approved requirement assignment.",
     "allocation.report": "Requirement allocation follows the governing Economics policy.",
     "allocation.student": "This course can count only in the requirement shown.",
@@ -7829,6 +8056,21 @@
         "supersedes": null
       },
       {
+        "authority": "Project owner and Economics Department domain expert; supplied Registrar correspondence",
+        "authorityBoundary": "ECONOMICS_FINANCE_ALLOCATION_AND_ELECTIVE_PETITION_NOTICE",
+        "confirmedOn": "2026-10-31",
+        "effective": {
+          "from": "2026-10-31",
+          "through": null
+        },
+        "path": "policy/provenance/finance-elective-clarification-2026-10-31.md",
+        "reviewer": "Project owner, explicit implementation instruction",
+        "sha256": "19e97a064f7a8782a425f69e3d057fe7b2aec5a284ce2945a1bbe44fb4fb506a",
+        "sourceId": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Automatic ECO 321 elective credit when BUSN 323 fills finance"
+      },
+      {
         "authority": "Project owner and Economics Department domain expert",
         "authorityBoundary": "ECONOMICS_OFFERING_PROJECTION_AND_CONSISTENT_TERM_PLACEMENT",
         "effective": {
@@ -8038,12 +8280,7 @@
     "schedule": "schedule-2026-2027-v3"
   },
   "requirementProfile": {
-    "electiveConditionalCourses": {
-      "ECO 321": {
-        "assignedCode": "BUSN 323",
-        "slotId": "finance"
-      }
-    },
+    "electiveConditionalCourses": {},
     "electiveExclusionOrder": [
       "ECO 113",
       "ECO 114",
@@ -8051,7 +8288,9 @@
       "ECO 214",
       "ECO 257",
       "ECO 461",
-      "ECO 307"
+      "ECO 307",
+      "ECO 321",
+      "BUSN 323"
     ],
     "id": "economics-major",
     "slots": [
@@ -8089,8 +8328,8 @@
         "id": "finance",
         "label": "ECO 321 / BUSN 323",
         "preferredOptions": [
-          "BUSN 323",
-          "ECO 321"
+          "ECO 321",
+          "BUSN 323"
         ],
         "ruleId": "REQ-FINANCE"
       },
@@ -8995,6 +9234,96 @@
     },
     {
       "authority": {
+        "boundary": "FINANCE_ALLOCATION_AND_ELECTIVE_PETITION",
+        "kind": "OWNER_CONFIRMATION",
+        "owner": "Project owner and Economics Department domain expert"
+      },
+      "classification": "HARD",
+      "condition": {
+        "course": "BUSN 323"
+      },
+      "confidence": "CONFIRMED",
+      "confirmation": {
+        "date": "2026-10-31",
+        "lastReviewDate": "2026-10-31",
+        "reviewer": "Project owner, explicit implementation instruction"
+      },
+      "dependencies": [
+        "REQ-FINANCE",
+        "REQ-ECO-ELECTIVES"
+      ],
+      "disposition": "ENFORCE",
+      "effect": {
+        "advisorOverridePermitted": false,
+        "allowedRequirementRuleIds": [
+          "REQ-FINANCE"
+        ],
+        "excludedRequirementRuleIds": [
+          "REQ-ECO-ELECTIVES"
+        ]
+      },
+      "effective": {
+        "from": "2026-10-31",
+        "through": null
+      },
+      "family": "ALLOCATION",
+      "messageKeys": {
+        "advisor": "allocation.advisor",
+        "move": "allocation.move",
+        "report": "allocation.report",
+        "student": "allocation.student"
+      },
+      "override": {
+        "authority": null,
+        "permitted": false,
+        "requiredEvidence": []
+      },
+      "policyVersion": "econ-2025-2026.1",
+      "reasonCode": "BUSN_323_FINANCE_ONLY",
+      "requiredEvidence": [],
+      "requiredInputs": [
+        "courseEvidence",
+        "requirementAllocation"
+      ],
+      "ruleId": "ELECTIVE-BUSN-323-FINANCE-ONLY",
+      "ruleType": "requirementAllocation",
+      "schemaVersion": "1.0.0",
+      "scope": {
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "BUSN 323"
+        ],
+        "program": "ECONOMICS",
+        "requirements": [
+          "finance",
+          "eco-elective-1",
+          "eco-elective-2",
+          "eco-elective-3",
+          "eco-elective-4"
+        ]
+      },
+      "sourceRefs": [
+        "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+      ],
+      "status": "ACTIVE",
+      "supersedes": [
+        "AUTOMATIC-FINANCE-ELECTIVE-PAIRING"
+      ],
+      "testRefs": {
+        "approval": [],
+        "negative": [
+          "finance-elective-correction"
+        ],
+        "positive": [
+          "finance-elective-correction"
+        ],
+        "reviewState": []
+      }
+    },
+    {
+      "authority": {
         "boundary": "FORMAL_CROSS_LISTING_AND_ELECTIVE_CREDIT",
         "kind": "OFFICIAL_CATALOG",
         "owner": "Hanover College"
@@ -9254,6 +9583,110 @@
         ],
         "positive": [
           "eco-260-elective"
+        ],
+        "reviewState": []
+      }
+    },
+    {
+      "authority": {
+        "boundary": "FINANCE_ALLOCATION_AND_ELECTIVE_PETITION",
+        "kind": "OWNER_CONFIRMATION",
+        "owner": "Project owner and Economics Department domain expert"
+      },
+      "classification": "HARD",
+      "condition": {
+        "course": "ECO 321"
+      },
+      "confidence": "CONFIRMED",
+      "confirmation": {
+        "date": "2026-10-31",
+        "lastReviewDate": "2026-10-31",
+        "reviewer": "Project owner, explicit implementation instruction"
+      },
+      "dependencies": [
+        "REQ-FINANCE",
+        "REQ-ECO-ELECTIVES"
+      ],
+      "disposition": "ENFORCE",
+      "effect": {
+        "advisorOverridePermitted": false,
+        "allowedRequirementRuleIds": [
+          "REQ-FINANCE"
+        ],
+        "excludedRequirementRuleIds": [
+          "REQ-ECO-ELECTIVES"
+        ],
+        "petitionNotice": {
+          "audience": [
+            "STUDENT",
+            "ACADEMIC_ADVISOR"
+          ],
+          "code": "BUSN_323_ELECTIVE_PETITION",
+          "messageKey": "allocation.financePetition",
+          "minimumUnits": 1,
+          "requiredCompletedCourses": [
+            "ECO 321",
+            "BUSN 323"
+          ],
+          "title": "BUSN 323 elective petition"
+        }
+      },
+      "effective": {
+        "from": "2026-10-31",
+        "through": null
+      },
+      "family": "ALLOCATION",
+      "messageKeys": {
+        "advisor": "allocation.advisor",
+        "move": "allocation.move",
+        "report": "allocation.report",
+        "student": "allocation.student"
+      },
+      "override": {
+        "authority": null,
+        "permitted": false,
+        "requiredEvidence": []
+      },
+      "policyVersion": "econ-2025-2026.1",
+      "reasonCode": "ECO_321_FINANCE_ONLY",
+      "requiredEvidence": [],
+      "requiredInputs": [
+        "courseEvidence",
+        "requirementAllocation"
+      ],
+      "ruleId": "ELECTIVE-ECO-321-FINANCE-ONLY",
+      "ruleType": "requirementAllocation",
+      "schemaVersion": "1.0.0",
+      "scope": {
+        "catalogYears": [
+          "2025-2026"
+        ],
+        "courses": [
+          "ECO 321"
+        ],
+        "program": "ECONOMICS",
+        "requirements": [
+          "finance",
+          "eco-elective-1",
+          "eco-elective-2",
+          "eco-elective-3",
+          "eco-elective-4"
+        ]
+      },
+      "sourceRefs": [
+        "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+      ],
+      "status": "ACTIVE",
+      "supersedes": [
+        "AUTOMATIC-FINANCE-ELECTIVE-PAIRING"
+      ],
+      "testRefs": {
+        "approval": [],
+        "negative": [
+          "finance-elective-correction"
+        ],
+        "positive": [
+          "finance-elective-correction"
         ],
         "reviewState": []
       }

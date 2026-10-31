@@ -19,7 +19,7 @@ test("the CP2 compiler validates and emits a complete release within its perform
   assert.match(bundle.contentHash, /^sha256:[a-f0-9]{64}$/);
   assert.deepEqual(compileReport.validation.criticalConflicts, []);
   assert.equal(compileReport.validation.schemas, "PASS");
-  assert.equal(compileReport.counts.activeRules, 56);
+  assert.equal(compileReport.counts.activeRules, 58);
   assert.equal(compileReport.counts.unresolvedReviewRecords, 5);
   assert.equal(compileReport.counts.historicalOfferingRecords, 0);
   assert.deepEqual(bundle.indexes.historicalOfferingByCourse, {});

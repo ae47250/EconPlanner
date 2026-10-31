@@ -7,7 +7,7 @@
       "student": {
         "completedCourses": [
           "ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 214", "PSY 217",
-          "BUSN 323", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+          "BUSN 323", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
         ]
       },
       "expectedContext": {

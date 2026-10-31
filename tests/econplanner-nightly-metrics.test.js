@@ -190,14 +190,14 @@ test("aggregate adds a versioned ordinary product KPI without changing pairwise 
   assert.equal(aggregate.artifactCompleteness.ordinaryOnTimeCohort.missing, false);
 });
 
-test("the observability registry exactly maps all 56 confirmed, 3 review, and 4 structural rules", async () => {
+test("the observability registry exactly maps all 58 confirmed, 3 review, and 4 structural rules", async () => {
   assert.deepEqual(validateObservabilityPolicy(observabilityPolicy, oraclePolicy, mutationRegistry), {
     valid: true,
-    ruleCount: 63,
+    ruleCount: 65,
     criticalFamilyCount: 19
   });
   const coverage = ruleCoverageSummary(observabilityPolicy);
-  assert.equal(coverage.rows.length, 63);
+  assert.equal(coverage.rows.length, 65);
   assert.deepEqual(coverage.missingProductionOrOracle, []);
   const sources = sourceEvidenceSummary(oraclePolicy);
   assert.equal(sources.effectiveDateComplete, true);

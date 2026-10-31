@@ -64,11 +64,10 @@ test("canonical Economics data has unique courses, aliases, units, and source me
   });
   assert.equal(capstone.residency, "hanover");
   assert.equal(capstone.studentSelectable, false);
-  assert.deepEqual(finance.preferredOptions, ["BUSN 323", "ECO 321"]);
-  assert.deepEqual(elective.conditionalCourses["ECO 321"], {
-    slotId: "finance",
-    assignedCode: "BUSN 323"
-  });
+  assert.deepEqual(finance.preferredOptions, ["ECO 321", "BUSN 323"]);
+  assert.equal(elective.conditionalCourses["ECO 321"], undefined);
+  assert.ok(elective.excludedCourses.includes("ECO 321"));
+  assert.ok(elective.excludedCourses.includes("BUSN 323"));
   assert.equal(calendars.source, "https://www.hanover.edu/academics/calendar/");
   assert.ok(manifest.entries.some(entry => entry.role === "academic_calendar" && entry.approvalStatus === "OFFICIAL_HANOVER_SOURCE"));
   assert.ok(manifest.entries.some(entry => entry.role === "economics_canonical_courses"));

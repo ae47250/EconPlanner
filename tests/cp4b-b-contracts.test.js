@@ -288,8 +288,8 @@ test("catalog policy compilation is byte-identical across three clean outputs an
       await compileCatalogPolicies({repositoryRoot: ROOT, outputRoot});
       outputs.push(await Promise.all([
         readFile(path.join(outputRoot, "catalog-releases.json"), "utf8"),
-        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.7", "bundle.json"), "utf8"),
-        ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.2"]
+        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.8", "bundle.json"), "utf8"),
+        ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.3"]
           .map(version => readFile(path.join(outputRoot, "releases", version, "bundle.json"), "utf8"))
       ]));
     }

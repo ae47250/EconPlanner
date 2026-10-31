@@ -61,6 +61,7 @@
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
     "infeasibility.finance.forced": "{financeCourse} must fill finance for this graduation target, so it cannot also count as an elective.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
-    "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor."
+    "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
+    "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor."
   }
 }

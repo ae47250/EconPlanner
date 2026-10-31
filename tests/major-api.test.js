@@ -516,7 +516,7 @@ test("major mapper retains a standard senior plan above the Economics load prefe
   assert.equal(economics.economicsPlans[0].feasibilityStatus, "CONDITIONALLY_FEASIBLE");
 });
 
-test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async () => {
+test("Finance uses ECO 321 when both are complete and explains the BUSN 323 petition", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -537,8 +537,9 @@ test("Finance uses BUSN 323 and leaves ECO 321 available as an elective", async 
   const economics = data.programs.find(result => result.program?.id === "economics-base");
 
   assert.equal(response.status, 200);
-  assert.equal(economics.assignments.find(item => item.slotId === "finance").code, "BUSN 323");
-  assert.ok(economics.assignments.some(item => item.slotId.startsWith("eco-elective") && item.code === "ECO 321"));
+  assert.equal(economics.assignments.find(item => item.slotId === "finance").code, "ECO 321");
+  assert.ok(!economics.assignments.some(item => item.slotId.startsWith("eco-elective") && ["ECO 321", "BUSN 323"].includes(item.code)));
+  assert.ok(data.catalog.advisorAttention.some(item => item.code === "BUSN_323_ELECTIVE_PETITION"));
 });
 
 test("a completed or current 100-level elective produces Advisor Attention", async () => {

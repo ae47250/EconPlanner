@@ -26,11 +26,11 @@
     },
     {
       "activationStatus": "PENDING_OWNER_APPROVAL",
-      "bundleVersion": "econ-catalog-2025-2026.2",
+      "bundleVersion": "econ-catalog-2025-2026.3",
       "catalogYear": "2025-2026",
-      "contentHash": "sha256:eedc9610b75a312809d9fc0aabe794165db5ea2198b73c718281f047a36a27ce",
+      "contentHash": "sha256:5286b11d137a7e76c29ee100ee9cec8af72b36c4407f61789d4eaaaca4c90390",
       "publicationStatus": "AUTHORITATIVE_PUBLISHED",
-      "releasePath": "releases/econ-catalog-2025-2026.2/bundle.json"
+      "releasePath": "releases/econ-catalog-2025-2026.3/bundle.json"
     }
   ],
   "schemaVersion": "1.0.0",

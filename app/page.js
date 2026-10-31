@@ -2237,6 +2237,7 @@ function PlanComparisonScreen({
           <section className="no-plan-state">
             <h2 role="status">{noPlan.title}</h2>
             <p>{noPlan.message}</p>
+            <PlanConditions catalog={{ advisorAttention: (report?.catalog?.advisorAttention || []).filter(item => item.category === "ELECTIVE_PETITION") }} />
             {canonicalPlanResult?.questions?.length > 0 && (
               <ul className="no-plan-question-list">
                 {canonicalPlanResult.questions.map((question, index) => (

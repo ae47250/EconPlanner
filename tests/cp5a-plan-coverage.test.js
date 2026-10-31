@@ -210,8 +210,8 @@ test("ECO 321 and BUSN 323 allocation is independent of completed-versus-planned
     existingAssignments: [{ slotId: "finance", code: "BUSN 323", status: "completed" }],
     plan: { terms: [{ term: "Winter 2027", courses: [{ requirementId: "eco-elective-1", course: "ECO 321" }] }] }
   });
-  assert.equal(first.valid, true);
-  assert.equal(second.valid, true);
+  assert.equal(first.valid, false);
+  assert.equal(second.valid, false);
   const expected = ["eco-elective-1:ECO 321", "finance:BUSN 323"];
   for (const allocation of [first, second]) {
     assert.deepEqual(allocation.assignments.map(item => `${item.slotId}:${item.code}`).sort(), expected);

@@ -341,7 +341,7 @@
       "sourceId": "OWNER-BUSN323-2026-2027-2026-09-28",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "EconPlanner project owner, explicit authoritative schedule clarification",
-      "authorityBoundary": "BUSN 323 / 2026\u201327 / Fall offered / Winter not offered",
+      "authorityBoundary": "BUSN 323 / 2026–27 / Fall offered / Winter not offered",
       "path": "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md",
       "confirmedOn": "2026-09-28",
       "reviewedOn": "2026-09-28",
@@ -422,6 +422,21 @@
         "through": null
       },
       "supersedes": null
+    },
+    {
+      "sourceId": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert; supplied Registrar correspondence",
+      "authorityBoundary": "ECONOMICS_FINANCE_ALLOCATION_AND_ELECTIVE_PETITION_NOTICE",
+      "path": "policy/provenance/finance-elective-clarification-2026-10-31.md",
+      "sha256": "19e97a064f7a8782a425f69e3d057fe7b2aec5a284ce2945a1bbe44fb4fb506a",
+      "confirmedOn": "2026-10-31",
+      "reviewer": "Project owner, explicit implementation instruction",
+      "effective": {
+        "from": "2026-10-31",
+        "through": null
+      },
+      "supersedes": "Automatic ECO 321 elective credit when BUSN 323 fills finance"
     }
   ],
   "authorityHierarchy": [

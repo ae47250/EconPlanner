@@ -6,7 +6,7 @@
   "reviewedOn": "2026-08-03",
   "reviewedBy": "Project owner and independent test-oracle review",
   "policyRef": "tests/oracle/economics-policy.v1.json",
-  "policyVersion": 11,
+  "policyVersion": 12,
   "purpose": "Test confirmed Economics requirement assignments and preserve explicit review states without using production allocation as academic authority.",
   "mandatoryExactCourses": ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 461"],
   "assignmentDefaults": {
@@ -41,13 +41,13 @@
     },
     {
       "caseId": "finance-both-busn-finance-eco321-elective",
-      "category": "confirmed",
+      "category": "invalid",
       "statistics": "PSY 217",
       "financeCourses": ["ECO 321", "BUSN 323"],
       "cognate": "MAT 113",
       "electives": ["ECO 321", "ECO 161", "ECO 221", "ECO 260"],
-      "expectedOracleStatus": "VALID_REQUIREMENTS",
-      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 260", "ECO 321"] }
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["ELECTIVE-ECO-321-FINANCE-ONLY"]
     },
     {
       "caseId": "finance-eco321-explicit-finance",
@@ -62,14 +62,14 @@
     },
     {
       "caseId": "finance-eco321-explicit-elective-with-busn",
-      "category": "confirmed",
+      "category": "invalid",
       "statistics": "PSY 217",
       "financeCourses": ["ECO 321", "BUSN 323"],
       "cognate": "MAT 113",
       "electives": ["ECO 321", "ECO 161", "ECO 221", "ECO 260"],
       "requirementHints": { "BUSN 323": "finance", "ECO 321": "eco-elective-candidate" },
-      "expectedOracleStatus": "VALID_REQUIREMENTS",
-      "expectedAssignments": { "statistics": "PSY 217", "finance": "BUSN 323", "cognate": "MAT 113", "electives": ["ECO 161", "ECO 221", "ECO 260", "ECO 321"] }
+      "expectedOracleStatus": "INVALID_REQUIREMENTS",
+      "expectedViolationCodes": ["ELECTIVE-ECO-321-FINANCE-ONLY"]
     },
     {
       "caseId": "statistics-eco257",
@@ -202,7 +202,7 @@
       "electives": ["ECO 321", "ECO 161", "ECO 221", "ECO 260"],
       "requirementHints": { "ECO 321": "finance-and-eco-elective-4" },
       "expectedOracleStatus": "INVALID_REQUIREMENTS",
-      "expectedViolationCodes": ["REQ-FINANCE", "ELECTIVE-NO-DOUBLE-COUNT"]
+      "expectedViolationCodes": ["ELECTIVE-ECO-321-FINANCE-ONLY", "ELECTIVE-NO-DOUBLE-COUNT"]
     },
     {
       "caseId": "elective-crosslist-eco234-phi234-duplicate",
