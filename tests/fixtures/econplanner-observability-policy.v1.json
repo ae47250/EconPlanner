@@ -80,7 +80,7 @@
       "ruleIds": ["REQ-MAJOR-COURSE-COUNT", "REQ-COGNATE-COURSE-COUNT", "REQ-ECO-113", "REQ-ECO-114", "REQ-ECO-213", "REQ-ECO-214", "REQ-STATISTICS", "REQ-FINANCE", "REQ-ECO-461", "REQ-COGNATE", "REQ-ECO-ELECTIVES"],
       "criticalFamilies": ["MAJOR_REQUIREMENTS_AND_ALLOCATION"],
       "implementationRefs": ["lib/assignment/solve.js", "lib/planning/requirementAllocation.js", "lib/decision-engine/requirements.js", "tests/oracle/check-requirements.js"],
-      "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js"],
+      "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js", "tests/finance-elective-correction.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "IMPLEMENTED", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
     },
@@ -105,10 +105,10 @@
     },
     {
       "group": "electives",
-      "ruleIds": ["ELECTIVE-MAX-ONE-100-LEVEL", "ELECTIVE-ECO-260-COUNTS", "ELECTIVE-ECO-257-STATISTICS-ONLY", "ELECTIVE-CROSSLIST-ECO-234-PHI-234", "ELECTIVE-NO-DOUBLE-COUNT"],
+      "ruleIds": ["ELECTIVE-MAX-ONE-100-LEVEL", "ELECTIVE-ECO-260-COUNTS", "ELECTIVE-ECO-257-STATISTICS-ONLY", "ELECTIVE-CROSSLIST-ECO-234-PHI-234", "ELECTIVE-NO-DOUBLE-COUNT", "ELECTIVE-ECO-321-FINANCE-ONLY", "ELECTIVE-BUSN-323-FINANCE-ONLY"],
       "criticalFamilies": ["ECO257_STATISTICS_ONLY", "ELECTIVE_LIMITS_AND_CROSSLIST_COUNT_ONCE", "DOUBLE_COUNTING_INCLUDING_ECO321"],
       "implementationRefs": ["lib/planning/requirementAllocation.js", "lib/planning/termSolver.js", "lib/decision-engine/requirements.js", "tests/oracle/check-requirements.js"],
-      "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js"],
+      "positiveTests": ["tests/economics-requirement-allocation-matrix.test.js", "tests/finance-elective-correction.test.js"],
       "negativeTests": ["tests/economics-validator-disagreements.test.js"],
       "layers": { "requirement_mapping": "IMPLEMENTED", "planner_pruning": "IMPLEMENTED", "production_validator": "IMPLEMENTED", "independent_oracle": "IMPLEMENTED", "ui_parity": "MISSING", "html": "MISSING", "pdf": "MISSING" }
     },

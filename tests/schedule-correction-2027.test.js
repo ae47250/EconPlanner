@@ -42,7 +42,7 @@ for (const standing of ["junior", "senior"]) for (const overload of [false, true
   assert.equal(busn.terms.find(term => term.termId === "2027-WINTER").reasonCode, "NOT_OFFERED_IN_COMPLETE_SCHEDULE");
   assert.ok(busn.terms.find(term => term.termId === "2027-WINTER").sourceRefs.includes("OWNER-BUSN323-2026-2027-2026-09-28"));
   assert.equal(evaluateRequirementAllocation("ECO 321", "finance", null, bundle).status, "ALLOW");
-  assert.equal(evaluateRequirementAllocation("ECO 321", "eco-elective-3", null, bundle, {assignments:[{slotId:"finance",code:"ECO 321"}]}).reasonCode, "ECO_321_REQUIRES_BUSN_323_FINANCE_ALLOCATION");
+  assert.equal(evaluateRequirementAllocation("ECO 321", "eco-elective-3", null, bundle, {assignments:[{slotId:"finance",code:"ECO 321"}]}).reasonCode, "ECO_321_FINANCE_ONLY");
   assert.equal(standing === "junior" ? result.status : result.conclusion, standing === "junior" ? "NOT_POSSIBLE" : "PROVEN_INFEASIBLE");
   const targetAttempts = result.evidence.strategyAttempts.filter(item => standing === "senior" || item.strategyId === "one-year-early");
   assert.equal(targetAttempts.length, 4);
@@ -176,7 +176,7 @@ test("the proposed Winter finance/capstone/elective combination is rejected for 
 });
 
 test("approved Winter overload, move blockers and server validation use the same recorded units", async () => {
-  const student = {academicStanding:"senior",planCreationDate:"2026-09-27",courses:["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","BUSN 323","ECO 161","ECO 234"].map(code=>({code,status:"completed",units:1,source:"manual_code"})),reservedCourseUnits:{"winter-2027":2,"spring-2027":1},termLoadOverrides:{"winter-2027":approval}};
+  const student = {academicStanding:"senior",planCreationDate:"2026-09-27",courses:["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","BUSN 323","ECO 260","ECO 234"].map(code=>({code,status:"completed",units:1,source:"manual_code"})),reservedCourseUnits:{"winter-2027":2,"spring-2027":1},termLoadOverrides:{"winter-2027":approval}};
   const request = payload => POST(new Request("http://localhost/api/majors/map",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)}));
   const response = await request({student});
   assert.equal(response.status,200);
@@ -188,7 +188,7 @@ test("approved Winter overload, move blockers and server validation use the same
   assert.ok(plan.validation.conditions.some(item=>item.reasonCode==="TERM_OVERLOAD_APPROVED" && item.message.includes("5 modeled units")));
   assert.equal(plan.validation.tuitionAdvisories[0].modeledUnits,6);
   const winter = plan.terms.find(term=>term.slotId==="winter-2027");
-  const course = winter.courses.find(course=>course.course==="ECO 321");
+  const course = winter.courses.find(course=>course.course==="ECO 161");
   const move = course.moveDestinationOptions.find(option=>option.id==="spring-2027");
   assert.equal(move.status,"BLOCKED");
   assert.equal(move.loadDecision.reasonCode,"TERM_CAPACITY_EXCEEDED");

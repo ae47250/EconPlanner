@@ -122,7 +122,7 @@
         "electiveEligibility": "eligible"
       },
       "ECO 321": {
-        "electiveEligibility": "eligible_only_when_busn_323_satisfies_finance",
+        "electiveEligibility": "finance_requirement_only",
         "titleAliases": [
           "Money and Financial Markets"
         ]
@@ -216,8 +216,8 @@
         "id": "finance",
         "label": "ECO 321 / BUSN 323",
         "preferredOptions": [
-          "BUSN 323",
-          "ECO 321"
+          "ECO 321",
+          "BUSN 323"
         ]
       },
       {
@@ -231,12 +231,7 @@
         "label": "MAT 113 / MAT 121"
       }
     ],
-    "electiveConditionalCourses": {
-      "ECO 321": {
-        "slotId": "finance",
-        "assignedCode": "BUSN 323"
-      }
-    },
+    "electiveConditionalCourses": {},
     "electiveExclusionOrder": [
       "ECO 113",
       "ECO 114",
@@ -244,7 +239,9 @@
       "ECO 214",
       "ECO 257",
       "ECO 461",
-      "ECO 307"
+      "ECO 307",
+      "ECO 321",
+      "BUSN 323"
     ]
   },
   "prerequisites": {

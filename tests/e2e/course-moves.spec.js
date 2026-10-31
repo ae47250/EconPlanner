@@ -761,7 +761,7 @@ test("recorded approval enables a conditional Winter overload and Spring moves r
   await page.getByLabel("Advisor overload approval in Winter 2027", {exact:true}).selectOption("APPROVED");
   await page.getByLabel("Academic probation status in Winter 2027", {exact:true}).selectOption("NOT_ON_ACADEMIC_PROBATION");
   await continueToCourses(page);
-  for (const code of ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323", "ECO 161", "ECO 234"]) {
+  for (const code of ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323", "ECO 260", "ECO 234"]) {
     if (!await page.getByRole("group", {name:`Status for ${code}`, exact:true}).isVisible()) await page.getByRole("searchbox", {name:"Search courses",exact:true}).fill(code);
     await setCourseStatus(page, code, "Completed");
     await page.getByRole("searchbox", {name:"Search courses",exact:true}).fill("");
@@ -773,10 +773,10 @@ test("recorded approval enables a conditional Winter overload and Spring moves r
   expect(plan.validation.conditions.some(item=>item.reasonCode==="TERM_OVERLOAD_APPROVED")).toBe(true);
   expect(plan.validation.tuitionAdvisories[0].modeledUnits).toBe(6);
   await visitPlan(page, plan.id);
-  const destination = moveControl(page, "ECO 321").locator('button[data-change-choice="move:spring-2027"]');
+  const destination = moveControl(page, "ECO 161").locator('button[data-change-choice="move:spring-2027"]');
   await expect(destination).toHaveCount(0);
 
-  await expect(card(page, "ECO 321").locator(".course-choice-details")).toHaveCount(0);
+  await expect(card(page, "ECO 161").locator(".course-choice-details")).toHaveCount(0);
 });
 
 for (const destination of ['fall-2027', 'winter-2028', 'spring-2028']) {
@@ -1256,7 +1256,7 @@ test("confirmation stays open after the pointer leaves the course card", async (
   await expect(menu).toBeHidden();
 });
 
-test("Winter replacements offer ECO 321 after choosing ECO 161", async ({ page }) => {
+test("Winter replacements exclude finance courses after choosing ECO 161", async ({ page }) => {
   await openPlan(page, "sophomore", { completed: ["ECO 113", "ECO 114"] });
   await page.getByRole("button", { name: "Compare plans", exact: true }).click();
   const plan = page.locator('[data-plan-id="balanced"]');
@@ -1271,7 +1271,11 @@ test("Winter replacements offer ECO 321 after choosing ECO 161", async ({ page }
     await expect(plan.getByRole('button', { name: `Change ${to}`, exact: true })).toBeVisible();
   }
   await replace('ECO 222', 'ECO 161');
-  await replace('ECO 161', 'ECO 321');
+  await plan.getByRole('button', { name: 'Change ECO 161', exact: true }).click();
+  const menu = plan.getByRole('region', { name: 'Change ECO 161 options', exact: true });
+  for (const course of ['ECO 321', 'BUSN 323']) {
+    await expect(menu.locator(`[data-change-choice$=":${course}"]`)).toHaveCount(0);
+  }
 });
 
 for (const width of [390, 1440]) {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.7",
+  "policyVersion": "econ-planning-flexibility.8",
   "status": "OWNER_APPROVED",
   "confirmation": {
     "date": "2026-09-27",
@@ -8,6 +8,7 @@
     "source": "policy/provenance/canonical-consumption-2026-09-27.md"
   },
   "sourceRefs": [
+    "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized implementation",
     "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
     "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
     "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
@@ -169,7 +170,7 @@
     "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
     "designationId": "economics-most-flexible-2025-2026",
     "catalogYear": "2025-2026",
-    "requirementSetPolicyVersion": "econ-catalog-2025-2026.2",
+    "requirementSetPolicyVersion": "econ-catalog-2025-2026.3",
     "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED",
     "requiresVerifiedActivation": true,
     "discoveryMayAutoActivate": false,
@@ -180,7 +181,6 @@
     "knownFlexibleDifferences": [
       "PSY_217_STATISTICS_OPTION",
       "BUSN_323_MONEY_FINANCE_OPTION",
-      "ECO_321_ELECTIVE_WHEN_BUSN_323_FILLS_FINANCE",
       "ECONOMICS_COMPREHENSIVE_EVALUATION_NOT_REQUIRED"
     ],
     "notices": {

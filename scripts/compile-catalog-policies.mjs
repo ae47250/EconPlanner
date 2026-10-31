@@ -8,7 +8,7 @@ const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)
 const MANIFESTS = [
   "policy/manifest/econ-catalog-2023-2024.1.json",
   "policy/manifest/econ-catalog-2024-2025.1.json",
-  "policy/manifest/econ-catalog-2025-2026.2.json"
+  "policy/manifest/econ-catalog-2025-2026.3.json"
 ];
 const EXPECTED_YEARS = ["2023-2024", "2024-2025", "2025-2026"];
 const FLEXIBILITY_RULE_ID = "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK";
@@ -419,8 +419,9 @@ export async function compileCatalogPolicies({ repositoryRoot = REPOSITORY_ROOT,
     releases
   };
   await Promise.all([
-    writeImmutable(path.join(compiledRoot, "catalog-releases.json"), canonicalJson(registry)),
-    writeImmutable(path.join(compiledRoot, "historical-catalog-source-report.md"), historicalSourceReport(provenance, releases))
+    // Selection metadata follows the current manifests; versioned releases remain immutable.
+    writeFile(path.join(compiledRoot, "catalog-releases.json"), canonicalJson(registry)),
+    writeFile(path.join(compiledRoot, "historical-catalog-source-report.md"), historicalSourceReport(provenance, releases))
   ]);
   const planningFlexibility = await compilePlanningFlexibilityPolicy(root, compiledRoot);
   return {registry, planningFlexibility, compiledRoot};

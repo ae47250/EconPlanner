@@ -43,7 +43,7 @@ export function oracleEvaluateAllocation(policy, course, requirementId, { assign
   const ruleId = requirementRuleId(requirementId);
   const rule = policy.byRuleId[ruleId];
   if (!rule) return { status: "UNKNOWN", ruleIds: [], reasonCode: "UNKNOWN_REQUIREMENT" };
-  if (placement.source === "requirement-placeholder" && Array.isArray(placement.options)) {
+  if (ruleId !== "REQ-ECO-ELECTIVES" && placement.source === "requirement-placeholder" && Array.isArray(placement.options)) {
     return (rule.effect.options || []).every(option => placement.options.includes(option))
       ? { status: "ALLOW", ruleIds: [ruleId], reasonCode: "REQUIREMENT_PLACEHOLDER_OPTIONS_MATCH" }
       : { status: "BLOCK", ruleIds: [ruleId], reasonCode: "COURSE_NOT_ELIGIBLE_FOR_REQUIREMENT" };

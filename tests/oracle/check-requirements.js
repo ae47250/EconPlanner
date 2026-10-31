@@ -185,6 +185,8 @@ function isElectiveCandidate(course, policy) {
     return false;
   }
   if (code === "ECO 307") return false;
+  if (policy.requirementRules.some(rule => rule.status === "CONFIRMED" && rule.course === code
+    && rule.excludedRequirementRuleIds?.includes("REQ-ECO-ELECTIVES"))) return false;
   if (!code.startsWith("ECO ")) return false;
   if (Number.isFinite(course.units) && course.units < 1) return false;
   return Boolean(courseNumber(code));
@@ -229,12 +231,9 @@ function exhaustiveAllocations(courses, slots, policy) {
 
   function visit(position) {
     if (position === order.length) {
-      const finance = assigned.get("REQ-FINANCE");
       const electives = [...assigned.entries()]
         .filter(([slotId]) => slotId.startsWith("REQ-ECO-ELECTIVES#"))
         .map(([, value]) => value.course);
-      if (electives.some(course => course.canonicalCourse === "ECO 321")
-        && finance?.course.canonicalCourse !== "BUSN 323") return;
       const oneHundredLevelCount = electives.filter(course => {
         const number = courseNumber(course.canonicalCourse);
         return number !== null && number >= 100 && number < 200;
@@ -410,21 +409,13 @@ function diagnoseFailure(courses, slots, candidates, coveredRuleIds, policy) {
     ));
   }
 
-  const eco321 = courses.find(course => course.canonicalCourse === "ECO 321");
-  const busn323 = courses.find(course => course.canonicalCourse === "BUSN 323");
-  if (eco321 && !busn323 && electiveHints.some(course => course.canonicalCourse === "ECO 321")) {
-    violations.push(violation(
-      "REQ-FINANCE",
-      eco321.objectPath,
-      "ECO 321 can be an elective only when BUSN 323 fills the finance slot.",
-      policy
-    ));
-    if (/finance/iu.test(normalizedText(eco321.requirementId))) violations.push(violation(
-      "ELECTIVE-NO-DOUBLE-COUNT",
-      eco321.objectPath,
-      "ECO 321 may not fill both the finance slot and an elective slot.",
-      policy
-    ));
+  for (const course of electiveHints) {
+    const exclusion = policy.requirementRules.find(rule => rule.status === "CONFIRMED"
+      && rule.course === course.canonicalCourse && rule.excludedRequirementRuleIds?.includes("REQ-ECO-ELECTIVES"));
+    if (exclusion && /finance/iu.test(normalizedText(course.requirementId))) violations.push(violation(
+      "ELECTIVE-NO-DOUBLE-COUNT", course.objectPath, "A finance course cannot also fill an elective slot.", policy));
+    if (exclusion) violations.push(violation(exclusion.ruleId, course.objectPath,
+      `${course.canonicalCourse} does not receive automatic Economics elective credit.`, policy));
   }
 
   if (!violations.length && !coveredRuleIds.size) {

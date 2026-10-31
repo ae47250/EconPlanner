@@ -100,7 +100,7 @@ test("all accepted handwritten fixtures produce one complete 12-slot allocation"
 });
 
 test("multiple valid cognate allocations still hand one complete 12-slot allocation to later oracles", () => {
-  const fixture = structuredClone(fixtureById("requirements-valid-busn-finance-eco321-elective"));
+  const fixture = structuredClone(fixtureById("requirements-valid-busn-finance-four-electives"));
   fixture.courses.push("MAT 121");
   const result = checkExternalEconomicsRequirements(externalInput(fixture));
 
@@ -152,10 +152,10 @@ test("the same actual course still cannot fill two requirement slots", () => {
 
 test("finance, statistics, ECO 260, and cross-list choices allocate under confirmed rules", () => {
   const busn = checkExternalEconomicsRequirements(externalInput(
-    fixtureById("requirements-valid-busn-finance-eco321-elective")
+    fixtureById("requirements-valid-busn-finance-four-electives")
   )).allocation;
   assert.equal(busn.find(item => item.ruleId === "REQ-FINANCE").canonicalCourse, "BUSN 323");
-  assert.ok(busn.some(item => item.ruleId === "REQ-ECO-ELECTIVES" && item.canonicalCourse === "ECO 321"));
+  assert.ok(busn.some(item => item.ruleId === "REQ-ECO-ELECTIVES" && item.canonicalCourse === "ECO 333"));
   assert.ok(busn.some(item => item.ruleId === "REQ-ECO-ELECTIVES" && item.canonicalCourse === "ECO 260"));
   assert.ok(busn.some(item => item.ruleId === "REQ-ECO-ELECTIVES" && item.canonicalCourse === "ECO 234"));
 
@@ -165,7 +165,7 @@ test("finance, statistics, ECO 260, and cross-list choices allocate under confir
   assert.equal(ecoFinance.find(item => item.ruleId === "REQ-FINANCE").canonicalCourse, "ECO 321");
 
   const statisticsCases = [
-    ["requirements-valid-busn-finance-eco321-elective", "PSY 217"],
+    ["requirements-valid-busn-finance-four-electives", "PSY 217"],
     ["requirements-valid-mat217-statistics", "MAT 217"],
     ["requirements-valid-eco257-statistics", "ECO 257"]
   ];
@@ -218,7 +218,7 @@ test("waivers, substitutions, and unconfirmed equivalencies require review and r
 });
 
 test("integrated Task 4 audit leaves prerequisites and schedule explicitly NOT_CHECKED", () => {
-  const fixture = fixtureById("requirements-valid-busn-finance-eco321-elective");
+  const fixture = fixtureById("requirements-valid-busn-finance-four-electives");
   const result = auditExternalEconomicsPlanWithRequirements(externalInput(fixture));
 
   assert.equal(result.status, "NOT_CHECKED");
@@ -234,7 +234,7 @@ test("integrated Task 4 audit leaves prerequisites and schedule explicitly NOT_C
 });
 
 test("declared elective-slot uniqueness is per submitted plan and excludes raw history", () => {
-  const input = externalInput(fixtureById("requirements-valid-busn-finance-eco321-elective"));
+  const input = externalInput(fixtureById("requirements-valid-busn-finance-four-electives"));
   const courses = input.plan.terms[0].courses;
   const first = courses.find(course => course.course === "PHI 234");
   const second = courses.find(course => course.course === "ECO 260");

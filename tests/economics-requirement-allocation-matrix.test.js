@@ -255,7 +255,7 @@ test("Task 9 fixture covers every requested allocation combination", () => {
       ...counts,
       [item.category]: (counts[item.category] || 0) + 1
     }), {}),
-    { confirmed: 15, invalid: 7, review: 4 }
+    { confirmed: 13, invalid: 9, review: 4 }
   );
   assert.equal(new Set(fixture.cases.map(item => item.caseId)).size, fixture.cases.length);
 
@@ -291,7 +291,7 @@ test("Task 9 fixture covers every requested allocation combination", () => {
 
 test("all confirmed cases have exact independent semantic slot assignments", () => {
   const confirmed = evaluations.filter(item => item.definition.category === "confirmed");
-  assert.equal(confirmed.length, 15);
+  assert.equal(confirmed.length, 13);
 
   for (const evaluation of confirmed) {
     const { definition, oracle } = evaluation;
@@ -323,7 +323,7 @@ test("all confirmed cases have exact independent semantic slot assignments", () 
 
 test("invalid combinations fail under the confirmed independent rule IDs", () => {
   const invalid = evaluations.filter(item => item.definition.category === "invalid");
-  assert.equal(invalid.length, 7);
+  assert.equal(invalid.length, 9);
 
   for (const evaluation of invalid) {
     const { definition, oracle } = evaluation;

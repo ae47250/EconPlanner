@@ -2,12 +2,12 @@
   "authorship": "handwritten",
   "cases": [
     {
-      "fixtureId": "requirements-valid-busn-finance-eco321-elective",
+      "fixtureId": "requirements-valid-busn-finance-four-electives",
       "expectedStatus": "VALID_REQUIREMENTS",
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     },
     {
@@ -25,7 +25,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "MAT 121", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "MAT 121", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     },
     {
@@ -34,7 +34,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 257", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     },
     {
@@ -43,7 +43,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "MAT 113", "ECO 161", "ECO 260", "ECO 234", "ECO 321"
+        "MAT 113", "ECO 161", "ECO 260", "ECO 234", "ECO 333"
       ]
     },
     {
@@ -55,7 +55,7 @@
         "MAT 113", "ECO 161",
         { "course": "ECO 260", "repeatableInstanceId": "topic-a" },
         { "course": "ECO 260", "repeatableInstanceId": "topic-b" },
-        "ECO 321"
+        "ECO 333"
       ]
     },
     {
@@ -80,7 +80,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "PSY 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     },
     {
@@ -96,7 +96,7 @@
     {
       "fixtureId": "requirements-reject-eco321-double-count",
       "expectedStatus": "INVALID_REQUIREMENTS",
-      "expectedCodes": ["REQ-FINANCE", "ELECTIVE-NO-DOUBLE-COUNT"],
+      "expectedCodes": ["ELECTIVE-ECO-321-FINANCE-ONLY", "ELECTIVE-NO-DOUBLE-COUNT"],
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217",
         { "course": "ECO 321", "requirementId": "finance-and-eco-elective-4" },
@@ -199,7 +199,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Transfer institution" },
-        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     },
     {
@@ -212,7 +212,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     },
     {
@@ -225,7 +225,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "PSY 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "MAT 113", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     },
     {
@@ -238,7 +238,7 @@
       "courses": [
         "ECO 113", "ECO 114", "ECO 213", "ECO 214", "PSY 217", "BUSN 323",
         { "course": "ECO 461", "institution": "Hanover College" },
-        "MAT 125", "ECO 161", "ECO 260", "PHI 234", "ECO 321"
+        "MAT 125", "ECO 161", "ECO 260", "PHI 234", "ECO 333"
       ]
     }
   ]

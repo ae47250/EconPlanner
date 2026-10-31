@@ -37,26 +37,26 @@ function allocate({ existingAssignments = [], plannedCourses = [] } = {}) {
   });
 }
 
-test("requirement allocation handles completed, in-progress, and planned Finance assignments consistently", () => {
+test("requirement allocation rejects the retired pairing for completed, in-progress, and planned Finance assignments", () => {
   const planned = allocate({
     plannedCourses: [
       { course: "BUSN 323", requirementId: "finance" },
       { course: "ECO 321", requirementId: "eco-elective-1" }
     ]
   });
-  assert.equal(planned.valid, true);
+  assert.equal(planned.valid, false);
 
   const completed = allocate({
     existingAssignments: [{ slotId: "finance", code: "BUSN 323", status: "completed" }],
     plannedCourses: [{ course: "ECO 321", requirementId: "eco-elective-1" }]
   });
-  assert.equal(completed.valid, true);
+  assert.equal(completed.valid, false);
 
   const inProgress = allocate({
     existingAssignments: [{ slotId: "finance", code: "BUSN 323", status: "in_progress" }],
     plannedCourses: [{ course: "ECO 321", requirementId: "eco-elective-1" }]
   });
-  assert.equal(inProgress.valid, true);
+  assert.equal(inProgress.valid, false);
 });
 
 test("requirement allocation rejects double counts and invalid Finance/elective combinations", () => {

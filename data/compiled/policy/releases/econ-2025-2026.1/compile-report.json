@@ -3,14 +3,14 @@
   "bundleVersion": "econ-2025-2026.1",
   "compatibility": [
     {
-      "canonicalHash": "sha256:aeeacd29e0546a24e5e17250abd46f3ccd5d6518ae42d33478500e7393939b38",
+      "canonicalHash": "sha256:2fd25f67f535e03f9855ca97c0a9b210dd1e6cbd29c47d3452cd989661e30ee6",
       "output": "compatibility/courses.json",
       "runtimeOutput": "data/normalized/economics/courses.json",
       "source": "canonical Knowledge Hub manifest inputs",
       "status": "GENERATED"
     },
     {
-      "canonicalHash": "sha256:c82d5ddf4607c90fbe9f6d63dbe632538733fb72c486076d792aef7aeda77234",
+      "canonicalHash": "sha256:473a5cb872d6394d3859522c26756aa59f28f4d7af3d3c6e46bbece7dfc2f3bb",
       "output": "compatibility/requirements.json",
       "runtimeOutput": "data/normalized/economics/requirements.json",
       "source": "canonical Knowledge Hub manifest inputs",
@@ -38,13 +38,13 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:902486311257fffcfec9f81bee60abfda575d6d11c99736b0297d05f1645d978",
+  "contentHash": "sha256:1369a2f2a1061fe0cf66a5179e88a2864150897604ebb5a637f9fb56e7000ce8",
   "counts": {
-    "activeRules": 56,
+    "activeRules": 58,
     "courses": 31,
     "historicalOfferingRecords": 0,
     "scheduleSections": 31,
-    "sources": 27,
+    "sources": 28,
     "unresolvedReviewRecords": 5
   },
   "determinism": {

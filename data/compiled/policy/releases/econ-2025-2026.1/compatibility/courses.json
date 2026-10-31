@@ -364,7 +364,7 @@
       "apEligible": false,
       "canonicalId": "eco-321",
       "code": "ECO 321",
-      "electiveEligibility": "eligible_only_when_busn_323_satisfies_finance",
+      "electiveEligibility": "finance_requirement_only",
       "offeringEvidence": {
         "2026-2027": [
           "Winter"

@@ -66,8 +66,8 @@ test('synthetic exclusions, pairings and equivalencies change production allocat
   const synthetic = structuredClone(bundle);
   synthetic.indexes.byRuleId['ELECTIVE-ECO-257-STATISTICS-ONLY'].condition.course = 'ECO 221';
   assert.equal(evaluateRequirementAllocation('ECO 221','eco-elective-1',{},synthetic).status,'BLOCK');
-  synthetic.requirementProfile.electiveConditionalCourses['ECO 321'].assignedCode = 'ECO 321';
-  assert.equal(evaluateRequirementAllocation('ECO 321','eco-elective-1',{},synthetic,{assignments:[{slotId:'finance',code:'BUSN 323'}]}).status,'BLOCK');
+  synthetic.requirementProfile.electiveConditionalCourses['ECO 333'] = {slotId:'finance', assignedCode:'ECO 321'};
+  assert.equal(evaluateRequirementAllocation('ECO 333','eco-elective-1',{},synthetic,{assignments:[{slotId:'finance',code:'BUSN 323'}]}).status,'BLOCK');
   const equivalency = synthetic.indexes.byRuleId['ELECTIVE-CROSSLIST-ECO-234-PHI-234'];
   equivalency.condition.equivalentCodes.push('TST 234');
   assert.equal(evaluateRequirementAllocation('TST 234','eco-elective-1',{},synthetic).status,'ALLOW');

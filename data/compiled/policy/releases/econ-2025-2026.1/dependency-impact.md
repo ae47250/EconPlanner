@@ -1,6 +1,6 @@
 # Dependency impact: econ-2025-2026.1
 
-Bundle digest: `sha256:902486311257fffcfec9f81bee60abfda575d6d11c99736b0297d05f1645d978`
+Bundle digest: `sha256:1369a2f2a1061fe0cf66a5179e88a2864150897604ebb5a637f9fb56e7000ce8`
 
 The canonical policy hub compiles this pinned runtime bundle and its compatibility projections. The bundle digest includes scoped exact and preliminary schedule evidence.
 
@@ -14,9 +14,11 @@ The canonical policy hub compiles this pinned runtime bundle and its compatibili
 | `CONCURRENT-INTERMEDIATE-ECO-461` | `PREREQ-ECO-461` |
 | `CONCURRENT-MATH-ECO-213` | `PREREQ-ECO-213` |
 | `CONCURRENT-MATH-ECO-214` | `PREREQ-ECO-214` |
+| `ELECTIVE-BUSN-323-FINANCE-ONLY` | `REQ-ECO-ELECTIVES`, `REQ-FINANCE` |
 | `ELECTIVE-CROSSLIST-ECO-234-PHI-234` | `REQ-ECO-ELECTIVES` |
 | `ELECTIVE-ECO-257-STATISTICS-ONLY` | `REQ-ECO-ELECTIVES`, `REQ-STATISTICS` |
 | `ELECTIVE-ECO-260-COUNTS` | `REQ-ECO-ELECTIVES` |
+| `ELECTIVE-ECO-321-FINANCE-ONLY` | `REQ-ECO-ELECTIVES`, `REQ-FINANCE` |
 | `ELECTIVE-MAX-ONE-100-LEVEL` | `REQ-ECO-ELECTIVES` |
 | `ELECTIVE-NO-DOUBLE-COUNT` | `REQ-MAJOR-COURSE-COUNT` |
 | `ELECTIVE-SLOT-UNIQUE-ASSIGNMENT` | `REQ-ECO-ELECTIVES` |

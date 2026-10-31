@@ -51,7 +51,7 @@ test('Extra course adds and removes without replacing required placements', asyn
   assert.equal(rejected.status,422);
 });
 
-test('Winter elective replacements include ECO 321 when BUSN 323 is planned for finance', async () => {
+test('Winter elective replacements reject ECO 321 even when BUSN 323 is planned for finance', async () => {
   const generated = await post({});
   const plans = generated.data.programs.find(item => item.program.id === 'economics-base').economicsPlans;
   const plan = plans.find(item => item.id === 'balanced');
@@ -65,14 +65,12 @@ test('Winter elective replacements include ECO 321 when BUSN 323 is planned for 
   const winter = first.data.plan.terms.find(term => term.slotId === 'winter-2027');
   const elective = winter.courses.find(course => course.course === 'ECO 161');
   const option = elective.replacementDestinationOptions.find(option => option.course === 'ECO 321' && option.toTermId === winter.slotId);
-  assert.ok(option, 'Confirmed Winter ECO 321 is included');
-  assert.ok(['ALLOWED', 'CONDITIONAL'].includes(option.status), JSON.stringify(option));
+  assert.ok(!option || option.status === 'BLOCKED', 'ECO 321 cannot replace an elective');
   const changed = await post({ action: 'validate-plan', plan: first.data.plan,
     plans: plans.map(item => item.id === plan.id ? first.data.plan : item),
     edit: { ...edit('ECO 321'), fromTermId: winter.slotId } });
-  assert.equal(changed.status, 200, JSON.stringify(changed.data));
-  assert.ok(changed.data.plan.terms.find(term => term.slotId === winter.slotId).courses.some(course => course.course === 'ECO 321'));
-  const audit = oracleEvaluateCanonicalPlan(await loadCanonicalPolicy(), student, changed.data.plan);
+  assert.equal(changed.status, 422, JSON.stringify(changed.data));
+  const audit = oracleEvaluateCanonicalPlan(await loadCanonicalPolicy(), student, first.data.plan);
   assert.equal(audit.valid, true, JSON.stringify(audit));
 });
 

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 11,
-    "confirmationDate": "2026-09-28",
+    "version": 12,
+    "confirmationDate": "2026-10-31",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -71,6 +71,12 @@
       "date": "2026-09-28",
       "reviewedBy": "Project owner and Economics Department domain expert",
       "summary": "One elective per unpublished term; generic future electives, uncertain ECO 321 finance, BUSN 323 preference. History informational only."
+    },
+    {
+      "id": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+      "date": "2026-10-31",
+      "reviewedBy": "Project owner, explicit implementation instruction",
+      "summary": "Neither finance course automatically counts as an Economics elective. Both completed: prefer ECO 321 finance and explain BUSN 323 petition; no petition credit is applied."
     }
   ],
   "sources": [
@@ -123,6 +129,11 @@
       "id": "OWNER-COURSE-PLANNING-2026-09-28",
       "path": "policy/provenance/course-planning-2026-09-28.md",
       "authority": "Project owner and Economics Department domain expert"
+    },
+    {
+      "id": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+      "path": "policy/provenance/finance-elective-clarification-2026-10-31.md",
+      "authority": "Project owner implementation instruction and supplied Registrar correspondence"
     }
   ],
   "requirementRules": [
@@ -280,6 +291,36 @@
         "allowedBeyondVerifiedScheduleHorizon": true,
         "allowedInVerifiedScheduleYear": false
       }
+    },
+    {
+      "ruleId": "ELECTIVE-ECO-321-FINANCE-ONLY",
+      "status": "CONFIRMED",
+      "confirmationRef": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+      "sourceRefs": [
+        "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+      ],
+      "course": "ECO 321",
+      "allowedRequirementRuleIds": [
+        "REQ-FINANCE"
+      ],
+      "excludedRequirementRuleIds": [
+        "REQ-ECO-ELECTIVES"
+      ]
+    },
+    {
+      "ruleId": "ELECTIVE-BUSN-323-FINANCE-ONLY",
+      "status": "CONFIRMED",
+      "confirmationRef": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+      "sourceRefs": [
+        "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+      ],
+      "course": "BUSN 323",
+      "allowedRequirementRuleIds": [
+        "REQ-FINANCE"
+      ],
+      "excludedRequirementRuleIds": [
+        "REQ-ECO-ELECTIVES"
+      ]
     }
   ],
   "prerequisiteRules": [

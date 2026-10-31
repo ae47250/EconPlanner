@@ -562,6 +562,7 @@ export async function POST(request) {
     });
     const advisorAttention = [
       ...catalogAdvisorAttention(authoritativePlanningContext),
+      ...results.flatMap(result => result.advisorNotifications || []),
       ...electiveAdvisorAttention(results),
       ...prerequisiteAdvisorAttention(prerequisiteValidation, student, catalog.policyBundle),
       ...planAdvisorAttention(results)

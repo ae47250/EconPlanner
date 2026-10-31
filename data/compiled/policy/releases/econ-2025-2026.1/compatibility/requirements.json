@@ -59,12 +59,7 @@
       "units": 1
     },
     {
-      "conditionalCourses": {
-        "ECO 321": {
-          "assignedCode": "BUSN 323",
-          "slotId": "finance"
-        }
-      },
+      "conditionalCourses": {},
       "confirmedSpecialTopicsElectives": [
         "ECO 260"
       ],
@@ -75,7 +70,9 @@
         "ECO 214",
         "ECO 257",
         "ECO 461",
-        "ECO 307"
+        "ECO 307",
+        "ECO 321",
+        "BUSN 323"
       ],
       "id": "eco-elective-1",
       "kind": "elective",
@@ -85,12 +82,7 @@
       "units": 1
     },
     {
-      "conditionalCourses": {
-        "ECO 321": {
-          "assignedCode": "BUSN 323",
-          "slotId": "finance"
-        }
-      },
+      "conditionalCourses": {},
       "confirmedSpecialTopicsElectives": [
         "ECO 260"
       ],
@@ -101,7 +93,9 @@
         "ECO 214",
         "ECO 257",
         "ECO 461",
-        "ECO 307"
+        "ECO 307",
+        "ECO 321",
+        "BUSN 323"
       ],
       "id": "eco-elective-2",
       "kind": "elective",
@@ -111,12 +105,7 @@
       "units": 1
     },
     {
-      "conditionalCourses": {
-        "ECO 321": {
-          "assignedCode": "BUSN 323",
-          "slotId": "finance"
-        }
-      },
+      "conditionalCourses": {},
       "confirmedSpecialTopicsElectives": [
         "ECO 260"
       ],
@@ -127,7 +116,9 @@
         "ECO 214",
         "ECO 257",
         "ECO 461",
-        "ECO 307"
+        "ECO 307",
+        "ECO 321",
+        "BUSN 323"
       ],
       "id": "eco-elective-3",
       "kind": "elective",
@@ -137,12 +128,7 @@
       "units": 1
     },
     {
-      "conditionalCourses": {
-        "ECO 321": {
-          "assignedCode": "BUSN 323",
-          "slotId": "finance"
-        }
-      },
+      "conditionalCourses": {},
       "confirmedSpecialTopicsElectives": [
         "ECO 260"
       ],
@@ -153,7 +139,9 @@
         "ECO 214",
         "ECO 257",
         "ECO 461",
-        "ECO 307"
+        "ECO 307",
+        "ECO 321",
+        "BUSN 323"
       ],
       "id": "eco-elective-4",
       "kind": "elective",
@@ -171,8 +159,8 @@
         "BUSN 323"
       ],
       "preferredOptions": [
-        "BUSN 323",
-        "ECO 321"
+        "ECO 321",
+        "BUSN 323"
       ],
       "units": 1
     },
