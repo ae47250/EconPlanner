@@ -425,8 +425,8 @@ test('one missing ECO 213 prerequisite prevents the otherwise finishable senior 
   const result = (await response.json()).programs.find(p=>p.economicsPlans);
   expect(result.economicsPlans).toEqual([]);
   expect(result.economicsPlanResult.reason).toBe(blocked.economicsPlanResult.reason);
-  await expect(page.locator('.no-plan-state h2')).toHaveText('Missing prerequisite: ECO 213 could not be scheduled within your graduation target.');
-  await expect(page.locator('.no-plan-state > p')).toContainText('Overload approval does not replace prerequisite requirements or authorize taking courses together.');
+  await expect(page.locator('.no-plan-state h2')).toHaveText('More information needed to assess an advisor-approved overload.');
+  await expect(page.locator('.no-plan-state > p')).toContainText('The normal-load search found no complete plan. Record existing advisor approval and absence of academic probation before using additional capacity.');
   await expect(page.getByRole('button', {name:/Download PDF Report/})).toHaveCount(0);
 });
 

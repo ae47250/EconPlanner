@@ -642,7 +642,7 @@ test("SEARCH_INCOMPLETE and INFEASIBLE_PROVEN remain visibly distinct", async ({
 
   await page.unroute("**/api/majors/map");
   await openFixtureResult(page, infeasibleFixture());
-  await expect(page.locator(".no-plan-state")).toContainText("No complete plan fits this graduation target under the current requirements and course timing.");
+  await expect(page.locator(".no-plan-state")).toContainText("No complete plan fits this graduation target with the available course timing and capacity.");
   await expect(page.locator(".no-plan-state")).toContainText("Review your graduation timeline");
 });
 

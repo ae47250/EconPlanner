@@ -3,7 +3,7 @@ import path from "node:path";
 import { buildEconomicsReportFromStudent } from "../../../../lib/reports/build-economics.js";
 import { renderEconomicsHtml } from "../../../../lib/reports/economics-html.js";
 import { createPdfFromHtml, PdfCreationClientError } from "../../../../lib/pdf-creation-client.js";
-import { PlanningInputError } from "../../../../lib/planning/horizon.js";
+import { PlanningInputError, validateStudentCourseHistoryLimit } from "../../../../lib/planning/horizon.js";
 import { resolveInputResolution } from "../../../../lib/catalog/input-resolution.js";
 import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
 
@@ -13,11 +13,22 @@ export const maxDuration = 120;
 export async function handleEconomicsReportRequest(request, dependencies = {}) {
   try {
     const body = await request.json();
+    const submittedStudent = body?.student || body || {};
+    const courseHistoryLimit = validateStudentCourseHistoryLimit(submittedStudent);
+    if (!courseHistoryLimit.valid) {
+      return Response.json({
+        error: courseHistoryLimit.issue.message,
+        code: courseHistoryLimit.issue.code,
+        field: courseHistoryLimit.issue.field,
+        count: courseHistoryLimit.count,
+        limit: courseHistoryLimit.limit
+      }, { status: 413, headers: { "Cache-Control": "no-store" } });
+    }
     if (body?.downloadOperationId !== undefined && !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.downloadOperationId)) {
       return Response.json({ error: "Start a new PDF download.", code: "INVALID_DOWNLOAD_OPERATION" }, { status: 400, headers: { "Cache-Control": "no-store" } });
     }
     const report = await buildEconomicsReportFromStudent(
-      body?.student || body || {},
+      submittedStudent,
       body?.preparedDate,
       body?.selectedPlan || null,
       body?.plans || []
