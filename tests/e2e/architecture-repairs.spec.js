@@ -169,13 +169,13 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   await expect(earlyPlanCard).toContainText('May 2029');
   await expect(earlyPlanCard.locator('.comparison-plan-summary > p')).toHaveCount(0);
   await expect(page.locator('.accelerated-result')).toHaveCount(0);
-  await page.getByRole('button',{name:`View/edit this plan: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
+  await page.getByRole('button',{name:`View detailed schedule: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
   const target = page.locator('.comparison-course-status p').filter({hasText:'Graduation target'});
   await expect(target).toContainText('May 2029');
   await reloadPlanner(page);
   await expect(target).toContainText('May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await page.getByRole('button',{name:`View/edit this plan: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
+  await page.getByRole('button',{name:`View detailed schedule: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
   await expect(target).toContainText('May 2029');
   await exportLocalPdf(page,browser,testInfo,'early','Spring/May 2029',{failFirst:true});
   const valid = await move(page,'MAT 217','winter-2027');
@@ -196,7 +196,7 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
   await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await page.getByRole('button',{name:'View/edit this plan: Balanced',exact:true}).click();
+  await page.getByRole('button',{name:'View detailed schedule: Balanced',exact:true}).click();
   await expect(target).toContainText('May 2030');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
   const balanced = await exportLocalPdf(page,browser,testInfo,'balanced','Spring/May 2030');
@@ -259,7 +259,7 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
   for(const code of ['ECO 113','ECO 114','MAT 113','MAT 217','ECO 213','ECO 214','BUSN 323','ECO 161','ECO 221','ECO 222','ECO 234']) await setCourseStatus(page,code,'Completed');
   const ready = await (await generatePlans(page)).json();
   expect(ready.programs.find(p=>p.program.id==='economics-base').economicsPlans.length).toBeGreaterThan(0);
-  await page.getByRole('button',{name:'← Back to course selection',exact:true}).click();
+  await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await setCourseStatus(page,'MAT 217','Completed');
   await generatePlans(page);
   await expect(page.locator('.result-status-value')).toHaveText('Not possible');
@@ -268,7 +268,7 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
   await expect(page.locator('details.result-diagnostics')).toContainText('statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term');
   await expect(page.locator('details.result-diagnostics li')).toHaveCount(1);
   await page.screenshot({path:testInfo.outputPath('senior-blocker.png'),fullPage:true,animations:'disabled'});
-  await page.getByRole('button',{name:'← Back to course selection',exact:true}).click();
+  await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await expect(page.getByRole('group',{name:'Status for MAT 217',exact:true}).getByRole('button',{name:'Completed',exact:true})).toHaveAttribute('aria-pressed','false');
   await expect(page.getByRole('group',{name:'Status for ECO 213',exact:true}).getByRole('button',{name:'Completed',exact:true})).toHaveAttribute('aria-pressed','true');
 });

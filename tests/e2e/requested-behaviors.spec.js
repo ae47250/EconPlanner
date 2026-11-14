@@ -51,7 +51,7 @@ test('fresh and reset sessions submit no selected courses; saved selections surv
   const regeneration = page.waitForResponse(response => response.url().endsWith('/api/majors/map'));
   await page.getByRole('button',{name:'Regenerate all plans',exact:true}).click();
   expect((await regeneration).request().postDataJSON().student.courses).toEqual([]);
-  await page.getByRole('button',{name:'Edit answers',exact:true}).click();
+  await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await setCourseStatus(page,'ECO 113','Completed');
   await setCourseStatus(page,'MAT 113','Taking now');
   await page.reload();

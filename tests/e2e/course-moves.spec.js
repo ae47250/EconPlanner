@@ -1314,13 +1314,13 @@ for (const width of [320, 1440]) {
     expect(may).toBeTruthy();
     const course = may.courses.find(c=>c.course==='ECO elective' && c.moveDestinationOptions?.some(o=>['ALLOWED','CONDITIONAL'].includes(o.status)));
     for (const candidate of plans) {
-      const open = page.getByRole('button', {name:`View/edit this plan: ${candidate.label}`,exact:true});
+      const open = page.getByRole('button', {name:`View detailed schedule: ${candidate.label}`,exact:true});
       await expect(open).toBeVisible();
       await open.press('Enter');
       await expect(page.getByRole('button',{name:candidate.label,exact:true})).toHaveAttribute('aria-pressed','true');
       await page.getByRole('button',{name:'Compare plans',exact:true}).press('Enter');
     }
-    await page.getByRole('button', {name:`View/edit this plan: ${plan.label}`,exact:true}).press('Enter');
+    await page.getByRole('button', {name:`View detailed schedule: ${plan.label}`,exact:true}).press('Enter');
     const scope = page.locator('.plan-section');
     const row = () => scope.locator(`.term-card > ul > li[data-requirement-id="${course.requirementId}"]`);
     await row().getByRole('button',{name:/^Change /}).press('Enter');
