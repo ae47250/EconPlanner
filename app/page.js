@@ -421,7 +421,7 @@ function UpcomingCourseEntry({ line }) {
 }
 
 function AdvisorAttention({ plan }) {
-  const notes = plan?.planNotes || [];
+  const notes = (plan?.planNotes || []).filter(note => note.id !== "history");
   if (!notes.length) return null;
   const presentation = {
     "ccr-ace": { title: "Other graduation requirements" },
