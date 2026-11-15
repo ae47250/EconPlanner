@@ -290,6 +290,23 @@ test("ordinary intake asks for the formal declaration year and explains the gove
   await expect(page.getByText(/official degree audit may differ/i)).toBeVisible();
 });
 
+test("unknown declaration year keeps planning preliminary and asks for confirmation", async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, "freshman");
+  await continueToCourses(page, { declarationYear: "I_DO_NOT_KNOW" });
+  const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/majors/map")
+    && response.request().postDataJSON()?.action !== "validate-plan");
+  await page.getByRole("button", { name: "Generate my plans" }).click();
+  const response = await responsePromise;
+  const result = await response.json();
+  expect(response.status()).toBe(200);
+  expect(result.code).toBe("MAJOR_DECLARATION_YEAR_REQUIRED");
+  expect(result.catalogApplicability.appliedMajorCatalogYear).toBeNull();
+  await expect(page.getByLabel("When did you formally declare Economics?")).toHaveValue("I_DO_NOT_KNOW");
+  await expect(page.getByRole("status").filter({ hasText: /Confirm the catalog year when you formally declared Economics/ })).toBeVisible();
+  await expect(page.locator(".comparison-page")).toHaveCount(0);
+});
+
 test("intake and generated results survive a normal reload", async ({ page }) => {
   await resetPlanner(page);
   await chooseStanding(page, "sophomore");

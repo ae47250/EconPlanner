@@ -3299,6 +3299,14 @@ export default function Page() {
         return;
       }
 
+      if (data.code === "MAJOR_DECLARATION_YEAR_REQUIRED" && data.catalogApplicability?.preliminaryOnly) {
+        setReport(null);
+        setSelectedPlanId("");
+        setStatus("Confirm the catalog year when you formally declared Economics with your advisor, then choose it to generate a confirmed major plan.");
+        focusAttention({ step: 1, target: "major-declaration-catalog-year" });
+        return;
+      }
+
       if (!isValidGeneratedPlannerReport(data)) {
         throw new Error("The planner returned an invalid response. Please try again.");
       }

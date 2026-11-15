@@ -399,7 +399,7 @@ test('results navigation reflows and remains keyboard accessible at all required
 
 test('one missing ECO 213 prerequisite prevents the otherwise finishable senior horizon', async ({request, page}) => {
   const common = ['ECO 113','ECO 114','ECO 214','MAT 113','MAT 217','BUSN 323','ECO 161','ECO 234','ECO 222','ECO 224'];
-  const student = {academicStanding:'senior',planCreationDate:'2026-09-23',courses:[...common,'ECO 213'].map(code=>({code,status:'completed'}))};
+  const student = {academicStanding:'senior',planCreationDate:'2026-09-23',majorDeclarationCatalogYear:'2025-2026',courses:[...common,'ECO 213'].map(code=>({code,status:'completed'}))};
   const readyResponse = await request.post('/api/majors/map',{data:{student}});
   expect(readyResponse.status()).toBe(200);
   const ready = (await readyResponse.json()).programs.find(p=>p.economicsPlans);

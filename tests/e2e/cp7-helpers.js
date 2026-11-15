@@ -29,7 +29,10 @@ export async function chooseStanding(page, standing) {
   return button;
 }
 
-export async function continueToCourses(page) {
+export async function continueToCourses(page, { declarationYear = "2025-2026" } = {}) {
+  if (declarationYear) {
+    await page.getByLabel("When did you formally declare Economics?").selectOption(declarationYear);
+  }
   await page.getByRole("button", { name: "Continue to your courses" }).click();
   await expect(page.getByRole("heading", { name: "Which courses have you finished or are taking now?" })).toBeVisible();
 }
