@@ -426,13 +426,12 @@ function AdvisorAttention({ plan }) {
   const presentation = {
     "ccr-ace": { title: "Other graduation requirements" },
     history: { title: "When these classes ran before" },
-    upcoming: { title: "Upcoming courses" },
     future: { title: "Courses in future years" }
   };
   return (
     <div className="student-evidence-groups" data-plan-id={plan?.id || ""} data-plan-notes>
       {notes.map(note => {
-        const display = presentation[note.id] || { title: note.title };
+        const display = note.id === "upcoming" ? { title: note.title } : presentation[note.id] || { title: note.title };
         return <section className="student-evidence-group" data-plan-note={note.id}
           data-degree-requirement-information={note.id === "ccr-ace" ? "" : undefined} key={note.id}>
           <h3 className="student-evidence-title">{display.title}</h3>

@@ -424,6 +424,21 @@
       "supersedes": null
     },
     {
+      "sourceId": "HANOVER-CATALOG-2026-2027",
+      "sourceType": "OFFICIAL_CATALOG",
+      "authority": "Hanover College",
+      "authorityBoundary": "2026-2027_FIRST-ENROLLMENT_HANOVER_CORE_AND_ECONOMICS_COURSE_DESIGNATIONS",
+      "url": "https://catalog.hanover.edu/",
+      "catalogYear": "2026-2027",
+      "retrievedOn": "2026-11-15",
+      "suppliedArchiveSha256": "0e2be236e8cfcf640c3579c03f87eff82745d4176d374f796a908e109d5d9ef0",
+      "anchors": [
+        "Hanover-Core-Curriculum",
+        "Economics-Courses"
+      ],
+      "supersedes": null
+    },
+    {
       "sourceId": "OWNER-FINANCE-ELECTIVE-2026-10-31",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "Project owner and Economics Department domain expert; supplied Registrar correspondence",

@@ -96,7 +96,7 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     expect(report.student.expectedGraduationTerm).toBe(expectedTarget);
     expect(report.terms.map(t => t.courses.map(c => c.code))).toEqual(actual.selectedPlan.terms.map(t => t.courses.map(c => c.course)));
     expect(report.planningHorizon).toContain(actual.selectedPlan.terms.at(-1).term);
-    expect(html).toContain('Selected plan horizon');
+    expect(html).toContain('This plan covers');
     expect(html).not.toContain('Balanced planning horizon');
     const renderer = await browser.newPage();
     await renderer.setContent(html, {waitUntil:'load'});
@@ -105,8 +105,8 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     await renderer.close();
     const text = execFileSync(process.env.PDFTOTEXT || 'pdftotext', ['-','-'], {input:bytes}).toString().replace(/\s+/g,' ');
     expect(text).toContain(expectedTarget);
-    expect(text).toMatch(/Major requirements checklist/i);
-    expect(text).toContain('Planned classes still need to be completed. Future classes may not be offered as shown; check the schedule when it is published.');
+    expect(text).toMatch(/Your Economics major checklist/i);
+    expect(text).toContain('Classes marked Planned are not completed yet. Future schedules can change. Check the published schedule before you register.');
     expect(text).toContain(report.planningHorizon);
     expect(text).toContain('ECO 461');
     for (const course of report.terms.flatMap(term=>term.courses)) if (course.offeringInformation) expect(text).toContain(course.offeringInformation.label);

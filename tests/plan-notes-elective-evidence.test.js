@@ -84,20 +84,21 @@ test("fictional PDF sample: all plans preserve requirements, generic future elec
     assert.deepEqual(plan.planNotes.map(note => note.id), ["ccr-ace", "history", "upcoming", "future"]);
     const history = plan.planNotes.find(note => note.id === "history");
     assert.equal(history.items.length, 3);
-    assert.equal(history.items[1].text, "2024-25: Fall ECO 333; Winter ECO 221, ECO 357. 2025-26: Fall ECO 333, ECO 357; Winter ECO 221, ECO 337.");
-    assert.deepEqual(history.items[1].lines, ["2024-25: Fall ECO 333; Winter ECO 221, ECO 357.", "2025-26: Fall ECO 333, ECO 357; Winter ECO 221, ECO 337."]);
-    assert.equal(history.items[2].text, "ECO 160, 161, 222, 224, 234, 331.");
+    assert.equal(history.items[1].text, "Past Fall schedules included: ECO 333, ECO 357. Past Winter schedules included: ECO 221, ECO 337, ECO 357.");
+    assert.deepEqual(history.items[1].lines, ["Past Fall schedules included: ECO 333, ECO 357.", "Past Winter schedules included: ECO 221, ECO 337, ECO 357."]);
+    assert.equal(history.items[2].text, "Past May schedules included: ECO 160, 161, 222, 224, 234, 331.");
     const upcoming = plan.planNotes.find(note => note.id === "upcoming");
+    assert.equal(upcoming.title, "Published schedules as of the plan date (September 28, 2026)");
     assert.deepEqual(upcoming.items.map(item => item.label), ["Winter 2027", "May 2027"]);
-    assert.ok(upcoming.items[0].lines.some(line => line === "ECO 113 · Principles of Microeconomics — J: Tue, Thu 10:00 AM–11:45 AM; K: Mon, Wed, Fri 8:00 AM–9:10 AM"));
+    assert.ok(upcoming.items[0].lines.some(line => line === "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m."));
     const report = await buildEconomicsReportFromStudent(sample, sample.planCreationDate, plan, result.economicsPlans);
     assert.deepEqual(report.planNotes, plan.planNotes);
     const html = renderEconomicsHtml(report, template);
     assert.ok(!html.includes("Course-level planning options") && !html.includes("Conditional move choices"));
-    assert.ok(html.includes("ECO elective (200+)"));
+    assert.ok(html.includes("Economics elective (200 level or higher)"));
     assert.ok(!html.includes("depends on successful completion"));
-    assert.ok(html.includes("<strong>J:</strong>"));
-    assert.ok(html.includes("<strong>K:</strong>"));
+    assert.ok(html.includes("<strong>Section J:</strong>"));
+    assert.ok(html.includes("<strong>Section K:</strong>"));
     assert.ok(!html.includes("<strong>S:</strong>"));
     assert.ok(plan.planningDetailMessages.length);
     assert.ok(plan.displayWarnings.includes(bundle.planningAdvice.display.prerequisiteCompletion));
@@ -134,9 +135,9 @@ test("upcoming notes include every exact ECO section and never borrow a missing 
   const upcoming = notes.find(note => note.id === "upcoming");
   const lines = upcoming.items.find(item => item.label === "Winter 2027").lines;
   assert.equal(lines.find(line => line.startsWith("ECO 113 ·")),
-    "ECO 113 · Principles of Microeconomics — J: meeting time unavailable; K: Mon, Wed, Fri 8:00 AM–9:10 AM");
+    "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, meeting time unavailable; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.");
   assert.ok(upcoming.items.find(item => item.label === "May 2027").lines.includes(
-    "ECO 222 · Economics of the European Union — Mon, Tue, Wed, Thu, Fri 10:15 AM–12:30 PM"));
+    "ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m."));
   for (const item of upcoming.items) {
     const termId = `${item.label.split(" ")[1]}-${item.label.split(" ")[0].toUpperCase()}`;
     const eco = withMissingTime.indexes.offeringByTerm[termId].sections.filter(row => row.course.startsWith("ECO "));
@@ -144,10 +145,42 @@ test("upcoming notes include every exact ECO section and never borrow a missing 
     for (const row of eco) {
       const line = item.lines.find(text => text.startsWith(`${row.course} ·`));
       const sameCourseSections = eco.filter(candidate => candidate.course === row.course);
-      if (sameCourseSections.length > 1) assert.ok(line.includes(`${row.sectionId.split("-").at(-1)}:`));
-      else assert.ok(!line.includes(`${row.sectionId.split("-").at(-1)}:`));
+      if (sameCourseSections.length > 1) assert.ok(line.includes(`Section ${row.sectionId.split("-").at(-1)}:`));
+      else assert.ok(!line.includes(`Section ${row.sectionId.split("-").at(-1)}:`));
     }
     assert.ok(item.lines.every(line => !/seats|available now|closed|waitlist/i.test(line)));
+  }
+});
+
+test("published schedule notes identify the plan-date snapshot used to include Fall 2026", () => {
+  const notes = buildEconomicsPlanNotes({ plan: { terms: [] }, student: { planCreationDate: "2026-07-30" },
+    courseCatalog: economicsCourses, mapping: { requirements: [] }, policyBundle: bundle });
+  const upcoming = notes.find(note => note.id === "upcoming");
+  assert.equal(upcoming.title, "Published schedules as of the plan date (July 30, 2026)");
+  assert.ok(upcoming.items.some(item => item.label === "Fall 2026"));
+});
+
+test("projected Finance notes identify the actual plan choice without claiming Finance is unmet", () => {
+  for (const [code, expected] of [
+    ["BUSN 323", "This plan places BUSN 323 in Fall 2029. Its future offering is not confirmed."],
+    ["ECO 321", "This plan places ECO 321 in Fall 2029. Future adjunct staffing is not confirmed."]
+  ]) {
+    const notes = buildEconomicsPlanNotes({
+      plan: {
+        terms: [{ term: "Fall 2029", publicationStatus: "PLANNING_PROJECTION", courses: [{ course: code, requirementId: "finance" }] }],
+        validation: { valid: true, requirementAllocation: { assignments: [{ slotId: "finance", code }] } },
+        unscheduled: []
+      },
+      student: { planCreationDate: "2026-09-28" },
+      mapping: {
+        requirements: [{ id: "finance", label: "Finance" }], assignments: [],
+        optimistic: { unresolved: [{ requirementId: "finance" }] }
+      },
+      policyBundle: bundle
+    });
+    const financeLines = notes.find(note => note.id === "future").items.map(item => item.text);
+    assert.ok(financeLines.includes(expected));
+    assert.ok(!financeLines.some(text => /BUSN 323 is preferred|Finance remains unmet/.test(text)));
   }
 });
 
@@ -177,7 +210,7 @@ test("late entrants retain an explicit extra-elective need and unconfirmed adjun
   assert.equal(result.economicsPlanResult.reason, "EXTRA_ELECTIVE_OFFERING_REVIEW_REQUIRED");
   const gap = result.economicsPlanResult.evidence.blockingReasons.find(item => item.unmetElectives);
   assert.equal(gap.unmetElectives, 1);
-  assert.match(gap.message, /staffing, budget and offerings are unconfirmed/);
+  assert.match(gap.message, /course, funding, and instructor are not confirmed/);
 });
 
 
@@ -189,7 +222,7 @@ test("early graduation exposes the extra elective need while keeping standard pl
   assert.ok(!result.economicsPlans.some(plan => plan.id === "one-year-early"));
   assert.equal(result.economicsAcceleratedResult.status, "MORE_INFORMATION_NEEDED");
   assert.equal(result.economicsAcceleratedResult.evidence.extraElectiveNeeds[0].unmetElectives, 1);
-  assert.match(result.economicsAcceleratedResult.message, /additional Economics elective.*unconfirmed/);
+  assert.match(result.economicsAcceleratedResult.message, /additional Economics elective.*not confirmed/);
   for (const plan of result.economicsPlans) for (const term of plan.terms) assert.equal(evaluateTermElectives(term, bundle).status, "ALLOW");
 });
 
@@ -209,7 +242,7 @@ test("BUSN 323 preference preserves verified ECO 321 when BUSN cannot fit and ex
     reservedCourseUnits: {"fall-2027": 4, "winter-2028": 4} };
   const gap = economics((await post({ student: gapStudent })).data);
   assert.equal(gap.economicsPlans.length, 0);
-  assert.match(gap.economicsPlanResult.evidence.blockingReasons[0].message, /Finance remains unmet.*BUSN 323.*ECO 321.*uncertain/);
+  assert.equal(gap.economicsPlanResult.evidence.blockingReasons[0].message, "We couldn't find a complete plan that meets the Finance requirement by your planned graduation date.");
 });
 
 test("a year-only placeholder needs a legal one-elective-per-term witness", () => {

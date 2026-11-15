@@ -154,7 +154,7 @@ function htmlScheduleTerms(html) {
         const markers = [...suffix.matchAll(/<span[^>]+data-approval-authority="([^"]*)"[^>]+data-approval-prerequisite="([^"]*)"[^>]*>(?:Approval required|Approval needed)<\/span>/gi)];
         const title = attributeValue(entry[3], "data-course-title") || note.split(/ - (?:open|full|closed|waitlisted|unknown)(?:\s|\(|$)| - [^-]+? approval for concurrent /i)[0].trim();
         courses.push({
-          code: identity?.[1] || label.replace(/ \(200\+\)$/, "") || null,
+          code: attributeValue(entry[1], "data-course-code") || identity?.[1] || label.replace(/ \(200\+\)$/, "") || null,
           section: identity?.[2] || null,
           title: title || null,
           requirementRole: attributeValue(entry[1], "data-requirement-id") || attributeValue(entry[3], "data-requirement-id"),

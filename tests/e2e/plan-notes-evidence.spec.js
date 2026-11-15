@@ -6,7 +6,7 @@ import { resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generat
 
 const normalize = value => value.replace(/\s+/g, ' ').trim();
 const studentNoteTitles = { 'ccr-ace':'Other graduation requirements', history:'When these classes ran before',
-  upcoming:'Upcoming courses', future:'Courses in future years' };
+  upcoming:'Published schedules as of the plan date (September 28, 2026)', future:'Courses in future years' };
 const expectedNoteText = note => normalize([studentNoteTitles[note.id] || note.title, note.description,
   ...note.items.map(item => [item.code, item.label ? item.label + ':' : '', ...(item.lines || [item.text])].filter(Boolean).join(' ')), note.caveat].filter(Boolean).join(' '));
 
@@ -76,8 +76,8 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(card.locator('[data-plan-conditions]')).toHaveCount(1);
       await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       if (plan.id === 'one-year-early') {
-        await expect(card.locator('[data-plan-conditions]')).toContainText('ECO 213 with ECO 461 in Winter 2028');
-        await expect(card.locator('[data-plan-conditions]')).toContainText('Senior standing is assumed for 2027–2028');
+        await expect(card.locator('[data-plan-conditions]')).toContainText('Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from Economics Department. No approval is recorded yet.');
+        await expect(card.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2027–2028. Ask your advisor to confirm you can take ECO 461 then.');
         await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       }
       for (const note of visibleNotes) {
@@ -86,7 +86,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       expect(await card.locator('[data-plan-note]').evaluateAll(nodes => nodes.map(node => node.dataset.planNote)))
         .toEqual(visibleNotes.map(note => note.id));
       await expect(card.locator('[data-plan-note] summary')).toHaveCount(0);
-      await expect(card.locator('[data-plan-note="upcoming"] h3')).toHaveText('Upcoming courses');
+      await expect(card.locator('[data-plan-note="upcoming"] h3')).toHaveText('Published schedules as of the plan date (September 28, 2026)');
       const sectionLabels = await card.locator('[data-plan-note="upcoming"] strong').allTextContents();
       expect(sectionLabels).toContain('J:');
       expect(sectionLabels).toContain('K:');
@@ -95,7 +95,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(firstUpcomingCourse.locator('.upcoming-course-heading')).toContainText('ECO 113');
       await expect(firstUpcomingCourse.locator('.upcoming-course-heading')).toContainText('Principles of Microeconomics');
       await expect(firstUpcomingCourse.locator('.upcoming-course-title')).toHaveCSS('text-decoration-line', 'underline');
-      await expect(firstUpcomingCourse.locator('.upcoming-course-times')).toContainText('Tue, Thu');
+      await expect(firstUpcomingCourse.locator('.upcoming-course-times')).toContainText('Tue/Thu, 10:00–11:45 a.m.');
       await expect(page.locator('main')).not.toContainText('Course-level planning options');
       await expect(page.locator('main')).not.toContainText('potential Economics');
       await expect(page.locator('main')).not.toContainText('current seat availability is');
@@ -183,7 +183,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     await reloadPlanner(page);
     await expect(control).toHaveAttribute('data-current-term','move:winter-2027');
     await expect(earlyCard.locator('[data-major-requirements-checklist] tbody .checklist-status.is-completed')).toHaveCount(0);
-    await expect(earlyCard.locator('[data-plan-conditions]')).toContainText('Senior standing is assumed');
+    await expect(earlyCard.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2028–2029. Ask your advisor to confirm you can take ECO 461 then.');
     await recordLiveMessages('MAT 217: reload');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.evaluate(() => Promise.all(document.getAnimations().map(animation => animation.finished)));
@@ -197,7 +197,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     }, null, 2));
     for (const observation of liveObservations) for (const message of observation.messages) {
       expect(message.length).toBeLessThan(220);
-      expect(message).not.toMatch(/Major requirements checklist|Past Economics schedules|Upcoming Economics courses/);
+      expect(message).not.toMatch(/Your Economics major checklist|Past Economics course offerings|Courses on upcoming published schedules/);
     }
     // Saved academic edits also receive full validation before any plan is displayed.
     await page.evaluate(() => {

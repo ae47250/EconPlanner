@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:1369a2f2a1061fe0cf66a5179e88a2864150897604ebb5a637f9fb56e7000ce8",
+  "contentHash": "sha256:1f5c68e85f773ebd403d7cd27ff93a6da0c7ef182fa30af8d98251d3f5f47303",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7164,9 +7164,9 @@
       }
     ],
     "display": {
-      "adjunct": "An extra Fall/Winter adjunct elective may be possible, but 2027–28 staffing, budget and offerings are unconfirmed. Advisor review and matching verified offerings are required.",
+      "adjunct": "An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed. Ask your advisor before relying on it.",
       "capstone": "Senior capstone · Winter. Final year preferred.",
-      "caveat": "Past schedules show historical availability, not guaranteed future offerings.",
+      "caveat": "A past schedule does not guarantee a course will be offered again.",
       "completedAcademicYears": [
         "2022-2023",
         "2023-2024",
@@ -7175,9 +7175,9 @@
       ],
       "fallWinterYearCount": 2,
       "finance": "Prefer BUSN 323 when it fits. Future BUSN 323 offerings need confirmation; future ECO 321 adjunct staffing is uncertain.",
-      "future": "Future schedules are unknown. Standard plans use at most one Economics elective per unpublished Fall, Winter or May term.",
+      "future": "For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.",
       "hs": "Either ECO 113 or ECO 114 counts as one of the two HS courses. The other must be from a different discipline.",
-      "intermediate": "ECO 213 and ECO 214 appeared in separate Fall/Winter terms historically; their order varied.",
+      "intermediate": "In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms. Their order changed from year to year. A published schedule may differ.",
       "prerequisiteCompletion": "Complete planned prerequisites before their dependent courses.",
       "seatConfirmation": "Confirm seat availability before registration; the published schedule is not current seat confirmation."
     },
@@ -7880,6 +7880,21 @@
         "sourceId": "ECONOMICS-REQUIREMENTS",
         "sourceType": "CATALOG_DERIVED_DEPARTMENT_RECORD",
         "supersedes": null
+      },
+      {
+        "anchors": [
+          "Hanover-Core-Curriculum",
+          "Economics-Courses"
+        ],
+        "authority": "Hanover College",
+        "authorityBoundary": "2026-2027_FIRST-ENROLLMENT_HANOVER_CORE_AND_ECONOMICS_COURSE_DESIGNATIONS",
+        "catalogYear": "2026-2027",
+        "retrievedOn": "2026-11-15",
+        "sourceId": "HANOVER-CATALOG-2026-2027",
+        "sourceType": "OFFICIAL_CATALOG",
+        "supersedes": null,
+        "suppliedArchiveSha256": "0e2be236e8cfcf640c3579c03f87eff82745d4176d374f796a908e109d5d9ef0",
+        "url": "https://catalog.hanover.edu/"
       },
       {
         "authority": "Hanover College",

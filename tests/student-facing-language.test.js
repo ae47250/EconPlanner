@@ -40,7 +40,7 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     selectedPlan: { id: "balanced", feasibilityStatus: "CONDITIONALLY_FEASIBLE" },
     terms: [], unresolved: [], planConditions: conditions, studentNotices: [], catalog: {}, planNotes: []
   }, template);
-  assert.ok(html.indexOf("Things to keep in mind") < html.indexOf("For your advisor"));
+  assert.ok(html.indexOf("What to check for this plan") < html.indexOf("Ask your advisor"));
   assert.ok(html.includes(`Why an advisor should review this plan:</strong> ${review.summary}`));
   assert.ok(html.includes(review.advisorPrompt));
   assert.equal(html.split(review.message).length - 1, 1);
