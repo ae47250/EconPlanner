@@ -188,7 +188,7 @@ const visualStates = [
         advisorActions: [{ code: "APPROVAL", message: "Meet with your advisor to confirm the required approval." }]
       });
       await openFixtureResult(page, plannerResultFixture({ plans: [plan] }));
-      const conditions = page.locator("[data-plan-conditions]");
+      const conditions = page.locator('article.comparison-plan-card[data-plan-id="balanced"] [data-plan-conditions]');
       await expect(conditions).toContainText("Confirm successful completion of the current course.");
       await expect(conditions).toContainText("Meet with your advisor to confirm the required approval.");
       await conditions.scrollIntoViewIfNeeded();

@@ -26,11 +26,11 @@ for (const device of ['desktop', 'mobile']) test(`${device}: finance correction 
   const plan = economics.economicsPlans[0];
   expect(plan).toBeTruthy();
   expect(plan.terms.flatMap(term => term.courses).some(course => course.requirementId?.startsWith('eco-elective') && ['ECO 321', 'BUSN 323'].includes(course.course))).toBe(false);
-  await visitPlan(page, plan.id);
-  await expect(page.locator('[data-plan-conditions]')).toContainText(message);
+  const planCard = await visitPlan(page, plan.id);
+  await expect(planCard.locator('[data-plan-conditions]')).toContainText(message);
   await reloadPlanner(page);
   await expect(page.getByRole('button', { name: 'Regenerate all plans', exact: true })).toBeEnabled();
-  await expect(page.locator('[data-plan-conditions]')).toContainText(message);
+  await expect(page.locator(`article.comparison-plan-card[data-plan-id="${plan.id}"] [data-plan-conditions]`)).toContainText(message);
   await page.screenshot({ path: testInfo.outputPath('finance-correction.png'), fullPage: true, animations: 'disabled' });
 
   if (device === 'desktop') {

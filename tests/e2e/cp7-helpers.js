@@ -209,12 +209,18 @@ export async function openFixtureResult(page, fixture, status = 200) {
   await expect(page.getByRole("heading", { name: /Compare your course plans|Your feasible plan|Your planning result/ })).toBeVisible();
 }
 
-// Keep the legacy detail route covered without restoring the redundant comparison button.
+// Select a plan in the comparison-only results view and return its own card.
 export async function visitPlan(page, planId) {
   await page.evaluate(id => {
-    const state = { econPlanner: true, view: "plan", planId: id };
-    window.history.pushState(state, "", `/?layout=apple&view=plan&plan=${id}`);
+    const state = { econPlanner: true, view: "compare", planId: id };
+    window.history.pushState(state, "", `/?layout=apple&view=compare&plan=${encodeURIComponent(id)}`);
     window.dispatchEvent(new PopStateEvent("popstate", { state }));
   }, planId);
-  await expect(page.locator(".plan-section")).toBeVisible();
+  const card = page.locator(`article.comparison-plan-card[data-plan-id="${planId}"]`);
+  await expect(card).toBeVisible();
+  return card;
+}
+
+export function selectedPlanCard(page) {
+  return page.locator("article.comparison-plan-card.is-selected");
 }

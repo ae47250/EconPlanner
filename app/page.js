@@ -1445,6 +1445,11 @@ function PlanComparisonScreen({
           font-size: 15px;
           line-height: 1.5;
         }
+        .comparison-plan-summary .plan-feasibility-value {
+          margin-top: .45rem;
+          font-size: 13px;
+          font-weight: 650;
+        }
         .early-plan-status {
           display: inline-block;
           padding: .35rem .55rem;
@@ -2010,6 +2015,9 @@ function PlanComparisonScreen({
             white-space: normal;
           }
           .comparison-content { width: min(100% - 1.25rem, 1460px); }
+          .compact-schedule th:first-child { width: 4.5rem; }
+          .compact-schedule th:nth-child(2) { width: 3rem; }
+          .compact-schedule td.comparison-academic-year { font-size: 12px; }
           .comparison-heading-row {
             align-items: flex-start;
             flex-direction: column;
@@ -2157,20 +2165,25 @@ function PlanComparisonScreen({
               const rows = rowsByPlan.get(plan.id) || [];
               const selected = selectedPlanId === plan.id;
               const invalid = plan.validation?.valid === false;
+              const mathSequenceNotes = acceleratedMathSequenceNotes(plan, COURSE_PREREQUISITES);
+              const planFeasibility = ({ VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" })[plan.feasibilityStatus] || "Plan needs confirmation";
               const showEarlyGraduationDetails = mergePossibleEarlyResult && plan.id === "one-year-early";
               return (
                 <article
                   className={`comparison-plan-card${selected ? " is-selected" : ""}`}
                   data-plan-id={plan.id}
+                  role="region"
+                  aria-labelledby={`comparison-plan-title-${plan.id}`}
                   key={plan.id}
                 >
                   <div className="comparison-plan-summary">
                     <div className="plan-title-row">
-                      <h2>{plan.label}</h2>
+                      <h2 id={`comparison-plan-title-${plan.id}`}>{plan.label}</h2>
                       {planBadge(plan) && <span className="plan-strategy-badge">{planBadge(plan)}</span>}
                       {showEarlyGraduationDetails && <span className="early-plan-status">Possible</span>}
                     </div>
                     {!showEarlyGraduationDetails && <p>{planDescription(plan)}</p>}
+                    <p className="plan-feasibility-value">Plan feasibility: {planFeasibility}</p>
                     {showEarlyGraduationDetails && (
                       <dl className="accelerated-target-list early-plan-graduation-dates" aria-label="Graduation dates">
                         <div><dt>Standard plan</dt><dd>{studentTermLabel(acceleratedResult.standardTarget)}</dd></div>
@@ -2247,14 +2260,22 @@ function PlanComparisonScreen({
                   <button type="button" className="comparison-undo" disabled={isGenerating || Boolean(editingPlanCourseKey) || isDownloadingPdf}
                     aria-label={`Regenerate this plan: ${plan.label}`} onClick={() => onRegeneratePlan(plan.id)}>Regenerate this plan</button>
                   <button type="button" className="download-plan-button" disabled={invalid || isGenerating || isDownloadingPdf || Boolean(editingPlanCourseKey)}
-                    aria-label={`Download PDF Report: ${plan.label}`} onClick={() => onDownloadPdf(plan.id)}>{isDownloadingPdf ? "Creating PDF…" : "Download PDF Report"}</button>
+                    aria-label={`Download PDF Report: ${plan.label}`} onClick={event => {
+                      downloadButtonRef.current = event.currentTarget;
+                      onDownloadPdf(plan.id);
+                    }}>{isDownloadingPdf ? "Creating PDF…" : "Download PDF Report"}</button>
                   <div className="comparison-plan-details">
                     <details className="comparison-disclosure" open><summary>Things to keep in mind</summary>
                       <PlanConditions plan={plan} catalog={report?.catalog} hideHeading />
                     </details>
                     <MajorRequirementsChecklist plan={plan} />
                     <details className="comparison-disclosure"><summary>More about this plan</summary>
-                      <div className="comparison-disclosure-content"><AdvisorAttention plan={plan} /></div>
+                      <div className="comparison-disclosure-content">
+                        {mathSequenceNotes.length > 0 && <ul className="plan-notes">
+                          {mathSequenceNotes.map(note => <li className="accelerated-math-sequence-note" role="note" key={note}>{note}</li>)}
+                        </ul>}
+                        <AdvisorAttention plan={plan} />
+                      </div>
                       <ScheduleAvailability schedule={result?.annualSchedule} plan={plan} />
                     </details>
                   </div>
@@ -2892,6 +2913,14 @@ export default function Page() {
       const safePlanId = plans.some(plan => plan.id === requestedPlanId)
         ? requestedPlanId
         : plans[0]?.id || "";
+      if (planEditInFlightRef.current) {
+        planEditRequestRef.current += 1;
+        planEditAbortRef.current?.abort();
+        planEditAbortRef.current = null;
+        planEditInFlightRef.current = false;
+        setEditingPlanCourseKey("");
+        setPlanEditFeedback(null);
+      }
       setSelectedPlanId(safePlanId);
       setPlannerView(safeView);
       setPlanEditStatus("");
