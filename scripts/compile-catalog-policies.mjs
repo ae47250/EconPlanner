@@ -181,8 +181,16 @@ function validatePlanningFlexibilityPolicy(policy) {
     || degreeInformation?.readinessImpact !== "NONE"
     || degreeInformation?.feasibilityImpact !== "NONE"
     || !degreeInformation?.designations?.HS?.differentDisciplinesRequired
-    || !degreeInformation?.designations?.W2?.courses?.includes("ECO 461")) {
-    fail("general-degree CCR/ACE information boundary is incomplete");
+    || !degreeInformation?.designations?.W2?.courses?.includes("ECO 461")
+    || !degreeInformation?.generalDegreeCatalogYearsWithEvidence?.includes("2025-2026")
+    || !degreeInformation?.generalDegreeCatalogYearsWithEvidence?.includes("2026-2027")
+    || degreeInformation?.hanoverCore?.catalogYear !== "2026-2027"
+    || degreeInformation?.hanoverCore?.hsDifferentDisciplinesRequired !== true
+    || degreeInformation?.hanoverCore?.hsRequiredUnits !== 2
+    || !["ECO 113", "ECO 114"].every(code => degreeInformation.hanoverCore.hsCourses?.includes(code))
+    || !degreeInformation?.hanoverCore?.w2Courses?.includes("ECO 461")
+    || !degreeInformation?.hanoverCore?.sourceRefs?.length) {
+    fail("general-degree information boundary is incomplete");
   }
   const equivalencyContract = policy.mathematicsEquivalencyEvidenceContract;
   if (equivalencyContract?.activationStatus !== "CONTRACT_ACTIVE_NO_APPROVED_EQUIVALENCIES"

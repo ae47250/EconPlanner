@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.8",
-  "contentHash": "sha256:af8874f0e5d8281526d6b08f5c72ef72cd8f8ed728cf0b1336c9e7cec7bb70e6",
+  "bundleVersion": "econ-planning-flexibility.9",
+  "contentHash": "sha256:a7cfafe2995d7272720acecdbb2e0b7bbbc02cbeae6a46d61896bc7d9419824e",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -31,9 +31,9 @@
       "legacyCodeRetired": false
     },
     "confirmation": {
-      "date": "2026-09-27",
+      "date": "2026-11-15",
       "reviewer": "Project owner and Economics Department domain expert",
-      "source": "policy/provenance/canonical-consumption-2026-09-27.md"
+      "source": "policy/provenance/hanover-core-2026-27.md"
     },
     "economicsPlanningStrategies": {
       "classification": "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES",
@@ -264,8 +264,26 @@
       },
       "feasibilityImpact": "NONE",
       "generalDegreeCatalogYearsWithEvidence": [
-        "2025-2026"
+        "2025-2026",
+        "2026-2027"
       ],
+      "hanoverCore": {
+        "catalogYear": "2026-2027",
+        "hsCourses": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "hsDifferentDisciplinesRequired": true,
+        "hsRequiredUnits": 2,
+        "name": "Hanover Core: Knowledge and Skills",
+        "sourceRefs": [
+          "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
+          "HANOVER-CATALOG-2026-2027#Economics-Courses"
+        ],
+        "w2Courses": [
+          "ECO 461"
+        ]
+      },
       "latestCatalogInferencePermitted": false,
       "readinessImpact": "NONE",
       "relevantStatuses": [
@@ -334,7 +352,7 @@
           "category": "ADMINISTRATIVE_INFORMATION",
           "code": "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN",
           "message": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026). The student’s incoming catalog year is not known, so the advisor should confirm it for degree-audit records.",
-          "messageWhenYearKnownButRequirementsUnavailableTemplate": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026). The student’s recorded incoming catalog year is [incoming year], but that catalog’s Economics requirements are not available in this planner yet. The advisor should determine whether the routine SAC petition paperwork is needed for degree-audit records.",
+          "messageWhenYearKnownButRequirementsUnavailableTemplate": "This plan uses the 2025–2026 Economics major requirements. Your recorded catalog year is [incoming year]. Ask your advisor to confirm which major requirements apply and whether any additional paperwork is needed.",
           "readinessImpact": "NONE",
           "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
           "sacPetitionRequired": false
@@ -355,9 +373,11 @@
       "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
       "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED"
     },
-    "policyVersion": "econ-planning-flexibility.8",
+    "policyVersion": "econ-planning-flexibility.9",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
+      "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
+      "HANOVER-CATALOG-2026-2027#Economics-Courses",
       "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized implementation",
       "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
       "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
@@ -395,9 +415,11 @@
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.8.json",
+    "provenancePath": "policy/provenance/planning-flexibility.9.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
+      "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
+      "HANOVER-CATALOG-2026-2027#Economics-Courses",
       "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized implementation",
       "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
       "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
@@ -408,6 +430,22 @@
       "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
     ],
     "sources": [
+      {
+        "anchors": [
+          "Hanover-Core-Curriculum",
+          "Economics-Courses"
+        ],
+        "authority": "Hanover College",
+        "authorityBoundary": "2026-2027_FIRST-ENROLLMENT_HANOVER_CORE_AND_ECONOMICS_COURSE_DESIGNATIONS",
+        "catalogYear": "2026-2027",
+        "path": "data/raw/hanover/catalog/2026-2027/general-degree-evidence.md",
+        "retrievedOn": "2026-11-15",
+        "sha256": "d5b7362b46afaaa65cc86f27ca4f3c330205eb9eb5eb0f0373ba2bb68d9ae936",
+        "sourceId": "HANOVER-CATALOG-2026-2027",
+        "sourceType": "OFFICIAL_CATALOG",
+        "supersedes": null,
+        "url": "https://catalog.hanover.edu/"
+      },
       {
         "authority": "Project owner and Economics Department domain expert",
         "authorityBoundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION",

@@ -133,7 +133,80 @@ test("CCR/ACE information is relevant-only, catalog-scoped, and informational", 
   assert.match(hs.message, /Either ECO 113 or ECO 114 counts as one of the two HS courses\. The other must be from a different discipline\./);
   assert.equal(hs.feasibilityImpact, "NONE");
   assert.equal(hs.readinessImpact, "NONE");
-  assert.equal(information.items.find(item => item.code === "W2").detail, "— planned through ECO 461.");
+  assert.equal(information.items.find(item => item.code === "W2").detail, "ECO 461 also counts toward your Writing 2 (W2) requirement.");
+});
+
+test("2026-2027 Hanover Core separates completed, taking-now, and planned course information", () => {
+  const information = buildDegreeDesignationInformation({
+    student: {
+      entryCatalogYear: "2026-2027",
+      generalDegreeCatalogYear: "2026-2027",
+      courses: [
+        { code: "ECO 113", status: "completed" },
+        { code: "ECO 114", status: "in_progress" }
+      ]
+    },
+    plan: { terms: [{ courses: [{ course: "ECO 461" }] }] },
+    planningContext: { entryCatalogYear: "2026-2027", catalogApplicability: { appliedMajorCatalogYear: "2025-2026" } }
+  });
+  assert.equal(information.curriculum, "HANOVER_CORE");
+  assert.equal(information.informationalOnly, true);
+  assert.deepEqual(information.items.map(item => item.code), ["HS", "W2"]);
+  const hs = information.items.find(item => item.code === "HS");
+  assert.deepEqual(hs.courses, { completed: ["ECO 113"], inProgress: ["ECO 114"], planned: [] });
+  assert.match(hs.detail, /ECO 113 is completed; ECO 114 is taking now\. Only one of these Economics courses may count toward one of your two Historical and Social Perspectives/);
+  assert.match(hs.detail, /Your other HS course must be from a different discipline/);
+  const w2 = information.items.find(item => item.code === "W2");
+  assert.deepEqual(w2.courses, { completed: [], inProgress: [], planned: ["ECO 461"] });
+  assert.equal(w2.detail, "ECO 461 also counts toward your Writing 2 (W2) Skills requirement.");
+  assert.equal(w2.feasibilityImpact, "NONE");
+
+  const conflicting = buildDegreeDesignationInformation({
+    student: { entryCatalogYear: "2025-2026", generalDegreeCatalogYear: "2026-2027" },
+    plan: {}, planningContext: { entryCatalogYear: "2025-2026" }
+  });
+  assert.equal(conflicting.evidenceStatus, "UNAVAILABLE_FOR_APPLICABLE_GENERAL_DEGREE_CATALOG");
+  assert.deepEqual(conflicting.items, []);
+});
+
+test("two planned Economics courses share only one HS Knowledge designation", () => {
+  const information = buildDegreeDesignationInformation({
+    student: { entryCatalogYear: "2026-2027", generalDegreeCatalogYear: "2026-2027", courses: [] },
+    plan: { terms: [{ courses: [{ course: "ECO 113" }, { course: "ECO 114" }] }] },
+    planningContext: { entryCatalogYear: "2026-2027" }
+  });
+  const hs = information.items.find(item => item.code === "HS");
+  assert.deepEqual(hs.courses, { completed: [], inProgress: [], planned: ["ECO 113", "ECO 114"] });
+  assert.equal(hs.detail, "ECO 113 is planned; ECO 114 is planned. Only one of these Economics courses may count toward one of your two Historical and Social Perspectives (HS) Knowledge courses. Your other HS course must be from a different discipline.");
+  assert.equal(hs.feasibilityImpact, "NONE");
+});
+
+test("W2 course wording follows catalog cohort while actual course status stays unchanged", () => {
+  const expectedStatuses = {
+    completed: { status: "SATISFIED", courses: { completed: ["ECO 461"], inProgress: [], planned: [] } },
+    in_progress: { status: "IN_PROGRESS", courses: { completed: [], inProgress: ["ECO 461"], planned: [] } },
+    planned: { status: "PLANNED", courses: { completed: [], inProgress: [], planned: ["ECO 461"] } }
+  };
+  for (const [catalogYear, expectedText] of [
+    ["2025-2026", "ECO 461 also counts toward your Writing 2 (W2) requirement."],
+    ["2026-2027", "ECO 461 also counts toward your Writing 2 (W2) Skills requirement."]
+  ]) {
+    for (const [courseStatus, expected] of Object.entries(expectedStatuses)) {
+      const student = {
+        entryCatalogYear: catalogYear,
+        generalDegreeCatalogYear: catalogYear,
+        courses: courseStatus === "planned" ? [] : [{ code: "ECO 461", status: courseStatus }]
+      };
+      const plan = { terms: courseStatus === "planned" ? [{ courses: [{ course: "ECO 461" }] }] : [] };
+      const information = buildDegreeDesignationInformation({
+        student, plan, planningContext: { entryCatalogYear: catalogYear }
+      });
+      const w2 = information.items.find(item => item.code === "W2");
+      assert.equal(w2.status, expected.status, `${catalogYear} ${courseStatus}`);
+      assert.deepEqual(w2.courses, expected.courses, `${catalogYear} ${courseStatus}`);
+      assert.equal(w2.detail, expectedText, `${catalogYear} ${courseStatus}`);
+    }
+  }
 });
 
 function rankingPlan(loads, course = { course: "ECO 260", source: "catalog-statement" }) {
@@ -268,7 +341,9 @@ test("HTML and PDF renderers preserve structured HS/W2 codes with accessible bol
     inputSummary: "Fixture",
     remaining: { strict: 0, optimistic: 0, projected: 0 },
     selectedPlan: { planningContext: { remainingYears: 1 }, feasibilityStatus: "CONDITIONALLY_FEASIBLE" },
-    terms: [],
+    terms: [{ term: "Winter 2027", termKey: "Winter", academicYear: "2026-2027", courses: [
+      { code: "ECO 461", course: "ECO 461", displayLabel: "ECO 461", title: "Senior Seminar", requirementId: "eco-capstone" }
+    ] }],
     requirements: [],
     unresolved: [],
     advisorChecks: [],
@@ -279,6 +354,8 @@ test("HTML and PDF renderers preserve structured HS/W2 codes with accessible bol
   }, template);
   assert.match(html, /<strong>HS<\/strong>/);
   assert.match(html, /<strong>W2<\/strong>/);
+  assert.match(html, /<strong>W2<\/strong> <strong>ECO 461<\/strong> also counts toward your Writing 2 \(W2\) requirement\./);
+  assert.match(html, /<span class="course" data-course-code="ECO 461" data-requirement-id="eco-capstone">ECO 461<\/span>/);
   assert.match(html, /Core Curriculum Requirements \(CCRs\)/);
   const pdfRenderer = await readFile(new URL("../scripts/render-economics-pdf.py", import.meta.url), "utf8");
   assert.match(pdfRenderer, /<b>\{escape\(item\['code'\]/);

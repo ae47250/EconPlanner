@@ -392,7 +392,8 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     const courseCode = instructor ? "ECO 213" : "ECO 461";
     const prerequisite = instructor ? "MAT 113" : "ECO 213";
     const term = instructor ? "Fall 2027" : "Winter 2028";
-    const message = `${authority} approval is required for ${prerequisite} with ${courseCode} in ${term}. Approval has not been recorded.`;
+    const approver = /instructor/i.test(authority) ? `the ${courseCode} instructor` : authority;
+    const message = `Taking ${prerequisite} and ${courseCode} together in ${term} needs approval from ${approver}. No approval is recorded yet.`;
     assert.equal(selectedPlan.feasibilityStatus, "CONDITIONALLY_FEASIBLE");
     const course = selectedPlan.terms.flatMap(term => term.courses).find(course => course.course === courseCode);
     assert.ok(course.approvalRequired.some(item => item.authority === authority && item.prerequisite === prerequisite));

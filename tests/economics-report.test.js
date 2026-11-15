@@ -21,7 +21,7 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   assert.equal(report.schemaVersion, "econmapper-economics-report-v1");
   assert.equal(report.preparedDate, "2026-07-28");
   assert.ok(report.requirements.some(item => item.label === "ECO 113" && item.strict === "ECO 113"));
-  assert.ok(html.includes("HANOVER COLLEGE"));
+  assert.ok(html.includes("Hanover College · Economics"));
   assert.ok(html.includes("ECO 113"));
   assert.ok(html.includes(String(report.remaining.strict)));
   assert.equal(html.includes("{{"), false);
@@ -70,8 +70,8 @@ test("Taking now fixed occupancy is identical in the validated plan, JSON projec
   assert.deepEqual(reportCurrent.courses.map(course => course.code), ["ECO 113"]);
   assert.equal(planCurrent.courses[0].fixedInProgress, true);
   assert.equal(reportCurrent.courses[0].fixedInProgress, true);
-  assert.match(html, /Taking now - fixed in this term/);
-  assert.equal((html.match(/Taking now - fixed in this term/g) || []).length, 1);
+  assert.match(html, /Taking now/);
+  assert.equal((html.match(/>Taking now</g) || []).length, 1);
 });
 
 test("an eligible early comparison request preserves the selected normal-horizon report", async () => {
@@ -198,7 +198,7 @@ test("Economics report API sends inactive completed HTML to pdf-creator", async 
   assert.equal(/<script\b/i.test(submitted.html), false);
   assert.equal(/\son[a-z]+\s*=/i.test(submitted.html), false);
   assert.equal(submitted.html.includes("{{"), false);
-  assert.match(submitted.html, /<span class="course"(?:\s+data-requirement-id="[^"]+")?>ECO 461(?:-[^<]+)?<\/span>/);
+  assert.match(submitted.html, /<span class="course"[^>]*>ECO 461(?:-[^<]+)?<\/span>/);
   assert.match(submitted.correlationId, /^[A-Za-z0-9._:-]+$/);
 });
 

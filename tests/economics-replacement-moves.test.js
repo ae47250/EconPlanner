@@ -107,7 +107,7 @@ test('offering labels report historical facts without activating a May predictio
   const bundle = runtimePolicyBundle();
   const info = courseOfferingInformation({course:'ECO 222'}, bundle);
   assert.ok(info?.observations.length);
-  assert.match(info.label, /^Past schedules:/);
+  assert.match(info.label, /^Previously offered in /);
   assert.doesNotMatch(info.label, /usually|only/i);
   assert.equal(courseOfferingInformation({course:'ECO 999'}, bundle), null);
   assert.equal(courseOfferingInformation({course:'ECO 222'}, {planningAdvice:{observations:[]}}), null);

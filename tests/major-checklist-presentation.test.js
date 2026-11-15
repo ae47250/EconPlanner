@@ -37,19 +37,21 @@ test("zero-course input: all three checklists use validated future assignments, 
     assert.deepEqual(report.planConditions, plan.planConditions);
     const html = renderEconomicsHtml(report, template);
     assert.ok(html.includes(checklist.note));
+    assert.ok(html.includes("Math choices:") && html.includes("MAT 113") && html.includes("MAT 121"));
+    assert.ok(html.includes("Statistics choices:") && html.includes("ECO 257") && html.includes("PSY 217"));
+    assert.ok(html.includes("Finance choices:") && html.includes("BUSN 323"));
     assert.ok(!/Requirement assignments|<th>Strict|<th>Optimistic|<td>Advisor check<\/td>|CONDITIONALLY FEASIBLE|planning_projection|stale availability/.test(html));
     assert.equal((html.match(/data-requirement-checklist-id=/g) || []).length, 12);
     for (const item of report.planConditions) assert.equal(html.split(item.message).length - 1, 1);
-    assert.ok(html.indexOf("Remaining years at a glance") < html.indexOf("Things to keep in mind"));
-    assert.ok(html.indexOf("Things to keep in mind") < html.indexOf("Major requirements checklist"));
+    assert.ok(html.indexOf("Your plan by term") < html.indexOf("Your Economics major checklist"));
     assert.ok(!/availability-open">|availability-full">/.test(html));
     assert.ok(html.includes("We don’t know if there are open seats in "));
     const capstone = checklist.rows.find(row => row.id === "eco-461");
     if (plan.id === "one-year-early") {
       assert.deepEqual(capstone.markers, ["Approval needed", "Ask an advisor to confirm senior standing"]);
       assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Approval needed"));
-      assert.ok(plan.planConditions.some(item => item.message.includes("ECO 213 with ECO 461 in Winter 2028. Approval has not been recorded.")));
-      assert.ok(plan.planConditions.some(item => /Senior standing is assumed for 2027–2028/.test(item.message)));
+      assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from Economics Department. No approval is recorded yet."));
+      assert.ok(plan.planConditions.some(item => /This plan assumes you will have senior standing in 2027–2028\./.test(item.message)));
       assert.ok(!html.includes("This plan assumes you will have senior standing in your final year."));
     } else assert.deepEqual(capstone.markers, []);
   }
@@ -63,10 +65,11 @@ test("incomplete candidates retain unmet eligibility separately without assertin
   assert.equal(checklist.unmetRequirements[0].id, "finance");
   assert.deepEqual(checklist.legend.map(state => state.label), ["Completed", "In progress", "Planned"]);
   const html = renderEconomicsHtml({ student: { displayName: "Fictional <student>", academicStanding: "senior" }, terms: [], unresolved: [], requirements: [], majorRequirementsChecklist: checklist, planConditions: [], planNotes: [] }, template);
-  assert.ok(html.includes("Requirements without a planned class"));
-  assert.ok(html.includes("A complete plan may still be possible."));
+  assert.ok(html.includes("Requirements still needing a class"));
+  assert.ok(html.includes("A complete plan may still be possible when the search is not finished."));
+  assert.ok(html.includes("Still needed"));
   assert.ok(html.includes("Fictional &lt;student&gt;"));
-  assert.ok(!html.includes("is-still_needed"));
+  assert.ok(html.includes("is-still_needed") && html.includes("Still needed"));
 });
 
 test("escaped student placeholder-like text cannot replace report markup", () => {
@@ -113,9 +116,13 @@ test("qualified completed credit and current enrollment are separate from future
       assert.ok(rows.filter(row => row.id.startsWith("eco-elective") && row.status === "planned").every(row => row.course === "ECO elective (200+)" || /ECO [2-9]\d\d/.test(row.course)));
       const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, result.economicsPlans);
       const html = renderEconomicsHtml(report, template);
+      assert.ok(html.includes("Taking now"));
       // Hosted Open Sans lacks these glyphs. Every row and legend must draw its
       // symbol independently of fonts and keep its accessible text label.
-      for (const row of rows) assert.ok(html.includes(`status-icon-${row.status}\" aria-hidden=\"true\"></span> ${row.statusLabel}`));
+      for (const row of rows) {
+        const label = row.status === "in_progress" ? "Taking now" : row.statusLabel;
+        assert.ok(html.includes(`status-icon-${row.status}\" aria-hidden=\"true\"></span> ${label}`));
+      }
       assert.equal((html.match(/class="status-icon status-icon-/g) || []).length, 15);
       assert.doesNotMatch(html, /aria-hidden="true">[✓◐○]</);
       assert.match(html, /status-icon-completed\{[^}]+border:/);

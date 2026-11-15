@@ -102,7 +102,11 @@ test("canonical sources have unique IDs, readable paths, matching hashes, and de
   for (const source of provenance.sources) {
     assert.ok(source.authority, source.sourceId);
     assert.ok(source.authorityBoundary, source.sourceId);
-    assert.match(source.effective.from, /^\d{4}-\d{2}-\d{2}$/, source.sourceId);
+    if (source.catalogYear) {
+      assert.match(source.catalogYear, /^\d{4}-\d{4}$/, source.sourceId);
+    } else {
+      assert.match(source.effective.from, /^\d{4}-\d{2}-\d{2}$/, source.sourceId);
+    }
     if (!source.path) continue;
     const bytes = await readFile(new URL(source.path, repositoryRoot));
     assert.equal(sourceEvidenceSha256(bytes, source.path), source.sha256, source.sourceId);

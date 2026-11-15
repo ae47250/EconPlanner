@@ -789,7 +789,8 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     const course = instructor ? "ECO 213" : "ECO 461";
     const prerequisite = instructor ? "MAT 113" : "ECO 213";
     const term = instructor ? "Fall 2027" : "Winter 2028";
-    const message = `${authority} approval is required for ${prerequisite} with ${course} in ${term}. Approval has not been recorded.`;
+    const approver = /instructor/i.test(authority) ? `the ${course} instructor` : authority;
+    const message = `Taking ${prerequisite} and ${course} together in ${term} needs approval from ${approver}. No approval is recorded yet.`;
     await resetPlanner(page);
     await chooseStanding(page, instructor ? "freshman" : "junior");
     await page.locator("details.more-details > summary").first().click();
@@ -837,7 +838,7 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
       const text = execFileSync(process.env.PDFTOTEXT || "pdftotext", ["-", "-"], { input: bytes }).toString().replace(/\s+/g, " ");
       expect(text).toContain(message);
       expect(text).not.toContain("Advisor approval needed");
-      const [grid, checklist] = text.split("Major requirements checklist");
+      const [grid, checklist] = text.split("Your Economics major checklist");
       expect(grid).toContain("Approval needed");
       expect(checklist).toContain("Approval needed");
     } finally {

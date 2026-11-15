@@ -225,7 +225,7 @@ test("each plan selection, requirement states and notes survive repeated reloads
       await expect(planCard.locator("[data-requirement-checklist-id]")).toHaveCount(12);
       expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")).selectedPlanId)).toBe(plan.id);
       await planCard.getByText("More about this plan", {exact:true}).click();
-      await expect(planCard.getByRole("heading", { name: "Upcoming courses", exact: true })).toBeVisible();
+      await expect(planCard.getByRole("heading", { name: "Published schedules as of the plan date (September 23, 2026)", exact: true })).toBeVisible();
       await expect(planCard.locator('[data-plan-note="history"]')).toHaveCount(0);
     }
   }
