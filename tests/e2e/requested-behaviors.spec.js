@@ -27,12 +27,13 @@ test('a pending-overload move card is visibly disabled and requests evidence',as
   ];
   plan.terms[0].courses[0].moveGuidance = {studentMessage:termLoadMessage(loadDecision,bundle)};
   await openFixtureResult(page,plannerResultFixture({plans:[plan]}));
-  await visitPlan(page, "balanced");
-  const destination = page.locator('select[aria-label="Change ECO 113 to"]').locator('option[value="move:2027-WINTER"]');
-  await expect(destination).toHaveCount(0);
-  await page.getByRole('button',{name:'Change ECO 113',exact:true}).click();
-  await expect(page.getByRole('region', {name:'Change ECO 113 options'})).toContainText('An advisor needs to check this move.');
-  await expect(page.locator('.course-choice-details')).toHaveCount(0);
+  const planCard = await visitPlan(page, "balanced");
+  const control = planCard.locator('.plan-course-actions[aria-label="Changes for ECO 113"]');
+  await control.getByRole('button',{name:'Change ECO 113',exact:true}).click();
+  const menu = planCard.getByRole('region', {name:'Change ECO 113 options'});
+  await expect(menu.locator('[data-change-choice="move:2027-WINTER"]')).toHaveCount(0);
+  await expect(menu).toContainText('An advisor needs to check this move.');
+  await expect(menu.locator('.course-choice-details')).toHaveCount(0);
 });
 async function clearAll(page) {
   await page.getByRole('button',{name:'Clear all',exact:true}).click();
@@ -51,7 +52,7 @@ test('fresh and reset sessions submit no selected courses; saved selections surv
   const regeneration = page.waitForResponse(response => response.url().endsWith('/api/majors/map'));
   await page.getByRole('button',{name:'Regenerate all plans',exact:true}).click();
   expect((await regeneration).request().postDataJSON().student.courses).toEqual([]);
-  await page.getByRole('button',{name:'Edit answers',exact:true}).click();
+  await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await setCourseStatus(page,'ECO 113','Completed');
   await setCourseStatus(page,'MAT 113','Taking now');
   await page.reload();

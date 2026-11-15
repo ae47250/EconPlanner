@@ -51,25 +51,30 @@ test("API and selected-plan UI retain material academic content", async ({ page 
   const economics = body.programs.find(program => program.program?.id === "economics-base");
   const selectedPlan = economics.economicsPlans[0];
   await expect(page.getByRole("heading", { name: /Compare your course plans|Your feasible plan/ })).toBeVisible({ timeout: 15000 });
-  await visitPlan(page, selectedPlan.id);
-  await expect(page.getByRole("heading", { name: new RegExp(`Review ${selectedPlan.label}`) })).toBeVisible();
+  const card = await visitPlan(page, selectedPlan.id);
+  await expect(card.getByRole("heading", { name: selectedPlan.label, exact: true })).toBeVisible();
+  await card.getByText("More about this plan", { exact: true }).click();
 
-  const displayed = await page.evaluate(() => ({
-    courses: [...document.querySelectorAll(".term-card .plan-course-summary > strong")].map(item => item.textContent.trim()),
-    terms: [...document.querySelectorAll(".term-card")].map(item => `${item.dataset.academicYear}|${item.dataset.termKey}`),
-    conditions: [...document.querySelectorAll("[data-plan-conditions] li")].map(item => item.textContent.trim()),
-    details: [...document.querySelectorAll(".plan-section details.plan-notes li")].map(item => item.textContent.trim()),
-    evidence: document.querySelector("[data-plan-notes]")?.textContent || "",
-    pageText: document.body.innerText
-  }));
+  const displayed = await card.evaluate((element, terms) => {
+    const rows = [...element.querySelectorAll(".compact-schedule tr[data-term-id]")];
+    return {
+      courses: [...element.querySelectorAll(".comparison-editable-course button[aria-label^='Change '], .comparison-editable-course .comparison-fixed-course > strong")].map(item => item.textContent.replace(/\s*▾$/, "").trim()),
+      terms: rows.map(row => {
+        const term = terms.find(item => item.slotId === row.dataset.termId);
+        return term ? `${term.academicYear || ""}|${term.termKey || ""}` : `unmatched|${row.dataset.termId}`;
+      }),
+      conditions: [...element.querySelectorAll("[data-plan-conditions] li")].map(item => item.textContent.trim()),
+      details: [...element.querySelectorAll(".comparison-disclosure-content > .plan-notes li")].map(item => item.textContent.trim()),
+      evidence: element.querySelector("[data-plan-notes]")?.textContent || ""
+    };
+  }, selectedPlan.terms);
+  displayed.pageText = await page.locator("body").innerText();
   const expectedConditions = selectedPlan.planConditions.map(item => item.message);
-  const expectedDetails = selectedPlan.planningDetailMessages || [];
+  expect(Array.isArray(selectedPlan.planningDetailMessages || [])).toBe(true);
+  const expectedDetails = [];
   const backendReadiness = selectedPlan.readinessStatus || selectedPlan.validation?.readinessStatus;
   const studentReadiness = readinessLabel(backendReadiness);
-  const evidenceText = (selectedPlan.planNotes || []).flatMap(note => [
-    note.description, note.caveat,
-    ...note.items.flatMap(item => item.lines || [item.text])
-  ]).filter(Boolean).map(text => text.replace(/\*\*/g, ""));
+  expect(selectedPlan.planNotes.some(note => note.id === "history")).toBe(true);
   const parity = {
     schemaVersion: 2,
     kind: "econplanner-api-ui-parity",
@@ -79,8 +84,13 @@ test("API and selected-plan UI retain material academic content", async ({ page 
     status: { missing: displayed.pageText.includes(studentReadiness) ? [] : [backendReadiness], extra: [] },
     conditions: difference(expectedConditions, displayed.conditions.filter(value => expectedConditions.includes(value))),
     details: difference(expectedDetails, displayed.details.filter(value => expectedDetails.includes(value))),
-    evidence: { missing: evidenceText.filter(value => !displayed.evidence.replace(/\s+/g, "").includes(value.replace(/\s+/g, ""))), extra: [] }
+    evidence: { missing: (selectedPlan.planNotes || []).filter(note => note.id !== "history").flatMap(note => [
+      note.description, note.caveat,
+      ...note.items.flatMap(item => item.lines || [item.text])
+    ]).filter(Boolean).map(value => value.replace(/\*\*/g, "")).filter(value =>
+      !displayed.evidence.replace(/\s+/g, "").includes(value.replace(/\s+/g, ""))), extra: [] }
   };
+  expect(displayed.details.filter(value => !expectedDetails.includes(value))).toEqual([]);
   parity.materialMissingCount = Object.values(parity)
     .filter(value => value && Array.isArray(value.missing))
     .reduce((sum, value) => sum + value.missing.length, 0);
@@ -133,11 +143,11 @@ test("readiness, conditions, and advisor actions are projected from the returned
     const returnedItems = scenario.plan.conditions.length
       ? scenario.plan.conditions.map(item => item.message)
       : scenario.plan.advisorActions.map(item => item.message);
-    await page.getByText("Things to keep in mind", { exact: true }).click();
+    const card = await visitPlan(page, scenario.plan.id);
     for (const message of returnedItems) {
-      await expect(page.locator(scenario.expectedSelector).getByText(message, { exact: true })).toBeVisible();
+      await expect(card.locator(scenario.expectedSelector).getByText(message, { exact: true })).toBeVisible();
     }
-    const displayedItems = await page.locator(`${scenario.expectedSelector} li`).allInnerTexts();
+    const displayedItems = await card.locator(`${scenario.expectedSelector} li`).allInnerTexts();
     const displayedStatus = await page.locator(".result-status-value").innerText();
     const result = {
       scenario: scenario.name,

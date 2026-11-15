@@ -80,7 +80,7 @@ test("generated planner session restores the exact selected plan for matching in
 
   assert.deepEqual(restored.report, report);
   assert.equal(restored.selectedPlanId, "explore-first");
-  assert.equal(restored.view, PLANNER_VIEWS.PLAN);
+  assert.equal(restored.view, PLANNER_VIEWS.COMPARE);
 });
 
 test("generated planner session restores an explicit zero-plan comparison result", () => {
@@ -176,7 +176,7 @@ test("replacing one generated plan leaves the other plan objects untouched", () 
 
 test("planner view query accepts only supported generated-plan views", () => {
   assert.equal(plannerViewFromSearch("?view=compare"), PLANNER_VIEWS.COMPARE);
-  assert.equal(plannerViewFromSearch("?view=plan&plan=one-year-early"), PLANNER_VIEWS.PLAN);
+  assert.equal(plannerViewFromSearch("?view=plan&plan=one-year-early"), PLANNER_VIEWS.COMPARE);
   assert.equal(plannerViewFromSearch("?view=unknown"), PLANNER_VIEWS.INPUT);
 });
 

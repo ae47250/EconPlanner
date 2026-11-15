@@ -421,7 +421,7 @@ function UpcomingCourseEntry({ line }) {
 }
 
 function AdvisorAttention({ plan }) {
-  const notes = plan?.planNotes || [];
+  const notes = (plan?.planNotes || []).filter(note => note.id !== "history");
   if (!notes.length) return null;
   const presentation = {
     "ccr-ace": { title: "Other graduation requirements" },
@@ -671,7 +671,6 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
       disabled={busy} onClick={() => { setOpen(true); setChoice(""); }}>{compact ? compactPlanCourse(course) : "Change"} ▾</button>
     <div hidden={!open} ref={panel} style={editorPosition} className="course-change-panel" role="region" aria-label={`Change ${compactPlanCourse(course)} options`}>
       <div className="course-editor-title"><strong>{compactPlanCourse(course)}</strong><button type="button" className="close-course-options" onClick={close} aria-label="Close course options">Close ×</button></div>
-      {course.course === "ECO 461" && <p>{course.capstoneTimingDisplay || "Senior capstone · Winter."}</p>}
       {!selected && (course.course !== "ECO 461" || optionGroups.length > 0) && (optionGroups.length ? optionGroups.map((group, groupIndex) => <section className="change-option-group" aria-label={group.label} key={group.label}>
         {group.items[0].edit.type === "replace-move" && group.items[0].edit.replacementCourse !== "ECO elective" && !optionGroups.slice(0, groupIndex).some(item => item.items[0].edit.type === "replace-move" && item.items[0].edit.replacementCourse !== "ECO elective") && <strong className="change-menu-heading">Take a different course</strong>}
         <strong className="change-menu-heading">{group.label}</strong>
@@ -872,7 +871,6 @@ function PlanTimeline({
           ))}
         </div>
       )}
-      {onEditPlanCourse && <p className="drag-plan-help">Drag a course by its ⠿ handle into another term. Destinations show whether it can move. You can also use Change.</p>}
       <p className="drag-plan-status" role="status">{dropMessage}</p>
       {pendingDrop && <MoveConfirmation drop={pendingDrop} onApply={applyDrop} onCancel={() => setPendingDrop(null)} busy={Boolean(editingPlanCourseKey)} />}
       <div
@@ -916,6 +914,7 @@ function PlanTimeline({
                               <div className="plan-course-summary">
                                 <strong>{compactPlanCourse(course)}</strong>
                                 <span>{course.title}</span>
+                                {course.course === "ECO 461" && <span className="course-constraint-note">Senior-year Winter only{!course.fixedInProgress && !courseHasMoveControl(course) ? " · no other eligible term in this plan" : ""}</span>}
                                 {course.fixedInProgress && <span>Taking now — fixed in this term</span>}
                                 <CourseAvailabilityStatus course={course} term={term} schedule={schedule} referenceDate={new Date().toISOString()} />
                                 {course.preliminaryScheduleEvidence && <span className="plan-course-availability">Preliminary schedule ({course.preliminaryScheduleEvidence.issuedOn}); course and term subject to change</span>}
@@ -1126,7 +1125,6 @@ function PlanComparisonScreen({
   onReviewTimeline,
   onClearAll,
   onBackToCompare,
-  onChoosePlan,
   onSelectPlan,
   onRegenerate,
   onRegeneratePlan,
@@ -1447,6 +1445,11 @@ function PlanComparisonScreen({
           font-size: 15px;
           line-height: 1.5;
         }
+        .comparison-plan-summary .plan-feasibility-value {
+          margin-top: .45rem;
+          font-size: 13px;
+          font-weight: 650;
+        }
         .early-plan-status {
           display: inline-block;
           padding: .35rem .55rem;
@@ -1502,6 +1505,7 @@ function PlanComparisonScreen({
         .compact-schedule tbody tr[data-year-start="true"]:not(:first-child) > td { border-top: 2px solid #b7a8cf; }
         .compact-schedule td { font-size: 13px; }
         .compact-schedule td[rowspan] { white-space: nowrap; }
+        .compact-schedule td.comparison-academic-year { color: #26364d; font-weight: 700; }
         .compact-schedule td:last-child {
           color: #111d36;
           font-weight: 700;
@@ -1621,19 +1625,47 @@ function PlanComparisonScreen({
         .comparison-page .plan-course-actions button { border: 1px solid #b8b8c0; border-radius: .7rem; background: #fff; color: #253753; cursor: pointer; }
         .comparison-page .plan-course-edit-feedback.is-error { padding: .45rem .55rem; border: 1px solid #c85a4c; border-radius: .25rem; background: #fff2ef; color: #6f2119; font-weight: 600; }
         .comparison-page .plan-course-edit-feedback { padding: .65rem; margin: .25rem 0; background: #edf7f0; color: #195e36; border: 1px solid #a5c9b1; border-radius: .7rem; }
-        .comparison-page .compact-schedule .comparison-editable-course { display: flex; flex-wrap: nowrap; align-items: flex-start; gap: .1rem; padding: 0; font-size: 13px; }
+        .comparison-page .compact-schedule .comparison-editable-course { display: grid; gap: .05rem; padding: 0; font-size: 13px; }
+        .comparison-page .comparison-course-controls { display: flex; flex-wrap: nowrap; align-items: flex-start; gap: .1rem; min-width: 0; }
         .comparison-page .comparison-editable-course .plan-course-actions { display: block; flex: 1; margin: 0; min-width: 0; }
         .comparison-page .comparison-editable-course .course-drag-handle { flex: 0 0 20px; padding: 2px; margin: 0; font-size: 15px; line-height: 24px; border: 0; background: transparent; text-align: center; }
-        .comparison-page .comparison-editable-course .plan-course-actions > button { display: block; padding: 3px 2px; margin: 0; font-size: 13px; font-weight: 700; line-height: 1.35; min-height: 30px; width: auto; text-align: left; border: 0; border-radius: 4px; background: transparent; box-shadow: none; }
+        .comparison-page .comparison-editable-course .plan-course-actions > button { display: block; padding: 3px 2px; margin: 0; font-size: 16px; font-weight: 700; line-height: 1.3; min-height: 30px; width: auto; text-align: left; border: 0; border-radius: 4px; background: transparent; box-shadow: none; }
         .comparison-page .comparison-editable-course .plan-course-actions > button:hover { background: #f1ebfa; }
         .comparison-page .comparison-editable-course.comparison-different-course { background: #eee3ff; box-shadow: inset 4px 0 #6b3fa0; border-radius: 4px; }
         .comparison-page .comparison-editable-course.comparison-different-course button { color: #351b57; }
         .comparison-page .comparison-editable-course.comparison-shared-course button { color: #334155; }
         .comparison-page .comparison-fixed-course { display: grid; gap: 2px; margin-left: calc(20px + .1rem); padding: 3px 2px; line-height: 1.35; }
-        .comparison-page .comparison-fixed-course strong { font-size: 13px; }
+        .comparison-page .comparison-fixed-course strong { font-size: 16px; }
         .comparison-page .comparison-fixed-course small { font-size: 11px; font-weight: 400; color: #64748b; }
+        .comparison-page .comparison-course-meta { display: grid; gap: .08rem; margin: 0 0 .25rem calc(20px + .1rem); color: #53627a; font-size: 12px; font-weight: 400; line-height: 1.35; }
+        .comparison-page .comparison-course-meta .comparison-course-title { color: #3f4e64; font-size: 14px; line-height: 1.35; }
+        .comparison-page .comparison-course-meta .plan-course-availability { font-size: 12px; }
+        .comparison-page .comparison-course-meta .plan-course-approval strong { display: block; color: #76510b; font-weight: 700; }
+        .comparison-page .comparison-course-meta .plan-course-approval span { display: block; color: #53627a; font-size: 12px; font-weight: 400; }
+        .comparison-page .comparison-course-meta .course-constraint-note { color: #35445d; font-weight: 650; }
         .comparison-page .comparison-edit-status { margin: .25rem .7rem; font-size: 12px; }
         .comparison-page .comparison-undo { margin: .25rem .7rem; padding: .25rem .5rem; font-size: 12px; }
+        .comparison-page .comparison-plan-card .comparison-undo,
+        .comparison-page .comparison-plan-card .download-plan-button {
+          display: block;
+          box-sizing: border-box;
+          width: calc(100% - 1.4rem);
+          min-height: 44px;
+          margin: .25rem .7rem;
+          padding: .65rem .85rem;
+          font-size: 14px;
+          line-height: 1.2;
+        }
+        .comparison-page .comparison-plan-card .extra-course-picker { margin: .25rem .7rem; }
+        .comparison-page .comparison-plan-card .extra-course-picker > button {
+          box-sizing: border-box;
+          width: 100%;
+          min-height: 44px;
+          margin: 0;
+          padding: .65rem .85rem;
+          font-size: 14px;
+          line-height: 1.2;
+        }
         .comparison-page .compact-schedule tr.drop-allowed { background: #eaf8f0; outline: 2px solid #168264; }
         .comparison-page .compact-schedule tr.drop-conditional { background: #fffbeb; outline: 2px dashed #946200; }
         .comparison-page .comparison-drop-hint { display: block; font-size: .7rem; font-weight: normal; }
@@ -1983,6 +2015,9 @@ function PlanComparisonScreen({
             white-space: normal;
           }
           .comparison-content { width: min(100% - 1.25rem, 1460px); }
+          .compact-schedule th:first-child { width: 4.5rem; }
+          .compact-schedule th:nth-child(2) { width: 3rem; }
+          .compact-schedule td.comparison-academic-year { font-size: 12px; }
           .comparison-heading-row {
             align-items: flex-start;
             flex-direction: column;
@@ -2051,9 +2086,9 @@ function PlanComparisonScreen({
           >
             {isGenerating ? "Regenerating..." : "Regenerate all plans"}
           </button>
-          <button type="button" className="edit-courses-button" onClick={onEditCourses}>
+          {isPlanView && <button type="button" className="edit-courses-button" onClick={onEditCourses}>
             Edit answers
-          </button>
+          </button>}
           <button type="button" className="edit-courses-button clear-all-results" onClick={onClearAll}>
             Clear all
           </button>
@@ -2062,13 +2097,6 @@ function PlanComparisonScreen({
 
       <div className="comparison-content">
         {pdfStatus && <p className="pdf-download-status" role="status" aria-live="polite">{pdfStatus}</p>}
-        {!isPlanView && <button
-          type="button"
-          className="comparison-back"
-          onClick={isPlanView ? onBackToCompare : onEditCourses}
-        >
-          {isPlanView ? "← Back to plan comparison" : "← Back to course selection"}
-        </button>}
         <section className="comparison-course-status" aria-label="Selected course status">
           <p><strong>Graduation target</strong><span>{graduationTarget}</span></p>
           <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
@@ -2089,9 +2117,9 @@ function PlanComparisonScreen({
                   ? "Your feasible plan"
                   : "Your planning result"}</h1>
             <p className={!isPlanView && plans.length > 1 ? "plan-edit-instructions" : undefined}>{isPlanView
-              ? "Drag courses between terms to adjust your schedule."
+              ? "Drag by the ⠿ handle. Eligible terms highlight as you drag; other terms show if they need review or why they’re unavailable. You can also use Change."
               : plans.length > 1
-                ? <><strong>Drag ⠿ to move a course, or click a course for options.</strong><span>Moves depend on prerequisites, term limits, and when courses are offered.</span></>
+                ? <><strong>Drag ⠿ to move a course. Eligible terms highlight as you drag; click a course for options.</strong><span>Conditional terms need review; other terms show why they can’t be used.</span></>
                 : plans.length === 1
                   ? "The planner returned one validated schedule for this graduation target."
                   : "Review this result and the next step below."}</p>
@@ -2137,20 +2165,25 @@ function PlanComparisonScreen({
               const rows = rowsByPlan.get(plan.id) || [];
               const selected = selectedPlanId === plan.id;
               const invalid = plan.validation?.valid === false;
+              const mathSequenceNotes = acceleratedMathSequenceNotes(plan, COURSE_PREREQUISITES);
+              const planFeasibility = ({ VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" })[plan.feasibilityStatus] || "Plan needs confirmation";
               const showEarlyGraduationDetails = mergePossibleEarlyResult && plan.id === "one-year-early";
               return (
                 <article
                   className={`comparison-plan-card${selected ? " is-selected" : ""}`}
                   data-plan-id={plan.id}
+                  role="region"
+                  aria-labelledby={`comparison-plan-title-${plan.id}`}
                   key={plan.id}
                 >
                   <div className="comparison-plan-summary">
                     <div className="plan-title-row">
-                      <h2>{plan.label}</h2>
+                      <h2 id={`comparison-plan-title-${plan.id}`}>{plan.label}</h2>
                       {planBadge(plan) && <span className="plan-strategy-badge">{planBadge(plan)}</span>}
                       {showEarlyGraduationDetails && <span className="early-plan-status">Possible</span>}
                     </div>
                     {!showEarlyGraduationDetails && <p>{planDescription(plan)}</p>}
+                    <p className="plan-feasibility-value">Plan feasibility: {planFeasibility}</p>
                     {showEarlyGraduationDetails && (
                       <dl className="accelerated-target-list early-plan-graduation-dates" aria-label="Graduation dates">
                         <div><dt>Standard plan</dt><dd>{studentTermLabel(acceleratedResult.standardTarget)}</dd></div>
@@ -2172,14 +2205,14 @@ function PlanComparisonScreen({
                         {rows.map(row => (
                           <tr key={`${plan.id}-${row.key}`} data-year-start={row.yearRowSpan ? "true" : "false"} data-term-id={row.sourceTerm.slotId || row.sourceTerm.term} data-plan-scope={plan.id}
                             className={comparisonDrop?.planId === plan.id && comparisonDrop.destination.id === (row.sourceTerm.slotId || row.sourceTerm.term) ? "drop-pending" : comparisonDrag?.planId === plan.id ? `drop-${(comparisonDrag.course.moveDestinationOptions?.find(option => option.id === (row.sourceTerm.slotId || row.sourceTerm.term))?.status || "unavailable").toLowerCase()}` : undefined}>
-                            {row.yearRowSpan && <td rowSpan={row.yearRowSpan}>{row.academicYear}</td>}
+                            {row.yearRowSpan && <td className="comparison-academic-year" rowSpan={row.yearRowSpan}>{row.academicYear}</td>}
                             <td>{row.term}</td>
                             <td>
                               {row.sourceTerm.courses.length > 0 ? row.sourceTerm.courses.map(course => {
                                 const courseId = planCourseIdentity(course);
                                 const termId = row.sourceTerm.slotId || row.sourceTerm.term;
                                 return <div className={`comparison-editable-course${highlightDifferences ? sharedCoursesByRow.get(row.key)?.has(compactPlanCourse(course)) ? " comparison-shared-course" : " comparison-different-course" : ""}`} data-requirement-id={courseId} key={courseId}>
-                                  {!course.fixedInProgress && courseHasMoveControl(course) ? <>
+                                  {!course.fixedInProgress && courseHasMoveControl(course) ? <div className="comparison-course-controls">
                                     <CourseDragHandle compact course={course} termId={termId} planId={plan.id}
                                       busy={Boolean(editingPlanCourseKey) || isGenerating || isDownloadingPdf}
                                       setPendingDrop={setComparisonDrop} setDropMessage={setComparisonDropMessage}
@@ -2187,7 +2220,27 @@ function PlanComparisonScreen({
                                     <CourseChange compact course={course} termId={termId} planId={plan.id} onEdit={onEditPlanCourse}
                                       busy={Boolean(editingPlanCourseKey) || isGenerating || isDownloadingPdf} />
                                     {course.extra === true && <small>Extra</small>}
-                                  </> : <span className="comparison-fixed-course"><strong>{compactPlanCourse(course)}</strong>{course.fixedInProgress && <small>Taking now</small>}</span>}
+                                  </div> : <span className="comparison-fixed-course"><strong>{compactPlanCourse(course)}</strong>{course.fixedInProgress && <small>Taking now</small>}</span>}
+                                  <div className="comparison-course-meta">
+                                    {course.title && course.course !== "ECO elective" && <span className="comparison-course-title">{course.title}</span>}
+                                    {course.course === "ECO elective" && <span>Future offering unconfirmed</span>}
+                                    <CourseAvailabilityStatus course={course} term={row.sourceTerm} schedule={result?.annualSchedule} referenceDate={new Date().toISOString()} />
+                                    {course.preliminaryScheduleEvidence && <span>Preliminary schedule ({course.preliminaryScheduleEvidence.issuedOn}); course and term subject to change</span>}
+                                    {(course.planningMarkers || []).filter(marker => marker !== "Approval required" || course.approvalRequired?.length).map(marker => marker === "Approval required"
+                                      ? <div className="plan-course-approval" key={marker}>
+                                        <strong>Approval needed</strong>
+                                        {(course.approvalRequired || []).map((approval, index) => {
+                                          const authority = approval.authority || (approval.type === "instructor" ? `${course.course} instructor` : "Economics Department");
+                                          return <span key={`${approval.prerequisite || "prerequisite"}-${index}`}>
+                                            {approval.prerequisite
+                                              ? `Taking ${approval.prerequisite} and ${course.course} in the same term requires approval from the ${authority}.`
+                                              : `A concurrent prerequisite requires approval from the ${authority}.`}
+                                          </span>;
+                                        })}
+                                      </div>
+                                      : <span className="plan-course-approval" key={marker}>{studentFriendlyCourseMarker(marker)}</span>)}
+                                    {course.course === "ECO 461" && <span className="course-constraint-note">Senior-year Winter only{!course.fixedInProgress && !courseHasMoveControl(course) ? " · no other eligible term in this plan" : ""}</span>}
+                                  </div>
                                 </div>;
                               }) : <span className="comparison-empty-term">No major course assigned</span>}
                               {comparisonDrag?.planId === plan.id && <small className="comparison-drop-hint">{(() => {
@@ -2206,30 +2259,29 @@ function PlanComparisonScreen({
                   <ExtraCoursePicker plan={plan} onEdit={onEditPlanCourse} busy={Boolean(editingPlanCourseKey) || isGenerating || isDownloadingPdf} />
                   <button type="button" className="comparison-undo" disabled={isGenerating || Boolean(editingPlanCourseKey) || isDownloadingPdf}
                     aria-label={`Regenerate this plan: ${plan.label}`} onClick={() => onRegeneratePlan(plan.id)}>Regenerate this plan</button>
+                  <button type="button" className="download-plan-button" disabled={invalid || isGenerating || isDownloadingPdf || Boolean(editingPlanCourseKey)}
+                    aria-label={`Download PDF Report: ${plan.label}`} onClick={event => {
+                      downloadButtonRef.current = event.currentTarget;
+                      onDownloadPdf(plan.id);
+                    }}>{isDownloadingPdf ? "Creating PDF…" : "Download PDF Report"}</button>
                   <div className="comparison-plan-details">
-                    <details className="comparison-disclosure"><summary>Things to keep in mind</summary>
+                    <details className="comparison-disclosure" open><summary>Things to keep in mind</summary>
                       <PlanConditions plan={plan} catalog={report?.catalog} hideHeading />
                     </details>
                     <MajorRequirementsChecklist plan={plan} />
                     <details className="comparison-disclosure"><summary>More about this plan</summary>
-                      <div className="comparison-disclosure-content"><AdvisorAttention plan={plan} /></div>
+                      <div className="comparison-disclosure-content">
+                        {mathSequenceNotes.length > 0 && <ul className="plan-notes">
+                          {mathSequenceNotes.map(note => <li className="accelerated-math-sequence-note" role="note" key={note}>{note}</li>)}
+                        </ul>}
+                        <AdvisorAttention plan={plan} />
+                      </div>
                       <ScheduleAvailability schedule={result?.annualSchedule} plan={plan} />
                     </details>
                   </div>
-                  <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
+                  {planReadinessLabel(plan) !== displayedOverallStatus && <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
                     {planReadinessLabel(plan)}
-                  </p>
-                  <button type="button" className="download-plan-button" disabled={invalid || isGenerating || isDownloadingPdf || Boolean(editingPlanCourseKey)}
-                    aria-label={`Download PDF Report: ${plan.label}`} onClick={() => onDownloadPdf(plan.id)}>{isDownloadingPdf ? "Creating PDF…" : "Download PDF Report"}</button>
-                  <button
-                    type="button"
-                    className="choose-plan-button"
-                    aria-pressed={selected}
-                    aria-label={`${invalid ? "Review plan issues" : "View/edit this plan"}: ${plan.label}`}
-                    onClick={() => onChoosePlan(plan.id)}
-                  >
-                    {invalid ? "Review plan issues" : "View/edit this plan"}
-                  </button>
+                  </p>}
                 </article>
               );
             })}
@@ -2626,15 +2678,14 @@ export default function Page() {
     };
   }
 
-  function plannerUrl(view, planId = "") {
+  function plannerUrl(view) {
     const url = new URL(window.location.href);
     if (view === PLANNER_VIEWS.INPUT) {
       url.searchParams.delete("view");
       url.searchParams.delete("plan");
     } else {
-      url.searchParams.set("view", view);
-      if (view === PLANNER_VIEWS.PLAN && planId) url.searchParams.set("plan", planId);
-      else url.searchParams.delete("plan");
+      url.searchParams.set("view", PLANNER_VIEWS.COMPARE);
+      url.searchParams.delete("plan");
     }
     return `${url.pathname}${url.search}${url.hash}`;
   }
@@ -2653,7 +2704,7 @@ export default function Page() {
       ? nextPlanId
       : plans[0]?.id || "";
     const safeView = nextView === PLANNER_VIEWS.INPUT || report
-      ? nextView
+      ? nextView === PLANNER_VIEWS.PLAN ? PLANNER_VIEWS.COMPARE : nextView
       : PLANNER_VIEWS.INPUT;
     const historyState = {
       econPlanner: true,
@@ -2661,17 +2712,10 @@ export default function Page() {
       planId: safePlanId,
       previousView: plannerView
     };
-    if (!replace && plannerView === PLANNER_VIEWS.COMPARE && nextView === PLANNER_VIEWS.PLAN) {
-      window.history.replaceState(
-        { ...window.history.state, econPlanner: true, view: plannerView, planId: safePlanId },
-        "",
-        plannerUrl(plannerView, safePlanId)
-      );
-    }
     window.history[replace ? "replaceState" : "pushState"](
       historyState,
       "",
-      plannerUrl(safeView, safePlanId)
+      plannerUrl(safeView)
     );
     setSelectedPlanId(safePlanId);
     setPlannerView(safeView);
@@ -2786,7 +2830,7 @@ export default function Page() {
       window.history.replaceState(
         { econPlanner: true, view: initialView, planId: initialPlanId, previousView: null },
         "",
-        plannerUrl(initialView, initialPlanId)
+        plannerUrl(initialView)
       );
       window.history.scrollRestoration = "manual";
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -2864,24 +2908,29 @@ export default function Page() {
         : plannerViewFromSearch(window.location.search);
       const plans = economicsResult(report)?.economicsPlans || [];
       const requestedPlanId = event.state?.planId || new URLSearchParams(window.location.search).get("plan");
-      if (requestedView === PLANNER_VIEWS.PLAN && !plans.length) {
-        setPlannerView(PLANNER_VIEWS.COMPARE);
-        setSelectedPlanId("");
-        setStatus("");
-        window.history.replaceState(
-          { econPlanner: true, view: PLANNER_VIEWS.COMPARE, planId: "", previousView: PLANNER_VIEWS.INPUT },
-          "",
-          plannerUrl(PLANNER_VIEWS.COMPARE)
-        );
-        return;
-      }
+      const safeView = requestedView === PLANNER_VIEWS.PLAN ? PLANNER_VIEWS.COMPARE : requestedView;
 
       const safePlanId = plans.some(plan => plan.id === requestedPlanId)
         ? requestedPlanId
         : plans[0]?.id || "";
+      if (planEditInFlightRef.current) {
+        planEditRequestRef.current += 1;
+        planEditAbortRef.current?.abort();
+        planEditAbortRef.current = null;
+        planEditInFlightRef.current = false;
+        setEditingPlanCourseKey("");
+        setPlanEditFeedback(null);
+      }
       setSelectedPlanId(safePlanId);
-      setPlannerView(requestedView);
+      setPlannerView(safeView);
       setPlanEditStatus("");
+      if (safeView !== requestedView) {
+        window.history.replaceState(
+          { ...window.history.state, econPlanner: true, view: safeView, planId: safePlanId },
+          "",
+          plannerUrl(safeView)
+        );
+      }
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
 
@@ -3290,7 +3339,7 @@ export default function Page() {
           previousView: plannerView
         },
         "",
-        plannerUrl(PLANNER_VIEWS.COMPARE, firstPlanId)
+        plannerUrl(PLANNER_VIEWS.COMPARE)
       );
       setStatus("");
       window.requestAnimationFrame(() => {
@@ -3800,8 +3849,7 @@ export default function Page() {
           onReviewTimeline={() => returnToInputStep(1)}
           onClearAll={() => setClearDialogOpen(true)}
           onBackToCompare={() => navigateBackTo(PLANNER_VIEWS.COMPARE)}
-          onChoosePlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
-          onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.PLAN, planId)}
+          onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.COMPARE, planId)}
           onRegenerate={() => mapMajors()}
           onRegeneratePlan={planId => mapMajors(null, planId)}
           onDownloadPdf={downloadSelectedPlanPdf}
@@ -4485,7 +4533,6 @@ export default function Page() {
                 <div className="step-two-heading">
                   <div>
                     <h2 id="your-courses-heading">Your course history</h2>
-                    <p className="cp7-task-intro">Only choose courses that apply to you.</p>
                   </div>
                   <button type="button" className="secondary-action" onClick={() => setIntakeStep(1)}>Back to about you</button>
                 </div>

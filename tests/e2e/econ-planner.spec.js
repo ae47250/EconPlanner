@@ -24,16 +24,17 @@ async function reviewBalanced(page) {
   await chooseStanding(page, "freshman");
   await continueToCourses(page);
   await generatePlans(page);
-  await visitPlan(page, "balanced");
-  await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
+  const card = await visitPlan(page, "balanced");
+  await expect(card.getByRole("heading", { name: "Balanced", exact: true })).toBeVisible();
 }
 
 async function visibleSchedule(page) {
-  return page.locator(".term-card").evaluateAll(cards => cards.map(card => ({
-    academicYear: card.dataset.academicYear,
-    termKey: card.dataset.termKey,
-    courses: [...card.querySelectorAll(".plan-course-summary > strong")].map(course => course.textContent.trim())
-  })));
+  return page.locator("article.comparison-plan-card.is-selected .compact-schedule tr[data-term-id]")
+    .evaluateAll(rows => rows.map(row => ({
+      termId: row.dataset.termId,
+      courses: [...row.querySelectorAll(".comparison-editable-course button[aria-label^='Change '], .comparison-editable-course .comparison-fixed-course > strong")]
+        .map(course => course.textContent.trim())
+    })));
 }
 
 for (const responseStatus of [422, 200]) {
@@ -49,11 +50,11 @@ for (const responseStatus of [422, 200]) {
     explore.terms[1].courses.push(...explore.terms[0].courses);
     explore.terms[0].courses = [];
     await openFixtureResult(page, plannerResultFixture({ plans: [balanced, explore] }));
-    await visitPlan(page, "balanced");
-    await expect(page.getByRole("heading", { name: "Review Balanced" })).toBeVisible();
+    const card = await visitPlan(page, "balanced");
+    await expect(card.getByRole("heading", { name: "Balanced", exact: true })).toBeVisible();
     const originalSchedule = await visibleSchedule(page);
-    await page.getByRole("button",{name:"Change ECO 113",exact:true}).click();
-    const moveControl = page.locator('.plan-course-actions[aria-label="Changes for ECO 113"]');
+    await card.getByRole("button",{name:"Change ECO 113",exact:true}).click();
+    const moveControl = card.locator('.plan-course-actions[aria-label="Changes for ECO 113"]');
 
     await page.unroute("**/api/majors/map");
     await page.route("**/api/majors/map", async route => {
@@ -71,11 +72,11 @@ for (const responseStatus of [422, 200]) {
 
     await expect(moveControl.locator('button[data-change-choice="move:2027-WINTER"]')).toHaveCount(1);
     await moveControl.locator('[data-change-choice="move:2027-WINTER"]').click();
-    await expect(page.locator(".plan-course-edit-feedback")).toContainText("same material schedule");
+    await expect(card.locator(".comparison-edit-status")).toContainText("same material schedule");
     await expect(page.locator(".plan-edit-status")).toHaveText("Change could not be saved.");
     await expect(page.locator(".plan-edit-status")).not.toContainText("updated and remains valid");
     await expect.poll(() => visibleSchedule(page)).toEqual(originalSchedule);
-    await expect(page.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
+    await expect(card.getByRole("button", { name: "Undo last plan edit" })).toHaveCount(0);
     await expect(moveControl.locator('[data-change-choice="move:2027-WINTER"]')).toBeFocused();
   });
 }
@@ -437,7 +438,7 @@ test("accelerated results expose the backend Possible, Not possible, and More in
       await expect(earlyPlan).toContainText("May 2030");
       await expect(earlyPlan).toContainText("This plan");
       await expect(earlyPlan).toContainText("May 2029");
-      await expect(earlyPlan.locator(".comparison-plan-summary > p")).toHaveCount(0);
+      await expect(earlyPlan.locator(".comparison-plan-summary > p:not(.plan-feasibility-value)")).toHaveCount(0);
     } else {
       await expect(page.locator(".accelerated-result-status")).toHaveText(label);
       await expect(page.locator(".accelerated-result")).toContainText(`Backend accelerated finding: ${label}.`);
@@ -570,10 +571,11 @@ for (const [math, economics] of [
       { slotId: "eco", academicYear: "2026-2027", termKey: "Winter", term: "Winter 2027", displayTerm: "Winter 2027", courses: [{ course: economics, title: "Intermediate Economics" }] }
     ];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
-    await visitPlan(page, "one-year-early");
-    await expect(page.locator(".accelerated-math-sequence-note")).toContainText(`${math} is scheduled before ${economics}`);
-    await expect(page.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
-    await expect(page.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
+    const card = await visitPlan(page, "one-year-early");
+    await card.getByText("More about this plan", { exact: true }).click();
+    await expect(card.locator(".accelerated-math-sequence-note")).toContainText(`${math} is scheduled before ${economics}`);
+    await expect(card.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
+    await expect(card.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
   });
 }
 
@@ -601,10 +603,10 @@ for (const [math, economics] of [
       ]
     }];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
-    await visitPlan(page, "one-year-early");
-    await expect(page.locator(".accelerated-math-sequence-note")).toHaveCount(0);
-    await expect(page.locator(".plan-course-approval")).toContainText("Approval needed");
-    await expect(page.locator("[data-plan-conditions]")).toContainText(approvalWarning);
+    const card = await visitPlan(page, "one-year-early");
+    await expect(card.locator(".accelerated-math-sequence-note")).toHaveCount(0);
+    await expect(card.locator(".plan-course-approval")).toContainText("Approval needed");
+    await expect(card.locator("[data-plan-conditions]")).toContainText(approvalWarning);
   });
 }
 
@@ -669,12 +671,14 @@ test("a freshman receives the Balanced and Explore the Major normal comparisons"
   await expect(page.locator('article[data-plan-id="explore-first"]')).toBeVisible();
   await expect(page.locator('article[data-plan-id="one-year-early"]')).toHaveCount(0);
 
-  await visitPlan(page, "explore-first");
-  await expect(page.getByRole("heading", { name: "Review Explore the Major" })).toBeVisible();
-  await expect(page.locator(".plan-course-availability")).not.toHaveCount(0);
-  await expect(page.locator(".plan-course-availability").first()).toHaveText("Seat availability not confirmed");
+  const card = await visitPlan(page, "explore-first");
+  await expect(card.getByRole("heading", { name: "Explore the Major", exact: true })).toBeVisible();
+  await expect(card.locator(".plan-course-availability")).not.toHaveCount(0);
+  await expect(card.locator(".plan-course-availability").first()).toHaveText("Seat availability not confirmed");
 
-  const availability = page.locator("details.schedule-availability");
+  const aboutPlan = card.locator(".comparison-plan-details > details.comparison-disclosure").last();
+  await aboutPlan.locator(":scope > summary").click();
+  const availability = card.locator("details.schedule-availability");
   await expect(availability).toBeVisible();
   await expect(availability).not.toHaveAttribute("open", "");
   await availability.locator(":scope > summary").click();
@@ -722,7 +726,7 @@ test("CP5 displays distinct Balanced, Explore the Major, and One Year Early plan
 test("PDF download recovers cleanly after failed and aborted requests", async ({ page }) => {
   await reviewBalanced(page);
 
-  const download = page.getByRole("button", { name: "Download PDF" });
+  const download = page.locator('article[data-plan-id="balanced"]').getByRole("button", { name: "Download PDF Report: Balanced", exact: true });
   await page.route("**/api/reports/economics", route => route.fulfill({
     status: 503,
     contentType: "application/json",
@@ -765,7 +769,7 @@ test("backend conditions and advisor actions retain their student-facing distinc
   });
   await openFixtureResult(page, plannerResultFixture({ plans: [conditional] }));
   await expect(page.locator(".result-status-value")).toHaveText("Needs confirmation");
-  await expect(page.locator("[data-plan-conditions]")).toContainText("Confirm successful completion of the current course.");
+  await expect((await visitPlan(page, conditional.id)).locator("[data-plan-conditions]")).toContainText("Confirm successful completion of the current course.");
 
   await page.unroute("**/api/majors/map");
   const advisor = fixturePlan({
@@ -775,7 +779,7 @@ test("backend conditions and advisor actions retain their student-facing distinc
   });
   await openFixtureResult(page, plannerResultFixture({ plans: [advisor] }));
   await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
-  await expect(page.locator("[data-plan-conditions]")).toContainText("Meet with your advisor to confirm this approval.");
+  await expect((await visitPlan(page, advisor.id)).locator("[data-plan-conditions]")).toContainText("Meet with your advisor to confirm this approval.");
 });
 
 for (const authority of ["ECO 213 instructor", "Economics Department"]) {
@@ -801,10 +805,10 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     const generated = await generatePlans(page);
     const student = generated.request().postDataJSON().student;
     let selectedPlan = (await generated.json()).programs.find(item => item.program.id === "economics-base").economicsPlans.find(plan => plan.id === "balanced");
-    await visitPlan(page, "balanced");
+    const card = await visitPlan(page, "balanced");
     if (instructor) {
-      await page.getByRole("button", { name: "Change ECO 213", exact: true }).click();
-      const actions = page.locator('.plan-course-actions[aria-label="Changes for ECO 213"]');
+      await card.getByRole("button", { name: "Change ECO 213", exact: true }).click();
+      const actions = card.locator('.plan-course-actions[aria-label="Changes for ECO 213"]');
       await actions.locator('[data-change-choice="move:fall-2027"]').click();
       await expect(actions).toContainText("instructor permission");
       const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/majors/map") && response.request().postDataJSON()?.action === "validate-plan");
@@ -814,11 +818,12 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
       selectedPlan = (await response.json()).plan;
     }
     expect(selectedPlan.feasibilityStatus).toBe("CONDITIONALLY_FEASIBLE");
-    await expect(page.locator("[data-plan-conditions]")).toContainText(message);
-    const badges = page.locator(".plan-course-approval");
+    await expect(card.locator("[data-plan-conditions]")).toContainText(message);
+    const badges = card.locator(".plan-course-approval");
     expect(await badges.count()).toBeGreaterThan(0);
-    for (const badge of await badges.all()) await expect(badge).toHaveText("Approval needed");
-    await expect(page.locator(`[data-requirement-checklist-id="${course.toLowerCase().replace(" ", "-")}"] .checklist-marker`).filter({ hasText: "Approval needed" })).toHaveCount(1);
+    for (const badge of await badges.all()) await expect(badge).toContainText("Approval needed");
+    await expect(badges.first()).toContainText(authority);
+    await expect(card.locator(`[data-requirement-checklist-id="${course.toLowerCase().replace(" ", "-")}"] .checklist-marker`).filter({ hasText: "Approval needed" })).toHaveCount(1);
     await expect(page.locator("body")).not.toContainText("Advisor approval needed");
     await page.screenshot({ path: testInfo.outputPath("approval-ui.png"), fullPage: true });
     const htmlResponse = await page.request.post("/api/reports/economics", { data: { student, selectedPlan, preparedDate: student.planCreationDate, format: "html" } });

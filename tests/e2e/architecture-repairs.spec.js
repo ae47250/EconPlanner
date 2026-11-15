@@ -1,5 +1,5 @@
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan, oracleEvaluateOffering } from "../oracle/load-canonical-policy.js";
-import { visitPlan } from "./cp7-helpers.js";
+import { selectedPlanCard, visitPlan } from "./cp7-helpers.js";
 import {test, expect} from './nightly-observability.js';
 import AxeBuilder from '@axe-core/playwright';
 import {writeFile, readFile} from 'node:fs/promises';
@@ -37,8 +37,9 @@ async function move(page, course, destination, status = 200) {
     return data;
   }
   const label = course === 'ECO elective' ? 'ECO elective (200+)' : course;
-  await page.getByRole('button',{name:`Change ${label}`,exact:true}).first().click();
-  const menu = page.getByRole('region',{name:`Change ${label} options`,exact:true}).first();
+  const planCard = selectedPlanCard(page);
+  await planCard.getByRole('button',{name:`Change ${label}`,exact:true}).click();
+  const menu = planCard.getByRole('region',{name:`Change ${label} options`,exact:true});
   const response = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
   const option = menu.locator(`[data-change-choice="move:${destination}"]`);
   const conditional = await option.getAttribute('data-change-status') === 'CONDITIONAL';
@@ -47,11 +48,11 @@ async function move(page, course, destination, status = 200) {
   const result = await response;
   const body = await result.json();
   expect(result.status(), JSON.stringify(body)).toBe(status);
-  await expect(page.locator('.plan-course-edit-feedback')).toContainText('Moved to');
+  await expect(planCard.locator('.comparison-edit-status')).toContainText('Moved to');
   return body;
 }
 
-async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {failFirst = false} = {}) {
+async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {failFirst = false, planId = "balanced"} = {}) {
   let attempt = 0;
   const requests = [];
   let report;
@@ -73,9 +74,13 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     });
     expect(completeAudit.violations,JSON.stringify(completeAudit)).toEqual([]);
     expect(completeAudit.uncheckedRuleFamilies,JSON.stringify(completeAudit)).toEqual([]);
+    const planCard = page.locator(`article.comparison-plan-card[data-plan-id="${actual.selectedPlan.id}"]`);
     for (const term of actual.selectedPlan.terms) {
-      const displayed = await page.locator(`[data-term-id="${term.slotId}"] .plan-course-summary > strong`).allTextContents();
-      expect(displayed.map(text=>text.replace(' (200+)', '')).sort()).toEqual(term.courses.map(course=>course.course).sort());
+      const displayed = await planCard.locator(`.compact-schedule [data-term-id="${term.slotId}"] .comparison-editable-course`).evaluateAll(rows => rows.map(row => {
+        const control = row.querySelector('.plan-course-actions > button');
+        return control ? control.getAttribute('aria-label').replace(/^Change /, '').replace(' (200+)', '') : row.querySelector('.comparison-fixed-course > strong')?.textContent.trim();
+      }));
+      expect(displayed.sort()).toEqual(term.courses.map(course=>course.course).sort());
     }
     if (failFirst && ++attempt === 1) {
       await route.fulfill({status:504, contentType:'application/json', body:JSON.stringify({error:'PDF creation timed out. Please try again.'})});
@@ -120,7 +125,10 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     await writeFile(testInfo.outputPath(`${name}.txt`), text);
     await route.fulfill({contentType:'application/pdf', body:bytes});
   });
-  const button = page.getByRole('button', {name:'Download PDF Report', exact:true});
+  const planLabel = await page.evaluate(id => JSON.parse(sessionStorage.getItem('econ-planner-generated-session'))
+    .report.programs.find(program => program.economicsPlans)?.economicsPlans.find(plan => plan.id === id)?.label, planId);
+  const button = page.locator(`article.comparison-plan-card[data-plan-id="${planId}"]`)
+    .getByRole('button', {name:`Download PDF Report: ${planLabel}`, exact:true});
   if (failFirst) {
     await button.focus();
     await page.keyboard.press('Enter');
@@ -153,7 +161,7 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const payload = await response.json();
   const plans = payload.programs.find(p => p.program.id === 'economics-base').economicsPlans;
   expect(plans.map(p => p.id)).toEqual(['balanced','explore-first','one-year-early']);
-  await expect(page.getByText('Drag ⠿ to move a course, or click a course for options.')).toBeVisible();
+  await expect(page.locator('.plan-edit-instructions')).toContainText('Eligible terms highlight as you drag');
   await expect(page.locator('.projection-readiness-note')).toHaveCount(0);
   await expect(page.locator('.comparison-grid')).toBeVisible();
   const conditionsFollowPlans = await page.locator('.comparison-grid').evaluate(grid => {
@@ -167,17 +175,14 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   await expect(earlyPlanCard).toContainText('May 2030');
   await expect(earlyPlanCard).toContainText('This plan');
   await expect(earlyPlanCard).toContainText('May 2029');
-  await expect(earlyPlanCard.locator('.comparison-plan-summary > p')).toHaveCount(0);
+  await expect(earlyPlanCard.locator('.comparison-plan-summary > p:not(.plan-feasibility-value)')).toHaveCount(0);
   await expect(page.locator('.accelerated-result')).toHaveCount(0);
-  await page.getByRole('button',{name:`View/edit this plan: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
-  const target = page.locator('.comparison-course-status p').filter({hasText:'Graduation target'});
+  await visitPlan(page, 'one-year-early');
+  const target = earlyPlanCard.locator('.early-plan-graduation-dates');
   await expect(target).toContainText('May 2029');
   await reloadPlanner(page);
   await expect(target).toContainText('May 2029');
-  await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await page.getByRole('button',{name:`View/edit this plan: ${plans.find(plan=>plan.id==='one-year-early').label}`,exact:true}).click();
-  await expect(target).toContainText('May 2029');
-  await exportLocalPdf(page,browser,testInfo,'early','Spring/May 2029',{failFirst:true});
+  await exportLocalPdf(page,browser,testInfo,'early','Spring/May 2029',{failFirst:true,planId:'one-year-early'});
   const valid = await move(page,'MAT 217','winter-2027');
   const statistics = valid.plan.terms.find(t => t.slotId === 'winter-2027').courses.find(c => c.course === 'MAT 217');
   expect(['J','K','L','M']).toContain(statistics.section);
@@ -186,27 +191,27 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const invalid = await move(page,'MAT 217','winter-2029',422);
   expect(invalid.error).toMatch(/prerequisite|statistics/i);
   expect(invalid.error).not.toMatch(/Fall 2028|projected standing/);
-  await expect(page.locator('.plan-course-actions[aria-label="Changes for MAT 217"]')).toHaveAttribute('data-current-term','move:winter-2027');
+  await expect(selectedPlanCard(page).locator('.plan-course-actions[aria-label="Changes for MAT 217"]')).toHaveAttribute('data-current-term','move:winter-2027');
   const unsupported = await move(page,'ECO elective','fall-2028',422);
   expect(unsupported.error).toMatch(/elective|term limit/i);
-  await page.locator('.term-card li').filter({has:page.locator('.plan-course-summary > strong',{hasText:'MAT 217'})}).first().locator('.course-drag-handle').dragTo(page.locator('[data-term-id="winter-2029"] h4'));
+  const earlyCard = selectedPlanCard(page);
+  await earlyCard.locator('.comparison-editable-course:has(button[aria-label="Change MAT 217"]) .course-drag-handle').dragTo(earlyCard.locator('.compact-schedule [data-term-id="winter-2029"]'));
   expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('econ-planner-generated-session')).report)).toEqual(beforeRejection);
-  const electiveControl = page.locator('.plan-course-actions[aria-label="Changes for ECO elective (200+)"]').first();
+  const electiveControl = earlyCard.locator('.plan-course-actions[aria-label="Changes for ECO elective (200+)"]').first();
   await expect(electiveControl).toHaveAttribute('data-current-term','move:fall-2027');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
-  await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029');
-  await page.getByRole('button',{name:'Compare plans',exact:true}).click();
-  await page.getByRole('button',{name:'View/edit this plan: Balanced',exact:true}).click();
-  await expect(target).toContainText('May 2030');
+  await exportLocalPdf(page,browser,testInfo,'early-edited','Spring/May 2029',{planId:'one-year-early'});
+  const balancedCard = await visitPlan(page, 'balanced');
+  await expect(balancedCard).toContainText('May 2030');
   await expect(page.locator('.pdf-download-status')).toHaveCount(0);
-  const balanced = await exportLocalPdf(page,browser,testInfo,'balanced','Spring/May 2030');
+  const balanced = await exportLocalPdf(page,browser,testInfo,'balanced','Spring/May 2030',{planId:'balanced'});
   expect(balanced.inputSummary).toContain('Planning pace: standard');
   expect(balanced.inputSummary).not.toContain('one year early');
-  await page.getByRole('button',{name:plans.find(plan=>plan.id==='one-year-early').label,exact:true}).click();
-  await page.getByRole('button',{name:'Undo last plan edit',exact:true}).click();
+  const restoredEarlyCard = await visitPlan(page, 'one-year-early');
+  await restoredEarlyCard.getByRole('button',{name:'Undo last plan edit',exact:true}).click();
   await reloadPlanner(page);
-  await expect(page.locator('.plan-course-actions[aria-label="Changes for MAT 217"]')).toHaveAttribute('data-current-term','move:spring-2027');
-  await exportLocalPdf(page,browser,testInfo,'early-undone','Spring/May 2029');
+  await expect(selectedPlanCard(page).locator('.plan-course-actions[aria-label="Changes for MAT 217"]')).toHaveAttribute('data-current-term','move:spring-2027');
+  await exportLocalPdf(page,browser,testInfo,'early-undone','Spring/May 2029',{planId:'one-year-early'});
   await page.screenshot({path:testInfo.outputPath('balanced-review.png'),fullPage:true,animations:'disabled'});
 });
 
@@ -224,16 +229,17 @@ test('required controls explain restrictions while mobile elective editing and k
   await visitPlan(page, "balanced");
   await expect(page.getByRole('button',{name:'Remove ECO 113',exact:true})).toHaveCount(0);
   await expect(page.getByRole('button',{name:'Remove BUSN 323',exact:true})).toHaveCount(0);
-  await expect(page.getByRole('button',{name:'Change ECO 113',exact:true})).toBeVisible();
+  const planCard = selectedPlanCard(page);
+  await expect(planCard.getByRole('button',{name:'Change ECO 113',exact:true})).toBeVisible();
   const edited = page.waitForResponse(r=>r.url().endsWith('/api/majors/map')&&r.request().postDataJSON()?.action==='validate-plan');
-  await page.getByRole('button',{name:'Change ECO elective (200+)',exact:true}).last().click();
-  const menu = page.getByRole('region',{name:'Change ECO elective (200+) options',exact:true}).last();
+  await planCard.getByRole('button',{name:'Change ECO elective (200+)',exact:true}).first().click();
+  const menu = planCard.getByRole('region',{name:'Change ECO elective (200+) options',exact:true}).first();
   const option = menu.locator('[data-change-choice="move:fall-2029"]');
   const conditional = await option.getAttribute('data-change-status') === 'CONDITIONAL';
   await option.click();
   if (conditional) await menu.getByRole('button',{name:'Apply change',exact:true}).click();
   expect((await edited).status()).toBe(200);
-  await expect(page.locator('.plan-course-edit-feedback')).toContainText('Moved to');
+  await expect(planCard.locator('.comparison-edit-status')).toContainText('Moved to');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await page.locator('main').evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)));
   expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations).toEqual([]);
@@ -243,8 +249,8 @@ test('required controls explain restrictions while mobile elective editing and k
 test('course cards explain when no move preserves prerequisite validity', async ({page}) => {
   await intake(page, 'freshman', true);
   await generatePlans(page);
-  await visitPlan(page, "one-year-early");
-  const coreCard = page.locator('.term-card li').filter({hasText:'ECO 113'}).first();
+  const planCard = await visitPlan(page, "one-year-early");
+  const coreCard = planCard.locator('.comparison-editable-course:has(button[aria-label="Change ECO 113"])').first();
   await coreCard.getByRole('button',{name:'Change ECO 113',exact:true}).click();
   await expect(coreCard).toContainText('Not confirmed for May.');
   await expect(coreCard).toContainText('ECO 213 needs ECO 113 first. Move ECO 213 later, then try again.');
@@ -259,7 +265,7 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
   for(const code of ['ECO 113','ECO 114','MAT 113','MAT 217','ECO 213','ECO 214','BUSN 323','ECO 161','ECO 221','ECO 222','ECO 234']) await setCourseStatus(page,code,'Completed');
   const ready = await (await generatePlans(page)).json();
   expect(ready.programs.find(p=>p.program.id==='economics-base').economicsPlans.length).toBeGreaterThan(0);
-  await page.getByRole('button',{name:'← Back to course selection',exact:true}).click();
+  await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await setCourseStatus(page,'MAT 217','Completed');
   await generatePlans(page);
   await expect(page.locator('.result-status-value')).toHaveText('Not possible');
@@ -268,7 +274,7 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
   await expect(page.locator('details.result-diagnostics')).toContainText('statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term');
   await expect(page.locator('details.result-diagnostics li')).toHaveCount(1);
   await page.screenshot({path:testInfo.outputPath('senior-blocker.png'),fullPage:true,animations:'disabled'});
-  await page.getByRole('button',{name:'← Back to course selection',exact:true}).click();
+  await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await expect(page.getByRole('group',{name:'Status for MAT 217',exact:true}).getByRole('button',{name:'Completed',exact:true})).toHaveAttribute('aria-pressed','false');
   await expect(page.getByRole('group',{name:'Status for ECO 213',exact:true}).getByRole('button',{name:'Completed',exact:true})).toHaveAttribute('aria-pressed','true');
 });
@@ -442,7 +448,7 @@ test('student readiness and exported feasibility are distinct and the course men
   await visitPlan(page, plan.id);
   await expect(page.locator('.result-status-value')).toHaveText('Ready to plan');
   await expect(page.locator('.comparison-course-status')).toContainText('Student readiness');
-  await expect(page.locator('.result-feasibility-value')).toHaveText('Plan feasibility: Conditional plan');
+  await expect(page.locator(`article[data-plan-id="${plan.id}"] .plan-feasibility-value`)).toHaveText('Plan feasibility: Conditional plan');
   await expect(page.locator('.result-status-reason')).toContainText('does not mean registration is confirmed');
   const report = await page.request.post('/api/reports/economics', {data:{
     student:response.request().postDataJSON().student, selectedPlan:plan,
@@ -451,11 +457,9 @@ test('student readiness and exported feasibility are distinct and the course men
   expect(report.status()).toBe(200);
   const reportPage = await browser.newPage();
   await reportPage.setContent(await report.text());
-  await expect(reportPage.locator('.plan-details h2')).toHaveText(await page.locator('.result-feasibility-value').textContent());
+  await expect(reportPage.locator('.plan-details h2')).toHaveText(await page.locator(`article[data-plan-id="${plan.id}"] .plan-feasibility-value`).textContent());
   await reportPage.close();
-  for (const compare of [false, true]) {
-    if (compare) await page.getByRole('button', {name:'Compare plans',exact:true}).click();
-    for (const width of [1440, 1280, 820, 390]) {
+  for (const width of [1440, 1280, 820, 390]) {
       await page.setViewportSize({width,height:900});
       const trigger = page.getByRole('button', {name:/^Change /}).first();
       await trigger.click();
@@ -472,10 +476,9 @@ test('student readiness and exported feasibility are distinct and the course men
         const r = button.getBoundingClientRect();
         return button.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
       })).toBe(true);
-      if (width === 1440) await testInfo.attach(compare ? 'comparison-menu' : 'plan-menu', {body:await page.screenshot({path:testInfo.outputPath(compare ? 'comparison-menu.png' : 'plan-menu.png')}),contentType:'image/png'});
+      if (width === 1440) await testInfo.attach('comparison-menu', {body:await page.screenshot({path:testInfo.outputPath('comparison-menu.png')}),contentType:'image/png'});
       await close.click();
       await expect(menu).toHaveCount(0);
       await expect(trigger).toBeFocused();
-    }
   }
 });
