@@ -282,11 +282,11 @@ test("progress navigation returns to About you and advances to Your courses", as
   await expect(page.getByText("Your plans", { exact: true })).toHaveAttribute("aria-disabled", "true");
 });
 
-test("ordinary intake hides catalog selection and states the active planning basis", async ({ page }) => {
+test("ordinary intake asks for the formal declaration year and explains the governing basis", async ({ page }) => {
   await resetPlanner(page);
   await chooseStanding(page, "freshman");
-  await expect(page.getByLabel(/catalog year/i)).toHaveCount(0);
-  await expect(page.getByText("Planning requirements: 2025–2026 Economics catalog and confirmed department policies.", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("When did you formally declare Economics?")).toBeVisible();
+  await expect(page.getByText("Economics major requirements follow your formal declaration year.", { exact: true })).toBeVisible();
   await expect(page.getByText(/official degree audit may differ/i)).toBeVisible();
 });
 

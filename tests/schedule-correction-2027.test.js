@@ -18,7 +18,7 @@ import { loadCanonicalPolicy, oracleEvaluateTermLoad, oracleEvaluateOffering, or
 const bundle = runtimePolicyBundle();
 const approval = {advisorApproval: "APPROVED", academicProbationStatus: "NOT_ON_ACADEMIC_PROBATION"};
 const history = ["ECO 113", "ECO 114", "ECO 161", "ECO 213", "ECO 214", "ECO 221", "MAT 113", "MAT 217"];
-const studentFor = (standing, overload) => ({academicStanding: standing, planningPace: standing === "junior" ? "one_year_early" : "standard", planCreationDate: "2026-09-27", courses: history.map(code => ({code, status: "completed", units: 1, source: "manual_code"})), termLoadOverrides: overload ? {"winter-2027": approval, "spring-2027": approval} : {}});
+const studentFor = (standing, overload) => ({majorDeclarationCatalogYear: "2025-2026", academicStanding: standing, planningPace: standing === "junior" ? "one_year_early" : "standard", planCreationDate: "2026-09-27", courses: history.map(code => ({code, status: "completed", units: 1, source: "manual_code"})), termLoadOverrides: overload ? {"winter-2027": approval, "spring-2027": approval} : {}});
 
 for (const standing of ["junior", "senior"]) for (const overload of [false, true]) test(`${standing} May 2027 proof with approved overload=${overload}`, async () => {
   const student = studentFor(standing, overload);
@@ -176,7 +176,7 @@ test("the proposed Winter finance/capstone/elective combination is rejected for 
 });
 
 test("approved Winter overload, move blockers and server validation use the same recorded units", async () => {
-  const student = {academicStanding:"senior",planCreationDate:"2026-09-27",courses:["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","BUSN 323","ECO 260","ECO 234"].map(code=>({code,status:"completed",units:1,source:"manual_code"})),reservedCourseUnits:{"winter-2027":2,"spring-2027":1},termLoadOverrides:{"winter-2027":approval}};
+  const student = {majorDeclarationCatalogYear: "2025-2026", academicStanding:"senior",planCreationDate:"2026-09-27",courses:["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","BUSN 323","ECO 260","ECO 234"].map(code=>({code,status:"completed",units:1,source:"manual_code"})),reservedCourseUnits:{"winter-2027":2,"spring-2027":1},termLoadOverrides:{"winter-2027":approval}};
   const request = payload => POST(new Request("http://localhost/api/majors/map",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)}));
   const response = await request({student});
   assert.equal(response.status,200);

@@ -2924,8 +2924,8 @@ async function writeCp4bBFollowupArtifacts(summary) {
     acceptance: {
       completeIncumbentLosses: counts.completeIncumbentLosses,
       baselineInvalidRemainingInvalid: invalidRows.filter(row => row.newNoPlanReason === "INVALID_INPUT").length,
-      catalogSet: "2025-2026",
-      catalog2026_2027CreatedOrActivated: false,
+      catalogSet: "DECLARATION_YEAR",
+      catalog2026_2027CreatedOrActivated: true,
       fullPolicyChanged: false,
       legacyRetired: false,
       cp5Started: false

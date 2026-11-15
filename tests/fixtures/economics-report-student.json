@@ -2,6 +2,7 @@
   "student": {
     "displayName": "Sample Student",
     "entryCatalogYear": "2025-2026",
+    "majorDeclarationCatalogYear": "2025-2026",
     "academicStanding": "senior",
     "expectedGraduationTerm": "Spring 2027",
     "courses": [

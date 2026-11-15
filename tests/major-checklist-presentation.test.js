@@ -9,7 +9,7 @@ import { buildMajorRequirementsChecklist } from "../lib/planning/plan-presentati
 import { availabilityIsStale, seatStatusPresentation } from "../lib/planning/seat-status.js";
 
 const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
-const sample = { displayName: "Fictional checklist student", academicStanding: "sophomore", entryCatalogYear: "2025-2026",
+const sample = { displayName: "Fictional checklist student", academicStanding: "sophomore", entryCatalogYear: "2025-2026", majorDeclarationCatalogYear: "2025-2026",
   planningPace: "one_year_early", planCreationDate: "2026-09-28", courses: [] };
 const order = ["ECO 113", "ECO 114", "Mathematics", "ECO 213", "ECO 214", "Statistics", "Finance", "ECO 461 / Senior Seminar",
   "Economics elective 1", "Economics elective 2", "Economics elective 3", "Economics elective 4"];

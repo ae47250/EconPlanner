@@ -1,0 +1,253 @@
+{
+  "prerequisitesByCatalogYear": {
+    "2023-2024": {
+      "ECO 213": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 214": {
+        "all": [
+          "ECO 114"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 221": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": []
+      },
+      "ECO 257": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114"
+          ]
+        ]
+      },
+      "ECO 321": {
+        "all": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "ECO 461": {
+        "all": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "any": [
+          [
+            "ECO 257",
+            "MAT 217"
+          ]
+        ]
+      }
+    },
+    "2024-2025": {
+      "ECO 213": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 214": {
+        "all": [
+          "ECO 114"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 221": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": []
+      },
+      "ECO 257": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114"
+          ]
+        ]
+      },
+      "ECO 321": {
+        "all": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "ECO 461": {
+        "all": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "any": [
+          [
+            "ECO 257",
+            "MAT 217",
+            "PSY 217"
+          ]
+        ]
+      }
+    },
+    "2025-2026": {
+      "ECO 213": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 214": {
+        "all": [
+          "ECO 114"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 221": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": []
+      },
+      "ECO 257": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114"
+          ]
+        ]
+      },
+      "ECO 321": {
+        "all": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "ECO 461": {
+        "all": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "any": [
+          [
+            "ECO 257",
+            "MAT 217",
+            "PSY 217"
+          ]
+        ]
+      }
+    },
+    "2026-2027": {
+      "ECO 213": {
+        "all": [
+          "ECO 113"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 214": {
+        "all": [
+          "ECO 114"
+        ],
+        "any": [
+          [
+            "MAT 113",
+            "MAT 121",
+            "READY_FOR_CALCULUS_PLACEMENT"
+          ]
+        ]
+      },
+      "ECO 221": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114",
+            "ECO 161"
+          ]
+        ]
+      },
+      "ECO 257": {
+        "all": [],
+        "any": [
+          [
+            "ECO 113",
+            "ECO 114"
+          ]
+        ]
+      },
+      "ECO 321": {
+        "all": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "any": []
+      },
+      "ECO 461": {
+        "all": [
+          "ECO 213",
+          "ECO 214"
+        ],
+        "any": [
+          [
+            "ECO 257",
+            "MAT 217",
+            "PSY 217"
+          ]
+        ]
+      }
+    }
+  },
+  "program": "ECONOMICS",
+  "schemaVersion": "1.0.0"
+}

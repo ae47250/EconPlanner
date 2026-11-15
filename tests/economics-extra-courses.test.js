@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {loadCanonicalPolicy,oracleEvaluateCanonicalPlan,oracleEvaluatePrerequisite} from './oracle/load-canonical-policy.js';
 import { handleEconomicsReportRequest } from '../app/api/reports/economics/route.js';
 import { POST } from '../app/api/majors/map/route.js';
-const student = { academicStanding: 'sophomore', planCreationDate: '2026-10-17', courses: [
+const student = { majorDeclarationCatalogYear: '2025-2026', academicStanding: 'sophomore', planCreationDate: '2026-10-17', courses: [
   { code: 'ECO 113', status: 'completed' }, { code: 'ECO 114', status: 'completed' }
 ] };
 async function post(body) {

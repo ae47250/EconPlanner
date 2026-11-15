@@ -48,7 +48,7 @@ test("whole-plan production and independent Oracle enforce Taking now chronology
     const edges = [...rule.all.map(code => ({code,kind:"all"})), ...rule.any.flatMap((group,index) => group.map(code => ({code,kind:"any",index})))];
     for (const edge of edges) {
       const baseline = [...rule.all.filter(code => code !== edge.code), ...rule.any.flatMap((group,index) => edge.kind === "any" && edge.index === index ? [] : [group[0]])];
-      const student = {academicStanding:"senior",planCreationDate:"2027-01-11",courses:[...completed(baseline),{code:edge.code,status:"in_progress"}]};
+      const student = {majorDeclarationCatalogYear:"2025-2026",academicStanding:"senior",planCreationDate:"2027-01-11",courses:[...completed(baseline),{code:edge.code,status:"in_progress"}]};
       for (const [termKey, academicYear, expected] of [["Fall","2026/2027",false],["Winter","2026/2027",false],["Fall","2027/2028",true]]) {
         const term = {termKey,academicYear,slotId:`${termKey.toLowerCase()}-${termKey === "Winter" ? 2027 : Number(academicYear.slice(0,4))}`,courses:[{course:dependent,source:"projected-offering",requirementId:"prerequisite-probe"}]};
         const actual = evaluatePlan({terms:[term]}, normalizeStudentFacts(student,bundle), {}, bundle).decisions.find(decision => decision.ruleIds.includes(ruleId) && decision.reasonCode !== "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW");
@@ -68,7 +68,7 @@ test("whole-plan production and independent Oracle enforce Taking now chronology
 });
 
 for (const math of ["MAT 113","MAT 121"]) test(`${math} Taking now supports later generation, allocation, move validation and report evidence`, async () => {
-  const student = {academicStanding:"freshman",planCreationDate:"2026-08-24",courses:[...completed(["ECO 113","ECO 114"]), {code:math,status:"in_progress",units:1}],scheduleSetByTerm:{"fall-2026":true}};
+  const student = {majorDeclarationCatalogYear:"2025-2026",academicStanding:"freshman",planCreationDate:"2026-08-24",courses:[...completed(["ECO 113","ECO 114"]), {code:math,status:"in_progress",units:1}],scheduleSetByTerm:{"fall-2026":true}};
   const generated = await post({student});
   assert.equal(generated.response.status,200);
   const mapped = economics(generated.data);
@@ -93,7 +93,7 @@ const boundaryHistory = ["ECO 113","ECO 114","ECO 213","MAT 113","MAT 217","ECO 
 // Fictional profile: four remaining Winter courses and one May elective. The
 // prior broader two-reservation fixture remains in schedule-correction-2027.
 for (const standing of ["senior","junior"]) for (const reserved of [0,1]) test(`${standing} exact four Winter plus one May boundary with ${reserved} reserved Winter unit`, async () => {
-  const student = {academicStanding:standing,planningPace:standing === "junior" ? "one_year_early" : "standard",planCreationDate:"2026-09-28",courses:completed(boundaryHistory),reservedCourseUnits:{"winter-2027":reserved},termLoadOverrides:reserved ? {"winter-2027":approval} : {}};
+  const student = {majorDeclarationCatalogYear:"2025-2026",academicStanding:standing,planningPace:standing === "junior" ? "one_year_early" : "standard",planCreationDate:"2026-09-28",courses:completed(boundaryHistory),reservedCourseUnits:{"winter-2027":reserved},termLoadOverrides:reserved ? {"winter-2027":approval} : {}};
   const {response,data} = await post({student});
   assert.equal(response.status,200);
   const mapped = economics(data);
@@ -141,7 +141,7 @@ test("load classifications distinguish missing, partial, denied, probation, appr
 
 test("missing overload evidence keeps normal solver capacity and returns More information needed in API and reports", async () => {
   for (const standing of ["senior","junior"]) {
-    const student = {academicStanding:standing,planningPace:standing === "junior" ? "one_year_early" : "standard",planCreationDate:"2026-09-28",courses:completed(boundaryHistory),reservedCourseUnits:{"winter-2027":1}};
+    const student = {majorDeclarationCatalogYear:"2025-2026",academicStanding:standing,planningPace:standing === "junior" ? "one_year_early" : "standard",planCreationDate:"2026-09-28",courses:completed(boundaryHistory),reservedCourseUnits:{"winter-2027":1}};
     const {data} = await post({student});
     const mapped = economics(data);
     const result = standing === "junior" ? mapped.economicsAcceleratedResult : mapped.economicsPlanResult;
@@ -160,7 +160,7 @@ test("verified ECO 161-J and ECO 321-J conflict in Winter 2027 across validator,
   assert.deepEqual(sections[0].meeting.days,["Tue","Thu"]);
   assert.deepEqual(sections[1].meeting.days,["Tue","Thu"]);
   assert.equal(meetingsConflict(...sections),true);
-  const student = {academicStanding:"senior",customGraduationEnabled:true,customExpectedGraduationYear:"2028",planCreationDate:"2026-09-28",courses:completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","BUSN 323","ECO 221","ECO 234"])};
+  const student = {majorDeclarationCatalogYear:"2025-2026",academicStanding:"senior",customGraduationEnabled:true,customExpectedGraduationYear:"2028",planCreationDate:"2026-09-28",courses:completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","BUSN 323","ECO 221","ECO 234"])};
   const {data} = await post({student});
   const mapped = economics(data);
   let plan = structuredClone(mapped.economicsPlans[0]);
@@ -199,7 +199,7 @@ test("verified ECO 161-J and ECO 321-J conflict in Winter 2027 across validator,
 });
 
 test("move annotations, direct API edits and report rejection agree at every Winter overload boundary", async () => {
-  const student = {academicStanding:"senior",customGraduationEnabled:true,customExpectedGraduationYear:"2028",planCreationDate:"2026-09-28",courses:completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","BUSN 323","ECO 221","ECO 234"])};
+  const student = {majorDeclarationCatalogYear:"2025-2026",academicStanding:"senior",customGraduationEnabled:true,customExpectedGraduationYear:"2028",planCreationDate:"2026-09-28",courses:completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","BUSN 323","ECO 221","ECO 234"])};
   const generated = economics((await post({student})).data);
   const plan = structuredClone(generated.economicsPlans[0]);
   const schedule = normalizeEconomicsSchedule(runtimeEconomicsSchedule());
@@ -252,7 +252,7 @@ test("move annotations, direct API edits and report rejection agree at every Win
 
 test("future-dated January 11, 2027 Taking now ECO 161 conflicts with ECO 321; September intake stays separate", async () => {
   // This is a future Winter-day test, not the September 28 student's history.
-  const student = {academicStanding:"senior",planCreationDate:"2027-01-11",courses:[...completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","ECO 221","ECO 234","ECO 222"]),{code:"ECO 161",status:"in_progress",units:1}]};
+  const student = {majorDeclarationCatalogYear:"2025-2026",academicStanding:"senior",planCreationDate:"2027-01-11",courses:[...completed(["ECO 113","ECO 114","ECO 213","ECO 214","MAT 113","MAT 217","ECO 221","ECO 234","ECO 222"]),{code:"ECO 161",status:"in_progress",units:1}]};
   const {data} = await post({student});
   const mapped = economics(data);
   assert.equal(mapped.economicsPlans.length,0,"The fixed verified ECO 161 meeting must exclude ECO 321 from Winter generation");

@@ -11,6 +11,7 @@
       "executionMode": "rendered-html",
       "selectedPlanId": "balanced",
       "student": {
+        "majorDeclarationCatalogYear": "2025-2026",
         "displayName": "Fictional Zoë & José — LongValueABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
         "academicStanding": "freshman",
         "planCreationDate": "2026-07-30",
@@ -20,8 +21,8 @@
         "minimumAcademicYears": 4,
         "minimumCourses": 12,
         "minimumWarnings": 3,
-        "minimumAdvisorNotices": 1,
-        "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
+        "minimumAdvisorNotices": 0,
+        "requiredAdvisorNoticeCodes": [],
         "minimumApprovals": 0,
         "minimumHtmlBytes": 18000,
         "minimumPdfPages": 3,
@@ -40,6 +41,7 @@
       "executionMode": "report-route",
       "selectedPlanId": "balanced",
       "student": {
+        "majorDeclarationCatalogYear": "2025-2026",
         "displayName": "Fictional Approval Layout Student",
         "academicStanding": "senior",
         "planCreationDate": "2026-07-30",
@@ -65,6 +67,7 @@
       "executionMode": "report-route",
       "selectedPlanId": "one-year-early",
       "student": {
+        "majorDeclarationCatalogYear": "2025-2026",
         "displayName": "Fictional Accelerated Student",
         "academicStanding": "sophomore",
         "planningPace": "one_year_early",
@@ -101,6 +104,7 @@
       "executionMode": "report-route",
       "selectedPlanId": "balanced",
       "student": {
+        "majorDeclarationCatalogYear": "2025-2026",
         "displayName": "Fictional Transfer Student",
         "isTransferStudent": true,
         "transferExpectedGraduationYear": "2027",
@@ -149,6 +153,7 @@
       "preparedDate": "2027-07-30",
       "selectedPlanId": "balanced",
       "student": {
+        "majorDeclarationCatalogYear": "2025-2026",
         "displayName": "Fictional ECO 257 Statistics Student",
         "academicStanding": "senior",
         "planCreationDate": "2027-07-30",
@@ -181,8 +186,8 @@
         "minimumAcademicYears": 1,
         "minimumCourses": 2,
         "minimumWarnings": 0,
-        "minimumAdvisorNotices": 1,
-        "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
+        "minimumAdvisorNotices": 0,
+        "requiredAdvisorNoticeCodes": [],
         "minimumApprovals": 0,
         "minimumPdfPages": 1,
         "requiredPlanType": "standard",

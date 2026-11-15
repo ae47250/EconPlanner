@@ -170,7 +170,7 @@ import { POST as mapPost } from '../app/api/majors/map/route.js';
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan, oracleEvaluateStanding } from './oracle/load-canonical-policy.js';
 const mapRequest = body => mapPost(new Request('http://localhost/api/majors/map',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}));
 test('generation uses open current-term slots and restored/edit submissions reject them after closure', async () => {
-  const student = {academicStanding:'freshman',planCreationDate:'2026-08-24',courses:[]};
+  const student = {majorDeclarationCatalogYear: "2025-2026", academicStanding:'freshman',planCreationDate:'2026-08-24',courses:[]};
   const response = await mapRequest({student});
   assert.equal(response.status,200);
   const data = await response.json();
@@ -184,7 +184,7 @@ test('generation uses open current-term slots and restored/edit submissions reje
   assert.ok(result.findings.some(finding => finding.reasonCode === 'CURRENT_TERM_NEW_PLACEMENT_CLOSED'));
 });
 test('a forged term flag cannot make Taking now prerequisites completed in the current term', () => {
-  const student = {academicStanding:'sophomore',planCreationDate:'2026-08-24',courses:[{code:'ECO 113',status:'in_progress'},{code:'MAT 113',status:'completed'}]};
+  const student = {majorDeclarationCatalogYear: "2025-2026", academicStanding:'sophomore',planCreationDate:'2026-08-24',courses:[{code:'ECO 113',status:'in_progress'},{code:'MAT 113',status:'completed'}]};
   const plan = {terms:[{academicYear:'2026/2027',yearIndex:0,termKey:'Fall',inProgressPrerequisitesAvailable:true,courses:[{course:'ECO 213',requirementId:'eco-213'}]}],unscheduled:[]};
   const result = evaluatePlan(plan,normalizeStudentFacts(student),resolvePlanningContext(student),bundle);
   assert.ok(result.decisions.some(decision => decision.status === 'BLOCK' && decision.ruleIds.includes('PREREQ-ECO-213')));

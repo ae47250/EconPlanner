@@ -11,6 +11,7 @@ import {
 } from "../lib/planning/horizon.js";
 import {
   buildPrerequisiteFollowUp,
+  coursePrerequisitesForCatalogYear,
   validateStudentPrerequisites
 } from "../lib/planning/prerequisiteFormValidation.js";
 import { acceleratedMathSequenceNotes } from "../lib/planning/acceleratedMathSequence.js";
@@ -2641,7 +2642,9 @@ export default function Page() {
   const juniorStudyAbroadSlots = planningSlots.filter(slot => !slot.isSummer && slot.absoluteStandingIndex === 2);
   const planningSlotIdSignature = planningSlots.map(slot => slot.id).join("|");
   const planningStart = planningSlots[0]?.label || "To be confirmed";
-  const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
+  const currentEnrollmentCatalogYear = String(planningContext.currentCatalogYear || "").replace("/", "-");
+  const inputPrerequisites = coursePrerequisitesForCatalogYear(COURSE_PREREQUISITES, currentEnrollmentCatalogYear);
+  const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, inputPrerequisites);
   const pendingDependentCourseCodes = [...new Set(inputPrerequisiteValidation.issues.map(item => item.course))];
   const transferOptions = transferPlanningOptions(planningContext);
   const standingQuestion = planningContext.isSummer
@@ -3521,7 +3524,7 @@ export default function Page() {
       course: course.code,
       targetStatus,
       courses: formData.courses,
-      prerequisites: COURSE_PREREQUISITES
+      prerequisites: inputPrerequisites
     });
     if (!followUp.required && !followUp.conditionalApprovals.length) return null;
     const hasExplicitConflict = followUp.questions.some(hasExplicitPrerequisiteConflict);
@@ -4311,6 +4314,29 @@ export default function Page() {
                   </div>
                   <p className="custom-timeline-copy">{standingHelp}</p>
                 </fieldset>
+                <div className="custom-fields">
+                  <label htmlFor="major-declaration-catalog-year">
+                    <span>When did you formally declare Economics?</span>
+                    <select
+                      id="major-declaration-catalog-year"
+                      value={formData.majorDeclarationCatalogYear}
+                      onChange={event => {
+                        setFormData(current => ({...current, majorDeclarationCatalogYear: event.target.value}));
+                        clearInputFeedback();
+                      }}
+                    >
+                      <option value="">Choose a declaration catalog year</option>
+                      <option value="2023-2024">2023–2024</option>
+                      <option value="2024-2025">2024–2025</option>
+                      <option value="2025-2026">2025–2026</option>
+                      <option value="2026-2027">2026–2027</option>
+                      <option value="I_DO_NOT_KNOW">I don’t know</option>
+                    </select>
+                  </label>
+                </div>
+                {formData.majorDeclarationCatalogYear === "I_DO_NOT_KNOW" && (
+                  <p role="status">Your major requirements stay preliminary until your declaration catalog year is confirmed.</p>
+                )}
                 {formData.academicStanding && !formData.isTransferStudent && !formData.customGraduationEnabled && (
                   <p className="standing-feedback">
                     Based on {planningContext.standingLabel.toLowerCase()} standing, we’ll plan through <strong>{studentTermLabel(planningContext.expectedGraduationTerm)}</strong>.
@@ -4425,8 +4451,8 @@ export default function Page() {
                   )}
                 </div>
                 <div className="catalog-planning-note">
-                  <strong>Planning requirements: 2025–2026 Economics catalog and confirmed department policies.</strong>
-                  <p>Your official degree audit may differ. If an older declaration catalog applies, your advisor can confirm whether routine SAC paperwork is needed.</p>
+                  <strong>Economics major requirements follow your formal declaration year.</strong>
+                  <p>Your official degree audit may differ. Using a newer complete requirement set requires recorded approval; ask your advisor to confirm which set governs your major.</p>
                 </div>
                 <details className="more-details">
                   <summary>More details</summary>

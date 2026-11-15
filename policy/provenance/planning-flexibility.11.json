@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "econ-planning-flexibility.11",
+  "sources": [
+    {
+      "sourceId": "OWNER-CONFIRMATION-CP5-2026-08-09",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project-owner planning preference",
+      "authorityBoundary": "ECONOMICS_PLANNING_STRATEGY_RANKING_ONLY",
+      "locator": "CP5 Codex task, project-owner messages dated 2026-08-09",
+      "confirmedOn": "2026-08-09",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "statement": "Balanced and Explore the Major remain separate searches. Balanced prefers feasible even pacing. Explore is available only in effective freshman and sophomore contexts, is compared at yearIndex 0 with the selected same-context Balanced plan, must be lighter and materially distinct, and softly prefers a nondecreasing backloaded distribution. Two or three final-year tracked requirements are common and four is acceptable; this is nonblocking planning guidance, not Hanover academic policy.",
+      "anchors": [
+        "STRATEGY-PREFERENCES"
+      ],
+      "effective": {
+        "from": "2026-08-09",
+        "through": null
+      },
+      "supersedes": "Earlier owner-approved planning strategy wording and the Explore First public label"
+    },
+    {
+      "sourceId": "OWNER-CONFIRMATION-CP7-2026-08-09",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project-owner product decision",
+      "authorityBoundary": "ECONOMICS_NONACADEMIC_PLANNING_STRATEGY_ELIGIBILITY_ONLY",
+      "locator": "CP7 Codex task, project-owner request dated 2026-08-09",
+      "confirmedOn": "2026-08-09",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "statement": "One Year Early is offered to students whose effective standing is freshman, sophomore, or junior. Junior students see the same one-year-early strategy as Graduate next year. Senior requests are safely normalized to the standard graduation timeline. This is a nonacademic product and strategy-eligibility decision and does not change plan feasibility or academic policy.",
+      "anchors": [
+        "ONE-YEAR-EARLY-ELIGIBILITY"
+      ],
+      "effective": {
+        "from": "2026-08-09",
+        "through": null
+      },
+      "supersedes": "The earlier One Year Early strategy contract limited to freshman and sophomore contexts"
+    },
+    {
+      "sourceId": "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project-owner product decision",
+      "authorityBoundary": "ECONOMICS_CATALOG_DEFAULT_SELECTION_ONLY",
+      "locator": "CP7 Codex task, project-owner request dated 2026-08-09",
+      "confirmedOn": "2026-08-09",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "statement": "Ordinary Economics planning uses the latest officially published requirement set that has been independently verified and explicitly activated by the project owner. Discovery alone never activates a new catalog. The current verified and activated default remains 2025-2026.",
+      "anchors": [
+        "CATALOG-DEFAULT"
+      ],
+      "effective": {
+        "from": "2026-08-09",
+        "through": null
+      },
+      "supersedes": "The owner-designation wording for the same current 2025-2026 default"
+    },
+    {
+      "sourceId": "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project-owner planning preference",
+      "authorityBoundary": "ECONOMICS_NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES_ONLY",
+      "locator": "Current Codex task, project-owner request dated 2026-08-10",
+      "confirmedOn": "2026-08-10",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "statement": "Balanced distributes total planner-tracked load as evenly as feasible with remainders in later usable years. Explore uses a lighter first planned year and backloads remaining work, including a 2/3/3/4 full freshman target for twelve tracked requirements. Annual and within-year targets use actual capacity after fixed Taking now courses and other reservations. Full-year preferred term shapes are 1/1/1 for three, equally preferred 1/2/1 and 2/1/1 for four, and 2/2/1 for five, with no preferred Spring/May target above one. Explore ranks 1/1/0 ahead of the other separated two-course shapes and same-term arrangements only as rescue candidates. These preferences rank academically valid plans and never change feasibility, requirements, prerequisites, offerings, capacity, or readiness.",
+      "anchors": [
+        "CAPACITY-AWARE-PACING"
+      ],
+      "effective": {
+        "from": "2026-08-10",
+        "through": null
+      },
+      "supersedes": "Earlier incomplete implementation details for Balanced remainder placement and within-year distribution"
+    },
+    {
+      "sourceId": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "ECONOMICS_OFFERING_PROJECTION_AND_CONSISTENT_TERM_PLACEMENT",
+      "path": "policy/provenance/offering-policy-2026-09-26.md",
+      "sha256": "f97ee7afcab40d19f20ce9e2b2f5b82f469eae5c51262b5eb619f18f43bc4093",
+      "effective": {
+        "from": "2026-09-26",
+        "through": null
+      },
+      "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
+    },
+    {
+      "sourceId": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION",
+      "path": "policy/provenance/canonical-consumption-2026-09-27.md",
+      "sha256": "9a5018fb2eb76643cc58b715dc93115f95aedea938b3e4f2ea3f8884246a8516",
+      "effective": {
+        "from": "2026-09-27",
+        "through": null
+      },
+      "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
+    },
+    {
+      "sourceId": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert; supplied Registrar correspondence",
+      "authorityBoundary": "ECONOMICS_FINANCE_ALLOCATION_AND_ELECTIVE_PETITION_NOTICE",
+      "path": "policy/provenance/finance-elective-clarification-2026-10-31.md",
+      "sha256": "19e97a064f7a8782a425f69e3d057fe7b2aec5a284ce2945a1bbe44fb4fb506a",
+      "confirmedOn": "2026-10-31",
+      "reviewer": "Project owner, explicit implementation instruction",
+      "effective": {
+        "from": "2026-10-31",
+        "through": null
+      },
+      "supersedes": "Automatic ECO 321 elective credit when BUSN 323 fills finance"
+    },
+    {
+      "sourceId": "HANOVER-CATALOG-2026-2027",
+      "sourceType": "OFFICIAL_CATALOG",
+      "authority": "Hanover College",
+      "authorityBoundary": "2026-2027_FIRST-ENROLLMENT_HANOVER_CORE_AND_ECONOMICS_COURSE_DESIGNATIONS",
+      "path": "data/raw/hanover/catalog/2026-2027/general-degree-evidence.md",
+      "sha256": "d5b7362b46afaaa65cc86f27ca4f3c330205eb9eb5eb0f0373ba2bb68d9ae936",
+      "url": "https://catalog.hanover.edu/",
+      "catalogYear": "2026-2027",
+      "retrievedOn": "2026-11-15",
+      "anchors": [
+        "Hanover-Core-Curriculum",
+        "Economics-Courses"
+      ],
+      "supersedes": null
+    },
+    {
+      "sourceId": "OWNER-CATALOG-AUTHORITY-2026-11-15",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "ECONOMICS_MAJOR_DECLARATION_SCOPE_AND_TERM_SPECIFIC_PREREQUISITES",
+      "path": "policy/provenance/catalog-authority-2026-11-15.md",
+      "sha256": "ef50a643353c12c8ecfe404a31e22054b56853f1e45d575bf9eba01420208fd4",
+      "anchors": ["MAJOR-AND-COURSE-SCOPE"],
+      "effective": {"from": "2026-11-15", "through": null},
+      "supersedes": "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09"
+    }
+  ]
+}

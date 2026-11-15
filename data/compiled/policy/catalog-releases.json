@@ -5,36 +5,44 @@
     "mappingPath": "active.json"
   },
   "activeRuntimeMappingChanged": false,
-  "latestAuthoritativePublishedCatalogYear": "2025-2026",
+  "latestAuthoritativePublishedCatalogYear": "2026-2027",
   "program": "ECONOMICS",
   "releases": [
     {
-      "activationStatus": "PENDING_OWNER_APPROVAL",
-      "bundleVersion": "econ-catalog-2023-2024.1",
+      "activationStatus": "OWNER_AUTHORIZED_DECLARATION_YEAR",
+      "bundleVersion": "econ-catalog-2023-2024.3",
       "catalogYear": "2023-2024",
-      "contentHash": "sha256:d03b85e6c4a59e84627d20d9aa2c169bbb6a3a33a6bead38d656bb77d2737e91",
+      "contentHash": "sha256:6865315459d79b6762cba5edd38600eec0ea426b5dcc2964c493044c5fb81e4e",
       "publicationStatus": "AUTHORITATIVE_PUBLISHED",
-      "releasePath": "releases/econ-catalog-2023-2024.1/bundle.json"
+      "releasePath": "releases/econ-catalog-2023-2024.3/bundle.json"
     },
     {
-      "activationStatus": "PENDING_OWNER_APPROVAL",
-      "bundleVersion": "econ-catalog-2024-2025.1",
+      "activationStatus": "OWNER_AUTHORIZED_DECLARATION_YEAR",
+      "bundleVersion": "econ-catalog-2024-2025.3",
       "catalogYear": "2024-2025",
-      "contentHash": "sha256:a51d46da65f84acd98c960e83e3a7a3ef78efc8156f48456641130f2aa47c60f",
+      "contentHash": "sha256:b456db7dda9ce159dae6d48cf31ebe8f27089a1230b62583a099e981a899be65",
       "publicationStatus": "AUTHORITATIVE_PUBLISHED",
-      "releasePath": "releases/econ-catalog-2024-2025.1/bundle.json"
+      "releasePath": "releases/econ-catalog-2024-2025.3/bundle.json"
     },
     {
-      "activationStatus": "PENDING_OWNER_APPROVAL",
-      "bundleVersion": "econ-catalog-2025-2026.3",
+      "activationStatus": "OWNER_AUTHORIZED_DECLARATION_YEAR",
+      "bundleVersion": "econ-catalog-2025-2026.5",
       "catalogYear": "2025-2026",
-      "contentHash": "sha256:5286b11d137a7e76c29ee100ee9cec8af72b36c4407f61789d4eaaaca4c90390",
+      "contentHash": "sha256:cf95cdb4cc54931022e8620767938faa9c91a1ec91d7686ae2293faf6827d30c",
       "publicationStatus": "AUTHORITATIVE_PUBLISHED",
-      "releasePath": "releases/econ-catalog-2025-2026.3/bundle.json"
+      "releasePath": "releases/econ-catalog-2025-2026.5/bundle.json"
+    },
+    {
+      "activationStatus": "OWNER_AUTHORIZED_DECLARATION_YEAR",
+      "bundleVersion": "econ-catalog-2026-2027.2",
+      "catalogYear": "2026-2027",
+      "contentHash": "sha256:556bb345fbd3c5b06c9a42c874dac25748ca1ac84127317299e61239bf8a0e46",
+      "publicationStatus": "AUTHORITATIVE_PUBLISHED",
+      "releasePath": "releases/econ-catalog-2026-2027.2/bundle.json"
     }
   ],
   "schemaVersion": "1.0.0",
   "unavailableCatalogYears": [
-    "2026-2027"
+    "2027-2028"
   ]
 }

@@ -18,7 +18,7 @@ const oracleSchedule = JSON.parse(await readFile(
 ));
 
 test("ordinary freshman plans agree with the independent policy Oracle and early edits rebuild evidence", async () => {
-  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
   const generated = await postMap({student});
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   assert.equal(plans.length, 3);
@@ -66,7 +66,7 @@ test("ordinary freshman plans agree with the independent policy Oracle and early
 });
 
 test("moving a concurrent intermediate before ECO 461 removes a no-longer-required concurrent approval", async () => {
-  const student = {
+  const student = { majorDeclarationCatalogYear: "2025-2026",
     academicStanding: "junior", planCreationDate: "2026-07-30",
     courses: completed(["MAT 113", "ECO 161", "ECO 221"])
   };
@@ -107,7 +107,7 @@ test("moving a concurrent intermediate before ECO 461 removes a no-longer-requir
 });
 
 test("senior statistics explanation follows the actual horizon and disappears when statistics are satisfied", async () => {
-  const student = {academicStanding: "senior", planCreationDate: "2026-09-23", courses: completed([
+  const student = { majorDeclarationCatalogYear: "2025-2026",academicStanding: "senior", planCreationDate: "2026-09-23", courses: completed([
     "ECO 113", "ECO 114", "MAT 113", "MAT 217", "ECO 213", "ECO 214", "BUSN 323", "ECO 161", "ECO 221", "ECO 222", "ECO 234"
   ])};
   const result = async () => (await postMap({student})).data.programs.find(item => item.program.id === "economics-base");
@@ -207,7 +207,7 @@ function completed(codes) {
 function profile(name) {
   const student = PROFILES[name];
   assert.ok(student, `Missing Task 15 profile ${name}.`);
-  return structuredClone(student);
+  return { ...structuredClone(student), majorDeclarationCatalogYear: "2025-2026" };
 }
 
 async function postMap(body) {
@@ -638,7 +638,7 @@ test("Task 15 API rejects missing and wrong approval metadata", async () => {
 });
 
 test("Task 15 accepts one Fall course with three reserved spaces and rejects two", async () => {
-  const student = {
+  const student = { majorDeclarationCatalogYear: "2025-2026",
     ...profile("verifiedFiveRemaining"),
     reservedCourseUnits: { "fall-2026": 3 }
   };
@@ -879,7 +879,7 @@ test("Task 15 disagreement registry is explicit and contains no unclassified fin
 
 
 test("compact saved inputs preserve canonical validation, controls and report evidence across all three plans", async () => {
-  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
   const result = await postMap({ student });
   const plans = result.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   const inputs = plans.map(compactEconomicsPlanForValidation);

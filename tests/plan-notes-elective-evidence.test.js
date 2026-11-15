@@ -15,7 +15,7 @@ const oracle = await loadCanonicalPolicy();
 const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
 const economicsCourses = JSON.parse(await readFile(new URL("../policy/courses/economics.json", import.meta.url), "utf8")).courses;
 const completed = codes => codes.map(code => ({ code, status: "completed", units: 1 }));
-const sample = { displayName: "Fictional PDF sample", academicStanding: "sophomore", entryCatalogYear: "2025-2026",
+const sample = { displayName: "Fictional PDF sample", academicStanding: "sophomore", entryCatalogYear: "2025-2026", majorDeclarationCatalogYear: "2025-2026",
   planCreationDate: "2026-09-28", planningPace: "one_year_early", courses: [] };
 async function post(payload) {
   const response = await POST(new Request("http://localhost/api/majors/map", { method: "POST",
@@ -202,7 +202,7 @@ test("direct API and saved-plan edits cannot add two future electives or a named
 });
 
 test("late entrants retain an explicit extra-elective need and unconfirmed adjunct dependency", async () => {
-  const student = { academicStanding: "senior", customGraduationEnabled: true, customExpectedGraduationYear: "2028",
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "senior", customGraduationEnabled: true, customExpectedGraduationYear: "2028",
     planCreationDate: "2027-08-24", courses: completed(["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323"]) };
   const result = economics((await post({ student })).data);
   assert.equal(result.economicsPlans.length, 0);
@@ -215,7 +215,7 @@ test("late entrants retain an explicit extra-elective need and unconfirmed adjun
 
 
 test("early graduation exposes the extra elective need while keeping standard plans within the limit", async () => {
-  const student = { academicStanding: "junior", planningPace: "one_year_early", planCreationDate: "2027-07-30",
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "junior", planningPace: "one_year_early", planCreationDate: "2027-07-30",
     courses: completed(["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323"]) };
   const result = economics((await post({ student })).data);
   assert.ok(result.economicsPlans.length);
@@ -228,7 +228,7 @@ test("early graduation exposes the extra elective need while keeping standard pl
 
 test("BUSN 323 preference preserves verified ECO 321 when BUSN cannot fit and exposes a future finance gap", async () => {
   const codes = ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "ECO 161", "ECO 221", "ECO 234"];
-  const student = { academicStanding: "senior", planCreationDate: "2026-07-30", courses: completed(codes) };
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "senior", planCreationDate: "2026-07-30", courses: completed(codes) };
   for (const [reservedCourseUnits, expected] of [[{}, "BUSN 323"], [{"fall-2026": 4}, "ECO 321"]]) {
     const result = economics((await post({ student: { ...student, reservedCourseUnits } })).data);
     assert.ok(result.economicsPlans.length);

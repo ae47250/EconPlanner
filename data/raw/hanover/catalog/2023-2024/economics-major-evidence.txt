@@ -11,7 +11,7 @@ Major requirements: ECO 113, ECO 114, ECO 213, ECO 214; one Statistics course fr
 [ECONOMICS-PREREQUISITES]
 Locator: printed pages 89-90, PDF pages 92-93, Economics course descriptions
 Evidence transcription:
-ECO 213 requires ECO 113 and MAT 113, MAT 121, or ready-for-calculus placement. ECO 214 requires ECO 114 and MAT 113, MAT 121, or ready-for-calculus placement. ECO 257 requires ECO 113 or ECO 114. ECO 321 requires ECO 113 and ECO 114. ECO 461 requires ECO 213, ECO 214, and ECO 257 or MAT 217.
+ECO 213 requires ECO 113 and MAT 113, MAT 121, or ready-for-calculus placement. ECO 214 requires ECO 114 and MAT 113, MAT 121, or ready-for-calculus placement. ECO 221 requires ECO 113. ECO 257 requires ECO 113 or ECO 114. ECO 321 requires ECO 113 and ECO 114. ECO 461 requires ECO 213, ECO 214, and ECO 257 or MAT 217.
 
 [COLLEGE-WIDE-BOUNDARY]
 Locator: printed pages 6-7, PDF pages 9-10, degree requirements

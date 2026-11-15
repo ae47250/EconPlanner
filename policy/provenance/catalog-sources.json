@@ -11,7 +11,7 @@
       "authority": "HANOVER_COLLEGE_OFFICIAL_CATALOG",
       "url": "https://www.hanover.edu/wp-content/uploads/2023/08/Academic_Catalog_23_24.pdf",
       "path": "data/raw/hanover/catalog/2023-2024/economics-major-evidence.txt",
-      "sha256": "sha256:0c03f63338e7d871a987000bb9e50279eccd2cd92c16cd6b0611697a0a51e1ee",
+      "sha256": "sha256:c12191c51a6b2af78574b00305016847306196f9b3cf9a7dcc26ff8ac9072da2",
       "anchors": [
         "[ECONOMICS-MAJOR]",
         "[ECONOMICS-PREREQUISITES]",
@@ -25,7 +25,7 @@
       "authority": "HANOVER_COLLEGE_OFFICIAL_CATALOG",
       "url": "https://www.hanover.edu/docs/courses/24-25Catalog.pdf",
       "path": "data/raw/hanover/catalog/2024-2025/economics-major-evidence.txt",
-      "sha256": "sha256:5ec1b9b8833292a3206e02b182eccab5b9139a110f6621a53a39dcb0b7f641e5",
+      "sha256": "sha256:aaba8a85a7dce80c7575806adfe9a72e1bafe2bf9c1e0e7535d6f1fe431ad6ba",
       "anchors": [
         "[ECONOMICS-MAJOR]",
         "[ECONOMICS-PREREQUISITES]",
@@ -38,15 +38,40 @@
       "sourceId": "CATALOG-2025-2026-ECONOMICS",
       "title": "Hanover College Academic Catalog 2025-2026",
       "authority": "HANOVER_COLLEGE_OFFICIAL_CATALOG",
-      "url": "https://catalog.hanover.edu/programs/economics.php",
+      "url": "https://www.hanover.edu/docs/courses/25-26Catalog.pdf",
       "path": "data/raw/hanover/catalog/2025-2026/economics-major-evidence.txt",
-      "sha256": "sha256:0e7000468fbe7e927477b57e6b81483f76a3472087382bb24ddabc0019e1e6c4",
+      "sha256": "sha256:bf747cb6f1d33663cc4a696effc65d281cd25c77e3d46455cb7e60e3371bb1bc",
       "anchors": [
         "[ECONOMICS-MAJOR]",
         "[ECONOMICS-PREREQUISITES]",
         "[COLLEGE-WIDE-BOUNDARY]"
       ],
       "retrievedAt": "2026-08-06"
+    },
+    {
+      "sourceId": "CATALOG-2026-2027-ECONOMICS",
+      "title": "Hanover College Academic Catalog 2026-2027",
+      "authority": "HANOVER_COLLEGE_OFFICIAL_CATALOG",
+      "url": "https://catalog.hanover.edu/",
+      "path": "data/raw/hanover/catalog/2026-2027/economics-major-evidence.md",
+      "sha256": "sha256:37b5716986dc9b45e59bc606ebb12ae3ee425e9d016bc6e95c3a71b575560bdf",
+      "anchors": [
+        "Economics-Major",
+        "Economics-Courses"
+      ],
+      "retrievedAt": "2026-11-15",
+      "effective": {"from": null, "through": null, "academicYear": "2026-2027", "firstInstructionalTermStart": "2026-08-24"},
+      "supersedes": null
+    },
+    {
+      "sourceId": "DEPARTMENT-POLICIES",
+      "title": "Economics Department Confirmed Planning Policies",
+      "authority": "ECONOMICS_DEPARTMENT_OWNER_CONFIRMED_POLICY",
+      "path": "data/raw/economics/Department_Confirmed_Planning_Policies.md",
+      "sha256": "sha256:7c53cf0f775fe97e0530864d790a6256f43b09bc141707889b335c2f830bc410",
+      "anchors": ["Confirmed policies"],
+      "retrievedAt": "2026-11-15",
+      "supersedes": null
     },
     {
       "sourceId": "OWNER-CONFIRMATION-CP4B-B",

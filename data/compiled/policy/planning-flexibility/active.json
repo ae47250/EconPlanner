@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.9",
-  "contentHash": "sha256:a7cfafe2995d7272720acecdbb2e0b7bbbc02cbeae6a46d61896bc7d9419824e",
+  "bundleVersion": "econ-planning-flexibility.13",
+  "contentHash": "sha256:8f3a3f39d28f70f31b3d14bdb135dfa1fc59eab1bf830a7f207e145d48c804cc",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -25,7 +25,7 @@
     },
     "boundaries": {
       "academicPrerequisitesChanged": false,
-      "catalog2026_2027CreatedOrActivated": false,
+      "catalog2026_2027CreatedOrActivated": true,
       "collegeWidePolicyChanged": false,
       "courseLoadRulesChanged": false,
       "legacyCodeRetired": false
@@ -33,7 +33,7 @@
     "confirmation": {
       "date": "2026-11-15",
       "reviewer": "Project owner and Economics Department domain expert",
-      "source": "policy/provenance/hanover-core-2026-27.md"
+      "source": "policy/provenance/catalog-authority-2026-11-15.md"
     },
     "economicsPlanningStrategies": {
       "classification": "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES",
@@ -336,23 +336,26 @@
     },
     "mostFlexibleEconomicsMajorRequirementSet": {
       "automaticNewestSelectionPermitted": false,
-      "catalogYear": "2025-2026",
-      "declarationCatalogMayOverride": false,
-      "designationId": "economics-most-flexible-2025-2026",
+      "catalogYear": null,
+      "coursePrerequisiteScope": "ENROLLMENT_TERM_INDEPENDENT_OF_MAJOR_DECLARATION",
+      "declarationCatalogMayOverride": true,
+      "designationId": "economics-declaration-year-complete-set",
       "discoveryMayAutoActivate": false,
-      "incomingCatalogRole": "AUDIT_AND_COMPARISON_METADATA",
+      "incomingCatalogRole": "FORMAL_MAJOR_REQUIREMENT_AUTHORITY",
       "knownFlexibleDifferences": [
         "PSY_217_STATISTICS_OPTION",
         "BUSN_323_MONEY_FINANCE_OPTION",
         "ECONOMICS_COMPREHENSIVE_EVALUATION_NOT_REQUIRED"
       ],
+      "mixedCatalogRequirementSelectionPermitted": false,
+      "newerCompleteSetOverrideRequiresRecordedApproval": true,
       "notices": {
         "incomingYearUnknown": {
           "blocking": false,
           "category": "ADMINISTRATIVE_INFORMATION",
           "code": "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN",
-          "message": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026). The student’s incoming catalog year is not known, so the advisor should confirm it for degree-audit records.",
-          "messageWhenYearKnownButRequirementsUnavailableTemplate": "This plan uses the 2025–2026 Economics major requirements. Your recorded catalog year is [incoming year]. Ask your advisor to confirm which major requirements apply and whether any additional paperwork is needed.",
+          "message": "The Economics major declaration catalog year is not known. Major requirements remain preliminary until the declaration year is confirmed.",
+          "messageWhenYearKnownButRequirementsUnavailableTemplate": "The recorded Economics declaration year is [incoming year], but its complete requirement set is unavailable. Ask an advisor to confirm the governing catalog before using a major plan.",
           "readinessImpact": "NONE",
           "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
           "sacPetitionRequired": false
@@ -361,19 +364,20 @@
           "blocking": false,
           "category": "ADMINISTRATIVE_FOLLOW_UP",
           "code": "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE",
-          "messageTemplate": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026) instead of the student’s incoming catalog requirements ([incoming year]). Please help the student submit the routine SAC petition so the newer requirements are recorded for the degree audit. The department treats this petition as a formality.",
+          "messageTemplate": "This plan uses a newer complete Economics major requirement set than the student's declaration catalog year. The required approval must be documented before this set can be treated as confirmed.",
           "readinessImpact": "NONE",
           "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
           "sacPetitionRequired": true
         }
       },
       "readinessImpact": "NONE",
-      "requirementSetPolicyVersion": "econ-catalog-2025-2026.3",
+      "requirementSetPolicyVersion": null,
       "requiresVerifiedActivation": true,
-      "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
-      "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED"
+      "ruleId": "ECONOMICS-MAJOR-DECLARATION-YEAR-REQUIREMENTS",
+      "selectionMethod": "COMPLETE_FORMAL_DECLARATION_YEAR_SET",
+      "unknownDeclarationStatus": "PRELIMINARY_ONLY"
     },
-    "policyVersion": "econ-planning-flexibility.9",
+    "policyVersion": "econ-planning-flexibility.13",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -383,7 +387,7 @@
       "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
       "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
       "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
-      "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
+      "OWNER-CATALOG-AUTHORITY-2026-11-15#MAJOR-AND-COURSE-SCOPE",
       "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
       "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
     ],
@@ -415,7 +419,7 @@
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.9.json",
+    "provenancePath": "policy/provenance/planning-flexibility.13.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -425,7 +429,7 @@
       "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
       "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
       "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
-      "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
+      "OWNER-CATALOG-AUTHORITY-2026-11-15#MAJOR-AND-COURSE-SCOPE",
       "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
       "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
     ],
@@ -458,6 +462,22 @@
         "sourceId": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
+      },
+      {
+        "anchors": [
+          "MAJOR-AND-COURSE-SCOPE"
+        ],
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_MAJOR_DECLARATION_SCOPE_AND_TERM_SPECIFIC_PREREQUISITES",
+        "effective": {
+          "from": "2026-11-15",
+          "through": null
+        },
+        "path": "policy/provenance/catalog-authority-2026-11-15.md",
+        "sha256": "40317d5100958a47841c537999c348ba43daba3517659cfdd82f7ff6950aa8d6",
+        "sourceId": "OWNER-CATALOG-AUTHORITY-2026-11-15",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09"
       },
       {
         "anchors": [

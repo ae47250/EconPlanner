@@ -17,6 +17,7 @@ import { applyEconomicsPlanEdit } from "../../../../lib/planning/termSolver.js";
 import { buildAcceleratedPlanningResult } from "../../../../lib/planning/acceleratedResult.js";
 import { buildEconomicsPlanResult } from "../../../../lib/planning/noPlanResult.js";
 import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../../../../lib/catalog/applicability.js";
+import { prerequisitesForCatalogYear } from "../../../../lib/catalog/policy-releases.js";
 import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../../lib/catalog/input-resolution.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
 import { studentFacingPlanReviewMessage } from "../../../../lib/planning/plan-presentation.js";
@@ -465,11 +466,15 @@ export async function POST(request) {
       availableCatalogYears: catalogYears
     });
     const inputResolution = resolveInputResolution({student, planningContext, catalogApplicability});
-    const requestedCatalogYear = planningContext.submittedMajorDeclarationCatalogYear || planningContext.entryCatalogYear;
+    const requestedCatalogYear = planningContext.submittedMajorDeclarationCatalogYear || null;
     if (!catalogApplicability.appliedMajorCatalogYear) {
       return jsonResponse({
-        error: "No authoritative published Economics catalog is available for conditional planning.",
-        code: "CATALOG_UNAVAILABLE",
+        error: catalogApplicability.status === CATALOG_APPLICABILITY_STATUS.DECLARATION_YEAR_REQUIRED
+          ? "The Economics major declaration catalog year is needed before a confirmed requirement plan can be created."
+          : "No authoritative published Economics catalog is available for the declared major year.",
+        code: catalogApplicability.status === CATALOG_APPLICABILITY_STATUS.DECLARATION_YEAR_REQUIRED
+          ? "MAJOR_DECLARATION_YEAR_REQUIRED"
+          : "DECLARATION_CATALOG_UNAVAILABLE",
         requestedCatalogYear,
         selectedCatalogYear: null,
         catalogResolutionStatus: "unavailable",
@@ -477,14 +482,12 @@ export async function POST(request) {
         catalogApplicability,
         inputResolution,
         economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
-      }, 422);
+      }, 200);
     }
     const catalogResolution = {
       requestedCatalogYear,
       selectedCatalogYear: catalogApplicability.appliedMajorCatalogYear,
-      catalogResolutionStatus: catalogApplicability.status === CATALOG_APPLICABILITY_STATUS.OWNER_DESIGNATED_MATCH
-        ? "owner_designated_matches_incoming"
-        : "owner_designated_flexible_requirements"
+      catalogResolutionStatus: "exact_declaration_year"
     };
 
     let catalog;
@@ -505,8 +508,8 @@ export async function POST(request) {
     const authoritativePlanningContext = { ...planningContext, catalogApplicability };
     const prerequisiteValidation = validateStudentPrerequisites(
       student.courses || [],
-      catalog.economicsPrerequisites,
-      { policyBundle: catalog.policyBundle }
+      prerequisitesForCatalogYear(catalog.economicsPrerequisites, planningContext.currentCatalogYear),
+      { policyBundle: catalog.policyBundle, currentCatalogYear: planningContext.currentCatalogYear }
     );
     if (!prerequisiteValidation.valid) {
       const prerequisiteInputResolution = resolveInputResolution({
@@ -602,7 +605,7 @@ export async function POST(request) {
             : "entry_catalog_year_inferred_from_standing_and_plan_date",
         applicabilityBasis: catalogApplicability.basis,
         compatibilitySelectionBasis: catalogApplicability.basis,
-        selectionAuthority: "OWNER_DESIGNATED_MOST_FLEXIBLE_ECONOMICS_MAJOR_REQUIREMENT_SET",
+        selectionAuthority: "FORMAL_MAJOR_DECLARATION_YEAR_REQUIREMENTS",
         uncertainty: advisorAttention.length ? advisorAttention.map(notice => notice.message).join(" ") : null,
         policyBundleVersion: catalog.policyBundleVersion,
         policyBundleHash: catalog.policyBundleHash,

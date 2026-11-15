@@ -113,7 +113,7 @@ test('both pairings and claimed placeholder or approval metadata cannot bypass a
 const request = body => new Request('http://localhost/api/majors/map', {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body)
 });
-const studentWithPair = { academicStanding: 'senior', planCreationDate: '2026-07-30',
+const studentWithPair = { majorDeclarationCatalogYear: '2025-2026', academicStanding: 'senior', planCreationDate: '2026-07-30',
   courses: [...core.filter(code => code !== 'ECO 461'), ...pair, ...electives.slice(0, 3)].map(completed) };
 
 test('API, edits, rejected claims, restoration and reports retain the same finance correction', async () => {

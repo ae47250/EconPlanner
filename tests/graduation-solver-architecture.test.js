@@ -224,6 +224,7 @@ test("a selected elective alternative survives validation and exact report regen
     academicStanding: "senior",
     planCreationDate: "2026-07-30",
     entryCatalogYear: "2025-2026",
+    majorDeclarationCatalogYear: "2025-2026",
     courses: completed(["ECO 113", "ECO 114", "MAT 113", "ECO 214"])
   };
   const { mapping, bundle } = generate(student);

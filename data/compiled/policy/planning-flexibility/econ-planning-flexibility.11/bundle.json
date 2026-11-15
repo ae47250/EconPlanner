@@ -1,0 +1,585 @@
+{
+  "activationStatus": "OWNER_APPROVED",
+  "activeRuntimeMappingChanged": false,
+  "bundleVersion": "econ-planning-flexibility.11",
+  "contentHash": "sha256:8cc68e969f1ca6c4d75b43cd0aac945149340a4c26f4e660fce27b7d0fe25787",
+  "policy": {
+    "acceleratedSeniorStanding": {
+      "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
+      "effect": "ASSUME_SENIOR_STANDING_IN_FINAL_PLANNING_YEAR",
+      "notice": {
+        "audience": [
+          "STUDENT",
+          "ACADEMIC_ADVISOR"
+        ],
+        "code": "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED",
+        "message": "This plan assumes you will have senior standing in your final year."
+      },
+      "readinessImpact": "NONE",
+      "requiresStudentConfirmation": false,
+      "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
+      "scope": [
+        "REGULAR_ONE_YEAR_EARLY",
+        "TRANSFER_ONE_YEAR_EARLY"
+      ]
+    },
+    "boundaries": {
+      "academicPrerequisitesChanged": false,
+      "catalog2026_2027CreatedOrActivated": false,
+      "collegeWidePolicyChanged": false,
+      "courseLoadRulesChanged": false,
+      "legacyCodeRetired": false
+    },
+    "confirmation": {
+      "date": "2026-11-15",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "source": "policy/provenance/catalog-authority-2026-11-15.md"
+    },
+    "economicsPlanningStrategies": {
+      "classification": "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES",
+      "feasibilityImpact": "NONE",
+      "ruleId": "ECONOMICS-OWNER-APPROVED-PLANNING-STRATEGIES",
+      "sourceRefs": [
+        "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
+        "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
+        "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING"
+      ],
+      "stableSavedStateIds": true,
+      "strategies": [
+        {
+          "definition": "Distribute remaining planner-tracked major and supporting requirements as evenly as feasible across the remaining years and, secondarily, across Fall, Winter, and May.",
+          "eligibility": {
+            "effectiveStandings": [
+              "freshman",
+              "sophomore",
+              "junior",
+              "senior"
+            ],
+            "horizon": "FIXED_SELECTED_GRADUATION_TERM"
+          },
+          "id": "balanced",
+          "publicLabel": "Balanced",
+          "rankingPreferences": {
+            "annualCapacityBasis": "ACTUAL_REMAINING_USABLE_CAPACITY_AFTER_FIXED_AND_RESERVED_OCCUPANCY",
+            "annualRemainderPlacement": "LATEST_YEARS",
+            "annualTarget": "EVEN_ACROSS_REMAINING_YEARS",
+            "exactTargetIsFeasibilityRule": false,
+            "termShapePreferences": {
+              "fiveCourses": [
+                [
+                  2,
+                  2,
+                  1
+                ]
+              ],
+              "fourCourses": [
+                [
+                  1,
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  1,
+                  1
+                ]
+              ],
+              "springMayPreferredMaximum": 1,
+              "threeCourses": [
+                [
+                  1,
+                  1,
+                  1
+                ]
+              ],
+              "twoCourses": "SPREAD_ACROSS_TWO_TERMS_WHEN_FEASIBLE"
+            },
+            "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES"
+          }
+        },
+        {
+          "definition": "Keep the first planned year lighter than the selected same-context Balanced plan while preserving safe prerequisite foundations and backloading remaining work when feasible.",
+          "eligibility": {
+            "baselineStrategyId": "balanced",
+            "effectiveStandings": [
+              "freshman",
+              "sophomore"
+            ],
+            "firstPlannedYearIndex": 0,
+            "horizon": "SAME_FIXED_GRADUATION_TERM_AS_BALANCED",
+            "requiresMaterialDifference": true,
+            "requiresStrictlyLighterFirstPlannedYear": true
+          },
+          "id": "explore-first",
+          "publicLabel": "Explore the Major",
+          "rankingPreferences": {
+            "acceptableFinalYearTrackedLoad": 4,
+            "annualCapacityBasis": "ACTUAL_REMAINING_USABLE_CAPACITY_AFTER_FIXED_AND_RESERVED_OCCUPANCY",
+            "avoidAdvancedEconomicsEarlyIsSoft": true,
+            "exactTargetIsFeasibilityRule": false,
+            "finalYearGuidanceIsMinimum": false,
+            "firstFullYearTwoCourseShapeTiers": [
+              [
+                [
+                  1,
+                  1,
+                  0
+                ]
+              ],
+              [
+                [
+                  1,
+                  0,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  1
+                ]
+              ],
+              [
+                [
+                  2,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  2,
+                  0
+                ]
+              ]
+            ],
+            "firstYearTargetFormula": "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS",
+            "foundationSequencingIsSoft": true,
+            "laterYearDistribution": "EVEN_WITH_REMAINDER_IN_LATEST_YEARS",
+            "preferNondecreasingAnnualLoad": true,
+            "strongerSafeBackloadingRemainsEligible": true,
+            "termShapePreferences": {
+              "fiveCourses": [
+                [
+                  2,
+                  2,
+                  1
+                ]
+              ],
+              "fourCourses": [
+                [
+                  1,
+                  2,
+                  1
+                ],
+                [
+                  2,
+                  1,
+                  1
+                ]
+              ],
+              "springMayPreferredMaximum": 1,
+              "threeCourses": [
+                [
+                  1,
+                  1,
+                  1
+                ]
+              ]
+            },
+            "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES",
+            "typicalFinalYearTrackedLoad": [
+              2,
+              3
+            ]
+          }
+        },
+        {
+          "definition": "Compress the complete prerequisite and offering sequence into the independently searched one-year-early graduation horizon.",
+          "eligibility": {
+            "effectiveStandings": [
+              "freshman",
+              "sophomore",
+              "junior"
+            ],
+            "horizon": "SHORTENED_ONE_YEAR_EARLY",
+            "separateSearch": true
+          },
+          "id": "one-year-early",
+          "publicLabel": "One Year Early",
+          "rankingPreferences": {
+            "termLoadSafetyFirst": true
+          }
+        }
+      ]
+    },
+    "futureScheduleProjection": {
+      "futureOfferingLikelihoodExtension": {
+        "activationRequiresOwnerApproval": true,
+        "canonicalContract": "policy/historical-offerings/economics.json",
+        "currentLikelihoodDataAvailable": false,
+        "inputFormat": "OWNER_SUPPLIED_EXCEL_HISTORICAL_OFFERING_OBSERVATIONS",
+        "probabilitiesMayBeInferredWithoutData": false,
+        "requiredFutureDisclosure": [
+          "DATA_COVERAGE",
+          "METHOD",
+          "OBSERVATION_PERIOD",
+          "INFORMATIONAL_ONLY"
+        ],
+        "status": "CONTRACT_IMPLEMENTED_INACTIVE_NO_APPROVED_DATA"
+      },
+      "notice": {
+        "audience": [
+          "STUDENT",
+          "ACADEMIC_ADVISOR"
+        ],
+        "code": "FUTURE_SCHEDULE_PROJECTION_NOTICE",
+        "message": "Courses later in your plan are best estimates because those schedules have not been published yet. Use this plan as a guide and update it with your advisor when new schedules become available."
+      },
+      "provenanceValues": [
+        "PUBLISHED_SCHEDULE",
+        "PLANNING_PROJECTION"
+      ],
+      "publishedScheduleAuthority": "AUTHORITATIVE",
+      "readinessImpact": "NONE",
+      "ruleId": "FUTURE-UNPUBLISHED-SCHEDULE-PLANNING-PROJECTION",
+      "unpublishedScheduleEffect": "ALLOW_ACADEMICALLY_VALID_PLANNING_PROJECTION"
+    },
+    "generalDegreeDesignationInformation": {
+      "advisorActionStatus": "INFORMATION_ONLY",
+      "designations": {
+        "HS": {
+          "courses": [
+            "ECO 113",
+            "ECO 114",
+            "ECO 161"
+          ],
+          "differentDisciplinesRequired": true,
+          "economicsCoursesMayOnlyPartlySatisfy": true,
+          "requiredUnits": 2
+        },
+        "W2": {
+          "courses": [
+            "ECO 461"
+          ]
+        }
+      },
+      "feasibilityImpact": "NONE",
+      "generalDegreeCatalogYearsWithEvidence": [
+        "2025-2026",
+        "2026-2027"
+      ],
+      "hanoverCore": {
+        "catalogYear": "2026-2027",
+        "hsCourses": [
+          "ECO 113",
+          "ECO 114"
+        ],
+        "hsDifferentDisciplinesRequired": true,
+        "hsRequiredUnits": 2,
+        "name": "Hanover Core: Knowledge and Skills",
+        "sourceRefs": [
+          "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
+          "HANOVER-CATALOG-2026-2027#Economics-Courses"
+        ],
+        "w2Courses": [
+          "ECO 461"
+        ]
+      },
+      "latestCatalogInferencePermitted": false,
+      "readinessImpact": "NONE",
+      "relevantStatuses": [
+        "COMPLETED",
+        "IN_PROGRESS",
+        "PLANNED"
+      ],
+      "ruleId": "GENERAL-DEGREE-CCR-ACE-INFORMATION",
+      "separateFromEconomicsMajorCatalogSelection": true,
+      "sourceRefs": [
+        "HANOVER-CP5A-OFFICIAL-EVIDENCE#CCR-ACE",
+        "ECON-MAJOR-DECLARATION#Course-designations"
+      ],
+      "status": "INFORMATIONAL_ONLY",
+      "terminology": {
+        "ace": "Areas of Competency and Engagement (ACEs)",
+        "ccr": "Core Curriculum Requirements (CCRs)"
+      }
+    },
+    "mathematicsEquivalencyEvidenceContract": {
+      "activationStatus": "CONTRACT_ACTIVE_NO_APPROVED_EQUIVALENCIES",
+      "approvedEquivalencies": [],
+      "approvedScopes": [
+        "ECONOMICS_COGNATE",
+        "COURSE_PREREQUISITE",
+        "BOTH"
+      ],
+      "bothScopeRequires": [
+        "affectedCourse",
+        "affectedRule"
+      ],
+      "coursePrerequisiteScopeRequires": [
+        "affectedCourse",
+        "affectedRule"
+      ],
+      "crossScopeInferencePermitted": false,
+      "requiredEvidenceFields": [
+        "authority",
+        "source",
+        "approvalDate",
+        "reviewer",
+        "scope"
+      ],
+      "ruleId": "MATHEMATICS-EQUIVALENCY-SCOPE-CONTRACT",
+      "sourceRefs": [
+        "ECON-MAJOR-DECLARATION#Mathematics-cognate",
+        "OFFICIAL-CATALOG-ECONOMICS#Major"
+      ],
+      "unapprovedDisposition": "REVIEW_REQUIRED_NO_CREDIT"
+    },
+    "mostFlexibleEconomicsMajorRequirementSet": {
+      "automaticNewestSelectionPermitted": false,
+      "catalogYear": null,
+      "coursePrerequisiteScope": "ENROLLMENT_TERM_INDEPENDENT_OF_MAJOR_DECLARATION",
+      "declarationCatalogMayOverride": true,
+      "designationId": "economics-declaration-year-complete-set",
+      "discoveryMayAutoActivate": false,
+      "incomingCatalogRole": "FORMAL_MAJOR_REQUIREMENT_AUTHORITY",
+      "knownFlexibleDifferences": [
+        "PSY_217_STATISTICS_OPTION",
+        "BUSN_323_MONEY_FINANCE_OPTION",
+        "ECONOMICS_COMPREHENSIVE_EVALUATION_NOT_REQUIRED"
+      ],
+      "mixedCatalogRequirementSelectionPermitted": false,
+      "newerCompleteSetOverrideRequiresRecordedApproval": true,
+      "notices": {
+        "incomingYearUnknown": {
+          "blocking": false,
+          "category": "ADMINISTRATIVE_INFORMATION",
+          "code": "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN",
+          "message": "The Economics major declaration catalog year is not known. Major requirements remain preliminary until the declaration year is confirmed.",
+          "messageWhenYearKnownButRequirementsUnavailableTemplate": "The recorded Economics declaration year is [incoming year], but its complete requirement set is unavailable. Ask an advisor to confirm the governing catalog before using a major plan.",
+          "readinessImpact": "NONE",
+          "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
+          "sacPetitionRequired": false
+        },
+        "materialDifference": {
+          "blocking": false,
+          "category": "ADMINISTRATIVE_FOLLOW_UP",
+          "code": "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE",
+          "messageTemplate": "This plan uses a newer complete Economics major requirement set than the student's declaration catalog year. The required approval must be documented before this set can be treated as confirmed.",
+          "readinessImpact": "NONE",
+          "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
+          "sacPetitionRequired": true
+        }
+      },
+      "readinessImpact": "NONE",
+      "requirementSetPolicyVersion": null,
+      "requiresVerifiedActivation": true,
+      "ruleId": "ECONOMICS-MAJOR-DECLARATION-YEAR-REQUIREMENTS",
+      "selectionMethod": "COMPLETE_FORMAL_DECLARATION_YEAR_SET",
+      "unknownDeclarationStatus": "PRELIMINARY_ONLY"
+    },
+    "policyVersion": "econ-planning-flexibility.11",
+    "schemaVersion": "1.0.0",
+    "sourceRefs": [
+      "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
+      "HANOVER-CATALOG-2026-2027#Economics-Courses",
+      "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized implementation",
+      "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
+      "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
+      "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
+      "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
+      "OWNER-CATALOG-AUTHORITY-2026-11-15#MAJOR-AND-COURSE-SCOPE",
+      "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
+      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+    ],
+    "status": "OWNER_APPROVED",
+    "supportingCoursePlacement": {
+      "courses": [
+        "MAT 113",
+        "MAT 121",
+        "MAT 217",
+        "PSY 217",
+        "BUSN 323"
+      ],
+      "evidenceStatus": "PLANNING_PROJECTION",
+      "exactSectionsInvented": false,
+      "historicalFrequencyInvented": false,
+      "ranking": {
+        "moveFlexiblePlacementsFirst": true,
+        "preferFrequentStatisticsOptionWhenEquallySafe": true,
+        "protectScarcePlacements": true,
+        "retainLessFrequentStatisticsOptionWhenNeededForValidity": true
+      },
+      "ruleId": "FUTURE-SUPPORTING-COURSE-PLACEMENT-FLEXIBILITY",
+      "scopeBoundaries": {
+        "cognateOptionsRemainCognateOnly": true,
+        "financeOptionsRemainFinanceOnlyUnlessAnExplicitAllocationRuleApplies": true,
+        "statisticsOptionsRemainStatisticsOnly": true
+      },
+      "termEligibilityRuleId": "PLANNING-MAY-COURSE-EXCLUSIONS"
+    }
+  },
+  "provenance": {
+    "provenancePath": "policy/provenance/planning-flexibility.11.json",
+    "sourcePath": "policy/rules/planning-flexibility.json",
+    "sourceRefs": [
+      "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
+      "HANOVER-CATALOG-2026-2027#Economics-Courses",
+      "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized implementation",
+      "OWNER-OFFERING-CONSOLIDATION-2026-09-26#Consolidation-boundary",
+      "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
+      "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
+      "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
+      "OWNER-CATALOG-AUTHORITY-2026-11-15#MAJOR-AND-COURSE-SCOPE",
+      "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
+      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+    ],
+    "sources": [
+      {
+        "anchors": [
+          "Hanover-Core-Curriculum",
+          "Economics-Courses"
+        ],
+        "authority": "Hanover College",
+        "authorityBoundary": "2026-2027_FIRST-ENROLLMENT_HANOVER_CORE_AND_ECONOMICS_COURSE_DESIGNATIONS",
+        "catalogYear": "2026-2027",
+        "path": "data/raw/hanover/catalog/2026-2027/general-degree-evidence.md",
+        "retrievedOn": "2026-11-15",
+        "sha256": "d5b7362b46afaaa65cc86f27ca4f3c330205eb9eb5eb0f0373ba2bb68d9ae936",
+        "sourceId": "HANOVER-CATALOG-2026-2027",
+        "sourceType": "OFFICIAL_CATALOG",
+        "supersedes": null,
+        "url": "https://catalog.hanover.edu/"
+      },
+      {
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION",
+        "effective": {
+          "from": "2026-09-27",
+          "through": null
+        },
+        "path": "policy/provenance/canonical-consumption-2026-09-27.md",
+        "sha256": "9a5018fb2eb76643cc58b715dc93115f95aedea938b3e4f2ea3f8884246a8516",
+        "sourceId": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
+      },
+      {
+        "anchors": [
+          "MAJOR-AND-COURSE-SCOPE"
+        ],
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_MAJOR_DECLARATION_SCOPE_AND_TERM_SPECIFIC_PREREQUISITES",
+        "effective": {
+          "from": "2026-11-15",
+          "through": null
+        },
+        "path": "policy/provenance/catalog-authority-2026-11-15.md",
+        "sha256": "ef50a643353c12c8ecfe404a31e22054b56853f1e45d575bf9eba01420208fd4",
+        "sourceId": "OWNER-CATALOG-AUTHORITY-2026-11-15",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09"
+      },
+      {
+        "anchors": [
+          "STRATEGY-PREFERENCES"
+        ],
+        "authority": "Project-owner planning preference",
+        "authorityBoundary": "ECONOMICS_PLANNING_STRATEGY_RANKING_ONLY",
+        "confirmedOn": "2026-08-09",
+        "effective": {
+          "from": "2026-08-09",
+          "through": null
+        },
+        "locator": "CP5 Codex task, project-owner messages dated 2026-08-09",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "sourceId": "OWNER-CONFIRMATION-CP5-2026-08-09",
+        "sourceType": "OWNER_CONFIRMATION",
+        "statement": "Balanced and Explore the Major remain separate searches. Balanced prefers feasible even pacing. Explore is available only in effective freshman and sophomore contexts, is compared at yearIndex 0 with the selected same-context Balanced plan, must be lighter and materially distinct, and softly prefers a nondecreasing backloaded distribution. Two or three final-year tracked requirements are common and four is acceptable; this is nonblocking planning guidance, not Hanover academic policy.",
+        "supersedes": "Earlier owner-approved planning strategy wording and the Explore First public label"
+      },
+      {
+        "anchors": [
+          "ONE-YEAR-EARLY-ELIGIBILITY"
+        ],
+        "authority": "Project-owner product decision",
+        "authorityBoundary": "ECONOMICS_NONACADEMIC_PLANNING_STRATEGY_ELIGIBILITY_ONLY",
+        "confirmedOn": "2026-08-09",
+        "effective": {
+          "from": "2026-08-09",
+          "through": null
+        },
+        "locator": "CP7 Codex task, project-owner request dated 2026-08-09",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "sourceId": "OWNER-CONFIRMATION-CP7-2026-08-09",
+        "sourceType": "OWNER_CONFIRMATION",
+        "statement": "One Year Early is offered to students whose effective standing is freshman, sophomore, or junior. Junior students see the same one-year-early strategy as Graduate next year. Senior requests are safely normalized to the standard graduation timeline. This is a nonacademic product and strategy-eligibility decision and does not change plan feasibility or academic policy.",
+        "supersedes": "The earlier One Year Early strategy contract limited to freshman and sophomore contexts"
+      },
+      {
+        "anchors": [
+          "CATALOG-DEFAULT"
+        ],
+        "authority": "Project-owner product decision",
+        "authorityBoundary": "ECONOMICS_CATALOG_DEFAULT_SELECTION_ONLY",
+        "confirmedOn": "2026-08-09",
+        "effective": {
+          "from": "2026-08-09",
+          "through": null
+        },
+        "locator": "CP7 Codex task, project-owner request dated 2026-08-09",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "sourceId": "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09",
+        "sourceType": "OWNER_CONFIRMATION",
+        "statement": "Ordinary Economics planning uses the latest officially published requirement set that has been independently verified and explicitly activated by the project owner. Discovery alone never activates a new catalog. The current verified and activated default remains 2025-2026.",
+        "supersedes": "The owner-designation wording for the same current 2025-2026 default"
+      },
+      {
+        "anchors": [
+          "CAPACITY-AWARE-PACING"
+        ],
+        "authority": "Project-owner planning preference",
+        "authorityBoundary": "ECONOMICS_NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES_ONLY",
+        "confirmedOn": "2026-08-10",
+        "effective": {
+          "from": "2026-08-10",
+          "through": null
+        },
+        "locator": "Current Codex task, project-owner request dated 2026-08-10",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "sourceId": "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10",
+        "sourceType": "OWNER_CONFIRMATION",
+        "statement": "Balanced distributes total planner-tracked load as evenly as feasible with remainders in later usable years. Explore uses a lighter first planned year and backloads remaining work, including a 2/3/3/4 full freshman target for twelve tracked requirements. Annual and within-year targets use actual capacity after fixed Taking now courses and other reservations. Full-year preferred term shapes are 1/1/1 for three, equally preferred 1/2/1 and 2/1/1 for four, and 2/2/1 for five, with no preferred Spring/May target above one. Explore ranks 1/1/0 ahead of the other separated two-course shapes and same-term arrangements only as rescue candidates. These preferences rank academically valid plans and never change feasibility, requirements, prerequisites, offerings, capacity, or readiness.",
+        "supersedes": "Earlier incomplete implementation details for Balanced remainder placement and within-year distribution"
+      },
+      {
+        "authority": "Project owner and Economics Department domain expert; supplied Registrar correspondence",
+        "authorityBoundary": "ECONOMICS_FINANCE_ALLOCATION_AND_ELECTIVE_PETITION_NOTICE",
+        "confirmedOn": "2026-10-31",
+        "effective": {
+          "from": "2026-10-31",
+          "through": null
+        },
+        "path": "policy/provenance/finance-elective-clarification-2026-10-31.md",
+        "reviewer": "Project owner, explicit implementation instruction",
+        "sha256": "19e97a064f7a8782a425f69e3d057fe7b2aec5a284ce2945a1bbe44fb4fb506a",
+        "sourceId": "OWNER-FINANCE-ELECTIVE-2026-10-31",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Automatic ECO 321 elective credit when BUSN 323 fills finance"
+      },
+      {
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_OFFERING_PROJECTION_AND_CONSISTENT_TERM_PLACEMENT",
+        "effective": {
+          "from": "2026-09-26",
+          "through": null
+        },
+        "path": "policy/provenance/offering-policy-2026-09-26.md",
+        "sha256": "f97ee7afcab40d19f20ce9e2b2f5b82f469eae5c51262b5eb619f18f43bc4093",
+        "sourceId": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
+      }
+    ]
+  },
+  "schemaVersion": "1.0.0"
+}

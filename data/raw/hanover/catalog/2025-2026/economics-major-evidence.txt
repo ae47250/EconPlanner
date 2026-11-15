@@ -1,5 +1,5 @@
 Source title: Hanover College Academic Catalog 2025-2026
-Source URL: https://catalog.hanover.edu/programs/economics.php
+Source URL: https://www.hanover.edu/docs/courses/25-26Catalog.pdf
 Retrieved: 2026-08-06
 Authority: Hanover College official published academic catalog
 
@@ -11,7 +11,7 @@ Major requirements: ECO 113, ECO 114, ECO 213, ECO 214; one Statistics course fr
 [ECONOMICS-PREREQUISITES]
 Locator: Economics course descriptions
 Evidence transcription:
-The catalog-specific prerequisite snapshot preserves the published ECO 213, ECO 214, ECO 257, ECO 321, and ECO 461 requirements and keeps requirement credit separate from prerequisite satisfaction.
+The archived catalog lists ECO 221 as requiring ECO 113. The catalog-specific prerequisite snapshot also preserves the published ECO 213, ECO 214, ECO 257, ECO 321, and ECO 461 requirements and keeps requirement credit separate from prerequisite satisfaction.
 
 [COLLEGE-WIDE-BOUNDARY]
 Locator: College-wide degree requirements

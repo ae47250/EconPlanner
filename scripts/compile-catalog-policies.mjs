@@ -6,11 +6,12 @@ import { sourceEvidenceSha256 } from "../lib/source-evidence-hash.js";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MANIFESTS = [
-  "policy/manifest/econ-catalog-2023-2024.1.json",
-  "policy/manifest/econ-catalog-2024-2025.1.json",
-  "policy/manifest/econ-catalog-2025-2026.3.json"
+  "policy/manifest/econ-catalog-2023-2024.3.json",
+  "policy/manifest/econ-catalog-2024-2025.3.json",
+  "policy/manifest/econ-catalog-2025-2026.5.json",
+  "policy/manifest/econ-catalog-2026-2027.2.json"
 ];
-const EXPECTED_YEARS = ["2023-2024", "2024-2025", "2025-2026"];
+const EXPECTED_YEARS = ["2023-2024", "2024-2025", "2025-2026", "2026-2027"];
 const FLEXIBILITY_RULE_ID = "CATALOG-LATEST-FLEXIBLE-MAJOR-FALLBACK";
 const PLANNING_FLEXIBILITY_POLICY_PATH = "policy/rules/planning-flexibility.json";
 // Historical CP4b catalog-compilation baseline, not a runtime selection.
@@ -44,8 +45,9 @@ function validateCatalog(catalog, manifest) {
   if (catalog.catalogYear !== manifest.catalogYear) fail(`${manifest.policyVersion} catalog year mismatch`);
   if (catalog.policyVersion !== manifest.policyVersion) fail(`${manifest.policyVersion} policy version mismatch`);
   if (catalog.publicationStatus !== "AUTHORITATIVE_PUBLISHED") fail(`${manifest.policyVersion} is not authoritative published evidence`);
-  if (catalog.activationStatus !== "PENDING_OWNER_APPROVAL" || manifest.status !== "PENDING_OWNER_APPROVAL") {
-    fail(`${manifest.policyVersion} must remain pending owner approval`);
+  const expectedActivation = "OWNER_AUTHORIZED_DECLARATION_YEAR";
+  if (catalog.activationStatus !== expectedActivation || manifest.status !== expectedActivation) {
+    fail(`${manifest.policyVersion} activation does not match its governed status`);
   }
   for (const field of ["core", "statisticsOptions", "moneyFinanceOptions", "capstone", "cognateOptions"]) {
     if (!Array.isArray(catalog.requirements?.[field]) || !catalog.requirements[field].length) fail(`${manifest.policyVersion} is missing ${field}`);
@@ -119,7 +121,7 @@ function policyDiff(bundle) {
   const rows = bundle.materialDifferences.map(item => `| ${item.code} | ${item.favorable ? "more flexible" : "review"} | ${item.detail} |`).join("\n");
   return `# Policy diff: ${bundle.bundleVersion}\n\n` +
     `Bundle digest: \`${bundle.contentHash}\`\n\n` +
-    `Activation: **pending owner approval**. The current active runtime bundle remains \`${ACTIVE_BUNDLE_VERSION}\`.\n\n` +
+    `Activation: **${bundle.activationStatus}**. The current active runtime bundle remains \`${ACTIVE_BUNDLE_VERSION}\`.\n\n` +
     `| Difference | Direction | Detail |\n|---|---|---|\n${rows}\n\n` +
     `College-wide graduation, residency, general-education, grade, and institution-wide requirements are outside this release's flexibility boundary.\n`;
 }
@@ -128,7 +130,7 @@ function dependencyImpact(bundle) {
   return `# Dependency impact: ${bundle.bundleVersion}\n\n` +
     `Bundle digest: \`${bundle.contentHash}\`\n\n` +
     `- Catalog applicability may evaluate this release as authoritative published evidence.\n` +
-    `- Conditional use is controlled by \`${FLEXIBILITY_RULE_ID}\`.\n` +
+    `- Major requirements apply to the verified declaration year; newer complete sets require recorded approval.\n` +
     `- The active Decision Engine bundle and \`data/compiled/policy/active.json\` are not changed.\n` +
     `- Planning, API, advisor-notice, readiness, and nightly-ledger consumers depend on the catalog applicability contract.\n` +
     `- Profile impact must be reviewed in the CP4b-B catalog/readiness ledger before activation.\n` +
@@ -151,9 +153,9 @@ async function writeImmutable(filePath, contents) {
 function historicalSourceReport(provenance, releases) {
   const rows = provenance.sources.map(source => `| ${source.sourceId} | ${source.authority} | ${source.sha256} | ${source.anchors.join("; ")} | ${source.url || "owner confirmation"} |`).join("\n");
   return `# Historical Economics catalog sources and provenance\n\n` +
-    `All governed source hashes and anchors passed compilation. No 2026-2027 catalog was created.\n\n` +
+    `All governed source hashes and anchors passed compilation. Release activation is recorded separately from publication.\n\n` +
     `| Source | Authority | SHA-256 | Anchors | Locator |\n|---|---|---|---|---|\n${rows}\n\n` +
-    `## Compiled releases\n\n${releases.map(release => `- ${release.catalogYear}: \`${release.bundleVersion}\` (\`${release.contentHash}\`), pending owner approval.`).join("\n")}\n`;
+    `## Compiled releases\n\n${releases.map(release => `- ${release.catalogYear}: \`${release.bundleVersion}\` (\`${release.contentHash}\`), ${release.activationStatus}.`).join("\n")}\n`;
 }
 
 function validatePlanningFlexibilityPolicy(policy) {
@@ -201,13 +203,18 @@ function validatePlanningFlexibilityPolicy(policy) {
     fail("mathematics-equivalency scope contract is incomplete");
   }
   const designation = policy.mostFlexibleEconomicsMajorRequirementSet;
-  if (designation?.catalogYear !== "2025-2026"
-    || designation?.selectionMethod !== "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED"
+  if (designation?.selectionMethod !== "COMPLETE_FORMAL_DECLARATION_YEAR_SET"
+    || designation?.newerCompleteSetOverrideRequiresRecordedApproval !== true
+    || designation?.mixedCatalogRequirementSelectionPermitted !== false
+    || designation?.unknownDeclarationStatus !== "PRELIMINARY_ONLY"
+    || designation?.coursePrerequisiteScope !== "ENROLLMENT_TERM_INDEPENDENT_OF_MAJOR_DECLARATION"
     || designation?.requiresVerifiedActivation !== true
+    || designation?.catalogYear !== null
+    || designation?.requirementSetPolicyVersion !== null
     || designation?.discoveryMayAutoActivate !== false
     || designation?.automaticNewestSelectionPermitted !== false
-    || designation?.declarationCatalogMayOverride !== false) {
-    fail("owner-designated Economics requirement set is incomplete");
+    || designation?.declarationCatalogMayOverride !== true) {
+    fail("declaration-year Economics requirement contract is incomplete");
   }
   const strategyContract = policy.economicsPlanningStrategies;
   const strategies = Object.fromEntries((strategyContract?.strategies || []).map(strategy => [strategy.id, strategy]));
@@ -245,19 +252,18 @@ function validatePlanningFlexibilityPolicy(policy) {
       !== JSON.stringify(["freshman", "sophomore", "junior"])) {
     fail("One Year Early must remain limited to effective freshman, sophomore, and junior contexts");
   }
-  if (policy.boundaries?.catalog2026_2027CreatedOrActivated !== false) {
-    fail("the planning flexibility policy may not create or activate a 2026-2027 catalog");
+  if (policy.boundaries?.catalog2026_2027CreatedOrActivated !== true) {
+    fail("the 2026-2027 catalog activation boundary must be recorded");
   }
 }
 
 function planningFlexibilityContract(bundle) {
-  const policy = bundle.policy;
   return `# Owner-approved planning-flexibility contract\n\n` +
     `Compiled policy: \`${bundle.bundleVersion}\` (\`${bundle.contentHash}\`).\n\n` +
     `- Accelerated one-year-early plans assume senior standing in the final planning year; no student confirmation is requested and readiness is unchanged by the assumption alone.\n` +
     `- Published schedules remain authoritative. Later unpublished schedules use academically checked placements with \`PLANNING_PROJECTION\` provenance and one informational notice.\n` +
-    `- Economics planning uses the latest verified, activated, owner-approved requirement set, currently ${policy.mostFlexibleEconomicsMajorRequirementSet.catalogYear}. Catalog discovery never activates a new requirement set; incoming catalog years remain comparison and degree-audit metadata.\n` +
-    `- Material incoming-catalog differences create a nonblocking SAC petition notification, not a substantive advisor action.\n` +
+    `- Economics major planning uses the complete approved requirement set for the formal declaration year. A newer complete set requires recorded approval; catalog discovery alone cannot activate one.\n` +
+    `- Course prerequisites follow the enrollment-term authority. Mixed changes require review, and completed historical coursework remains recorded.\n` +
     `- A future owner-supplied Excel history may support informational offering likelihoods only when data coverage and method are disclosed. No likelihood data or probability is present in this release.\n` +
     `- CCR/ACE information uses the student's supported general-degree catalog separately from the Economics major requirement set and has no readiness or feasibility effect.\n` +
     `- Mathematics equivalencies require an explicit cognate, prerequisite, or both scope with complete approval evidence; no equivalencies are activated in this release.\n` +
@@ -265,7 +271,7 @@ function planningFlexibilityContract(bundle) {
     `- Balanced places annual remainders in later usable years. Annual and within-year targets use actual capacity after fixed current courses and other reservations; preferred Spring/May load never exceeds one.\n` +
     `- Explore the Major remains limited to effective freshman and sophomore contexts, must be lighter than and materially distinct from its selected same-context Balanced baseline, and uses a soft nondecreasing backloaded target. Its preferred two-course first-year shape is 1/1/0, followed by the other separated shapes, with same-term placement retained only as a lower-ranked rescue.\n` +
     `- One Year Early remains limited to effective freshman, sophomore, and junior contexts; ineligible saved or submitted requests normalize to the standard graduation timeline without changing academic feasibility.\n` +
-    `- No 2026-2027 catalog is compiled or activated, and the active Decision Engine mapping is unchanged.\n`;
+    `- The 2026-2027 Economics catalog release is compiled for its authorized scope; the active Decision Engine mapping is unchanged.\n`;
 }
 
 async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
@@ -309,7 +315,7 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
       acceleratedSeniorStandingNonblocking: "PASS",
       futureScheduleProjectionNonblocking: "PASS",
       publishedScheduleAuthorityPreserved: "PASS",
-      verifiedActivatedDefaultFixedTo2025_2026: "PASS",
+      verifiedDeclarationYearCatalogSelection: "PASS",
       automaticNewestSelectionDisabled: "PASS",
       futureLikelihoodsNotInvented: "PASS",
       generalDegreeDesignationInformationNonblocking: "PASS",
@@ -364,7 +370,7 @@ export async function compileCatalogPolicies({ repositoryRoot = REPOSITORY_ROOT,
       bundleVersion: manifest.policyVersion,
       catalogYear: manifest.catalogYear,
       program: manifest.program,
-      activationStatus: "PENDING_OWNER_APPROVAL",
+      activationStatus: manifest.status,
       authoritativePublicationStatus: catalog.publicationStatus,
       catalog,
       flexibilityRule,
@@ -382,7 +388,7 @@ export async function compileCatalogPolicies({ repositoryRoot = REPOSITORY_ROOT,
       schemaVersion: "1.0.0",
       bundleVersion: manifest.policyVersion,
       contentHash,
-      activationStatus: "PENDING_OWNER_APPROVAL",
+      activationStatus: manifest.status,
       activeRuntimeMappingChanged: false,
       inputs: Object.values(manifest.inputs),
       validation: {
@@ -412,7 +418,7 @@ export async function compileCatalogPolicies({ repositoryRoot = REPOSITORY_ROOT,
       contentHash,
       releasePath: `releases/${manifest.policyVersion}/bundle.json`,
       publicationStatus: catalog.publicationStatus,
-      activationStatus: "PENDING_OWNER_APPROVAL"
+      activationStatus: manifest.status
     });
     previous = catalog;
   }
@@ -422,14 +428,21 @@ export async function compileCatalogPolicies({ repositoryRoot = REPOSITORY_ROOT,
     program: "ECONOMICS",
     activeRuntimeMappingChanged: false,
     activeRuntimeBundle: {bundleVersion: ACTIVE_BUNDLE_VERSION, contentHash: ACTIVE_BUNDLE_HASH, mappingPath: "active.json"},
-    latestAuthoritativePublishedCatalogYear: "2025-2026",
-    unavailableCatalogYears: ["2026-2027"],
+    latestAuthoritativePublishedCatalogYear: "2026-2027",
+    unavailableCatalogYears: ["2027-2028"],
     releases
   };
   await Promise.all([
     // Selection metadata follows the current manifests; versioned releases remain immutable.
     writeFile(path.join(compiledRoot, "catalog-releases.json"), canonicalJson(registry)),
-    writeFile(path.join(compiledRoot, "historical-catalog-source-report.md"), historicalSourceReport(provenance, releases))
+    writeFile(path.join(compiledRoot, "historical-catalog-source-report.md"), historicalSourceReport(provenance, releases)),
+    writeFile(path.join(compiledRoot, "catalog-prerequisites-by-year.json"), canonicalJson({
+      schemaVersion: "1.0.0",
+      program: "ECONOMICS",
+      prerequisitesByCatalogYear: Object.fromEntries(catalogs
+        .filter(catalog => catalog.activationStatus === "OWNER_AUTHORIZED_DECLARATION_YEAR")
+        .map(catalog => [catalog.catalogYear, catalog.prerequisites]))
+    }))
   ]);
   const planningFlexibility = await compilePlanningFlexibilityPolicy(root, compiledRoot);
   return {registry, planningFlexibility, compiledRoot};

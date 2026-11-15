@@ -31,7 +31,7 @@ test("major mapper returns every captured program and Economics schedule", async
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ student: { academicStanding: "freshman", planCreationDate: "2025-09-01", courses: [] } })
+    body: JSON.stringify({ student: { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", planCreationDate: "2025-09-01", courses: [] } })
   }));
   const data = await response.json();
   const economics = data.programs.find(result => result.program?.id === "economics-base");
@@ -40,10 +40,10 @@ test("major mapper returns every captured program and Economics schedule", async
   assert.ok(data.summary.programCount >= 37);
   assert.equal(data.summary.mappedProgramCount, 1);
   assert.deepEqual(data.catalog.evaluatedCatalogYears, ["2025-2026"]);
-  assert.equal(data.catalog.basis, "entry_catalog_year_inferred_from_standing_and_plan_date");
+  assert.equal(data.catalog.basis, "major_declaration_catalog_year");
   assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
   assert.equal(data.catalog.requestedCatalogYear, "2025-2026");
-  assert.equal(data.catalog.catalogResolutionStatus, "owner_designated_matches_incoming");
+  assert.equal(data.catalog.catalogResolutionStatus, "exact_declaration_year");
   assert.equal(data.catalog.comparisonStatus, "no_change");
   assert.equal(data.catalog.catalogApplicability.status, "OWNER_DESIGNATED_REQUIREMENTS_MATCH_INCOMING_CATALOG");
   assert.equal(data.catalog.governingMajorCatalogYear, "2025-2026");
@@ -64,7 +64,7 @@ test("major mapper returns the separated top-tier Explore plan for the current f
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "freshman",
         planCreationDate: "2026-08-10",
         planningPace: "standard",
@@ -102,7 +102,7 @@ test("major mapper treats summer standing as the upcoming Fall without clarifica
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "freshman",
         planCreationDate: "2026-07-26",
         courses: []
@@ -123,7 +123,7 @@ test("major mapper validates transfer graduation and Hanover entry years", async
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         isTransferStudent: true,
         transferExpectedGraduationYear: "2032",
         transferEntryAcademicYear: "2026-2027",
@@ -143,7 +143,7 @@ test("major mapper asks the exact missing plan-date question", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ student: { academicStanding: "freshman", courses: [] } })
+    body: JSON.stringify({ student: { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", courses: [] } })
   }));
   const data = await response.json();
 
@@ -173,7 +173,7 @@ test("a matching incoming catalog needs no SAC notification", async () => {
   assert.equal(response.status, 200);
   assert.equal(data.catalog.catalogApplicability.status, "OWNER_DESIGNATED_REQUIREMENTS_MATCH_INCOMING_CATALOG");
   assert.equal(data.catalog.governingMajorCatalogYear, "2025-2026");
-  assert.equal(data.catalog.selectionAuthority, "OWNER_DESIGNATED_MOST_FLEXIBLE_ECONOMICS_MAJOR_REQUIREMENT_SET");
+  assert.equal(data.catalog.selectionAuthority, "FORMAL_MAJOR_DECLARATION_YEAR_REQUIREMENTS");
   assert.ok(!data.catalog.advisorAttention.some(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE"));
 });
 
@@ -183,7 +183,7 @@ test("major mapper accepts one-year-early plans without a senior-standing confir
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        student: {
+        student: { majorDeclarationCatalogYear: "2025-2026",
           academicStanding: "freshman",
           planningPace: "one_year_early",
           planCreationDate: "2026-07-26",
@@ -213,7 +213,7 @@ test("major mapper accepts one-year-early plans without a senior-standing confir
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         isTransferStudent: true,
         transferExpectedGraduationYear: "2027",
         transferEntryAcademicYear: "2026-2027",
@@ -233,7 +233,7 @@ test("major mapper evaluates Junior Graduate next year and normalizes Senior req
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        student: {
+        student: { majorDeclarationCatalogYear: "2025-2026",
           academicStanding,
           planningPace: "one_year_early",
           planCreationDate: "2026-07-30",
@@ -267,7 +267,7 @@ test("major mapper accepts a custom graduation year without transfer identity", 
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "sophomore",
         customGraduationEnabled: true,
         customExpectedGraduationYear: "2030",
@@ -285,7 +285,7 @@ test("major mapper accepts a custom graduation year without transfer identity", 
   assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
   assert.equal(economics.planningContext.earlyComparisonRequested, false);
   assert.equal(economics.economicsAcceleratedResult, null);
-  assert.equal(data.catalog.basis, "entry_catalog_year_inferred_from_standing_and_plan_date");
+  assert.equal(data.catalog.basis, "major_declaration_catalog_year");
 });
 
 test("major mapper uses transfer entry catalog and keeps the selected graduation target", async () => {
@@ -293,7 +293,7 @@ test("major mapper uses transfer entry catalog and keeps the selected graduation
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         isTransferStudent: true,
         transferExpectedGraduationYear: "2030",
         transferEntryAcademicYear: "2025-2026",
@@ -307,7 +307,7 @@ test("major mapper uses transfer entry catalog and keeps the selected graduation
 
   assert.equal(response.status, 200);
   assert.equal(data.catalog.requestedCatalogYear, "2025-2026");
-  assert.equal(data.catalog.basis, "transfer_hanover_entry_academic_year");
+  assert.equal(data.catalog.basis, "major_declaration_catalog_year");
   assert.equal(economics.planningContext.isTransferStudent, true);
   assert.equal(economics.planningContext.expectedGraduationTerm, "Spring/May 2030");
   assert.ok(economics.economicsCandidateOutcomes.every(outcome => outcome.id !== "one-year-early"));
@@ -318,7 +318,7 @@ test("major mapper returns only the selected planning horizon", async () => {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "freshman",
         planCreationDate: "2026-09-01",
         courses: []
@@ -340,7 +340,7 @@ test("major mapper returns only the selected planning horizon", async () => {
 });
 
 test("major mapper generation continues to enforce authoritative reserved term capacity", async () => {
-  const baseStudent = {
+  const baseStudent = { majorDeclarationCatalogYear: "2025-2026",
     academicStanding: "senior",
     planCreationDate: "2026-07-30",
     courses: [
@@ -352,7 +352,7 @@ test("major mapper generation continues to enforce authoritative reserved term c
     const response = await POST(new Request("http://localhost/api/majors/map", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ student: { ...baseStudent, reservedCourseUnits } })
+      body: JSON.stringify({ student: { majorDeclarationCatalogYear: "2025-2026", ...baseStudent, reservedCourseUnits } })
     }));
     const data = await response.json();
     const economics = data.programs.find(result => result.program?.id === "economics-base");
@@ -383,7 +383,7 @@ test("exhaustive normal-capacity search preserves missing overload evidence inst
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "junior",
         planningPace: "standard",
         planCreationDate: "2027-02-15",
@@ -422,7 +422,7 @@ test("major mapper uses the inferred entry catalog and reports an unavailable ne
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "sophomore",
         planCreationDate: "2027-01-10",
         courses: []
@@ -439,12 +439,12 @@ test("major mapper uses the inferred entry catalog and reports an unavailable ne
   assert.deepEqual(data.catalog.candidateCatalogYears, ["2025-2026"]);
 });
 
-test("missing 2026-2027 entry catalog uses 2025-2026 and returns Advisor Attention", async () => {
+test("2026-2027 declaration uses its authorized complete major set", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2026-2027",
         academicStanding: "freshman",
         planCreationDate: "2026-09-01",
         courses: []
@@ -455,19 +455,19 @@ test("missing 2026-2027 entry catalog uses 2025-2026 and returns Advisor Attenti
 
   assert.equal(response.status, 200);
   assert.equal(data.catalog.requestedCatalogYear, "2026-2027");
-  assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
-  assert.equal(data.catalog.catalogResolutionStatus, "owner_designated_flexible_requirements");
-  assert.equal(data.catalog.advisorAttention[0].code, "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
-  assert.equal(data.catalog.catalogApplicability.latestAvailableCatalogYear, "2025-2026");
+  assert.equal(data.catalog.selectedCatalogYear, "2026-2027");
+  assert.equal(data.catalog.catalogResolutionStatus, "exact_declaration_year");
+  assert.ok(!data.catalog.advisorAttention.some(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"));
+  assert.equal(data.catalog.catalogApplicability.latestAvailableCatalogYear, "2026-2027");
   assert.ok(data.catalog.catalogApplicability.candidateCatalogYears.includes("2026-2027"));
 });
 
-test("missing historical entry catalog uses an Economics-only provisional fallback", async () => {
+test("2023-2024 declaration uses its authorized historical major set", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2023-2024",
         academicStanding: "senior",
         planCreationDate: "2026-09-01",
         courses: []
@@ -478,13 +478,11 @@ test("missing historical entry catalog uses an Economics-only provisional fallba
 
   assert.equal(response.status, 200);
   assert.equal(data.catalog.requestedCatalogYear, "2023-2024");
-  assert.equal(data.catalog.selectedCatalogYear, "2025-2026");
-  assert.equal(data.catalog.catalogResolutionStatus, "owner_designated_flexible_requirements");
-  assert.equal(data.catalog.scope, "economics_only_provisional");
-  assert.equal(data.programs.length, 1);
-  assert.equal(data.programs[0].program.id, "economics-base");
-  const notice = data.catalog.advisorAttention.find(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE");
-  assert.match(notice.message, /routine SAC petition/);
+  assert.equal(data.catalog.selectedCatalogYear, "2023-2024");
+  assert.equal(data.catalog.catalogResolutionStatus, "exact_declaration_year");
+  assert.equal(data.catalog.scope, "catalog_snapshot");
+  assert.ok(data.programs.some(item => item.program.id === "economics-base"));
+  assert.ok(!data.catalog.advisorAttention.some(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE"));
 });
 
 test("major mapper retains a standard senior plan above the Economics load preference with advisor warnings", async () => {
@@ -492,7 +490,7 @@ test("major mapper retains a standard senior plan above the Economics load prefe
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "senior",
         planCreationDate: "2026-07-30",
         courses: ["ECO 113", "ECO 114", "MAT 113", "ECO 214"].map(code => ({ code, status: "completed" }))
@@ -521,7 +519,7 @@ test("Finance uses ECO 321 when both are complete and explains the BUSN 323 peti
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "freshman",
         planCreationDate: "2025-09-01",
         courses: [
@@ -547,7 +545,7 @@ test("a completed or current 100-level elective produces Advisor Attention", asy
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "freshman",
         planCreationDate: "2025-09-01",
         courses: [{ code: "ECO 161", status: "in_progress" }]
@@ -567,7 +565,7 @@ test("major mapper rejects an in-progress course with missing prerequisites", as
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "sophomore",
         planCreationDate: "2027-02-01",
         courses: [{ code: "ECO 213", status: "in_progress" }]
@@ -590,7 +588,7 @@ test("major mapper does not request new approval for current concurrent math", a
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      student: {
+      student: { majorDeclarationCatalogYear: "2025-2026",
         academicStanding: "sophomore",
         planCreationDate: "2027-02-01",
         courses: [
@@ -604,7 +602,6 @@ test("major mapper does not request new approval for current concurrent math", a
   const data = await response.json();
   const economics = data.programs.find(result => result.program?.id === "economics-base");
   const notice = data.catalog.advisorAttention.find(item => item.title === "Concurrent enrollment approval");
-
   assert.equal(response.status, 200);
   assert.equal(notice, undefined);
   assert.ok(economics.economicsPlans.length > 0);
@@ -613,7 +610,7 @@ test("major mapper does not request new approval for current concurrent math", a
 });
 
 test("edited plan validation rejects an incomplete submitted candidate", async () => {
-  const student = {
+  const student = { majorDeclarationCatalogYear: "2025-2026",
     academicStanding: "freshman",
     planCreationDate: "2026-09-01",
     courses: []
@@ -654,7 +651,7 @@ test("edited plan validation rejects an incomplete submitted candidate", async (
 });
 
 test("edited plan validation keeps future sequencing nonblocking with open selected sections", async () => {
-  const student = {
+  const student = { majorDeclarationCatalogYear: "2025-2026",
     academicStanding: "freshman",
     planCreationDate: "2026-08-02",
     courses: []
@@ -701,7 +698,7 @@ test("edited plan validation keeps future sequencing nonblocking with open selec
 });
 
 test("edited plan validation preserves the selected plan's yearly design", async () => {
-  const student = {
+  const student = { majorDeclarationCatalogYear: "2025-2026",
     academicStanding: "freshman",
     planCreationDate: "2026-08-02",
     courses: []
@@ -750,7 +747,7 @@ test("edited plan validation preserves the selected plan's yearly design", async
 });
 
 test("edited plan validation rejects canonical schedule tampering and post-graduation terms", async () => {
-  const student = {
+  const student = { majorDeclarationCatalogYear: "2025-2026",
     academicStanding: "freshman",
     planCreationDate: "2026-08-02",
     courses: []

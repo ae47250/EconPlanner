@@ -7,7 +7,7 @@ import { POST, GET } from "../app/api/majors/map/route.js";
 import { handleEconomicsReportRequest } from "../app/api/reports/economics/route.js";
 import { buildPlanningSlots, isValidPlanningDate, MAX_STUDENT_COURSE_RECORDS, normalizeStanding, resolvePlanningContext, validatePlanningInputs, validateStudentCourseHistoryLimit } from "../lib/planning/horizon.js";
 
-const student = { academicStanding: "freshman", planCreationDate: "2026-09-23", courses: [] };
+const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", planCreationDate: "2026-09-23", courses: [] };
 const reportStudentFixture = JSON.parse(await readFile(new URL("./fixtures/economics-report-student.json", import.meta.url), "utf8")).student;
 const request = body => new Request("http://localhost/api/local-test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
@@ -74,7 +74,7 @@ test("supported standings, leap day, optional standing and report date defaults 
     assert.equal(context.planCreationDate, "2028-02-29");
     assert.equal(context.effectiveStanding, standing?.trim().toLowerCase() || "freshman");
   }
-  const response = await handleEconomicsReportRequest(request({ student: { academicStanding: "freshman", courses: [] }, preparedDate: "2026-09-23", format: "json" }));
+  const response = await handleEconomicsReportRequest(request({ student: { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", courses: [] }, preparedDate: "2026-09-23", format: "json" }));
   assert.equal(response.status, 200);
 });
 

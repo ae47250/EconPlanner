@@ -8,7 +8,7 @@ import { runtimePolicyBundle } from '../lib/policy/compat-normalized.js';
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan } from './oracle/load-canonical-policy.js';
 import { projectSelectedPlanArtifact, projectReportJsonArtifact, projectReportHtmlArtifact, projectionMismatches } from './oracle/economics-artifact-projection.js';
 
-const student = { academicStanding: 'freshman', planCreationDate: '2026-07-30', courses: [] };
+const student = { majorDeclarationCatalogYear: '2025-2026', academicStanding: 'freshman', planCreationDate: '2026-07-30', courses: [] };
 async function post(body, handler = POST) {
   const response = await handler(new Request('http://localhost/api/majors/map', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) }));
   const data = response.headers.get('content-type')?.includes('text/html') ? await response.text() : await response.json();

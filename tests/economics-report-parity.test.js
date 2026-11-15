@@ -29,6 +29,7 @@ function completed(codes) {
 }
 
 const LARGE_SELECTED_STUDENT = Object.freeze({
+  majorDeclarationCatalogYear: "2025-2026",
   displayName: "Artifact Parity Student",
   academicStanding: "senior",
   planCreationDate: PREPARED_DATE,
@@ -36,6 +37,7 @@ const LARGE_SELECTED_STUDENT = Object.freeze({
 });
 
 const PROJECTED_STUDENT = Object.freeze({
+  majorDeclarationCatalogYear: "2025-2026",
   displayName: "Non-default Plan Student",
   academicStanding: "sophomore",
   planCreationDate: PREPARED_DATE,
@@ -47,6 +49,7 @@ const PROJECTED_STUDENT = Object.freeze({
 
 function statisticsCompletedStudent(statisticsCourse) {
   return {
+    majorDeclarationCatalogYear: "2025-2026",
     displayName: `${statisticsCourse} Statistics Student`,
     academicStanding: "senior",
     planCreationDate: PREPARED_DATE,
@@ -58,6 +61,7 @@ function statisticsCompletedStudent(statisticsCourse) {
 }
 
 const FUTURE_ECO257_STUDENT = Object.freeze({
+  majorDeclarationCatalogYear: "2025-2026",
   displayName: "ECO 257 Statistics Student",
   academicStanding: "senior",
   planCreationDate: "2027-07-30",
@@ -232,7 +236,7 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
   assert.equal(expected.feasibilityStatus, "CONDITIONALLY_FEASIBLE");
   assert.equal(expected.terms.flatMap(term => term.courses).filter(course => course.requirementRole).length, 8);
   assert.ok(expected.warnings.some(message => /unknown date|availability|seat/i.test(message)));
-  assert.equal(expected.advisorAttention.length, 1);
+  assert.equal(expected.advisorAttention.length, 0);
   assert.ok(!expected.advisorAttention.some(notice => notice.code.startsWith("PLAN_EDIT_OPTIONS_")));
   assert.ok(expected.terms.some(term => term.courses.some(course => course.approvals.length > 0)));
 
@@ -377,8 +381,8 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
   test(`approval badges preserve ${authority} evidence across the edited plan and reports`, async () => {
     const instructor = authority === "ECO 213 instructor";
     const student = instructor
-      ? { academicStanding: "freshman", planCreationDate: "2026-10-19", courses: [] }
-      : { academicStanding: "junior", planCreationDate: PREPARED_DATE, courses: completed(["MAT 113", "ECO 161", "ECO 221"]) };
+      ? { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", planCreationDate: "2026-10-19", courses: [] }
+      : { majorDeclarationCatalogYear: "2025-2026", academicStanding: "junior", planCreationDate: PREPARED_DATE, courses: completed(["ECO 113", "MAT 113", "ECO 161", "ECO 221"]) };
     const economics = await generateEconomics(student);
     let selectedPlan = economics.economicsPlans.find(plan => plan.id === "balanced");
     if (instructor) {
@@ -390,7 +394,7 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
       selectedPlan = data.plan;
     }
     const courseCode = instructor ? "ECO 213" : "ECO 461";
-    const prerequisite = instructor ? "MAT 113" : "ECO 213";
+    const prerequisite = instructor ? "MAT 113" : "ECO 214";
     const term = instructor ? "Fall 2027" : "Winter 2028";
     const approver = /instructor/i.test(authority) ? `the ${courseCode} instructor` : authority;
     const message = `Taking ${prerequisite} and ${courseCode} together in ${term} needs approval from ${approver}. No approval is recorded yet.`;

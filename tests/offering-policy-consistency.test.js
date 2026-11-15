@@ -29,7 +29,7 @@ const post = async body => {
 };
 const entries = plan => plan.terms.flatMap(term => term.courses.map(course => ({ term, course })));
 const baseCompleted = ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "BUSN 323", "ECO 221", "ECO 222", "ECO 234", "ECO 333"];
-const studentWith = codes => ({ academicStanding: "sophomore", planCreationDate: "2027-07-30", courses: codes.map(code => ({ code, status: "completed" })) });
+const studentWith = codes => ({ majorDeclarationCatalogYear: "2025-2026", academicStanding: "sophomore", planCreationDate: "2027-07-30", courses: codes.map(code => ({ code, status: "completed" })) });
 async function generate(student) {
   const result = await post({ student });
   assert.equal(result.status, 200);
@@ -123,7 +123,7 @@ test("ECO 222 catalog term scope does not establish a future elective offering",
 });
 
 test("ECO 222 exact alternate-term evidence passes complete edit validation", async () => {
-  const student = { academicStanding: "junior", planCreationDate: "2026-07-30", courses: ["MAT 113", "ECO 161", "ECO 221"].map(code => ({code, status: "completed"})) };
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "junior", planCreationDate: "2026-07-30", courses: ["MAT 113", "ECO 161", "ECO 221"].map(code => ({code, status: "completed"})) };
   const generated = await post({ student });
   const economics = generated.data.programs.find(item => item.program.id === "economics-base");
   const plan = economics.economicsPlans.find(item => item.id === "balanced");
@@ -206,7 +206,7 @@ test("ECO 222 exact alternate-term evidence passes complete edit validation", as
 });
 
 for (const soften of [false, true]) test(`catalog/history patterns cannot activate named future electives (soft=${soften})`, async () => {
-  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
   const generated = await post({ student });
   const economics = generated.data.programs.find(item => item.program.id === "economics-base");
   const plan = economics.economicsPlans.find(item => item.id === "one-year-early");
@@ -241,7 +241,7 @@ test("year-only placeholders retain a distinct-term witness for the intermediate
 });
 
 test("targeted option rebuilding retains full comparison validation and identical selected-plan controls", async () => {
-  const student = { academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
+  const student = { majorDeclarationCatalogYear: "2025-2026", academicStanding: "freshman", planningPace: "one_year_early", planCreationDate: "2026-09-23", courses: [] };
   const generated = await post({ student });
   const economics = generated.data.programs.find(item => item.program.id === "economics-base");
   const catalog = await loadCatalog(generated.data.catalog.selectedCatalogYear);

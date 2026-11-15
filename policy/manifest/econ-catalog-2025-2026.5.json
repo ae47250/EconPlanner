@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0.0",
+  "manifestId": "ECON-CATALOG-2025-2026-5",
+  "policyVersion": "econ-catalog-2025-2026.5",
+  "program": "ECONOMICS",
+  "catalogYear": "2025-2026",
+  "status": "OWNER_AUTHORIZED_DECLARATION_YEAR",
+  "inputs": {
+    "catalog": "policy/catalogs/economics-2025-2026.5.json",
+    "flexibilityRule": "policy/rules/catalog-flexibility.json",
+    "provenance": "policy/provenance/catalog-sources.json"
+  },
+  "output": "data/compiled/policy/releases/econ-catalog-2025-2026.5",
+  "activation": {
+    "changesActiveRuntimeMapping": false,
+    "previousActiveBundle": "econ-2025-2026.1",
+    "previousActiveBundleHash": "sha256:76659e80ea6c3f43148dbc485818081db36a25a1a857a9b020c1a75f505ca4e7",
+    "requiredApproval": "OWNER_DECISION_2026-11-15_AND_VERIFIED_OFFICIAL_CATALOG"
+  }
+}

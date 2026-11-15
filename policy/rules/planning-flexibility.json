@@ -1,11 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.9",
+  "policyVersion": "econ-planning-flexibility.13",
   "status": "OWNER_APPROVED",
   "confirmation": {
     "date": "2026-11-15",
     "reviewer": "Project owner and Economics Department domain expert",
-    "source": "policy/provenance/hanover-core-2026-27.md"
+    "source": "policy/provenance/catalog-authority-2026-11-15.md"
   },
   "sourceRefs": [
     "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -15,7 +15,7 @@
     "OWNER-CONFIRMATION-CP4B-B-FOLLOWUP#PLANNING-FLEXIBILITY",
     "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
     "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
-    "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
+    "OWNER-CATALOG-AUTHORITY-2026-11-15#MAJOR-AND-COURSE-SCOPE",
     "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
     "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
   ],
@@ -182,16 +182,20 @@
     ]
   },
   "mostFlexibleEconomicsMajorRequirementSet": {
-    "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
-    "designationId": "economics-most-flexible-2025-2026",
-    "catalogYear": "2025-2026",
-    "requirementSetPolicyVersion": "econ-catalog-2025-2026.3",
-    "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED",
+    "ruleId": "ECONOMICS-MAJOR-DECLARATION-YEAR-REQUIREMENTS",
+    "designationId": "economics-declaration-year-complete-set",
+    "catalogYear": null,
+    "requirementSetPolicyVersion": null,
+    "selectionMethod": "COMPLETE_FORMAL_DECLARATION_YEAR_SET",
     "requiresVerifiedActivation": true,
     "discoveryMayAutoActivate": false,
     "automaticNewestSelectionPermitted": false,
-    "incomingCatalogRole": "AUDIT_AND_COMPARISON_METADATA",
-    "declarationCatalogMayOverride": false,
+    "incomingCatalogRole": "FORMAL_MAJOR_REQUIREMENT_AUTHORITY",
+    "declarationCatalogMayOverride": true,
+    "newerCompleteSetOverrideRequiresRecordedApproval": true,
+    "mixedCatalogRequirementSelectionPermitted": false,
+    "unknownDeclarationStatus": "PRELIMINARY_ONLY",
+    "coursePrerequisiteScope": "ENROLLMENT_TERM_INDEPENDENT_OF_MAJOR_DECLARATION",
     "readinessImpact": "NONE",
     "knownFlexibleDifferences": [
       "PSY_217_STATISTICS_OPTION",
@@ -206,7 +210,7 @@
         "readinessImpact": "NONE",
         "sacPetitionRequired": true,
         "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
-        "messageTemplate": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026) instead of the student’s incoming catalog requirements ([incoming year]). Please help the student submit the routine SAC petition so the newer requirements are recorded for the degree audit. The department treats this petition as a formality."
+        "messageTemplate": "This plan uses a newer complete Economics major requirement set than the student's declaration catalog year. The required approval must be documented before this set can be treated as confirmed."
       },
       "incomingYearUnknown": {
         "code": "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN",
@@ -215,8 +219,8 @@
         "readinessImpact": "NONE",
         "sacPetitionRequired": false,
         "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
-        "message": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026). The student’s incoming catalog year is not known, so the advisor should confirm it for degree-audit records.",
-        "messageWhenYearKnownButRequirementsUnavailableTemplate": "This plan uses the 2025–2026 Economics major requirements. Your recorded catalog year is [incoming year]. Ask your advisor to confirm which major requirements apply and whether any additional paperwork is needed."
+        "message": "The Economics major declaration catalog year is not known. Major requirements remain preliminary until the declaration year is confirmed.",
+        "messageWhenYearKnownButRequirementsUnavailableTemplate": "The recorded Economics declaration year is [incoming year], but its complete requirement set is unavailable. Ask an advisor to confirm the governing catalog before using a major plan."
       }
     }
   },
@@ -401,6 +405,6 @@
     "academicPrerequisitesChanged": false,
     "courseLoadRulesChanged": false,
     "legacyCodeRetired": false,
-    "catalog2026_2027CreatedOrActivated": false
+    "catalog2026_2027CreatedOrActivated": true
   }
 }

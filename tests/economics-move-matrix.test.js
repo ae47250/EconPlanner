@@ -41,6 +41,7 @@ if (fullMode) for (const standing of profileFixture.standings) for (const fixtur
   }]);
 }
 
+for (const [, student] of profiles) student.majorDeclarationCatalogYear = "2025-2026";
 const selectedProfiles = shard ? selectProfiles(profiles.map(([name]) => name), shard) : null;
 
 async function post(body) {
