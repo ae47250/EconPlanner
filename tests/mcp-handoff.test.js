@@ -40,15 +40,28 @@ test("hosted MCP advertises the same two tools with a five-minute function limit
   assert.equal(response.status, 200);
   const text = await response.text();
   const message = JSON.parse(text.match(/^data: (.*)$/m)[1]);
-  assert.deepEqual(message.result.tools.map(tool => tool.name), ["generate_plans", "move_course"]);
+  const tools = message.result.tools;
+  assert.deepEqual(tools.map(tool => tool.name), ["generate_plans", "move_course"]);
+  for (const tool of tools) {
+    assert.match(tool.description, /Hanover.*Economics major/);
+    assert.match(tool.description, /seats/);
+    assert.match(tool.description, /catalogue.year/);
+    assert.match(tool.description, /advisor/);
+    assert.match(tool.description, /link unchanged, never its raw URL/);
+    assert.ok(tool._meta?.["openai/toolInvocation/invoking"]?.length <= 64);
+    assert.ok(tool._meta?.["openai/toolInvocation/invoked"]?.length <= 64);
+  }
+  assert.match(tools[0].description, /Ask for the declaration catalogue year first/);
+  assert.match(tools[1].description, /Use after generate_plans/);
 });
 
 test("pilot planning and move decisions stay the same and return encrypted handoff links", async () => {
   const tools = toolHandlers();
-  const generated = (await tools.get("generate_plans")({
+  const generatedResult = await tools.get("generate_plans")({
     planningDate: "2026-11-20", standing: "freshman", earlyGraduation: true,
     courses: [{ code: "ECO 113", status: "in_progress" }]
-  })).structuredContent;
+  });
+  const generated = generatedResult.structuredContent;
   assert.deepEqual(generated.plans.map(plan => [plan.id, plan.terms.at(-1).id]), [
     ["balanced", "spring-2030"], ["explore-first", "spring-2030"], ["one-year-early", "spring-2029"]
   ]);
@@ -56,16 +69,20 @@ test("pilot planning and move decisions stay the same and return encrypted hando
   assert.equal(new URL(generated.openInEconPlannerUrl).origin, "https://econplanner-preview.vercel.app");
   assert.equal(new URL(generated.openInEconPlannerUrl).search, "");
   assert.equal(new URLSearchParams(new URL(generated.openInEconPlannerUrl).hash.slice(1)).get("openPlan"), generated.stateToken);
+  assert.ok(generatedResult.content[0].text.endsWith(`[Open in EconPlanner](${generated.openInEconPlannerUrl})`));
+  assert.ok(!("student" in generated));
 
   let token = generated.stateToken;
   let balanced = generated.plans[0];
+  let lastMoveResult;
   async function move(code, toTermId, fromTermId = null) {
     const from = placement(balanced, code, fromTermId);
     assert.ok(from, `${code} must be in the displayed plan`);
-    const response = (await tools.get("move_course")({
+    lastMoveResult = await tools.get("move_course")({
       stateToken: token, planId: "balanced", courseId: from.courseId,
       fromTermId: from.termId, toTermId
-    })).structuredContent;
+    });
+    const response = lastMoveResult.structuredContent;
     if (response.accepted) { token = response.stateToken; balanced = response.plan; }
     return response;
   }
@@ -73,10 +90,21 @@ test("pilot planning and move decisions stay the same and return encrypted hando
   const conditional = await move("MAT 113", "winter-2028");
   assert.equal(conditional.accepted, true);
   assert.equal(conditional.plan.readinessStatus, "READY_WITH_CONDITIONS");
-  assert.ok(conditional.plan.conditions.some(item => item.affectedObject?.course === "ECO 213"));
-  assert.equal((await move("MAT 217", "winter-2030")).accepted, false);
+  assert.ok(conditional.plan.conditions.some(item => item.affectedObject?.course === "ECO 213"
+    && /Approval from the ECO 213 instructor is required/.test(item.message)));
+  assert.ok(conditional.plan.conditions.every(item => item.message));
+  assert.match(conditional.message, /^Accepted, but needs ECO 213 instructor approval\./);
+  assert.ok(lastMoveResult.content[0].text.endsWith(`[Open in EconPlanner](${conditional.openInEconPlannerUrl})`));
+  assert.ok(!("student" in conditional));
+  const rejected = await move("MAT 217", "winter-2030");
+  assert.equal(rejected.accepted, false);
+  assert.equal(rejected.errors.length, 2);
+  assert.match(rejected.message, /^Move rejected:/);
+  for (const error of rejected.errors) assert.ok(lastMoveResult.content[0].text.includes(`- ${error}`));
   assert.equal((await move("ECO elective", "fall-2027", "spring-2030")).accepted, true);
-  assert.equal((await move("MAT 217", "spring-2030")).accepted, false);
+  const rejectedAgain = await move("MAT 217", "spring-2030");
+  assert.equal(rejectedAgain.accepted, false);
+  assert.ok(rejectedAgain.errors.length >= 1);
   assert.equal(new URLSearchParams(new URL(conditional.openInEconPlannerUrl).hash.slice(1)).get("plan"), "balanced");
   assert.equal((await redeem(token, "balanced")).status, 200);
 });
