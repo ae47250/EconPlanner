@@ -2,6 +2,7 @@ import { createMcpHandler } from "mcp-handler";
 import { checkRateLimit } from "@vercel/firewall";
 import { GET as getPlannerFingerprint, POST as runPlanner } from "../majors/map/route.js";
 import { registerPlannerTools } from "../../../lib/planning/mcp-tools.js";
+import { registerPlanCard } from "../../../lib/planning/mcp-plan-card.js";
 import { publicSiteOrigin, validStateKey } from "../../../lib/planning/mcp-state.js";
 
 export const runtime = "nodejs";
@@ -22,6 +23,7 @@ async function handle(request) {
   }
 
   const handler = createMcpHandler(server => {
+    registerPlanCard(server);
     registerPlannerTools(server, { runPlanner, getPlannerFingerprint, secret });
   }, { serverInfo: { name: "econplanner", version: "0.1.0" } });
   return handler(request);

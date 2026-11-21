@@ -4,6 +4,7 @@ import { GET as getPlannerFingerprint, POST as runPlanner } from "../app/api/maj
 import { POST as openLinkedPlan } from "../app/api/mcp/open-plan/route.js";
 import { POST as mcpRequest, maxDuration } from "../app/api/mcp/route.js";
 import { registerPlannerTools } from "../lib/planning/mcp-tools.js";
+import { planCardUri } from "../lib/planning/mcp-plan-card.js";
 import { encodeState, openInEconPlannerUrl, publicSiteOrigin } from "../lib/planning/mcp-state.js";
 
 const stateKey = "ab".repeat(32); // Fictional test key, never used in a deployment.
@@ -50,9 +51,25 @@ test("hosted MCP advertises the same two tools with a five-minute function limit
     assert.match(tool.description, /link unchanged, never its raw URL/);
     assert.ok(tool._meta?.["openai/toolInvocation/invoking"]?.length <= 64);
     assert.ok(tool._meta?.["openai/toolInvocation/invoked"]?.length <= 64);
+    assert.equal(tool._meta?.ui?.resourceUri, planCardUri);
   }
   assert.match(tools[0].description, /Ask for the declaration catalogue year first/);
   assert.match(tools[1].description, /Use after generate_plans/);
+});
+
+test("hosted MCP returns the plan card as a self-contained UI resource", async () => {
+  const response = await mcpRequest(new Request("https://econplanner-preview.vercel.app/api/mcp", {
+    method: "POST", headers: { "content-type": "application/json", accept: "application/json, text/event-stream" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "resources/read", params: { uri: planCardUri } })
+  }));
+  assert.equal(response.status, 200);
+  const text = await response.text();
+  const message = JSON.parse(text.match(/^data: (.*)$/m)[1]);
+  const [resource] = message.result.contents;
+  assert.equal(resource.uri, planCardUri);
+  assert.equal(resource.mimeType, "text/html;profile=mcp-app");
+  assert.match(resource.text, /ui\/notifications\/tool-result/);
+  assert.deepEqual(resource._meta["openai/widgetCSP"].redirect_domains, ["https://econplanner-preview.vercel.app"]);
 });
 
 test("pilot planning and move decisions stay the same and return encrypted handoff links", async () => {
@@ -70,6 +87,15 @@ test("pilot planning and move decisions stay the same and return encrypted hando
   assert.equal(new URL(generated.openInEconPlannerUrl).search, "");
   assert.equal(new URLSearchParams(new URL(generated.openInEconPlannerUrl).hash.slice(1)).get("openPlan"), generated.stateToken);
   assert.ok(generatedResult.content[0].text.endsWith(`[Open in EconPlanner](${generated.openInEconPlannerUrl})`));
+  const card = generatedResult._meta.econplannerPlanCard;
+  assert.equal(card.selectedPlanId, "balanced");
+  assert.deepEqual(Object.keys(card.links), generated.plans.map(plan => plan.id));
+  for (const [planId, link] of Object.entries(card.links)) {
+    const params = new URLSearchParams(new URL(link).hash.slice(1));
+    assert.equal(params.get("openPlan"), generated.stateToken);
+    assert.equal(params.get("plan"), planId);
+    assert.equal((await redeem(params.get("openPlan"), planId)).status, 200);
+  }
   assert.ok(!("student" in generated));
 
   let token = generated.stateToken;
@@ -95,6 +121,10 @@ test("pilot planning and move decisions stay the same and return encrypted hando
   assert.ok(conditional.plan.conditions.every(item => item.message));
   assert.match(conditional.message, /^Accepted, but needs ECO 213 instructor approval\./);
   assert.ok(lastMoveResult.content[0].text.endsWith(`[Open in EconPlanner](${conditional.openInEconPlannerUrl})`));
+  assert.deepEqual(lastMoveResult._meta.econplannerPlanCard, {
+    selectedPlanId: "balanced",
+    links: { balanced: conditional.openInEconPlannerUrl }
+  });
   assert.ok(!("student" in conditional));
   const rejected = await move("MAT 217", "winter-2030");
   assert.equal(rejected.accepted, false);
