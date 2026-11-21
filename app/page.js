@@ -28,7 +28,7 @@ import { compactEconomicsPlanForValidation } from "../lib/planning/validation-pa
 import { requirementFormGroups } from "../lib/planning/requirementFormChoices.js";
 import economicsRequirements from "../data/normalized/economics/requirements.json";
 import economicsCourseData from "../data/normalized/economics/courses.json";
-import economicsPlanningConstraints from "../data/normalized/economics/planning-constraints.json";
+import { followingMayId, studyAbroadAdvisorContext, studyAbroadTermIds, termReservationLimit, updateStudyAbroadReservation } from "../lib/planning/study-abroad.js";
 import { seatStatusPresentation } from "../lib/planning/seat-status.js";
 import { noPlanPresentation } from "../lib/planning/no-plan-presentation.js";
 import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentTermLabel } from "../lib/planning/student-language.js";
@@ -188,6 +188,9 @@ function plannerInputSignature(formData) {
     reservedCourseUnits: formData.reservedCourseUnits,
     termLoadOverrides: formData.termLoadOverrides,
     studyAbroadTerm: formData.studyAbroadTerm,
+    studyAbroadMayOverlap: formData.studyAbroadMayOverlap,
+    studyAbroadDestination: formData.studyAbroadDestination,
+    studyAbroadAdvisingNote: formData.studyAbroadAdvisingNote,
     currentTermScheduleSet: currentTermWindow
       ? [currentTermWindow.slotId, formData.scheduleSetByTerm?.[currentTermWindow.slotId] === true]
       : null,
@@ -215,6 +218,9 @@ const initialForm = {
   reservationMemory: {},
   scheduleSetByTerm: {},
   studyAbroadTerm: "",
+  studyAbroadMayOverlap: false,
+  studyAbroadDestination: "",
+  studyAbroadAdvisingNote: "",
   courses: SELECTABLE_COURSE_CATALOG.map(blankCourse),
   advisorApprovals: ""
 };
@@ -376,12 +382,6 @@ function scheduleTermKey(term) {
   const value = String(term?.termKey || term?.scheduleTerm || term?.displayTerm || term?.term || "");
   if (/spring|may/i.test(value)) return "May";
   return value;
-}
-
-function termReservationLimit(slot = {}) {
-  const key = slot.termKey === "Spring" ? "May" : slot.termKey;
-  const contract = economicsPlanningConstraints.terms?.[key];
-  return Math.max(0, Number(contract?.normalCourseUnits ?? contract?.maxTotalCourses ?? 0));
 }
 
 function planningSlotsLabel(slotId, planningContext) {
@@ -804,6 +804,7 @@ function MoveConfirmation({ drop, onApply, onCancel, busy }) {
 
 function PlanTimeline({
   plans = [],
+  studyAbroadIds = [],
   planningGaps = [],
   activePlanId,
   schedule,
@@ -930,7 +931,7 @@ function PlanTimeline({
                         })}
                       </ul>
                     ) : (
-                      <p className="empty-term">No courses placed</p>
+                      <p className="empty-term">{studyAbroadIds.includes(term.slotId) ? "Study abroad" : "No courses placed"}</p>
                     )}
                     {term.isSummer && (
                       <p className="summer-term-note">Summer, online, last-resort option.</p>
@@ -1107,6 +1108,7 @@ function comparisonScheduleRows(plan) {
 
 function PlanComparisonScreen({
   report,
+  studyAbroad,
   planResult,
   fallbackPlanningContext,
   courses,
@@ -1140,6 +1142,8 @@ function PlanComparisonScreen({
   const candidateOutcomes = result?.economicsCandidateOutcomes || [];
   const convergences = result?.economicsPlanConvergences || [];
   const comparisonContext = result?.planningContext || fallbackPlanningContext;
+  const studyAbroadIds = studyAbroadTermIds(studyAbroad, buildPlanningSlots(comparisonContext));
+  const advisorContext = studyAbroadAdvisorContext(studyAbroad);
   const canonicalPlanResult = result?.economicsPlanResult || planResult || null;
   const acceleratedResult = result?.economicsAcceleratedResult || null;
   const mergePossibleEarlyResult = acceleratedResult?.status === "POSSIBLE"
@@ -2148,6 +2152,7 @@ function PlanComparisonScreen({
         {isPlanView ? (
           <PlanTimeline
             plans={plans}
+            studyAbroadIds={studyAbroadIds}
             planningGaps={planningGaps}
             activePlanId={selectedPlan?.id}
             schedule={result?.annualSchedule}
@@ -2241,7 +2246,7 @@ function PlanComparisonScreen({
                                     {course.course === "ECO 461" && <span className="course-constraint-note">Senior-year Winter only{!course.fixedInProgress && !courseHasMoveControl(course) ? " · no other eligible term in this plan" : ""}</span>}
                                   </div>
                                 </div>;
-                              }) : <span className="comparison-empty-term">No major course assigned</span>}
+                              }) : <span className="comparison-empty-term">{studyAbroadIds.includes(row.sourceTerm.slotId) ? "Study abroad" : "No major course assigned"}</span>}
                               {comparisonDrag?.planId === plan.id && <small className="comparison-drop-hint">{(() => {
                                 const option = comparisonDrag.course.moveDestinationOptions?.find(item => item.id === (row.sourceTerm.slotId || row.sourceTerm.term));
                                 return option?.status === "CURRENT" ? "Current term" : option?.status === "ALLOWED" ? "Drop here" : option?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(option);
@@ -2252,6 +2257,8 @@ function PlanComparisonScreen({
                       </tbody>
                     </table>
                   ) : null}
+
+                  {advisorContext.length > 0 && <section className="plan-notes" data-student-advisor-context><h3>Ask your advisor</h3><ul>{advisorContext.map((item, index) => <li key={index}>{item}</li>)}</ul></section>}
 
                   {planEditFeedback?.planId === plan.id && <p className="comparison-edit-status" role={planEditFeedback.failed ? "alert" : "status"}>{planEditFeedback.message}</p>}
                   {undoPlanId === plan.id && <button className="comparison-undo" type="button" disabled={Boolean(editingPlanCourseKey)} onClick={onUndoPlanEdit}>Undo last plan edit</button>}
@@ -2339,6 +2346,7 @@ function PlanComparisonScreen({
           <strong>Unmet requirements</strong><ul>{selectedPlan.majorRequirementsChecklist.unmetRequirements.map(row => <li key={row.id}>{row.label}: {row.courseTerm}{row.markers?.length > 0 && `; ${row.markers.join("; ")}`}</li>)}</ul>
         </section>}
         {isPlanView && selectedPlan && <PlanConditions plan={selectedPlan} catalog={report?.catalog} showPlanName={!isPlanView} />}
+        {isPlanView && advisorContext.length > 0 && <section className="plan-notes" data-student-advisor-context><h2>Ask your advisor</h2><ul>{advisorContext.map((item, index) => <li key={index}>{item}</li>)}</ul></section>}
 
         {isPlanView && selectedPlan && (
           <>
@@ -2535,14 +2543,14 @@ function PlannerSummary({
         {formData.studyAbroadTerm && (
           <div>
             <dt>Study abroad</dt>
-            <dd>No Economics courses in {planningSlotsLabel(formData.studyAbroadTerm, planningContext)}</dd>
+            <dd>No Economics courses in {studyAbroadTermIds(formData, buildPlanningSlots(planningContext)).map(id => planningSlotsLabel(id, planningContext)).join(" or ")}</dd>
           </div>
         )}
         {Object.entries(formData.reservedCourseUnits || {}).some(([, value]) => Number(value) > 0) && (
           <div>
             <dt>Room for other courses</dt>
             <dd>{Object.entries(formData.reservedCourseUnits)
-              .filter(([slotId, value]) => Number(value) > 0 && slotId !== formData.studyAbroadTerm)
+              .filter(([slotId, value]) => Number(value) > 0 && !studyAbroadTermIds(formData, buildPlanningSlots(planningContext)).includes(slotId))
               .map(([slotId, value]) => `${planningSlotsLabel(slotId, planningContext)}: ${value}`)
               .join(" · ") || "Study-abroad term only"}</dd>
           </div>
@@ -2942,17 +2950,7 @@ export default function Page() {
     if (!isHydrated || !formData.studyAbroadTerm) return;
     const valid = planningSlots.some(slot => slot.id === formData.studyAbroadTerm);
     if (valid) return;
-    setFormData(current => {
-      const restoredUnits = Number(current.reservationMemory?.[current.studyAbroadTerm] || 0);
-      const reservedCourseUnits = { ...(current.reservedCourseUnits || {}) };
-      if (current.studyAbroadTerm) reservedCourseUnits[current.studyAbroadTerm] = restoredUnits;
-      return {
-        ...current,
-        studyAbroadTerm: "",
-        reservedCourseUnits,
-        reservationMemory: {}
-      };
-    });
+    setFormData(current => updateStudyAbroadReservation(current, "", false, planningSlots));
   }, [formData.studyAbroadTerm, isHydrated, planningSlotIdSignature]);
 
   useEffect(() => {
@@ -3165,25 +3163,8 @@ export default function Page() {
   }
 
   function changeStudyAbroadTerm(nextTermId) {
-    setFormData(current => {
-      const reservedCourseUnits = { ...(current.reservedCourseUnits || {}) };
-      const reservationMemory = { ...(current.reservationMemory || {}) };
-      if (current.studyAbroadTerm) {
-        reservedCourseUnits[current.studyAbroadTerm] = Number(reservationMemory[current.studyAbroadTerm] || 0);
-        delete reservationMemory[current.studyAbroadTerm];
-      }
-      if (nextTermId) {
-        const nextSlot = planningSlots.find(slot => slot.id === nextTermId);
-        reservationMemory[nextTermId] = Number(reservedCourseUnits[nextTermId] || 0);
-        reservedCourseUnits[nextTermId] = termReservationLimit(nextSlot);
-      }
-      return {
-        ...current,
-        studyAbroadTerm: nextTermId,
-        reservedCourseUnits,
-        reservationMemory
-      };
-    });
+    setFormData(current => updateStudyAbroadReservation(current, nextTermId,
+      Boolean(followingMayId(nextTermId, planningSlots) && current.studyAbroadMayOverlap), planningSlots));
     clearInputFeedback();
   }
 
@@ -3924,6 +3905,7 @@ export default function Page() {
         {saveWarning}
         <PlanComparisonScreen
           report={report}
+          studyAbroad={formData}
           planResult={inputBlock?.economicsPlanResult}
           fallbackPlanningContext={planningContext}
           courses={formData.courses}
@@ -4141,7 +4123,9 @@ export default function Page() {
         .advanced-fields .wide-field { grid-column: 1 / -1; }
         .non-major-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-top: .75rem; }
         .non-major-fields label, .study-abroad-fields label { display: grid; gap: .3rem; font-size: 13px; font-weight: 700; }
-        .non-major-fields select, .study-abroad-fields select { min-height: 40px; padding: .45rem .55rem; border: 1px solid var(--cp7-border-strong); border-radius: 6px; background: #fff; }
+        .non-major-fields select, .study-abroad-fields select, .study-abroad-fields input[type="text"], .study-abroad-fields textarea { min-height: 40px; padding: .45rem .55rem; border: 1px solid var(--cp7-border-strong); border-radius: 6px; background: #fff; font: inherit; }
+        .study-abroad-fields textarea { min-height: 88px; resize: vertical; }
+        .study-abroad-fields label:has(input[type="checkbox"]) { display: flex; align-items: flex-start; gap: .45rem; }
         .study-abroad-fields { display: grid; gap: .65rem; margin: .9rem 0; padding: .8rem; border: 1px solid #cae0e4; border-radius: 8px; background: #f2fafb; }
         .study-abroad-fields p { margin: 0; color: #285b63; }
         main.cp7-container .study-abroad-toggle { display: inline-flex; width: fit-content; min-height: 42px; align-items: center; gap: .4rem; padding: .55rem .7rem; border: 1px solid #8ab7bf; border-radius: 7px; background: #fff; color: #24434a; font-weight: 700; cursor: pointer; }
@@ -4556,7 +4540,24 @@ export default function Page() {
                               </select>
                             </label>
                           )}
-                          {formData.studyAbroadTerm && <p>No Economics courses will be scheduled in {planningSlotsLabel(formData.studyAbroadTerm, planningContext)}.</p>}
+                          {formData.studyAbroadTerm && followingMayId(formData.studyAbroadTerm, planningSlots) && (
+                            <label><input type="checkbox" checked={formData.studyAbroadMayOverlap === true}
+                              onChange={event => {
+                                setFormData(current => updateStudyAbroadReservation(current, current.studyAbroadTerm, event.target.checked, planningSlots));
+                                clearInputFeedback();
+                              }} /> Also reserve the following May for a possible study-abroad overlap</label>
+                          )}
+                          {formData.studyAbroadTerm && <>
+                            <label><span>Destination or possibility (optional)</span><input type="text" maxLength={300}
+                              placeholder="Australia is one possible destination."
+                              value={formData.studyAbroadDestination || ""}
+                              onChange={event => { setFormData(current => ({ ...current, studyAbroadDestination: event.target.value })); clearInputFeedback(); }} /></label>
+                            <label><span>Note for your advisor (optional)</span><textarea maxLength={1000}
+                              placeholder="Some courses taken abroad, especially Economics electives, may count toward Hanover’s Economics major. Check with your advisor or the Economics department once your course list is available."
+                              value={formData.studyAbroadAdvisingNote || ""}
+                              onChange={event => { setFormData(current => ({ ...current, studyAbroadAdvisingNote: event.target.value })); clearInputFeedback(); }} /></label>
+                            <p>No Economics courses will be scheduled in {studyAbroadTermIds(formData, planningSlots).map(id => planningSlotsLabel(id, planningContext)).join(" or ")}. Courses abroad are not counted toward the major until confirmed.</p>
+                          </>}
                         </div>
                       )}
                       <h3>Recorded overload approval</h3>
@@ -4590,10 +4591,10 @@ export default function Page() {
                           <label key={slot.id}>
                             <span>{slot.label}</span>
                             <select
-                              value={formData.studyAbroadTerm === slot.id
+                              value={studyAbroadTermIds(formData, planningSlots).includes(slot.id)
                                 ? termReservationLimit(slot)
                                 : Number(formData.reservedCourseUnits?.[slot.id] || 0)}
-                              disabled={formData.studyAbroadTerm === slot.id}
+                              disabled={studyAbroadTermIds(formData, planningSlots).includes(slot.id)}
                               aria-label={`Course units reserved in ${slot.label}`}
                               onChange={event => {
                                 setFormData(current => ({
@@ -4609,7 +4610,7 @@ export default function Page() {
                               {Array.from({ length: Math.min(2, termReservationLimit(slot)) + 1 }, (_, value) => (
                                 <option value={value} key={value}>{value}</option>
                               ))}
-                              {formData.studyAbroadTerm === slot.id && termReservationLimit(slot) > 2 && (
+                              {studyAbroadTermIds(formData, planningSlots).includes(slot.id) && termReservationLimit(slot) > 2 && (
                                 <option value={termReservationLimit(slot)}>{termReservationLimit(slot)}</option>
                               )}
                             </select>

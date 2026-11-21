@@ -72,6 +72,48 @@ test("a fresh browser opens the edited Balanced plan and offers its existing PDF
   }
 });
 
+test("a chat handoff keeps Winter and May study abroad context through the web PDF request", async ({ browser, request }) => {
+  test.setTimeout(90000);
+  const abroadStudent = {
+    planCreationDate: "2026-11-21", academicStanding: "sophomore", courses: [],
+    studyAbroadTerm: "winter-2028", studyAbroadMayOverlap: true,
+    reservedCourseUnits: { "winter-2028": 4, "spring-2028": 1 },
+    studyAbroadDestination: "Australia is one possible destination.",
+    studyAbroadAdvisingNote: "Some courses taken abroad, especially Economics electives, may count toward Hanover’s Economics major. Check with your advisor once your course list is available."
+  };
+  const generatedResponse = await request.post("/api/majors/map", { data: { student: abroadStudent } });
+  expect(generatedResponse.ok()).toBeTruthy();
+  const generated = await generatedResponse.json();
+  const plans = generated.programs.find(entry => entry.program.id === "economics-base").economicsPlans;
+  const stateToken = encodeState({
+    student: abroadStudent, plans: plans.map(planForEdit), fingerprint: generated.plannerFingerprint
+  }, process.env.ECONPLANNER_MCP_STATE_KEY);
+  const context = await browser.newContext();
+  try {
+    const page = await context.newPage();
+    await page.goto(link(stateToken));
+    const card = page.locator('article.comparison-plan-card[data-plan-id="balanced"]');
+    await expect(card.locator('tr[data-term-id="winter-2028"] .comparison-empty-term')).toHaveText("Study abroad", { timeout: 60000 });
+    await expect(card.locator('tr[data-term-id="spring-2028"] .comparison-empty-term')).toHaveText("Study abroad");
+    await expect(card.locator("[data-student-advisor-context]")).not.toContainText(abroadStudent.studyAbroadDestination);
+    await expect(card.locator("[data-student-advisor-context]")).toContainText(abroadStudent.studyAbroadAdvisingNote);
+    let pdfRequest;
+    await page.route("**/api/reports/economics", async route => {
+      pdfRequest = route.request().postDataJSON();
+      await route.fulfill({ status: 200, contentType: "application/pdf", body: "%PDF-1.4\n%%EOF\n" });
+    });
+    const download = page.waitForEvent("download");
+    await card.getByRole("button", { name: "Download PDF Report: Balanced" }).click();
+    await download;
+    expect(pdfRequest.student.studyAbroadMayOverlap).toBe(true);
+    expect(pdfRequest.student.reservedCourseUnits).toMatchObject(abroadStudent.reservedCourseUnits);
+    expect(pdfRequest.student.studyAbroadDestination).toBe(abroadStudent.studyAbroadDestination);
+    expect(pdfRequest.student.studyAbroadAdvisingNote).toBe(abroadStudent.studyAbroadAdvisingNote);
+  } finally {
+    await context.close();
+  }
+});
+
 test("expired, altered, and wrong-plan links show an error without loading a plan", async ({ browser, request }) => {
   test.setTimeout(90000);
   const { stateToken } = await editedPlanToken(request);

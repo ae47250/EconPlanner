@@ -109,6 +109,54 @@ test("pilot planning and move decisions stay the same and return encrypted hando
   assert.equal((await redeem(token, "balanced")).status, 200);
 });
 
+test("chat study-abroad context and both reservations survive a move and web handoff", async () => {
+  const tools = toolHandlers();
+  const studentContext = {
+    planningDate: "2026-11-21", standing: "sophomore", courses: [],
+    studyAbroadTerm: "winter-2028", studyAbroadMayOverlap: true,
+    studyAbroadDestination: "Australia is one possible destination.",
+    studyAbroadAdvisingNote: "Some courses taken abroad, especially Economics electives, may count toward Hanover’s Economics major. Check with your advisor or the Economics department once your course list is available."
+  };
+  const generated = (await tools.get("generate_plans")(studentContext)).structuredContent;
+  assert.deepEqual(generated.studyAbroadTermIds, ["winter-2028", "spring-2028"]);
+  assert.deepEqual(generated.studentAdvisorContext, [studentContext.studyAbroadAdvisingNote]);
+  const balanced = generated.plans.find(plan => plan.id === "balanced");
+  for (const id of generated.studyAbroadTermIds) {
+    const term = balanced.terms.find(item => item.id === id);
+    assert.equal(term.studyAbroad, true);
+    assert.deepEqual(term.courses, []);
+  }
+  const source = placement(balanced, "ECO 214");
+  const rejected = (await tools.get("move_course")({
+    stateToken: generated.stateToken, planId: "balanced", courseId: source.courseId,
+    fromTermId: source.termId, toTermId: "winter-2028"
+  })).structuredContent;
+  assert.equal(rejected.accepted, false);
+  const elective = balanced.terms.flatMap(term => term.courses.map(course => ({ termId: term.id, course })))
+    .find(item => item.course.code === "ECO elective" && item.termId !== "spring-2028");
+  const mayRejected = (await tools.get("move_course")({
+    stateToken: generated.stateToken, planId: "balanced", courseId: elective.course.id,
+    fromTermId: elective.termId, toTermId: "spring-2028"
+  })).structuredContent;
+  assert.equal(mayRejected.accepted, false);
+  const math = placement(balanced, "MAT 217");
+  const moved = (await tools.get("move_course")({
+    stateToken: generated.stateToken, planId: "balanced", courseId: math.courseId,
+    fromTermId: math.termId, toTermId: "winter-2027"
+  })).structuredContent;
+  assert.equal(moved.accepted, true);
+  assert.deepEqual(moved.studyAbroadTermIds, ["winter-2028", "spring-2028"]);
+  assert.deepEqual(moved.studentAdvisorContext, generated.studentAdvisorContext);
+  const opened = await redeem(moved.stateToken, "balanced");
+  assert.equal(opened.status, 200);
+  const linked = await opened.json();
+  assert.equal(linked.student.reservedCourseUnits["winter-2028"], 4);
+  assert.equal(linked.student.reservedCourseUnits["spring-2028"], 1);
+  assert.equal(linked.student.studyAbroadDestination, studentContext.studyAbroadDestination);
+  assert.equal(linked.student.studyAbroadAdvisingNote, studentContext.studyAbroadAdvisingNote);
+  assert.equal(linked.plans.find(plan => plan.id === "balanced").terms.find(term => term.slotId === "winter-2027").courses.some(course => course.course === "MAT 217"), true);
+});
+
 test("link redemption rejects altered, expired, wrong-plan, and stale-policy tokens", async t => {
   const { plannerFingerprint } = await (await getPlannerFingerprint()).json();
   const state = { student: { academicStanding: "freshman", courses: [] },

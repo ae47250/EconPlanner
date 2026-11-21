@@ -32,6 +32,36 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   );
 });
 
+test("explicit junior Winter and May study abroad reservations appear in the standard report without major credit", async () => {
+  const student = {
+    academicStanding: "sophomore", planCreationDate: "2026-11-21", courses: [],
+    studyAbroadTerm: "winter-2028", studyAbroadMayOverlap: true,
+    reservedCourseUnits: { "winter-2028": 4, "spring-2028": 1 },
+    studyAbroadDestination: "Australia is one possible destination.",
+    studyAbroadAdvisingNote: "Some courses taken abroad, especially Economics electives, may count toward Hanover’s Economics major. Check with your advisor or the Economics department once your course list is available."
+  };
+  const report = await buildEconomicsReportFromStudent(student, "2026-11-21");
+  const html = renderEconomicsHtml(report, template);
+  for (const id of ["winter-2028", "spring-2028"]) {
+    const term = report.terms.find(item => item.slotId === id);
+    assert.equal(term.studyAbroad, true);
+    assert.deepEqual(term.courses, []);
+  }
+  assert.equal((html.match(/class="study-abroad">Study abroad<\/td>/g) || []).length, 2);
+  assert.deepEqual(report.studentAdvisorContext, [student.studyAbroadAdvisingNote]);
+  assert.match(html, /<h2>Ask your advisor<\/h2>/);
+  assert.ok(!html.includes(student.studyAbroadDestination));
+  assert.ok(html.includes(student.studyAbroadAdvisingNote));
+
+  const winterOnly = await buildEconomicsReportFromStudent({
+    ...student, studyAbroadMayOverlap: false, reservedCourseUnits: { "winter-2028": 4 }
+  }, "2026-11-21");
+  assert.equal(winterOnly.terms.find(item => item.slotId === "winter-2028").studyAbroad, true);
+  assert.equal(winterOnly.terms.find(item => item.slotId === "spring-2028").studyAbroad, false);
+  assert.equal(winterOnly.terms.find(item => item.slotId === "spring-2028").courses.length, 1);
+  assert.equal(report.remaining.strict, winterOnly.remaining.strict);
+});
+
 test("report observability reuses each freshly validated selected or generated plan", async t => {
   const output = [];
   t.mock.method(console, "info", value => output.push(value));

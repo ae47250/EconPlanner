@@ -393,7 +393,7 @@ test("study abroad reserves the whole actual term and restores a remembered manu
   const studyToggle = page.getByRole("button", { name: "I plan to study abroad during my junior year" });
   await studyToggle.click();
   const selectedTerm = await page.getByLabel("Study-abroad term").locator("option:checked").innerText();
-  await expect(page.getByText(`No Economics courses will be scheduled in ${selectedTerm}.`, { exact: true })).toBeVisible();
+  await expect(page.getByText(`No Economics courses will be scheduled in ${selectedTerm}. Courses abroad are not counted toward the major until confirmed.`, { exact: true })).toBeVisible();
   const reserved = page.getByLabel(`Course units reserved in ${selectedTerm}`);
   await expect(reserved).toBeDisabled();
   const wholeCapacity = Number(await reserved.inputValue());
@@ -407,6 +407,34 @@ test("study abroad reserves the whole actual term and restores a remembered manu
   await studyToggle.click();
   await expect(reserved).toHaveValue("1");
   await expect(page.locator(".cp7-summary")).toContainText(`${selectedTerm}: 1`);
+});
+
+test("a sophomore can reserve junior Winter alone or Winter and May, with context visible below the plan", async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, "sophomore");
+  await page.locator("details.more-details > summary", { hasText: "More details" }).first().click();
+  await page.getByLabel("Plan creation date").fill("2026-11-21");
+  await page.getByText("Adjust your schedule (optional)", { exact: true }).click();
+  await page.getByRole("button", { name: "I plan to study abroad during my junior year" }).click();
+  await page.getByLabel("Study-abroad term").selectOption("winter-2028");
+  await expect(page.getByLabel("Course units reserved in Winter 2028")).toBeDisabled();
+  await expect(page.getByLabel("Course units reserved in Spring/May 2028")).toBeEnabled();
+  const may = page.getByLabel("Also reserve the following May for a possible study-abroad overlap");
+  await may.check();
+  await expect(page.getByLabel("Course units reserved in Spring/May 2028")).toBeDisabled();
+  await expect(page.getByLabel("Course units reserved in Spring/May 2028")).toHaveValue("1");
+  await page.getByLabel("Destination or possibility (optional)").fill("Australia is one possible destination.");
+  await page.getByLabel("Note for your advisor (optional)").fill("Some courses taken abroad, especially Economics electives, may count toward Hanover’s Economics major. Check with your advisor once your course list is available.");
+  await continueToCourses(page);
+  await generatePlans(page);
+  const card = page.locator('article.comparison-plan-card[data-plan-id="balanced"]');
+  await expect(card.locator('tr[data-term-id="winter-2028"] .comparison-empty-term')).toHaveText("Study abroad");
+  await expect(card.locator('tr[data-term-id="spring-2028"] .comparison-empty-term')).toHaveText("Study abroad");
+  await expect(card.locator("[data-student-advisor-context]")).not.toContainText("Australia");
+  await expect(card.locator("[data-student-advisor-context]")).toContainText("especially Economics electives");
+  await card.getByRole("button", { name: "Change ECO 214", exact: true }).click();
+  await expect(card.locator('[data-change-choice="move:winter-2028"]')).toHaveCount(0);
+  await expect(card.locator('[data-change-choice="move:spring-2028"]')).toHaveCount(0);
 });
 
 test("accelerated results expose the backend Possible, Not possible, and More information needed findings", async ({ page }) => {
