@@ -2615,6 +2615,7 @@ export default function Page() {
   const [canRetryRestoration, setCanRetryRestoration] = useState(false);
   const [isRetryingRestoration, setIsRetryingRestoration] = useState(false);
   const [restorationProgress, setRestorationProgress] = useState("");
+  const [linkedPlanError, setLinkedPlanError] = useState("");
   const [courseSearch, setCourseSearch] = useState("");
   const [completionSourceCourseCode, setCompletionSourceCourseCode] = useState("");
   const [intakeStep, setIntakeStep] = useState(1);
@@ -2727,6 +2728,88 @@ export default function Page() {
     const controller = new AbortController();
     restorationAbortRef.current = controller;
     async function restoreSession() {
+      const linkedParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      if (linkedParams.has("openPlan")) {
+        const stateToken = linkedParams.get("openPlan");
+        const planId = linkedParams.get("plan");
+        // Remove the encrypted bearer token from the browser URL before redeeming it.
+        window.history.replaceState(window.history.state, "", `${window.location.pathname}${window.location.search}`);
+        try {
+          setRestorationProgress("Opening your EconPlanner plan…");
+          const openedResponse = await fetch("/api/mcp/open-plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ stateToken, planId }),
+            signal: controller.signal
+          });
+          if (!openedResponse.ok) throw new Error(openedResponse.status === 503
+            ? "This plan link could not be checked right now. Please try opening it again later."
+            : "This plan link is invalid, expired, or no longer matches current planning rules. Ask ChatGPT for a new link.");
+          const opened = await openedResponse.json();
+          const openedForm = {
+            ...initialForm,
+            ...opened.student,
+            courses: migrateSavedCourses(opened.student?.courses),
+            planCreationDateEdited: true
+          };
+          const inputSignature = plannerInputSignature(openedForm);
+          setRestorationProgress("Checking the linked plans…");
+          const generatedResponse = await fetch("/api/majors/map", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ student: opened.student }),
+            signal: controller.signal
+          });
+          const generated = await generatedResponse.json();
+          if (!generatedResponse.ok || !isValidGeneratedPlannerReport(generated)
+            || generated.plannerFingerprint !== opened.plannerFingerprint) {
+            throw new Error("This plan link no longer passes current planning checks. Ask ChatGPT for a new link.");
+          }
+          const generatedPlans = economicsResult(generated).economicsPlans;
+          if (!Array.isArray(opened.plans) || opened.plans.length !== generatedPlans.length
+            || opened.plans.some(plan => !generatedPlans.some(candidate => candidate.id === plan.id))) {
+            throw new Error("This plan link does not contain a current plan. Ask ChatGPT for a new link.");
+          }
+          let preparedReport = generated;
+          for (const plan of opened.plans) preparedReport = replaceEconomicsPlan(preparedReport, plan.id, plan);
+          const reportContextId = crypto.randomUUID();
+          const checked = await validateSavedPlannerSession({
+            rawSession: createGeneratedPlannerSession({
+              report: preparedReport, inputSignature, selectedPlanId: opened.planId,
+              view: PLANNER_VIEWS.COMPARE, reportContextId
+            }),
+            inputSignature, student: opened.student, signal: controller.signal,
+            onProgress: message => { if (!cancelled) setRestorationProgress(message); }
+          });
+          if (checked.kind !== "restored" || checked.session.selectedPlanId !== opened.planId) {
+            throw new Error(checked.kind === "unavailable"
+              ? "This plan link could not be checked right now. Please try opening it again later."
+              : "This plan link no longer passes current planning checks. Ask ChatGPT for a new link.");
+          }
+          if (cancelled || controller.signal.aborted) return;
+          reportContextIdRef.current = reportContextId;
+          generatedInputSignatureRef.current = inputSignature;
+          setFormData(openedForm);
+          setIntakeStep(2);
+          setInputBlock(null);
+          setReport(checked.session.report);
+          setSelectedPlanId(opened.planId);
+          setPlannerView(PLANNER_VIEWS.COMPARE);
+          setStatus("");
+          window.history.replaceState(
+            { econPlanner: true, view: PLANNER_VIEWS.COMPARE, planId: opened.planId, previousView: null },
+            "", plannerUrl(PLANNER_VIEWS.COMPARE)
+          );
+          window.history.scrollRestoration = "manual";
+          window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+          setIsHydrated(true);
+        } catch (error) {
+          if (cancelled || controller.signal.aborted) return;
+          setLinkedPlanError(error.message || "This plan link could not be opened. Ask ChatGPT for a new link.");
+          setIsHydrated(true);
+        }
+        return;
+      }
       let restoredForm = restorationAttempt ? latestFormRef.current : { ...initialForm, planCreationDate: localToday() };
       let restoredCourseSearch = "";
       let restoredIntakeStep = 1;
@@ -2840,7 +2923,7 @@ export default function Page() {
   }, [restorationAttempt]);
 
   useEffect(() => {
-    if (!isHydrated) return;
+    if (!isHydrated || linkedPlanError) return;
 
     try {
       window.localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify({
@@ -2853,7 +2936,7 @@ export default function Page() {
     } catch {
       setAnswersSaveFailed(true);
     }
-  }, [courseSearch, formData, intakeStep, isHydrated]);
+  }, [courseSearch, formData, intakeStep, isHydrated, linkedPlanError]);
 
   useEffect(() => {
     if (!isHydrated || !formData.studyAbroadTerm) return;
@@ -2873,7 +2956,7 @@ export default function Page() {
   }, [formData.studyAbroadTerm, isHydrated, planningSlotIdSignature]);
 
   useEffect(() => {
-    if (!isHydrated) return;
+    if (!isHydrated || linkedPlanError) return;
     try {
       if ((report || inputBlock) && generatedInputSignatureRef.current) {
         recoverableSessionRef.current = null;
@@ -2896,7 +2979,7 @@ export default function Page() {
     } catch {
       setPlanSaveFailed(true);
     }
-  }, [inputBlock, isHydrated, planEditUndo, plannerView, report, selectedPlanId]);
+  }, [inputBlock, isHydrated, linkedPlanError, planEditUndo, plannerView, report, selectedPlanId]);
 
   useEffect(() => {
     if (!isHydrated) return undefined;
@@ -3821,6 +3904,16 @@ export default function Page() {
           body { margin: 0; background: #f7f8fa; }
           .planner-loading { min-height: 100vh; padding: 2rem; box-sizing: border-box; color: #344054; }
         `}</style>
+      </main>
+    );
+  }
+
+  if (linkedPlanError) {
+    return (
+      <main className="planner-loading">
+        <h1>Could not open this plan</h1>
+        <p role="alert">{linkedPlanError}</p>
+        <a href="/">Open EconPlanner without this link</a>
       </main>
     );
   }
