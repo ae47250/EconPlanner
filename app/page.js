@@ -2074,7 +2074,7 @@ function PlanComparisonScreen({
                 disabled={isDownloadingPdf || Boolean(editingPlanCourseKey)}
                 onClick={() => onDownloadPdf()}
               >
-                {isDownloadingPdf ? "Creating PDF..." : "Download PDF Report"}
+                {isDownloadingPdf ? "Creating PDF..." : `Download PDF Report: ${selectedPlan?.label || "Your plan"}`}
               </button>
               <button type="button" className="compare-plans-button" onClick={onBackToCompare}>
                 Compare plans
@@ -2269,9 +2269,9 @@ function PlanComparisonScreen({
                     aria-label={`Download PDF Report: ${plan.label}`} onClick={event => {
                       downloadButtonRef.current = event.currentTarget;
                       onDownloadPdf(plan.id);
-                    }}>{isDownloadingPdf ? "Creating PDF…" : "Download PDF Report"}</button>
+                    }}>{isDownloadingPdf ? "Creating PDF…" : `Download PDF Report: ${plan.label}`}</button>
                   <div className="comparison-plan-details">
-                    <details className="comparison-disclosure" open><summary>Things to keep in mind</summary>
+                    <details className="comparison-disclosure"><summary>Things to keep in mind</summary>
                       <PlanConditions plan={plan} catalog={report?.catalog} hideHeading />
                     </details>
                     <MajorRequirementsChecklist plan={plan} />
