@@ -38,6 +38,11 @@ import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentF
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
 const PLANNER_STORAGE_VERSION = PLANNER_INPUT_STATE_VERSION;
+const STUDENT_READINESS_EXPLANATIONS = Object.freeze({
+  "Ready to plan": "These plans meet the major rules. Seats are not confirmed, so check the registration system before you register.",
+  "Needs confirmation": "These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions.",
+  "Needs advisor attention": "Something in your answers needs your advisor to check it before you rely on these plans."
+});
 const COURSE_CATALOG = economicsCourseData.courses || [];
 const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
   (course.aliases || []).map(alias => [alias, course.code])
@@ -2053,7 +2058,7 @@ function PlanComparisonScreen({
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>{plans.length ? "Student readiness" : "Overall status"}</strong><span className="result-status-value">{displayedOverallStatus}</span>
             {isPlanView && selectedPlan && <span className="result-feasibility-value">Plan feasibility: {({ VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" })[selectedPlan.feasibilityStatus] || "Plan needs confirmation"}</span>}
-            {plans.length > 0 && <span className="result-status-reason">Ready to plan does not mean registration is confirmed. Check each plan’s feasibility and conditions.</span>}
+            {plans.length > 0 && <span className="result-status-reason">{STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}</span>}
             {displayedOverallStatus === "Needs advisor attention" && statusReason && <span className="result-status-reason">Why: {statusReason}</span>}
           </p>
         </section>

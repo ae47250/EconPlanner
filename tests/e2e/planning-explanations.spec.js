@@ -1,5 +1,38 @@
 import { expect, test } from "@playwright/test";
-import { resetPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus } from "./cp7-helpers.js";
+import { resetPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus, fixturePlan, openFixtureResult, plannerResultFixture } from "./cp7-helpers.js";
+
+test("Student readiness explains each displayed status", async ({ page }) => {
+  const cases = [
+    ["STUDENT_READY", "COMPLETE_STUDENT_READY", "Ready to plan", "These plans meet the major rules. Seats are not confirmed, so check the registration system before you register."],
+    ["READY_WITH_CONDITIONS", "COMPLETE_READY_WITH_CONDITIONS", "Needs confirmation", "These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions."],
+    ["ADVISOR_ACTION_REQUIRED", "COMPLETE_ADVISOR_ACTION_REQUIRED", "Needs advisor attention", "Something in your answers needs your advisor to check it before you rely on these plans."]
+  ];
+  for (const [readinessStatus, planDisposition, label, explanation] of cases) {
+    await openFixtureResult(page, plannerResultFixture({ plans: [fixturePlan({ readinessStatus, planDisposition })] }));
+    await expect(page.locator(".result-status-value")).toHaveText(label);
+    await expect(page.locator(".result-status-reason").first()).toHaveText(explanation);
+  }
+});
+
+test("a junior's custom one-year-early ECO 461 plan displays Needs confirmation", async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, "junior");
+  await page.locator("details.more-details > summary").first().click();
+  await page.getByLabel("Plan creation date", { exact: true }).fill("2026-11-21");
+  await page.getByRole("button", { name: "My expected graduation year is different" }).click();
+  await page.getByLabel("When do you expect to graduate?").selectOption("2027");
+  await continueToCourses(page);
+  await page.locator("details.course-accordion > summary").filter({ hasText: "Other Economics courses" }).click();
+  for (const code of ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 121", "MAT 217", "BUSN 323", "ECO 315", "ECO 337"]) {
+    await setCourseStatus(page, code, "Completed");
+  }
+  await setCourseStatus(page, "ECO 333", "Taking now");
+  const response = await generatePlans(page);
+  const result = (await response.json()).programs.find(item => item.program.id === "economics-base");
+  expect(result.economicsPlans[0].readinessStatus).toBe("READY_WITH_CONDITIONS");
+  await expect(page.locator(".result-status-value")).toHaveText("Needs confirmation");
+  await expect(page.locator(".result-status-reason").first()).toHaveText("These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions.");
+});
 
 test("comparison header names both standard and selected early targets, and tab uses EconPlanner", async ({ page }) => {
   await resetPlanner(page);

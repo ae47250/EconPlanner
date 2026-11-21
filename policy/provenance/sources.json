@@ -298,12 +298,12 @@
       "sourceId": "OWNER-PLANNING-DECISIONS-2026-11-21",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "Project owner, explicit planning repair task",
-      "authorityBoundary": "CUSTOM_ONE_YEAR_EARLY_STANDING_AND_OWNER_PLANNING_EXPLANATIONS_EXCLUDING_CATALOG_COMPARISON",
+      "authorityBoundary": "CUSTOM_ONE_YEAR_EARLY_STANDING_READINESS_CATALOG_COMPARISON_AND_OWNER_PLANNING_EXPLANATIONS",
       "path": "policy/provenance/owner-planning-decisions-2026-11-21.md",
       "confirmedOn": "2026-11-21",
       "reviewer": "Project owner",
-      "sha256": "7f182287fc7c7ccae31d0346df222f3aacc57820ef75e79fc500bcae55997704",
-      "anchors": ["Custom-one-year-early-standing", "Senior-standing-no-plan-explanation", "Current-term-taking-now", "Advisor-explanations-and-seat-panel"],
+      "sha256": "3fe2cc0d0dd9839c71e0738bc7831e975fac2c042effbf14784e6a376bc8f0a7",
+      "anchors": ["Custom-one-year-early-standing", "Senior-standing-no-plan-explanation", "Current-term-taking-now", "Assumed-standing-readiness", "Catalog-year-explanation", "Advisor-explanations-and-seat-panel"],
       "effective": {
         "from": "2026-11-21",
         "through": null

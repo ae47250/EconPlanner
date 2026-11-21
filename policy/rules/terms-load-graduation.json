@@ -1613,7 +1613,8 @@
       },
       "sourceRefs": [
         "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
-        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing"
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
       ],
       "effective": {
         "from": "2026-09-27",
@@ -1636,7 +1637,7 @@
       "effect": {
         "assumeSeniorStandingInFinalPlanningYear": true,
         "requiresStudentConfirmation": false,
-        "readinessImpact": "NONE"
+        "readinessImpact": "READY_WITH_CONDITIONS"
       },
       "reasonCode": "ACCELERATED_PLAN_FINAL_YEAR_SENIOR_STANDING",
       "messageKeys": {

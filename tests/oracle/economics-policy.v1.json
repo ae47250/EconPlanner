@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 13,
+    "version": 14,
     "confirmationDate": "2026-11-21",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
@@ -64,7 +64,7 @@
       "id": "PROJECT-OWNER-2026-11-21",
       "date": "2026-11-21",
       "reviewedBy": "Project owner",
-      "summary": "A custom target exactly one year early shares the nonblocking final-year standing assumption; earlier custom targets do not. Current-term Taking now enrollment needs no overload warning."
+      "summary": "A custom target exactly one year early shares the nonblocking final-year standing assumption; earlier custom targets do not. A plan using the assumption needs readiness confirmation, without blocking generation. Current-term Taking now enrollment needs no overload warning. The 2025–26 and 2026–27 Economics major requirements comparison is owner-confirmed."
     },
     {
       "id": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
@@ -769,13 +769,15 @@
       "confirmationRef": "PROJECT-OWNER-2026-11-21",
       "sourceRefs": [
         "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
-        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing"
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
       ],
       "course": "ECO 461",
       "scope": ["REGULAR_ONE_YEAR_EARLY", "TRANSFER_ONE_YEAR_EARLY", "CUSTOM_EXACTLY_ONE_YEAR_EARLY"],
       "extendedPlanSeniorStandingBeginsInFourthAcademicYear": true,
       "assumeSeniorStandingInFinalPlanningYear": true,
-      "requiresStudentConfirmation": false
+      "requiresStudentConfirmation": false,
+      "readinessImpact": "READY_WITH_CONDITIONS"
     },
     {
       "ruleId": "CAPSTONE-HANOVER-RESIDENCY",

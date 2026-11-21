@@ -31,6 +31,8 @@ test("a custom target exactly one year early produces a validated ECO 461 plan a
   assert.equal(result.economicsPlanResult.category, "PLANS_READY");
   const plan = result.economicsPlans[0];
   assert.ok(plan?.validation?.valid);
+  assert.equal(plan.readinessStatus, "READY_WITH_CONDITIONS");
+  assert.equal(plan.planDisposition, "COMPLETE_READY_WITH_CONDITIONS");
   assert.ok(plan.terms.some(term => term.courses.some(course => course.course === "ECO 461")));
   const warning = plan.planConditions.find(item => item.kind === "standing")?.message;
   assert.match(warning, /advisor and the Registrar to confirm you can take ECO 461/);
@@ -41,6 +43,15 @@ test("a custom target exactly one year early produces a validated ECO 461 plan a
   assert.ok(html.includes(warning));
   assert.ok(report.planConditions.some(item => item.message === warning));
   assert.ok(report.planConditions.some(item => /Confirm the student will be eligible for ECO 461/.test(item.advisorPrompt || "")));
+});
+
+test("the one-year-early target also needs confirmation when ECO 461 relies on assumed senior standing", async () => {
+  const result = await economics({ ...juniorCustom, customGraduationEnabled: false, customExpectedGraduationYear: undefined, planningPace: "one_year_early" });
+  const plan = result.economicsPlans.find(item => item.id === "one-year-early");
+  assert.ok(plan?.validation?.valid);
+  assert.equal(plan.planningContext.acceleratedPlanAssumesSeniorStanding, true);
+  assert.equal(plan.readinessStatus, "READY_WITH_CONDITIONS");
+  assert.equal(plan.planDisposition, "COMPLETE_READY_WITH_CONDITIONS");
 });
 
 test("a custom target more than one year early reports proven senior-standing infeasibility", async () => {

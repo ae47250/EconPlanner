@@ -161,8 +161,8 @@ function validatePlanningFlexibilityPolicy(policy) {
     fail("owner-approved planning flexibility policy is missing");
   }
   const senior = policy.acceleratedSeniorStanding;
-  if (senior?.requiresStudentConfirmation !== false || senior?.readinessImpact !== "NONE") {
-    fail("accelerated senior-standing policy must be nonblocking and require no confirmation");
+  if (senior?.requiresStudentConfirmation !== false || senior?.readinessImpact !== "READY_WITH_CONDITIONS") {
+    fail("accelerated senior-standing policy must require readiness confirmation without blocking plan generation");
   }
   const projection = policy.futureScheduleProjection;
   if (projection?.publishedScheduleAuthority !== "AUTHORITATIVE"

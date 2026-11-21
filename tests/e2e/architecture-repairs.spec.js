@@ -449,7 +449,7 @@ test('student readiness and exported feasibility are distinct and the course men
   await expect(page.locator('.result-status-value')).toHaveText('Ready to plan');
   await expect(page.locator('.comparison-course-status')).toContainText('Student readiness');
   await expect(page.locator(`article[data-plan-id="${plan.id}"] .plan-feasibility-value`)).toHaveText('Plan feasibility: Conditional plan');
-  await expect(page.locator('.result-status-reason')).toContainText('does not mean registration is confirmed');
+  await expect(page.locator('.result-status-reason').first()).toHaveText('These plans meet the major rules. Seats are not confirmed, so check the registration system before you register.');
   const report = await page.request.post('/api/reports/economics', {data:{
     student:response.request().postDataJSON().student, selectedPlan:plan,
     plans:result.economicsPlans, format:'html'
