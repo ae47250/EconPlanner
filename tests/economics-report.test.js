@@ -167,7 +167,7 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
   const html = await htmlResponse.text();
   assert.equal(htmlResponse.status, 200);
   assert.match(htmlResponse.headers.get("content-type"), /text\/html/);
-  assert.ok(html.includes("EconMapper"));
+  assert.ok(html.includes("<title>EconPlanner - Economics Major Course Plan</title>"));
   assert.equal(html.includes("{{"), false);
 });
 

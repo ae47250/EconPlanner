@@ -295,6 +295,22 @@
       "supersedes": "Current-term blanket exclusion; early standing confirmation gate; duplicate statistics timing; active flexibility release 6"
     },
     {
+      "sourceId": "OWNER-PLANNING-DECISIONS-2026-11-21",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner, explicit planning repair task",
+      "authorityBoundary": "CUSTOM_ONE_YEAR_EARLY_STANDING_AND_OWNER_PLANNING_EXPLANATIONS_EXCLUDING_CATALOG_COMPARISON",
+      "path": "policy/provenance/owner-planning-decisions-2026-11-21.md",
+      "confirmedOn": "2026-11-21",
+      "reviewer": "Project owner",
+      "sha256": "7f182287fc7c7ccae31d0346df222f3aacc57820ef75e79fc500bcae55997704",
+      "anchors": ["Custom-one-year-early-standing", "Senior-standing-no-plan-explanation", "Current-term-taking-now", "Advisor-explanations-and-seat-panel"],
+      "effective": {
+        "from": "2026-11-21",
+        "through": null
+      },
+      "supersedes": "The regular one-year-early-only final-year standing assumption scope for custom targets"
+    },
+    {
       "sourceId": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "Project owner and Economics Department domain expert",

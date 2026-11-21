@@ -1532,7 +1532,8 @@
         "boundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION"
       },
       "sourceRefs": [
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Current-term-taking-now"
       ],
       "effective": {
         "from": "2026-09-27",
@@ -1611,7 +1612,8 @@
         "boundary": "ECONOMICS_PLANNING_AND_CANONICAL_CONSUMPTION"
       },
       "sourceRefs": [
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing"
       ],
       "effective": {
         "from": "2026-09-27",

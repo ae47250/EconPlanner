@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:1f5c68e85f773ebd403d7cd27ff93a6da0c7ef182fa30af8d98251d3f5f47303",
+  "contentHash": "sha256:6b7791c62d3c3a2c735903f1db3b40f14e7f56a6837772ab21d5e40cef3d9151",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -261,7 +261,8 @@
           ]
         },
         "sourceRefs": [
-          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+          "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing"
         ],
         "status": "ACTIVE",
         "supersedes": [
@@ -1990,7 +1991,8 @@
           "requirements": []
         },
         "sourceRefs": [
-          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"
+          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration",
+          "OWNER-PLANNING-DECISIONS-2026-11-21#Current-term-taking-now"
         ],
         "status": "ACTIVE",
         "supersedes": [
@@ -7025,6 +7027,7 @@
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
+    "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. With this graduation year you will not have senior standing in any Winter term before you graduate. Choose a later graduation year or talk with your advisor.",
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
     "infeasibility.electives.spring": "You still need {remainingElectives} distinct Economics electives. After finance is allocated, no remaining eligible elective is offered in {winterTerm}. The {springTerm} options are {springOptions}. Each is {courseUnits} unit, so two exceed both the normal {normalCourseUnits}-unit load and the advisor-approved {conditionalMaximumCourseUnits}-unit ceiling.",
     "infeasibility.finance.forced": "{financeCourse} must fill finance for this graduation target, so it cannot also count as an elective.",
@@ -8113,6 +8116,27 @@
         "supersedes": null
       },
       {
+        "anchors": [
+          "Custom-one-year-early-standing",
+          "Senior-standing-no-plan-explanation",
+          "Current-term-taking-now",
+          "Advisor-explanations-and-seat-panel"
+        ],
+        "authority": "Project owner, explicit planning repair task",
+        "authorityBoundary": "CUSTOM_ONE_YEAR_EARLY_STANDING_AND_OWNER_PLANNING_EXPLANATIONS_EXCLUDING_CATALOG_COMPARISON",
+        "confirmedOn": "2026-11-21",
+        "effective": {
+          "from": "2026-11-21",
+          "through": null
+        },
+        "path": "policy/provenance/owner-planning-decisions-2026-11-21.md",
+        "reviewer": "Project owner",
+        "sha256": "7f182287fc7c7ccae31d0346df222f3aacc57820ef75e79fc500bcae55997704",
+        "sourceId": "OWNER-PLANNING-DECISIONS-2026-11-21",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "The regular one-year-early-only final-year standing assumption scope for custom targets"
+      },
+      {
         "authority": "Project owner and Economics Department domain expert",
         "authorityBoundary": "ECONOMICS_PLANNING_DROPDOWN_AND_OFFERING_PROJECTION_SCOPE",
         "effective": {
@@ -8430,7 +8454,8 @@
         ]
       },
       "sourceRefs": [
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing"
       ],
       "status": "ACTIVE",
       "supersedes": [
@@ -10159,7 +10184,8 @@
         "requirements": []
       },
       "sourceRefs": [
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Current-term-taking-now"
       ],
       "status": "ACTIVE",
       "supersedes": [

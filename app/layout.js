@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "EconMapper",
+  title: "EconPlanner",
   description: "Economics advising course mapper"
 };
 

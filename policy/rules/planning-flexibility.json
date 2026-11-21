@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.9",
+  "policyVersion": "econ-planning-flexibility.10",
   "status": "OWNER_APPROVED",
   "confirmation": {
     "date": "2026-11-15",
@@ -17,13 +17,15 @@
     "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
     "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
     "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
-    "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+    "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+    "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing"
   ],
   "acceleratedSeniorStanding": {
     "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
     "scope": [
       "REGULAR_ONE_YEAR_EARLY",
-      "TRANSFER_ONE_YEAR_EARLY"
+      "TRANSFER_ONE_YEAR_EARLY",
+      "CUSTOM_EXACTLY_ONE_YEAR_EARLY"
     ],
     "effect": "ASSUME_SENIOR_STANDING_IN_FINAL_PLANNING_YEAR",
     "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -216,7 +218,8 @@
         "sacPetitionRequired": false,
         "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
         "message": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026). The student’s incoming catalog year is not known, so the advisor should confirm it for degree-audit records.",
-        "messageWhenYearKnownButRequirementsUnavailableTemplate": "This plan uses the 2025–2026 Economics major requirements. Your recorded catalog year is [incoming year]. Ask your advisor to confirm which major requirements apply and whether any additional paperwork is needed."
+        "messageWhenYearKnownButRequirementsUnavailableTemplate": "Based on your class year, your catalog year is likely [incoming year]. The Economics major requirements are the same for both years.",
+        "messageWhenOtherYearKnownButRequirementsUnavailableTemplate": "Based on your class year, your catalog year is likely [incoming year]. Ask your advisor to confirm which Economics major requirements apply."
       }
     }
   },

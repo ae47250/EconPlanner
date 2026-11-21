@@ -4,9 +4,25 @@ import { readFile } from "node:fs/promises";
 import { buildPlanConditions, studentFacingPlanReviewMessage, studentFacingPrerequisiteReview, studentFriendlyCourseMarker, studentFriendlyUnavailableReason } from "../lib/planning/plan-presentation.js";
 import { runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
 import { renderEconomicsHtml } from "../lib/reports/economics-html.js";
+import { resolveCatalogApplicability } from "../lib/catalog/applicability.js";
 
 const policyBundle = runtimePolicyBundle();
 const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
+
+test("non-registration notes have an advisor heading and the derived catalog year uses owner wording", () => {
+  const html = renderEconomicsHtml({
+    student: { displayName: "Fictional student", academicStanding: "freshman" },
+    selectedPlan: { id: "balanced" }, terms: [], unresolved: [], planNotes: [],
+    planConditions: [
+      { id: "seat", kind: "seat", message: "Check seats." },
+      { id: "advisor", kind: "review", message: "Check this history." }
+    ]
+  }, template);
+  assert.match(html, /<h3>Before you register<\/h3><ul>.*Check seats/);
+  assert.match(html, /<h3>Check with your advisor<\/h3><ul>.*Check this history/);
+  const notice = resolveCatalogApplicability({ entryCatalogYear: "2026-2027", availableCatalogYears: ["2025-2026"] }).advisorNotice;
+  assert.equal(notice.message, "Based on your class year, your catalog year is likely 2026–2027. The Economics major requirements are the same for both years.");
+});
 
 test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the review", () => {
   const student = { courses: [
@@ -20,7 +36,8 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     sourceRefs: ["DEPARTMENT-POLICIES#Confirmed-policy-7"]
   };
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
-  assert.match(review.summary, /MAT 113 is marked Not taken \/ not sure/i);
+  assert.match(review.summary, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
+  assert.match(review.summary, /and 1 more$/);
   assert.match(review.message, /ECO 113 and either MAT 113 or MAT 121/);
   assert.match(review.message, /ECO 113 is marked “Taking now\.”/);
   assert.match(review.message, /MAT 113 is marked “Not taken \/ not sure\.”/);
