@@ -1,9 +1,36 @@
 SCREEN
-EconPlanner is a planning guide, not an official degree audit.
-Lower that number and try again.
-No plan fits while you leave room for other courses in these terms: Winter 2027, Spring/May 2027, Fall 2027, Winter 2028, Spring/May 2028.
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Junior
+·
+Graduation target: May 2028
+Regenerate all plans
+Clear all
+Class standing
+Junior
+Graduation target
+May 2028
+Completed
+ECO 113 · ECO 114
+Taking now
+None
+Overall status
+Needs advisor attention
+Your planning result
 Review this result and the next step below.
-These courses did not fit before May 2028: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
-Why am I seeing this result?
+SCREEN > Other details
+SCREEN > Your reserved room leaves too little space for the major courses.
 Your reserved room leaves too little space for the major courses.
+No plan fits while you leave room for other courses in these terms: Winter 2027, Spring/May 2027, Fall 2027, Winter 2028, Spring/May 2028. Lower that number and try again.
+Change room for other courses
+SCREEN > Why am I seeing this result?
+Why am I seeing this result?
+Balanced: Not feasible
+What still needs attention
+These courses did not fit before May 2028: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
 PDF

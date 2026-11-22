@@ -1,0 +1,59 @@
+{
+  "studentId": "42",
+  "planDate": "2026-08-25",
+  "overallStatus": "Needs advisor attention",
+  "resultCategory": "PLANS_READY",
+  "plans": [
+    {
+      "id": "balanced",
+      "name": "Balanced",
+      "status": "Needs advisor attention",
+      "feasibilityStatus": "CONDITIONALLY_FEASIBLE",
+      "readinessStatus": "ADVISOR_ACTION_REQUIRED",
+      "terms": [
+        {
+          "termId": "fall-2026",
+          "term": "Fall",
+          "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "MAT 217",
+              "title": "Applied Statistics",
+              "section": "A",
+              "status": "Planned",
+              "requirementId": "statistics"
+            }
+          ]
+        },
+        {
+          "termId": "winter-2027",
+          "term": "Winter",
+          "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 461",
+              "title": "Senior Seminar - Econometrics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "eco-461"
+            }
+          ]
+        },
+        {
+          "termId": "spring-2027",
+          "term": "Spring/May",
+          "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 222",
+              "title": "Economics of the European Union",
+              "section": "S",
+              "status": "Planned",
+              "requirementId": "eco-elective-4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

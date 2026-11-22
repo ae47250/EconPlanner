@@ -1,9 +1,36 @@
 SCREEN
-Course offering evidence is incomplete for this graduation target.
-EconPlanner is a planning guide, not an official degree audit.
-More information needed to decide whether this major can be completed by your target.
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Senior
+·
+Graduation target: May 2027
+Regenerate all plans
+Clear all
+Class standing
+Senior
+Graduation target
+May 2027
+Completed
+BUSN 323 · ECO 113 · ECO 114 · ECO 214 · ECO 234 · ECO 333 · MAT 217
+Taking now
+None
+Overall status
+More information needed
+Your planning result
 Review this result and the next step below.
-These courses did not fit before May 2027: MAT 113, MAT 121, ECO 213, ECO elective 3, ECO elective 4, ECO 461.
-This result does not establish that major completion is impossible.
+SCREEN > Other details
+SCREEN > More information needed to decide whether this major can be completed by your target.
+More information needed to decide whether this major can be completed by your target.
+Course offering evidence is incomplete for this graduation target. This result does not establish that major completion is impossible.
+Review my answers
+SCREEN > Why am I seeing this result?
 Why am I seeing this result?
+Balanced: Not feasible
+What still needs attention
+These courses did not fit before May 2027: MAT 113, MAT 121, ECO 213, ECO elective 3, ECO elective 4, ECO 461.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
 PDF

@@ -1,9 +1,36 @@
 SCREEN
-EconPlanner is a planning guide, not an official degree audit.
-Review the details below with your academic advisor.
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Senior
+·
+Graduation target: May 2026
+Regenerate all plans
+Clear all
+Class standing
+Senior
+Graduation target
+May 2026
+Completed
+BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · MAT 121 · MAT 217
+Taking now
+None
+Overall status
+Needs advisor attention
+Your planning result
 Review this result and the next step below.
-These courses did not fit before May 2026: ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+SCREEN > Other details
+SCREEN > This planning result needs advisor attention before we can show a complete schedule.
 This planning result needs advisor attention before we can show a complete schedule.
+Your answers are saved. Review the details below with your academic advisor.
+Review my answers
+SCREEN > Why am I seeing this result?
 Why am I seeing this result?
-Your answers are saved.
+Balanced: Not feasible
+What still needs attention
+These courses did not fit before May 2026: ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
 PDF

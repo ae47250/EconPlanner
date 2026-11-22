@@ -1,0 +1,59 @@
+{
+  "studentId": "28",
+  "planDate": "2026-11-22",
+  "overallStatus": "Needs confirmation",
+  "resultCategory": "PLANS_READY",
+  "plans": [
+    {
+      "id": "balanced",
+      "name": "Balanced",
+      "status": "Needs confirmation",
+      "feasibilityStatus": "CONDITIONALLY_FEASIBLE",
+      "readinessStatus": "READY_WITH_CONDITIONS",
+      "terms": [
+        {
+          "termId": "winter-2027",
+          "term": "Winter",
+          "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 214",
+              "title": "Intermediate Macroeconomics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "eco-214"
+            },
+            {
+              "course": "ECO 221",
+              "title": "Environmental Economics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "eco-elective-3"
+            },
+            {
+              "course": "ECO 461",
+              "title": "Senior Seminar - Econometrics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "eco-461"
+            }
+          ]
+        },
+        {
+          "termId": "spring-2027",
+          "term": "Spring/May",
+          "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 222",
+              "title": "Economics of the European Union",
+              "section": "S",
+              "status": "Planned",
+              "requirementId": "eco-elective-4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

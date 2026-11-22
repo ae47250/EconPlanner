@@ -1,1331 +1,580 @@
 $ node scripts/panel/lint.mjs
-01.txt: 70 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan places BUSN 323 in Fall 2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
-  [duplicate] Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
-  [duplicate] Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2030.
-  [duplicate] This plan places BUSN 323 in Fall 2029.
-  [duplicate] This plan places BUSN 323 in Fall 2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
-  [duplicate] We don’t know if there are open seats in ECO 114 and MAT 217.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-02.txt: 123 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan places BUSN 323 in Fall 2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor and the Registrar to confirm you can take ECO 461 then.
-  [duplicate] Before taking ECO 213 in Fall 2027, finish ECO 113 and MAT 113.
-  [duplicate] Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
-  [duplicate] Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
-  [duplicate] Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan assumes you will have senior standing in 2028–2029.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2030.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] This plan places BUSN 323 in Fall 2029.
-  [duplicate] This plan places BUSN 323 in Fall 2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
-  [duplicate] We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.
-  [duplicate] We don’t know if there are open seats in ECO 114 and MAT 217.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-03.txt: 76 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor and the Registrar to confirm you can take ECO 461 then.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan assumes you will have senior standing in 2028–2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor and the Registrar to confirm you can take ECO 461 then.
-  [duplicate] Ask your advisor and the Registrar to confirm you can take ECO 461 then.
-  [duplicate] Before taking ECO 213 in Fall 2027, finish ECO 113 and MAT 113.
-  [duplicate] Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
-  [duplicate] Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm the student will be eligible for ECO 461 in 2028–2029.
-  [duplicate] ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan assumes you will have senior standing in 2028–2029.
-  [duplicate] This plan assumes you will have senior standing in 2028–2029.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2029.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] This plan places BUSN 323 in Winter 2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
-  [duplicate] We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-04.txt: 3 violation(s)
-  [duplicate] Choose a later graduation year or talk with your advisor.
-  [duplicate] ECO 461 requires senior standing and is offered only in Winter.
-  [duplicate] With this graduation year you will not have senior standing in any Winter term before you graduate.
-05.txt: 89 violation(s)
-  [duplicate] ?
-  [duplicate] ?
-  [duplicate] ?
-  [duplicate] Actual offerings may differ.
-  [duplicate] AP/exam credit.
-  [duplicate] AP/exam credit.
-  [duplicate] AP/exam credit.
-  [duplicate] Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
-  [duplicate] ECO 113 ECO 113 ?
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.
-  [duplicate] Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and ECO 257.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm whether the student’s AP credit for ECO 113 and MAT 121 counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
-  [duplicate] Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
-  [duplicate] ECO 113 ECO 113 AP credit AP/exam credit.
-  [duplicate] ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 222 — Economics of the European Union Previously offered in May.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] Mathematics MAT 121 AP credit AP/exam credit.
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2029.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 114 and ECO 222.
-  [duplicate] We don’t know if there are open seats in ECO 114, MAT 217, and ECO 222.
-  [duplicate] Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-06.txt: 3 violation(s)
-  [duplicate] Choose a later graduation year or talk with your advisor.
-  [duplicate] ECO 461 requires senior standing and is offered only in Winter.
-  [duplicate] With this graduation year you will not have senior standing in any Winter term before you graduate.
-07.txt: 16 violation(s)
-  [duplicate] Ask your advisor and the Registrar to confirm you can take ECO 461 then.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan assumes you will have senior standing in 2026–2027.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-08.txt: 63 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor and the Registrar to confirm you can take ECO 461 then.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 222 — Economics of the European Union Previously offered in May.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] This plan assumes you will have senior standing in 2026–2027.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
-  [duplicate] We don’t know if there are open seats in ECO 222.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-  [duplicate] Your plan counts BUSN 323.
-09.txt: 15 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 213 and ECO 214.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] The department prefers no more than 2 per term, but the term is still within the normal course load.
-  [duplicate] This plan has 3 Economics courses in Winter 2027.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-10.txt: 20 violation(s)
-  [duplicate] Check your statistics answer or ask your advisor about a later graduation date.
-  [duplicate] ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.
-  [duplicate] Your answers do not show statistics completed, and there is no earlier term left in this plan to take it.
-  [duplicate] Your available terms start in Winter 2027.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-11.txt: 25 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Before taking ECO 213 in Winter 2028, finish MAT 113.
-  [duplicate] Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 113.
-  [duplicate] Before taking ECO 222 in Spring/May 2027, finish ECO 114.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 214.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
-  [duplicate] The department prefers no more than 2 per term, but the term is still within the normal course load.
-  [duplicate] This plan has 3 Economics courses in Winter 2027.
-  [duplicate] This plan places BUSN 323 in Fall 2027.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 114, ECO 161, ECO 221, MAT 113, and ECO 222.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-12.txt: 13 violation(s)
-  [duplicate] Graduate next year is not possible under the current requirements, course timing, and selected term capacity.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-13.txt: 22 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Before taking ECO 213 in Fall 2027, finish ECO 113.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] See the notes below for paperwork to file.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] The department prefers no more than 2 per term, but the term is still within the normal course load.
-  [duplicate] This plan has 3 Economics courses in Winter 2027.
-  [duplicate] This plan places BUSN 323 in Winter 2028.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 113, ECO 161, ECO 214, MAT 217, and ECO 222.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-14.txt: 14 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 161, ECO 221, MAT 217, and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-15.txt: 15 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 213 and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-16.txt: 27 violation(s)
-  [duplicate] If you finished ECO 113 or have transfer/AP credit for it, mark it.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor to check.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check with your advisor.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] If you finished ECO 113 or have transfer/AP credit for it, mark it.
-  [duplicate] If you finished ECO 113 or have transfer/AP credit for it, mark it.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan places BUSN 323 in Winter 2028.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.
-  [duplicate] You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-17.txt: 28 violation(s)
-  [duplicate] If you finished one or are taking it now, mark it.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor to check.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Before taking ECO 222 in Spring/May 2027, finish ECO 114.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] If you finished one or are taking it now, mark it.
-  [duplicate] If you finished one or are taking it now, mark it.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan places BUSN 323 in Winter 2028.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 114, ECO 221, MAT 217, and ECO 222.
-  [duplicate] You are taking ECO 214, but ECO 114, which comes before it, is not marked.
-  [duplicate] Your 2024–25 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-18.txt: 22 violation(s)
-  [duplicate] If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
-  [duplicate] If that was a mistake, change one of them.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Ask your advisor to check.
-  [duplicate] Before taking ECO 221 in Winter 2027 and ECO 321 in Winter 2027, finish ECO 113.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
-  [duplicate] If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
-  [duplicate] If that was a mistake, change one of them.
-  [duplicate] If that was a mistake, change one of them.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
-  [duplicate] You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
-  [duplicate] Your other HS course must be from a different discipline.
-19.txt: 76 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 222 in Spring/May 2027, finish ECO 114.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] MAT 121 is marked “Taking now.”
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 121.
-  [duplicate] Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 121.
-  [duplicate] Before taking ECO 222 in Spring/May 2027, finish ECO 114.
-  [duplicate] Before taking ECO 222 in Spring/May 2027, finish ECO 114.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and ECO 257.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 222 — Economics of the European Union Previously offered in May.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] MAT 121 is marked “Taking now.”
-  [duplicate] MAT 121 is marked “Taking now.”
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] The student's answers show MAT 121 is marked “Taking now.”
-  [duplicate] This plan covers Fall 2026 through Spring/May 2029.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 114 and ECO 222.
-  [duplicate] We don’t know if there are open seats in ECO 114, MAT 217, and ECO 222.
-  [duplicate] Why an advisor should review this plan: ECO 213’s earlier course requirements need review.
-  [duplicate] Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.
-  [duplicate] Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-20.txt: 15 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 213 and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-21.txt: 15 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2028, finish ECO 213 and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-22.txt: 12 violation(s)
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your other HS course must be from a different discipline.
-23.txt: 17 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] See the notes below for paperwork to file.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts PSY 217.
-24.txt: 17 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] See the notes below for paperwork to file.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept they.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323 and PSY 217.
-25.txt: 16 violation(s)
-  [semicolon] This planner does not apply that credit; discuss the petition with your advisor.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [semicolon] This planner does not apply that credit; discuss the petition with your advisor.
-  [duplicate] This planner does not apply that credit; discuss the petition with your advisor.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
-  [duplicate] You may petition to count BUSN 323 as an Economics elective.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your other HS course must be from a different discipline.
-26.txt: 13 violation(s)
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm with your advisor that your transfer credit for BUSN 323 counts.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your other HS course must be from a different discipline.
-27.txt: 17 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
-  [duplicate] See the notes below for paperwork to file.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-28.txt: 20 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department.
-  [duplicate] The department prefers no more than 2 per term, but the term is still within the normal course load.
-  [duplicate] This plan has 3 Economics courses in Winter 2027.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 214, ECO 221, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-30.txt: 27 violation(s)
-  [duplicate] Advisor approval and no academic probation are recorded.
-  [duplicate] Advisor approval and no academic probation are recorded.
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check with the Business Office.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] More than 5.5 courses in Winter and Spring/May may add tuition.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department.
-  [duplicate] The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
-  [duplicate] The normal limit is 4.
-  [duplicate] The normal limit is 4.
-  [duplicate] This plan has 3 Economics courses in Winter 2027.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] This term would have 5 courses.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 214, ECO 221, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-32.txt: 33 violation(s)
-  [duplicate] If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Advisor approval and no academic probation are recorded.
-  [duplicate] Ask your advisor to check.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check with the Business Office.
-  [duplicate] Check with your advisor.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.
-  [duplicate] If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.
-  [duplicate] More than 5.5 courses in Winter and Spring/May may add tuition.
-  [duplicate] No approval is recorded yet.
-  [duplicate] No approval is recorded yet.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Otherwise your advisor will check it.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department.
-  [duplicate] Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor.
-  [duplicate] The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
-  [duplicate] The normal limit is 4.
-  [duplicate] This plan has 4 Economics courses in Winter 2027.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] This term would have 5 courses.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222.
-  [duplicate] You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your other HS course must be from a different discipline.
-36.txt: 18 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Before taking ECO 461 in Winter 2027, finish MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] See the notes below for paperwork to file.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 461 and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-39.txt: 16 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] See the notes below for paperwork to file.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 161, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-42.txt: 19 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Before taking ECO 461 in Winter 2027, finish MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system for current availability.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] The listed section for MAT 217 was recorded as full.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in MAT 217, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-44.txt: 17 violation(s)
-  [duplicate] Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
-  [duplicate] Ask your advisor whether you still need to take it.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Forms are at the Registrar's Office.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] See the notes below for paperwork to file.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] This plan uses the current Economics major requirements.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
-  [duplicate] Your 2023–24 catalog also required a comprehensive evaluation in Economics.
-  [duplicate] Your 2023–24 catalog does not accept it.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your plan counts BUSN 323.
-46.txt: 89 violation(s)
-  [duplicate] ?
-  [duplicate] ?
-  [duplicate] ?
-  [duplicate] Actual offerings may differ.
-  [duplicate] AP/exam credit.
-  [duplicate] AP/exam credit.
-  [duplicate] AP/exam credit.
-  [duplicate] AP/exam credit.
-  [duplicate] AP/exam credit.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
-  [duplicate] ECO 113 ECO 113 ?
-  [duplicate] ECO 114 ECO 114 ?
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm whether the student’s AP credit for ECO 113, ECO 114, and MAT 121 counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
-  [duplicate] Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
-  [duplicate] ECO 113 ECO 113 AP credit AP/exam credit.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 114 ECO 114 AP credit AP/exam credit.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] Mathematics MAT 121 AP credit AP/exam credit.
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2030.
-  [duplicate] This plan places BUSN 323 in Fall 2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 321 and MAT 217.
-  [duplicate] We don’t know if there are open seats in MAT 217.
-  [duplicate] Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-47.txt: 81 violation(s)
-  [duplicate] ?
-  [duplicate] ?
-  [duplicate] ?
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-  [duplicate] ECO 113 ECO 113 ?
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Transfer credit.
-  [duplicate] Transfer credit.
-  [duplicate] Transfer credit.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Confirm whether the student’s transfer credit for ECO 113 and MAT 121 counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that it counts.
-  [duplicate] Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-  [duplicate] Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-  [duplicate] ECO 113 ECO 113 Transfer credit Transfer credit.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] Mathematics MAT 121 Transfer credit Transfer credit.
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2029.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 214 and ECO 222.
-  [duplicate] We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.
-  [duplicate] Why an advisor should review this plan: Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-48.txt: 66 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Counts as your one 100-level elective.
-  [duplicate] ECO 161 does not count toward the major because only one 100-level Economics elective can.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
-  [duplicate] Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 160 does not count toward the major because only one 100-level Economics elective can.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Economics elective 1 ECO 161 Completed Counts as your one 100-level elective.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 , ECO 114 , and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] Its future offering is not confirmed.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2029.
-  [duplicate] This plan places BUSN 323 in Fall 2028.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 321, MAT 113, and MAT 217.
-  [duplicate] We don’t know if there are open seats in MAT 113 and ECO 222.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-49.txt: 62 violation(s)
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] A past schedule does not guarantee a course will be offered again.
-  [duplicate] A published schedule may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Actual offerings may differ.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.
-  [duplicate] Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the published schedule before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Check the registration system before you register.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] Classes marked Planned are not completed yet.
-  [duplicate] ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
-  [duplicate] ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-  [duplicate] ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-  [duplicate] ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-  [duplicate] ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
-  [duplicate] ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
-  [duplicate] ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-  [duplicate] ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-  [duplicate] Finance choices: ECO 321 or BUSN 323 .
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-  [duplicate] Future schedules can change.
-  [duplicate] Future schedules can change.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-  [duplicate] In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-  [duplicate] MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
-  [duplicate] MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
-  [duplicate] Math choices: MAT 113 or MAT 121 .
-  [duplicate] May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] Past Fall schedules included: ECO 333 , ECO 357 .
-  [duplicate] Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-  [duplicate] Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Some future classes, seats, or approvals still need confirmation.
-  [duplicate] Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-  [duplicate] Their order changed from year to year.
-  [duplicate] This plan covers Winter 2027 through Spring/May 2029.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-  [duplicate] We don’t know if there are open seats in ECO 214 and ECO 321.
-  [duplicate] We don’t know if there are open seats in ECO 321.
-  [duplicate] Your other HS course must be from a different discipline.
-  [duplicate] Your other HS course must be from a different discipline.
-Panel sentence violations: 1290 (semicolon=2, wordLimit=0, bannedTerm=0, placeholder=0, duplicate=1288)
+01.txt: 29 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+02.txt: 45 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / One Year Early: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / One Year Early: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / One Year Early: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / One Year Early: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / One Year Early: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / One Year Early: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / One Year Early: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / One Year Early: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / One Year Early: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / One Year Early: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / One Year Early: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / One Year Early: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / One Year Early: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+03.txt: 31 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+05.txt: 23 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+07.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+08.txt: 13 violation(s)
+  [duplicate] SCREEN / Balanced: GRID ROW: No major course assigned
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / One Year Early: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / One Year Early: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / One Year Early: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [semicolon] PDF / One Year Early: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+09.txt: 11 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+10.txt: 16 violation(s)
+  [wordLimit] SCREEN: Your available terms start in Winter 2027. ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term. Your answers do not show statistics completed, and there is no earlier term left in this plan to take it. Check your statistics answer or ask your advisor about a later graduation date. [sentence: ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.]
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 213 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+11.txt: 12 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 213 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: ECO 114, MAT 113, MAT 121, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+12.txt: 10 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: BUSN 323, ECO 321, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+13.txt: 11 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+14.txt: 10 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 213 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+15.txt: 13 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+16.txt: 12 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed. If you finished ECO 113 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it. [sentence: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.]
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 213 ECO 213 Completed ECO 113 not marked done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether ECO 113 were completed before ECO 213.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+17.txt: 12 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 214 ECO 214 — Taking now Taking now ECO 114 not marked done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether ECO 114 were completed before ECO 214.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+18.txt: 13 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it. [sentence: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.]
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 213 ECO 213 Completed ECO 113 marked Taking now rather than done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether ECO 113 were completed before ECO 213. The student's answers show ECO 113 is marked “Taking now.”]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+19.txt: 31 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: NOTE: Taking now
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: NOTE: Taking now
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Explore the Major: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+20.txt: 13 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+21.txt: 13 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+22.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+23.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+24.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+25.txt: 8 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+26.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+27.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+28.txt: 10 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2027.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+30.txt: 10 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2027.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+32.txt: 18 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Approval needed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [inconsistentFact] SCREEN / Balanced: Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor. No approval is recorded yet. [also: NOTE: Taking MAT 113 and ECO 214 in the same term requires approval from the ECO 214 instructor.]
+  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2027Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it. [sentence: Graduation goal: Spring/May 2027Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.]
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [duplicate] PDF / Balanced: NOTE: Approval needed
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 213 ECO 213 Completed MAT 113 or MAT 121 not marked done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213.]
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 Planned Approval needed [also: Confirm ECO 214 instructor approval for ECO 214 in Winter 2027.]
+  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2027.]
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+35.txt: 1 violation(s)
+  [wordLimit] SCREEN: Your available terms start in Winter 2027. ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term. Your answers do not show statistics completed, and there is no earlier term left in this plan to take it. Check your statistics answer or ask your advisor about a later graduation date. [sentence: ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.]
+36.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+39.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+42.txt: 6 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+43.txt: 1 violation(s)
+  [wordLimit] SCREEN: Your available terms start in Winter 2027. ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term. Your answers do not show statistics completed, and there is no earlier term left in this plan to take it. Check your statistics answer or ask your advisor about a later graduation date. [sentence: ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.]
+44.txt: 3 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+46.txt: 37 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: No major course assigned
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: No major course assigned
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: GRID ROW: No major course assigned
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2030Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [wordLimit] PDF / Explore the Major: Graduation goal: Spring/May 2030Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+  [duplicate] PDF / Explore the Major: GRID ROW: -
+  [duplicate] PDF / Explore the Major: GRID ROW: -
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+47.txt: 27 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+48.txt: 21 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+49.txt: 29 violation(s)
+  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
+  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
+  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
+  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+  [duplicate] PDF / Balanced: GRID ROW: -
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+  [duplicate] PDF / Explore the Major: GRID ROW: -
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
+  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+50.txt: 1 violation(s)
+  [wordLimit] SCREEN: These courses did not fit before May 2028: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+Panel sentence violations: 538 (semicolon=94, wordLimit=13, bannedTerm=0, placeholder=0, duplicate=405, inconsistentFact=26, statusContradiction=0)
 [ELIFECYCLE] Command failed with exit code 1.

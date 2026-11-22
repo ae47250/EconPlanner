@@ -1,12 +1,34 @@
 SCREEN
-Choose a later graduation year or talk with your advisor.
-Choose a later graduation year or talk with your advisor.
-ECO 461 cannot fit before this graduation target without senior standing.
-ECO 461 requires senior standing and is offered only in Winter.
-ECO 461 requires senior standing and is offered only in Winter.
-EconPlanner is a planning guide, not an official degree audit.
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Freshman (custom graduation year)
+·
+Graduation target: May 2028
+Regenerate all plans
+Clear all
+Class standing
+Freshman (custom graduation year)
+Graduation target
+May 2028
+Completed
+None
+Taking now
+None
+Overall status
+Not possible
+Your planning result
 Review this result and the next step below.
+SCREEN > Other details
+SCREEN > ECO 461 cannot fit before this graduation target without senior standing.
+ECO 461 cannot fit before this graduation target without senior standing.
+ECO 461 requires senior standing and is offered only in Winter. With this graduation year you will not have senior standing in any Winter term before you graduate. Choose a later graduation year or talk with your advisor.
+Review graduation timeline
+SCREEN > Why am I seeing this result?
 Why am I seeing this result?
-With this graduation year you will not have senior standing in any Winter term before you graduate.
-With this graduation year you will not have senior standing in any Winter term before you graduate.
+ECO 461 requires senior standing and is offered only in Winter. With this graduation year you will not have senior standing in any Winter term before you graduate. Choose a later graduation year or talk with your advisor.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
 PDF

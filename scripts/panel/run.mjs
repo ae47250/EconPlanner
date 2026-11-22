@@ -16,9 +16,17 @@ const template = await readFile(path.join(root, "templates/econplannertemplate.h
 const policyBundle = runtimePolicyBundle();
 const storageKey = "econ-planner-ui-state";
 const runningCheck = process.argv.includes("--check");
-const targetDir = runningCheck ? await mkdtemp(path.join(os.tmpdir(), "econplanner-panel-")) : path.join(root, "tests/panel");
+const generatedDirIndex = process.argv.indexOf("--generated-dir");
+const suppliedGeneratedDir = generatedDirIndex >= 0 ? process.argv[generatedDirIndex + 1] : null;
+if (generatedDirIndex >= 0 && (!runningCheck || !suppliedGeneratedDir)) throw new Error("--generated-dir requires --check and a directory");
+const targetDir = suppliedGeneratedDir ? path.resolve(suppliedGeneratedDir)
+  : runningCheck ? await mkdtemp(path.join(os.tmpdir(), "econplanner-panel-")) : path.join(root, "tests/panel");
 const snapshotsDir = path.join(targetDir, "snapshots");
-await mkdir(snapshotsDir, { recursive: true });
+const plansDir = path.join(targetDir, "plans");
+if (!suppliedGeneratedDir) {
+  await mkdir(snapshotsDir, { recursive: true });
+  await mkdir(plansDir, { recursive: true });
+}
 const traceRules = new Map();
 const traceReasons = new Map();
 const traceMessages = new Map();
@@ -40,7 +48,7 @@ const sourceForSection = {
   PDF: { file: "lib/reports/economics-html.js", function: "renderEconomicsHtml" }
 };
 const sorted = values => [...new Set(values)].sort((a, b) => a.localeCompare(b, "en-US", { numeric: true }));
-const sortedSentences = values => [...values].sort((a, b) => a.localeCompare(b, "en-US", { numeric: true }));
+const normalize = value => String(value ?? "").replace(/\s+/g, " ").trim();
 
 function expandCodes(profile) {
   const base = profile.set ? data.courseSets[profile.set] : [];
@@ -109,22 +117,202 @@ function prepareProfile(profile) {
   return student;
 }
 
-function textFromHtml(html) {
-  return html.replace(/<(?:style|script)\b[^>]*>[\s\S]*?<\/(?:style|script)>/gi, "")
-    .replace(/<br\s*\/?\s*>/gi, "\n")
-    .replace(/<\/(?:p|div|li|h[1-6]|tr|section|header|footer|article|table|ul|ol)>/gi, "\n")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ").replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">")
-    .replace(/&#39;|&apos;/gi, "'").replace(/&quot;/gi, '"');
-}
-
 function toSentences(value) {
   return value.split(/\r?\n/).flatMap(line => line.split(/(?<=[.!?])\s+(?=[A-Z0-9“])/))
-    .map(line => line.replace(/\s+/g, " ").trim())
-    .filter(line => /[.!?]["'’”)}\]]?$/.test(line)
-      && !/^—\s*(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/i.test(line)
-      && !/\bSection\s+[A-Z]\s*:[^;]*;\s*Section\s+[A-Z]\s*:/i.test(line))
+    .map(normalize)
     .filter(Boolean);
+}
+
+function planStatus(plan) {
+  const readiness = plan?.readinessStatus || plan?.validation?.readinessStatus || "";
+  const disposition = plan?.planDisposition || plan?.validation?.planDisposition || "";
+  if (readiness === "ADVISOR_ACTION_REQUIRED" || disposition.includes("ADVISOR_ACTION_REQUIRED")) return "Needs advisor attention";
+  if (readiness === "READY_WITH_CONDITIONS" || disposition.includes("READY_WITH_CONDITIONS")) return "Needs confirmation";
+  if (readiness === "STUDENT_READY" || disposition.includes("STUDENT_READY")) return "Ready to plan";
+  return "Needs advisor attention";
+}
+
+function planArtifact(profile, overallStatus, plans, payload) {
+  return {
+    studentId: profile.id,
+    planDate: profile.planDate || "2026-11-22",
+    overallStatus,
+    resultCategory: (payload.programs || []).find(item => item.economicsPlanResult)?.economicsPlanResult?.category || null,
+    plans: plans.map(plan => ({
+      id: plan.id,
+      name: plan.label,
+      status: planStatus(plan),
+      feasibilityStatus: plan.feasibilityStatus || null,
+      readinessStatus: plan.readinessStatus || null,
+      terms: (plan.terms || []).map(term => ({
+        termId: term.slotId || term.term,
+        term: term.displayTerm || term.term,
+        academicYear: term.academicYear || null,
+        courses: (term.courses || []).map(course => ({
+          course: course.course,
+          title: course.title || null,
+          section: course.section || null,
+          status: course.fixedInProgress ? "Taking now" : "Planned",
+          requirementId: course.requirementId || null
+        }))
+      }))
+    }))
+  };
+}
+
+async function captureScreen(page, statusById) {
+  return page.evaluate(statuses => {
+    const clean = value => String(value ?? "").replace(/\s+/g, " ").trim();
+    const lines = node => String(node?.innerText || "").split(/\r?\n/).map(clean).filter(Boolean);
+    const sections = [];
+    const add = (heading, values) => sections.push({ heading, lines: values.filter(Boolean) });
+    const root = document.querySelector(".comparison-page");
+    if (!root) throw new Error("The comparison screen did not render");
+    const summary = [
+      ...lines(root.querySelector(".comparison-topbar")),
+      ...lines(root.querySelector(".comparison-course-status")),
+      ...lines(root.querySelector(".comparison-heading-row")),
+      ...lines(root.querySelector(".accelerated-result")),
+      ...lines(root.querySelector(".comparison-difference-key"))
+    ];
+    add("SCREEN > Summary box", summary);
+
+    for (const card of root.querySelectorAll(".comparison-plan-card")) {
+      const name = clean(card.querySelector(".plan-title-row h2")?.innerText || card.dataset.planId);
+      const prefix = `SCREEN > Plan: ${name}`;
+      add(prefix, [`STATUS: ${statuses[card.dataset.planId] || "Needs advisor attention"}`, ...lines(card.querySelector(".comparison-plan-summary"))]);
+      for (const child of card.children) {
+        if (child.classList.contains("comparison-plan-summary")) continue;
+        if (child.matches("table.compact-schedule")) {
+          const grid = ["Year | Term | Courses"];
+          let year = "";
+          for (const row of child.querySelectorAll("tbody tr")) {
+            year = clean(row.querySelector(".comparison-academic-year")?.innerText || year);
+            const cells = [...row.children];
+            const termCell = cells.find(cell => cell !== row.querySelector(".comparison-academic-year"));
+            const courseCell = cells.at(-1);
+            grid.push(`TERM: ${year} ${clean(termCell?.innerText)}`);
+            const courseEntries = courseCell?.querySelectorAll(".comparison-editable-course") || [];
+            if (!courseEntries.length) grid.push(`GRID ROW: ${clean(courseCell?.innerText)}`);
+            for (const entry of courseEntries) {
+              const code = clean(entry.querySelector(".plan-course-actions > button, .comparison-fixed-course strong")?.innerText
+                || entry.querySelector(".comparison-course-controls")?.innerText || "");
+              const title = clean(entry.querySelector(".comparison-course-title")?.innerText || "");
+              grid.push(`GRID ROW: ${code}${title ? ` | ${title}` : ""}`);
+              for (const note of entry.querySelectorAll(":scope > .comparison-course-meta > *")) {
+                if (note.classList.contains("comparison-course-title")) continue;
+                for (const text of lines(note)) grid.push(`NOTE: ${text}`);
+              }
+              for (const extra of entry.querySelectorAll(":scope > .comparison-course-controls > small")) {
+                for (const text of lines(extra)) grid.push(`NOTE: ${text}`);
+              }
+            }
+          }
+          add(`${prefix} > Grid`, grid);
+          continue;
+        }
+        if (child.classList.contains("comparison-plan-details")) {
+          for (const detail of child.children) {
+            if (detail.classList.contains("major-checklist")) {
+              const heading = clean(detail.querySelector("summary")?.innerText || "Checklist");
+              const content = [heading, "Requirement | Course / term | Status"];
+              for (const row of detail.querySelectorAll("tbody tr")) content.push(`CHECKLIST ROW: ${clean(row.innerText)}`);
+              const body = detail.querySelector(".comparison-disclosure-content");
+              for (const node of body?.children || []) {
+                if (node.tagName === "TABLE") continue;
+                content.push(...lines(node));
+              }
+              add(`${prefix} > Checklist`, content);
+            } else if (detail.tagName === "DETAILS") {
+              const heading = clean(detail.querySelector(":scope > summary")?.innerText || "Notes");
+              const content = [heading];
+              for (const node of detail.children) if (node.tagName !== "SUMMARY") content.push(...lines(node));
+              add(`${prefix} > Notes: ${heading}`, content);
+            } else add(`${prefix} > Details`, lines(detail));
+          }
+          continue;
+        }
+        if (child.matches("section.plan-notes")) {
+          const heading = clean(child.querySelector("h2, h3")?.innerText || "Notes");
+          add(`${prefix} > Notes: ${heading}`, lines(child));
+          continue;
+        }
+        add(`${prefix} > More`, lines(child));
+      }
+    }
+
+    for (const child of root.querySelector(".comparison-content")?.children || []) {
+      if (child.matches(".comparison-course-status, .comparison-heading-row, .accelerated-result, .comparison-difference-key, .comparison-grid")) continue;
+      if (child.querySelector(".comparison-plan-card")) continue;
+      const heading = clean(child.querySelector("summary, h2, h3")?.innerText || "Other details");
+      add(`SCREEN > ${heading}`, lines(child));
+    }
+    return { sections, overallStatus: clean(root.querySelector(".result-status-value")?.innerText || "Not available") };
+  }, statusById);
+}
+
+async function capturePdf(reportPage, html, planName) {
+  await reportPage.setContent(html, { waitUntil: "domcontentloaded" });
+  return reportPage.evaluate(name => {
+    const clean = value => String(value ?? "").replace(/\s+/g, " ").trim();
+    const lines = node => String(node?.innerText || "").split(/\r?\n/).map(clean).filter(Boolean);
+    const sections = [];
+    const prefix = `PDF > Plan: ${name}`;
+    const add = (heading, values) => sections.push({ heading, lines: values.filter(Boolean) });
+    const main = document.querySelector(".sheet .plan-main");
+    if (!main) throw new Error(`The HTML report for ${name} did not render`);
+    for (const block of main.children) {
+      if (block.classList.contains("schedule-card")) {
+        const grid = [clean(block.querySelector("h2")?.innerText || "Your plan by term"), "Year | Fall | Winter | May"];
+        const headers = [...block.querySelectorAll(".schedule thead th")].slice(1).map(header => clean(header.innerText));
+        for (const row of block.querySelectorAll(".schedule tbody tr")) {
+          const year = clean(row.querySelector("th")?.innerText);
+          for (const [index, cell] of [...row.querySelectorAll("td")].entries()) {
+            const term = clean(cell.dataset.scheduleTerm || headers[index] || "Term");
+            grid.push(`TERM: ${year} ${term}`);
+            const courses = cell.querySelectorAll(".course-entry");
+            if (!courses.length) grid.push(`GRID ROW: ${clean(cell.innerText)}`);
+            for (const course of courses) {
+              grid.push(`GRID ROW: ${clean(course.querySelector(".course")?.innerText)}`);
+              for (const note of course.children) {
+                if (note.classList.contains("course") || note.classList.contains("cell-note")) continue;
+                for (const text of lines(note)) grid.push(`NOTE: ${text}`);
+              }
+            }
+          }
+        }
+        for (const node of block.querySelectorAll(".course-titles > *")) grid.push(...lines(node));
+        for (const node of block.querySelectorAll(".seat-note")) grid.push(...lines(node));
+        add(`${prefix} > Grid`, grid);
+      } else if (block.classList.contains("checklist-section")) {
+        const heading = clean(block.querySelector("h2")?.innerText || "Checklist");
+        const content = [heading, "Requirement | Course / term | Status"];
+        for (const row of block.querySelectorAll("tbody tr")) content.push(`CHECKLIST ROW: ${clean(row.innerText)}`);
+        for (const child of block.children) {
+          if (child.tagName === "H2" || child.tagName === "TABLE") continue;
+          content.push(...lines(child));
+        }
+        add(`${prefix} > Checklist`, content);
+      } else {
+        const heading = clean(block.querySelector("h1, h2, h3")?.innerText || (block.classList.contains("report-header") ? "Header" : "Notes"));
+        add(`${prefix} > ${heading}`, lines(block));
+      }
+    }
+    const notes = document.querySelector(".sheet .plan-notes-section");
+    if (notes) {
+      add(`${prefix} > Plan Notes`, lines(notes.querySelector(":scope > header")));
+      for (const card of notes.querySelectorAll(":scope > .note-card")) {
+        const heading = clean(card.querySelector("h2")?.innerText || "Notes");
+        add(`${prefix} > Notes: ${heading}`, lines(card));
+      }
+    }
+    return sections;
+  }, planName);
+}
+
+function snapshotText(screenSections, pdfSections) {
+  return ["SCREEN", ...screenSections.flatMap(section => [section.heading, ...section.lines]),
+    "PDF", ...pdfSections.flatMap(section => [section.heading, ...section.lines])].join("\n") + "\n";
 }
 
 function policyEvidence(payload, plans) {
@@ -263,25 +451,29 @@ async function runStudent(browser, baseURL, profile) {
     await page.locator(".comparison-page").waitFor({ timeout: 30000 });
     stepStatus.push("Generate");
     await page.locator(".comparison-page details").evaluateAll(items => items.forEach(item => { item.open = true; }));
-    const screenText = await page.locator(".comparison-page").innerText();
-    const screen = sortedSentences(toSentences(screenText));
     const plans = [...new Map((payload.programs || []).flatMap(item => item.economicsPlans || []).map(plan => [plan.id, plan])).values()];
-    const pdfSentences = [];
+    const screen = await captureScreen(page, Object.fromEntries(plans.map(plan => [plan.id, planStatus(plan)])));
+    const reportPage = await context.newPage();
+    const pdfSections = [];
     for (const plan of plans) {
       const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, plans);
       const html = renderEconomicsHtml(report, template);
-      pdfSentences.push(...toSentences(textFromHtml(html)));
+      pdfSections.push(...await capturePdf(reportPage, html, plan.label));
     }
-    const pdf = sortedSentences(pdfSentences);
     const evidence = policyEvidence(payload, plans);
-    for (const sentence of screen) recordTrace("SCREEN", sentence, evidence, profile.id);
-    for (const sentence of pdf) recordTrace("PDF", sentence, evidence, profile.id);
-    return { student, text: [`SCREEN`, ...screen, `PDF`, ...pdf].join("\n") + "\n", stepStatus };
+    for (const section of screen.sections) {
+      for (const line of section.lines) for (const sentence of toSentences(line)) recordTrace("SCREEN", sentence, evidence, profile.id);
+    }
+    for (const section of pdfSections) {
+      for (const line of section.lines) for (const sentence of toSentences(line)) recordTrace("PDF", sentence, evidence, profile.id);
+    }
+    return { student, text: snapshotText(screen.sections, pdfSections), plans: planArtifact(profile, screen.overallStatus, plans, payload), stepStatus };
   } catch (error) {
     const reason = error?.message || String(error);
     couldNotDrive.push({ studentId: profile.id, completedSteps: stepStatus, reason });
     const line = `Could not drive student ${profile.id} through the planner: ${reason}`;
-    return { student, text: `SCREEN\n${line}\nPDF\n${line}\n`, stepStatus };
+    return { student, text: `SCREEN\nSCREEN > Drive failure\n${line}\nPDF\n`,
+      plans: { studentId: profile.id, planDate: student.planCreationDate, overallStatus: "Drive failure", resultCategory: null, plans: [] }, stepStatus };
   } finally {
     await context.close();
   }
@@ -294,6 +486,7 @@ async function generate() {
     for (const profile of data.students) {
       const result = await runStudent(browser, url, profile);
       await writeFile(path.join(snapshotsDir, `${profile.id}.txt`), result.text);
+      await writeFile(path.join(plansDir, `${profile.id}.json`), JSON.stringify(result.plans, null, 2) + "\n");
       console.log(`Student ${profile.id}: ${result.stepStatus.join(" → ") || "not driven"}`);
     }
   } finally {
@@ -330,45 +523,63 @@ function traceArtifacts() {
 }
 
 function diffText(expected, actual) {
-  const counts = text => {
-    const result = new Map();
-    for (const line of text.split(/\r?\n/).filter(Boolean)) result.set(line, (result.get(line) || 0) + 1);
-    return result;
-  };
-  const left = counts(expected);
-  const right = counts(actual);
+  const left = expected.split(/\r?\n/);
+  const right = actual.split(/\r?\n/);
   const lines = [];
-  for (const line of [...new Set([...right.keys(), ...left.keys()])].sort()) {
-    for (let index = left.get(line) || 0; index < (right.get(line) || 0); index++) lines.push(`+ ${line}`);
-    for (let index = right.get(line) || 0; index < (left.get(line) || 0); index++) lines.push(`- ${line}`);
+  let before = 0;
+  let after = 0;
+  while (before < left.length || after < right.length) {
+    if (left[before] === right[after]) { before++; after++; continue; }
+    const nextBefore = left.slice(before + 1, before + 21).indexOf(right[after]);
+    const nextAfter = right.slice(after + 1, after + 21).indexOf(left[before]);
+    if (nextBefore >= 0 && (nextAfter < 0 || nextBefore <= nextAfter)) {
+      lines.push(`- ${left[before++]}`);
+    } else if (nextAfter >= 0) {
+      lines.push(`+ ${right[after++]}`);
+    } else {
+      if (before < left.length) lines.push(`- ${left[before++]}`);
+      if (after < right.length) lines.push(`+ ${right[after++]}`);
+    }
   }
   return lines;
 }
 
 try {
-  await generate();
-  const traces = traceArtifacts();
-  await writeFile(path.join(targetDir, "trace.json"), traces.json);
-  await writeFile(path.join(targetDir, "trace.md"), traces.markdown);
+  if (!suppliedGeneratedDir) {
+    await generate();
+    const traces = traceArtifacts();
+    await writeFile(path.join(targetDir, "trace.json"), traces.json);
+    await writeFile(path.join(targetDir, "trace.md"), traces.markdown);
+  }
   if (runningCheck) {
     const expectedDir = path.join(root, "tests/panel");
-    const expectedFiles = [...(await readdir(path.join(expectedDir, "snapshots"))).filter(file => file.endsWith(".txt")).map(file => `snapshots/${file}`), "trace.json", "trace.md"].sort();
-    const actualFiles = [...(await readdir(snapshotsDir)).filter(file => file.endsWith(".txt")).map(file => `snapshots/${file}`), "trace.json", "trace.md"].sort();
+    const filesIn = async (directory, extension, prefix) => (await readdir(directory))
+      .filter(file => file.endsWith(extension)).map(file => `${prefix}/${file}`);
+    const expectedFiles = [
+      ...await filesIn(path.join(expectedDir, "snapshots"), ".txt", "snapshots"),
+      ...await filesIn(path.join(expectedDir, "plans"), ".json", "plans"), "trace.json", "trace.md"
+    ].sort();
+    const actualFiles = [
+      ...await filesIn(snapshotsDir, ".txt", "snapshots"),
+      ...await filesIn(plansDir, ".json", "plans"), "trace.json", "trace.md"
+    ].sort();
     let failed = JSON.stringify(expectedFiles) !== JSON.stringify(actualFiles);
     if (failed) console.error(`Panel file list differs. Expected ${expectedFiles.length} files; generated ${actualFiles.length}.`);
-    for (const file of expectedFiles) {
+    for (const file of [...new Set([...expectedFiles, ...actualFiles])].sort()) {
       const expected = await readFile(path.join(expectedDir, file), "utf8").catch(() => "");
       const actual = await readFile(path.join(targetDir, file), "utf8").catch(() => "");
       if (expected === actual) continue;
       failed = true;
       console.error(`\n${file} differs:`);
-      for (const line of diffText(expected, actual)) console.error(line);
+      const changes = diffText(expected, actual);
+      for (const line of changes.slice(0, 300)) console.error(line);
+      if (changes.length > 300) console.error(`... ${changes.length - 300} more changed lines`);
     }
     if (failed) process.exitCode = 1;
-    else console.log(`Panel check passed: ${data.students.length} students, ${expectedFiles.length - 2} snapshots and current trace.`);
+    else console.log(`Panel check passed: ${data.students.length} students, ${data.students.length} snapshots, ${data.students.length} plan files and current trace.`);
   } else {
     console.log(`Generated ${data.students.length} student snapshots under ${snapshotsDir}.`);
   }
 } finally {
-  if (runningCheck) await rm(targetDir, { recursive: true, force: true });
+  if (runningCheck && !suppliedGeneratedDir) await rm(targetDir, { recursive: true, force: true });
 }

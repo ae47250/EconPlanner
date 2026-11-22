@@ -1,125 +1,437 @@
 SCREEN
-Actual offerings may differ.
-Actual offerings may differ.
-Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
-Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
-Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
-Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
-Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-Check the published schedule before you register.
-Check the published schedule before you register.
-Check the registration system before you register.
-Check the registration system before you register.
-Classes marked Planned are not completed yet.
-Classes marked Planned are not completed yet.
-Classes that need an earlier class are scheduled later.
-Click a course to see where it can move.
-EconPlanner is a planning guide, not an official degree audit.
-For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-Future schedules can change.
-Future schedules can change.
-HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-Its future offering is not confirmed.
-Its future offering is not confirmed.
-Plans a lighter course load in the first year than Balanced.
-Seats are not confirmed, so check the registration system before you register.
-Some future classes, seats, or approvals still need confirmation.
-Some future classes, seats, or approvals still need confirmation.
-Spreads the required classes you still need across the years before you graduate.
-These plans meet the major rules.
-This plan places BUSN 323 in Fall 2029.
-This plan places BUSN 323 in Fall 2029.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
-We don’t know if there are open seats in ECO 114 and MAT 217.
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Freshman
+·
+Graduation target: May 2030
+Regenerate all plans
+Clear all
+Class standing
+Freshman
+Graduation target
+May 2030
+Completed
+None
+Taking now
+None
+Student readiness
+Ready to plan
+These plans meet the major rules. Seats are not confirmed, so check the registration system before you register.
+Compare your course plans
+Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
-You can also drag it by the ⠿ handle.
-Your other HS course must be from a different discipline.
-Your other HS course must be from a different discipline.
-PDF
-A past schedule does not guarantee a course will be offered again.
-A past schedule does not guarantee a course will be offered again.
-A published schedule may differ.
-A published schedule may differ.
-Actual offerings may differ.
-Actual offerings may differ.
-Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
-Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
+Highlight differences
+SCREEN > Plan: Balanced
+STATUS: Ready to plan
+Balanced
+Spreads the required classes you still need across the years before you graduate.
+Plan feasibility: Conditional plan
+Some future classes, seats, or approvals still need confirmation.
+SCREEN > Plan: Balanced > Grid
+Year | Term | Courses
+TERM: 2026/2027 Winter
+GRID ROW: ECO 113 ▾ | Principles of Microeconomics
+NOTE: Seat availability not confirmed
+GRID ROW: ECO 114 ▾ | Principles of Macroeconomics
+NOTE: Seat availability not confirmed
+TERM: 2026/2027 May
+GRID ROW: MAT 217 ▾ | Applied Statistics
+NOTE: Seat availability not confirmed
+TERM: 2027/2028 Fall
+GRID ROW: MAT 113 ▾ | Essential Pre-Calculus
+TERM: 2027/2028 Winter
+GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
+TERM: 2027/2028 May
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+TERM: 2028/2029 Fall
+GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
+TERM: 2028/2029 Winter
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+TERM: 2028/2029 May
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+TERM: 2029/2030 Fall
+GRID ROW: BUSN 323 ▾ | Investments
+TERM: 2029/2030 Winter
+GRID ROW: ECO 461 | Senior Seminar: Econometrics
+NOTE: Senior-year Winter only · no other eligible term in this plan
+TERM: 2029/2030 May
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+SCREEN > Plan: Balanced > More
+Add Econ course
+SCREEN > Plan: Balanced > More
+Regenerate this plan
+SCREEN > Plan: Balanced > More
+Download PDF Report: Balanced
+SCREEN > Plan: Balanced > Notes: Things to keep in mind
+Things to keep in mind
+Classes to finish first
 Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
+Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
+Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
+Before you register
+We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217. Check the registration system before you register.
+SCREEN > Plan: Balanced > Checklist
+Major requirements checklist
+Requirement | Course / term | Status
+CHECKLIST ROW: ECO 113 ECO 113 — Winter 2027 ○ Planned
+CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned
+CHECKLIST ROW: Mathematics MAT 113 — Fall 2027 Requirement options: MAT 113 / MAT 121 ○ Planned
+CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned
+CHECKLIST ROW: ECO 214 ECO 214 — Fall 2028 ○ Planned
+CHECKLIST ROW: Statistics MAT 217 — May 2027 Requirement options: ECO 257 / MAT 217 / PSY 217 ○ Planned
+CHECKLIST ROW: Finance BUSN 323 — Fall 2029 Requirement options: ECO 321 / BUSN 323 ○ Planned
+CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 ○ Planned
+CHECKLIST ROW: Economics elective 1 ECO elective (200+) — May 2028 ○ Planned
+CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2029 ○ Planned
+CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2029 ○ Planned
+CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2030 ○ Planned
+○ Planned
+Classes marked Planned are not completed yet. Future schedules can change. Check the published schedule before you register.
+SCREEN > Plan: Balanced > Notes: More about this plan
+More about this plan
+Other graduation requirements
+HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
+W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+Published schedules as of the plan date (November 22, 2026)
+Winter 2027:
+ECO 113 · Principles of Microeconomics
+— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 114 · Principles of Macroeconomics
+— Tue/Thu, 8:00–9:45 a.m.
+ECO 161 · Foundations of Economics
+— Tue/Thu, 12:20–2:05 p.m.
+ECO 214 · Intermediate Macroeconomics
+— Tue/Thu, 10:00–11:45 a.m.
+ECO 221 · Environmental Economics
+— Mon/Wed/Fri, 9:20–10:30 a.m.
+ECO 321 · Money and Financial Markets
+— Tue/Thu, 12:20–2:05 p.m.
+ECO 461 · Senior Seminar: Econometrics
+— Mon/Wed/Fri, 10:40–11:50 a.m.
+May 2027:
+ECO 222 · Economics of the European Union
+— Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+ECO 224 · Introduction to Sustainability
+— Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
+ECO 234 · Rational Choices
+— Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+Courses in future years
+For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
+This plan places BUSN 323 in Fall 2029. Its future offering is not confirmed.
+SCREEN > Plan: Explore the Major
+STATUS: Ready to plan
+Explore the Major
+Plans a lighter course load in the first year than Balanced. Classes that need an earlier class are scheduled later.
+Plan feasibility: Conditional plan
+Some future classes, seats, or approvals still need confirmation.
+SCREEN > Plan: Explore the Major > Grid
+Year | Term | Courses
+TERM: 2026/2027 Winter
+GRID ROW: ECO 114 ▾ | Principles of Macroeconomics
+NOTE: Seat availability not confirmed
+TERM: 2026/2027 May
+GRID ROW: MAT 217 ▾ | Applied Statistics
+NOTE: Seat availability not confirmed
+TERM: 2027/2028 Fall
+GRID ROW: ECO 113 ▾ | Principles of Microeconomics
+TERM: 2027/2028 Winter
+GRID ROW: MAT 113 ▾ | Essential Pre-Calculus
+TERM: 2027/2028 May
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+TERM: 2028/2029 Fall
+GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
+TERM: 2028/2029 Winter
+GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
+TERM: 2028/2029 May
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+TERM: 2029/2030 Fall
+GRID ROW: BUSN 323 ▾ | Investments
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+TERM: 2029/2030 Winter
+GRID ROW: ECO 461 | Senior Seminar: Econometrics
+NOTE: Senior-year Winter only · no other eligible term in this plan
+TERM: 2029/2030 May
+GRID ROW: ECO elective (200+) ▾
+NOTE: Future offering unconfirmed
+SCREEN > Plan: Explore the Major > More
+Add Econ course
+SCREEN > Plan: Explore the Major > More
+Regenerate this plan
+SCREEN > Plan: Explore the Major > More
+Download PDF Report: Explore the Major
+SCREEN > Plan: Explore the Major > Notes: Things to keep in mind
+Things to keep in mind
+Classes to finish first
+Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
 Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
 Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
+Before you register
+We don’t know if there are open seats in ECO 114 and MAT 217. Check the registration system before you register.
+SCREEN > Plan: Explore the Major > Checklist
+Major requirements checklist
+Requirement | Course / term | Status
+CHECKLIST ROW: ECO 113 ECO 113 — Fall 2027 ○ Planned
+CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned
+CHECKLIST ROW: Mathematics MAT 113 — Winter 2028 Requirement options: MAT 113 / MAT 121 ○ Planned
+CHECKLIST ROW: ECO 213 ECO 213 — Fall 2028 ○ Planned
+CHECKLIST ROW: ECO 214 ECO 214 — Winter 2029 ○ Planned
+CHECKLIST ROW: Statistics MAT 217 — May 2027 Requirement options: ECO 257 / MAT 217 / PSY 217 ○ Planned
+CHECKLIST ROW: Finance BUSN 323 — Fall 2029 Requirement options: ECO 321 / BUSN 323 ○ Planned
+CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 ○ Planned
+CHECKLIST ROW: Economics elective 1 ECO elective (200+) — May 2028 ○ Planned
+CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2029 ○ Planned
+CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2029 ○ Planned
+CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2030 ○ Planned
+○ Planned
+Classes marked Planned are not completed yet. Future schedules can change. Check the published schedule before you register.
+SCREEN > Plan: Explore the Major > Notes: More about this plan
+More about this plan
+Other graduation requirements
+HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
+W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+Published schedules as of the plan date (November 22, 2026)
+Winter 2027:
+ECO 113 · Principles of Microeconomics
+— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 114 · Principles of Macroeconomics
+— Tue/Thu, 8:00–9:45 a.m.
+ECO 161 · Foundations of Economics
+— Tue/Thu, 12:20–2:05 p.m.
+ECO 214 · Intermediate Macroeconomics
+— Tue/Thu, 10:00–11:45 a.m.
+ECO 221 · Environmental Economics
+— Mon/Wed/Fri, 9:20–10:30 a.m.
+ECO 321 · Money and Financial Markets
+— Tue/Thu, 12:20–2:05 p.m.
+ECO 461 · Senior Seminar: Econometrics
+— Mon/Wed/Fri, 10:40–11:50 a.m.
+May 2027:
+ECO 222 · Economics of the European Union
+— Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+ECO 224 · Introduction to Sustainability
+— Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
+ECO 234 · Rational Choices
+— Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+Courses in future years
+For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
+This plan places BUSN 323 in Fall 2029. Its future offering is not confirmed.
+SCREEN > Other details
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
+PDF
+PDF > Plan: Balanced > Your Economics major plan
+Hanover College · Economics
+Your Economics major plan
+Panel Student 01 | Balanced | Prepared November 22, 2026 | Class standing: Freshman
+This plan covers Winter 2027 through Spring/May 2030.
+Plan feasibility: Conditional plan
+Some future classes, seats, or approvals still need confirmation.
+Graduation goal: Spring/May 2030
+PDF > Plan: Balanced > Grid
+Your plan by term
+Year | Fall | Winter | May
+TERM: 2026/2027 Fall
+GRID ROW: -
+TERM: 2026/2027 Winter
+GRID ROW: ECO 113-J
+GRID ROW: ECO 114-J
+TERM: 2026/2027 May
+GRID ROW: MAT 217-S
+TERM: 2027/2028 Fall
+GRID ROW: MAT 113
+TERM: 2027/2028 Winter
+GRID ROW: ECO 213
+TERM: 2027/2028 May
+GRID ROW: Economics elective (200 level or higher)
+TERM: 2028/2029 Fall
+GRID ROW: ECO 214
+TERM: 2028/2029 Winter
+GRID ROW: Economics elective (200 level or higher)
+TERM: 2028/2029 May
+GRID ROW: Economics elective (200 level or higher)
+TERM: 2029/2030 Fall
+GRID ROW: BUSN 323
+TERM: 2029/2030 Winter
+GRID ROW: ECO 461
+TERM: 2029/2030 May
+GRID ROW: Economics elective (200 level or higher)
+ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
+ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
+MAT 217 — Applied Statistics
+MAT 113 — Essential Pre-Calculus
+ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+Economics elective (200 level or higher) — Eligible ECO elective (future offering to verify)
+ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
+BUSN 323 — Investments
+ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+PDF > Plan: Balanced > What to check for this plan
+What to check for this plan
+Finish these classes first
+Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
+Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
 Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
-Check the published schedule before you register.
-Check the published schedule before you register.
-Check the registration system before you register.
-Check the registration system before you register.
-Classes marked Planned are not completed yet.
-Classes marked Planned are not completed yet.
-ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
-ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
-ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
-ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
+Before you register
+We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217. Check the registration system before you register.
+PDF > Plan: Balanced > Checklist
+Your Economics major checklist
+Requirement | Course / term | Status
+CHECKLIST ROW: ECO 113 ECO 113 — Winter 2027 Planned
+CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 Planned
+CHECKLIST ROW: Mathematics MAT 113 — Fall 2027 Planned
+CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 Planned
+CHECKLIST ROW: ECO 214 ECO 214 — Fall 2028 Planned
+CHECKLIST ROW: Statistics MAT 217 — Spring/May 2027 Planned
+CHECKLIST ROW: Finance BUSN 323 — Fall 2029 Planned
+CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 Planned
+CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Spring/May 2028 Planned
+CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Winter 2029 Planned
+CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Spring/May 2029 Planned
+CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — Spring/May 2030 Planned
+Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
+Planned
+Classes marked Planned are not completed yet. Future schedules can change. Check the published schedule before you register.
+PDF > Plan: Balanced > Plan Notes
+Plan Notes
+Panel Student 01 | Balanced | Prepared November 22, 2026
+PDF > Plan: Balanced > Notes: Hanover Core
+Hanover Core
+HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
+W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+PDF > Plan: Balanced > Notes: Past Economics course offerings
+Past Economics course offerings
+In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms. Their order changed from year to year. A published schedule may differ.
+Past Fall schedules included: ECO 333, ECO 357.
+Past Winter schedules included: ECO 221, ECO 337, ECO 357.
+Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 234, ECO 331.
+A past schedule does not guarantee a course will be offered again.
+PDF > Plan: Balanced > Notes: Published schedules as of the plan date (November 22, 2026)
+Published schedules as of the plan date (November 22, 2026)
+Winter 2027:
+ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
+ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
+ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
+ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
+ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
+May 2027:
+ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
+ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+PDF > Plan: Balanced > Notes: Future years
+Future years
+For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
+This plan places BUSN 323 in Fall 2029. Its future offering is not confirmed.
+PDF > Plan: Explore the Major > Your Economics major plan
+Hanover College · Economics
+Your Economics major plan
+Panel Student 01 | Explore the Major | Prepared November 22, 2026 | Class standing: Freshman
+This plan covers Winter 2027 through Spring/May 2030.
+Plan feasibility: Conditional plan
+Some future classes, seats, or approvals still need confirmation.
+Graduation goal: Spring/May 2030
+PDF > Plan: Explore the Major > Grid
+Your plan by term
+Year | Fall | Winter | May
+TERM: 2026/2027 Fall
+GRID ROW: -
+TERM: 2026/2027 Winter
+GRID ROW: ECO 114-J
+TERM: 2026/2027 May
+GRID ROW: MAT 217-S
+TERM: 2027/2028 Fall
+GRID ROW: ECO 113
+TERM: 2027/2028 Winter
+GRID ROW: MAT 113
+TERM: 2027/2028 May
+GRID ROW: Economics elective (200 level or higher)
+TERM: 2028/2029 Fall
+GRID ROW: ECO 213
+TERM: 2028/2029 Winter
+GRID ROW: ECO 214
+TERM: 2028/2029 May
+GRID ROW: Economics elective (200 level or higher)
+TERM: 2029/2030 Fall
+GRID ROW: BUSN 323
+GRID ROW: Economics elective (200 level or higher)
+TERM: 2029/2030 Winter
+GRID ROW: ECO 461
+TERM: 2029/2030 May
+GRID ROW: Economics elective (200 level or higher)
+ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
+MAT 217 — Applied Statistics
+ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
+MAT 113 — Essential Pre-Calculus
+Economics elective (200 level or higher) — Eligible ECO elective (future offering to verify)
+ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
+BUSN 323 — Investments
+ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+PDF > Plan: Explore the Major > What to check for this plan
+What to check for this plan
+Finish these classes first
+Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
+Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
+Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
+Before you register
+We don’t know if there are open seats in ECO 114 and MAT 217. Check the registration system before you register.
+PDF > Plan: Explore the Major > Checklist
+Your Economics major checklist
+Requirement | Course / term | Status
+CHECKLIST ROW: ECO 113 ECO 113 — Fall 2027 Planned
+CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 Planned
+CHECKLIST ROW: Mathematics MAT 113 — Winter 2028 Planned
+CHECKLIST ROW: ECO 213 ECO 213 — Fall 2028 Planned
+CHECKLIST ROW: ECO 214 ECO 214 — Winter 2029 Planned
+CHECKLIST ROW: Statistics MAT 217 — Spring/May 2027 Planned
+CHECKLIST ROW: Finance BUSN 323 — Fall 2029 Planned
+CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 Planned
+CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Spring/May 2028 Planned
+CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Spring/May 2029 Planned
+CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2029 Planned
+CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — Spring/May 2030 Planned
+Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
+Planned
+Classes marked Planned are not completed yet. Future schedules can change. Check the published schedule before you register.
+PDF > Plan: Explore the Major > Plan Notes
+Plan Notes
+Panel Student 01 | Explore the Major | Prepared November 22, 2026
+PDF > Plan: Explore the Major > Notes: Hanover Core
+Hanover Core
+HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
+W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+PDF > Plan: Explore the Major > Notes: Past Economics course offerings
+Past Economics course offerings
+In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms. Their order changed from year to year. A published schedule may differ.
+Past Fall schedules included: ECO 333, ECO 357.
+Past Winter schedules included: ECO 221, ECO 337, ECO 357.
+Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 234, ECO 331.
+A past schedule does not guarantee a course will be offered again.
+PDF > Plan: Explore the Major > Notes: Published schedules as of the plan date (November 22, 2026)
+Published schedules as of the plan date (November 22, 2026)
+Winter 2027:
+ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
 ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
 ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
+ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
+ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
+May 2027:
+ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
-ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
-Finance choices: ECO 321 or BUSN 323 .
-Finance choices: ECO 321 or BUSN 323 .
-For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-For terms without a published schedule, this plan assumes no more than one Economics elective per term.
-Future schedules can change.
-Future schedules can change.
-HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
-Its future offering is not confirmed.
-Its future offering is not confirmed.
-Math choices: MAT 113 or MAT 121 .
-Math choices: MAT 113 or MAT 121 .
-May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-Past Fall schedules included: ECO 333 , ECO 357 .
-Past Fall schedules included: ECO 333 , ECO 357 .
-Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
-Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
-Some future classes, seats, or approvals still need confirmation.
-Some future classes, seats, or approvals still need confirmation.
-Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-Statistics choices: ECO 257 or MAT 217 or PSY 217 .
-Their order changed from year to year.
-Their order changed from year to year.
-This plan covers Winter 2027 through Spring/May 2030.
-This plan covers Winter 2027 through Spring/May 2030.
-This plan places BUSN 323 in Fall 2029.
-This plan places BUSN 323 in Fall 2029.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
-We don’t know if there are open seats in ECO 114 and MAT 217.
-Your other HS course must be from a different discipline.
-Your other HS course must be from a different discipline.
+PDF > Plan: Explore the Major > Notes: Future years
+Future years
+For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
+This plan places BUSN 323 in Fall 2029. Its future offering is not confirmed.
