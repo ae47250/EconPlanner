@@ -484,7 +484,7 @@ test("missing historical entry catalog uses an Economics-only provisional fallba
   assert.equal(data.programs.length, 1);
   assert.equal(data.programs[0].program.id, "economics-base");
   const notice = data.catalog.advisorAttention.find(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE");
-  assert.match(notice.message, /routine SAC petition/);
+  assert.match(notice.message, /routine petition with the Student Academic Assistance Committee/);
 });
 
 test("major mapper retains a standard senior plan above the Economics load preference with advisor warnings", async () => {

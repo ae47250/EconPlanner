@@ -327,6 +327,22 @@
       "supersedes": "The universal planning-requirements box on intake"
     },
     {
+      "sourceId": "OWNER-CATALOG-NOTE-WORDING-2026-11-21",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner, explicit catalog-note wording correction",
+      "authorityBoundary": "ECONOMICS_CATALOG_PLANNING_NOTE_PRESENTATION",
+      "path": "policy/provenance/catalog-note-wording-2026-11-21.md",
+      "confirmedOn": "2026-11-21",
+      "reviewer": "Project owner",
+      "sha256": "d5474d84c9c676fe5ff3eca9fbaf9172e3c8387c2ad7e4b0e9eb3d98d6377bfc",
+      "anchors": ["Catalog-note-wording"],
+      "effective": {
+        "from": "2026-11-21",
+        "through": null
+      },
+      "supersedes": "The abbreviated SAC wording in student-facing catalog notes"
+    },
+    {
       "sourceId": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "Project owner and Economics Department domain expert",

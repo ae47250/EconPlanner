@@ -50,10 +50,10 @@ test("explicit junior Winter and May study abroad reservations appear in the sta
     assert.deepEqual(term.courses, []);
   }
   assert.equal((html.match(/class="study-abroad">Study abroad<\/td>/g) || []).length, 2);
-  assert.equal(report.student.studyAbroadLabel, "Winter 2028 or Spring/May 2028");
-  assert.match(html, /Class standing: Sophomore \| Study abroad: Winter 2028 or Spring\/May 2028/);
+  assert.equal(report.student.studyAbroadLabel, "Winter 2028 and Spring/May 2028");
+  assert.match(html, /Class standing: Sophomore \| Study abroad: Winter 2028 and Spring\/May 2028/);
   assert.deepEqual(report.studentAdvisorContext, [student.studyAbroadAdvisingNote]);
-  assert.match(html, /<h2>Ask your advisor<\/h2>/);
+  assert.match(html, /<h2>For your advisor<\/h2>/);
   assert.ok(!html.includes(student.studyAbroadDestination));
   assert.ok(html.includes(student.studyAbroadAdvisingNote));
 

@@ -37,7 +37,7 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
   };
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
   assert.match(review.summary, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
-  assert.match(review.summary, /advisor will check it\. \(1 more item below\.\)$/);
+  assert.match(review.summary, /advisor will check it\. Also: MAT 113 or MAT 121 is not marked completed\.$/);
   assert.match(review.message, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
   assert.match(review.message, /You marked ECO 213 completed, but MAT 113 or MAT 121.*not marked completed/);
   assert.doesNotMatch(review.message, /Your answers do not show|Ask your advisor to check your earlier course/);
@@ -59,9 +59,9 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     selectedPlan: { id: "balanced", feasibilityStatus: "CONDITIONALLY_FEASIBLE" },
     terms: [], unresolved: [], planConditions: conditions, studentNotices: [], catalog: {}, planNotes: []
   }, template);
-  assert.ok(html.indexOf("What to check for this plan") < html.indexOf("Ask your advisor"));
+  assert.ok(html.indexOf("What to check for this plan") < html.indexOf("For your advisor"));
   assert.ok(html.includes(`Why an advisor should review this plan:</strong> ${review.summary}`));
-  assert.ok(html.includes(review.advisorPrompt));
+  assert.ok(html.includes(review.advisorPrompt.replaceAll("'", "&#39;")));
   for (const message of review.details) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
 });
 

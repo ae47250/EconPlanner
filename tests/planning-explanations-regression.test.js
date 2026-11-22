@@ -81,7 +81,7 @@ test("AP or exam credit produces a visible advisor-attention reason", async () =
   });
   assert.equal(result.economicsPlans[0].readinessStatus, "ADVISOR_ACTION_REQUIRED");
   const review = result.economicsPlans[0].planConditions.find(item => item.kind === "review" && item.shortMessage);
-  assert.equal(review.shortMessage, "ECO 113 and ECO 114 are recorded as AP or exam credit. Confirm with your advisor that they count.");
+  assert.equal(review.shortMessage, "Confirm with your advisor that your AP credit for ECO 113 and ECO 114 counts.");
 });
 
 test("sophomore early abroad plan uses consistent prerequisite and department-approval wording in the PDF", async () => {

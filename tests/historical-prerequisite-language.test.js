@@ -22,7 +22,7 @@ test("completed advanced courses explain Taking now, missing, one-of, and multip
   assert.equal(gaps("ECO 213", [course("ECO 213"), course("ECO 113")])[0].label, "MAT 113 or MAT 121");
   const multiple = gaps("ECO 461", [course("ECO 461"), course("ECO 213")]);
   assert.equal(multiple.length, 2);
-  assert.match(historicalPrerequisiteSummary(multiple), /advisor will check it\. \(1 more item below\.\)$/);
+  assert.match(historicalPrerequisiteSummary(multiple), /advisor will check it\. Also: ECO 257 or MAT 217 or PSY 217 is not marked completed\.$/);
   assert.deepEqual(gaps("ECO 214", [course("ECO 214"), course("ECO 114"), course("MAT 121")]), []);
   assert.equal(scheduledAfterCompletedMarker("ECO 114", [course("ECO 214"), course("MAT 113")], rules), "Scheduled after ECO 214, which you marked completed. Check with your advisor.");
 });
@@ -49,7 +49,7 @@ test("the validated plan keeps a missing major prerequisite and the PDF repeats 
   const note = "Scheduled after ECO 214, which you marked completed. Check with your advisor.";
   assert.ok(scheduled.planningMarkers.includes(note));
   assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-214").markers.includes("ECO 114 not marked done before this class. Ask your advisor to check."));
-  assert.match(plan.planConditions.find(item => item.reasonCode === "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW").shortMessage, /^You marked ECO 214 completed, but ECO 114.*\(1 more item below\.\)$/);
+  assert.match(plan.planConditions.find(item => item.reasonCode === "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW").shortMessage, /^You marked ECO 214 completed, but ECO 114.*Also: MAT 113 or MAT 121 is not marked completed\.$/);
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
   assert.match(renderEconomicsHtml(report, template), /Scheduled after ECO 214, which you marked completed\. Check with your advisor\./);
 });
@@ -71,7 +71,7 @@ test("freshman completed ECO 214 shows the same prerequisite-gap advice in the p
   const html = renderEconomicsHtml(report, template);
   for (const message of messages) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
   assert.equal(html.match(/<li data-plan-warning>You marked ECO 214 completed/g)?.length, 2);
-  assert.ok(html.includes(review[0].advisorPrompt));
+  assert.ok(html.includes(review[0].advisorPrompt.replaceAll("'", "&#39;")));
   const catalog = report.catalog.advisorAttention.find(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
   assert.ok(catalog);
   assert.ok(!html.includes(catalog.message));

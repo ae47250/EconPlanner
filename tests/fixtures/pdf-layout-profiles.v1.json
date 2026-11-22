@@ -169,7 +169,7 @@
           "requirementId": "statistics",
           "replacement": {
             "course": "ECO 257",
-            "title": "Applied Statistics",
+            "title": "Quantitative Methods for Business/Economics",
             "source": "projected-offering",
             "offeringStatus": "future_schedule_confirmation_required",
             "verificationStatus": "unverified"

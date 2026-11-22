@@ -38,8 +38,9 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
     ["freshman", []], ["sophomore", []], ["junior", ["BUSN 323"]], ["senior", ["BUSN 323", "PSY 217", "comprehensive evaluation"]]
   ]) {
     const student = { academicStanding: standing, planCreationDate: standing === "senior" ? "2026-07-30" : date,
-      courses: standing === "senior" ? ["ECO 113", "ECO 114", "MAT 113", "ECO 214"].map(code => ({ code, status: "completed" }))
-        : standing === "freshman" ? [{ code: "ECO 113", status: "in_progress" }] : [] };
+      courses: standing === "senior" ? ["ECO 113", "ECO 114", "MAT 113", "ECO 214", "BUSN 323", "PSY 217"].map(code => ({ code, status: "completed" }))
+        : standing === "junior" ? [{ code: "BUSN 323", status: "completed" }]
+          : standing === "freshman" ? [{ code: "ECO 113", status: "in_progress" }] : [] };
     const response = await POST(new Request("http://localhost/api/majors/map", {
       method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student })
     }));
@@ -47,7 +48,7 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
     const body = await response.json();
     const plans = body.programs.find(item => item.program?.id === "economics-base").economicsPlans;
     const plan = plans[0];
-    const note = planningRequirementsNote(plan.planningContext);
+    const note = planningRequirementsNote(plan.planningContext, plan);
     const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, plans);
     const html = renderEconomicsHtml(report, template);
     if (!expected.length) {
@@ -62,7 +63,8 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
       assert.ok(studentSection.includes("<h3>Check with your advisor</h3>"));
       for (const term of expected) assert.ok(studentSection.includes(term));
       assert.doesNotMatch(html, /Please help the student submit the routine SAC petition/);
-      if (standing === "senior") assert.match(studentSection, /comprehensive evaluation\. The current requirements do not list it\./);
+      assert.match(studentSection, /Student Academic Assistance Committee \(forms are at the Registrar&#39;s Office\)/);
+      if (standing === "senior") assert.match(studentSection, /comprehensive evaluation in Economics\. Ask your advisor whether you still need to take it\./);
     }
   }
 });
@@ -75,10 +77,20 @@ test("an entered declaration year overrides the derived year in the plan and PDF
   assert.equal(response.status, 200);
   const body = await response.json();
   const plans = body.programs.find(item => item.program?.id === "economics-base").economicsPlans;
-  const note = planningRequirementsNote(plans[0].planningContext);
-  assert.match(note.details[0], /Your 2023–24 catalog does not count BUSN 323 or PSY 217/);
+  const note = planningRequirementsNote(plans[0].planningContext, plans[0]);
+  assert.match(note.details.join(" "), /comprehensive evaluation in Economics/);
   const report = await buildEconomicsReportFromStudent(student, date, plans[0], plans);
   const html = renderEconomicsHtml(report, template);
-  assert.ok(html.includes(note.details[0]));
+  assert.ok(html.includes(note.details[0].replaceAll("'", "&#39;")));
   assert.equal(html.split(note.heading).length - 1, 1);
+});
+
+test("older-catalog wording names only the courses the plan actually counts", () => {
+  const context = resolvePlanningContext({ academicStanding: "senior", planCreationDate: date });
+  const onlyPsychology = { validation: { requirementAllocation: { assignments: [{ slotId: "statistics", code: "PSY 217" }] } } };
+  const note = planningRequirementsNote(context, onlyPsychology);
+  assert.match(note.details[0], /^Your plan counts PSY 217, which your 2023–24 catalog does not accept\./);
+  assert.doesNotMatch(note.details[0], /BUSN 323|\bSAC\b|;/);
+  assert.match(note.details[0], /Student Academic Assistance Committee \(forms are at the Registrar's Office\) so it counts\./);
+  assert.equal(note.details[1], "Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.");
 });

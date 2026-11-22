@@ -45,6 +45,11 @@ test("a junior's custom one-year-early ECO 461 plan displays Needs confirmation"
   await expect(page.locator(".result-status-reason").first()).toHaveText("These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions.");
   await expect(page.locator(".comparison-course-status > p").first()).toContainText("Class standingJunior (custom graduation year)");
   await expect(page.locator(".comparison-student strong")).toHaveText("Junior (custom graduation year)");
+  const balanced = page.locator('article[data-plan-id="balanced"]');
+  await balanced.locator("summary").filter({ hasText: "Major requirements checklist" }).click();
+  await expect(balanced.locator('[data-requirement-checklist-id="eco-elective-2"]')).toContainText("ECO 337");
+  await expect(balanced.locator('[data-requirement-checklist-id="eco-elective-3"]')).toContainText("ECO 333");
+  await expect(balanced.locator('[data-requirement-checklist-id="eco-elective-3"]')).toContainText("Taking now");
 });
 
 test("comparison header names both standard and selected early targets, and tab uses EconPlanner", async ({ page }) => {
@@ -85,7 +90,7 @@ test("AP or exam credit advisor status includes a visible Why line", async ({ pa
   }
   await generatePlans(page);
   await expect(page.locator(".result-status-value")).toContainText("Needs advisor attention");
-  await expect(page.locator(".result-status-reason").last()).toContainText("Why: ECO 113 and ECO 114 are recorded as AP or exam credit.");
+  await expect(page.locator(".result-status-reason").last()).toContainText("Why: Confirm with your advisor that your AP credit for ECO 113 and ECO 114 counts.");
   await expect(page.locator(".comparison-course-status > p").first()).toContainText("Class standingFreshman");
   await expect(page.locator(".comparison-student strong")).toHaveText("Freshman");
   await expect(page.locator(".comparison-course-status strong").filter({ hasText: "Study abroad" })).toHaveCount(0);
@@ -93,6 +98,11 @@ test("AP or exam credit advisor status includes a visible Why line", async ({ pa
   const balanced = page.locator('article[data-plan-id="balanced"]');
   await balanced.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   await expect(balanced.locator(".upfront-conditions h3").filter({ hasText: "Check with your advisor" })).toBeVisible();
+  await expect(balanced.locator("[data-plan-conditions]")).toContainText("Confirm with your advisor that your AP credit for ECO 113 and ECO 114 counts.");
+  await balanced.locator("summary").filter({ hasText: "Major requirements checklist" }).click();
+  for (const code of ["eco-113", "eco-114"]) {
+    await expect(balanced.locator(`[data-requirement-checklist-id="${code}"]`)).toContainText("AP credit");
+  }
   await expect(balanced).not.toContainText("Based on your class year, your catalog year is likely");
 });
 
@@ -104,11 +114,12 @@ test("selected study abroad appears in the result summary and top strip", async 
   await page.locator("details.more-details > summary").filter({ hasText: "Adjust your schedule" }).click();
   await page.getByRole("button", { name: "I plan to study abroad during my junior year" }).click();
   await page.getByLabel("Study-abroad term").selectOption("winter-2028");
-  await expect(page.locator(".cp7-summary")).toContainText("No Economics courses in Winter 2028");
+  await page.getByLabel("Also reserve the following May").check();
+  await expect(page.locator(".cp7-summary")).toContainText("No Economics courses in Winter 2028 and Spring/May 2028");
   await continueToCourses(page);
   await generatePlans(page);
-  await expect(page.locator(".comparison-course-status > p").filter({ hasText: "Study abroad" })).toHaveText("Study abroadWinter 2028");
-  await expect(page.locator(".comparison-student")).toContainText("Study abroad: Winter 2028");
+  await expect(page.locator(".comparison-course-status > p").filter({ hasText: "Study abroad" })).toHaveText("Study abroadWinter 2028 and Spring/May 2028");
+  await expect(page.locator(".comparison-student")).toContainText("Study abroad: Winter 2028 and Spring/May 2028");
 });
 
 test("completed course shows its prerequisite review as soon as both statuses are chosen", async ({ page }) => {
@@ -125,12 +136,12 @@ test("completed course shows its prerequisite review as soon as both statuses ar
   await expect(advanced.getByText(/You marked ECO 214 completed, but ECO 114/)).toHaveCount(0);
 });
 
-test("Student readiness Why line puts additional prerequisite issues in parentheses", async ({ page }) => {
+test("Student readiness Why line names the additional prerequisite", async ({ page }) => {
   await resetPlanner(page);
   await chooseStanding(page, "sophomore");
   await continueToCourses(page);
   await setCourseStatus(page, "ECO 214", "Completed");
   await generatePlans(page);
   await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
-  await expect(page.locator(".result-status-reason").last()).toContainText("advisor will check it. (1 more item below.)");
+  await expect(page.locator(".result-status-reason").last()).toContainText("Also: MAT 113 or MAT 121 is not marked completed.");
 });

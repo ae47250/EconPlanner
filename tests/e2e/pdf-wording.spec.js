@@ -55,6 +55,9 @@ test("freshman and sophomore plans have no catalog note with ECO 113 Taking now"
     const notes = card.locator("[data-plan-conditions]");
     await expect(notes).not.toContainText("Based on your class year, your catalog year is likely");
     await expect(notes).not.toContainText("This plan uses the current (2026–27) Economics major requirements.");
+    const current = card.locator('[data-term-id="fall-2026"]');
+    await expect(current).toContainText("ECO 113");
+    await expect(current).toContainText("Taking now");
   }
 });
 
@@ -93,6 +96,6 @@ test("junior plan notes name the catalog difference instead of the generic petit
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
   await expect(notes).toContainText("This plan uses the current (2026–27) Economics major requirements.");
-  await expect(notes).toContainText("Your 2024–25 catalog does not count BUSN 323 toward the major.");
+  await expect(notes).toContainText("Your plan counts BUSN 323, which your 2024–25 catalog does not accept.");
   await expect(notes).not.toContainText("Please help the student submit the routine SAC petition");
 });

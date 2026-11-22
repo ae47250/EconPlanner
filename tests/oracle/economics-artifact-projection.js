@@ -1,8 +1,11 @@
 import catalog2023 from "../../policy/catalogs/economics-2023-2024.json" with { type: "json" };
 import catalog2024 from "../../policy/catalogs/economics-2024-2025.json" with { type: "json" };
 import catalog2025 from "../../policy/catalogs/economics-2025-2026.json" with { type: "json" };
+import coursePolicy from "../../policy/courses/economics.json" with { type: "json" };
 
 const CATALOGS = new Map([catalog2023, catalog2024, catalog2025].map(record => [record.catalogYear, record]));
+const CATALOG_TITLES = new Map(coursePolicy.courses.filter(item => ["MAT 113", "ECO 461"].includes(item.code))
+  .map(item => [item.code, item.title]));
 
 function text(value) {
   return String(value ?? "").trim();
@@ -43,10 +46,11 @@ function normalizedApproval(approval = {}, course = {}, term = {}) {
 }
 
 function normalizedCourse(course = {}, term = {}) {
+  const code = text(course.course || course.code) || null;
   return {
-    code: text(course.course || course.code) || null,
+    code,
     section: text(course.section) || null,
-    title: text(course.title) || null,
+    title: CATALOG_TITLES.get(code) || text(course.title) || null,
     requirementRole: text(course.requirementId || course.requirementRole) || null,
     extra: course.extra === true,
     approvals: (course.approvalRequired || [])
@@ -74,15 +78,18 @@ function olderCatalogNote(plan = {}) {
   const added = ["moneyFinanceOptions", "statisticsOptions"].flatMap(key => (
     catalog2025.requirements[key].filter(course => !earlier.requirements[key].includes(course))
   )).sort();
+  const counted = new Set((plan.validation?.requirementAllocation?.assignments || []).map(item => item.code));
+  const used = added.filter(code => counted.has(code));
   const shortYear = year.replace(/-20/, "–");
   const details = [];
-  if (added.length) {
-    details.push(`Your ${shortYear} catalog does not count ${added.join(" or ")} toward the major. If your plan uses ${added.length === 1 ? "it" : "either"}, your advisor will help you file a routine SAC petition.`);
+  if (used.length) {
+    const courses = used.join(" and ");
+    details.push(`Your plan counts ${courses}, which your ${shortYear} catalog does not accept. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee (forms are at the Registrar's Office) so ${used.length === 1 ? "it counts" : "they count"}.`);
   }
   const priorMilestone = earlier.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   const currentMilestone = catalog2025.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
-    details.push(`Your ${shortYear} catalog also required an Economics comprehensive evaluation. The current requirements do not list it.`);
+    details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.`);
   }
   return `This plan uses the current (2026–27) Economics major requirements. ${details.join(" ")}`.trim();
 }
@@ -150,7 +157,8 @@ export function projectReportJsonArtifact(report) {
     projectedSeniorStandingAcademicYear: text(report?.student?.projectedSeniorStandingAcademicYear) || null,
     projectedSeniorStandingBasis: text(report?.student?.projectedSeniorStandingBasis) || null,
     feasibilityStatus: text(report?.selectedPlan?.feasibilityStatus) || null,
-    terms: normalizedTerms(report?.terms || []),
+    terms: normalizedTerms((report?.terms || []).filter(term => term.publicationStatus !== "STUDENT_CURRENT_TERM")
+      .map(term => ({ ...term, courses: (term.courses || []).filter(course => !course.displayOnlyCurrent) }))),
     warnings: selectedPlanWarnings(report?.selectedPlan, report?.catalog?.advisorAttention || []),
     advisorAttention: advisorAttention(report)
   };
@@ -167,7 +175,7 @@ function htmlScheduleTerms(html) {
   const gridRows = [...String(html || "").matchAll(/<tr data-schedule-year="([^"]+)">([\s\S]*?)<\/tr>/gi)];
   if (gridRows.length) {
     const legacyBlocks = gridRows.flatMap(row => [...row[2].matchAll(/<td([^>]*)>([\s\S]*?)<\/td>/gi)]
-      .filter(cell => attributeValue(cell[1], "data-schedule-term"))
+      .filter(cell => attributeValue(cell[1], "data-schedule-term") && attributeValue(cell[1], "data-display-only-current-term") !== "true")
       .map(cell => `<section class="year-block"><div class="year-heading"><h2>Economics schedule <span>- ${row[1]}</span></h2></div><div class="table-wrap"><table><thead><tr><th>${attributeValue(cell[1], "data-schedule-term")}</th></tr></thead><tbody><tr><td>${cell[2]}</td></tr>`)).join("");
     return htmlScheduleTerms(legacyBlocks);
   }
@@ -183,6 +191,7 @@ function htmlScheduleTerms(html) {
       const courseEntries = [...cell.matchAll(coursePattern)];
       for (let entryIndex = 0; entryIndex < courseEntries.length; entryIndex += 1) {
         const entry = courseEntries[entryIndex];
+        if (attributeValue(entry[1], "data-display-only-current-course") === "true") continue;
         const label = decodeHtml(entry[2]);
         const identity = label.match(/^([A-Z]{2,5}\s+\d{3})(?:-([^\s]+))?$/);
         const note = decodeHtml(entry[4]);

@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:1125a77f75d63b30dcc5fc64d74fb0e19ee251ff9e9d7f69d0bb659e6cb0e8f8",
+  "contentHash": "sha256:5a3288f9c71100126261370392691f1653c951a0cd6aa24a4f8dcdba823d992a",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -8003,6 +8003,24 @@
         "sourceId": "OWNER-CAPSTONE-TIMING-2026-10-17",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
+      },
+      {
+        "anchors": [
+          "Catalog-note-wording"
+        ],
+        "authority": "Project owner, explicit catalog-note wording correction",
+        "authorityBoundary": "ECONOMICS_CATALOG_PLANNING_NOTE_PRESENTATION",
+        "confirmedOn": "2026-11-21",
+        "effective": {
+          "from": "2026-11-21",
+          "through": null
+        },
+        "path": "policy/provenance/catalog-note-wording-2026-11-21.md",
+        "reviewer": "Project owner",
+        "sha256": "d5474d84c9c676fe5ff3eca9fbaf9172e3c8387c2ad7e4b0e9eb3d98d6377bfc",
+        "sourceId": "OWNER-CATALOG-NOTE-WORDING-2026-11-21",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "The abbreviated SAC wording in student-facing catalog notes"
       },
       {
         "anchors": [
