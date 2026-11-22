@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:5a3288f9c71100126261370392691f1653c951a0cd6aa24a4f8dcdba823d992a",
+  "contentHash": "sha256:fbdd60f5155f6652e0d2790b1e6a67d22019a0564786b42f61c1cede409e6772",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -1771,7 +1771,7 @@
       },
       "HISTORY-COMPLETED-ADVANCED-PRESERVED": {
         "authority": {
-          "boundary": "COMPLETED_AND_TRANSFER_HISTORY_HANDLING",
+          "boundary": "STUDENT_ENTERED_HISTORY_MISSING_PREREQUISITE_HANDLING",
           "kind": "DEPARTMENT_CONFIRMED",
           "owner": "Economics Department"
         },
@@ -1779,14 +1779,15 @@
         "condition": {
           "courseStatus": [
             "COMPLETED",
-            "TRANSFER"
+            "TRANSFER",
+            "IN_PROGRESS"
           ],
           "historicalPrerequisiteEvidence": "MISSING"
         },
         "confidence": "CONFIRMED",
         "confirmation": {
-          "date": "2026-08-05",
-          "lastReviewDate": "2026-08-05",
+          "date": "2026-11-22",
+          "lastReviewDate": "2026-11-22",
           "reviewer": "Project owner"
         },
         "dependencies": [
@@ -1795,9 +1796,10 @@
         "disposition": "REVIEW",
         "effect": {
           "decision": "REVIEW_REQUIRED",
+          "inProgressMissingPrerequisite": "REVIEW_REQUIRED_PRESERVE_STUDENT_ENTRY",
           "inferMissingPrerequisite": false,
           "preserveCourseFact": true,
-          "strictTimingForPlannedAndInProgress": true
+          "strictTimingForPlannedCourses": true
         },
         "effective": {
           "from": "2026-08-05",
@@ -1835,7 +1837,8 @@
           "requirements": []
         },
         "sourceRefs": [
-          "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"
+          "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
+          "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD1"
         ],
         "status": "ACTIVE",
         "supersedes": [
@@ -7021,7 +7024,6 @@
     "allocation.move": "This move must preserve the approved requirement assignment.",
     "allocation.report": "Requirement allocation follows the governing Economics policy.",
     "allocation.student": "This course can count only in the requirement shown.",
-    "designation.applicability": "We have not confirmed which Hanover Core rules apply to your {catalogYear} catalog. Before counting ECO 113 or ECO 114 toward the Historical and Social Perspectives (HS) requirement, or ECO 461 toward Writing 2 (W2), check with your advisor.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "history.advisor": "Historical prerequisite evidence is incomplete and requires review.",
@@ -7046,16 +7048,16 @@
     "offering.intermediate.pattern.move": "This projected term is not verified by an exact schedule.",
     "offering.intermediate.pattern.report": "The intermediate-course term is a preliminary projection, not a universal same-term prohibition.",
     "offering.move": "This destination needs schedule confirmation.",
-    "offering.report": "The exact offering is preliminary and must be confirmed.",
-    "offering.student": "This future offering is preliminary and needs confirmation.",
+    "offering.report": "This future course needs confirmation.",
+    "offering.student": "This future course needs schedule confirmation.",
     "permission.advisor": "Verify that the approval matches the controlling rule, course, term, authority, and evidence.",
-    "permission.move": "This destination requires the documented approval shown.",
-    "permission.report": "The placement is conditional on a matching documented approval.",
-    "permission.student": "This course arrangement requires documented approval.",
+    "permission.move": "This destination needs the approval shown.",
+    "permission.report": "This placement depends on matching approval.",
+    "permission.student": "This course arrangement needs approval.",
     "prerequisite.advisor": "Review the listed prerequisite evidence and timing.",
     "prerequisite.move": "This destination must preserve prerequisite timing.",
     "prerequisite.report": "Prerequisites must be completed before the course unless a documented concurrency approval applies.",
-    "prerequisite.student": "Complete the listed prerequisite before this course unless the documented exception applies.",
+    "prerequisite.student": "Finish the listed prerequisite before this course unless an approved exception applies.",
     "requirement.advisor": "This rule defines a required Economics major or cognate slot.",
     "requirement.move": "The edited plan must continue to satisfy this requirement.",
     "requirement.report": "This course satisfies the identified Economics requirement.",
@@ -7067,17 +7069,17 @@
     "term.advisor": "Apply the canonical term identity and governing placement restriction.",
     "term.move": "This term is not allowed for the selected course.",
     "term.report": "The placement follows canonical term and graduation rules.",
-    "term.student": "This course must be placed in an allowed term.",
-    "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE": "Within normal capacity: {courseUnits} of {normalCourseUnits} modeled units. The Economics load is above the advising preference.",
-    "termLoad.TERM_CAPACITY_AVAILABLE": "Within normal capacity: {courseUnits} of {normalCourseUnits} modeled units.",
-    "termLoad.TERM_CAPACITY_EXCEEDED": "This move models {courseUnits} units and exceeds the published term limit ({conditionalMaximumCourseUnits} units, with any applicable Economics course limit). Additional tuition does not authorize this move.",
-    "termLoad.TERM_OVERLOAD_APPROVAL_DENIED": "An overload is blocked because advisor approval was not granted. This term models {courseUnits} units, above the normal {normalCourseUnits}.",
-    "termLoad.TERM_OVERLOAD_APPROVED": "Advisor-approved overload: {courseUnits} modeled units; the approved ceiling is {conditionalMaximumCourseUnits}. Approval and absence of academic probation were recorded for this term.",
-    "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "More information needed: {courseUnits} modeled units exceed the normal {normalCourseUnits}. Record existing advisor approval and confirmation that you are not on academic probation before using additional capacity; the conditional ceiling is {conditionalMaximumCourseUnits}.",
-    "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "An overload is not permitted while you are on academic probation. This move models {courseUnits} units, above the normal {normalCourseUnits}.",
-    "termLoad.pending": "More information needed: the normal-load search found no complete plan. Advisor overload approval and absence of academic probation have not been established for {terms}. No additional capacity has been granted; the search does not establish impossibility under an approved overload.",
-    "tuition.threshold.exceeded": "The modeled {period} load is {modeledUnits} units, above the published {threshold}-unit tuition threshold. Additional tuition applies to actual enrollment above that threshold; this major plan does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit.",
-    "tuition.threshold.possible": "Additional tuition applies above {threshold} registered units across {period}. This plan models {modeledUnits} units and does not establish your complete enrollment or a charge. Paying additional tuition does not increase the term limit."
+    "term.student": "Place this course in an allowed term.",
+    "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE": "This plan has {economicsCount} Economics courses in {term}. The department prefers no more than 2 per term, but the term is still within the normal course load.",
+    "termLoad.TERM_CAPACITY_AVAILABLE": "This term has {courseCount} courses. The normal limit is {normalCourseUnits}.",
+    "termLoad.TERM_CAPACITY_EXCEEDED": "This move would exceed the approved course limit for the term. Extra tuition does not raise that limit.",
+    "termLoad.TERM_OVERLOAD_APPROVAL_DENIED": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Advisor approval was not granted.",
+    "termLoad.TERM_OVERLOAD_APPROVED": "This term would have {courseCount} courses. The normal limit is {normalCourseUnits}. Advisor approval and no academic probation are recorded.",
+    "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "This term would have {courseCount} courses. The normal limit is {normalCourseUnits}. You need advisor approval and must not be on academic probation.",
+    "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Overloads are not allowed during academic probation.",
+    "termLoad.pending": "A plan may need more than the normal course limit in {terms}. You need advisor approval and must not be on academic probation.",
+    "tuition.threshold.exceeded": "More than {threshold} courses in {period} may add tuition. Check with the Business Office.",
+    "tuition.threshold.possible": "More than {threshold} courses in {period} may add tuition. Check with the Business Office."
   },
   "planningAdvice": {
     "coverage": [
@@ -8214,6 +8216,29 @@
         "path": "policy/provenance/schedule-load-correction-2026-09-27.md",
         "sha256": "302459c0663eb176f0d9b23602b85e200589b3130eab6835fc720f7c02bec87c",
         "sourceId": "OWNER-SCHEDULE-LOAD-CORRECTION-2026-09-27",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
+      },
+      {
+        "anchors": [
+          "OD1",
+          "OD2",
+          "OD3",
+          "OD4",
+          "Allocation-wording",
+          "Presentation-decisions"
+        ],
+        "authority": "Project owner, explicit wording-review decisions",
+        "authorityBoundary": "ECONOMICS_STUDENT_HISTORY_REVIEW_PLANNING_PREFERENCE_AND_PRESENTATION",
+        "confirmedOn": "2026-11-22",
+        "effective": {
+          "from": "2026-11-22",
+          "through": null
+        },
+        "path": "policy/provenance/wording-review-decisions-2026-11-22.md",
+        "reviewer": "Project owner",
+        "sha256": "fc0e8e437eecdb4905ee08874bf362554bf0e5b592d168f6e9218cbb16868c25",
+        "sourceId": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
       },
@@ -10003,7 +10028,7 @@
     },
     {
       "authority": {
-        "boundary": "COMPLETED_AND_TRANSFER_HISTORY_HANDLING",
+        "boundary": "STUDENT_ENTERED_HISTORY_MISSING_PREREQUISITE_HANDLING",
         "kind": "DEPARTMENT_CONFIRMED",
         "owner": "Economics Department"
       },
@@ -10011,14 +10036,15 @@
       "condition": {
         "courseStatus": [
           "COMPLETED",
-          "TRANSFER"
+          "TRANSFER",
+          "IN_PROGRESS"
         ],
         "historicalPrerequisiteEvidence": "MISSING"
       },
       "confidence": "CONFIRMED",
       "confirmation": {
-        "date": "2026-08-05",
-        "lastReviewDate": "2026-08-05",
+        "date": "2026-11-22",
+        "lastReviewDate": "2026-11-22",
         "reviewer": "Project owner"
       },
       "dependencies": [
@@ -10027,9 +10053,10 @@
       "disposition": "REVIEW",
       "effect": {
         "decision": "REVIEW_REQUIRED",
+        "inProgressMissingPrerequisite": "REVIEW_REQUIRED_PRESERVE_STUDENT_ENTRY",
         "inferMissingPrerequisite": false,
         "preserveCourseFact": true,
-        "strictTimingForPlannedAndInProgress": true
+        "strictTimingForPlannedCourses": true
       },
       "effective": {
         "from": "2026-08-05",
@@ -10067,7 +10094,8 @@
         "requirements": []
       },
       "sourceRefs": [
-        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"
+        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
+        "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD1"
       ],
       "status": "ACTIVE",
       "supersedes": [

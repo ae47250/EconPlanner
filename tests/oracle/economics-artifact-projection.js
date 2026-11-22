@@ -91,7 +91,7 @@ function olderCatalogNote(plan = {}) {
   if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
     details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.`);
   }
-  return `This plan uses the current (2026–27) Economics major requirements. ${details.join(" ")}`.trim();
+  return `This plan uses the current (${catalog2025.catalogYear.replace(/-20/, "–")}) Economics major requirements. ${details.join(" ")}`.trim();
 }
 
 function selectedPlanWarnings(plan = {}, advisorNotices = []) {

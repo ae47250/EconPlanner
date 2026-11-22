@@ -13,7 +13,7 @@ test("intake shows the older-catalog explanation only for junior and senior year
     const note = page.locator(".catalog-planning-note");
     if (!expected.length) await expect(note).toHaveCount(0);
     else {
-      await expect(note).toContainText("This plan uses the current (2026–27) Economics major requirements.");
+      await expect(note).toContainText("This plan uses the current (2025–26) Economics major requirements.");
       for (const term of expected) await expect(note).toContainText(term);
     }
   }
@@ -39,6 +39,35 @@ test("freshman completed-course and catalog-year advice appears under Check with
   await expect(notes.locator("h3").filter({ hasText: "Check with your advisor" })).toBeVisible();
   await expect(notes).not.toContainText("Based on your class year, your catalog year is likely");
   await expect(notes).not.toContainText("Ask your advisor whether a catalog petition is needed.");
+});
+
+test("freshman ECO 213 Taking now with an unmarked prerequisite stays in the plan and the PDF", async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, "freshman");
+  await page.locator("details.more-details > summary").first().click();
+  await page.getByLabel("Plan creation date", { exact: true }).fill("2026-11-21");
+  await continueToCourses(page);
+  await setCourseStatus(page, "ECO 113", "Completed");
+  await setCourseStatus(page, "ECO 213", "Taking now");
+  await expect(page.getByRole("button", { name: "Generate my plans", exact: true })).toBeEnabled();
+  await expect(page.locator("#course-eco-213")).toContainText("Taking now");
+  const response = await generatePlans(page);
+  const mapped = (await response.json()).programs.find(item => item.program?.id === "economics-base");
+  const plan = mapped.economicsPlans.find(item => item.id === "balanced");
+  const reason = "You are taking ECO 213, but MAT 113 or MAT 121, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.";
+  await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
+  await expect(page.locator(".result-status-reason").last()).toContainText(reason);
+  const card = await visitPlan(page, "balanced");
+  await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
+  await expect(card.locator("[data-plan-conditions]")).toContainText(reason);
+  const report = await page.request.post("/api/reports/economics", { data: {
+    student: response.request().postDataJSON().student,
+    selectedPlan: plan,
+    plans: mapped.economicsPlans,
+    format: "html"
+  } });
+  expect(report.status()).toBe(200);
+  expect(await report.text()).toContain(`<li data-plan-warning>${reason}</li>`);
 });
 
 test("freshman and sophomore plans have no catalog note with ECO 113 Taking now", async ({ page }) => {
@@ -95,7 +124,7 @@ test("junior plan notes name the catalog difference instead of the generic petit
   const card = await visitPlan(page, "balanced");
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
-  await expect(notes).toContainText("This plan uses the current (2026–27) Economics major requirements.");
+  await expect(notes).toContainText("This plan uses the current (2025–26) Economics major requirements.");
   await expect(notes).toContainText("Your plan counts BUSN 323, which your 2024–25 catalog does not accept.");
   await expect(notes).not.toContainText("Please help the student submit the routine SAC petition");
 });

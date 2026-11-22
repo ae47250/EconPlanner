@@ -1014,10 +1014,11 @@
       "authority": {
         "kind": "DEPARTMENT_CONFIRMED",
         "owner": "Economics Department",
-        "boundary": "COMPLETED_AND_TRANSFER_HISTORY_HANDLING"
+        "boundary": "STUDENT_ENTERED_HISTORY_MISSING_PREREQUISITE_HANDLING"
       },
       "sourceRefs": [
-        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule"
+        "ECONOMICS-REQUIREMENTS#Core-Scheduling-Rule",
+        "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD1"
       ],
       "effective": {
         "from": "2026-08-05",
@@ -1038,15 +1039,17 @@
       "condition": {
         "courseStatus": [
           "COMPLETED",
-          "TRANSFER"
+          "TRANSFER",
+          "IN_PROGRESS"
         ],
         "historicalPrerequisiteEvidence": "MISSING"
       },
       "effect": {
         "preserveCourseFact": true,
         "decision": "REVIEW_REQUIRED",
-        "strictTimingForPlannedAndInProgress": true,
-        "inferMissingPrerequisite": false
+        "inferMissingPrerequisite": false,
+        "strictTimingForPlannedCourses": true,
+        "inProgressMissingPrerequisite": "REVIEW_REQUIRED_PRESERVE_STUDENT_ENTRY"
       },
       "reasonCode": "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW",
       "messageKeys": {
@@ -1062,9 +1065,9 @@
         "LEGACY-CLEAR-ADVANCED-HISTORY"
       ],
       "confirmation": {
-        "date": "2026-08-05",
+        "date": "2026-11-22",
         "reviewer": "Project owner",
-        "lastReviewDate": "2026-08-05"
+        "lastReviewDate": "2026-11-22"
       },
       "testRefs": {
         "positive": [

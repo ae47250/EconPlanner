@@ -303,7 +303,14 @@
       "confirmedOn": "2026-11-21",
       "reviewer": "Project owner",
       "sha256": "3fe2cc0d0dd9839c71e0738bc7831e975fac2c042effbf14784e6a376bc8f0a7",
-      "anchors": ["Custom-one-year-early-standing", "Senior-standing-no-plan-explanation", "Current-term-taking-now", "Assumed-standing-readiness", "Catalog-year-explanation", "Advisor-explanations-and-seat-panel"],
+      "anchors": [
+        "Custom-one-year-early-standing",
+        "Senior-standing-no-plan-explanation",
+        "Current-term-taking-now",
+        "Assumed-standing-readiness",
+        "Catalog-year-explanation",
+        "Advisor-explanations-and-seat-panel"
+      ],
       "effective": {
         "from": "2026-11-21",
         "through": null
@@ -319,7 +326,9 @@
       "confirmedOn": "2026-11-21",
       "reviewer": "Project owner",
       "sha256": "60f6295ba7962c77807c7edd445f87b9f26d6f2472aed694f187cddfd3400324",
-      "anchors": ["Catalog-planning-note-by-year"],
+      "anchors": [
+        "Catalog-planning-note-by-year"
+      ],
       "effective": {
         "from": "2026-11-21",
         "through": null
@@ -335,7 +344,9 @@
       "confirmedOn": "2026-11-21",
       "reviewer": "Project owner",
       "sha256": "d5474d84c9c676fe5ff3eca9fbaf9172e3c8387c2ad7e4b0e9eb3d98d6377bfc",
-      "anchors": ["Catalog-note-wording"],
+      "anchors": [
+        "Catalog-note-wording"
+      ],
       "effective": {
         "from": "2026-11-21",
         "through": null
@@ -389,7 +400,7 @@
       "sourceId": "OWNER-BUSN323-2026-2027-2026-09-28",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "EconPlanner project owner, explicit authoritative schedule clarification",
-      "authorityBoundary": "BUSN 323 / 2026–27 / Fall offered / Winter not offered",
+      "authorityBoundary": "BUSN 323 / 2026\u201327 / Fall offered / Winter not offered",
       "path": "policy/provenance/busn-323-2026-2027-confirmation-2026-09-28.md",
       "confirmedOn": "2026-09-28",
       "reviewedOn": "2026-09-28",
@@ -500,6 +511,29 @@
         "through": null
       },
       "supersedes": "Automatic ECO 321 elective credit when BUSN 323 fills finance"
+    },
+    {
+      "sourceId": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner, explicit wording-review decisions",
+      "authorityBoundary": "ECONOMICS_STUDENT_HISTORY_REVIEW_PLANNING_PREFERENCE_AND_PRESENTATION",
+      "path": "policy/provenance/wording-review-decisions-2026-11-22.md",
+      "confirmedOn": "2026-11-22",
+      "reviewer": "Project owner",
+      "sha256": "fc0e8e437eecdb4905ee08874bf362554bf0e5b592d168f6e9218cbb16868c25",
+      "anchors": [
+        "OD1",
+        "OD2",
+        "OD3",
+        "OD4",
+        "Allocation-wording",
+        "Presentation-decisions"
+      ],
+      "effective": {
+        "from": "2026-11-22",
+        "through": null
+      },
+      "supersedes": null
     }
   ],
   "authorityHierarchy": [

@@ -348,7 +348,26 @@ function validateHistoricalPrerequisites({ policy, entries, claims, reviewItems 
   }
 }
 
-function validateNormalRule({ policy, entries, claims, approvals, usedApprovals, entry, rule, violations }) {
+function validateNormalRule({ policy, entries, claims, approvals, usedApprovals, entry, rule, violations, reviewItems }) {
+  if (entry.state === "inProgress") {
+    const selected = new Set(entries.filter(item => item.state === "completed" || item.state === "inProgress").map(item => item.course));
+    const unconfirmed = [
+      ...(rule.allOf || []).filter(course => !selected.has(upper(course))),
+      ...(rule.oneOfGroups || []).filter(group => !group.some(course => selected.has(upper(course))))
+        .map(group => group.join(" or "))
+    ];
+    if (unconfirmed.length) {
+      const reviewRuleId = "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE";
+      const reviewRule = ruleById(policy, reviewRuleId);
+      reviewItems.push({
+        ...makeFinding(policy, reviewRuleId, entry.objectPath,
+          `Taking ${entry.course} is recorded. Check whether these earlier courses were completed: ${unconfirmed.join(", ")}.`),
+        status: reviewRule?.status || "POLICY_REVIEW_REQUIRED",
+        sourceRefs: [...new Set([...(reviewRule?.sourceRefs || []), "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD1"])]
+      });
+    }
+    return;
+  }
   if (!Number.isFinite(entry.position)) {
     violations.push(makeFinding(
       policy,
@@ -401,6 +420,7 @@ function validateNormalRule({ policy, entries, claims, approvals, usedApprovals,
       `One of ${group.join(", ")} must be completed before ${entry.course}.`
     ));
   }
+
 }
 
 function seniorEligible(entry, student, expectedContext, policy) {
@@ -610,7 +630,8 @@ export function checkExternalEconomicsPrerequisites(input) {
         usedApprovals,
         entry,
         rule: prerequisiteRule,
-        violations
+        violations,
+        reviewItems
       });
     }
   }

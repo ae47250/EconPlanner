@@ -270,6 +270,19 @@ test("the independent oracle applies the owner-approved custom one-year-early st
     .some(item => item.code === "CAPSTONE-SENIOR-STANDING"));
 });
 
+test("the independent oracle keeps in-progress history with missing prerequisites and flags it for review", () => {
+  const result = checkExternalEconomicsPrerequisites({
+    student: { inProgressCourses: [{ course: "ECO 213" }] },
+    expectedContext: DEFAULT_CONTEXT,
+    plan: { id: "in-progress-history-review", terms: [] },
+    policy,
+    verifiedSchedule
+  });
+  assert.deepEqual(result.violations, []);
+  assert.ok(result.reviewItems.some(item => item.code === "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE"
+    && item.sourceRefs.includes("OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD1")));
+});
+
 test("integrated Task 5 audit checks requirements and prerequisites but leaves schedules NOT_CHECKED", () => {
   const fixture = fixtureById("prereq-valid-integrated-strict-capstone");
   const result = auditExternalEconomicsPlanWithPrerequisites(externalInput(fixture));

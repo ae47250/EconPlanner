@@ -17,16 +17,15 @@ const prerequisites = JSON.parse(await readFile(
   "utf8"
 ));
 
-test("ECO 213 in progress is blocked when its prerequisites are missing", () => {
+test("ECO 213 in progress with missing prerequisites is retained for advisor review", () => {
   const result = validateStudentPrerequisites([
     { code: "ECO 213", status: "in_progress" }
   ], prerequisites);
 
-  assert.equal(result.valid, false);
-  assert.deepEqual(result.issues.map(issue => issue.options?.length ? issue.options : [issue.prerequisite]), [
-    ["ECO 113"],
-    ["MAT 113", "MAT 121"]
-  ]);
+  assert.equal(result.valid, true);
+  assert.equal(result.status, "REVIEW_REQUIRED");
+  assert.deepEqual(result.issues, []);
+  assert.equal(result.reviewFindings[0].reasonCode, "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW");
 });
 
 test("completed ECO 113 and MAT 113 allow ECO 213 in progress without approval", () => {
@@ -54,15 +53,16 @@ test("concurrent math allows ECO 213 in progress only with an approval notice", 
   assert.match(result.conditionalApprovals[0].message, /instructor/);
 });
 
-test("ECO 113 in progress does not unlock ECO 213", () => {
+test("ECO 113 in progress does not count as completed history", () => {
   const result = validateStudentPrerequisites([
     { code: "ECO 113", status: "in_progress" },
     { code: "MAT 113", status: "completed" },
     { code: "ECO 213", status: "in_progress" }
   ], prerequisites);
 
-  assert.equal(result.valid, false);
-  assert.ok(result.issues.some(issue => issue.prerequisite === "ECO 113"));
+  assert.equal(result.valid, true);
+  assert.equal(result.status, "REVIEW_REQUIRED");
+  assert.deepEqual(result.issues, []);
 });
 
 test("completed target courses are retained with a historical-evidence review", () => {
@@ -97,8 +97,9 @@ test("ECO 214 supports the same MAT 121 concurrency rule but not concurrent ECO 
 
   assert.equal(allowed.valid, true);
   assert.equal(allowed.conditionalApprovals[0].prerequisite, "MAT 121");
-  assert.equal(blocked.valid, false);
-  assert.ok(blocked.issues.some(issue => issue.prerequisite === "ECO 114"));
+  assert.equal(blocked.valid, true);
+  assert.equal(blocked.status, "REVIEW_REQUIRED");
+  assert.deepEqual(blocked.issues, []);
 });
 
 test("form follow-up builds canonical required and alternative questions for a course taking now", () => {
@@ -110,20 +111,17 @@ test("form follow-up builds canonical required and alternative questions for a c
   });
 
   assert.equal(result.required, true);
-  assert.equal(result.valid, false);
-  assert.equal(result.status, "BLOCK");
+  assert.equal(result.valid, true);
+  assert.equal(result.status, "ALLOW");
   assert.deepEqual(result.questions.map(question => ({
     kind: question.kind,
     options: question.options,
     blocking: question.blocking
   })), [
-    { kind: "required", options: ["ECO 113"], blocking: true },
-    { kind: "one_of", options: ["MAT 113", "MAT 121"], blocking: true }
+    { kind: "required", options: ["ECO 113"], blocking: false },
+    { kind: "one_of", options: ["MAT 113", "MAT 121"], blocking: false }
   ]);
-  assert.deepEqual(result.conflicts.map(conflict => conflict.code), [
-    "PREREQUISITE_STATUS_CONFLICT",
-    "PREREQUISITE_STATUS_CONFLICT"
-  ]);
+  assert.deepEqual(result.conflicts, []);
 });
 
 test("completed-course follow-up asks the same canonical questions while the form gate awaits answers", () => {
@@ -212,7 +210,7 @@ for (const [math, economics] of [
     }, prerequisites);
 
     assert.equal(notes.length, 1);
-    assert.match(notes[0], new RegExp(`${math} is scheduled before ${economics}`));
+    assert.match(notes[0], new RegExp(`Take ${math} before ${economics}`));
   });
 }
 
@@ -242,7 +240,7 @@ test("concurrent math for one intermediate does not suppress an earlier-math not
   }, prerequisites);
 
   assert.equal(notes.length, 1);
-  assert.match(notes[0], /MAT 121 is scheduled before ECO 214/);
+  assert.match(notes[0], /Take MAT 121 before ECO 214/);
 });
 
 test("alternative follow-up preserves not-started and uncertain statuses as unsatisfied", () => {
@@ -267,8 +265,7 @@ test("alternative follow-up preserves not-started and uncertain statuses as unsa
     { code: "MAT 113", status: "uncertain" },
     { code: "MAT 121", status: "not_started" }
   ]);
-  assert.deepEqual(result.conflicts[0].statuses, result.questions[0].statuses);
-  assert.equal(result.conflicts[0].blocking, true);
+  assert.deepEqual(result.conflicts, []);
 });
 
 test("approved current-term prerequisite paths produce metadata instead of a follow-up conflict", () => {

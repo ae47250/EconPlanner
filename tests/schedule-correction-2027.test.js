@@ -91,7 +91,7 @@ test("unit boundaries and approval evidence agree with the independent evaluator
   assert.equal(notices[0].modeledUnits, 6);
   assert.equal(notices[0].thresholdExclusive, 5.5);
   assert.equal(notices[0].blocking, false);
-  assert.match(notices[0].message, /full enrollment|complete enrollment/);
+  assert.equal(notices[0].message, "More than 5.5 courses in Winter and Spring/May may add tuition. Check with the Business Office.");
 });
 
 test("incomplete schedule or search cannot support the specific proof", () => {
@@ -186,7 +186,7 @@ test("approved Winter overload, move blockers and server validation use the same
   assert.ok(plan, JSON.stringify(economics.economicsPlanResult));
   assert.equal(plan.validation.valid,true);
   assert.ok(plan.validation.warnings.includes("This plan has 3 Economics courses in Winter 2027. The department prefers no more than 2 per term, and this term uses an advisor-approved overload."));
-  assert.ok(plan.validation.conditions.some(item=>item.reasonCode==="TERM_OVERLOAD_APPROVED" && item.message.includes("5 modeled units")));
+  assert.ok(plan.validation.conditions.some(item=>item.reasonCode==="TERM_OVERLOAD_APPROVED" && item.message.includes("This term would have 5 courses. The normal limit is 4.")));
   assert.equal(plan.validation.tuitionAdvisories[0].modeledUnits,6);
   const winter = plan.terms.find(term=>term.slotId==="winter-2027");
   const course = winter.courses.find(course=>course.course==="ECO 161");
@@ -194,7 +194,7 @@ test("approved Winter overload, move blockers and server validation use the same
   assert.equal(move.status,"BLOCKED");
   assert.equal(move.loadDecision.reasonCode,"TERM_CAPACITY_EXCEEDED");
   assert.match(move.message,/not listed|not eligible|verified/);
-  assert.match(move.message,/published term limit/);
+  assert.match(move.message,/approved course limit/);
   const rejected = await request({action:"validate-plan",student,plan,plans:economics.economicsPlans,edit:{type:"move",planId:plan.id,fromTermId:winter.slotId,toTermId:"spring-2027",courseId:course.requirementId}});
   assert.equal(rejected.status,422);
   const oracle = await loadCanonicalPolicy();

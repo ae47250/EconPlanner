@@ -11,7 +11,7 @@
           "compatibility/requirements.json": "sha256:473a5cb872d6394d3859522c26756aa59f28f4d7af3d3c6e46bbece7dfc2f3bb",
           "compatibility/schedule-2026-2027.json": "sha256:c5d790588a082e4a7076d5cb0e4d8b533aa7e66f54bce9cad7a88d887a5599b3"
         },
-        "contentHash": "sha256:5a3288f9c71100126261370392691f1653c951a0cd6aa24a4f8dcdba823d992a",
+        "contentHash": "sha256:fbdd60f5155f6652e0d2790b1e6a67d22019a0564786b42f61c1cede409e6772",
         "releasePath": "releases/econ-2025-2026.1/bundle.json"
       }
     }

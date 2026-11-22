@@ -1177,7 +1177,7 @@ test("verified schedule facts and the graduation horizon are authoritative", () 
     student, mapping, schedule, prerequisites, context: result.context
   });
   assert.equal(horizonValidation.valid, false);
-  assert.ok(horizonValidation.errors.some(error => /authoritative graduation planning horizon/.test(error)));
+  assert.ok(horizonValidation.errors.some(error => /outside the terms in your plan/.test(error)));
   assert.ok(plan.terms.some(term => (
     term.academicYear === `${result.context.expectedGraduationYear - 1}/${result.context.expectedGraduationYear}`
     && ["Fall", "Winter", "Spring/May"].includes(term.termKey)

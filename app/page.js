@@ -42,7 +42,7 @@ const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
 const PLANNER_STORAGE_VERSION = PLANNER_INPUT_STATE_VERSION;
 const STUDENT_READINESS_EXPLANATIONS = Object.freeze({
   "Ready to plan": "These plans meet the major rules. Seats are not confirmed, so check the registration system before you register.",
-  "Needs confirmation": "These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions.",
+  "Needs confirmation": "These plans work only if the conditions shown on them are met, such as instructor approval or confirmed senior standing. Check each plan's conditions.",
   "Needs advisor attention": "Something in your answers needs your advisor to check it before you rely on these plans."
 });
 const COURSE_CATALOG = economicsCourseData.courses || [];
@@ -1090,6 +1090,7 @@ function PlanComparisonScreen({
   undoPlanId,
   onEditCourses,
   onReviewTimeline,
+  onReviewReservedRoom,
   onClearAll,
   onBackToCompare,
   onSelectPlan,
@@ -1148,7 +1149,8 @@ function PlanComparisonScreen({
       .filter(course => courseSets.filter(set => set.has(course)).length > 1);
     return [key, new Set(shared)];
   }));
-  const standing = studentStandingSummary(studyAbroad);
+  const standing = studentStandingSummary({ ...studyAbroad,
+    acceleratedPlanExists: acceleratedResult?.status !== "NOT_POSSIBLE" });
   const studyAbroadLabel = joinStudyAbroadTerms(studyAbroadIds.map(id => planningSlotsLabel(id, comparisonContext)));
   const graduationTarget = studentTermLabel(planningContext?.expectedGraduationTerm || "To be confirmed");
   const earlyGraduationTarget = !isPlanView && plans.find(plan => plan.id === "one-year-early")?.planningContext?.expectedGraduationTerm;
@@ -1171,6 +1173,8 @@ function PlanComparisonScreen({
   const statusPlans = isPlanView && selectedPlan ? [selectedPlan] : plans;
   const statusReason = statusPlans.flatMap(plan => plan.planConditions || [])
     .find(item => item.kind === "review" && item.shortMessage)?.shortMessage;
+  const paperworkReminder = displayedOverallStatus === "Ready to plan"
+    && statusPlans.some(plan => planningRequirementsNote(plan.planningContext, plan)?.details.some(detail => /petition/i.test(detail)));
   const planBadge = plan => {
     if (plan.planningMode !== "graduation_priority") return null;
     const mayCourse = plan.terms
@@ -2067,6 +2071,7 @@ function PlanComparisonScreen({
           <p><strong>{plans.length ? "Student readiness" : "Overall status"}</strong><span className="result-status-value">{displayedOverallStatus}</span>
             {isPlanView && selectedPlan && <><span className="result-feasibility-value">Plan feasibility: {({ VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" })[selectedPlan.feasibilityStatus] || "Plan needs confirmation"}</span><span className="plan-feasibility-meaning">{feasibilityMeaning(selectedPlan.feasibilityStatus)}</span></>}
             {plans.length > 0 && <span className="result-status-reason">{STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}</span>}
+            {paperworkReminder && <span className="result-status-reason">See the notes below for paperwork to file.</span>}
             {displayedOverallStatus === "Needs advisor attention" && statusReason && <span className="result-status-reason">Why: {statusReason}</span>}
           </p>
         </section>
@@ -2080,7 +2085,7 @@ function PlanComparisonScreen({
                   ? "Your feasible plan"
                   : "Your planning result"}</h1>
             <p className={plans.length ? "plan-edit-instructions" : undefined}>{plans.length
-              ? <><strong>Click a course to see where it can move. You can also drag it by the ⠿ handle.</strong><span>While you drag, green terms are open, amber terms need a permission or check first, and gray terms show why the course can&apos;t go there.</span></>
+              ? <><strong>Click a course to see where it can move. You can also drag it by the ⠿ handle.</strong><span>While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can&apos;t go there.</span></>
               : "Review this result and the next step below."}</p>
           </div>
           {!isPlanView && plans.length > 1 && (
@@ -2094,6 +2099,11 @@ function PlanComparisonScreen({
             </label>
           )}
         </div>
+
+        {!isPlanView && acceleratedResult?.status === "NOT_POSSIBLE" && <section className="accelerated-result" role="status">
+          <h2>You cannot finish by {studentTermLabel(acceleratedResult.acceleratedTarget)}. The plan below is for {studentTermLabel(acceleratedResult.standardTarget)}.</h2>
+          <p>{acceleratedResult.message}</p>
+        </section>}
 
         {!isPlanView && highlightDifferences && (
           <p className="comparison-difference-key">
@@ -2275,7 +2285,7 @@ function PlanComparisonScreen({
             <button
               type="button"
               className="no-plan-primary"
-              onClick={noPlan.actionTarget === "timeline" ? onReviewTimeline : onEditCourses}
+              onClick={noPlan.actionTarget === "timeline" ? onReviewTimeline : noPlan.actionTarget === "other-courses-reserved" ? onReviewReservedRoom : onEditCourses}
             >
               {noPlan.action}
             </button>
@@ -2294,7 +2304,7 @@ function PlanComparisonScreen({
             </h2>
             <dl className="accelerated-target-list">
               <div><dt>Standard target</dt><dd>{studentTermLabel(acceleratedResult.standardTarget)}</dd></div>
-              <div><dt>Accelerated target</dt><dd>{studentTermLabel(acceleratedResult.acceleratedTarget || "To be confirmed")}</dd></div>
+              <div><dt>One-year-early target</dt><dd>{studentTermLabel(acceleratedResult.acceleratedTarget || "To be confirmed")}</dd></div>
             </dl>
             {acceleratedResult.status !== "POSSIBLE" && acceleratedResult.message && <p>{acceleratedResult.message}</p>}
           </section>
@@ -3348,7 +3358,7 @@ export default function Page() {
       setInputBlock(null);
       setReport(data);
       setSelectedPlanId(firstPlanId);
-      setPlanEditStatus(plans.length ? "" : "Plan review ready.");
+      setPlanEditStatus("");
       setPlannerView(PLANNER_VIEWS.COMPARE);
       setPlanEditUndo(null);
       window.history.pushState(
@@ -3651,10 +3661,11 @@ export default function Page() {
             )}
           </div>
         )}
-        {course && ["completed", "transfer"].includes(course.status) && historicalPrerequisiteGaps(course.code, formData.courses, prerequisitePolicy.records).map(gap => (
+        {course && ["completed", "transfer", "in_progress"].includes(course.status) && historicalPrerequisiteGaps(course.code, formData.courses, prerequisitePolicy.records).map(gap => (
           <p className="prerequisite-conflict" role="status" key={gap.label}>{historicalPrerequisiteMessage(gap)}</p>
         ))}
-        {course && renderPrerequisiteFollowUp(course)}
+        {course && !(course.status === "in_progress" && historicalPrerequisiteGaps(course.code, formData.courses, prerequisitePolicy.records).length)
+          && renderPrerequisiteFollowUp(course)}
       </div>
     );
   }
@@ -3830,6 +3841,19 @@ export default function Page() {
     returnToInputStep(2);
   }
 
+  function returnToReservedRoomSetting() {
+    returnToInputStep(1);
+    window.setTimeout(() => {
+      const target = document.getElementById("other-courses-reserved");
+      let details = target?.closest("details");
+      while (details) {
+        details.open = true;
+        details = details.parentElement?.closest("details") || null;
+      }
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+  }
+
   const saveWarning = (answersSaveFailed || planSaveFailed) ? (
     <div role="alert" style={{ margin: "1rem", padding: "1rem", border: "2px solid #946200", background: "#fff8e8", color: "#503600", lineHeight: 1.5 }}>
       Your {answersSaveFailed && planSaveFailed ? "answers and plan changes are" : answersSaveFailed ? "answers are" : "plan changes are"} unsaved.
@@ -3880,6 +3904,7 @@ export default function Page() {
           canUndoPlanEdit={planEditUndo?.planId === selectedPlanId ? (planEditUndo.courseId || "__plan__") : null}
           onEditCourses={returnToCourseSelection}
           onReviewTimeline={() => returnToInputStep(1)}
+          onReviewReservedRoom={returnToReservedRoomSetting}
           onClearAll={() => setClearDialogOpen(true)}
           onBackToCompare={() => navigateBackTo(PLANNER_VIEWS.COMPARE)}
           onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.COMPARE, planId)}
@@ -4394,7 +4419,7 @@ export default function Page() {
                         ? "I’d like to graduate next year"
                         : "I’d like to graduate one year early"}
                     </button>
-                    <p>Standard target: {studentTermLabel(planningContext.expectedGraduationTerm)}. Accelerated target: {studentTermLabel(buildEarlyGraduationContext(planningContext)?.expectedGraduationTerm)}.</p>
+                    <p>Standard target: {studentTermLabel(planningContext.expectedGraduationTerm)}. One-year-early target: {studentTermLabel(buildEarlyGraduationContext(planningContext)?.expectedGraduationTerm)}.</p>
                   </div>
                 )}
                 <div className="custom-timeline-disclosure">
@@ -4543,7 +4568,7 @@ export default function Page() {
                           </div>
                         ))}
                       </div>
-                      <h3>Leave room for other courses</h3>
+                      <h3 id="other-courses-reserved">Leave room for other courses</h3>
                       <p className="custom-timeline-copy">Choose how much room to leave for classes outside the Economics major: none, one, or two course units. The choices shown stay within each term’s normal course limit.</p>
                       <div className="non-major-fields">
                         {planningSlots.filter(slot => !slot.isSummer).map(slot => (

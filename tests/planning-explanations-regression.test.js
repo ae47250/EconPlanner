@@ -67,8 +67,8 @@ test("a custom target more than one year early reports proven senior-standing in
   assert.match(presentation.message, /ECO 461 requires senior standing and is offered only in Winter/);
 
   const text = result.economicsPlanningGaps.map(item => item.reason || item.message).join(" ");
-  const generic = "No complete assignment satisfies the term-level prerequisites, verified offerings, and recorded term-load capacity.";
-  assert.equal(text.split(generic).length - 1, 1);
+  const scheduleGaps = text.match(/These courses did not fit before [^:]+:/g) || [];
+  assert.equal(scheduleGaps.length, 1);
   assert.doesNotMatch(text, /Requirement (?:eco-elective-\d+|cognate|statistics|finance) remains unscheduled/);
   assert.match(text, /MAT 113 \/ MAT 121/);
   assert.match(text, /ECO 257 \/ MAT 217 \/ PSY 217/);

@@ -378,7 +378,7 @@ test("major mapper generation continues to enforce authoritative reserved term c
   )));
 });
 
-test("exhaustive normal-capacity search preserves missing overload evidence instead of proving impossibility", async () => {
+test("a plan found without reserved room explains the reservation before asking about overload", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -408,8 +408,9 @@ test("exhaustive normal-capacity search preserves missing overload evidence inst
   assert.equal(economics.economicsPlans.length, 0);
   assert.equal(planResult.category, "NEEDS_ADVISOR_ATTENTION");
   assert.equal(planResult.conclusion, "UNKNOWN");
-  assert.equal(planResult.reason, "TERM_OVERLOAD_EVIDENCE_REQUIRED");
-  assert.ok(planResult.evidence.pendingOverloadEvidence.length);
+  assert.equal(planResult.reason, "RESERVED_ROOM_BLOCKS_PLAN");
+  assert.match(planResult.evidence.message, /No plan fits while you leave room for other courses in these terms:/);
+  assert.match(planResult.evidence.message, /Lower that number and try again\./);
   assert.ok(planResult.evidence.strategyAttempts.length > 0);
   assert.ok(planResult.evidence.strategyAttempts.every(attempt => attempt.exhaustive));
   assert.ok(planResult.evidence.searchAttempts.length > 0);
@@ -542,7 +543,7 @@ test("Finance uses ECO 321 when both are complete and explains the BUSN 323 peti
   assert.ok(data.catalog.advisorAttention.some(item => item.code === "BUSN_323_ELECTIVE_PETITION"));
 });
 
-test("a completed or current 100-level elective produces Advisor Attention", async () => {
+test("a current 100-level elective is explained in its checklist row", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -555,14 +556,14 @@ test("a completed or current 100-level elective produces Advisor Attention", asy
     })
   }));
   const data = await response.json();
-  const notice = data.catalog.advisorAttention.find(item => item.code === "ONE_HUNDRED_LEVEL_ELECTIVE_USED");
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
 
   assert.equal(response.status, 200);
-  assert.match(notice.message, /ECO 161 is being used/);
-  assert.match(notice.message, /other three Economics electives must be at the 200 level or above/);
+  assert.ok(economics.economicsPlans[0].majorRequirementsChecklist.rows.some(row => row.markers.includes("Counts as your one 100-level elective.")));
+  assert.equal(data.catalog.advisorAttention.some(item => item.code === "ONE_HUNDRED_LEVEL_ELECTIVE_USED"), false);
 });
 
-test("major mapper rejects an in-progress course with missing prerequisites", async () => {
+test("major mapper retains an in-progress course with missing prerequisites for advisor review", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -576,13 +577,10 @@ test("major mapper rejects an in-progress course with missing prerequisites", as
   }));
   const data = await response.json();
 
-  assert.equal(response.status, 422);
-  assert.equal(data.code, "INVALID_STUDENT_PREREQUISITES");
-  assert.ok(data.prerequisiteIssues.some(issue => issue.course === "ECO 213"));
-  assert.equal(data.economicsPlanResult.category, "INPUT_BLOCKED");
-  assert.equal(data.economicsPlanResult.reason, "INVALID_INPUT");
-  assert.deepEqual(data.economicsPlanResult.questions, data.inputResolution.questions);
-  assert.equal(data.economicsPlanResult.evidence.inputResolution.issueCode, "INVALID_STUDENT_PREREQUISITES");
+  assert.equal(response.status, 200);
+  const economics = data.programs.find(result => result.program?.id === "economics-base");
+  assert.ok(economics.economicsPlans.length);
+  assert.ok(economics.economicsPlans[0].planConditions.some(item => item.course === "ECO 213" && /You are taking ECO 213/.test(item.message)));
 });
 
 test("major mapper does not request new approval for current concurrent math", async () => {
@@ -797,7 +795,7 @@ test("edited plan validation rejects canonical schedule tampering and post-gradu
   }));
   const horizonResult = await horizonResponse.json();
   assert.equal(horizonResponse.status, 422);
-  assert.ok(horizonResult.validation.errors.some(error => /graduation planning horizon/.test(error)));
+  assert.ok(horizonResult.validation.errors.some(error => /terms in your plan/.test(error)));
 
   const forgedStanding = structuredClone(originalPlan);
   forgedStanding.terms[0].absoluteStandingIndex = 3;

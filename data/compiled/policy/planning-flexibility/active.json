@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.11",
-  "contentHash": "sha256:554892e1bf51b7b2ad3fa1a5f11dac99a1244f50bde01657c44c6cb60530964f",
+  "bundleVersion": "econ-planning-flexibility.12",
+  "contentHash": "sha256:f4e4efac71b07d7e62f7e6a2a02853d6331d3fc8c1efdd562ece1a16eb827d13",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -32,9 +32,9 @@
       "legacyCodeRetired": false
     },
     "confirmation": {
-      "date": "2026-11-21",
-      "reviewer": "Project owner and Economics Department domain expert",
-      "source": "policy/provenance/owner-planning-decisions-2026-11-21.md"
+      "date": "2026-11-22",
+      "reviewer": "Project owner",
+      "source": "policy/provenance/wording-review-decisions-2026-11-22.md"
     },
     "economicsPlanningStrategies": {
       "classification": "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES",
@@ -212,6 +212,17 @@
         }
       ]
     },
+    "financePlanningPreference": {
+      "appliesWhen": "NO_FINANCE_COURSE_COMPLETED_OR_IN_PROGRESS",
+      "completedCourseAllocationChanged": false,
+      "completedPairRuleSourceRef": "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation",
+      "fallbackCourse": "BUSN 323",
+      "preferredCourse": "ECO 321",
+      "requiredEvidence": "PUBLISHED_VERIFIED_SCHEDULE_IN_PLACEMENT_TERM",
+      "ruleId": "PREFER-PUBLISHED-ECO-321-OTHERWISE-BUSN-323",
+      "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
+      "unpublishedTermAllowed": false
+    },
     "futureScheduleProjection": {
       "futureOfferingLikelihoodExtension": {
         "activationRequiresOwnerApproval": true,
@@ -265,6 +276,8 @@
       },
       "feasibilityImpact": "NONE",
       "generalDegreeCatalogYearsWithEvidence": [
+        "2023-2024",
+        "2024-2025",
         "2025-2026",
         "2026-2027"
       ],
@@ -296,7 +309,8 @@
       "separateFromEconomicsMajorCatalogSelection": true,
       "sourceRefs": [
         "HANOVER-CP5A-OFFICIAL-EVIDENCE#CCR-ACE",
-        "ECON-MAJOR-DECLARATION#Course-designations"
+        "ECON-MAJOR-DECLARATION#Course-designations",
+        "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2"
       ],
       "status": "INFORMATIONAL_ONLY",
       "terminology": {
@@ -375,7 +389,22 @@
       "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
       "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED"
     },
-    "policyVersion": "econ-planning-flexibility.11",
+    "noPlanCourseCapacityExplanation": {
+      "normalCourseLimits": {
+        "Fall": 4,
+        "May": 1,
+        "Winter": 4
+      },
+      "overloadCapacityRequires": [
+        "ADVISOR_APPROVAL_RECORDED",
+        "NOT_ON_ACADEMIC_PROBATION_RECORDED"
+      ],
+      "reservedOtherCourseUnitsSubtracted": true,
+      "showOnlyWhenRemainingMajorCoursesExceedTotal": true,
+      "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",
+      "studyAbroadCapacity": 0
+    },
+    "policyVersion": "econ-planning-flexibility.12",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -389,7 +418,10 @@
       "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
       "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
       "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
-      "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
+      "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness",
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2",
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4"
     ],
     "status": "OWNER_APPROVED",
     "supportingCoursePlacement": {
@@ -419,7 +451,7 @@
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.11.json",
+    "provenancePath": "policy/provenance/planning-flexibility.12.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -433,7 +465,10 @@
       "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
       "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
       "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
-      "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
+      "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness",
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2",
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4"
     ],
     "sources": [
       {
@@ -586,6 +621,27 @@
         "sourceId": "OWNER-PLANNING-DECISIONS-2026-11-21",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": "The regular one-year-early-only final-year standing assumption scope for custom targets"
+      },
+      {
+        "anchors": [
+          "OD2",
+          "OD3",
+          "OD4",
+          "Presentation-decisions"
+        ],
+        "authority": "Project owner, explicit wording-review decisions",
+        "authorityBoundary": "ECONOMICS_FINANCE_PLANNING_PREFERENCE_AND_PRESENTATION",
+        "confirmedOn": "2026-11-22",
+        "effective": {
+          "from": "2026-11-22",
+          "through": null
+        },
+        "path": "policy/provenance/wording-review-decisions-2026-11-22.md",
+        "reviewer": "Project owner",
+        "sha256": "fc0e8e437eecdb4905ee08874bf362554bf0e5b592d168f6e9218cbb16868c25",
+        "sourceId": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
       }
     ]
   },

@@ -495,7 +495,7 @@ fixedSeedProperty(
 );
 
 fixedSeedProperty(
-  "removing a prerequisite never makes a dependent course easier to schedule",
+  "an unmarked prerequisite for a course taking now stays review-only",
   fc.record({
     profile: generatedProfileArbitrary,
     removal: fc.constantFrom(...prerequisiteRemovalCases)
@@ -514,7 +514,9 @@ fixedSeedProperty(
       productionPrerequisites
     );
     propertyInvariant(baseline.valid, `Independent closure did not create a valid ${removal.dependent} baseline.`);
-    propertyInvariant(!afterRemoval.valid, `Removing ${removedCourse} left ${removal.dependent} valid.`);
+    propertyInvariant(afterRemoval.valid, `Removing ${removedCourse} blocked ${removal.dependent} that is already taking now.`);
+    propertyInvariant(afterRemoval.reviewFindings.some(finding => finding.subject?.course === removal.dependent),
+      `Removing ${removedCourse} did not flag ${removal.dependent} for advisor review.`);
   },
   { seedOffset: 2 }
 );

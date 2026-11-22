@@ -813,7 +813,7 @@ test("Task 15 API rejects a term after the authoritative graduation date", async
   finalTerm.termKey = "Fall";
   finalTerm.scheduleTerm = "Fall";
   finalTerm.slotId = `fall-${graduationYear}`;
-  await assertRejected(student, edited, /graduation planning horizon|authoritative planning slot/);
+  await assertRejected(student, edited, /outside the terms in your plan|authoritative planning slot/);
 });
 
 test("Task 15 API rejects ECO 257 assigned to an elective when MAT 217 or PSY 217 fills statistics", async () => {

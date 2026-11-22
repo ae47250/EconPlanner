@@ -116,7 +116,7 @@ for (const standing of ["senior","junior"]) for (const reserved of [0,1]) test(`
   }
   const report = await buildEconomicsReportFromStudent(student,student.planCreationDate,plan,[plan]);
   assert.equal(report.selectedPlan.validation.policyDecision.decisions.find(decision => decision.reasonCode === load.reasonCode && decision.subject.termId === "2027-WINTER").status,load.status);
-  if (reserved) assert.match(renderEconomicsHtml(report,template), /Advisor-approved overload/);
+  if (reserved) assert.match(renderEconomicsHtml(report,template), /This term would have 5 courses\. The normal limit is 4\./);
 });
 
 test("load classifications distinguish missing, partial, denied, probation, approved ceilings and tuition", () => {
@@ -146,10 +146,14 @@ test("missing overload evidence keeps normal solver capacity and returns More in
     const mapped = economics(data);
     const result = standing === "junior" ? mapped.economicsAcceleratedResult : mapped.economicsPlanResult;
     assert.equal(standing === "junior" ? result.status : result.conclusion,standing === "junior" ? "MORE_INFORMATION_NEEDED" : "UNKNOWN");
-    if (standing === "senior") assert.equal(result.reason,"TERM_OVERLOAD_EVIDENCE_REQUIRED");
+    if (standing === "senior") assert.equal(result.reason,"RESERVED_ROOM_BLOCKS_PLAN");
     assert.ok(!mapped.economicsPlans.some(plan => plan.terms.some(term => term.slotId === "winter-2027" && term.courses.length > 3)));
     const report = await buildEconomicsReportFromStudent(student,student.planCreationDate);
-    assert.match(renderEconomicsHtml(report,template),/More information needed/);
+    if (standing === "senior") {
+      const html = renderEconomicsHtml(report,template);
+      assert.match(html,/No plan fits while you leave room for other courses in these terms:/);
+      assert.doesNotMatch(html,/More information needed to assess an advisor-approved overload/);
+    } else assert.match(renderEconomicsHtml(report,template),/More information needed/);
   }
 });
 

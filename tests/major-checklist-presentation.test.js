@@ -26,7 +26,7 @@ test("zero-course input: all three checklists use validated future assignments, 
   for (const plan of result.economicsPlans) {
     const checklist = plan.majorRequirementsChecklist;
     assert.equal(checklist.complete, true);
-    assert.deepEqual(checklist.legend.map(state => state.label), ["Completed", "AP credit", "Transfer credit", "In progress", "Planned"]);
+    assert.deepEqual(checklist.legend.map(state => state.label), ["Planned"]);
     assert.deepEqual(checklist.unmetRequirements, []);
     assert.equal(checklist.title, "Major requirements checklist");
     assert.deepEqual(checklist.rows.map(row => row.label), order);
@@ -63,7 +63,7 @@ test("incomplete candidates retain unmet eligibility separately without assertin
   ] } });
   assert.equal(checklist.complete, false);
   assert.equal(checklist.unmetRequirements[0].id, "finance");
-  assert.deepEqual(checklist.legend.map(state => state.label), ["Completed", "AP credit", "Transfer credit", "In progress", "Planned"]);
+  assert.deepEqual(checklist.legend.map(state => state.label), []);
   const html = renderEconomicsHtml({ student: { displayName: "Fictional <student>", academicStanding: "senior" }, terms: [], unresolved: [], requirements: [], majorRequirementsChecklist: checklist, planConditions: [], planNotes: [] }, template);
   assert.ok(html.includes("Requirements still needing a class"));
   assert.match(html, /<h3>Requirements still needing a class<\/h3><ul><li>Finance<\/li><\/ul>/);
@@ -172,7 +172,7 @@ test("qualified completed credit and current enrollment are separate from future
         const label = row.status === "in_progress" ? "Taking now" : row.statusLabel;
         assert.ok(html.includes(`status-icon-${row.status}\" aria-hidden=\"true\"></span> ${label}`));
       }
-      assert.equal((html.match(/class="status-icon status-icon-/g) || []).length, 17);
+      assert.equal((html.match(/class="status-icon status-icon-/g) || []).length, 15);
       assert.doesNotMatch(html, /aria-hidden="true">[✓◐○]</);
       assert.match(html, /status-icon-completed\{[^}]+border:/);
       assert.match(html, /status-icon-in_progress:before\{[^}]+background:currentColor/);
@@ -244,13 +244,14 @@ test("saved/direct API data cannot forge checklist credit or remove real approva
   }
 });
 
-test("unsupported cohort/catalog identifies the HS and W2 claims without granting them", async () => {
-  const student = { ...sample, generalDegreeCatalogYear: "2024-2025" };
+test("2024–25 catalog receives the confirmed Hanover Core HS and W2 notes", async () => {
+  const student = { ...sample, generalDegreeCatalogYear: "2024-2025", courses: completed(["ECO 113", "ECO 114"]) };
   const result = economics((await post({ student })).data);
   for (const plan of result.economicsPlans) {
     const note = plan.planNotes.find(item => item.id === "ccr-ace");
-    assert.ok(note.items.some(item => /We have not confirmed which Hanover Core rules apply to your 2024-2025 catalog.*ECO 113 or ECO 114.*Historical and Social Perspectives \(HS\).*ECO 461.*Writing 2 \(W2\).*check with your advisor/.test(item.text)));
-    assert.ok(!note.items.some(item => /satisfied through|planned through/.test(item.text)));
+    assert.equal(plan.degreeRequirementInformation.evidenceStatus, "SUPPORTED");
+    assert.ok(note.items.some(item => /Historical and Social Perspectives \(HS\)/.test(item.text)));
+    assert.ok(!note.items.some(item => /We have not confirmed/.test(item.text)));
     const report = await buildEconomicsReportFromStudent(student, sample.planCreationDate, plan);
     assert.deepEqual(report.planNotes, plan.planNotes);
   }

@@ -242,7 +242,8 @@ test("BUSN 323 preference preserves verified ECO 321 when BUSN cannot fit and ex
     reservedCourseUnits: {"fall-2027": 4, "winter-2028": 4} };
   const gap = economics((await post({ student: gapStudent })).data);
   assert.equal(gap.economicsPlans.length, 0);
-  assert.equal(gap.economicsPlanResult.evidence.blockingReasons[0].message, "We couldn't find a complete plan that meets the Finance requirement by your planned graduation date.");
+  assert.equal(gap.economicsPlanResult.reason, "RESERVED_ROOM_BLOCKS_PLAN");
+  assert.match(gap.economicsPlanResult.evidence.message, /No plan fits while you leave room for other courses in these terms:/);
 });
 
 test("a year-only placeholder needs a legal one-elective-per-term witness", () => {

@@ -286,9 +286,10 @@ test("catalog policy compilation is byte-identical across three clean outputs an
     for (let index = 1; index <= 3; index += 1) {
       const outputRoot = path.join(tempRoot, `run-${index}`);
       await compileCatalogPolicies({repositoryRoot: ROOT, outputRoot});
+      const generatedFlexibilityRelease = JSON.parse(await readFile(path.join(outputRoot, "planning-flexibility", "active.json"), "utf8")).bundleVersion;
       outputs.push(await Promise.all([
         readFile(path.join(outputRoot, "catalog-releases.json"), "utf8"),
-        readFile(path.join(outputRoot, "planning-flexibility", "econ-planning-flexibility.11", "bundle.json"), "utf8"),
+        readFile(path.join(outputRoot, "planning-flexibility", generatedFlexibilityRelease, "bundle.json"), "utf8"),
         ...["econ-catalog-2023-2024.1", "econ-catalog-2024-2025.1", "econ-catalog-2025-2026.3"]
           .map(version => readFile(path.join(outputRoot, "releases", version, "bundle.json"), "utf8"))
       ]));

@@ -1,11 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.11",
+  "policyVersion": "econ-planning-flexibility.12",
   "status": "OWNER_APPROVED",
   "confirmation": {
-    "date": "2026-11-21",
-    "reviewer": "Project owner and Economics Department domain expert",
-    "source": "policy/provenance/owner-planning-decisions-2026-11-21.md"
+    "date": "2026-11-22",
+    "reviewer": "Project owner",
+    "source": "policy/provenance/wording-review-decisions-2026-11-22.md"
   },
   "sourceRefs": [
     "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -19,7 +19,10 @@
     "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
     "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
     "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
-    "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
+    "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness",
+    "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2",
+    "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
+    "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4"
   ],
   "acceleratedSeniorStanding": {
     "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
@@ -102,16 +105,23 @@
     "ruleId": "GENERAL-DEGREE-CCR-ACE-INFORMATION",
     "status": "INFORMATIONAL_ONLY",
     "generalDegreeCatalogYearsWithEvidence": [
+      "2023-2024",
+      "2024-2025",
       "2025-2026",
       "2026-2027"
     ],
     "hanoverCore": {
       "catalogYear": "2026-2027",
       "name": "Hanover Core: Knowledge and Skills",
-      "hsCourses": ["ECO 113", "ECO 114"],
+      "hsCourses": [
+        "ECO 113",
+        "ECO 114"
+      ],
       "hsRequiredUnits": 2,
       "hsDifferentDisciplinesRequired": true,
-      "w2Courses": ["ECO 461"],
+      "w2Courses": [
+        "ECO 461"
+      ],
       "sourceRefs": [
         "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
         "HANOVER-CATALOG-2026-2027#Economics-Courses"
@@ -146,7 +156,8 @@
     ],
     "sourceRefs": [
       "HANOVER-CP5A-OFFICIAL-EVIDENCE#CCR-ACE",
-      "ECON-MAJOR-DECLARATION#Course-designations"
+      "ECON-MAJOR-DECLARATION#Course-designations",
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2"
     ],
     "readinessImpact": "NONE",
     "feasibilityImpact": "NONE",
@@ -406,5 +417,31 @@
     "courseLoadRulesChanged": false,
     "legacyCodeRetired": false,
     "catalog2026_2027CreatedOrActivated": false
+  },
+  "financePlanningPreference": {
+    "ruleId": "PREFER-PUBLISHED-ECO-321-OTHERWISE-BUSN-323",
+    "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
+    "appliesWhen": "NO_FINANCE_COURSE_COMPLETED_OR_IN_PROGRESS",
+    "preferredCourse": "ECO 321",
+    "requiredEvidence": "PUBLISHED_VERIFIED_SCHEDULE_IN_PLACEMENT_TERM",
+    "unpublishedTermAllowed": false,
+    "fallbackCourse": "BUSN 323",
+    "completedCourseAllocationChanged": false,
+    "completedPairRuleSourceRef": "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+  },
+  "noPlanCourseCapacityExplanation": {
+    "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",
+    "normalCourseLimits": {
+      "Fall": 4,
+      "Winter": 4,
+      "May": 1
+    },
+    "reservedOtherCourseUnitsSubtracted": true,
+    "studyAbroadCapacity": 0,
+    "overloadCapacityRequires": [
+      "ADVISOR_APPROVAL_RECORDED",
+      "NOT_ON_ACADEMIC_PROBATION_RECORDED"
+    ],
+    "showOnlyWhenRemainingMajorCoursesExceedTotal": true
   }
 }

@@ -278,8 +278,8 @@ test("PSY 217 unlocks ECO 461, while concurrent statistics remains blocked", () 
     { code: "PSY 217", status: "in_progress" },
     { code: "ECO 461", status: "in_progress" }
   ], prerequisites);
-  assert.equal(concurrent.valid, false);
-  assert.ok(concurrent.issues.some(item => item.course === "ECO 461"));
+  assert.equal(concurrent.valid, true);
+  assert.ok(concurrent.reviewFindings.some(item => item.subject?.course === "ECO 461"));
 });
 
 test("ECO 114 in Fall unlocks ECO 321 in Winter", () => {

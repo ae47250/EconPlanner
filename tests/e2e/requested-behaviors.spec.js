@@ -86,12 +86,12 @@ for (const dependent of ['ECO 213','ECO 214']) for (const math of ['MAT 113','MA
 
 for (const scenario of [
   {name:'normal four Winter units',reserved:'0',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'Needs confirmation'},
-  {name:'missing overload evidence',reserved:'1',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'More information needed'},
+  {name:'missing overload evidence',reserved:'1',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'Needs advisor attention'},
   {name:'approved five Winter units',reserved:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs confirmation'},
-  {name:'denied Winter approval',reserved:'1',approval:'NOT_APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Not possible'},
-  {name:'Winter overload on probation',reserved:'1',approval:'APPROVED',probation:'ON_ACADEMIC_PROBATION',expected:'Not possible'},
-  {name:'six Winter units above ceiling',reserved:'2',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Not possible'},
-  {name:'two May units with approval',reserved:'0',spring:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Not possible'}
+  {name:'denied Winter approval',reserved:'1',approval:'NOT_APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'},
+  {name:'Winter overload on probation',reserved:'1',approval:'APPROVED',probation:'ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'},
+  {name:'six Winter units above ceiling',reserved:'2',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'},
+  {name:'two May units with approval',reserved:'0',spring:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'}
 ]) test(`browser controls and results: ${scenario.name}`,async ({page}) => {
   await resetPlanner(page);
   await chooseStanding(page,'senior');
@@ -119,6 +119,32 @@ for (const scenario of [
     expect(winter.status).toBe(scenario.reserved==='0'?'ALLOW':'CONDITIONAL');
   } else {
     expect(result.economicsPlans).toHaveLength(0);
-    expect(result.economicsPlanResult.conclusion).toBe(scenario.expected==='Not possible'?'PROVEN_INFEASIBLE':'UNKNOWN');
+    expect(result.economicsPlanResult.reason).not.toBe('TERM_OVERLOAD_EVIDENCE_REQUIRED');
   }
+});
+
+test('a reserved-room no-plan result links back to the room setting',async ({page}) => {
+  await resetPlanner(page);
+  await chooseStanding(page,'junior');
+  await page.locator('details.more-details > summary').first().click();
+  await page.getByLabel('Plan creation date',{exact:true}).fill('2026-09-28');
+  await page.getByText('Adjust your schedule (optional)',{exact:true}).click();
+  const reservations = page.locator('select[aria-label^="Course units reserved in "]');
+  const count = await reservations.count();
+  expect(count).toBeGreaterThan(0);
+  for (let index=0; index<count; index+=1) {
+    const options = await reservations.nth(index).locator('option').count();
+    await reservations.nth(index).selectOption({index:options-1});
+  }
+  await continueToCourses(page);
+  await setCourseStatus(page,'ECO 113','Completed');
+  await setCourseStatus(page,'ECO 114','Completed');
+  const response = await generatePlans(page);
+  const result = (await response.json()).programs.find(item=>item.program?.id==='economics-base');
+  expect(result.economicsPlans).toHaveLength(0);
+  expect(result.economicsPlanResult.reason).toBe('RESERVED_ROOM_BLOCKS_PLAN');
+  await expect(page.locator('.no-plan-state h2')).toHaveText('Your reserved room leaves too little space for the major courses.');
+  await expect(page.locator('.no-plan-state > p')).toContainText('No plan fits while you leave room for other courses in these terms:');
+  await page.getByRole('button',{name:'Change room for other courses',exact:true}).click();
+  await expect(page.locator('#other-courses-reserved')).toBeVisible();
 });
