@@ -161,7 +161,8 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const payload = await response.json();
   const plans = payload.programs.find(p => p.program.id === 'economics-base').economicsPlans;
   expect(plans.map(p => p.id)).toEqual(['balanced','explore-first','one-year-early']);
-  await expect(page.locator('.plan-edit-instructions')).toContainText('Eligible terms highlight as you drag');
+  await expect(page.locator('.plan-edit-instructions strong')).toHaveText('Click a course to see where it can move. You can also drag it by the ⠿ handle.');
+  await expect(page.locator('.plan-edit-instructions span')).toHaveText("While you drag, green terms are open, amber terms need a permission or check first, and gray terms show why the course can't go there.");
   await expect(page.locator('.projection-readiness-note')).toHaveCount(0);
   await expect(page.locator('.comparison-grid')).toBeVisible();
   const conditionsFollowPlans = await page.locator('.comparison-grid').evaluate(grid => {

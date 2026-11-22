@@ -1271,7 +1271,8 @@ test("Winter replacements exclude finance courses after choosing ECO 161", async
   await openPlan(page, "sophomore", { completed: ["ECO 113", "ECO 114"] });
   const plan = page.locator('[data-plan-id="balanced"]');
   await expect(page.getByText('Plans generated.', { exact: true })).toHaveCount(0);
-  await expect(page.locator('.plan-edit-instructions')).toContainText('Eligible terms highlight as you drag');
+  await expect(page.locator('.plan-edit-instructions strong')).toHaveText('Click a course to see where it can move. You can also drag it by the ⠿ handle.');
+  await expect(page.locator('.plan-edit-instructions span')).toHaveText("While you drag, green terms are open, amber terms need a permission or check first, and gray terms show why the course can't go there.");
   async function replace(from, to) {
     await plan.getByRole('button', { name: `Change ${from}`, exact: true }).click();
     const menu = plan.getByRole('region', { name: `Change ${from} options`, exact: true });

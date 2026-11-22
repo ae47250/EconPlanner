@@ -37,7 +37,7 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
   };
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
   assert.match(review.summary, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
-  assert.match(review.summary, /and 1 more$/);
+  assert.match(review.summary, /advisor will check it\. \(1 more item below\.\)$/);
   assert.match(review.message, /ECO 113 and either MAT 113 or MAT 121/);
   assert.match(review.message, /ECO 113 is marked “Taking now\.”/);
   assert.match(review.message, /MAT 113 is marked “Not taken \/ not sure\.”/);

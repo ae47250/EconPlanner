@@ -33,7 +33,7 @@ import { seatStatusPresentation } from "../lib/planning/seat-status.js";
 import prerequisitePolicy from "../policy/rules/prerequisites.json";
 import { historicalPrerequisiteGaps, historicalPrerequisiteMessage } from "../lib/planning/historical-prerequisites.js";
 import { noPlanPresentation } from "../lib/planning/no-plan-presentation.js";
-import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentTermLabel } from "../lib/planning/student-language.js";
+import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentStandingSummary, studentTermLabel } from "../lib/planning/student-language.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
@@ -1073,7 +1073,6 @@ function PlanComparisonScreen({
   planResult,
   fallbackPlanningContext,
   courses,
-  displayName,
   view,
   selectedPlanId,
   isExiting,
@@ -1143,9 +1142,8 @@ function PlanComparisonScreen({
       .filter(course => courseSets.filter(set => set.has(course)).length > 1);
     return [key, new Set(shared)];
   }));
-  const standing = displayName?.trim() || (planningContext?.customGraduationEnabled ? "Custom timeline" : planningContext?.effectiveStandingLabel)
-    || planningContext?.standingLabel
-    || "Student";
+  const standing = studentStandingSummary(studyAbroad);
+  const studyAbroadLabel = studyAbroadIds.map(id => planningSlotsLabel(id, comparisonContext)).join(" or ");
   const graduationTarget = studentTermLabel(planningContext?.expectedGraduationTerm || "To be confirmed");
   const earlyGraduationTarget = !isPlanView && plans.find(plan => plan.id === "one-year-early")?.planningContext?.expectedGraduationTerm;
   const graduationTargetDisplay = earlyGraduationTarget && studentTermLabel(earlyGraduationTarget) !== graduationTarget
@@ -1632,6 +1630,7 @@ function PlanComparisonScreen({
         }
         .comparison-page .compact-schedule tr.drop-allowed { background: #eaf8f0; outline: 2px solid #168264; }
         .comparison-page .compact-schedule tr.drop-conditional { background: #fffbeb; outline: 2px dashed #946200; }
+        .comparison-page .compact-schedule tr.drop-unavailable, .comparison-page .compact-schedule tr.drop-blocked, .comparison-page .compact-schedule tr.drop-review_required { background: #f3f3f5; outline: 2px solid #a6a6af; }
         .comparison-page .comparison-drop-hint { display: block; font-size: .7rem; font-weight: normal; }
         .comparison-page .download-plan-button { margin: .5rem 0; width: 100%; background: #49317c; border-color: #49317c; color: white; }
         .comparison-page .plan-course-actions { position: relative; }
@@ -2015,6 +2014,7 @@ function PlanComparisonScreen({
           <strong>{standing}</strong>
           <span aria-hidden="true">·</span>
           <span>Graduation target: {graduationTargetDisplay}</span>
+          {studyAbroadLabel && <><span aria-hidden="true">·</span><span>Study abroad: {studyAbroadLabel}</span></>}
         </div>}
         <div className="comparison-actions">
           {isPlanView && (
@@ -2053,7 +2053,9 @@ function PlanComparisonScreen({
       <div className="comparison-content">
         {pdfStatus && <p className="pdf-download-status" role="status" aria-live="polite">{pdfStatus}</p>}
         <section className="comparison-course-status" aria-label="Selected course status">
+          <p><strong>Class standing</strong><span>{standing}</span></p>
           <p><strong>Graduation target</strong><span>{graduationTargetDisplay}</span></p>
+          {studyAbroadLabel && <p><strong>Study abroad</strong><span>{studyAbroadLabel}</span></p>}
           <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>{plans.length ? "Student readiness" : "Overall status"}</strong><span className="result-status-value">{displayedOverallStatus}</span>
@@ -2071,13 +2073,9 @@ function PlanComparisonScreen({
                 : plans.length === 1
                   ? "Your feasible plan"
                   : "Your planning result"}</h1>
-            <p className={!isPlanView && plans.length > 1 ? "plan-edit-instructions" : undefined}>{isPlanView
-              ? "Drag by the ⠿ handle. Eligible terms highlight as you drag; other terms show if they need review or why they’re unavailable. You can also use Change."
-              : plans.length > 1
-                ? <><strong>Drag ⠿ to move a course. Eligible terms highlight as you drag; click a course for options.</strong><span>Conditional terms need review; other terms show why they can’t be used.</span></>
-                : plans.length === 1
-                  ? "The planner returned one validated schedule for this graduation target."
-                  : "Review this result and the next step below."}</p>
+            <p className={plans.length ? "plan-edit-instructions" : undefined}>{plans.length
+              ? <><strong>Click a course to see where it can move. You can also drag it by the ⠿ handle.</strong><span>While you drag, green terms are open, amber terms need a permission or check first, and gray terms show why the course can&apos;t go there.</span></>
+              : "Review this result and the next step below."}</p>
           </div>
           {!isPlanView && plans.length > 1 && (
             <label className="difference-toggle">
@@ -3862,7 +3860,6 @@ export default function Page() {
           planResult={inputBlock?.economicsPlanResult}
           fallbackPlanningContext={planningContext}
           courses={formData.courses}
-          displayName={formData.displayName}
           view={plannerView}
           selectedPlanId={selectedPlanId}
           isExiting={isComparisonExiting}
