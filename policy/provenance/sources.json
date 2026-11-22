@@ -520,14 +520,15 @@
       "path": "policy/provenance/wording-review-decisions-2026-11-22.md",
       "confirmedOn": "2026-11-22",
       "reviewer": "Project owner",
-      "sha256": "fc0e8e437eecdb4905ee08874bf362554bf0e5b592d168f6e9218cbb16868c25",
+      "sha256": "a140dabf3d646ee890beffc16d7a9d54be1b2707ca8b6454b8272e23db378722",
       "anchors": [
         "OD1",
         "OD2",
         "OD3",
         "OD4",
         "Allocation-wording",
-        "Presentation-decisions"
+        "Presentation-decisions",
+        "Item-19"
       ],
       "effective": {
         "from": "2026-11-22",

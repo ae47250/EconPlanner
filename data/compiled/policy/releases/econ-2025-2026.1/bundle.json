@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:fbdd60f5155f6652e0d2790b1e6a67d22019a0564786b42f61c1cede409e6772",
+  "contentHash": "sha256:b3166dfee088664f050b7071440abf7a292a4db9ed7e8b875364eac78f8e2180",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -8226,7 +8226,8 @@
           "OD3",
           "OD4",
           "Allocation-wording",
-          "Presentation-decisions"
+          "Presentation-decisions",
+          "Item-19"
         ],
         "authority": "Project owner, explicit wording-review decisions",
         "authorityBoundary": "ECONOMICS_STUDENT_HISTORY_REVIEW_PLANNING_PREFERENCE_AND_PRESENTATION",
@@ -8237,7 +8238,7 @@
         },
         "path": "policy/provenance/wording-review-decisions-2026-11-22.md",
         "reviewer": "Project owner",
-        "sha256": "fc0e8e437eecdb4905ee08874bf362554bf0e5b592d168f6e9218cbb16868c25",
+        "sha256": "a140dabf3d646ee890beffc16d7a9d54be1b2707ca8b6454b8272e23db378722",
         "sourceId": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
