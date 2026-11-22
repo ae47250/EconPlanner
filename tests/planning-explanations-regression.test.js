@@ -81,5 +81,25 @@ test("AP or exam credit produces a visible advisor-attention reason", async () =
   });
   assert.equal(result.economicsPlans[0].readinessStatus, "ADVISOR_ACTION_REQUIRED");
   const review = result.economicsPlans[0].planConditions.find(item => item.kind === "review" && item.shortMessage);
-  assert.equal(review.shortMessage, "ECO 113 and ECO 114 are recorded as AP or exam credit. Confirm with your advisor that they count.");
+  assert.equal(review.shortMessage, "Confirm with your advisor that your AP credit for ECO 113 and ECO 114 counts.");
+});
+
+test("sophomore early abroad plan uses consistent prerequisite and department-approval wording in the PDF", async () => {
+  const student = {
+    academicStanding: "sophomore", planningPace: "one_year_early", planCreationDate,
+    studyAbroadTerm: "fall-2027", courses: [...completed(["ECO 113"]), { code: "ECO 114", status: "in_progress" }]
+  };
+  const result = await economics(student);
+  const plan = result.economicsPlans.find(item => item.id === "one-year-early");
+  assert.ok(plan);
+  assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet."));
+  const prerequisites = plan.planConditions.filter(item => item.kind === "prerequisite");
+  assert.ok(prerequisites.length > 0);
+  assert.ok(prerequisites.every(item => /^Before taking .+, finish .+\.$/.test(item.message)));
+  const report = await buildEconomicsReportFromStudent(student, planCreationDate, plan, result.economicsPlans);
+  const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
+  const html = renderEconomicsHtml(report, template);
+  for (const item of [plan.planConditions.find(item => item.kind === "approval"), ...prerequisites]) {
+    assert.equal(html.split(item.message).length - 1, 1);
+  }
 });

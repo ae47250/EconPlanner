@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:2151a359ed3441c5eede52ae12114d0ac3e610292b3f4f464a3bbc99528ea775",
+  "contentHash": "sha256:5a3288f9c71100126261370392691f1653c951a0cd6aa24a4f8dcdba823d992a",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7021,7 +7021,7 @@
     "allocation.move": "This move must preserve the approved requirement assignment.",
     "allocation.report": "Requirement allocation follows the governing Economics policy.",
     "allocation.student": "This course can count only in the requirement shown.",
-    "designation.applicability": "CCR/ACE applicability is unresolved for {catalogYear}. Confirm the cohort/catalog before relying on HS credit through ECO 113 or ECO 114, the different-discipline HS requirement, or W2 through ECO 461.",
+    "designation.applicability": "We have not confirmed which Hanover Core rules apply to your {catalogYear} catalog. Before counting ECO 113 or ECO 114 toward the Historical and Social Perspectives (HS) requirement, or ECO 461 toward Writing 2 (W2), check with your advisor.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "history.advisor": "Historical prerequisite evidence is incomplete and requires review.",
@@ -8003,6 +8003,42 @@
         "sourceId": "OWNER-CAPSTONE-TIMING-2026-10-17",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
+      },
+      {
+        "anchors": [
+          "Catalog-note-wording"
+        ],
+        "authority": "Project owner, explicit catalog-note wording correction",
+        "authorityBoundary": "ECONOMICS_CATALOG_PLANNING_NOTE_PRESENTATION",
+        "confirmedOn": "2026-11-21",
+        "effective": {
+          "from": "2026-11-21",
+          "through": null
+        },
+        "path": "policy/provenance/catalog-note-wording-2026-11-21.md",
+        "reviewer": "Project owner",
+        "sha256": "d5474d84c9c676fe5ff3eca9fbaf9172e3c8387c2ad7e4b0e9eb3d98d6377bfc",
+        "sourceId": "OWNER-CATALOG-NOTE-WORDING-2026-11-21",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "The abbreviated SAC wording in student-facing catalog notes"
+      },
+      {
+        "anchors": [
+          "Catalog-planning-note-by-year"
+        ],
+        "authority": "Project owner, explicit catalog-note presentation task",
+        "authorityBoundary": "ECONOMICS_CATALOG_PLANNING_NOTE_PRESENTATION",
+        "confirmedOn": "2026-11-21",
+        "effective": {
+          "from": "2026-11-21",
+          "through": null
+        },
+        "path": "policy/provenance/catalog-planning-note-2026-11-21.md",
+        "reviewer": "Project owner",
+        "sha256": "60f6295ba7962c77807c7edd445f87b9f26d6f2472aed694f187cddfd3400324",
+        "sourceId": "OWNER-CATALOG-PLANNING-NOTE-2026-11-21",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "The universal planning-requirements box on intake"
       },
       {
         "authority": "Project owner; inspected local source workbooks and original PDF",

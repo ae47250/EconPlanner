@@ -86,7 +86,7 @@ test("fictional PDF sample: all plans preserve requirements, generic future elec
     assert.equal(history.items.length, 3);
     assert.equal(history.items[1].text, "Past Fall schedules included: ECO 333, ECO 357. Past Winter schedules included: ECO 221, ECO 337, ECO 357.");
     assert.deepEqual(history.items[1].lines, ["Past Fall schedules included: ECO 333, ECO 357.", "Past Winter schedules included: ECO 221, ECO 337, ECO 357."]);
-    assert.equal(history.items[2].text, "Past May schedules included: ECO 160, 161, 222, 224, 234, 331.");
+    assert.equal(history.items[2].text, "Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 234, ECO 331.");
     const upcoming = plan.planNotes.find(note => note.id === "upcoming");
     assert.equal(upcoming.title, "Published schedules as of the plan date (September 28, 2026)");
     assert.deepEqual(upcoming.items.map(item => item.label), ["Winter 2027", "May 2027"]);

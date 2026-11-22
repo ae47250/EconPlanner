@@ -1,3 +1,12 @@
+import catalog2023 from "../../policy/catalogs/economics-2023-2024.json" with { type: "json" };
+import catalog2024 from "../../policy/catalogs/economics-2024-2025.json" with { type: "json" };
+import catalog2025 from "../../policy/catalogs/economics-2025-2026.json" with { type: "json" };
+import coursePolicy from "../../policy/courses/economics.json" with { type: "json" };
+
+const CATALOGS = new Map([catalog2023, catalog2024, catalog2025].map(record => [record.catalogYear, record]));
+const CATALOG_TITLES = new Map(coursePolicy.courses.filter(item => ["MAT 113", "ECO 461"].includes(item.code))
+  .map(item => [item.code, item.title]));
+
 function text(value) {
   return String(value ?? "").trim();
 }
@@ -37,10 +46,11 @@ function normalizedApproval(approval = {}, course = {}, term = {}) {
 }
 
 function normalizedCourse(course = {}, term = {}) {
+  const code = text(course.course || course.code) || null;
   return {
-    code: text(course.course || course.code) || null,
+    code,
     section: text(course.section) || null,
-    title: text(course.title) || null,
+    title: CATALOG_TITLES.get(code) || text(course.title) || null,
     requirementRole: text(course.requirementId || course.requirementRole) || null,
     extra: course.extra === true,
     approvals: (course.approvalRequired || [])
@@ -59,21 +69,56 @@ function normalizedTerms(terms = []) {
   }));
 }
 
-function selectedPlanWarnings(plan = {}) {
-  if (Array.isArray(plan.planConditions)) return uniqueSorted(plan.planConditions.map(item => item.message));
-  if (Array.isArray(plan.displayWarnings)) return uniqueSorted(plan.displayWarnings);
+function olderCatalogNote(plan = {}) {
+  const context = plan.planningContext || {};
+  const year = /^\d{4}-\d{4}$/.test(context.majorDeclarationCatalogYear || "")
+    ? context.majorDeclarationCatalogYear : context.entryCatalogYear;
+  const earlier = CATALOGS.get(year);
+  if (!earlier || year >= catalog2025.catalogYear) return null;
+  const added = ["moneyFinanceOptions", "statisticsOptions"].flatMap(key => (
+    catalog2025.requirements[key].filter(course => !earlier.requirements[key].includes(course))
+  )).sort();
+  const counted = new Set((plan.validation?.requirementAllocation?.assignments || []).map(item => item.code));
+  const used = added.filter(code => counted.has(code));
+  const shortYear = year.replace(/-20/, "–");
+  const details = [];
+  if (used.length) {
+    const courses = used.join(" and ");
+    details.push(`Your plan counts ${courses}, which your ${shortYear} catalog does not accept. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee (forms are at the Registrar's Office) so ${used.length === 1 ? "it counts" : "they count"}.`);
+  }
+  const priorMilestone = earlier.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
+  const currentMilestone = catalog2025.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
+  if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
+    details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.`);
+  }
+  return `This plan uses the current (2026–27) Economics major requirements. ${details.join(" ")}`.trim();
+}
+
+function selectedPlanWarnings(plan = {}, advisorNotices = []) {
+  const catalogNote = olderCatalogNote(plan);
+  const covered = new Set((plan.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
+  const catalogYearMessages = advisorNotices.filter(notice => notice.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"
+    && !["2025-2026", "2026-2027"].includes(plan.planningContext?.majorDeclarationCatalogYear || plan.planningContext?.entryCatalogYear)
+    && !(plan.studentNotices || []).some(item => item.code === notice.code)
+    && !covered.has(notice.message)).map(notice => notice.message);
+  if (Array.isArray(plan.planConditions)) return uniqueSorted([...plan.planConditions.map(item => item.message), ...catalogYearMessages, catalogNote]);
+  if (Array.isArray(plan.displayWarnings)) return uniqueSorted([...plan.displayWarnings, ...catalogYearMessages, catalogNote]);
   const noticeMessages = new Set((plan.studentNotices || []).map(notice => text(notice.message)));
   return uniqueSorted([
     ...(plan.warnings || []),
     ...(plan.studentMessages || []),
-    ...(plan.feasibility?.warnings || [])
+    ...(plan.feasibility?.warnings || []),
+    ...catalogYearMessages,
+    catalogNote
   ].map(text).filter(message => !noticeMessages.has(message) && !/projected placement/i.test(message)));
 }
 
 function advisorAttention(report = {}) {
   const coveredNotices = new Set((report.selectedPlan?.planConditions || []).flatMap(item => item.noticeCodes || []));
   const coveredMessages = new Set((report.selectedPlan?.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
-  return (report.catalog?.advisorAttention || []).filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(notice.code) && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
+  return (report.catalog?.advisorAttention || []).filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED", "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"].includes(notice.code)
+    && (!olderCatalogNote(report.selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
+    && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
     code: text(notice.code) || null,
     title: text(notice.title) || null,
     severity: text(notice.severity) || null,
@@ -92,8 +137,10 @@ export function projectSelectedPlanArtifact(selectedPlan, { advisorNotices = [] 
     projectedSeniorStandingBasis: text(selectedPlan?.planningContext?.projectedSeniorStandingBasis) || null,
     feasibilityStatus: text(selectedPlan?.feasibilityStatus) || null,
     terms: normalizedTerms(selectedPlan?.terms || []),
-    warnings: selectedPlanWarnings(selectedPlan),
-    advisorAttention: advisorNotices.filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(notice.code) && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
+    warnings: selectedPlanWarnings(selectedPlan, advisorNotices),
+    advisorAttention: advisorNotices.filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED", "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"].includes(notice.code)
+      && (!olderCatalogNote(selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
+      && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
       code: text(notice.code) || null,
       title: text(notice.title) || null,
       severity: text(notice.severity) || null,
@@ -110,8 +157,9 @@ export function projectReportJsonArtifact(report) {
     projectedSeniorStandingAcademicYear: text(report?.student?.projectedSeniorStandingAcademicYear) || null,
     projectedSeniorStandingBasis: text(report?.student?.projectedSeniorStandingBasis) || null,
     feasibilityStatus: text(report?.selectedPlan?.feasibilityStatus) || null,
-    terms: normalizedTerms(report?.terms || []),
-    warnings: selectedPlanWarnings(report?.selectedPlan),
+    terms: normalizedTerms((report?.terms || []).filter(term => term.publicationStatus !== "STUDENT_CURRENT_TERM")
+      .map(term => ({ ...term, courses: (term.courses || []).filter(course => !course.displayOnlyCurrent) }))),
+    warnings: selectedPlanWarnings(report?.selectedPlan, report?.catalog?.advisorAttention || []),
     advisorAttention: advisorAttention(report)
   };
 }
@@ -127,7 +175,7 @@ function htmlScheduleTerms(html) {
   const gridRows = [...String(html || "").matchAll(/<tr data-schedule-year="([^"]+)">([\s\S]*?)<\/tr>/gi)];
   if (gridRows.length) {
     const legacyBlocks = gridRows.flatMap(row => [...row[2].matchAll(/<td([^>]*)>([\s\S]*?)<\/td>/gi)]
-      .filter(cell => attributeValue(cell[1], "data-schedule-term"))
+      .filter(cell => attributeValue(cell[1], "data-schedule-term") && attributeValue(cell[1], "data-display-only-current-term") !== "true")
       .map(cell => `<section class="year-block"><div class="year-heading"><h2>Economics schedule <span>- ${row[1]}</span></h2></div><div class="table-wrap"><table><thead><tr><th>${attributeValue(cell[1], "data-schedule-term")}</th></tr></thead><tbody><tr><td>${cell[2]}</td></tr>`)).join("");
     return htmlScheduleTerms(legacyBlocks);
   }
@@ -143,6 +191,7 @@ function htmlScheduleTerms(html) {
       const courseEntries = [...cell.matchAll(coursePattern)];
       for (let entryIndex = 0; entryIndex < courseEntries.length; entryIndex += 1) {
         const entry = courseEntries[entryIndex];
+        if (attributeValue(entry[1], "data-display-only-current-course") === "true") continue;
         const label = decodeHtml(entry[2]);
         const identity = label.match(/^([A-Z]{2,5}\s+\d{3})(?:-([^\s]+))?$/);
         const note = decodeHtml(entry[4]);

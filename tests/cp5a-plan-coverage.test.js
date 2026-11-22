@@ -130,7 +130,7 @@ test("CCR/ACE information is relevant-only, catalog-scoped, and informational", 
   const hs = information.items.find(item => item.code === "HS");
   assert.deepEqual(hs.courses, { completed: ["ECO 113"], inProgress: ["ECO 114"], planned: ["ECO 161"] });
   assert.doesNotMatch(hs.message, /ECO 260/);
-  assert.match(hs.message, /Either ECO 113 or ECO 114 counts as one of the two HS courses\. The other must be from a different discipline\./);
+  assert.match(hs.message, /ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives \(HS\), but only one of them can count\./);
   assert.equal(hs.feasibilityImpact, "NONE");
   assert.equal(hs.readinessImpact, "NONE");
   assert.equal(information.items.find(item => item.code === "W2").detail, "ECO 461 also counts toward your Writing 2 (W2) requirement.");
@@ -154,11 +154,11 @@ test("2026-2027 Hanover Core separates completed, taking-now, and planned course
   assert.deepEqual(information.items.map(item => item.code), ["HS", "W2"]);
   const hs = information.items.find(item => item.code === "HS");
   assert.deepEqual(hs.courses, { completed: ["ECO 113"], inProgress: ["ECO 114"], planned: [] });
-  assert.match(hs.detail, /ECO 113 is completed; You are taking ECO 114 now\. Only one of these Economics courses may count toward one of your two Historical and Social Perspectives/);
+  assert.match(hs.detail, /ECO 113 and ECO 114 can each count toward Historical and Social Perspectives \(HS\), but only one of them can count\./);
   assert.match(hs.detail, /Your other HS course must be from a different discipline/);
   const w2 = information.items.find(item => item.code === "W2");
   assert.deepEqual(w2.courses, { completed: [], inProgress: [], planned: ["ECO 461"] });
-  assert.equal(w2.detail, "ECO 461 also counts toward your Writing 2 (W2) Skills requirement.");
+  assert.equal(w2.detail, "ECO 461 also counts toward your Writing 2 (W2) requirement.");
   assert.equal(w2.feasibilityImpact, "NONE");
 
   const conflicting = buildDegreeDesignationInformation({
@@ -177,7 +177,7 @@ test("two planned Economics courses share only one HS Knowledge designation", ()
   });
   const hs = information.items.find(item => item.code === "HS");
   assert.deepEqual(hs.courses, { completed: [], inProgress: [], planned: ["ECO 113", "ECO 114"] });
-  assert.equal(hs.detail, "ECO 113 is planned; ECO 114 is planned. Only one of these Economics courses may count toward one of your two Historical and Social Perspectives (HS) Knowledge courses. Your other HS course must be from a different discipline.");
+  assert.equal(hs.detail, "ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.");
   assert.equal(hs.feasibilityImpact, "NONE");
 });
 
@@ -189,7 +189,7 @@ test("W2 course wording follows catalog cohort while actual course status stays 
   };
   for (const [catalogYear, expectedText] of [
     ["2025-2026", "ECO 461 also counts toward your Writing 2 (W2) requirement."],
-    ["2026-2027", "ECO 461 also counts toward your Writing 2 (W2) Skills requirement."]
+    ["2026-2027", "ECO 461 also counts toward your Writing 2 (W2) requirement."]
   ]) {
     for (const [courseStatus, expected] of Object.entries(expectedStatuses)) {
       const student = {

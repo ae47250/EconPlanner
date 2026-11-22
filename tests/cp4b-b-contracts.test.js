@@ -273,7 +273,7 @@ test("minimal accessible intake is present and the browser contains no selection
   const source = await readFile(path.join(ROOT, "app/page.js"), "utf8");
   assert.doesNotMatch(source, /htmlFor="major-declaration-catalog-year"/);
   assert.doesNotMatch(source, /id="major-declaration-catalog-year"/);
-  assert.match(source, /Planning requirements: 2025–2026 Economics catalog and confirmed department policies/);
+  assert.match(source, /planningRequirementsNote\(planningContext\)/);
   assert.doesNotMatch(source, /projectedSeniorStandingConfirmation/);
   assert.doesNotMatch(source, /resolveCatalogApplicability/);
 });

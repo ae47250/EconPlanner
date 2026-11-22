@@ -20,7 +20,6 @@
         "minimumAcademicYears": 4,
         "minimumCourses": 12,
         "minimumWarnings": 3,
-        "minimumAdvisorNotices": 1,
         "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
         "minimumApprovals": 0,
         "minimumHtmlBytes": 18000,
@@ -170,7 +169,7 @@
           "requirementId": "statistics",
           "replacement": {
             "course": "ECO 257",
-            "title": "Applied Statistics",
+            "title": "Quantitative Methods for Business/Economics",
             "source": "projected-offering",
             "offeringStatus": "future_schedule_confirmation_required",
             "verificationStatus": "unverified"
@@ -181,7 +180,6 @@
         "minimumAcademicYears": 1,
         "minimumCourses": 2,
         "minimumWarnings": 0,
-        "minimumAdvisorNotices": 1,
         "requiredAdvisorNoticeCodes": ["FUTURE_SCHEDULE_PROJECTION_NOTICE"],
         "minimumApprovals": 0,
         "minimumPdfPages": 1,

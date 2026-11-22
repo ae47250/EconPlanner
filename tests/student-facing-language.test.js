@@ -37,30 +37,37 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
   };
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
   assert.match(review.summary, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
-  assert.match(review.summary, /advisor will check it\. \(1 more item below\.\)$/);
-  assert.match(review.message, /ECO 113 and either MAT 113 or MAT 121/);
-  assert.match(review.message, /ECO 113 is marked “Taking now\.”/);
-  assert.match(review.message, /MAT 113 is marked “Not taken \/ not sure\.”/);
-  assert.match(review.message, /stays on your course history/);
+  assert.match(review.summary, /advisor will check it\. Also: MAT 113 or MAT 121 is not marked completed\.$/);
+  assert.match(review.message, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
+  assert.match(review.message, /You marked ECO 213 completed, but MAT 113 or MAT 121.*not marked completed/);
+  assert.doesNotMatch(review.message, /Your answers do not show|Ask your advisor to check your earlier course/);
+  assert.match(review.advisorPrompt, /ECO 113 and either MAT 113 or MAT 121/);
 
   const conditions = buildPlanConditions({
-    plan: { validation: { reviewFindings: [decision] } },
+    plan: { validation: { reviewFindings: [decision], conditions: [{ reasonCode: decision.reasonCode, affectedObject: { course: "ECO 213" }, message: "Old historical note." }] } },
     student,
     policyBundle
   });
-  assert.equal(conditions.length, 1);
+  assert.equal(conditions.length, 2);
+  assert.deepEqual(conditions.map(item => item.message), review.details);
   assert.equal(conditions[0].shortMessage, review.summary);
   assert.equal(conditions[0].advisorPrompt, review.advisorPrompt);
+  assert.equal(conditions[1].advisorPrompt, undefined);
 
   const html = renderEconomicsHtml({
     student: { displayName: "Fictional student", academicStanding: "senior" },
     selectedPlan: { id: "balanced", feasibilityStatus: "CONDITIONALLY_FEASIBLE" },
     terms: [], unresolved: [], planConditions: conditions, studentNotices: [], catalog: {}, planNotes: []
   }, template);
-  assert.ok(html.indexOf("What to check for this plan") < html.indexOf("Ask your advisor"));
+  assert.ok(html.indexOf("What to check for this plan") < html.indexOf("For your advisor"));
   assert.ok(html.includes(`Why an advisor should review this plan:</strong> ${review.summary}`));
-  assert.ok(html.includes(review.advisorPrompt));
-  assert.equal(html.split(review.message).length - 1, 1);
+  assert.ok(html.includes(review.advisorPrompt.replaceAll("'", "&#39;")));
+  for (const message of review.details) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
+});
+
+test("Hanover Core applicability uses the approved plain-language message", () => {
+  assert.equal(policyBundle.messages["designation.applicability"],
+    "We have not confirmed which Hanover Core rules apply to your {catalogYear} catalog. Before counting ECO 113 or ECO 114 toward the Historical and Social Perspectives (HS) requirement, or ECO 461 toward Writing 2 (W2), check with your advisor.");
 });
 
 test("next-step prerequisites name only the actual course pairs in the selected schedule", () => {
@@ -75,7 +82,7 @@ test("next-step prerequisites name only the actual course pairs in the selected 
     },
     policyBundle
   });
-  assert.deepEqual(conditions.map(item => item.message), ["Complete ECO 114 before taking ECO 214 in Winter 2028."]);
+  assert.deepEqual(conditions.map(item => item.message), ["Before taking ECO 214 in Winter 2028, finish ECO 114."]);
   assert.equal(conditions[0].kind, "prerequisite");
 });
 
@@ -91,7 +98,7 @@ test("prerequisite reminders combine shared and related scheduled course steps",
     policyBundle
   });
   assert.deepEqual(conditions.map(item => item.message), [
-    "Finish MAT 113 before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028.",
+    "Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.",
     "Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217."
   ]);
 });
