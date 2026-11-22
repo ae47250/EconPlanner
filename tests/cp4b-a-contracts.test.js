@@ -147,6 +147,8 @@ test("readiness preserves complete review-dependent plans without authority appr
   assert.equal(studentReady.readinessStatus, "STUDENT_READY");
   const conditional = classifyPlanReadiness({ completionStatus: "COMPLETE", academicallyValid: true, decisions: [{ status: "PRELIMINARY" }] });
   assert.equal(conditional.readinessStatus, "READY_WITH_CONDITIONS");
+  const assumedStanding = classifyPlanReadiness({ completionStatus: "COMPLETE", academicallyValid: true, decisions: [], assumedSeniorStandingNeedsConfirmation: true });
+  assert.equal(assumedStanding.readinessStatus, "READY_WITH_CONDITIONS");
   const review = {
     status: "REVIEW_REQUIRED",
     decisionId: "decision-review",

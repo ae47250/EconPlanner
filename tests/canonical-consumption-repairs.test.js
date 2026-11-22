@@ -7,11 +7,11 @@ import { resolvePlanningContext } from '../lib/planning/horizon.js';
 import { loadPlanningFlexibilityPolicy } from '../lib/catalog/policy-releases.js';
 const bundle = await loadPolicyBundle();
 
-test('owner standing notice is nonblocking and exact', () => {
+test('owner standing notice is nonblocking but requires readiness confirmation', () => {
   const standing = loadPlanningFlexibilityPolicy().policy.acceleratedSeniorStanding;
   assert.equal(standing.notice.message, 'This plan assumes you will have senior standing in your final year.');
   assert.equal(standing.requiresStudentConfirmation, false);
-  assert.equal(standing.readinessImpact, 'NONE');
+  assert.equal(standing.readinessImpact, 'READY_WITH_CONDITIONS');
 });
 test('statistics timing has one active controlling record', () => {
   assert.equal(bundle.indexes.byRuleId['PREREQ-ECO-461'].effect.statisticsMustBePrior, true);

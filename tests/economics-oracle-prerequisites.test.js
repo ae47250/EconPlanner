@@ -258,6 +258,18 @@ test("capstone rules include final-Winter senior standing and never infer concur
   assert.ok(concurrentStatistics.violations.some(item => item.code === "PREREQ-ECO-461"));
 });
 
+test("the independent oracle applies the owner-approved custom one-year-early standing boundary", () => {
+  const source = fixtureById("prereq-valid-integrated-strict-capstone");
+  const custom = structuredClone(source);
+  custom.expectedContext.planningPace = "standard";
+  custom.expectedContext.customGraduationEnabled = true;
+  assert.equal(checkExternalEconomicsPrerequisites(externalInput(custom)).status, "VALID_PREREQUISITES");
+
+  custom.expectedContext.acceleratedPlanAssumesSeniorStanding = false;
+  assert.ok(checkExternalEconomicsPrerequisites(externalInput(custom)).violations
+    .some(item => item.code === "CAPSTONE-SENIOR-STANDING"));
+});
+
 test("integrated Task 5 audit checks requirements and prerequisites but leaves schedules NOT_CHECKED", () => {
   const fixture = fixtureById("prereq-valid-integrated-strict-capstone");
   const result = auditExternalEconomicsPlanWithPrerequisites(externalInput(fixture));

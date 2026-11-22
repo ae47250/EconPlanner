@@ -159,7 +159,7 @@ test("provisional transfer credit, missing work and an invalid double allocation
     { slotId: "eco-113", code: "ECO 113", source: "planned" }, { slotId: "eco-elective-1", code: "ECO 113", source: "planned" }
   ] } }, terms: [{ term: "Winter 2028", courses: [{ course: "ECO 113", requirementId: "eco-113" }, { course: "ECO 113", requirementId: "eco-elective-1" }] }] };
   const rows = buildMajorRequirementsChecklist({ plan: duplicate, mapping: { requirements: [requirement, { id: "eco-elective-1", label: "Elective", kind: "elective" }] } }).rows;
-  assert.ok(rows.every(item => item.status === "still_needed" && item.markers.includes("Ask an advisor whether this class counts")));
+  assert.ok(rows.every(item => item.status === "still_needed" && item.markers.includes("Listed more than once. It counts once.")));
 });
 
 test("saved/direct API data cannot forge checklist credit or remove real approval and standing conditions", async () => {

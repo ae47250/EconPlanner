@@ -161,7 +161,8 @@ test('freshman early selection, persistence, evidence-aware moves, rollback and 
   const payload = await response.json();
   const plans = payload.programs.find(p => p.program.id === 'economics-base').economicsPlans;
   expect(plans.map(p => p.id)).toEqual(['balanced','explore-first','one-year-early']);
-  await expect(page.locator('.plan-edit-instructions')).toContainText('Eligible terms highlight as you drag');
+  await expect(page.locator('.plan-edit-instructions strong')).toHaveText('Click a course to see where it can move. You can also drag it by the ⠿ handle.');
+  await expect(page.locator('.plan-edit-instructions span')).toHaveText("While you drag, green terms are open, amber terms need a permission or check first, and gray terms show why the course can't go there.");
   await expect(page.locator('.projection-readiness-note')).toHaveCount(0);
   await expect(page.locator('.comparison-grid')).toBeVisible();
   const conditionsFollowPlans = await page.locator('.comparison-grid').evaluate(grid => {
@@ -449,7 +450,7 @@ test('student readiness and exported feasibility are distinct and the course men
   await expect(page.locator('.result-status-value')).toHaveText('Ready to plan');
   await expect(page.locator('.comparison-course-status')).toContainText('Student readiness');
   await expect(page.locator(`article[data-plan-id="${plan.id}"] .plan-feasibility-value`)).toHaveText('Plan feasibility: Conditional plan');
-  await expect(page.locator('.result-status-reason')).toContainText('does not mean registration is confirmed');
+  await expect(page.locator('.result-status-reason').first()).toHaveText('These plans meet the major rules. Seats are not confirmed, so check the registration system before you register.');
   const report = await page.request.post('/api/reports/economics', {data:{
     student:response.request().postDataJSON().student, selectedPlan:plan,
     plans:result.economicsPlans, format:'html'

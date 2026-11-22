@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 12,
-    "confirmationDate": "2026-10-31",
+    "version": 14,
+    "confirmationDate": "2026-11-21",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -59,6 +59,12 @@
       "date": "2026-09-27",
       "reviewedBy": "Project owner and Economics Department domain expert",
       "summary": "Initial add/drop, nonblocking final-year standing, canonical consumption and statistics timing consolidation."
+    },
+    {
+      "id": "PROJECT-OWNER-2026-11-21",
+      "date": "2026-11-21",
+      "reviewedBy": "Project owner",
+      "summary": "A custom target exactly one year early shares the nonblocking final-year standing assumption; earlier custom targets do not. A plan using the assumption needs readiness confirmation, without blocking generation. Current-term Taking now enrollment needs no overload warning. The 2025–26 and 2026–27 Economics major requirements comparison is owner-confirmed."
     },
     {
       "id": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
@@ -119,6 +125,11 @@
       "id": "OWNER-CANONICAL-CONSUMPTION-2026-09-27",
       "path": "policy/provenance/canonical-consumption-2026-09-27.md",
       "authority": "Project owner and Economics Department domain expert"
+    },
+    {
+      "id": "OWNER-PLANNING-DECISIONS-2026-11-21",
+      "path": "policy/provenance/owner-planning-decisions-2026-11-21.md",
+      "authority": "Project owner, explicit planning repair task"
     },
     {
       "id": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
@@ -755,14 +766,18 @@
     {
       "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
       "status": "CONFIRMED",
-      "confirmationRef": "PROJECT-OWNER-2026-09-27",
+      "confirmationRef": "PROJECT-OWNER-2026-11-21",
       "sourceRefs": [
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
       ],
       "course": "ECO 461",
+      "scope": ["REGULAR_ONE_YEAR_EARLY", "TRANSFER_ONE_YEAR_EARLY", "CUSTOM_EXACTLY_ONE_YEAR_EARLY"],
       "extendedPlanSeniorStandingBeginsInFourthAcademicYear": true,
       "assumeSeniorStandingInFinalPlanningYear": true,
-      "requiresStudentConfirmation": false
+      "requiresStudentConfirmation": false,
+      "readinessImpact": "READY_WITH_CONDITIONS"
     },
     {
       "ruleId": "CAPSTONE-HANOVER-RESIDENCY",

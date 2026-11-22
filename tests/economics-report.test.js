@@ -22,6 +22,8 @@ test("canonical Economics report renders the same assignment data to HTML", asyn
   assert.equal(report.preparedDate, "2026-07-28");
   assert.ok(report.requirements.some(item => item.label === "ECO 113" && item.strict === "ECO 113"));
   assert.ok(html.includes("Hanover College · Economics"));
+  assert.match(html, /Class standing: Senior<\/p>/);
+  assert.doesNotMatch(html, /Study abroad:/);
   assert.ok(html.includes("ECO 113"));
   assert.ok(html.includes(String(report.remaining.strict)));
   assert.equal(html.includes("{{"), false);
@@ -48,6 +50,8 @@ test("explicit junior Winter and May study abroad reservations appear in the sta
     assert.deepEqual(term.courses, []);
   }
   assert.equal((html.match(/class="study-abroad">Study abroad<\/td>/g) || []).length, 2);
+  assert.equal(report.student.studyAbroadLabel, "Winter 2028 or Spring/May 2028");
+  assert.match(html, /Class standing: Sophomore \| Study abroad: Winter 2028 or Spring\/May 2028/);
   assert.deepEqual(report.studentAdvisorContext, [student.studyAbroadAdvisingNote]);
   assert.match(html, /<h2>Ask your advisor<\/h2>/);
   assert.ok(!html.includes(student.studyAbroadDestination));
@@ -115,11 +119,13 @@ test("an eligible early comparison request preserves the selected normal-horizon
   const html = renderEconomicsHtml(report, template);
 
   assert.equal(report.student.planningPace, "standard");
+  assert.equal(report.student.classStandingSummary, "Sophomore (graduating one year early)");
   assert.equal(report.student.expectedGraduationTerm, "Spring/May 2029");
   assert.equal(report.selectedPlan.id, "balanced");
   assert.ok(report.candidateOutcomes.some(item => item.id === "one-year-early" && item.displayed));
   assert.equal(report.acceleratedPlanningResult.status, "POSSIBLE");
   assert.match(html, /data-planning-pace="standard"/);
+  assert.match(html, /Class standing: Sophomore \(graduating one year early\)/);
   assert.match(html, /data-accelerated-planning-result="POSSIBLE"/);
   assert.match(html, /Graduate one year early: Possible/);
 
@@ -139,8 +145,11 @@ test("a custom graduation target remains separate in the advisor report", async 
     planCreationDate: "2026-07-28"
   };
   const report = await buildEconomicsReportFromStudent(student, "2026-07-28");
+  const html = renderEconomicsHtml(report, template);
 
   assert.equal(report.student.planType, "custom-graduation-horizon");
+  assert.equal(report.student.classStandingSummary, "Sophomore (custom graduation year)");
+  assert.match(html, /Class standing: Sophomore \(custom graduation year\)/);
   assert.equal(report.student.expectedGraduationTerm, "Spring/May 2030");
   assert.equal(report.acceleratedPlanningResult, null);
   assert.match(report.inputSummary, /student-selected Spring\/May 2030 target/);
@@ -167,7 +176,7 @@ test("Economics report API returns canonical JSON or populated HTML", async () =
   const html = await htmlResponse.text();
   assert.equal(htmlResponse.status, 200);
   assert.match(htmlResponse.headers.get("content-type"), /text\/html/);
-  assert.ok(html.includes("EconMapper"));
+  assert.ok(html.includes("<title>EconPlanner - Economics Major Course Plan</title>"));
   assert.equal(html.includes("{{"), false);
 });
 

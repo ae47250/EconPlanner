@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.9",
-  "contentHash": "sha256:a7cfafe2995d7272720acecdbb2e0b7bbbc02cbeae6a46d61896bc7d9419824e",
+  "bundleVersion": "econ-planning-flexibility.11",
+  "contentHash": "sha256:554892e1bf51b7b2ad3fa1a5f11dac99a1244f50bde01657c44c6cb60530964f",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -15,12 +15,13 @@
         "code": "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED",
         "message": "This plan assumes you will have senior standing in your final year."
       },
-      "readinessImpact": "NONE",
+      "readinessImpact": "READY_WITH_CONDITIONS",
       "requiresStudentConfirmation": false,
       "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
       "scope": [
         "REGULAR_ONE_YEAR_EARLY",
-        "TRANSFER_ONE_YEAR_EARLY"
+        "TRANSFER_ONE_YEAR_EARLY",
+        "CUSTOM_EXACTLY_ONE_YEAR_EARLY"
       ]
     },
     "boundaries": {
@@ -31,9 +32,9 @@
       "legacyCodeRetired": false
     },
     "confirmation": {
-      "date": "2026-11-15",
+      "date": "2026-11-21",
       "reviewer": "Project owner and Economics Department domain expert",
-      "source": "policy/provenance/hanover-core-2026-27.md"
+      "source": "policy/provenance/owner-planning-decisions-2026-11-21.md"
     },
     "economicsPlanningStrategies": {
       "classification": "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES",
@@ -352,7 +353,8 @@
           "category": "ADMINISTRATIVE_INFORMATION",
           "code": "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN",
           "message": "This plan uses the department’s current, more flexible Economics major requirements (2025–2026). The student’s incoming catalog year is not known, so the advisor should confirm it for degree-audit records.",
-          "messageWhenYearKnownButRequirementsUnavailableTemplate": "This plan uses the 2025–2026 Economics major requirements. Your recorded catalog year is [incoming year]. Ask your advisor to confirm which major requirements apply and whether any additional paperwork is needed.",
+          "messageWhenOtherYearKnownButRequirementsUnavailableTemplate": "Based on your class year, your catalog year is likely [incoming year]. Ask your advisor to confirm which Economics major requirements apply.",
+          "messageWhenYearKnownButRequirementsUnavailableTemplate": "Based on your class year, your catalog year is likely [incoming year]. The Economics major requirements are the same for both years.",
           "readinessImpact": "NONE",
           "responsibleParty": "ACADEMIC_ADVISOR_AND_STUDENT",
           "sacPetitionRequired": false
@@ -373,7 +375,7 @@
       "ruleId": "ECONOMICS-OWNER-DESIGNATED-MOST-FLEXIBLE-REQUIREMENTS",
       "selectionMethod": "LATEST_VERIFIED_ACTIVATED_OWNER_APPROVED"
     },
-    "policyVersion": "econ-planning-flexibility.9",
+    "policyVersion": "econ-planning-flexibility.11",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -385,7 +387,9 @@
       "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
       "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
       "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
-      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+      "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
+      "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
     ],
     "status": "OWNER_APPROVED",
     "supportingCoursePlacement": {
@@ -415,7 +419,7 @@
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.9.json",
+    "provenancePath": "policy/provenance/planning-flexibility.11.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -427,7 +431,9 @@
       "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
       "OWNER-CONFIRMATION-CP7-CATALOG-DEFAULT-2026-08-09#CATALOG-DEFAULT",
       "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
-      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+      "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+      "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
+      "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
     ],
     "sources": [
       {
@@ -558,6 +564,28 @@
         "sourceId": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
+      },
+      {
+        "anchors": [
+          "Custom-one-year-early-standing",
+          "Senior-standing-no-plan-explanation",
+          "Current-term-taking-now",
+          "Assumed-standing-readiness",
+          "Catalog-year-explanation"
+        ],
+        "authority": "Project owner, explicit planning repair task",
+        "authorityBoundary": "CUSTOM_ONE_YEAR_EARLY_STANDING_READINESS_CATALOG_COMPARISON_AND_OWNER_PLANNING_EXPLANATIONS",
+        "confirmedOn": "2026-11-21",
+        "effective": {
+          "from": "2026-11-21",
+          "through": null
+        },
+        "path": "policy/provenance/owner-planning-decisions-2026-11-21.md",
+        "reviewer": "Project owner",
+        "sha256": "3fe2cc0d0dd9839c71e0738bc7831e975fac2c042effbf14784e6a376bc8f0a7",
+        "sourceId": "OWNER-PLANNING-DECISIONS-2026-11-21",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "The regular one-year-early-only final-year standing assumption scope for custom targets"
       }
     ]
   },

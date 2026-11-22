@@ -77,7 +77,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       if (plan.id === 'one-year-early') {
         await expect(card.locator('[data-plan-conditions]')).toContainText('Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from Economics Department. No approval is recorded yet.');
-        await expect(card.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2027–2028. Ask your advisor to confirm you can take ECO 461 then.');
+        await expect(card.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2027–2028. Ask your advisor and the Registrar to confirm you can take ECO 461 then.');
         await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       }
       for (const note of visibleNotes) {
@@ -183,7 +183,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     await reloadPlanner(page);
     await expect(control).toHaveAttribute('data-current-term','move:winter-2027');
     await expect(earlyCard.locator('[data-major-requirements-checklist] tbody .checklist-status.is-completed')).toHaveCount(0);
-    await expect(earlyCard.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2028–2029. Ask your advisor to confirm you can take ECO 461 then.');
+    await expect(earlyCard.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2028–2029. Ask your advisor and the Registrar to confirm you can take ECO 461 then.');
     await recordLiveMessages('MAT 217: reload');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.evaluate(() => Promise.all(document.getAnimations().map(animation => animation.finished)));

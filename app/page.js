@@ -30,12 +30,19 @@ import economicsRequirements from "../data/normalized/economics/requirements.jso
 import economicsCourseData from "../data/normalized/economics/courses.json";
 import { followingMayId, studyAbroadAdvisorContext, studyAbroadTermIds, termReservationLimit, updateStudyAbroadReservation } from "../lib/planning/study-abroad.js";
 import { seatStatusPresentation } from "../lib/planning/seat-status.js";
+import prerequisitePolicy from "../policy/rules/prerequisites.json";
+import { historicalPrerequisiteGaps, historicalPrerequisiteMessage } from "../lib/planning/historical-prerequisites.js";
 import { noPlanPresentation } from "../lib/planning/no-plan-presentation.js";
-import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentTermLabel } from "../lib/planning/student-language.js";
+import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentStandingSummary, studentTermLabel } from "../lib/planning/student-language.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
 const PLANNER_STORAGE_VERSION = PLANNER_INPUT_STATE_VERSION;
+const STUDENT_READINESS_EXPLANATIONS = Object.freeze({
+  "Ready to plan": "These plans meet the major rules. Seats are not confirmed, so check the registration system before you register.",
+  "Needs confirmation": "These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions.",
+  "Needs advisor attention": "Something in your answers needs your advisor to check it before you rely on these plans."
+});
 const COURSE_CATALOG = economicsCourseData.courses || [];
 const COURSE_ALIASES = new Map(COURSE_CATALOG.flatMap(course => (
   (course.aliases || []).map(alias => [alias, course.code])
@@ -471,10 +478,12 @@ function PlanConditions({ plan, catalog, showPlanName = false, hideHeading = fal
     {!hideHeading && <h2>Things to keep in mind{showPlanName && ` — ${plan.label}`}</h2>}
     {prerequisiteConditions.length > 0 && <div><h3>Classes to finish first</h3><ul>{prerequisiteConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul></div>}
     {seatConditions.length > 0 && <div><h3>Before you register</h3><ul>{seatConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul></div>}
-    {otherConditions.length > 0 && <ul>{otherConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul>}
-    {notices.length > 0 && <ul>{notices.map(item => <li key={item.code}>{item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE"
+    {(otherConditions.length > 0 || notices.length > 0) && <div><h3>Check with your advisor</h3><ul>
+      {otherConditions.map(item => <li key={item.id}>{item.message}</li>)}
+      {notices.map((item, index) => <li key={item.noticeId || `${item.code}-${index}`}>{item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE"
         ? <><strong>Ask your advisor whether a catalog petition is needed.</strong><details><summary>Catalog details</summary><p>{item.message}</p></details></>
-        : item.message}</li>)}</ul>}
+        : item.message}</li>)}
+    </ul></div>}
   </section>;
 }
 
@@ -1019,7 +1028,7 @@ function CourseAvailabilityStatus({ course, term, schedule, referenceDate }) {
   return <span className={`plan-course-availability ${availabilityClassName(selectedSection, Boolean(selectedSection), referenceDate)}`}>{courseAvailabilityLabel(selectedSection, Boolean(selectedSection), referenceDate)}</span>;
 }
 
-function CandidateOutcomes({ outcomes = [], convergences = [] }) {
+function CandidateOutcomes({ outcomes = [], convergences = [], showReasons = true }) {
   if (!outcomes.length && !convergences.length) return null;
   return (
     <section className="candidate-outcomes" aria-label="Other planning results">
@@ -1028,61 +1037,13 @@ function CandidateOutcomes({ outcomes = [], convergences = [] }) {
           {outcomes.map(outcome => (
             <li key={`${outcome.id}-${outcome.label}`}>
               <strong>{outcome.label}:</strong> {feasibilityLabel(outcome.status)}
-              {outcome.reasons?.length > 0 && ` — ${outcome.reasons.map(item => item.reason || item.message || item).join("; ")}`}
+              {showReasons && outcome.reasons?.length > 0 && ` — ${outcome.reasons.map(item => item.reason || item.message || item).join("; ")}`}
             </li>
           ))}
         </ul>
       )}
       {convergences.map(item => <p key={`${item.keptPlanId}-${item.convergedPlanId}`}>{item.message}</p>)}
     </section>
-  );
-}
-
-function ScheduleAvailability({ schedule, plan }) {
-  const scheduleYear = academicYearKey(schedule?.academicYear);
-  const plannedByTerm = new Map((plan?.terms || [])
-    .filter(term => academicYearKey(term.academicYear) === scheduleYear)
-    .map(term => [scheduleTermKey(term), term.courses || []]));
-  const terms = Object.entries(schedule?.terms || {})
-    .map(([term, sections]) => [term, (plannedByTerm.get(term) || []).map(course => ({
-      course,
-      section: sections.find(item => (
-        item.course === course.course && String(item.section || "") === String(course.section || "")
-      )) || null
-    }))])
-    .filter(([, courses]) => courses.length > 0)
-    .sort(([a], [b]) => ["Fall", "Winter", "May", "Summer"].indexOf(a) - ["Fall", "Winter", "May", "Summer"].indexOf(b));
-  if (!terms.length) return null;
-  const referenceDate = new Date().toISOString();
-  const entries = terms.flatMap(([, courses]) => courses);
-  const status = ({ course, section }) => courseAvailabilityLabel(section || course, Boolean(section), referenceDate);
-  const allUnverified = entries.every(entry => status(entry) === "Seat availability not confirmed");
-  const recorded = entries.filter(({ section }) => section?.availability?.status);
-  const allRecordedOpenUndated = recorded.length === entries.length
-    && recorded.every(({ section }) => section.availability.status === "open" && !section.availability.asOf);
-  const courseLabel = course => `${course.course}${course.section ? `-${course.section}` : ""}`;
-  return (
-    <details className="schedule-availability comparison-disclosure">
-      <summary>Class seats · {plan?.label || "This plan"} · {formatAcademicYear(schedule.academicYear)}</summary>
-      <div className="comparison-disclosure-content">
-      <p>{allUnverified ? "Seat availability hasn’t been confirmed. " : ""}Check the registration system before you register.</p>
-      <dl className="seat-term-list">{terms.map(([term, courses]) => (
-        <div key={term}><dt>{term}</dt><dd>{courses.map((entry, index) => <span key={`${term}-${courseLabel(entry.course)}-${index}`}>
-          {index > 0 && ", "}{courseLabel(entry.course)}
-          {!allUnverified && <> — <span className={availabilityClassName(entry.section || entry.course, Boolean(entry.section), referenceDate)}>{status(entry)}</span></>}
-        </span>)}</dd></div>
-      ))}</dl>
-      {recorded.length > 0 && <details className="recorded-seat-information">
-        <summary>Recorded seat information</summary>
-        {allRecordedOpenUndated
-          ? <p>These sections were recorded as open, but the observation dates are unavailable.</p>
-          : <ul>{recorded.map(({ course, section }, index) => <li key={`${courseLabel(course)}-${index}`}>
-            <strong>{courseLabel(course)}:</strong> Recorded as {section.availability.status}; observation date {section.availability.asOf || "unavailable"}.
-          </li>)}</ul>}
-        <p>Being listed on the schedule does not guarantee an open seat.</p>
-      </details>}
-      </div>
-    </details>
   );
 }
 
@@ -1112,7 +1073,6 @@ function PlanComparisonScreen({
   planResult,
   fallbackPlanningContext,
   courses,
-  displayName,
   view,
   selectedPlanId,
   isExiting,
@@ -1182,10 +1142,13 @@ function PlanComparisonScreen({
       .filter(course => courseSets.filter(set => set.has(course)).length > 1);
     return [key, new Set(shared)];
   }));
-  const standing = displayName?.trim() || (planningContext?.customGraduationEnabled ? "Custom timeline" : planningContext?.effectiveStandingLabel)
-    || planningContext?.standingLabel
-    || "Student";
+  const standing = studentStandingSummary(studyAbroad);
+  const studyAbroadLabel = studyAbroadIds.map(id => planningSlotsLabel(id, comparisonContext)).join(" or ");
   const graduationTarget = studentTermLabel(planningContext?.expectedGraduationTerm || "To be confirmed");
+  const earlyGraduationTarget = !isPlanView && plans.find(plan => plan.id === "one-year-early")?.planningContext?.expectedGraduationTerm;
+  const graduationTargetDisplay = earlyGraduationTarget && studentTermLabel(earlyGraduationTarget) !== graduationTarget
+    ? `${graduationTarget} (one year early: ${studentTermLabel(earlyGraduationTarget)})`
+    : graduationTarget;
   const completedCodes = courses.filter(isTaken).map(course => course.code);
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
   const overallStatus = overallPlanReadiness(isPlanView && selectedPlan ? [selectedPlan] : plans);
@@ -1590,14 +1553,10 @@ function PlanComparisonScreen({
         .comparison-page .plan-course-summary span { display: block; }
         .comparison-page .plan-course-summary span { margin-top: .15rem; color: #53627a; font-size: 12px; }
         .comparison-page .plan-course-summary .plan-course-availability { font-weight: 700; }
-        .comparison-page .plan-course-availability.is-open,
-        .comparison-page .schedule-availability .is-open { color: #167c32; font-weight: 700; }
-        .comparison-page .plan-course-availability.is-full,
-        .comparison-page .schedule-availability .is-full { color: #b42318; font-weight: 700; }
+        .comparison-page .plan-course-availability.is-open { color: #167c32; font-weight: 700; }
+        .comparison-page .plan-course-availability.is-full { color: #b42318; font-weight: 700; }
         .comparison-page .plan-course-availability.is-unavailable,
-        .comparison-page .plan-course-availability.is-unverified,
-        .comparison-page .schedule-availability .is-unverified,
-        .comparison-page .schedule-availability .is-unavailable { color: #53627a; }
+        .comparison-page .plan-course-availability.is-unverified { color: #53627a; }
         .major-checklist { margin: 1rem 0; padding: 0; border: 0; background: transparent; }
         .major-checklist h2,.upfront-conditions h2 { margin: 0 0 .6rem; font-size: 19px; }
         .major-checklist table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -1671,6 +1630,7 @@ function PlanComparisonScreen({
         }
         .comparison-page .compact-schedule tr.drop-allowed { background: #eaf8f0; outline: 2px solid #168264; }
         .comparison-page .compact-schedule tr.drop-conditional { background: #fffbeb; outline: 2px dashed #946200; }
+        .comparison-page .compact-schedule tr.drop-unavailable, .comparison-page .compact-schedule tr.drop-blocked, .comparison-page .compact-schedule tr.drop-review_required { background: #f3f3f5; outline: 2px solid #a6a6af; }
         .comparison-page .comparison-drop-hint { display: block; font-size: .7rem; font-weight: normal; }
         .comparison-page .download-plan-button { margin: .5rem 0; width: 100%; background: #49317c; border-color: #49317c; color: white; }
         .comparison-page .plan-course-actions { position: relative; }
@@ -1726,18 +1686,11 @@ function PlanComparisonScreen({
         .candidate-outcomes h2 { margin: 0 0 .5rem; font-size: 1rem; }
         .candidate-outcomes ul { margin: 0; padding-left: 1.2rem; }
         .candidate-outcomes p { margin: .55rem 0 0; }
-        .schedule-availability { margin: 1rem 0; padding: .8rem 1rem; border: 1px solid #cfd8e6; border-radius: 12px; background: rgba(255,255,255,.8); }
-        .schedule-availability summary { cursor: pointer; font-weight: 700; }
-        .schedule-availability h3 { margin: .75rem 0 .25rem; font-size: .95rem; }
-        .schedule-availability ul { margin: 0; padding-left: 1.2rem; }
-        .comparison-page .schedule-availability, .comparison-page .result-diagnostics { font-size: 14px; line-height: 1.5; }
-        .comparison-page .schedule-availability > summary, .comparison-page .result-diagnostics > summary { font-size: 15px; }
-        .comparison-page .schedule-availability p { margin: .6rem 0; font-size: 14px; }
-        .seat-term-list, .plan-choice-explanations { margin: .65rem 0 0; }
-        .seat-term-list > div { display: flex; gap: .6rem; margin: .35rem 0; }
-        .seat-term-list dt, .plan-choice-explanations dt { font-weight: 650; }
-        .seat-term-list dt { flex: 0 0 4rem; }
-        .seat-term-list dd, .plan-choice-explanations dd { margin: 0; min-width: 0; }
+        .comparison-page .result-diagnostics { font-size: 14px; line-height: 1.5; }
+        .comparison-page .result-diagnostics > summary { font-size: 15px; }
+        .plan-choice-explanations { margin: .65rem 0 0; }
+        .plan-choice-explanations dt { font-weight: 650; }
+        .plan-choice-explanations dd { margin: 0; min-width: 0; }
         .plan-choice-explanations > div { margin: .6rem 0; }
         .recorded-seat-information { margin-top: .65rem; color: #53627a; }
         .recorded-seat-information > summary { font-weight: 500; }
@@ -1938,8 +1891,6 @@ function PlanComparisonScreen({
         .comparison-page .comparison-disclosure-content { padding: 1rem; }
         .comparison-page .comparison-disclosure-content > :first-child { margin-top: 0; }
         .comparison-page .comparison-disclosure-content > :last-child { margin-bottom: 0; }
-        .comparison-page .schedule-availability > .comparison-disclosure-content > p { margin: .1rem 0 .75rem; }
-        .comparison-page .schedule-availability > .comparison-disclosure-content > .seat-term-list { margin: .5rem 0; }
         .comparison-page .student-evidence-group + .student-evidence-group { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e7e8ed; }
         .comparison-page .student-evidence-title { margin: 0 0 .45rem; color: #2f1c57; font-size: 1rem; font-weight: 650; line-height: 1.35; }
         .comparison-page .student-evidence-content { font-size: .875rem; line-height: 1.5; }
@@ -2062,7 +2013,8 @@ function PlanComparisonScreen({
         {!isPlanView && <div className="comparison-student">
           <strong>{standing}</strong>
           <span aria-hidden="true">·</span>
-          <span>Graduation target: {graduationTarget}</span>
+          <span>Graduation target: {graduationTargetDisplay}</span>
+          {studyAbroadLabel && <><span aria-hidden="true">·</span><span>Study abroad: {studyAbroadLabel}</span></>}
         </div>}
         <div className="comparison-actions">
           {isPlanView && (
@@ -2101,12 +2053,14 @@ function PlanComparisonScreen({
       <div className="comparison-content">
         {pdfStatus && <p className="pdf-download-status" role="status" aria-live="polite">{pdfStatus}</p>}
         <section className="comparison-course-status" aria-label="Selected course status">
-          <p><strong>Graduation target</strong><span>{graduationTarget}</span></p>
+          <p><strong>Class standing</strong><span>{standing}</span></p>
+          <p><strong>Graduation target</strong><span>{graduationTargetDisplay}</span></p>
+          {studyAbroadLabel && <p><strong>Study abroad</strong><span>{studyAbroadLabel}</span></p>}
           <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>{plans.length ? "Student readiness" : "Overall status"}</strong><span className="result-status-value">{displayedOverallStatus}</span>
             {isPlanView && selectedPlan && <span className="result-feasibility-value">Plan feasibility: {({ VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" })[selectedPlan.feasibilityStatus] || "Plan needs confirmation"}</span>}
-            {plans.length > 0 && <span className="result-status-reason">Ready to plan does not mean registration is confirmed. Check each plan’s feasibility and conditions.</span>}
+            {plans.length > 0 && <span className="result-status-reason">{STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}</span>}
             {displayedOverallStatus === "Needs advisor attention" && statusReason && <span className="result-status-reason">Why: {statusReason}</span>}
           </p>
         </section>
@@ -2119,13 +2073,9 @@ function PlanComparisonScreen({
                 : plans.length === 1
                   ? "Your feasible plan"
                   : "Your planning result"}</h1>
-            <p className={!isPlanView && plans.length > 1 ? "plan-edit-instructions" : undefined}>{isPlanView
-              ? "Drag by the ⠿ handle. Eligible terms highlight as you drag; other terms show if they need review or why they’re unavailable. You can also use Change."
-              : plans.length > 1
-                ? <><strong>Drag ⠿ to move a course. Eligible terms highlight as you drag; click a course for options.</strong><span>Conditional terms need review; other terms show why they can’t be used.</span></>
-                : plans.length === 1
-                  ? "The planner returned one validated schedule for this graduation target."
-                  : "Review this result and the next step below."}</p>
+            <p className={plans.length ? "plan-edit-instructions" : undefined}>{plans.length
+              ? <><strong>Click a course to see where it can move. You can also drag it by the ⠿ handle.</strong><span>While you drag, green terms are open, amber terms need a permission or check first, and gray terms show why the course can&apos;t go there.</span></>
+              : "Review this result and the next step below."}</p>
           </div>
           {!isPlanView && plans.length > 1 && (
             <label className="difference-toggle">
@@ -2282,7 +2232,6 @@ function PlanComparisonScreen({
                         </ul>}
                         <AdvisorAttention plan={plan} />
                       </div>
-                      <ScheduleAvailability schedule={result?.annualSchedule} plan={plan} />
                     </details>
                   </div>
                   {planReadinessLabel(plan) !== displayedOverallStatus && <p className={`plan-validation${plan.validation?.valid === false ? " is-invalid" : ""}`}>
@@ -2352,7 +2301,6 @@ function PlanComparisonScreen({
           <>
             <MajorRequirementsChecklist plan={selectedPlan} showPlanName={!isPlanView} />
             <details className="comparison-disclosure"><summary>More about this plan</summary><div className="comparison-disclosure-content"><AdvisorAttention plan={selectedPlan} /></div></details>
-            <ScheduleAvailability schedule={result?.annualSchedule} plan={selectedPlan} />
           </>
         )}
 
@@ -2416,7 +2364,7 @@ function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, p
     <details className="result-diagnostics">
       <summary>{planCount ? "More planning details" : "Why am I seeing this result?"}</summary>
       {blockingReasons.length ? <ul>{blockingReasons.map(reason => <li key={reason.code}>{reason.message}</li>)}</ul> : <>
-        <CandidateOutcomes outcomes={otherOutcomes} convergences={convergences} />
+        <CandidateOutcomes outcomes={otherOutcomes} convergences={convergences} showReasons={planCount > 0 || !planningGaps.length} />
         <PlanningGaps items={planningGaps} />
       </>}
     </details>
@@ -3694,6 +3642,9 @@ export default function Page() {
             )}
           </div>
         )}
+        {course && ["completed", "transfer"].includes(course.status) && historicalPrerequisiteGaps(course.code, formData.courses, prerequisitePolicy.records).map(gap => (
+          <p className="prerequisite-conflict" role="status" key={gap.label}>{historicalPrerequisiteMessage(gap)}</p>
+        ))}
         {course && renderPrerequisiteFollowUp(course)}
       </div>
     );
@@ -3909,7 +3860,6 @@ export default function Page() {
           planResult={inputBlock?.economicsPlanResult}
           fallbackPlanningContext={planningContext}
           courses={formData.courses}
-          displayName={formData.displayName}
           view={plannerView}
           selectedPlanId={selectedPlanId}
           isExiting={isComparisonExiting}

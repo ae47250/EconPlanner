@@ -154,7 +154,7 @@ test("2026-2027 Hanover Core separates completed, taking-now, and planned course
   assert.deepEqual(information.items.map(item => item.code), ["HS", "W2"]);
   const hs = information.items.find(item => item.code === "HS");
   assert.deepEqual(hs.courses, { completed: ["ECO 113"], inProgress: ["ECO 114"], planned: [] });
-  assert.match(hs.detail, /ECO 113 is completed; ECO 114 is taking now\. Only one of these Economics courses may count toward one of your two Historical and Social Perspectives/);
+  assert.match(hs.detail, /ECO 113 is completed; You are taking ECO 114 now\. Only one of these Economics courses may count toward one of your two Historical and Social Perspectives/);
   assert.match(hs.detail, /Your other HS course must be from a different discipline/);
   const w2 = information.items.find(item => item.code === "W2");
   assert.deepEqual(w2.courses, { completed: [], inProgress: [], planned: ["ECO 461"] });

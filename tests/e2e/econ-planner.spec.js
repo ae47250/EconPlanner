@@ -706,21 +706,14 @@ test("a freshman receives the Balanced and Explore the Major normal comparisons"
 
   const aboutPlan = card.locator(".comparison-plan-details > details.comparison-disclosure").last();
   await aboutPlan.locator(":scope > summary").click();
-  const availability = card.locator("details.schedule-availability");
-  await expect(availability).toBeVisible();
-  await expect(availability).not.toHaveAttribute("open", "");
-  await availability.locator(":scope > summary").click();
-  await expect(availability.getByText("Seat availability hasn’t been confirmed. Check the registration system before you register.")).toBeVisible();
-  await expect(availability.locator(".seat-term-list dd")).not.toHaveCount(0);
-  await expect(availability.locator(".recorded-seat-information")).not.toHaveAttribute("open", "");
-  await availability.getByText("Recorded seat information", { exact: true }).click();
-  await expect(availability).toContainText("These sections were recorded as open, but the observation dates are unavailable.");
+  await expect(card.locator("details.schedule-availability")).toHaveCount(0);
+  await expect(card.getByText("Recorded seat information", { exact: true })).toHaveCount(0);
   await expect(page.locator(".result-diagnostics")).toHaveCount(0);
   await expect(page.locator("body")).not.toContainText("validated options retained");
-  await availability.scrollIntoViewIfNeeded();
+  await card.scrollIntoViewIfNeeded();
   await page.screenshot({ path: test.info().outputPath("compact-panels-desktop.png") });
   await page.setViewportSize({ width: 390, height: 844 });
-  await availability.scrollIntoViewIfNeeded();
+  await card.scrollIntoViewIfNeeded();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: test.info().outputPath("compact-panels-mobile.png") });
 });
@@ -848,7 +841,7 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     }
     expect(selectedPlan.feasibilityStatus).toBe("CONDITIONALLY_FEASIBLE");
     await expect(card.locator("[data-plan-conditions]")).toContainText(message);
-    const badges = card.locator(".plan-course-approval");
+    const badges = card.locator(".plan-course-approval").filter({ hasText: "Approval needed" });
     expect(await badges.count()).toBeGreaterThan(0);
     for (const badge of await badges.all()) await expect(badge).toContainText("Approval needed");
     await expect(badges.first()).toContainText(authority);

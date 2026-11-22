@@ -6,7 +6,7 @@
   "reviewedOn": "2026-08-03",
   "reviewedBy": "Project owner and independent test-oracle review",
   "policyRef": "tests/oracle/economics-policy.v1.json",
-  "policyVersion": 12,
+  "policyVersion": 14,
   "purpose": "Test confirmed Economics requirement assignments and preserve explicit review states without using production allocation as academic authority.",
   "mandatoryExactCourses": ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "ECO 461"],
   "assignmentDefaults": {

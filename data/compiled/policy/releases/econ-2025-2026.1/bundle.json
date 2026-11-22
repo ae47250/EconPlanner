@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:1f5c68e85f773ebd403d7cd27ff93a6da0c7ef182fa30af8d98251d3f5f47303",
+  "contentHash": "sha256:2151a359ed3441c5eede52ae12114d0ac3e610292b3f4f464a3bbc99528ea775",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -220,7 +220,7 @@
         "disposition": "ENFORCE",
         "effect": {
           "assumeSeniorStandingInFinalPlanningYear": true,
-          "readinessImpact": "NONE",
+          "readinessImpact": "READY_WITH_CONDITIONS",
           "requiresStudentConfirmation": false
         },
         "effective": {
@@ -261,7 +261,9 @@
           ]
         },
         "sourceRefs": [
-          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+          "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
+          "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
         ],
         "status": "ACTIVE",
         "supersedes": [
@@ -1990,7 +1992,8 @@
           "requirements": []
         },
         "sourceRefs": [
-          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"
+          "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration",
+          "OWNER-PLANNING-DECISIONS-2026-11-21#Current-term-taking-now"
         ],
         "status": "ACTIVE",
         "supersedes": [
@@ -7025,6 +7028,7 @@
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
+    "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. With this graduation year you will not have senior standing in any Winter term before you graduate. Choose a later graduation year or talk with your advisor.",
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
     "infeasibility.electives.spring": "You still need {remainingElectives} distinct Economics electives. After finance is allocated, no remaining eligible elective is offered in {winterTerm}. The {springTerm} options are {springOptions}. Each is {courseUnits} unit, so two exceed both the normal {normalCourseUnits}-unit load and the advisor-approved {conditionalMaximumCourseUnits}-unit ceiling.",
     "infeasibility.finance.forced": "{financeCourse} must fill finance for this graduation target, so it cannot also count as an elective.",
@@ -8113,6 +8117,29 @@
         "supersedes": null
       },
       {
+        "anchors": [
+          "Custom-one-year-early-standing",
+          "Senior-standing-no-plan-explanation",
+          "Current-term-taking-now",
+          "Assumed-standing-readiness",
+          "Catalog-year-explanation",
+          "Advisor-explanations-and-seat-panel"
+        ],
+        "authority": "Project owner, explicit planning repair task",
+        "authorityBoundary": "CUSTOM_ONE_YEAR_EARLY_STANDING_READINESS_CATALOG_COMPARISON_AND_OWNER_PLANNING_EXPLANATIONS",
+        "confirmedOn": "2026-11-21",
+        "effective": {
+          "from": "2026-11-21",
+          "through": null
+        },
+        "path": "policy/provenance/owner-planning-decisions-2026-11-21.md",
+        "reviewer": "Project owner",
+        "sha256": "3fe2cc0d0dd9839c71e0738bc7831e975fac2c042effbf14784e6a376bc8f0a7",
+        "sourceId": "OWNER-PLANNING-DECISIONS-2026-11-21",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "The regular one-year-early-only final-year standing assumption scope for custom targets"
+      },
+      {
         "authority": "Project owner and Economics Department domain expert",
         "authorityBoundary": "ECONOMICS_PLANNING_DROPDOWN_AND_OFFERING_PROJECTION_SCOPE",
         "effective": {
@@ -8389,7 +8416,7 @@
       "disposition": "ENFORCE",
       "effect": {
         "assumeSeniorStandingInFinalPlanningYear": true,
-        "readinessImpact": "NONE",
+        "readinessImpact": "READY_WITH_CONDITIONS",
         "requiresStudentConfirmation": false
       },
       "effective": {
@@ -8430,7 +8457,9 @@
         ]
       },
       "sourceRefs": [
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Final-year-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Custom-one-year-early-standing",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
       ],
       "status": "ACTIVE",
       "supersedes": [
@@ -10159,7 +10188,8 @@
         "requirements": []
       },
       "sourceRefs": [
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Current-term-registration",
+        "OWNER-PLANNING-DECISIONS-2026-11-21#Current-term-taking-now"
       ],
       "status": "ACTIVE",
       "supersedes": [

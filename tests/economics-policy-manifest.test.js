@@ -26,8 +26,8 @@ function byId(ruleId) {
 test("policy manifest has stable version and review metadata", () => {
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.policy.id, "hanover-economics-planning-policy");
-  assert.equal(manifest.policy.version, 12);
-  assert.equal(manifest.policy.confirmationDate, "2026-10-31");
+  assert.equal(manifest.policy.version, 14);
+  assert.equal(manifest.policy.confirmationDate, "2026-11-21");
   assert.equal(
     manifest.policy.reviewedBy,
     "Project owner and Economics Department domain expert"
@@ -39,6 +39,10 @@ test("policy manifest has stable version and review metadata", () => {
     "ADVISOR_CONFIRMATION_REQUIRED",
     "EQUIVALENCY_NOT_CONFIRMED"
   ]);
+});
+
+test("one-year-early assumed senior standing requires confirmation", () => {
+  assert.equal(byId("ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING").readinessImpact, "READY_WITH_CONDITIONS");
 });
 
 test("all source files and confirmation references are explicit", async () => {

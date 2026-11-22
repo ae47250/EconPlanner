@@ -60,6 +60,7 @@
     "infeasibility.electives.spring": "You still need {remainingElectives} distinct Economics electives. After finance is allocated, no remaining eligible elective is offered in {winterTerm}. The {springTerm} options are {springOptions}. Each is {courseUnits} unit, so two exceed both the normal {normalCourseUnits}-unit load and the advisor-approved {conditionalMaximumCourseUnits}-unit ceiling.",
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
     "infeasibility.finance.forced": "{financeCourse} must fill finance for this graduation target, so it cannot also count as an elective.",
+    "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. With this graduation year you will not have senior standing in any Winter term before you graduate. Choose a later graduation year or talk with your advisor.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor."

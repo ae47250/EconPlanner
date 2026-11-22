@@ -144,6 +144,7 @@ test("readiness, conditions, and advisor actions are projected from the returned
       ? scenario.plan.conditions.map(item => item.message)
       : scenario.plan.advisorActions.map(item => item.message);
     const card = await visitPlan(page, scenario.plan.id);
+    await card.getByText("Things to keep in mind", { exact: true }).click();
     for (const message of returnedItems) {
       await expect(card.locator(scenario.expectedSelector).getByText(message, { exact: true })).toBeVisible();
     }
