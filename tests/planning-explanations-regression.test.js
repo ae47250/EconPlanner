@@ -25,6 +25,56 @@ const juniorCustom = {
     { code: "ECO 333", status: "in_progress", source: "manual_code" }]
 };
 
+test("a junior's verified Winter 2027 ECO 321 replaces BUSN 323 in the Balanced plan", async () => {
+  const result = await economics({
+    academicStanding: "junior", planCreationDate: "2026-11-22",
+    courses: [...completed(["ECO 113", "ECO 114", "MAT 121", "ECO 213", "MAT 217"]),
+      { code: "ECO 214", status: "in_progress", source: "manual_code" }]
+  });
+  const plan = result.economicsPlans.find(item => item.id === "balanced");
+  assert.ok(plan?.validation?.valid);
+  const winter = plan.terms.find(term => term.slotId === "winter-2027");
+  assert.ok(winter.courses.some(course => course.course === "ECO 321"
+    && course.requirementId === "finance" && course.source === "verified-offering"));
+  assert.ok(plan.terms.every(term => term.courses.every(course => course.course !== "BUSN 323")));
+});
+
+test("the verified ECO 321 preference also reaches standard junior and custom senior strategies", async () => {
+  for (const student of [
+    { academicStanding: "junior", courses: completed(["ECO 113", "ECO 114"]) },
+    { academicStanding: "senior", customGraduationEnabled: true, customExpectedGraduationYear: 2028,
+      courses: completed(["ECO 113", "ECO 114", "MAT 121"]) }
+  ]) {
+    const result = await economics({ ...student, planCreationDate: "2026-11-22" });
+    const plan = result.economicsPlans.find(item => item.id === "balanced");
+    assert.ok(plan?.validation?.valid);
+    assert.ok(plan.terms.find(term => term.slotId === "winter-2027").courses.some(course => (
+      course.course === "ECO 321" && course.requirementId === "finance"
+    )));
+    assert.ok(plan.terms.every(term => term.courses.every(course => course.course !== "BUSN 323")));
+  }
+});
+
+test("a senior with no history counts the math cognate among required courses left", async () => {
+  const result = await economics({ academicStanding: "senior", planCreationDate: "2026-11-22", courses: [] });
+  assert.equal(result.economicsPlanResult.reason, "MAJOR_COURSE_CAPACITY_EXCEEDED");
+  assert.equal(result.economicsPlanResult.evidence.blockingReasons[0].remainingRequiredCourses, 12);
+  assert.equal(result.economicsPlanResult.evidence.blockingReasons[0].message,
+    "You have 12 required courses left and 2 terms before May 2027. They cannot all fit. Choose a later graduation year or talk with your advisor.");
+});
+
+test("failed early planning shows one grouped sentence without unscheduled fragments", async () => {
+  const result = await economics({
+    academicStanding: "junior", planningPace: "one_year_early", planCreationDate: "2026-11-22",
+    courses: completed(["ECO 113", "ECO 114"])
+  });
+  const reasons = result.economicsCandidateOutcomes.find(item => item.id === "one-year-early").reasons;
+  assert.equal(reasons.length, 1);
+  assert.match(reasons[0].message, /^These courses did not fit before May 2027:/);
+  assert.doesNotMatch(reasons[0].message, /remains unscheduled|\.\s*;/);
+  assert.equal(result.economicsPlanningGaps.length, 0);
+});
+
 test("a custom target exactly one year early produces a validated ECO 461 plan and report warning", async () => {
   const result = await economics(juniorCustom);
   assert.equal(result.planningContext.acceleratedPlanAssumesSeniorStanding, true);
@@ -70,8 +120,8 @@ test("a custom target more than one year early reports proven senior-standing in
   const scheduleGaps = text.match(/These courses did not fit before [^:]+:/g) || [];
   assert.equal(scheduleGaps.length, 1);
   assert.doesNotMatch(text, /Requirement (?:eco-elective-\d+|cognate|statistics|finance) remains unscheduled/);
-  assert.match(text, /MAT 113 \/ MAT 121/);
-  assert.match(text, /ECO 257 \/ MAT 217 \/ PSY 217/);
+  assert.match(text, /MAT 113, MAT 121/);
+  assert.match(text, /ECO 257, MAT 217, PSY 217/);
 });
 
 test("AP or exam credit produces a visible advisor-attention reason", async () => {

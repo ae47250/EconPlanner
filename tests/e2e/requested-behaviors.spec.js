@@ -145,6 +145,72 @@ test('a reserved-room no-plan result links back to the room setting',async ({pag
   expect(result.economicsPlanResult.reason).toBe('RESERVED_ROOM_BLOCKS_PLAN');
   await expect(page.locator('.no-plan-state h2')).toHaveText('Your reserved room leaves too little space for the major courses.');
   await expect(page.locator('.no-plan-state > p')).toContainText('No plan fits while you leave room for other courses in these terms:');
+  await page.locator('.result-diagnostics > summary').click();
+  const gaps = page.locator('.result-diagnostics .planning-gaps li');
+  await expect(gaps).toHaveCount(1);
+  await expect(gaps.first()).toContainText('These courses did not fit before May 2028:');
+  await expect(page.locator('.result-diagnostics')).not.toContainText('remains unscheduled');
+  await expect(page.locator('.result-diagnostics')).not.toContainText('.;');
   await page.getByRole('button',{name:'Change room for other courses',exact:true}).click();
   await expect(page.locator('#other-courses-reserved')).toBeVisible();
+});
+
+test('a junior early result gives one course-fit sentence in planning details',async ({page}) => {
+  await resetPlanner(page);
+  await chooseStanding(page,'junior');
+  await page.locator('details.more-details > summary').first().click();
+  await page.getByLabel('Plan creation date',{exact:true}).fill('2026-11-22');
+  await page.getByRole('button',{name:'I’d like to graduate next year',exact:true}).click();
+  await continueToCourses(page);
+  await selectHistory(page,['ECO 113','ECO 114']);
+  await generatePlans(page);
+  await page.locator('.result-diagnostics > summary').click();
+  const details = page.locator('.result-diagnostics');
+  await expect(details).toContainText('These courses did not fit before May 2027:');
+  await expect(details).not.toContainText('remains unscheduled');
+  await expect(details).not.toContainText('.;');
+});
+
+test('the verified ECO 321 section appears in a junior plan instead of BUSN 323',async ({page}) => {
+  await resetPlanner(page);
+  await chooseStanding(page,'junior');
+  await page.locator('details.more-details > summary').first().click();
+  await page.getByLabel('Plan creation date',{exact:true}).fill('2026-11-22');
+  await continueToCourses(page);
+  await selectHistory(page,['ECO 113','ECO 114','MAT 121','ECO 213','MAT 217']);
+  await setCourseStatus(page,'ECO 214','Taking now');
+  const response = await generatePlans(page);
+  const plan = (await response.json()).programs.find(item=>item.program?.id==='economics-base')
+    .economicsPlans.find(item=>item.id==='balanced');
+  expect(plan.terms.find(term=>term.slotId==='winter-2027').courses.some(course=>(
+    course.course==='ECO 321' && course.requirementId==='finance'
+  ))).toBe(true);
+  expect(plan.terms.every(term=>term.courses.every(course=>course.course!=='BUSN 323'))).toBe(true);
+  const card = await visitPlan(page,'balanced');
+  await expect(card.locator('[data-term-id="winter-2027"]')).toContainText('ECO 321');
+  await expect(card.locator('.compact-schedule')).not.toContainText('BUSN 323');
+});
+
+test('a Ready to plan status includes the petition paperwork sentence on screen and PDF',async ({page}) => {
+  await resetPlanner(page);
+  await chooseStanding(page,'senior');
+  await page.locator('details.more-details > summary').first().click();
+  await page.getByLabel('Plan creation date',{exact:true}).fill('2027-05-01');
+  await page.getByRole('button',{name:'My expected graduation year is different'}).click();
+  await page.getByLabel('When do you expect to graduate?').selectOption('2028');
+  await continueToCourses(page);
+  await selectHistory(page,['ECO 113','ECO 114','MAT 121','ECO 213','ECO 214','MAT 217','ECO 221','ECO 222']);
+  const response = await generatePlans(page);
+  const mapped = (await response.json()).programs.find(item=>item.program?.id==='economics-base');
+  const plan = mapped.economicsPlans.find(item=>item.id==='balanced');
+  expect(plan.readinessStatus).toBe('STUDENT_READY');
+  await expect(page.locator('.result-status-value')).toHaveText('Ready to plan');
+  const status = page.locator('.result-status-reason');
+  await expect(status).toHaveCount(1);
+  await expect(status).toContainText('See the notes below for paperwork to file.');
+  const report = await page.request.post('/api/reports/economics',{data:{
+    student:response.request().postDataJSON().student,selectedPlan:plan,plans:mapped.economicsPlans,format:'html'
+  }});
+  expect(report.status()).toBe(200);
+  expect(await report.text()).toContain('See the notes below for paperwork to file.');
 });

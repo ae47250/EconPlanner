@@ -4,7 +4,7 @@ import catalog2025 from "../../policy/catalogs/economics-2025-2026.json" with { 
 import coursePolicy from "../../policy/courses/economics.json" with { type: "json" };
 
 const CATALOGS = new Map([catalog2023, catalog2024, catalog2025].map(record => [record.catalogYear, record]));
-const CATALOG_TITLES = new Map(coursePolicy.courses.filter(item => ["MAT 113", "ECO 461"].includes(item.code))
+const CATALOG_TITLES = new Map(coursePolicy.courses.filter(item => ["MAT 113", "ECO 321", "ECO 461"].includes(item.code))
   .map(item => [item.code, item.title]));
 
 function text(value) {
@@ -84,14 +84,14 @@ function olderCatalogNote(plan = {}) {
   const details = [];
   if (used.length) {
     const courses = used.join(" and ");
-    details.push(`Your plan counts ${courses}, which your ${shortYear} catalog does not accept. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee (forms are at the Registrar's Office) so ${used.length === 1 ? "it counts" : "they count"}.`);
+    details.push(`Your plan counts ${courses}. Your ${shortYear} catalog does not accept ${used.length === 1 ? "it" : "they"}. Ask your advisor to help you file a petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.`);
   }
   const priorMilestone = earlier.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   const currentMilestone = catalog2025.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
     details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.`);
   }
-  return `This plan uses the current (${catalog2025.catalogYear.replace(/-20/, "–")}) Economics major requirements. ${details.join(" ")}`.trim();
+  return `This plan uses the current Economics major requirements. ${details.join(" ")}`.trim();
 }
 
 function selectedPlanWarnings(plan = {}, advisorNotices = []) {

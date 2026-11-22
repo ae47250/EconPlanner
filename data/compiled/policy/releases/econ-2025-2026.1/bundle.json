@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:b3166dfee088664f050b7071440abf7a292a4db9ed7e8b875364eac78f8e2180",
+  "contentHash": "sha256:45508e4535d403c56f81fdb433727914d77cba457f89a1f6359641fdbe6a2bfd",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -8238,7 +8238,7 @@
         },
         "path": "policy/provenance/wording-review-decisions-2026-11-22.md",
         "reviewer": "Project owner",
-        "sha256": "a140dabf3d646ee890beffc16d7a9d54be1b2707ca8b6454b8272e23db378722",
+        "sha256": "ea81f4498c865ad96c73fb1957d160125f461fcfd8f221e4acdb5621dbd3ad7b",
         "sourceId": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null

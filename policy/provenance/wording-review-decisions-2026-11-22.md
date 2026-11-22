@@ -31,6 +31,6 @@ Use the existing requirement-allocation rules to explain courses that do not cou
 - Rewrite “planning horizon” as “the terms in your plan” in student-facing text. Rewrite other jargon in plain English, using judgment while preserving the underlying rule.
 - Use “one-year-early target,” “approval,” and compact catalog-year labels such as “2024–25.” Keep sentences short and do not use semicolons in student-facing text.
 
-### Item 19 — Active requirements year label
+### Item 19 — Current requirements note
 
-The older-catalog planning note names the current Economics requirements using the catalog year label on the active requirements record, not the plan date or derived student catalog year. The active record is `policy/catalogs/economics-2025-2026.json`, labeled 2025–26. Do not activate a newer catalog as part of this wording change. This updates the prior display wording that called the current requirements 2026–27; the 2026–27 note remains historical provenance and is not an active catalog record.
+For an older catalog, use “This plan uses the current Economics major requirements.” without a year. Keep the student's own catalog year in the comparison details. This replaces the earlier Item 19 label decision. No catalog is activated by this wording change.

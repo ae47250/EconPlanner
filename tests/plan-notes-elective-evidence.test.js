@@ -226,15 +226,15 @@ test("early graduation exposes the extra elective need while keeping standard pl
   for (const plan of result.economicsPlans) for (const term of plan.terms) assert.equal(evaluateTermElectives(term, bundle).status, "ALLOW");
 });
 
-test("BUSN 323 preference preserves verified ECO 321 when BUSN cannot fit and exposes a future finance gap", async () => {
+test("verified ECO 321 takes precedence when finance is still open and future gaps remain visible", async () => {
   const codes = ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "ECO 161", "ECO 221", "ECO 234"];
   const student = { academicStanding: "senior", planCreationDate: "2026-07-30", courses: completed(codes) };
-  for (const [reservedCourseUnits, expected] of [[{}, "BUSN 323"], [{"fall-2026": 4}, "ECO 321"]]) {
+  for (const reservedCourseUnits of [{}, {"fall-2026": 4}]) {
     const result = economics((await post({ student: { ...student, reservedCourseUnits } })).data);
     assert.ok(result.economicsPlans.length);
     for (const plan of result.economicsPlans) {
       const finance = plan.terms.flatMap(term => term.courses).find(course => course.requirementId === "finance");
-      assert.equal(finance.course, expected);
+      assert.equal(finance.course, "ECO 321");
       assert.equal(finance.source, "verified-offering");
     }
   }

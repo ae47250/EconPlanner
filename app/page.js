@@ -2070,8 +2070,7 @@ function PlanComparisonScreen({
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>{plans.length ? "Student readiness" : "Overall status"}</strong><span className="result-status-value">{displayedOverallStatus}</span>
             {isPlanView && selectedPlan && <><span className="result-feasibility-value">Plan feasibility: {({ VERIFIED_FEASIBLE: "Verified feasible", CONDITIONALLY_FEASIBLE: "Conditional plan", PRELIMINARY_ONLY: "Preliminary plan", SEARCH_INCOMPLETE: "More information needed", NOT_FEASIBLE: "Plan needs attention" })[selectedPlan.feasibilityStatus] || "Plan needs confirmation"}</span><span className="plan-feasibility-meaning">{feasibilityMeaning(selectedPlan.feasibilityStatus)}</span></>}
-            {plans.length > 0 && <span className="result-status-reason">{STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}</span>}
-            {paperworkReminder && <span className="result-status-reason">See the notes below for paperwork to file.</span>}
+            {plans.length > 0 && <span className="result-status-reason">{STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}{paperworkReminder && " See the notes below for paperwork to file."}</span>}
             {displayedOverallStatus === "Needs advisor attention" && statusReason && <span className="result-status-reason">Why: {statusReason}</span>}
           </p>
         </section>

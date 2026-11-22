@@ -13,7 +13,7 @@ test("intake shows the older-catalog explanation only for junior and senior year
     const note = page.locator(".catalog-planning-note");
     if (!expected.length) await expect(note).toHaveCount(0);
     else {
-      await expect(note).toContainText("This plan uses the current (2025–26) Economics major requirements.");
+      await expect(note).toContainText("This plan uses the current Economics major requirements.");
       for (const term of expected) await expect(note).toContainText(term);
     }
   }
@@ -83,7 +83,7 @@ test("freshman and sophomore plans have no catalog note with ECO 113 Taking now"
     await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
     const notes = card.locator("[data-plan-conditions]");
     await expect(notes).not.toContainText("Based on your class year, your catalog year is likely");
-    await expect(notes).not.toContainText("This plan uses the current (2026–27) Economics major requirements.");
+    await expect(notes).not.toContainText("This plan uses the current Economics major requirements.");
     const current = card.locator('[data-term-id="fall-2026"]');
     await expect(current).toContainText("ECO 113");
     await expect(current).toContainText("Taking now");
@@ -110,7 +110,7 @@ test("early sophomore abroad plan shows consistent prerequisite and approval sen
   await expect(notes).toContainText("Before taking ECO 214 in Winter 2027, finish ECO 114.");
   await expect(notes).toContainText("This plan has 3 Economics courses in Winter 2027. The department prefers no more than 2 per term, but the term is still within the normal course load.");
   await expect(notes).not.toContainText("Complete ECO 114 before taking");
-  await expect(notes).not.toContainText("This plan uses the current (2026–27) Economics major requirements.");
+  await expect(notes).not.toContainText("This plan uses the current Economics major requirements.");
   await expect(notes).not.toContainText("Ask your advisor whether a catalog petition is needed.");
 });
 
@@ -120,11 +120,13 @@ test("junior plan notes name the catalog difference instead of the generic petit
   await page.locator("details.more-details > summary").first().click();
   await page.getByLabel("Plan creation date", { exact: true }).fill("2026-11-21");
   await continueToCourses(page);
+  await setCourseStatus(page, "BUSN 323", "Completed");
   await generatePlans(page);
   const card = await visitPlan(page, "balanced");
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
-  await expect(notes).toContainText("This plan uses the current (2025–26) Economics major requirements.");
-  await expect(notes).toContainText("Your plan counts BUSN 323, which your 2024–25 catalog does not accept.");
+  await expect(notes).toContainText("This plan uses the current Economics major requirements.");
+  await expect(notes).toContainText("Your plan counts BUSN 323. Your 2024–25 catalog does not accept it.");
+  await expect(notes).toContainText("Ask your advisor to help you file a petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.");
   await expect(notes).not.toContainText("Please help the student submit the routine SAC petition");
 });
