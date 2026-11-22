@@ -138,6 +138,10 @@ jobs:
       - name: Install local PDF text verification
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
 
+      - name: Check student panel snapshots
+        if: matrix.shard == 1
+        run: pnpm panel:check
+
       - name: Run bounded EconPlanner browser regression suite
         run: >-
           pnpm exec playwright test

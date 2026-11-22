@@ -39,3 +39,11 @@
 - Flag registry-only coverage changes without proof of production behavior and a targeted test. Safe correction: exercise the real affected path and add a narrow regression assertion.
 - Flag material disagreement among the validated plan, API, interface, HTML, and PDF. Safe correction: repair the incorrect projection from the same validated canonical plan rather than duplicating policy.
 - Flag unrelated verification systems or external infrastructure imposed as release gates. Safe correction: keep gates proportional to the changed behavior unless the integration itself changed or the user explicitly authorized live verification.
+
+## Student panel
+
+- Every change that can affect student-facing text must pass `pnpm panel:check` and `pnpm panel:lint`; PRs must list changed sentences grouped by panel student.
+- Before changing a rule, message, or wording, check `tests/panel/trace.md` and list affected panel students in the PR.
+- Do not regenerate panel snapshots in bulk to make checks pass without listing each changed sentence and its reason.
+- Commit schedule data changes separately from code changes.
+- New student-facing sentences belong in `policy/messages/en-US.json`; application code should refer to message IDs rather than define sentence text.

@@ -1,0 +1,407 @@
+# Student panel decision trace
+
+Rule or reason code → policy message keys → panel students.
+
+- **allocation.financePetition** → 25
+- **infeasibility.capstone.seniorStanding** → 04, 06, 31, 33, 45
+- **infeasibility.electives.conflict** → 37, 38
+- **infeasibility.electives.spring** → 37, 38
+- **infeasibility.finance.forced** → 37
+- **termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE** → 09, 11, 13, 28, 30, 32
+- **termLoad.pending** → 09
+- **termLoad.TERM_CAPACITY_AVAILABLE** → 30, 32
+- **termLoad.TERM_OVERLOAD_APPROVED** → 30, 32
+- **termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED** → 09, 30, 32
+- **tuition.threshold.exceeded** → 30, 32
+- **tuition.threshold.possible** → 30, 32
+
+## Untraced sentences
+
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): 2026/2027 - ECO 113-J Scheduled after ECO 213, which you marked completed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): A past schedule does not guarantee a course will be offered again.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 20, 21, 46, 47, 48, 49): A published schedule may differ.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48, 49): Actual offerings may differ.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 07, 08): Ask your advisor and the Registrar to confirm you can take ECO 461 then.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 17, 18, 32): Ask your advisor to check.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 13, 16, 17, 23, 24, 27, 28, 30, 36, 39, 42, 44): Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Ask your advisor whether you still need to take it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 48): Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): Before taking ECO 213 in Fall 2027, finish ECO 113 and MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13): Before taking ECO 213 in Fall 2027, finish ECO 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Before taking ECO 213 in Winter 2028, finish MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10): Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 121.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 121.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): Before taking ECO 221 in Winter 2027 and ECO 321 in Winter 2027, finish ECO 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 17, 19): Before taking ECO 222 in Spring/May 2027, finish ECO 114.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 36, 42): Before taking ECO 461 in Winter 2027, finish MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09): Before taking ECO 461 in Winter 2028, finish ECO 213 and ECO 214.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 15, 20, 21): Before taking ECO 461 in Winter 2028, finish ECO 213 and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13, 17): Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 14, 16, 18): Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Before taking ECO 461 in Winter 2028, finish ECO 214.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 49): Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19): Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and ECO 257.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48): Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the published schedule before you register.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the registration system before you register.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): Check the registration system for current availability.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 18): Check the student’s earlier course or transfer records to confirm whether ECO 113 were completed before ECO 213.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): Check the student’s earlier course or transfer records to confirm whether ECO 114 were completed before ECO 214.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19, 32): Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 32): Check with your advisor.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Classes marked Planned are not completed yet.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Confirm ECO 214 instructor approval for ECO 214 in Winter 2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Confirm Economics Department approval for ECO 461 in Winter 2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14, 15, 20, 21): Confirm Economics Department approval for ECO 461 in Winter 2028.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08): Confirm the student will be eligible for ECO 461 in 2026–2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): Confirm the student will be eligible for ECO 461 in 2028–2029.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Confirm whether the student’s AP credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Confirm whether the student’s AP credit for ECO 113, ECO 114, and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 26): Confirm whether the student’s transfer credit for BUSN 323 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Confirm whether the student’s transfer credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46, 47): Confirm with your advisor that it counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 26): Confirm with your advisor that your transfer credit for BUSN 323 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 13, 16, 18): ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): ECO 113 ECO 113 AP credit AP/exam credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): ECO 113 ECO 113 Transfer credit Transfer credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 17, 19): ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): ECO 114 ECO 114 AP credit AP/exam credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): ECO 160 does not count toward the major because only one 100-level Economics elective can.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 13, 14, 16, 39): ECO 161 — Foundations of Economics Previously offered in Fall, Winter, May.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 19, 20, 21, 46, 47, 48, 49): ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): ECO 213 ECO 213 Completed ECO 113 marked Taking now rather than done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): ECO 213 ECO 213 Completed ECO 113 not marked done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): ECO 213 ECO 213 Completed MAT 113 or MAT 121 not marked done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 28, 30, 32, 46, 47, 48, 49): ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): ECO 214 ECO 214 — Taking now Taking now ECO 114 not marked done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 14, 15, 17, 18, 20, 21, 24, 25, 26, 27, 28, 30, 32, 44): ECO 221 — Environmental Economics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): ECO 222 — Economics of the European Union Previously offered in May.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19): ECO 257 — Quantitative Methods for Business/Economics Previously offered in Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 15, 18, 20, 21, 22, 23, 32, 46, 47, 48, 49): ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): Economics elective 1 ECO 161 Completed Counts as your one 100-level elective.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Finance choices: ECO 321 or BUSN 323 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48, 49): For terms without a published schedule, this plan assumes no more than one Economics elective per term.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 13, 16, 17, 23, 24, 27, 28, 30, 36, 39, 42, 44): Forms are at the Registrar's Office.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Future schedules can change.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 13, 14, 16, 27, 39, 48): HS ECO 113 , ECO 114 , and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 12, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 30, 32, 36, 42, 44, 46, 47, 49): HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): If that was a mistake, change one of them.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): If you finished ECO 113 or have transfer/AP credit for it, mark it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): If you finished one or are taking it now, mark it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 20, 21, 46, 47, 48, 49): In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 13, 16, 17, 19, 46, 47, 48): Its future offering is not confirmed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): MAT 113-J Approval needed Scheduled after ECO 213, which you marked completed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): MAT 121 is marked “Taking now.”
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 49): MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Math choices: MAT 113 or MAT 121 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): Mathematics MAT 121 AP credit AP/exam credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Mathematics MAT 121 Transfer credit Transfer credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): May 2027 : ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14, 15, 20, 21, 28, 30, 32): No approval is recorded yet.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 17, 32): Otherwise your advisor will check it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 39, 46, 47, 48, 49): Past Fall schedules included: ECO 333 , ECO 357 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 42, 44): Past Fall schedules included: ECO 357 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 49): Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 234 , ECO 331 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 28, 30, 32, 36, 39, 42, 44): Past May schedules included: ECO 160 , ECO 161 , ECO 222 , ECO 224 , ECO 331 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): Past May schedules included: ECO 222 , ECO 224 , ECO 234 , ECO 331 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 24, 25, 26, 27, 28, 30, 32, 44, 46, 47, 48, 49): Past Winter schedules included: ECO 221 , ECO 337 , ECO 357 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 36, 39, 42): Past Winter schedules included: ECO 337 , ECO 357 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 13, 23, 24, 27, 36, 39, 44): See the notes below for paperwork to file.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Some future classes, seats, or approvals still need confirmation.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Statistics choices: ECO 257 or MAT 217 or PSY 217 .
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 15, 20, 21): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 30, 32): The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): The listed section for MAT 217 was recorded as full.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): The student's answers show ECO 113 is marked “Taking now.”
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): The student's answers show MAT 121 is marked “Taking now.”
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 20, 21, 46, 47, 48, 49): Their order changed from year to year.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08): This plan assumes you will have senior standing in 2026–2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): This plan assumes you will have senior standing in 2028–2029.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 36, 42): This plan covers Fall 2026 through Spring/May 2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18): This plan covers Fall 2026 through Spring/May 2028.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): This plan covers Fall 2026 through Spring/May 2029.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 44): This plan covers Winter 2027 through Spring/May 2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21): This plan covers Winter 2027 through Spring/May 2028.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 47, 48, 49): This plan covers Winter 2027 through Spring/May 2029.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): This plan covers Winter 2027 through Spring/May 2030.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): This plan places BUSN 323 in Fall 2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48): This plan places BUSN 323 in Fall 2028.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): This plan places BUSN 323 in Fall 2029.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13, 16, 17): This plan places BUSN 323 in Winter 2028.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03): This plan places BUSN 323 in Winter 2029.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): This plan uses the current Economics major requirements.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13): We don’t know if there are open seats in ECO 113, ECO 161, ECO 214, MAT 217, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19): We don’t know if there are open seats in ECO 114 and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): We don’t know if there are open seats in ECO 114 and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): We don’t know if there are open seats in ECO 114, ECO 161, ECO 221, MAT 113, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): We don’t know if there are open seats in ECO 114, ECO 221, MAT 217, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19): We don’t know if there are open seats in ECO 114, MAT 217, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 14): We don’t know if there are open seats in ECO 161, ECO 221, MAT 217, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 39): We don’t know if there are open seats in ECO 161, ECO 461, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): We don’t know if there are open seats in ECO 214 and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 49): We don’t know if there are open seats in ECO 214 and ECO 321.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09): We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30): We don’t know if there are open seats in ECO 214, ECO 221, ECO 461, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 12): We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10): We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 15, 18, 20, 21): We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 24, 25, 26, 27, 44): We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08): We don’t know if there are open seats in ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): We don’t know if there are open seats in ECO 321 and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23): We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 48): We don’t know if there are open seats in ECO 321, MAT 113, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 49): We don’t know if there are open seats in ECO 321.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 36): We don’t know if there are open seats in ECO 461 and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 48): We don’t know if there are open seats in MAT 113 and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): We don’t know if there are open seats in MAT 217, ECO 461, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): We don’t know if there are open seats in MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 26): Why an advisor should review this plan: Confirm with your advisor that your transfer credit for BUSN 323 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Why an advisor should review this plan: Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Why an advisor should review this plan: ECO 213’s earlier course requirements need review.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 30): Why an advisor should review this plan: This term would have 5 courses.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): Why an advisor should review this plan: You are taking ECO 214, but ECO 114, which comes before it, is not marked.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): You are taking ECO 214, but ECO 114, which comes before it, is not marked.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Your 2023–24 catalog also required a comprehensive evaluation in Economics.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 23, 27, 28, 30, 36, 39, 42, 44): Your 2023–24 catalog does not accept it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 24): Your 2023–24 catalog does not accept they.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 13, 16, 17): Your 2024–25 catalog does not accept it.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Your other HS course must be from a different discipline.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 24): Your plan counts BUSN 323 and PSY 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 13, 16, 17, 27, 28, 30, 36, 39, 42, 44): Your plan counts BUSN 323.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 23): Your plan counts PSY 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 46, 47): ?
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48, 49): Actual offerings may differ.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 46): AP/exam credit.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03, 07, 08): Ask your advisor and the Registrar to confirm you can take ECO 461 then.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16, 17, 18, 32): Ask your advisor to check.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 07, 08, 11, 13, 16, 17, 23, 24, 27, 28, 30, 36, 39, 42, 44): Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Ask your advisor whether you still need to take it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 48): Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03): Before taking ECO 213 in Fall 2027, finish ECO 113 and MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 13): Before taking ECO 213 in Fall 2027, finish ECO 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02): Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03): Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11): Before taking ECO 213 in Winter 2028, finish MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10): Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11): Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 19): Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 121.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03): Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03): Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 19): Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 121.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02): Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 18): Before taking ECO 221 in Winter 2027 and ECO 321 in Winter 2027, finish ECO 113.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05): Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11, 17, 19): Before taking ECO 222 in Spring/May 2027, finish ECO 114.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 36, 42): Before taking ECO 461 in Winter 2027, finish MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 09): Before taking ECO 461 in Winter 2028, finish ECO 213 and ECO 214.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 15, 20, 21): Before taking ECO 461 in Winter 2028, finish ECO 213 and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 13, 17): Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 14, 16, 18): Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11): Before taking ECO 461 in Winter 2028, finish ECO 214.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 49): Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 19): Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and ECO 257.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03, 05, 19, 47, 48): Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 46): Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03, 07, 08, 10, 11, 14, 15, 20, 21, 28, 30): Check each plan's conditions.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the published schedule before you register.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the registration system before you register.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 42): Check the registration system for current availability.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16, 32): Check with your advisor.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 35, 43): Check your statistics answer or ask your advisor about a later graduation date.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Classes marked Planned are not completed yet.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 19, 46, 47, 48, 49): Classes that need an earlier class are scheduled later.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Click a course to see where it can move.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 46, 47): Confirm with your advisor that it counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05): Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 46): Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 26): Confirm with your advisor that your transfer credit for BUSN 323 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 47): Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 27, 48): Counts as your one 100-level elective.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 40): Course offering evidence is incomplete for this graduation target.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 46, 47): ECO 113 ECO 113 ?
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 18): ECO 113 marked Taking now rather than done before this class.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16): ECO 113 not marked done before this class.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 46): ECO 114 ECO 114 ?
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 17): ECO 114 not marked done before this class.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 27, 48): ECO 161 does not count toward the major because only one 100-level Economics elective can.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 04, 06): ECO 461 cannot fit before this graduation target without senior standing.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 35, 43): ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): EconPlanner is a planning guide, not an official degree audit.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48, 49): For terms without a published schedule, this plan assumes no more than one Economics elective per term.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 07, 08, 11, 13, 16, 17, 23, 24, 27, 28, 30, 36, 39, 42, 44): Forms are at the Registrar's Office.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Future schedules can change.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 12): Graduate next year is not possible under the current requirements, course timing, and selected term capacity.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 12, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 30, 32, 36, 42, 44, 46, 47, 49): HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11, 13, 14, 16, 27, 39, 48): HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 18): If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 18): If that was a mistake, change one of them.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16): If you finished ECO 113 or have transfer/AP credit for it, mark it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 32): If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 17): If you finished one or are taking it now, mark it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 11, 13, 16, 17, 19, 46, 47, 48): Its future offering is not confirmed.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 29, 50): Lower that number and try again.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 32): MAT 113 or MAT 121 not marked done before this class.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 19): MAT 121 is marked “Taking now.”
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 27, 49): MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11): More information is needed before EconPlanner can determine whether you can graduate next year.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 40): More information needed to decide whether this major can be completed by your target.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 11, 14, 15, 20, 21, 28, 30, 32): No approval is recorded yet.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 31, 33, 34, 35, 37, 38, 43, 45): No complete plan fits this graduation target with the available course timing and capacity.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 50): No plan fits while you leave room for other courses in these terms: Winter 2027, Spring/May 2027, Fall 2027, Winter 2028, Spring/May 2028.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 29): No plan fits while you leave room for other courses in these terms: Winter 2027.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 09): One Year Early: Not feasible — These courses did not fit before May 2027: BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 12): One Year Early: Not feasible — These courses did not fit before May 2027: BUSN 323, ECO 321, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11): One Year Early: Not feasible — These courses did not fit before May 2027: ECO 114, MAT 113, MAT 121, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10): One Year Early: Not feasible — These courses did not fit before May 2027: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16, 17, 32): Otherwise your advisor will check it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 19, 46, 47, 48, 49): Plans a lighter course load in the first year than Balanced.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 41): Review the details below with your academic advisor.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 04, 06, 29, 31, 33, 34, 35, 37, 38, 40, 41, 43, 45, 50): Review this result and the next step below.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 31, 33, 34, 35, 37, 38, 43, 45): Review your graduation timeline and bring this result to your academic advisor.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16, 32): Scheduled after ECO 213, which you marked completed.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 09, 12, 13, 22, 23, 24, 25, 27, 36, 39, 44, 48, 49): Seats are not confirmed, so check the registration system before you register.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 13, 23, 24, 27, 36, 39, 44): See the notes below for paperwork to file.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Some future classes, seats, or approvals still need confirmation.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 16, 17, 18, 19, 26, 32, 42, 46, 47): Something in your answers needs your advisor to check it before you rely on these plans.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Spreads the required classes you still need across the years before you graduate.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02): Take MAT 113 before ECO 213.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02): Take MAT 113 before ECO 214.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02): Taking both in one term needs the ECO 213 instructor's approval.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02): Taking both in one term needs the ECO 214 instructor's approval.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 11, 14): Taking ECO 213 and ECO 461 in the same term requires approval from the Economics Department.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 11, 14): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 15, 20, 21, 28, 30, 32): Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 15, 20, 21): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 32): Taking MAT 113 and ECO 214 in the same term requires approval from the ECO 214 instructor.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 32): Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 30, 32): The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 42): The listed section for MAT 217 was recorded as full.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 12): The plan below is for May 2028.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 41): These courses did not fit before May 2026: ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 29): These courses did not fit before May 2027: ECO 214, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 40): These courses did not fit before May 2027: MAT 113, MAT 121, ECO 213, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 50): These courses did not fit before May 2028: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 09, 12, 13, 22, 23, 24, 25, 27, 36, 39, 44, 48, 49): These plans meet the major rules.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03, 07, 08, 10, 11, 14, 15, 20, 21, 28, 30): These plans work only if the conditions shown on them are met, such as instructor approval or confirmed senior standing.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 31, 33, 45): They cannot all fit.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 07, 08): This plan assumes you will have senior standing in 2026–2027.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03): This plan assumes you will have senior standing in 2028–2029.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11): This plan places BUSN 323 in Fall 2027.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03, 05, 19, 47, 48): This plan places BUSN 323 in Fall 2028.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 46): This plan places BUSN 323 in Fall 2029.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 13, 16, 17): This plan places BUSN 323 in Winter 2028.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 03): This plan places BUSN 323 in Winter 2029.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): This plan uses the current Economics major requirements.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 41): This planning result needs advisor attention before we can show a complete schedule.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 40): This result does not establish that major completion is impossible.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 47): Transfer credit.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 34): We couldn't find a complete plan that meets the Finance requirement by your planned graduation date.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 13): We don’t know if there are open seats in ECO 113, ECO 161, ECO 214, MAT 217, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16): We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 19): We don’t know if there are open seats in ECO 114 and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02): We don’t know if there are open seats in ECO 114 and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 11): We don’t know if there are open seats in ECO 114, ECO 161, ECO 221, MAT 113, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 17): We don’t know if there are open seats in ECO 114, ECO 221, MAT 217, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05, 19): We don’t know if there are open seats in ECO 114, MAT 217, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 14): We don’t know if there are open seats in ECO 161, ECO 221, MAT 217, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 39): We don’t know if there are open seats in ECO 161, ECO 461, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 47): We don’t know if there are open seats in ECO 214 and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 49): We don’t know if there are open seats in ECO 214 and ECO 321.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 09): We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 32): We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 28, 30): We don’t know if there are open seats in ECO 214, ECO 221, ECO 461, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 47): We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 12): We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10): We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 15, 18, 20, 21): We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 07, 08, 24, 25, 26, 27, 44): We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 08): We don’t know if there are open seats in ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 46): We don’t know if there are open seats in ECO 321 and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 22, 23): We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 48): We don’t know if there are open seats in ECO 321, MAT 113, and MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 49): We don’t know if there are open seats in ECO 321.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 36): We don’t know if there are open seats in ECO 461 and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 48): We don’t know if there are open seats in MAT 113 and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 42): We don’t know if there are open seats in MAT 217, ECO 461, and ECO 222.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 46): We don’t know if there are open seats in MAT 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 04, 06, 29, 31, 33, 34, 35, 37, 38, 40, 41, 43, 45, 50): Why am I seeing this result?
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 05): Why: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 46): Why: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 26): Why: Confirm with your advisor that your transfer credit for BUSN 323 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 47): Why: Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 19): Why: ECO 213’s earlier course requirements need review.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 17): Why: You are taking ECO 214, but ECO 114, which comes before it, is not marked.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 18): Why: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16): Why: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 32): Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 17): You are taking ECO 214, but ECO 114, which comes before it, is not marked.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): You can also drag it by the ⠿ handle.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 12): You cannot finish by May 2027.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 45): You have 3 required courses left and 1 terms before May 2027.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 31, 33): You have 6 required courses left and 2 terms before May 2027.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 18): You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 16): You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 32): You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Your 2023–24 catalog also required a comprehensive evaluation in Economics.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 23, 27, 28, 30, 36, 39, 42, 44): Your 2023–24 catalog does not accept it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 24): Your 2023–24 catalog does not accept they.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 07, 08, 11, 13, 16, 17): Your 2024–25 catalog does not accept it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 41): Your answers are saved.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 19): Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 35, 43): Your answers do not show statistics completed, and there is no earlier term left in this plan to take it.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 10, 35, 43): Your available terms start in Winter 2027.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Your other HS course must be from a different discipline.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 24): Your plan counts BUSN 323 and PSY 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 07, 08, 11, 13, 16, 17, 27, 28, 30, 36, 39, 42, 44): Your plan counts BUSN 323.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 23): Your plan counts PSY 217.
+- **SCREEN** (app/page.js, PlanComparisonScreen; students 29, 50): Your reserved room leaves too little space for the major courses.
+
+## Students not driven through all screens
+
+None.
