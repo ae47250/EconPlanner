@@ -255,7 +255,25 @@ async function capturePdf(reportPage, html, planName) {
   await reportPage.setContent(html, { waitUntil: "domcontentloaded" });
   return reportPage.evaluate(name => {
     const clean = value => String(value ?? "").replace(/\s+/g, " ").trim();
-    const lines = node => String(node?.innerText || "").split(/\r?\n/).map(clean).filter(Boolean);
+    const lines = node => {
+      if (!node) return [];
+      const output = [];
+      let current = "";
+      const flush = () => { const line = clean(current); if (line) output.push(line); current = ""; };
+      const boundaries = new Set(["ARTICLE", "BLOCKQUOTE", "DD", "DIV", "DL", "DT", "FOOTER", "H1", "H2", "H3", "H4", "H5", "H6", "HEADER", "LI", "OL", "P", "SECTION", "TABLE", "TBODY", "TD", "TFOOT", "TH", "THEAD", "TR", "UL"]);
+      const visit = item => {
+        if (item.nodeType === Node.TEXT_NODE) { current += item.textContent; return; }
+        if (item.nodeType !== Node.ELEMENT_NODE || item.hidden || getComputedStyle(item).display === "none") return;
+        if (item.tagName === "BR") { flush(); return; }
+        const boundary = boundaries.has(item.tagName);
+        if (boundary) flush();
+        for (const child of item.childNodes) visit(child);
+        if (boundary) flush();
+      };
+      visit(node);
+      flush();
+      return output;
+    };
     const sections = [];
     const prefix = `PDF > Plan: ${name}`;
     const add = (heading, values) => sections.push({ heading, lines: values.filter(Boolean) });
@@ -263,7 +281,8 @@ async function capturePdf(reportPage, html, planName) {
     if (!main) throw new Error(`The HTML report for ${name} did not render`);
     for (const block of main.children) {
       if (block.classList.contains("schedule-card")) {
-        const grid = [clean(block.querySelector("h2")?.innerText || "Your plan by term"), "Year | Fall | Winter | May"];
+        const grid = [clean(block.querySelector("h2")?.innerText || "Your plan by term")];
+        for (const header of block.querySelectorAll(".schedule thead th")) grid.push(`TABLE HEADER: ${clean(header.innerText)}`);
         const headers = [...block.querySelectorAll(".schedule thead th")].slice(1).map(header => clean(header.innerText));
         for (const row of block.querySelectorAll(".schedule tbody tr")) {
           const year = clean(row.querySelector("th")?.innerText);
@@ -286,8 +305,11 @@ async function capturePdf(reportPage, html, planName) {
         add(`${prefix} > Grid`, grid);
       } else if (block.classList.contains("checklist-section")) {
         const heading = clean(block.querySelector("h2")?.innerText || "Checklist");
-        const content = [heading, "Requirement | Course / term | Status"];
-        for (const row of block.querySelectorAll("tbody tr")) content.push(`CHECKLIST ROW: ${clean(row.innerText)}`);
+        const content = [heading];
+        for (const header of block.querySelectorAll("thead th")) content.push(`TABLE HEADER: ${clean(header.innerText)}`);
+        for (const row of block.querySelectorAll("tbody tr")) {
+          for (const cell of row.children) content.push(`CHECKLIST CELL: ${clean(cell.innerText)}`);
+        }
         for (const child of block.children) {
           if (child.tagName === "H2" || child.tagName === "TABLE") continue;
           content.push(...lines(child));
@@ -407,8 +429,11 @@ function recordTrace(section, sentence, evidence, studentId) {
 }
 
 async function bootServer() {
+  await readFile(path.join(root, ".next/BUILD_ID"), "utf8").catch(() => {
+    throw new Error("Build the production application with pnpm run build before running the student panel");
+  });
   const port = process.env.PANEL_PORT || "3137";
-  const child = spawn(process.execPath, [path.join(root, "node_modules/next/dist/bin/next"), "dev", "--hostname", "127.0.0.1", "--port", port], {
+  const child = spawn(process.execPath, [path.join(root, "node_modules/next/dist/bin/next"), "start", "--hostname", "127.0.0.1", "--port", port], {
     cwd: root,
     env: { ...process.env, ECONPLANNER_MCP_STATE_KEY: "panel-local-test-key-not-for-production" },
     stdio: ["ignore", "pipe", "pipe"]
@@ -435,9 +460,9 @@ async function runStudent(browser, baseURL, profile) {
   const page = await context.newPage();
   await page.clock.install({ time: new Date(`${student.planCreationDate}T12:00:00`) });
   await page.addInitScript(({ key, formData }) => localStorage.setItem(key, JSON.stringify({ schemaVersion: 6, formData, courseSearch: "", intakeStep: 1 })), { key: storageKey, formData: student });
-  await page.goto(baseURL);
   const stepStatus = [];
   try {
+    await page.goto(baseURL);
     await page.getByRole("heading", { name: "Where are you in your degree?" }).waitFor({ timeout: 30000 });
     stepStatus.push("About you");
     await page.getByRole("button", { name: "Continue to your courses" }).click();
@@ -477,6 +502,22 @@ async function runStudent(browser, baseURL, profile) {
   } finally {
     await context.close();
   }
+}
+
+async function uniqueLinesArtifact() {
+  const seenByLine = new Map();
+  for (const profile of data.students) {
+    const snapshot = await readFile(path.join(snapshotsDir, `${profile.id}.txt`), "utf8");
+    for (const sourceLine of snapshot.split(/\r?\n/)) {
+      if (!sourceLine || sourceLine === "SCREEN" || sourceLine === "PDF" || /^(?:SCREEN|PDF) > /.test(sourceLine)) continue;
+      const line = normalize(sourceLine.replace(/^(?:STATUS|NOTE|GRID ROW|TERM|CHECKLIST ROW|CHECKLIST CELL|TABLE HEADER):\s*/, ""));
+      if (!line) continue;
+      if (!seenByLine.has(line)) seenByLine.set(line, new Set());
+      seenByLine.get(line).add(profile.id);
+    }
+  }
+  return [...seenByLine].sort(([a], [b]) => a.localeCompare(b, "en-US", { numeric: true }))
+    .map(([line, ids]) => `${sorted(ids).join(", ")}\t${line}`).join("\n") + "\n";
 }
 
 async function generate() {
@@ -550,6 +591,7 @@ try {
     const traces = traceArtifacts();
     await writeFile(path.join(targetDir, "trace.json"), traces.json);
     await writeFile(path.join(targetDir, "trace.md"), traces.markdown);
+    await writeFile(path.join(targetDir, "unique-lines.txt"), await uniqueLinesArtifact());
   }
   if (runningCheck) {
     const expectedDir = path.join(root, "tests/panel");
@@ -557,11 +599,11 @@ try {
       .filter(file => file.endsWith(extension)).map(file => `${prefix}/${file}`);
     const expectedFiles = [
       ...await filesIn(path.join(expectedDir, "snapshots"), ".txt", "snapshots"),
-      ...await filesIn(path.join(expectedDir, "plans"), ".json", "plans"), "trace.json", "trace.md"
+      ...await filesIn(path.join(expectedDir, "plans"), ".json", "plans"), "trace.json", "trace.md", "unique-lines.txt"
     ].sort();
     const actualFiles = [
       ...await filesIn(snapshotsDir, ".txt", "snapshots"),
-      ...await filesIn(plansDir, ".json", "plans"), "trace.json", "trace.md"
+      ...await filesIn(plansDir, ".json", "plans"), "trace.json", "trace.md", "unique-lines.txt"
     ].sort();
     let failed = JSON.stringify(expectedFiles) !== JSON.stringify(actualFiles);
     if (failed) console.error(`Panel file list differs. Expected ${expectedFiles.length} files; generated ${actualFiles.length}.`);

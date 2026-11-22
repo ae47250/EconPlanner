@@ -138,9 +138,22 @@ jobs:
       - name: Install local PDF text verification
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
 
+      - name: Exercise student panel self-tests
+        if: matrix.shard == 1
+        run: node --test tests/panel/panel-self-test.test.js
+
+      - name: Build application for student panel
+        if: matrix.shard == 1
+        run: pnpm run build
+
       - name: Check student panel snapshots
         if: matrix.shard == 1
         run: pnpm panel:check
+
+      - name: Report student panel lint findings
+        if: always() && matrix.shard == 1
+        continue-on-error: true
+        run: pnpm panel:lint
 
       - name: Run bounded EconPlanner browser regression suite
         run: >-

@@ -1,580 +1,72 @@
-$ node scripts/panel/lint.mjs
-01.txt: 29 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-02.txt: 45 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / One Year Early: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / One Year Early: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / One Year Early: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / One Year Early: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / One Year Early: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / One Year Early: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / One Year Early: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / One Year Early: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / One Year Early: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / One Year Early: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / One Year Early: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / One Year Early: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / One Year Early: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-03.txt: 31 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-05.txt: 23 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-07.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-08.txt: 13 violation(s)
-  [duplicate] SCREEN / Balanced: GRID ROW: No major course assigned
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / One Year Early: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / One Year Early: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / One Year Early: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / One Year Early: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [semicolon] PDF / One Year Early: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-09.txt: 11 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+05.txt: 8 violation(s)
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+09.txt: 1 violation(s)
   [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-10.txt: 16 violation(s)
+10.txt: 2 violation(s)
   [wordLimit] SCREEN: Your available terms start in Winter 2027. ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term. Your answers do not show statistics completed, and there is no earlier term left in this plan to take it. Check your statistics answer or ask your advisor about a later graduation date. [sentence: ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.]
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 213 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
   [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-11.txt: 12 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 213 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+11.txt: 1 violation(s)
   [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: ECO 114, MAT 113, MAT 121, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-12.txt: 10 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+12.txt: 1 violation(s)
   [wordLimit] SCREEN: One Year Early: Not feasible — These courses did not fit before May 2027: BUSN 323, ECO 321, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-13.txt: 11 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-14.txt: 10 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 213 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-15.txt: 13 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-16.txt: 12 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed. If you finished ECO 113 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it. [sentence: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.]
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 213 ECO 213 Completed ECO 113 not marked done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether ECO 113 were completed before ECO 213.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-17.txt: 12 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 214 ECO 214 — Taking now Taking now ECO 114 not marked done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether ECO 114 were completed before ECO 214.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-18.txt: 13 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it. [sentence: Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.]
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 213 ECO 213 Completed ECO 113 marked Taking now rather than done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether ECO 113 were completed before ECO 213. The student's answers show ECO 113 is marked “Taking now.”]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-19.txt: 31 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: NOTE: Taking now
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: NOTE: Taking now
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Explore the Major: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-20.txt: 13 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-21.txt: 13 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2028.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-22.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-23.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-24.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-25.txt: 8 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
+16.txt: 2 violation(s)
+  [duplicate] PDF / Balanced: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed. If you finished ECO 113 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
+  [duplicate] PDF / Balanced: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed. If you finished ECO 113 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
+17.txt: 2 violation(s)
+  [duplicate] PDF / Balanced: You are taking ECO 214, but ECO 114, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.
+  [duplicate] PDF / Balanced: You are taking ECO 214, but ECO 114, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.
+18.txt: 2 violation(s)
+  [duplicate] PDF / Balanced: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
+  [duplicate] PDF / Balanced: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
+25.txt: 2 violation(s)
   [semicolon] SCREEN / Balanced: You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
   [semicolon] PDF / Balanced: You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-26.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-27.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-28.txt: 10 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2027.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-30.txt: 10 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2027.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-32.txt: 18 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Approval needed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [inconsistentFact] SCREEN / Balanced: Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor. No approval is recorded yet. [also: NOTE: Taking MAT 113 and ECO 214 in the same term requires approval from the ECO 214 instructor.]
-  [inconsistentFact] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet. [also: NOTE: Taking ECO 214 and ECO 461 in the same term requires approval from the Economics Department.]
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2027Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it. [sentence: Graduation goal: Spring/May 2027Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.]
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [duplicate] PDF / Balanced: NOTE: Approval needed
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 213 ECO 213 Completed MAT 113 or MAT 121 not marked done before this class. Ask your advisor to check. [also: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213.]
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 Planned Approval needed [also: Confirm ECO 214 instructor approval for ECO 214 in Winter 2027.]
-  [inconsistentFact] PDF / Balanced: CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Approval needed [also: Confirm Economics Department approval for ECO 461 in Winter 2027.]
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+30.txt: 2 violation(s)
+  [duplicate] PDF / Balanced: This term would have 5 courses. The normal limit is 4. Advisor approval and no academic probation are recorded.
+  [duplicate] PDF / Balanced: This term would have 5 courses. The normal limit is 4. Advisor approval and no academic probation are recorded.
+32.txt: 5 violation(s)
+  [duplicate] SCREEN / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet.
+  [wordLimit] PDF / Balanced: Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it. [sentence: Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.]
+  [duplicate] PDF / Balanced: Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department. No approval is recorded yet.
+  [duplicate] PDF / Balanced: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
+  [duplicate] PDF / Balanced: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 35.txt: 1 violation(s)
   [wordLimit] SCREEN: Your available terms start in Winter 2027. ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term. Your answers do not show statistics completed, and there is no earlier term left in this plan to take it. Check your statistics answer or ask your advisor about a later graduation date. [sentence: ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.]
-36.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-39.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-42.txt: 6 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 43.txt: 1 violation(s)
   [wordLimit] SCREEN: Your available terms start in Winter 2027. ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term. Your answers do not show statistics completed, and there is no earlier term left in this plan to take it. Check your statistics answer or ask your advisor about a later graduation date. [sentence: ECO 461 must be taken in Winter 2027 to finish by Spring/May 2027, and statistics (ECO 257 / MAT 217 / PSY 217) must be completed before that term.]
-44.txt: 3 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-46.txt: 37 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: No major course assigned
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: No major course assigned
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: GRID ROW: No major course assigned
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [wordLimit] PDF / Balanced: Graduation goal: Spring/May 2030Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [wordLimit] PDF / Explore the Major: Graduation goal: Spring/May 2030Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
-  [duplicate] PDF / Explore the Major: GRID ROW: -
-  [duplicate] PDF / Explore the Major: GRID ROW: -
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-47.txt: 27 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-48.txt: 21 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-49.txt: 29 violation(s)
-  [duplicate] SCREEN / Balanced: NOTE: Seat availability not confirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Balanced: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Balanced: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Balanced: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Balanced: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Balanced: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [duplicate] SCREEN / Explore the Major: GRID ROW: ECO elective (200+) ▾
-  [duplicate] SCREEN / Explore the Major: NOTE: Future offering unconfirmed
-  [semicolon] SCREEN / Explore the Major: — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] SCREEN / Explore the Major: — Tue/Thu, 12:20–2:05 p.m.
-  [duplicate] SCREEN / Explore the Major: — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-  [duplicate] PDF / Balanced: GRID ROW: -
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Balanced: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Balanced: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
-  [duplicate] PDF / Explore the Major: GRID ROW: -
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [duplicate] PDF / Explore the Major: GRID ROW: Economics elective (200 level or higher)
-  [semicolon] PDF / Explore the Major: ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+46.txt: 16 violation(s)
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: ECO 114 ECO 114 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: ECO 114 ECO 114 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: ECO 114 ECO 114 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: ECO 114 ECO 114 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+47.txt: 8 violation(s)
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? Transfer credit Transfer credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Balanced: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? Transfer credit Transfer credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? Transfer credit Transfer credit. Confirm with your advisor that it counts.
+  [duplicate] SCREEN / Explore the Major: CHECKLIST ROW: Mathematics MAT 121 Requirement options: MAT 113 / MAT 121 ? Transfer credit Transfer credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: Transfer credit Transfer credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Balanced: CHECKLIST CELL: Transfer credit Transfer credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: Transfer credit Transfer credit. Confirm with your advisor that it counts.
+  [duplicate] PDF / Explore the Major: CHECKLIST CELL: Transfer credit Transfer credit. Confirm with your advisor that it counts.
 50.txt: 1 violation(s)
   [wordLimit] SCREEN: These courses did not fit before May 2028: MAT 113, MAT 121, ECO 257, MAT 217, PSY 217, BUSN 323, ECO 321, ECO 213, ECO 214, ECO elective 1, ECO elective 2, ECO elective 3, ECO elective 4, ECO 461.
-Panel sentence violations: 538 (semicolon=94, wordLimit=13, bannedTerm=0, placeholder=0, duplicate=405, inconsistentFact=26, statusContradiction=0)
-[ELIFECYCLE] Command failed with exit code 1.
+Panel sentence violations: 55 (semicolon=2, wordLimit=9, bannedTerm=0, placeholder=0, duplicate=44, statusContradiction=0)

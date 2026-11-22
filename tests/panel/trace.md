@@ -20,7 +20,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): A past schedule does not guarantee a course will be offered again.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 20, 21, 46, 47, 48, 49): A published schedule may differ.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48, 49): Actual offerings may differ.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): AP credit
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): AP credit Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 07, 08): Ask your advisor and the Registrar to confirm you can take ECO 461 then.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 17, 18, 32): Ask your advisor to check.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 13, 16, 17, 23, 24, 27, 28, 30, 36, 39, 42, 44): Ask your advisor to help you file a petition with the Student Academic Assistance Committee.
@@ -61,100 +61,91 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19, 32): Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 were completed before ECO 213.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47): Check with your advisor
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 32): Check with your advisor.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST ROW: ECO 113 ECO 113 — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): CHECKLIST ROW: ECO 113 ECO 113 — Taking now Taking now
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 13, 16): CHECKLIST ROW: ECO 113 ECO 113 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): CHECKLIST ROW: ECO 113 ECO 113 AP credit AP/exam credit.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 14, 15, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 48, 49): CHECKLIST ROW: ECO 113 ECO 113 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): CHECKLIST ROW: ECO 113 ECO 113 Transfer credit Transfer credit.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 17, 19): CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): CHECKLIST ROW: ECO 114 ECO 114 AP credit AP/exam credit.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 12, 13, 14, 15, 16, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49): CHECKLIST ROW: ECO 114 ECO 114 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 09, 13, 15, 17, 20, 21, 46, 47, 48, 49): CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST ROW: ECO 213 ECO 213 — Fall 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST ROW: ECO 213 ECO 213 — Taking now Taking now Ask an advisor whether this class counts
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14): CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 Planned Approval needed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 12, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44): CHECKLIST ROW: ECO 213 ECO 213 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): CHECKLIST ROW: ECO 213 ECO 213 Completed ECO 113 marked Taking now rather than done before this class.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): CHECKLIST ROW: ECO 213 ECO 213 Completed ECO 113 not marked done before this class.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): CHECKLIST ROW: ECO 213 ECO 213 Completed MAT 113 or MAT 121 not marked done before this class.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14, 16, 18, 19): CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 46): CHECKLIST ROW: ECO 214 ECO 214 — Fall 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): CHECKLIST ROW: ECO 214 ECO 214 — Taking now Taking now ECO 114 not marked done before this class.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 13, 47, 49): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 Planned Approval needed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 46, 48, 49): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 15, 20, 21): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 Planned Approval needed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 12, 22, 23, 24, 25, 26, 27, 36, 39, 42, 44): CHECKLIST ROW: ECO 214 ECO 214 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 24, 25, 26, 27, 36, 39, 42, 44): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Approval needed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 Planned Ask an advisor to confirm senior standing
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 09, 12, 13, 16, 17, 18): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14, 15, 20, 21): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 Planned Approval needed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19, 47, 48, 49): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 Planned Ask an advisor to confirm senior standing
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 13, 14, 16): CHECKLIST ROW: Economics elective 1 ECO 161 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): CHECKLIST ROW: Economics elective 1 ECO 161 Completed Counts as your one 100-level elective.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 15, 17, 18, 20, 21): CHECKLIST ROW: Economics elective 1 ECO 221 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19, 47): CHECKLIST ROW: Economics elective 1 ECO 222 — Spring/May 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 28, 30, 32, 36, 39, 42, 44): CHECKLIST ROW: Economics elective 1 ECO 234 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Fall 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46, 49): CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Spring/May 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47, 49): CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Winter 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 14): CHECKLIST ROW: Economics elective 2 ECO 221 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 36, 39, 42): CHECKLIST ROW: Economics elective 2 ECO 221 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 13, 15, 16, 17, 18, 20, 21, 48): CHECKLIST ROW: Economics elective 2 ECO 222 — Spring/May 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 24, 25, 26, 27, 28, 30, 32, 44): CHECKLIST ROW: Economics elective 2 ECO 333 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 49): CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Fall 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48, 49): CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Spring/May 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Spring/May 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19, 47): CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Winter 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Winter 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 39): CHECKLIST ROW: Economics elective 3 ECO 161 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 24, 25, 26, 27, 28, 30, 32, 44): CHECKLIST ROW: Economics elective 3 ECO 221 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 11, 14): CHECKLIST ROW: Economics elective 3 ECO 222 — Spring/May 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 36, 42): CHECKLIST ROW: Economics elective 3 ECO 333 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 13, 15, 16, 17, 18, 20, 21): CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48, 49): CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Spring/May 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Spring/May 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 49): CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Winter 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): CHECKLIST ROW: Economics elective 4 ECO 222 — Spring/May 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21): CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — Spring/May 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48, 49): CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — Spring/May 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — Spring/May 2030 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): CHECKLIST ROW: Finance BUSN 323 — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48): CHECKLIST ROW: Finance BUSN 323 — Fall 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST ROW: Finance BUSN 323 — Fall 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13, 16, 17): CHECKLIST ROW: Finance BUSN 323 — Winter 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03): CHECKLIST ROW: Finance BUSN 323 — Winter 2029 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 24, 27, 28, 30, 36, 39, 42, 44): CHECKLIST ROW: Finance BUSN 323 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 15, 18, 20, 21, 22, 23, 32, 46, 47, 48, 49): CHECKLIST ROW: Finance ECO 321 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 14, 25, 26): CHECKLIST ROW: Finance ECO 321 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): CHECKLIST ROW: Mathematics MAT 113 — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 10, 11, 48): CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 Planned Approval needed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST ROW: Mathematics MAT 113 — Winter 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST ROW: Mathematics MAT 121 — Taking now Taking now
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): CHECKLIST ROW: Mathematics MAT 121 AP credit AP/exam credit.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44, 49): CHECKLIST ROW: Mathematics MAT 121 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): CHECKLIST ROW: Mathematics MAT 121 Transfer credit Transfer credit.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19): CHECKLIST ROW: Statistics ECO 257 — Fall 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 27, 49): CHECKLIST ROW: Statistics ECO 257 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): CHECKLIST ROW: Statistics MAT 217 — Fall 2026 Planned Check this class’s enrollment status
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 46): CHECKLIST ROW: Statistics MAT 217 — Spring/May 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47, 48): CHECKLIST ROW: Statistics MAT 217 — Spring/May 2028 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 36): CHECKLIST ROW: Statistics MAT 217 — Taking now Taking now
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48): CHECKLIST ROW: Statistics MAT 217 — Winter 2027 Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 11, 12, 25, 26, 28, 30, 32, 39, 44): CHECKLIST ROW: Statistics MAT 217 Completed
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 23, 24): CHECKLIST ROW: Statistics PSY 217 Completed
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): CHECKLIST CELL: AP credit AP/exam credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 24, 27, 28, 30, 36, 39, 42, 44): CHECKLIST CELL: BUSN 323
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): CHECKLIST CELL: BUSN 323 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48): CHECKLIST CELL: BUSN 323 — Fall 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST CELL: BUSN 323 — Fall 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13, 16, 17): CHECKLIST CELL: BUSN 323 — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03): CHECKLIST CELL: BUSN 323 — Winter 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49): CHECKLIST CELL: Completed
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): CHECKLIST CELL: Completed Counts as your one 100-level elective.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): CHECKLIST CELL: Completed ECO 113 marked Taking now rather than done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): CHECKLIST CELL: Completed ECO 113 not marked done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): CHECKLIST CELL: Completed MAT 113 or MAT 121 not marked done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 113
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST CELL: ECO 113 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): CHECKLIST CELL: ECO 113 — Taking now
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 13, 16): CHECKLIST CELL: ECO 113 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 114
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 17, 19): CHECKLIST CELL: ECO 114 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): CHECKLIST CELL: ECO 161
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 13, 14, 16, 39): CHECKLIST CELL: ECO 161 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 213
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 09, 13, 15, 17, 20, 21, 46, 47, 48, 49): CHECKLIST CELL: ECO 213 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST CELL: ECO 213 — Fall 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST CELL: ECO 213 — Taking now
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 10, 11, 14): CHECKLIST CELL: ECO 213 — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 214
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14, 16, 18, 19): CHECKLIST CELL: ECO 214 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 46): CHECKLIST CELL: ECO 214 — Fall 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): CHECKLIST CELL: ECO 214 — Taking now
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 13, 28, 30, 32, 47, 49): CHECKLIST CELL: ECO 214 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 15, 19, 20, 21, 46, 48, 49): CHECKLIST CELL: ECO 214 — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST CELL: ECO 214 — Winter 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 36, 39, 42): CHECKLIST CELL: ECO 221
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 14, 15, 17, 18, 20, 21, 24, 25, 26, 27, 28, 30, 32, 44): CHECKLIST CELL: ECO 221 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): CHECKLIST CELL: ECO 222 — Spring/May 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 28, 30, 32, 36, 39, 42, 44): CHECKLIST CELL: ECO 234
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 27, 49): CHECKLIST CELL: ECO 257
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19): CHECKLIST CELL: ECO 257 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 14, 25, 26): CHECKLIST CELL: ECO 321
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 15, 18, 20, 21, 22, 23, 32, 46, 47, 48, 49): CHECKLIST CELL: ECO 321 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 42, 44): CHECKLIST CELL: ECO 333
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): CHECKLIST CELL: ECO 461 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21): CHECKLIST CELL: ECO 461 — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48, 49): CHECKLIST CELL: ECO 461 — Winter 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST CELL: ECO 461 — Winter 2030
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 461 / Senior Seminar
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 09, 10, 12, 13, 15, 16, 17, 18, 20, 21): CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 46, 47, 48, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 19, 46, 47, 48, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2030
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19, 47, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Economics elective 1
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Economics elective 2
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Economics elective 3
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Economics elective 4
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Finance
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): CHECKLIST CELL: MAT 113 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 10, 11, 32, 48): CHECKLIST CELL: MAT 113 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST CELL: MAT 113 — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 07, 08, 09, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44, 46, 47, 49): CHECKLIST CELL: MAT 121
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST CELL: MAT 121 — Taking now
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 11, 12, 25, 26, 28, 30, 32, 39, 44): CHECKLIST CELL: MAT 217
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): CHECKLIST CELL: MAT 217 — Fall 2026
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 46): CHECKLIST CELL: MAT 217 — Spring/May 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47, 48): CHECKLIST CELL: MAT 217 — Spring/May 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 36): CHECKLIST CELL: MAT 217 — Taking now
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48): CHECKLIST CELL: MAT 217 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Mathematics
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Planned
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14, 15, 20, 21, 28, 30, 32): CHECKLIST CELL: Planned Approval needed
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 07, 08): CHECKLIST CELL: Planned Ask an advisor to confirm senior standing
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): CHECKLIST CELL: Planned Check this class’s enrollment status
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 23, 24): CHECKLIST CELL: PSY 217
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Statistics
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18, 19, 36): CHECKLIST CELL: Taking now
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST CELL: Taking now Ask an advisor whether this class counts
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): CHECKLIST CELL: Taking now ECO 114 not marked done before this class.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): CHECKLIST CELL: Transfer credit Transfer credit.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Classes marked Planned are not completed yet.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49): Completed
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 42, 44, 48, 49): Completed Planned
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): Completed Taking now Planned
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Completed Transfer credit Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Confirm ECO 214 instructor approval for ECO 214 in Winter 2027.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Confirm Economics Department approval for ECO 461 in Winter 2027.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14, 15, 20, 21): Confirm Economics Department approval for ECO 461 in Winter 2028.
@@ -198,24 +189,10 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 13, 16, 17, 23, 24, 27, 28, 30, 36, 39, 42, 44): Forms are at the Registrar's Office.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Future schedules can change.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 46, 47, 48, 49): Future years
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 22, 25, 28, 42): Graduation goal: Spring/May 2027
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 23, 24, 27, 36, 39, 44): Graduation goal: Spring/May 2027See the notes below for paperwork to file.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08): Graduation goal: Spring/May 2027Timeline: One year early
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 26): Graduation goal: Spring/May 2027Why an advisor should review this plan: Confirm with your advisor that your transfer credit for BUSN 323 counts.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 30): Graduation goal: Spring/May 2027Why an advisor should review this plan: This term would have 5 courses.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Graduation goal: Spring/May 2027Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 11, 12, 14, 15, 20, 21): Graduation goal: Spring/May 2028
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 13): Graduation goal: Spring/May 2028See the notes below for paperwork to file.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): Graduation goal: Spring/May 2028Why an advisor should review this plan: You are taking ECO 214, but ECO 114, which comes before it, is not marked.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): Graduation goal: Spring/May 2028Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03, 48, 49): Graduation goal: Spring/May 2029
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02): Graduation goal: Spring/May 2029Timeline: One year early
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Graduation goal: Spring/May 2029Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Graduation goal: Spring/May 2029Why an advisor should review this plan: Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Graduation goal: Spring/May 2029Why an advisor should review this plan: ECO 213’s earlier course requirements need review.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): Graduation goal: Spring/May 2030
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Graduation goal: Spring/May 2030Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Graduation goal: Spring/May 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21): Graduation goal: Spring/May 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48, 49): Graduation goal: Spring/May 2029
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): Graduation goal: Spring/May 2030
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 44, 46, 47, 48, 49): GRID ROW: -
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 13, 16, 17, 19, 46, 47, 48): GRID ROW: BUSN 323
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 18): GRID ROW: ECO 113
@@ -370,19 +347,25 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 36, 39, 42): Past Winter schedules included: ECO 337, ECO 357.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Plan feasibility: Conditional plan
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Plan Notes
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Planned
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 25): Planning information
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): Published schedules as of the plan date (August 25, 2026)
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 44): Published schedules as of the plan date (January 12, 2027)
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 46, 47, 48, 49): Published schedules as of the plan date (November 22, 2026)
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Requirement | Course / term | Status
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 13, 23, 24, 27, 36, 39, 44): See the notes below for paperwork to file.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Some future classes, seats, or approvals still need confirmation.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Statistics choices: ECO 257 or MAT 217 or PSY 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Course / term
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Fall
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: May
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Requirement
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Status
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Winter
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Year
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 14): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 15, 20, 21): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): Taking now
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 42, 44, 46, 47, 48, 49): TERM: 2026/2027 Fall
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): TERM: 2026/2027 Fall 2026
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TERM: 2026/2027 May
@@ -416,7 +399,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13, 16, 17): This plan places BUSN 323 in Winter 2028.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03): This plan places BUSN 323 in Winter 2029.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): This plan uses the current Economics major requirements.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Transfer credit
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 08): Timeline: One year early
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.
@@ -449,8 +432,17 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): We don’t know if there are open seats in MAT 217, ECO 461, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): We don’t know if there are open seats in MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): What to check for this plan
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 26): Why an advisor should review this plan: Confirm with your advisor that your transfer credit for BUSN 323 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Why an advisor should review this plan: Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Why an advisor should review this plan: ECO 213’s earlier course requirements need review.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 30): Why an advisor should review this plan: This term would have 5 courses.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): Why an advisor should review this plan: You are taking ECO 214, but ECO 114, which comes before it, is not marked.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): Why an advisor should review this plan: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Why an advisor should review this plan: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): Winter 2027:
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Year | Fall | Winter | May
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): You are taking ECO 214, but ECO 114, which comes before it, is not marked.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.

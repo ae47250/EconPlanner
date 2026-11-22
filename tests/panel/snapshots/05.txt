@@ -229,10 +229,14 @@ Panel Student 05 | Balanced | Prepared November 22, 2026 | Class standing: Sopho
 This plan covers Winter 2027 through Spring/May 2029.
 Plan feasibility: Conditional plan
 Some future classes, seats, or approvals still need confirmation.
-Graduation goal: Spring/May 2029Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
+Graduation goal: Spring/May 2029
+Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
 PDF > Plan: Balanced > Grid
 Your plan by term
-Year | Fall | Winter | May
+TABLE HEADER: Year
+TABLE HEADER: Fall
+TABLE HEADER: Winter
+TABLE HEADER: May
 TERM: 2026/2027 Fall
 GRID ROW: -
 TERM: 2026/2027 Winter
@@ -275,22 +279,47 @@ For your advisor
 Confirm whether the student’s AP credit for ECO 113 and MAT 121 counts.
 PDF > Plan: Balanced > Checklist
 Your Economics major checklist
-Requirement | Course / term | Status
-CHECKLIST ROW: ECO 113 ECO 113 AP credit AP/exam credit. Confirm with your advisor that it counts.
-CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 Planned
-CHECKLIST ROW: Mathematics MAT 121 AP credit AP/exam credit. Confirm with your advisor that it counts.
-CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 Planned
-CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 Planned
-CHECKLIST ROW: Statistics MAT 217 — Winter 2027 Planned
-CHECKLIST ROW: Finance BUSN 323 — Fall 2028 Planned
-CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 Planned
-CHECKLIST ROW: Economics elective 1 ECO 222 — Spring/May 2027 Planned
-CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Spring/May 2028 Planned
-CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2028 Planned
-CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — Spring/May 2029 Planned
+TABLE HEADER: Requirement
+TABLE HEADER: Course / term
+TABLE HEADER: Status
+CHECKLIST CELL: ECO 113
+CHECKLIST CELL: ECO 113
+CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: ECO 114
+CHECKLIST CELL: ECO 114 — Winter 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Mathematics
+CHECKLIST CELL: MAT 121
+CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: ECO 213
+CHECKLIST CELL: ECO 213 — Fall 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: ECO 214
+CHECKLIST CELL: ECO 214 — Winter 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Statistics
+CHECKLIST CELL: MAT 217 — Winter 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Finance
+CHECKLIST CELL: BUSN 323 — Fall 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: ECO 461 / Senior Seminar
+CHECKLIST CELL: ECO 461 — Winter 2029
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 1
+CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 2
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 3
+CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 4
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
+CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
-AP credit
-Planned
+AP credit Planned
 Classes marked Planned are not completed yet. Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
@@ -331,10 +360,14 @@ Panel Student 05 | Explore the Major | Prepared November 22, 2026 | Class standi
 This plan covers Winter 2027 through Spring/May 2029.
 Plan feasibility: Conditional plan
 Some future classes, seats, or approvals still need confirmation.
-Graduation goal: Spring/May 2029Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
+Graduation goal: Spring/May 2029
+Why an advisor should review this plan: Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
 PDF > Plan: Explore the Major > Grid
 Your plan by term
-Year | Fall | Winter | May
+TABLE HEADER: Year
+TABLE HEADER: Fall
+TABLE HEADER: Winter
+TABLE HEADER: May
 TERM: 2026/2027 Fall
 GRID ROW: -
 TERM: 2026/2027 Winter
@@ -377,22 +410,47 @@ For your advisor
 Confirm whether the student’s AP credit for ECO 113 and MAT 121 counts.
 PDF > Plan: Explore the Major > Checklist
 Your Economics major checklist
-Requirement | Course / term | Status
-CHECKLIST ROW: ECO 113 ECO 113 AP credit AP/exam credit. Confirm with your advisor that it counts.
-CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 Planned
-CHECKLIST ROW: Mathematics MAT 121 AP credit AP/exam credit. Confirm with your advisor that it counts.
-CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 Planned
-CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 Planned
-CHECKLIST ROW: Statistics ECO 257 — Fall 2027 Planned
-CHECKLIST ROW: Finance BUSN 323 — Fall 2028 Planned
-CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 Planned
-CHECKLIST ROW: Economics elective 1 ECO 222 — Spring/May 2027 Planned
-CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Spring/May 2028 Planned
-CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2028 Planned
-CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — Spring/May 2029 Planned
+TABLE HEADER: Requirement
+TABLE HEADER: Course / term
+TABLE HEADER: Status
+CHECKLIST CELL: ECO 113
+CHECKLIST CELL: ECO 113
+CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: ECO 114
+CHECKLIST CELL: ECO 114 — Winter 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Mathematics
+CHECKLIST CELL: MAT 121
+CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: ECO 213
+CHECKLIST CELL: ECO 213 — Fall 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: ECO 214
+CHECKLIST CELL: ECO 214 — Winter 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Statistics
+CHECKLIST CELL: ECO 257 — Fall 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Finance
+CHECKLIST CELL: BUSN 323 — Fall 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: ECO 461 / Senior Seminar
+CHECKLIST CELL: ECO 461 — Winter 2029
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 1
+CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 2
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 3
+CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 4
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
+CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
-AP credit
-Planned
+AP credit Planned
 Classes marked Planned are not completed yet. Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Explore the Major > Plan Notes
 Plan Notes

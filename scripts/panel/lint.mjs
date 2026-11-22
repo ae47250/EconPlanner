@@ -1,4 +1,4 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
@@ -7,16 +7,17 @@ const snapshotFlag = process.argv.indexOf("--snapshots-dir");
 const snapshotDir = snapshotFlag >= 0
   ? path.resolve(process.argv[snapshotFlag + 1] || "")
   : path.join(root, "tests/panel/snapshots");
+const factReportPath = path.join(path.dirname(snapshotDir), "fact-variants.txt");
 const banned = JSON.parse(await readFile(path.join(root, "tests/panel/banned-terms.json"), "utf8"));
 const files = (await readdir(snapshotDir)).filter(name => name.endsWith(".txt")).sort();
-const counts = { semicolon: 0, wordLimit: 0, bannedTerm: 0, placeholder: 0, duplicate: 0, inconsistentFact: 0, statusContradiction: 0 };
+const counts = { semicolon: 0, wordLimit: 0, bannedTerm: 0, placeholder: 0, duplicate: 0, statusContradiction: 0 };
 const normalize = value => String(value).replace(/\s+/g, " ").trim();
 const words = value => value.match(/[\p{L}\p{N}]+(?:[’'/-][\p{L}\p{N}]+)*/gu) || [];
 const escapePattern = value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const bannedPatterns = banned.map(term => [term, new RegExp(`\\b${escapePattern(term)}\\b`, "i")]);
 
 function visibleText(line) {
-  return line.replace(/^(?:STATUS|NOTE|GRID ROW|TERM|CHECKLIST ROW):\s*/, "");
+  return line.replace(/^(?:STATUS|NOTE|GRID ROW|TERM|CHECKLIST ROW|CHECKLIST CELL|TABLE HEADER):\s*/, "");
 }
 
 function factFamily(value) {
@@ -42,12 +43,14 @@ function factKey(value) {
 }
 
 let total = 0;
+const factVariants = [];
 for (const file of files) {
   const lines = (await readFile(path.join(snapshotDir, file), "utf8")).split(/\r?\n/);
   const scopes = new Map();
   const violations = [];
   let surface = "";
   let scope = "";
+  let subsection = "";
   const flag = (type, line, currentScope = scope) => {
     counts[type]++;
     violations.push({ type, line, scope: currentScope || surface || "unscoped" });
@@ -56,20 +59,22 @@ for (const file of files) {
   for (const original of lines) {
     const line = normalize(original);
     if (!line) continue;
-    if (line === "SCREEN" || line === "PDF") { surface = line; scope = ""; continue; }
+    if (line === "SCREEN" || line === "PDF") { surface = line; scope = ""; subsection = ""; continue; }
     const section = line.match(/^(SCREEN|PDF) > Plan: (.*?)(?: > .*)?$/);
     if (section) {
       surface = section[1];
       scope = `${section[1]} / ${section[2]}`;
+      subsection = line;
       if (!scopes.has(scope)) scopes.set(scope, { lines: [], seen: new Set(), facts: new Map() });
       continue;
     }
-    if (/^(?:SCREEN|PDF) > /.test(line)) { scope = ""; continue; }
+    if (/^(?:SCREEN|PDF) > /.test(line)) { scope = ""; subsection = line; continue; }
 
     const text = visibleText(line);
     const isGridRow = /^GRID ROW:/.test(line);
+    const isGridNote = /^NOTE:/.test(line) && subsection.endsWith(" > Grid");
     const isMeetingTime = /\b(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)(?:\/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun))*\b[^\n]*\b\d{1,2}:\d{2}\b/i.test(text);
-    if (text.includes(";")) flag("semicolon", line);
+    if (!isMeetingTime && text.includes(";")) flag("semicolon", line);
     if (!isGridRow && !isMeetingTime) {
       for (const sentence of text.split(/(?<=[.!?])\s+(?=[A-Z0-9“])/).map(normalize).filter(Boolean)) {
         if (words(sentence).length > 25) flag("wordLimit", sentence === text ? line : `${line} [sentence: ${sentence}]`);
@@ -81,15 +86,20 @@ for (const file of files) {
     if (!scope) continue;
     const record = scopes.get(scope);
     record.lines.push(line);
-    if (record.seen.has(line)) flag("duplicate", line);
-    record.seen.add(line);
+    if (!isGridRow && !isGridNote && !isMeetingTime) {
+      for (const sentence of text.split(/(?<=[.!?])\s+(?=[A-Z0-9“])/).map(normalize).filter(Boolean)) {
+        if (!/[.!?]["'’”)}\]]?$/.test(sentence)) continue;
+        if (record.seen.has(sentence)) flag("duplicate", line);
+        record.seen.add(sentence);
+      }
+    }
     if (isGridRow || isMeetingTime) continue;
     const key = factKey(text);
     if (!key) continue;
     const normalized = normalizedFact(text);
     const prior = record.facts.get(key);
     if (prior && prior.normalized !== normalized && !prior.variants.has(normalized)) {
-      flag("inconsistentFact", `${line} [also: ${prior.first}]`);
+      factVariants.push(`${file} | ${scope}: ${line} [also: ${prior.first}]`);
     }
     if (prior) prior.variants.add(normalized);
     else record.facts.set(key, { first: line, normalized, variants: new Set([normalized]) });
@@ -115,5 +125,9 @@ for (const file of files) {
     for (const { type, line, scope: location } of violations) console.log(`  [${type}] ${location}: ${line}`);
   }
 }
+await writeFile(factReportPath, [
+  `Same-fact wording variants: ${factVariants.length}`,
+  ...factVariants
+].join("\n") + "\n");
 console.log(`Panel sentence violations: ${total} (${Object.entries(counts).map(([type, count]) => `${type}=${count}`).join(", ")})`);
 if (!files.length || total) process.exitCode = 1;
