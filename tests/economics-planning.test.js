@@ -862,7 +862,7 @@ test("standard planning may use more than two Economics courses when total load 
     assert.deepEqual(fall.courses.map(course => course.course), ["ECO 213", "ECO 234", "ECO 333", "MAT 217"]);
     assert.deepEqual(winter.courses.map(course => course.course), ["ECO 221", "ECO 321", "ECO 461"]);
     assert.ok(schedule.terms.May.some(section => section.course === may.courses[0].course));
-    assert.ok(plan.validation.warnings.some(warning => /more than two Economics courses/.test(warning)));
+    assert.ok(plan.validation.warnings.some(warning => warning === "This plan has 3 Economics courses in Fall 2026. The department prefers no more than 2 per term, but the term is still within the normal course load."));
     assert.ok(plan.validation.warnings.some(warning => /MAT 217.*FULL|FULL.*MAT 217/i.test(warning)));
     assert.ok(plan.terms.every(term => term.courses.length <= (term.termKey === "May" ? 1 : 4)));
     assert.ok(plan.terms.flatMap(term => term.courses).filter(course => course.course.startsWith("ECO ")).every(course => (
@@ -1033,7 +1033,7 @@ test("graduation overload is a warning, while a fifth total course remains block
   const fall = overloaded.terms.find(term => term.term === "Fall 2026");
 
   assert.equal(overloaded.validation.valid, true);
-  assert.ok(overloaded.validation.warnings.some(warning => /more than two Economics courses/.test(warning)));
+  assert.ok(overloaded.validation.warnings.some(warning => /This plan has 3 Economics courses in Fall 2026/.test(warning)));
   fall.courses.push({
     course: "ECO 260",
     title: "Special Topics",

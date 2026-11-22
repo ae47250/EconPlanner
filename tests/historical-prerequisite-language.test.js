@@ -54,6 +54,26 @@ test("the validated plan keeps a missing major prerequisite and the PDF repeats 
   assert.match(renderEconomicsHtml(report, template), /Scheduled after ECO 214, which you marked completed\. Check with your advisor\./);
 });
 
+test("freshman completed ECO 214 shows the same prerequisite-gap advice in the plan and PDF", async () => {
+  const student = { displayName: "Fictional student", academicStanding: "freshman", planCreationDate: "2026-11-21", courses: [course("ECO 214"), course("ECO 114", "in_progress")] };
+  const response = await POST(new Request("http://localhost/api/majors/map", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student }) }));
+  assert.equal(response.status, 200);
+  const plans = (await response.json()).programs.find(item => item.economicsPlans).economicsPlans;
+  const plan = plans[0];
+  const review = plan.planConditions.filter(item => item.reasonCode === "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW");
+  assert.equal(review.length, 1);
+  for (const gap of gaps("ECO 214", student.courses)) assert.ok(review[0].message.includes(historicalPrerequisiteMessage(gap)));
+  assert.doesNotMatch(review[0].message, /Your answers do not show|Ask your advisor to check your earlier course/);
+  assert.match(review[0].advisorPrompt, /Check the student’s earlier course or transfer records/);
+  const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, plans);
+  const html = renderEconomicsHtml(report, template);
+  assert.equal(html.split(review[0].message).length - 1, 1);
+  assert.ok(html.includes(review[0].advisorPrompt));
+  const catalog = report.catalog.advisorAttention.find(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
+  assert.ok(catalog);
+  assert.ok(html.indexOf(catalog.message) < html.indexOf("<h2>Ask your advisor</h2>"));
+});
+
 test("validated AP and transfer checklist rows show the evidence reason", async () => {
   const base = { displayName: "Fictional student", academicStanding: "sophomore", entryCatalogYear: "2025-2026", planningPace: "one_year_early", planCreationDate: "2026-09-28" };
   for (const [history, expected] of [

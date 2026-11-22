@@ -311,6 +311,22 @@
       "supersedes": "The regular one-year-early-only final-year standing assumption scope for custom targets"
     },
     {
+      "sourceId": "OWNER-CATALOG-PLANNING-NOTE-2026-11-21",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner, explicit catalog-note presentation task",
+      "authorityBoundary": "ECONOMICS_CATALOG_PLANNING_NOTE_PRESENTATION",
+      "path": "policy/provenance/catalog-planning-note-2026-11-21.md",
+      "confirmedOn": "2026-11-21",
+      "reviewer": "Project owner",
+      "sha256": "60f6295ba7962c77807c7edd445f87b9f26d6f2472aed694f187cddfd3400324",
+      "anchors": ["Catalog-planning-note-by-year"],
+      "effective": {
+        "from": "2026-11-21",
+        "through": null
+      },
+      "supersedes": "The universal planning-requirements box on intake"
+    },
+    {
       "sourceId": "OWNER-PLANNING-DROPDOWN-REPAIR-2026-09-27",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "Project owner and Economics Department domain expert",

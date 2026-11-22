@@ -1,3 +1,9 @@
+import catalog2023 from "../../policy/catalogs/economics-2023-2024.json" with { type: "json" };
+import catalog2024 from "../../policy/catalogs/economics-2024-2025.json" with { type: "json" };
+import catalog2025 from "../../policy/catalogs/economics-2025-2026.json" with { type: "json" };
+
+const CATALOGS = new Map([catalog2023, catalog2024, catalog2025].map(record => [record.catalogYear, record]));
+
 function text(value) {
   return String(value ?? "").trim();
 }
@@ -59,21 +65,52 @@ function normalizedTerms(terms = []) {
   }));
 }
 
-function selectedPlanWarnings(plan = {}) {
-  if (Array.isArray(plan.planConditions)) return uniqueSorted(plan.planConditions.map(item => item.message));
-  if (Array.isArray(plan.displayWarnings)) return uniqueSorted(plan.displayWarnings);
+function olderCatalogNote(plan = {}) {
+  const context = plan.planningContext || {};
+  const year = /^\d{4}-\d{4}$/.test(context.majorDeclarationCatalogYear || "")
+    ? context.majorDeclarationCatalogYear : context.entryCatalogYear;
+  const earlier = CATALOGS.get(year);
+  if (!earlier || year >= catalog2025.catalogYear) return null;
+  const added = ["moneyFinanceOptions", "statisticsOptions"].flatMap(key => (
+    catalog2025.requirements[key].filter(course => !earlier.requirements[key].includes(course))
+  )).sort();
+  const shortYear = year.replace(/-20/, "–");
+  const details = [];
+  if (added.length) {
+    details.push(`Your ${shortYear} catalog does not count ${added.join(" or ")} toward the major. If your plan uses ${added.length === 1 ? "it" : "either"}, your advisor will help you file a routine SAC petition.`);
+  }
+  const priorMilestone = earlier.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
+  const currentMilestone = catalog2025.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
+  if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
+    details.push(`Your ${shortYear} catalog also required an Economics comprehensive evaluation; the current requirements do not list it.`);
+  }
+  return `This plan uses the current (2026–27) Economics major requirements. ${details.join(" ")}`.trim();
+}
+
+function selectedPlanWarnings(plan = {}, advisorNotices = []) {
+  const catalogNote = olderCatalogNote(plan);
+  const covered = new Set((plan.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
+  const catalogYearMessages = advisorNotices.filter(notice => notice.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"
+    && !(plan.studentNotices || []).some(item => item.code === notice.code)
+    && !covered.has(notice.message)).map(notice => notice.message);
+  if (Array.isArray(plan.planConditions)) return uniqueSorted([...plan.planConditions.map(item => item.message), ...catalogYearMessages, catalogNote]);
+  if (Array.isArray(plan.displayWarnings)) return uniqueSorted([...plan.displayWarnings, ...catalogYearMessages, catalogNote]);
   const noticeMessages = new Set((plan.studentNotices || []).map(notice => text(notice.message)));
   return uniqueSorted([
     ...(plan.warnings || []),
     ...(plan.studentMessages || []),
-    ...(plan.feasibility?.warnings || [])
+    ...(plan.feasibility?.warnings || []),
+    ...catalogYearMessages,
+    catalogNote
   ].map(text).filter(message => !noticeMessages.has(message) && !/projected placement/i.test(message)));
 }
 
 function advisorAttention(report = {}) {
   const coveredNotices = new Set((report.selectedPlan?.planConditions || []).flatMap(item => item.noticeCodes || []));
   const coveredMessages = new Set((report.selectedPlan?.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
-  return (report.catalog?.advisorAttention || []).filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(notice.code) && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
+  return (report.catalog?.advisorAttention || []).filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED", "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"].includes(notice.code)
+    && (!olderCatalogNote(report.selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
+    && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
     code: text(notice.code) || null,
     title: text(notice.title) || null,
     severity: text(notice.severity) || null,
@@ -92,8 +129,10 @@ export function projectSelectedPlanArtifact(selectedPlan, { advisorNotices = [] 
     projectedSeniorStandingBasis: text(selectedPlan?.planningContext?.projectedSeniorStandingBasis) || null,
     feasibilityStatus: text(selectedPlan?.feasibilityStatus) || null,
     terms: normalizedTerms(selectedPlan?.terms || []),
-    warnings: selectedPlanWarnings(selectedPlan),
-    advisorAttention: advisorNotices.filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(notice.code) && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
+    warnings: selectedPlanWarnings(selectedPlan, advisorNotices),
+    advisorAttention: advisorNotices.filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED", "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"].includes(notice.code)
+      && (!olderCatalogNote(selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
+      && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
       code: text(notice.code) || null,
       title: text(notice.title) || null,
       severity: text(notice.severity) || null,
@@ -111,7 +150,7 @@ export function projectReportJsonArtifact(report) {
     projectedSeniorStandingBasis: text(report?.student?.projectedSeniorStandingBasis) || null,
     feasibilityStatus: text(report?.selectedPlan?.feasibilityStatus) || null,
     terms: normalizedTerms(report?.terms || []),
-    warnings: selectedPlanWarnings(report?.selectedPlan),
+    warnings: selectedPlanWarnings(report?.selectedPlan, report?.catalog?.advisorAttention || []),
     advisorAttention: advisorAttention(report)
   };
 }

@@ -38,13 +38,13 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
   assert.match(review.summary, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
   assert.match(review.summary, /advisor will check it\. \(1 more item below\.\)$/);
-  assert.match(review.message, /ECO 113 and either MAT 113 or MAT 121/);
-  assert.match(review.message, /ECO 113 is marked “Taking now\.”/);
-  assert.match(review.message, /MAT 113 is marked “Not taken \/ not sure\.”/);
-  assert.match(review.message, /stays on your course history/);
+  assert.match(review.message, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
+  assert.match(review.message, /You marked ECO 213 completed, but MAT 113 or MAT 121.*not marked completed/);
+  assert.doesNotMatch(review.message, /Your answers do not show|Ask your advisor to check your earlier course/);
+  assert.match(review.advisorPrompt, /ECO 113 and either MAT 113 or MAT 121/);
 
   const conditions = buildPlanConditions({
-    plan: { validation: { reviewFindings: [decision] } },
+    plan: { validation: { reviewFindings: [decision], conditions: [{ reasonCode: decision.reasonCode, affectedObject: { course: "ECO 213" }, message: "Old historical note." }] } },
     student,
     policyBundle
   });
@@ -75,7 +75,7 @@ test("next-step prerequisites name only the actual course pairs in the selected 
     },
     policyBundle
   });
-  assert.deepEqual(conditions.map(item => item.message), ["Complete ECO 114 before taking ECO 214 in Winter 2028."]);
+  assert.deepEqual(conditions.map(item => item.message), ["Before taking ECO 214 in Winter 2028, finish ECO 114."]);
   assert.equal(conditions[0].kind, "prerequisite");
 });
 
@@ -91,7 +91,7 @@ test("prerequisite reminders combine shared and related scheduled course steps",
     policyBundle
   });
   assert.deepEqual(conditions.map(item => item.message), [
-    "Finish MAT 113 before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028.",
+    "Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.",
     "Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217."
   ]);
 });

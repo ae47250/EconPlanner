@@ -282,12 +282,11 @@ test("progress navigation returns to About you and advances to Your courses", as
   await expect(page.getByText("Your plans", { exact: true })).toHaveAttribute("aria-disabled", "true");
 });
 
-test("ordinary intake hides catalog selection and states the active planning basis", async ({ page }) => {
+test("ordinary intake hides catalog selection and the older-catalog note", async ({ page }) => {
   await resetPlanner(page);
   await chooseStanding(page, "freshman");
   await expect(page.getByLabel(/catalog year/i)).toHaveCount(0);
-  await expect(page.getByText("Planning requirements: 2025–2026 Economics catalog and confirmed department policies.", { exact: true })).toBeVisible();
-  await expect(page.getByText(/official degree audit may differ/i)).toBeVisible();
+  await expect(page.locator(".catalog-planning-note")).toHaveCount(0);
 });
 
 test("intake and generated results survive a normal reload", async ({ page }) => {
@@ -810,7 +809,7 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     const course = instructor ? "ECO 213" : "ECO 461";
     const prerequisite = instructor ? "MAT 113" : "ECO 213";
     const term = instructor ? "Fall 2027" : "Winter 2028";
-    const approver = /instructor/i.test(authority) ? `the ${course} instructor` : authority;
+    const approver = /instructor/i.test(authority) ? `the ${course} instructor` : `the ${authority}`;
     const message = `Taking ${prerequisite} and ${course} together in ${term} needs approval from ${approver}. No approval is recorded yet.`;
     await resetPlanner(page);
     await chooseStanding(page, instructor ? "freshman" : "junior");

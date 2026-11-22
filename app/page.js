@@ -33,6 +33,7 @@ import { seatStatusPresentation } from "../lib/planning/seat-status.js";
 import prerequisitePolicy from "../policy/rules/prerequisites.json";
 import { historicalPrerequisiteGaps, historicalPrerequisiteMessage } from "../lib/planning/historical-prerequisites.js";
 import { noPlanPresentation } from "../lib/planning/no-plan-presentation.js";
+import { planningRequirementsNote, replacesLegacyCatalogNotice } from "../lib/catalog/planning-requirements-note.js";
 import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentStandingSummary, studentTermLabel } from "../lib/planning/student-language.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
@@ -473,14 +474,18 @@ function PlanConditions({ plan, catalog, showPlanName = false, hideHeading = fal
   const notices = (catalog?.advisorAttention || []).filter(item => !isFlattenedPlanNotice(item)
     && !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED"].includes(item.code)
     && !coveredNotices.has(item.code) && !messages.has(item.message));
-  if (!conditions.length && !notices.length) return null;
+  const catalogNote = plan && planningRequirementsNote(plan.planningContext);
+  const visibleNotices = notices.filter(item => !replacesLegacyCatalogNotice(plan?.planningContext)
+    || item.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE");
+  if (!conditions.length && !visibleNotices.length && !catalogNote) return null;
   return <section className="plan-notes upfront-conditions" data-plan-conditions>
     {!hideHeading && <h2>Things to keep in mind{showPlanName && ` — ${plan.label}`}</h2>}
     {prerequisiteConditions.length > 0 && <div><h3>Classes to finish first</h3><ul>{prerequisiteConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul></div>}
     {seatConditions.length > 0 && <div><h3>Before you register</h3><ul>{seatConditions.map(item => <li key={item.id}>{item.message}</li>)}</ul></div>}
-    {(otherConditions.length > 0 || notices.length > 0) && <div><h3>Check with your advisor</h3><ul>
+    {(otherConditions.length > 0 || visibleNotices.length > 0 || catalogNote) && <div><h3>Check with your advisor</h3><ul>
       {otherConditions.map(item => <li key={item.id}>{item.message}</li>)}
-      {notices.map((item, index) => <li key={item.noticeId || `${item.code}-${index}`}>{item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE"
+      {catalogNote && <li><strong>{catalogNote.heading}</strong> {catalogNote.details.join(" ")}</li>}
+      {visibleNotices.map((item, index) => <li key={item.noticeId || `${item.code}-${index}`}>{item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE"
         ? <><strong>Ask your advisor whether a catalog petition is needed.</strong><details><summary>Catalog details</summary><p>{item.message}</p></details></>
         : item.message}</li>)}
     </ul></div>}
@@ -2594,6 +2599,7 @@ export default function Page() {
   const [planEditUndo, setPlanEditUndo] = useState(null);
   const [isComparisonExiting, setIsComparisonExiting] = useState(false);
   const planningContext = resolvePlanningContext(formData);
+  const catalogPlanningNote = planningRequirementsNote(planningContext);
   const planningSlots = buildPlanningSlots(planningContext);
   const juniorStudyAbroadSlots = planningSlots.filter(slot => !slot.isSummer && slot.absoluteStandingIndex === 2);
   const planningSlotIdSignature = planningSlots.map(slot => slot.id).join("|");
@@ -4451,10 +4457,10 @@ export default function Page() {
                     </div>
                   )}
                 </div>
-                <div className="catalog-planning-note">
-                  <strong>Planning requirements: 2025–2026 Economics catalog and confirmed department policies.</strong>
-                  <p>Your official degree audit may differ. If an older declaration catalog applies, your advisor can confirm whether routine SAC paperwork is needed.</p>
-                </div>
+                {catalogPlanningNote && <div className="catalog-planning-note">
+                  <strong>{catalogPlanningNote.heading}</strong>
+                  {catalogPlanningNote.details.map(detail => <p key={detail}>{detail}</p>)}
+                </div>}
                 <details className="more-details">
                   <summary>More details</summary>
                   <div className="advanced-fields">

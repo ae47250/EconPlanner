@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:2151a359ed3441c5eede52ae12114d0ac3e610292b3f4f464a3bbc99528ea775",
+  "contentHash": "sha256:f1566cddd03f6a466e179bbc5a1f8b5b160a150fbe48d577a953090bed020e8a",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -8003,6 +8003,24 @@
         "sourceId": "OWNER-CAPSTONE-TIMING-2026-10-17",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
+      },
+      {
+        "anchors": [
+          "Catalog-planning-note-by-year"
+        ],
+        "authority": "Project owner, explicit catalog-note presentation task",
+        "authorityBoundary": "ECONOMICS_CATALOG_PLANNING_NOTE_PRESENTATION",
+        "confirmedOn": "2026-11-21",
+        "effective": {
+          "from": "2026-11-21",
+          "through": null
+        },
+        "path": "policy/provenance/catalog-planning-note-2026-11-21.md",
+        "reviewer": "Project owner",
+        "sha256": "60f6295ba7962c77807c7edd445f87b9f26d6f2472aed694f187cddfd3400324",
+        "sourceId": "OWNER-CATALOG-PLANNING-NOTE-2026-11-21",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "The universal planning-requirements box on intake"
       },
       {
         "authority": "Project owner; inspected local source workbooks and original PDF",
