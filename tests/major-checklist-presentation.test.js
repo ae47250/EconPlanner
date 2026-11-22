@@ -191,7 +191,7 @@ test("unsupported cohort/catalog identifies the HS and W2 claims without grantin
   const result = economics((await post({ student })).data);
   for (const plan of result.economicsPlans) {
     const note = plan.planNotes.find(item => item.id === "ccr-ace");
-    assert.ok(note.items.some(item => /unresolved for 2024-2025.*HS.*ECO 113.*ECO 114.*different-discipline.*W2.*ECO 461/.test(item.text)));
+    assert.ok(note.items.some(item => /We have not confirmed which Hanover Core rules apply to your 2024-2025 catalog.*ECO 113 or ECO 114.*Historical and Social Perspectives \(HS\).*ECO 461.*Writing 2 \(W2\).*check with your advisor/.test(item.text)));
     assert.ok(!note.items.some(item => /satisfied through|planned through/.test(item.text)));
     const report = await buildEconomicsReportFromStudent(student, sample.planCreationDate, plan);
     assert.deepEqual(report.planNotes, plan.planNotes);

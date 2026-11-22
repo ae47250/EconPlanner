@@ -93,7 +93,7 @@ test("AP or exam credit advisor status includes a visible Why line", async ({ pa
   const balanced = page.locator('article[data-plan-id="balanced"]');
   await balanced.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   await expect(balanced.locator(".upfront-conditions h3").filter({ hasText: "Check with your advisor" })).toBeVisible();
-  await expect(balanced.getByText("Based on your class year, your catalog year is likely 2026–2027. The Economics major requirements are the same for both years.")).toBeVisible();
+  await expect(balanced).not.toContainText("Based on your class year, your catalog year is likely");
 });
 
 test("selected study abroad appears in the result summary and top strip", async ({ page }) => {

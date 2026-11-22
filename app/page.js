@@ -476,7 +476,7 @@ function PlanConditions({ plan, catalog, showPlanName = false, hideHeading = fal
     && !coveredNotices.has(item.code) && !messages.has(item.message));
   const catalogNote = plan && planningRequirementsNote(plan.planningContext);
   const visibleNotices = notices.filter(item => !replacesLegacyCatalogNotice(plan?.planningContext)
-    || item.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE");
+    || !["FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE", "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"].includes(item.code));
   if (!conditions.length && !visibleNotices.length && !catalogNote) return null;
   return <section className="plan-notes upfront-conditions" data-plan-conditions>
     {!hideHeading && <h2>Things to keep in mind{showPlanName && ` — ${plan.label}`}</h2>}

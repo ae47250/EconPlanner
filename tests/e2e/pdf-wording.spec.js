@@ -31,11 +31,31 @@ test("freshman completed-course and catalog-year advice appears under Check with
   const card = await visitPlan(page, "balanced");
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
-  await expect(notes).toContainText("You marked ECO 214 completed, but ECO 114, which comes before it, is marked Taking now.");
+  const historyBullets = notes.locator("li").filter({ hasText: "You marked ECO 214 completed" });
+  await expect(historyBullets).toHaveCount(2);
+  await expect(historyBullets.nth(0)).toContainText("ECO 114, which comes before it, is marked Taking now.");
+  await expect(historyBullets.nth(1)).toContainText("MAT 113 or MAT 121, which comes before it, is not marked completed.");
   await expect(notes).not.toContainText("Your answers do not show ECO 114");
   await expect(notes.locator("h3").filter({ hasText: "Check with your advisor" })).toBeVisible();
-  await expect(notes).toContainText("Based on your class year, your catalog year is likely 2026–2027.");
+  await expect(notes).not.toContainText("Based on your class year, your catalog year is likely");
   await expect(notes).not.toContainText("Ask your advisor whether a catalog petition is needed.");
+});
+
+test("freshman and sophomore plans have no catalog note with ECO 113 Taking now", async ({ page }) => {
+  for (const standing of ["freshman", "sophomore"]) {
+    await resetPlanner(page);
+    await chooseStanding(page, standing);
+    await page.locator("details.more-details > summary").first().click();
+    await page.getByLabel("Plan creation date", { exact: true }).fill("2026-11-21");
+    await continueToCourses(page);
+    await setCourseStatus(page, "ECO 113", "Taking now");
+    await generatePlans(page);
+    const card = await visitPlan(page, "balanced");
+    await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
+    const notes = card.locator("[data-plan-conditions]");
+    await expect(notes).not.toContainText("Based on your class year, your catalog year is likely");
+    await expect(notes).not.toContainText("This plan uses the current (2026–27) Economics major requirements.");
+  }
 });
 
 test("early sophomore abroad plan shows consistent prerequisite and approval sentences", async ({ page }) => {

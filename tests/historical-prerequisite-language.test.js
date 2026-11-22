@@ -61,17 +61,20 @@ test("freshman completed ECO 214 shows the same prerequisite-gap advice in the p
   const plans = (await response.json()).programs.find(item => item.economicsPlans).economicsPlans;
   const plan = plans[0];
   const review = plan.planConditions.filter(item => item.reasonCode === "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW");
-  assert.equal(review.length, 1);
-  for (const gap of gaps("ECO 214", student.courses)) assert.ok(review[0].message.includes(historicalPrerequisiteMessage(gap)));
-  assert.doesNotMatch(review[0].message, /Your answers do not show|Ask your advisor to check your earlier course/);
+  const messages = gaps("ECO 214", student.courses).map(historicalPrerequisiteMessage);
+  assert.deepEqual(review.map(item => item.message), messages);
+  assert.deepEqual(plan.planConditions.filter(item => item.message.startsWith("You marked ECO 214 completed")).map(item => item.message), messages);
+  assert.equal(review.filter(item => item.advisorPrompt).length, 1);
+  for (const item of review) assert.doesNotMatch(item.message, /Your answers do not show|Ask your advisor to check your earlier course/);
   assert.match(review[0].advisorPrompt, /Check the student’s earlier course or transfer records/);
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, plans);
   const html = renderEconomicsHtml(report, template);
-  assert.equal(html.split(review[0].message).length - 1, 1);
+  for (const message of messages) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
+  assert.equal(html.match(/<li data-plan-warning>You marked ECO 214 completed/g)?.length, 2);
   assert.ok(html.includes(review[0].advisorPrompt));
   const catalog = report.catalog.advisorAttention.find(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
   assert.ok(catalog);
-  assert.ok(html.indexOf(catalog.message) < html.indexOf("<h2>Ask your advisor</h2>"));
+  assert.ok(!html.includes(catalog.message));
 });
 
 test("validated AP and transfer checklist rows show the evidence reason", async () => {

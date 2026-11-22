@@ -38,7 +38,8 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
     ["freshman", []], ["sophomore", []], ["junior", ["BUSN 323"]], ["senior", ["BUSN 323", "PSY 217", "comprehensive evaluation"]]
   ]) {
     const student = { academicStanding: standing, planCreationDate: standing === "senior" ? "2026-07-30" : date,
-      courses: standing === "senior" ? ["ECO 113", "ECO 114", "MAT 113", "ECO 214"].map(code => ({ code, status: "completed" })) : [] };
+      courses: standing === "senior" ? ["ECO 113", "ECO 114", "MAT 113", "ECO 214"].map(code => ({ code, status: "completed" }))
+        : standing === "freshman" ? [{ code: "ECO 113", status: "in_progress" }] : [] };
     const response = await POST(new Request("http://localhost/api/majors/map", {
       method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student })
     }));
@@ -52,6 +53,7 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
     if (!expected.length) {
       assert.equal(note, null);
       assert.doesNotMatch(html, /This plan uses the current \(2026–27\) Economics major requirements/);
+      assert.doesNotMatch(html, /Based on your class year, your catalog year is likely/);
       assert.doesNotMatch(html, /Please help the student submit the routine SAC petition/);
     } else {
       assert.ok(note);
@@ -60,6 +62,7 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
       assert.ok(studentSection.includes("<h3>Check with your advisor</h3>"));
       for (const term of expected) assert.ok(studentSection.includes(term));
       assert.doesNotMatch(html, /Please help the student submit the routine SAC petition/);
+      if (standing === "senior") assert.match(studentSection, /comprehensive evaluation\. The current requirements do not list it\./);
     }
   }
 });

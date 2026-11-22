@@ -48,9 +48,11 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     student,
     policyBundle
   });
-  assert.equal(conditions.length, 1);
+  assert.equal(conditions.length, 2);
+  assert.deepEqual(conditions.map(item => item.message), review.details);
   assert.equal(conditions[0].shortMessage, review.summary);
   assert.equal(conditions[0].advisorPrompt, review.advisorPrompt);
+  assert.equal(conditions[1].advisorPrompt, undefined);
 
   const html = renderEconomicsHtml({
     student: { displayName: "Fictional student", academicStanding: "senior" },
@@ -60,7 +62,12 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
   assert.ok(html.indexOf("What to check for this plan") < html.indexOf("Ask your advisor"));
   assert.ok(html.includes(`Why an advisor should review this plan:</strong> ${review.summary}`));
   assert.ok(html.includes(review.advisorPrompt));
-  assert.equal(html.split(review.message).length - 1, 1);
+  for (const message of review.details) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
+});
+
+test("Hanover Core applicability uses the approved plain-language message", () => {
+  assert.equal(policyBundle.messages["designation.applicability"],
+    "We have not confirmed which Hanover Core rules apply to your {catalogYear} catalog. Before counting ECO 113 or ECO 114 toward the Historical and Social Perspectives (HS) requirement, or ECO 461 toward Writing 2 (W2), check with your advisor.");
 });
 
 test("next-step prerequisites name only the actual course pairs in the selected schedule", () => {

@@ -82,7 +82,7 @@ function olderCatalogNote(plan = {}) {
   const priorMilestone = earlier.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   const currentMilestone = catalog2025.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
-    details.push(`Your ${shortYear} catalog also required an Economics comprehensive evaluation; the current requirements do not list it.`);
+    details.push(`Your ${shortYear} catalog also required an Economics comprehensive evaluation. The current requirements do not list it.`);
   }
   return `This plan uses the current (2026–27) Economics major requirements. ${details.join(" ")}`.trim();
 }
@@ -91,6 +91,7 @@ function selectedPlanWarnings(plan = {}, advisorNotices = []) {
   const catalogNote = olderCatalogNote(plan);
   const covered = new Set((plan.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
   const catalogYearMessages = advisorNotices.filter(notice => notice.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"
+    && !["2025-2026", "2026-2027"].includes(plan.planningContext?.majorDeclarationCatalogYear || plan.planningContext?.entryCatalogYear)
     && !(plan.studentNotices || []).some(item => item.code === notice.code)
     && !covered.has(notice.message)).map(notice => notice.message);
   if (Array.isArray(plan.planConditions)) return uniqueSorted([...plan.planConditions.map(item => item.message), ...catalogYearMessages, catalogNote]);

@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "locale": "en-US",
   "messages": {
-    "designation.applicability": "CCR/ACE applicability is unresolved for {catalogYear}. Confirm the cohort/catalog before relying on HS credit through ECO 113 or ECO 114, the different-discipline HS requirement, or W2 through ECO 461.",
+    "designation.applicability": "We have not confirmed which Hanover Core rules apply to your {catalogYear} catalog. Before counting ECO 113 or ECO 114 toward the Historical and Social Perspectives (HS) requirement, or ECO 461 toward Writing 2 (W2), check with your advisor.",
     "allocation.advisor": "Review how this course is assigned across requirements.",
     "allocation.move": "This move must preserve the approved requirement assignment.",
     "allocation.report": "Requirement allocation follows the governing Economics policy.",
