@@ -36,12 +36,10 @@ const untraced = new Map();
 const couldNotDrive = [];
 const originalConsoleLog = console.log.bind(console);
 console.log = (...args) => {
-  if (typeof args[0] === "string" && args[0].startsWith("ECONPLANNER_DECISION_SHADOW ")) return;
   originalConsoleLog(...args);
 };
 const originalConsoleInfo = console.info.bind(console);
 console.info = (...args) => {
-  if (typeof args[0] === "string" && args[0].startsWith("ECONPLANNER_DECISION_SHADOW ")) return;
   originalConsoleInfo(...args);
 };
 const sourceForSection = {

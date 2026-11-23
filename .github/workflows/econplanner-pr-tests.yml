@@ -47,7 +47,6 @@ jobs:
           tests/policy-compatibility-generation.test.js
           tests/policy-source-to-bundle.test.js
           tests/production-decision-engine.test.js
-          tests/decision-engine-shadow.test.js
           tests/decision-engine-oracle-differential.test.js
           tests/architecture-boundaries.test.js
 
