@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:3abbe8788e26eeedd115944d6bfb86260cfbbb4ff9404413cbd4d6f1e911ea4b",
+  "contentHash": "sha256:5c04937d8a404a00fe0c89dc35a2451d858491d1117c9a001a745daa63e4d57c",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7034,6 +7034,7 @@
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
     "infeasibility.electives.spring": "You still need {remainingElectives} Economics electives. No other eligible elective is offered in {winterTerm}. You can take only one of {springOptions} in {springTerm}.",
     "infeasibility.finance.forced": "{financeCourse} counts for Finance here, so it cannot also count as an elective.",
+    "infeasibility.requiredOffering": "You still need {course}, but no available term by {target} offers it. Talk with your advisor about a later graduation year.",
     "load.advisor": "The plan exceeds the preferred Economics load but remains within total term capacity.",
     "load.move": "This term is within total capacity but carries a heavy Economics load warning.",
     "load.report": "A graduation-required heavy Economics load is valid within total term capacity and requires a warning.",
@@ -8130,6 +8131,24 @@
         "sourceId": "OWNER-FINANCE-ELECTIVE-2026-10-31",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": "Automatic ECO 321 elective credit when BUSN 323 fills finance"
+      },
+      {
+        "anchors": [
+          "N1"
+        ],
+        "authority": "Project owner, explicit N1 decision",
+        "authorityBoundary": "ECONOMICS_GRADUATION_TARGET_INDEPENDENT_INFEASIBILITY_PROOF",
+        "confirmedOn": "2026-11-23",
+        "effective": {
+          "from": "2026-11-23",
+          "through": null
+        },
+        "path": "policy/provenance/n1-independent-infeasibility-2026-11-23.md",
+        "reviewer": "Project owner",
+        "sha256": "caa2a0d39a702e5d877d695a5fb6e0a89e5c34175e1e05a4071a6cfc94ef3439",
+        "sourceId": "OWNER-N1-INDEPENDENT-INFEASIBILITY-2026-11-23",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Only the all-options coverage condition for infeasibility in OWNER-BUSN323-2026-2027-2026-09-28 when a separate obstacle is conclusively proven"
       },
       {
         "authority": "Project owner and Economics Department domain expert",

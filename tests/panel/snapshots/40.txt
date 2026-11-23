@@ -18,18 +18,17 @@ BUSN 323 · ECO 113 · ECO 114 · ECO 214 · ECO 234 · ECO 333 · MAT 217
 Taking now
 None
 Status
-More information needed
+Not possible
 Your planning result
 SCREEN > Other details
-SCREEN > We need more course schedule information for your graduation target.
-We need more course schedule information for your graduation target.
-This does not mean you cannot finish. Ask your advisor which required classes will be offered.
-Review my answers
+SCREEN > Your remaining classes do not fit before this graduation target.
+Your remaining classes do not fit before this graduation target.
+Review your graduation timeline and bring this result to your academic advisor.
+You still need ECO 213, but no available term by May 2027 offers it. Talk with your advisor about a later graduation year.
+Review graduation timeline
 SCREEN > Why am I seeing this result?
 Why am I seeing this result?
-Balanced: No complete plan found
-What still needs attention
-These requirements did not fit by May 2027: ECO 213.
+You still need ECO 213, but no available term by May 2027 offers it. Talk with your advisor about a later graduation year.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF
