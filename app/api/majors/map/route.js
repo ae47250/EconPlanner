@@ -122,12 +122,11 @@ function planAdvisorAttention(results) {
 }
 
 function mapCatalogPrograms(catalog, student, catalogReview, {
-  economicsOnly = false,
   planningContext = null,
   catalogApplicability = null,
   inputResolution = null
 } = {}) {
-  return catalog.variants.filter(variant => !economicsOnly || variant.programId === "economics").map(variant => {
+  return catalog.variants.filter(variant => variant.programId === "economics").map(variant => {
     const program = catalog.programs.find(item => item.id === variant.programId) || {
       id: variant.programId,
       name: variant.label,
@@ -552,9 +551,7 @@ export async function POST(request) {
       comparisonFindings: catalogApplicability.materialDifferences,
       evaluations: catalogApplicability.evaluations
     };
-    const economicsOnly = requestedCatalogYear !== catalogApplicability.appliedMajorCatalogYear;
     const results = mapCatalogPrograms(catalog, student, catalogReview, {
-      economicsOnly,
       planningContext: authoritativePlanningContext,
       catalogApplicability,
       inputResolution
@@ -596,7 +593,8 @@ export async function POST(request) {
         policyBundleVersion: catalog.policyBundleVersion,
         policyBundleHash: catalog.policyBundleHash,
         availableCatalogYears: catalogYears,
-        scope: economicsOnly ? "economics_only_provisional" : "catalog_snapshot"
+        scope: requestedCatalogYear !== catalogApplicability.appliedMajorCatalogYear
+          ? "economics_only_provisional" : "catalog_snapshot"
       },
       inputResolution,
       summary: {

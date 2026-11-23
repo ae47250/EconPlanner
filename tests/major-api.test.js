@@ -27,7 +27,25 @@ test("non-syntax request failures remain internal errors", async t => {
   assert.doesNotMatch((await response.json()).error, /invalid JSON/);
 });
 
-test("major mapper returns every captured program and Economics schedule", async () => {
+test("normal major mapping returns only the Economics program", async () => {
+  const response = await POST(new Request("http://localhost/api/majors/map", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ student: { academicStanding: "freshman", planCreationDate: "2025-09-01", courses: [] } })
+  }));
+  const data = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(data.programs.map(result => result.program?.id), ["economics-base"]);
+  assert.deepEqual(data.summary, {
+    programCount: 1,
+    mappedProgramCount: 1,
+    reviewRequiredProgramCount: 0
+  });
+  assert.equal(data.catalog.scope, "catalog_snapshot");
+});
+
+test("major mapper returns the Economics schedule", async () => {
   const response = await POST(new Request("http://localhost/api/majors/map", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -37,7 +55,7 @@ test("major mapper returns every captured program and Economics schedule", async
   const economics = data.programs.find(result => result.program?.id === "economics-base");
 
   assert.equal(response.status, 200);
-  assert.ok(data.summary.programCount >= 37);
+  assert.equal(data.summary.programCount, 1);
   assert.equal(data.summary.mappedProgramCount, 1);
   assert.deepEqual(data.catalog.evaluatedCatalogYears, ["2025-2026"]);
   assert.equal(data.catalog.basis, "entry_catalog_year_inferred_from_standing_and_plan_date");
