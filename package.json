@@ -7,7 +7,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ingest:sources": "node scripts/ingest-economics-sources.mjs",
     "ingest:catalog": "node scripts/ingest-hanover-catalog.mjs",
     "normalize:catalog": "node scripts/normalize-hanover-catalog.mjs",
     "watch:catalog:2026-2027": "node scripts/watch-hanover-catalog.mjs",
