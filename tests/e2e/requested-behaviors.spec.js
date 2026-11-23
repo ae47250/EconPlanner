@@ -1,5 +1,5 @@
 import { visitPlan } from "./cp7-helpers.js";
-import {expect,test} from './nightly-observability.js';
+import { test, expect } from "@playwright/test";
 import {resetPlanner,chooseStanding,continueToCourses,setCourseStatus,courseStatusGroup,generatePlans,fixturePlan,openFixtureResult,plannerResultFixture} from './cp7-helpers.js';
 import {evaluateTermLoad} from '../../lib/decision-engine/placement.js';
 import {runtimePolicyBundle} from '../../lib/policy/compat-normalized.js';

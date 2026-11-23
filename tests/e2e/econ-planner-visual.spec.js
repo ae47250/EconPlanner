@@ -1,4 +1,4 @@
-import { expect, test } from "./nightly-observability.js";
+import { test, expect } from "@playwright/test";
 import {
   chooseStanding,
   continueToCourses,
@@ -204,8 +204,7 @@ for (const viewport of [
     test.use({ viewport: { width: viewport.width, height: viewport.height } });
 
     for (const state of visualStates) {
-      test(`${state.id} at ${viewport.width}x${viewport.height}`, async ({ page, nightlyObservability }, testInfo) => {
-        nightlyObservability.recordViewport(state.id);
+      test(`${state.id} at ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
         await state.setup(page, viewport.name);
         await page.addStyleTag({ content: "nextjs-portal { display: none !important; }" });
         await page.evaluate(async () => {

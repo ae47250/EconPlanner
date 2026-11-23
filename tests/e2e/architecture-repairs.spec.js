@@ -1,6 +1,6 @@
 import { loadCanonicalPolicy, oracleEvaluateCanonicalPlan, oracleEvaluateOffering } from "../oracle/load-canonical-policy.js";
 import { selectedPlanCard, visitPlan } from "./cp7-helpers.js";
-import {test, expect} from './nightly-observability.js';
+import { test, expect } from "@playwright/test";
 import AxeBuilder from '@axe-core/playwright';
 import {writeFile, readFile} from 'node:fs/promises';
 import { auditExternalEconomicsPlanComplete } from '../oracle/audit-external-plan.js';
