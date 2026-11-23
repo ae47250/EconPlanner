@@ -35,7 +35,7 @@ import { historicalPrerequisiteGaps, historicalPrerequisiteMessage } from "../li
 import { noPlanPresentation } from "../lib/planning/no-plan-presentation.js";
 import { planningRequirementsNote, replacesLegacyCatalogNotice } from "../lib/catalog/planning-requirements-note.js";
 import { feasibilityMeaning, planTermsWithCurrentCourses } from "../lib/planning/plan-display.js";
-import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentStandingSummary, studentTermLabel } from "../lib/planning/student-language.js";
+import { isUnpublishedScheduleCondition, preliminaryScheduleExplanation, studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentStandingSummary, studentTermLabel } from "../lib/planning/student-language.js";
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 const GENERATED_PLANNER_SESSION_KEY = "econ-planner-generated-session";
@@ -509,7 +509,12 @@ function MajorRequirementsChecklist({ plan, showPlanName = false }) {
           {row.markers.map(marker => <span className="checklist-marker" key={marker}>{marker}</span>)}</td>
       </tr>)}</tbody>
     </table>
-    <p className="checklist-note">Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.</p>
+    <p className="checklist-note">{checklist.rows.filter(row => ["cognate", "statistics", "finance"].includes(row.id) && row.alternatives.length > 1)
+      .map(row => {
+        const choices = row.alternatives;
+        const label = { cognate: "Math choices", statistics: "Statistics choices", finance: "Finance choices" }[row.id];
+        return `${label}: ${choices.length > 2 ? `${choices.slice(0, -1).join(", ")} or ${choices.at(-1)}` : choices.join(" or ")}.`;
+      }).join(" ")}</p>
     <div className="checklist-legend" aria-label="Checklist status legend">{checklist.legend?.map(state => <span key={state.status} className={`checklist-status is-${state.status}`}><span aria-hidden="true">{state.symbol}</span> {state.label}</span>)}</div>
     <p className="checklist-note">{checklist.note}</p>
     {checklist.unmetRequirements?.length > 0 && <div className="incomplete-candidate" data-incomplete-candidate>
@@ -586,7 +591,7 @@ function ExtraCoursePicker({ plan, onEdit, busy }) {
       <button type="button" className="change-menu-option" onClick={() => { setTermId(""); setSelected(null); }}>← {studentTermLabel(term.term)}</button>
       {selected ? <>
         <strong>{selected.course === "ECO elective" ? "200+ Economics elective" : selected.course}</strong>
-        <p className="change-confirm-warning">{studentFriendlyMoveCondition(selected, selected.course)}</p>
+        <p className="change-confirm-warning">{studentFriendlyMoveCondition(selected, selected.course, menu.policyMessages)}</p>
         <div className="change-confirm-actions"><button type="button" disabled={busy} onClick={event => add(selected,event.currentTarget)}>Add course</button><button type="button" onClick={close}>Cancel</button></div>
       </> : <>
         {usable.length ? <section aria-label={usable[0].evidence === "published" ? "Published for this term" : "Future elective"}>
@@ -594,7 +599,7 @@ function ExtraCoursePicker({ plan, onEdit, busy }) {
           {usable.map(item => <button type="button" className="change-menu-option" key={item.course} disabled={busy} onClick={event => item.status === "CONDITIONAL" ? setSelected(item) : add(item,event.currentTarget)}>
             <span>{item.course === "ECO elective" ? "Add a 200+ elective" : item.course}</span><small>{item.title}</small>
           </button>)}
-        </section> : <p>{blocked ? studentFriendlyUnavailableReason(blocked) : "No eligible extra course is available in this term."} {blocked && studentFriendlyMoveNextStep(blocked)}</p>}
+        </section> : <p>{blocked ? studentFriendlyUnavailableReason(blocked, menu.policyMessages) : "No eligible extra course is available in this term."} {blocked && studentFriendlyMoveNextStep(blocked)}</p>}
         {term.extraCourseHistory?.length > 0 && <details><summary>Previously scheduled — not confirmed</summary>
           <ul>{term.extraCourseHistory.map(item => <li key={item.course}>{item.course} · {item.title}</li>)}</ul>
         </details>}
@@ -641,7 +646,7 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
   const all = [...moves, ...replacements];
   const usable = all.filter(item => ["ALLOWED", "CONDITIONAL"].includes(item.status));
   const guidance = [...new Set(all.filter(item => !["ALLOWED", "CONDITIONAL"].includes(item.status))
-    .map(item => studentFriendlyUnavailableReason({ ...item, movingCourse: course.course }))
+    .map(item => studentFriendlyUnavailableReason({ ...item, movingCourse: course.course }, menu.policyMessages))
     .filter(reason => /Move .* (?:out|later|first)|needs .* first/i.test(reason)))].slice(0, 2);
   const optionGroups = usable.reduce((groups, item) => {
     const label = item.edit.type === "move" ? "Move to"
@@ -696,15 +701,15 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
             else apply(item, event.currentTarget);
           }}>
           <span>{item.edit.type === "replace-move" && item.edit.replacementCourse !== "ECO elective" ? item.edit.replacementCourse : studentTermLabel(item.label)}</span>
-          {item.status === "CONDITIONAL" && studentFriendlyMoveCondition(item, course.course) !== "Schedule not yet published." && <small>{studentFriendlyMoveCondition(item, course.course)}</small>}
+          {item.status === "CONDITIONAL" && !isUnpublishedScheduleCondition(item) && <small>{studentFriendlyMoveCondition(item, course.course, menu.policyMessages)}</small>}
         </button>)}
-        {group.items.some(item => item.status === "CONDITIONAL" && studentFriendlyMoveCondition(item, course.course) === "Schedule not yet published.") && <small className="change-confirm-warning">Schedule not yet published.</small>}
-      </section>) : <p>{all.length ? studentFriendlyUnavailableReason({ ...all[0], movingCourse: course.course }) : "No other move is available right now."}</p>)}
+        {group.items.some(isUnpublishedScheduleCondition) && <small className="change-confirm-warning">{studentFriendlyMoveCondition(group.items.find(isUnpublishedScheduleCondition), course.course, menu.policyMessages)}</small>}
+      </section>) : <p>{all.length ? studentFriendlyUnavailableReason({ ...all[0], movingCourse: course.course }, menu.policyMessages) : "No other move is available right now."}</p>)}
       {selected && <>
         <strong className="change-confirm-title">{selected.edit.type === "move" ? `Move ${compactPlanCourse(course)}` : `Replace with ${selected.edit.replacementCourse === "ECO elective" ? "a 200+ elective" : selected.edit.replacementCourse}`}</strong>
         <span className="change-confirm-term">{studentTermLabel(selected.label)}</span>
         {selected.edit.replacementCourse === "ECO elective" && <p>Choose the exact course later.</p>}
-        <p className="change-confirm-warning">{studentFriendlyMoveCondition(selected, course.course)}</p>
+        <p className="change-confirm-warning">{studentFriendlyMoveCondition(selected, course.course, menu.policyMessages)}</p>
         <details className="course-reason-details"><summary>Full check details</summary><p>{studentFriendlyMoveDetails(selected)}</p>
         </details>
         <div className="change-confirm-actions">
@@ -724,6 +729,7 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
 }
 
 function CourseDragHandle({ course, termId, planId, compact = false, busy, setPendingDrop, setDropMessage, setDraggedCourse, applyDrop }) {
+  const { policyMessages } = useContext(CourseMenuContext);
   const pointerDragRef = useRef(null);
   useEffect(() => {
     const cancel = event => {
@@ -770,7 +776,7 @@ function CourseDragHandle({ course, termId, planId, compact = false, busy, setPe
                                   const destination = moving.course.moveDestinationOptions?.find(option => option.id === target?.dataset.termId);
                                   if (!target || target.dataset.planScope !== planId || destination?.status === "CURRENT") return;
                                   if (!["ALLOWED", "CONDITIONAL"].includes(destination?.status)) {
-                                    setDropMessage(studentFriendlyUnavailableReason(destination));
+                                    setDropMessage(studentFriendlyUnavailableReason(destination, policyMessages));
                                     return;
                                   }
                                   const drop = { ...moving, destination, anchorElement: target };
@@ -782,6 +788,7 @@ function CourseDragHandle({ course, termId, planId, compact = false, busy, setPe
 }
 
 function MoveConfirmation({ drop, onApply, onCancel, busy }) {
+  const { policyMessages } = useContext(CourseMenuContext);
   const panel = useRef(null);
   const [position, setPosition] = useState({});
   useLayoutEffect(() => {
@@ -809,7 +816,7 @@ function MoveConfirmation({ drop, onApply, onCancel, busy }) {
     aria-label="Review move conditions" ref={panel} style={position} tabIndex={-1}
     onKeyDown={event => { if (event.key === "Escape" && !busy) { event.stopPropagation(); onCancel(); } }}>
     <strong>Move {compactPlanCourse(drop.course)} to {studentTermLabel(drop.destination.label)}?</strong>
-    <p>{studentFriendlyMoveCondition(drop.destination, drop.course.course)}</p>
+    <p>{studentFriendlyMoveCondition(drop.destination, drop.course.course, policyMessages)}</p>
     <details><summary>Check details</summary><p>{drop.destination.message}</p></details>
     <div className="drop-confirmation-actions">
       <button type="button" disabled={busy} onClick={event => onApply(drop, event.currentTarget)}>Apply move</button>
@@ -832,6 +839,7 @@ function PlanTimeline({
   onUndoPlanEdit,
   undoCourseId
 }) {
+  const { policyMessages } = useContext(CourseMenuContext);
   const [draggedCourse, setDraggedCourse] = useState(null);
   const [pendingDrop, setPendingDrop] = useState(null);
   const [dropMessage, setDropMessage] = useState("");
@@ -912,7 +920,7 @@ function PlanTimeline({
                     key={term.slotId || term.term}
                   >
                     <h4>{studentTermLabel(term.displayTerm || term.term)}</h4>
-                    {drag && <p className="drop-term-hint">{destinationFor(term)?.status === "CURRENT" ? "Current term" : destinationFor(term)?.status === "ALLOWED" ? "Drop to move here" : destinationFor(term)?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(destinationFor(term))}</p>}
+                    {drag && <p className="drop-term-hint">{destinationFor(term)?.status === "CURRENT" ? "Current term" : destinationFor(term)?.status === "ALLOWED" ? "Drop to move here" : destinationFor(term)?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(destinationFor(term), policyMessages)}</p>}
                     {term.courses.length > 0 ? (
                       <ul>
                         {term.courses.map(course => {
@@ -1110,6 +1118,7 @@ function PlanComparisonScreen({
   onUndoPlanEdit
 }) {
   const result = economicsResult(report);
+  const policyMessages = report?.policyMessages;
   const plans = result?.economicsPlans || [];
   const planningGaps = result?.economicsPlanningGaps || [];
   const candidateOutcomes = result?.economicsCandidateOutcomes || [];
@@ -1196,7 +1205,7 @@ function PlanComparisonScreen({
   })[plan.id] || plan.description;
 
   return (
-    <CourseMenuContext.Provider value={{ openId: openCourseMenuId, setOpenId: setOpenCourseMenuId, confirmingId: confirmingCourseMenuId, setConfirmingId: setConfirmingCourseMenuId }}>
+    <CourseMenuContext.Provider value={{ openId: openCourseMenuId, setOpenId: setOpenCourseMenuId, confirmingId: confirmingCourseMenuId, setConfirmingId: setConfirmingCourseMenuId, policyMessages }}>
     <main className={`comparison-page${isExiting ? " is-exiting" : ""}`}>
       <style jsx global>{`
         body {
@@ -2197,7 +2206,7 @@ function PlanComparisonScreen({
                                     {course.title && course.course !== "ECO elective" && <span className="comparison-course-title">{courseTitle(course.course)}</span>}
                                     {course.course === "ECO elective" && <span>Future offering unconfirmed</span>}
                                     <CourseAvailabilityStatus course={course} term={row.sourceTerm} schedule={result?.annualSchedule} referenceDate={new Date().toISOString()} />
-                                    {course.preliminaryScheduleEvidence && <span>Preliminary schedule ({course.preliminaryScheduleEvidence.issuedOn}). Course and term may change.</span>}
+                                    {course.preliminaryScheduleEvidence && <span>{preliminaryScheduleExplanation(course.preliminaryScheduleEvidence.issuedOn, policyMessages)}</span>}
                                     {(course.planningMarkers || []).filter(marker => marker !== "Approval required" || course.approvalRequired?.length).map(marker => marker === "Approval required"
                                       ? <div className="plan-course-approval" key={marker}>
                                         <strong>Approval needed</strong>
@@ -2209,7 +2218,7 @@ function PlanComparisonScreen({
                               }) : <span className="comparison-empty-term">{studyAbroadIds.includes(row.sourceTerm.slotId) ? "Study abroad" : "No Economics course this term"}</span>}
                               {comparisonDrag?.planId === plan.id && <small className="comparison-drop-hint">{(() => {
                                 const option = comparisonDrag.course.moveDestinationOptions?.find(item => item.id === (row.sourceTerm.slotId || row.sourceTerm.term));
-                                return option?.status === "CURRENT" ? "Current term" : option?.status === "ALLOWED" ? "Drop here" : option?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(option);
+                                return option?.status === "CURRENT" ? "Current term" : option?.status === "ALLOWED" ? "Drop here" : option?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(option, policyMessages);
                               })()}</small>}
                             </td>
                           </tr>

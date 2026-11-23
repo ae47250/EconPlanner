@@ -23,6 +23,7 @@ import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequ
 import { annotatePreliminaryScheduleEvidence } from "../../../../lib/policy/preliminary-schedule.js";
 import { loadPlannerFingerprint } from "../../../../lib/planning/fingerprint.js";
 import { compactEconomicsPlanForValidation } from "../../../../lib/planning/validation-payload.js";
+import { studentDisplayMessages } from "../../../../lib/planning/student-language.js";
 
 export const runtime = "nodejs";
 
@@ -566,6 +567,7 @@ export async function POST(request) {
     ];
 
     return jsonResponse({
+      policyMessages: studentDisplayMessages(catalog.policyBundle),
       catalog: {
         requestedCatalogYear,
         selectedCatalogYear: catalogResolution.selectedCatalogYear,

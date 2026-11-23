@@ -553,6 +553,9 @@ test("Generic elective May moves, one-elective limits, persistence, and concise 
 
   const control = moveControl(termRow(page, '[data-term-id="spring-2028"]'), "Economics elective (200 level or higher)");
   await expect(control.locator('button[data-change-choice="move:spring-2029"]')).toBeEnabled();
+  await control.getByRole("button", { name: /^Change / }).click();
+  await expect(control.locator('.change-menu-option[data-change-choice="move:spring-2029"] small')).toHaveCount(0);
+  await expect(control.locator('.change-confirm-warning')).toHaveText('Schedule not yet published.');
   await expect(control.locator('button[data-change-choice="move:winter-2029"]')).toHaveCount(0);
   const unsupportedWinter = await page.request.post("/api/majors/map", { data: {
     action: "validate-plan", student, plan: planWithFreeMay, plans: updatedPlans,
