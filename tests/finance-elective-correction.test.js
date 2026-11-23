@@ -13,7 +13,7 @@ import { validateSavedPlannerSession } from '../lib/planning/session-restoration
 
 const policy = loadEconomicsPolicyCompatibility();
 const oracle = JSON.parse(await readFile(new URL('./oracle/economics-policy.v1.json', import.meta.url)));
-const message = 'You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.';
+const message = 'You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.';
 const pair = ['ECO 321', 'BUSN 323'];
 const completed = code => ({ code, status: 'completed', source: 'direct-record', units: 1 });
 const core = ['ECO 113', 'ECO 114', 'ECO 213', 'ECO 214', 'MAT 113', 'MAT 217', 'ECO 461'];

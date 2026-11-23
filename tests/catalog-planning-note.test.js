@@ -94,6 +94,6 @@ test("older-catalog wording names only the courses the plan actually counts", ()
   const note = planningRequirementsNote(context, onlyPsychology);
   assert.match(note.details[0], /^Your plan counts PSY 217\. Your 2023–24 catalog does not accept it\./);
   assert.doesNotMatch(note.details[0], /BUSN 323|\bSAC\b|;/);
-  assert.match(note.details[0], /Ask your advisor to help you file a petition with the Student Academic Assistance Committee\. Forms are at the Registrar's Office\./);
+  assert.match(note.details[0], /Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee\. Forms are at the Registrar's Office\./);
   assert.equal(note.details[1], "Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.");
 });

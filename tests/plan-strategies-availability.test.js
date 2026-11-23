@@ -132,7 +132,7 @@ test("dated preliminary evidence stays visible in report JSON and HTML", () => {
   };
   const report = buildEconomicsReport({ student, mapping, schedule, economicsPlan, planBundle, preparedDate: "2026-11-02" });
   assert.ok(report.terms.some(term => term.courses.some(course => course.preliminaryScheduleEvidence?.issuedOn === "2026-11-01")));
-  assert.match(renderEconomicsHtml(report, template), /Preliminary schedule \(2026-11-01\); course and term subject to change/);
+  assert.match(renderEconomicsHtml(report, template), /Preliminary schedule \(2026-11-01\)\. Course and term may change\./);
 });
 
 test("generic elective identity does not create a strategy difference, but risk changes do", () => {
