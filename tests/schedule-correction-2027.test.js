@@ -32,9 +32,9 @@ for (const standing of ["junior", "senior"]) for (const overload of [false, true
   assert.equal(reasons.length, 1, JSON.stringify(result));
   assert.match(reasons[0].message, /two|2/);
   assert.match(reasons[0].message, /ECO 222, ECO 224, ECO 234/);
-  assert.match(reasons[0].message, /1\.25/);
+  assert.match(reasons[0].message, /You can take only one/);
   assert.match(reasons[0].message, /ECO 222 and ECO 234/);
-  assert.match(reasons[0].message, /ECO 321 must fill finance/);
+  assert.match(reasons[0].message, /ECO 321 counts for Finance/);
   assert.equal(reasons[0].financeAllocation.course, "ECO 321");
   assert.deepEqual([...reasons[0].satisfiedElectives].sort(), ["ECO 161", "ECO 221"]);
   assert.deepEqual(reasons[0].remainingWinterElectives, []);
@@ -91,7 +91,7 @@ test("unit boundaries and approval evidence agree with the independent evaluator
   assert.equal(notices[0].modeledUnits, 6);
   assert.equal(notices[0].thresholdExclusive, 5.5);
   assert.equal(notices[0].blocking, false);
-  assert.equal(notices[0].message, "More than 5.5 courses in Winter and Spring/May may add tuition. Check with the Business Office.");
+  assert.equal(notices[0].message, "This plan totals 6 courses in Winter and May. More than 5.5 may add tuition. Ask the Business Office.");
 });
 
 test("incomplete schedule or search cannot support the specific proof", () => {
@@ -186,7 +186,7 @@ test("approved Winter overload, move blockers and server validation use the same
   assert.ok(plan, JSON.stringify(economics.economicsPlanResult));
   assert.equal(plan.validation.valid,true);
   assert.ok(plan.validation.warnings.includes("This plan has 3 Economics courses in Winter 2027. The department prefers no more than 2 per term, and this term uses an advisor-approved overload."));
-  assert.ok(plan.validation.conditions.some(item=>item.reasonCode==="TERM_OVERLOAD_APPROVED" && item.message.includes("This term would have 5 courses. The normal limit is 4.")));
+  assert.ok(plan.validation.conditions.some(item=>item.reasonCode==="TERM_OVERLOAD_APPROVED" && item.message.includes("In Winter 2027, this plan has 3 courses plus room for 2 more. The normal limit is 4.")));
   assert.equal(plan.validation.tuitionAdvisories[0].modeledUnits,6);
   const winter = plan.terms.find(term=>term.slotId==="winter-2027");
   const course = winter.courses.find(course=>course.course==="ECO 161");

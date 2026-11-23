@@ -409,8 +409,8 @@ test("a plan found without reserved room explains the reservation before asking 
   assert.equal(planResult.category, "NEEDS_ADVISOR_ATTENTION");
   assert.equal(planResult.conclusion, "UNKNOWN");
   assert.equal(planResult.reason, "RESERVED_ROOM_BLOCKS_PLAN");
-  assert.match(planResult.evidence.message, /No plan fits while you leave room for other courses in these terms:/);
-  assert.match(planResult.evidence.message, /Lower that number and try again\./);
+  assert.match(planResult.evidence.message, /You saved room for 4 other courses across 4 terms/);
+  assert.match(planResult.evidence.message, /Save room for fewer courses and try again\./);
   assert.ok(planResult.evidence.strategyAttempts.length > 0);
   assert.ok(planResult.evidence.strategyAttempts.every(attempt => attempt.exhaustive));
   assert.ok(planResult.evidence.searchAttempts.length > 0);
@@ -511,7 +511,7 @@ test("major mapper retains a standard senior plan above the Economics load prefe
   assert.ok(data.catalog.advisorAttention.some(item => /listed section for MAT 217 was recorded as full/i.test(item.message)));
   const plan = economics.economicsPlans[0];
   assert.ok(plan.advisorActions.some(action => action.reasonCode === "ENROLLMENT_FULL"));
-  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "statistics").markers.includes("Check this class’s enrollment status"));
+  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "statistics").markers.includes("This section was full. Check for open seats."));
   assert.ok(plan.planConditions.some(item => item.course === "MAT 217" && /listed section for MAT 217 was recorded as full/i.test(item.message)));
   assert.ok(plan.planConditions.every(item => !item.message.includes("ENROLLMENT_FULL")));
   assert.equal(economics.economicsPlans[0].feasibilityStatus, "CONDITIONALLY_FEASIBLE");
@@ -744,7 +744,7 @@ test("edited plan validation preserves the selected plan's yearly design", async
   assert.equal(validationResponse.status, 200);
   assert.equal(validation.plan.validation.valid, true);
   assert.equal(validation.plan.validation.distribution.valid, false);
-  assert.match(validation.plan.validation.warnings.join(" | "), /Balanced no longer follows its Balanced yearly distribution/);
+  assert.match(validation.plan.validation.warnings.join(" | "), /This plan puts a different number of courses in each year than the usual Balanced plan/);
 });
 
 test("edited plan validation rejects canonical schedule tampering and post-graduation terms", async () => {

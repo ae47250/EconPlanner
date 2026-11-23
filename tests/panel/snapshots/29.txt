@@ -17,20 +17,19 @@ Completed
 BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 234 · ECO 333 · MAT 121 · MAT 217
 Taking now
 None
-Overall status
+Status
 Needs advisor attention
 Your planning result
-Review this result and the next step below.
 SCREEN > Other details
-SCREEN > Your reserved room leaves too little space for the major courses.
-Your reserved room leaves too little space for the major courses.
-No plan fits while you leave room for other courses in these terms: Winter 2027. Lower that number and try again.
-Change room for other courses
+SCREEN > No plan fits with the room saved for other courses.
+No plan fits with the room saved for other courses.
+You saved room for 2 other courses in Winter 2027. That leaves too little room for the major. Save room for fewer courses and try again.
+Save less room
 SCREEN > Why am I seeing this result?
 Why am I seeing this result?
-Balanced: Not feasible
+Balanced: No complete plan found
 What still needs attention
-These courses did not fit before May 2027: ECO 214, ECO elective 3, ECO elective 4, ECO 461.
+No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF

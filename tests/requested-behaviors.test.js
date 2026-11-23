@@ -116,7 +116,7 @@ for (const standing of ["senior","junior"]) for (const reserved of [0,1]) test(`
   }
   const report = await buildEconomicsReportFromStudent(student,student.planCreationDate,plan,[plan]);
   assert.equal(report.selectedPlan.validation.policyDecision.decisions.find(decision => decision.reasonCode === load.reasonCode && decision.subject.termId === "2027-WINTER").status,load.status);
-  if (reserved) assert.match(renderEconomicsHtml(report,template), /This term would have 5 courses\. The normal limit is 4\./);
+  if (reserved) assert.match(renderEconomicsHtml(report,template), /In Winter 2027, this plan has 4 courses plus room for 1 more\. The normal limit is 4\./);
 });
 
 test("load classifications distinguish missing, partial, denied, probation, approved ceilings and tuition", () => {
@@ -139,21 +139,21 @@ test("load classifications distinguish missing, partial, denied, probation, appr
   }
 });
 
-test("missing overload evidence keeps normal solver capacity and returns More information needed in API and reports", async () => {
+test("missing overload evidence keeps normal solver capacity and explains each result", async () => {
   for (const standing of ["senior","junior"]) {
     const student = {academicStanding:standing,planningPace:standing === "junior" ? "one_year_early" : "standard",planCreationDate:"2026-09-28",courses:completed(boundaryHistory),reservedCourseUnits:{"winter-2027":1}};
     const {data} = await post({student});
     const mapped = economics(data);
     const result = standing === "junior" ? mapped.economicsAcceleratedResult : mapped.economicsPlanResult;
-    assert.equal(standing === "junior" ? result.status : result.conclusion,standing === "junior" ? "MORE_INFORMATION_NEEDED" : "UNKNOWN");
+    assert.equal(standing === "junior" ? result.status : result.conclusion,standing === "junior" ? "NOT_POSSIBLE" : "UNKNOWN");
     if (standing === "senior") assert.equal(result.reason,"RESERVED_ROOM_BLOCKS_PLAN");
     assert.ok(!mapped.economicsPlans.some(plan => plan.terms.some(term => term.slotId === "winter-2027" && term.courses.length > 3)));
     const report = await buildEconomicsReportFromStudent(student,student.planCreationDate);
     if (standing === "senior") {
       const html = renderEconomicsHtml(report,template);
-      assert.match(html,/No plan fits while you leave room for other courses in these terms:/);
+      assert.match(html,/You saved room for 1 other course in Winter 2027/);
       assert.doesNotMatch(html,/More information needed to assess an advisor-approved overload/);
-    } else assert.match(renderEconomicsHtml(report,template),/More information needed/);
+    } else assert.match(renderEconomicsHtml(report,template),/You cannot finish|Not possible|required courses/);
   }
 });
 

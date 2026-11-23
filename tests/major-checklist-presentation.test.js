@@ -20,6 +20,20 @@ async function post(body) {
 const economics = data => data.programs.find(item => item.economicsPlans);
 const completed = codes => codes.map(code => ({ code, status: "completed" }));
 
+test("completed math choice is stable across course entry order and report generation", async () => {
+  const courses = completed(["ECO 113", "ECO 114", "MAT 113", "MAT 121", "MAT 217", "ECO 257"]);
+  const student = { ...sample, planningPace: "standard", planCreationDate: "2026-11-22", courses };
+  for (const enteredCourses of [courses, [...courses].reverse()]) {
+    const input = { ...student, courses: enteredCourses };
+    const plan = economics((await post({ student: input })).data).economicsPlans[0];
+    const screenMath = plan.majorRequirementsChecklist.rows.find(row => row.id === "cognate").course;
+    const report = await buildEconomicsReportFromStudent(input, input.planCreationDate, plan);
+    const pdfMath = report.majorRequirementsChecklist.rows.find(row => row.id === "cognate").course;
+    assert.equal(screenMath, "MAT 113");
+    assert.equal(pdfMath, screenMath);
+  }
+});
+
 test("zero-course input: all three checklists use validated future assignments, full terms, order and identical report content", async () => {
   const result = economics((await post({ student: sample })).data);
   assert.equal(result.economicsPlans.length, 3);
@@ -48,9 +62,9 @@ test("zero-course input: all three checklists use validated future assignments, 
     assert.ok(html.includes("We don’t know if there are open seats in "));
     const capstone = checklist.rows.find(row => row.id === "eco-461");
     if (plan.id === "one-year-early") {
-      assert.deepEqual(capstone.markers, ["Approval needed", "Ask an advisor to confirm senior standing"]);
+      assert.deepEqual(capstone.markers, ["Approval needed", "Ask your advisor and the Registrar to confirm senior standing."]);
       assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Approval needed"));
-      assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet."));
+      assert.ok(plan.planConditions.some(item => /Taking ECO 21[34] and ECO 461 together in Winter 202[78] needs approval from the Economics Department before you register\./.test(item.message)));
       assert.ok(plan.planConditions.some(item => /This plan assumes you will have senior standing in 2027–2028\./.test(item.message)));
       assert.ok(!html.includes("This plan assumes you will have senior standing in your final year."));
     } else assert.deepEqual(capstone.markers, []);
@@ -81,14 +95,14 @@ test("senior elective history uses each completed and current course once in API
   const result = economics((await post({ student })).data);
   const plan = result.economicsPlans[0];
   const rows = plan.majorRequirementsChecklist.rows;
-  assert.equal(rows.find(row => row.id === "eco-elective-2").course, "ECO 337");
-  const current = rows.find(row => row.id === "eco-elective-3");
+  assert.equal(rows.find(row => row.id === "eco-elective-2").course, "ECO 333");
+  const current = rows.find(row => row.id === "eco-elective-2");
   assert.equal(current.course, "ECO 333");
   assert.equal(current.status, "in_progress");
   assert.equal(rows.filter(row => row.course === "ECO 337").length, 1);
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
   const html = renderEconomicsHtml(report, template);
-  assert.match(html, /data-requirement-checklist-id="eco-elective-3"[\s\S]*?ECO 333[\s\S]*?Taking now/);
+  assert.match(html, /data-requirement-checklist-id="eco-elective-2"[\s\S]*?ECO 333[\s\S]*?Taking now/);
 });
 
 test("AP and transfer checklist credit and grouped advisor text agree in API and PDF", async () => {
@@ -103,7 +117,7 @@ test("AP and transfer checklist credit and grouped advisor text agree in API and
     for (const course of courses) {
       const row = plan.majorRequirementsChecklist.rows.find(item => item.course === course.code);
       assert.equal(row.statusLabel, label);
-      assert.ok(row.markers.some(marker => /Confirm with your advisor that it counts/.test(marker)));
+      assert.ok(row.markers.some(marker => marker === `Confirm with your advisor that ${course.code} counts.`));
     }
     assert.equal(plan.planConditions.filter(item => item.message === message).length, 1);
     const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
@@ -135,7 +149,7 @@ test("an incomplete late-entry report never presents published offerings as stud
   assert.equal(report.selectedPlan, null);
   assert.ok(report.terms.length);
   assert.ok(report.terms.every(term => term.courses.length === 0));
-  assert.equal(report.planningHorizon, "Fall 2027 through Spring/May 2028");
+  assert.equal(report.planningHorizon, "Fall through May");
   assert.ok(report.verifiedOfferings.Winter.length > 0);
   assert.equal(report.majorRequirementsChecklist.unmetRequirements.length, 5);
   assert.ok(report.planNotes.some(note => note.id === "future"));
@@ -200,7 +214,7 @@ test("provisional transfer credit, missing work and an invalid double allocation
   const mapping = { requirements: [requirement], assignments: [provisional], strict: { assignments: [] } };
   let row = buildMajorRequirementsChecklist({ mapping }).rows[0];
   assert.equal(row.status, "still_needed");
-  assert.deepEqual(row.markers, ["Ask an advisor whether this class counts"]);
+  assert.deepEqual(row.markers, ["Ask your advisor whether this course counts toward the major."]);
   row = buildMajorRequirementsChecklist({ mapping: { requirements: [requirement], assignments: [] } }).rows[0];
   assert.equal(row.status, "still_needed");
   assert.equal(row.courseTerm, "No class matched yet");

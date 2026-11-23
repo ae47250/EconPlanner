@@ -17,18 +17,20 @@ Completed
 ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 333 · MAT 121 · MAT 217
 Taking now
 None
-Overall status
+Status
 Not possible
 Your planning result
-Review this result and the next step below.
 SCREEN > Other details
-SCREEN > No complete plan fits this graduation target with the available course timing and capacity.
-No complete plan fits this graduation target with the available course timing and capacity.
+SCREEN > Your remaining classes do not fit before this graduation target.
+Your remaining classes do not fit before this graduation target.
 Review your graduation timeline and bring this result to your academic advisor.
+Finance and the other required courses do not fit by your graduation target. Bring this page to your advisor.
 Review graduation timeline
 SCREEN > Why am I seeing this result?
 Why am I seeing this result?
-We couldn't find a complete plan that meets the Finance requirement by your planned graduation date.
+Balanced: No complete plan found
+What still needs attention
+No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF

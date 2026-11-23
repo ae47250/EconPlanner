@@ -17,18 +17,20 @@ Completed
 BUSN 323 · ECO 113 · ECO 114 · ECO 161 · ECO 213 · ECO 214 · ECO 221 · MAT 121 · MAT 217
 Taking now
 None
-Overall status
+Status
 Not possible
 Your planning result
-Review this result and the next step below.
 SCREEN > Other details
-SCREEN > No complete plan fits this graduation target with the available course timing and capacity.
-No complete plan fits this graduation target with the available course timing and capacity.
+SCREEN > Your remaining classes do not fit before this graduation target.
+Your remaining classes do not fit before this graduation target.
 Review your graduation timeline and bring this result to your academic advisor.
+You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.
 Review graduation timeline
 SCREEN > Why am I seeing this result?
 Why am I seeing this result?
-You still need 2 distinct Economics electives. After finance is allocated, no remaining eligible elective is offered in Winter 2027. The Spring/May 2027 options are ECO 222, ECO 224, ECO 234. Each is 1 unit, so two exceed both the normal 1-unit load and the advisor-approved 1.25-unit ceiling. ECO 222 and ECO 234 also meet at the same time.
+Balanced: No complete plan found
+What still needs attention
+No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF

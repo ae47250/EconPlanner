@@ -7,6 +7,7 @@ import { chromium } from "@playwright/test";
 import { resolvePlanningContext, buildPlanningSlots } from "../../lib/planning/horizon.js";
 import { runtimePolicyBundle } from "../../lib/policy/compat-normalized.js";
 import { termLoadRule } from "../../lib/policy/term-load.js";
+import { updateStudyAbroadReservation } from "../../lib/planning/study-abroad.js";
 import { buildEconomicsReportFromStudent } from "../../lib/reports/build-economics.js";
 import { renderEconomicsHtml } from "../../lib/reports/economics-html.js";
 
@@ -88,8 +89,8 @@ function prepareProfile(profile) {
     termLoadOverrides: {},
     reservationMemory: {},
     scheduleSetByTerm: {},
-    studyAbroadTerm: profile.abroad || "",
-    studyAbroadMayOverlap: Boolean(profile.abroadMay),
+    studyAbroadTerm: "",
+    studyAbroadMayOverlap: false,
     studyAbroadDestination: "",
     studyAbroadAdvisingNote: "",
     advisorApprovals: ""
@@ -113,6 +114,11 @@ function prepareProfile(profile) {
   if (profile.scheduleSet) {
     const current = slots.find(slot => slot.isCurrent || slot.status === "CURRENT") || slots[0];
     if (current) student.scheduleSetByTerm[current.id] = true;
+  }
+  if (profile.abroad) {
+    const abroadTerm = String(profile.abroad).toLowerCase()
+      .replace(/^(\d{4})-(fall|winter|spring)$/, (_, year, term) => `${term}-${year}`);
+    Object.assign(student, updateStudyAbroadReservation(student, abroadTerm, profile.abroadMay, slots));
   }
   return student;
 }

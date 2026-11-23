@@ -1,15 +1,15 @@
 {
   "studentId": "14",
   "planDate": "2026-11-22",
-  "overallStatus": "Needs confirmation",
+  "overallStatus": "Ready to plan",
   "resultCategory": "PLANS_READY",
   "plans": [
     {
       "id": "balanced",
       "name": "Balanced",
-      "status": "Needs confirmation",
+      "status": "Ready to plan",
       "feasibilityStatus": "CONDITIONALLY_FEASIBLE",
-      "readinessStatus": "READY_WITH_CONDITIONS",
+      "readinessStatus": "STUDENT_READY",
       "terms": [
         {
           "termId": "winter-2027",
@@ -17,18 +17,18 @@
           "academicYear": "2026/2027",
           "courses": [
             {
-              "course": "ECO 161",
-              "title": "Foundations of Economics",
+              "course": "ECO 214",
+              "title": "Intermediate Macroeconomics",
               "section": "J",
               "status": "Planned",
-              "requirementId": "eco-elective-1"
+              "requirementId": "eco-214"
             },
             {
               "course": "ECO 221",
               "title": "Environmental Economics",
               "section": "J",
               "status": "Planned",
-              "requirementId": "eco-elective-2"
+              "requirementId": "eco-elective-1"
             },
             {
               "course": "MAT 217",
@@ -49,7 +49,7 @@
               "title": "Economics of the European Union",
               "section": "S",
               "status": "Planned",
-              "requirementId": "eco-elective-3"
+              "requirementId": "eco-elective-2"
             }
           ]
         },
@@ -59,11 +59,18 @@
           "academicYear": "2027/2028",
           "courses": [
             {
-              "course": "ECO 214",
-              "title": "Intermediate Macroeconomics",
+              "course": "ECO 213",
+              "title": "Intermediate Microeconomics",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-214"
+              "requirementId": "eco-213"
+            },
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-3"
             }
           ]
         },
@@ -72,13 +79,6 @@
           "term": "Winter",
           "academicYear": "2027/2028",
           "courses": [
-            {
-              "course": "ECO 213",
-              "title": "Intermediate Microeconomics",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-213"
-            },
             {
               "course": "ECO 461",
               "title": "Senior Seminar: Econometrics",
@@ -95,7 +95,7 @@
           "courses": [
             {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
               "requirementId": "eco-elective-4"

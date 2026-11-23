@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.12",
-  "contentHash": "sha256:f4e4efac71b07d7e62f7e6a2a02853d6331d3fc8c1efdd562ece1a16eb827d13",
+  "bundleVersion": "econ-planning-flexibility.13",
+  "contentHash": "sha256:40c353e59b7acfd76fe8ddd922a3977bc9c19c4f83881716993590fd37032f05",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -31,10 +31,26 @@
       "courseLoadRulesChanged": false,
       "legacyCodeRetired": false
     },
+    "capstoneConcurrencyPlanningPreference": {
+      "approvalRequirementUnchanged": true,
+      "concurrentCourses": [
+        "ECO 213",
+        "ECO 214"
+      ],
+      "course": "ECO 461",
+      "lastResortOnly": true,
+      "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD7"
+    },
     "confirmation": {
       "date": "2026-11-22",
       "reviewer": "Project owner",
       "source": "policy/provenance/wording-review-decisions-2026-11-22.md"
+    },
+    "economicsLoadPlanningPreference": {
+      "aboveMaximumOnlyWhenNoValidPlanWithinPreferenceMeetsTarget": true,
+      "precedesBalancedEvenSpread": true,
+      "preferredMaximumPerTerm": 2,
+      "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD6"
     },
     "economicsPlanningStrategies": {
       "classification": "NONACADEMIC_PLANNING_AND_RANKING_PREFERENCES",
@@ -213,10 +229,13 @@
       ]
     },
     "financePlanningPreference": {
+      "appliesToEveryStrategy": true,
       "appliesWhen": "NO_FINANCE_COURSE_COMPLETED_OR_IN_PROGRESS",
+      "clarificationSourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification",
       "completedCourseAllocationChanged": false,
       "completedPairRuleSourceRef": "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation",
       "fallbackCourse": "BUSN 323",
+      "precedesExploreFirstYearPreference": true,
       "preferredCourse": "ECO 321",
       "requiredEvidence": "PUBLISHED_VERIFIED_SCHEDULE_IN_PLACEMENT_TERM",
       "ruleId": "PREFER-PUBLISHED-ECO-321-OTHERWISE-BUSN-323",
@@ -404,7 +423,16 @@
       "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",
       "studyAbroadCapacity": 0
     },
-    "policyVersion": "econ-planning-flexibility.12",
+    "oneHundredLevelElectivePreference": {
+      "eco160TopicConfirmationRequired": false,
+      "eligibleCourses": [
+        "ECO 160",
+        "ECO 161"
+      ],
+      "preferredWhenBothCompleted": "ECO 161",
+      "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD5"
+    },
+    "policyVersion": "econ-planning-flexibility.13",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -421,7 +449,11 @@
       "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness",
       "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2",
       "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
-      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4"
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD5",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD6",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD7",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification"
     ],
     "status": "OWNER_APPROVED",
     "supportingCoursePlacement": {
@@ -451,7 +483,7 @@
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.12.json",
+    "provenancePath": "policy/provenance/planning-flexibility.13.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -468,7 +500,11 @@
       "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness",
       "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2",
       "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
-      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4"
+      "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD5",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD6",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD7",
+      "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification"
     ],
     "sources": [
       {
@@ -599,6 +635,27 @@
         "sourceId": "OWNER-OFFERING-CONSOLIDATION-2026-09-26",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
+      },
+      {
+        "anchors": [
+          "OD5",
+          "OD6",
+          "OD7",
+          "OD3-clarification"
+        ],
+        "authority": "Project owner, explicit panel-review planning decisions",
+        "authorityBoundary": "ECONOMICS_PLANNING_PREFERENCES_AND_100_LEVEL_ELECTIVE_ALLOCATION",
+        "confirmedOn": "2026-11-22",
+        "effective": {
+          "from": "2026-11-22",
+          "through": null
+        },
+        "path": "policy/provenance/owner-decisions-2026-11-22b.md",
+        "reviewer": "Project owner",
+        "sha256": "1c2f630298a9f577d96842b38f39a877b24e9cd96305ef0e39d287293bd8ed2e",
+        "sourceId": "OWNER-PANEL-REVIEW-2026-11-22",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Earlier planning preference order where it conflicts with OD3, OD5, OD6, or OD7"
       },
       {
         "anchors": [

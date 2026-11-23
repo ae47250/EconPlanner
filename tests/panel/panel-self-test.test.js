@@ -66,7 +66,7 @@ test("panel:lint counts course codes and titles in a 30-word sentence", async ()
 
 test("PDF snapshot keeps adjacent report list items on separate lines", async () => {
   const snapshot = await readFile(path.join(panel, "snapshots/30.txt"), "utf8");
-  assert.match(snapshot, /\nGraduation goal: Spring\/May 2027\nWhy an advisor should review this plan:/);
+  assert.match(snapshot, /\nGraduation target: May 2027\nSee the notes below for paperwork to file\.\nPDF > Plan: Balanced > Grid/);
   assert.doesNotMatch(snapshot, /2027Why an advisor should review this plan:/);
   assert.match(snapshot, /TABLE HEADER: Requirement\nTABLE HEADER: Course \/ term\nTABLE HEADER: Status/);
   assert.match(snapshot, /CHECKLIST CELL: ECO 113\nCHECKLIST CELL: ECO 113/);
@@ -122,6 +122,23 @@ test("same-fact wording variants go to a separate non-blocking report", async ()
     assert.equal(result.status, 0, result.stdout + result.stderr);
     assert.match(result.stdout, /Panel sentence violations: 0/);
     assert.match(await readFile(path.join(temporary, "fact-variants.txt"), "utf8"), /Same-fact wording variants: 1/);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("panel lint rejects conflicting status labels within one plan", async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "econplanner-panel-status-check-"));
+  try {
+    const snapshotDir = path.join(temporary, "snapshots");
+    await mkdir(snapshotDir);
+    await writeFile(path.join(snapshotDir, "01.txt"), [
+      "SCREEN", "SCREEN > Plan: Balanced", "STATUS: Ready to plan",
+      "Plan feasibility: Conditional plan", "PDF", ""
+    ].join("\n"));
+    const planted = invoke(lintScript, ["--snapshots-dir", snapshotDir]);
+    assert.equal(planted.status, 1, planted.stdout + planted.stderr);
+    assert.match(planted.stdout, /statusContradiction=1/);
   } finally {
     await rm(temporary, { recursive: true, force: true });
   }

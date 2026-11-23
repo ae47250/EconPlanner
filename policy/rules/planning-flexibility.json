@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.12",
+  "policyVersion": "econ-planning-flexibility.13",
   "status": "OWNER_APPROVED",
   "confirmation": {
     "date": "2026-11-22",
@@ -22,7 +22,11 @@
     "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness",
     "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD2",
     "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
-    "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4"
+    "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",
+    "OWNER-PANEL-REVIEW-2026-11-22#OD5",
+    "OWNER-PANEL-REVIEW-2026-11-22#OD6",
+    "OWNER-PANEL-REVIEW-2026-11-22#OD7",
+    "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification"
   ],
   "acceleratedSeniorStanding": {
     "ruleId": "ACCELERATED-PLAN-FINAL-YEAR-SENIOR-STANDING",
@@ -421,13 +425,35 @@
   "financePlanningPreference": {
     "ruleId": "PREFER-PUBLISHED-ECO-321-OTHERWISE-BUSN-323",
     "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD3",
+    "clarificationSourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification",
     "appliesWhen": "NO_FINANCE_COURSE_COMPLETED_OR_IN_PROGRESS",
+    "appliesToEveryStrategy": true,
+    "precedesExploreFirstYearPreference": true,
     "preferredCourse": "ECO 321",
     "requiredEvidence": "PUBLISHED_VERIFIED_SCHEDULE_IN_PLACEMENT_TERM",
     "unpublishedTermAllowed": false,
     "fallbackCourse": "BUSN 323",
     "completedCourseAllocationChanged": false,
     "completedPairRuleSourceRef": "OWNER-FINANCE-ELECTIVE-2026-10-31#Owner-authorized-implementation"
+  },
+  "oneHundredLevelElectivePreference": {
+    "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD5",
+    "eligibleCourses": ["ECO 160", "ECO 161"],
+    "preferredWhenBothCompleted": "ECO 161",
+    "eco160TopicConfirmationRequired": false
+  },
+  "economicsLoadPlanningPreference": {
+    "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD6",
+    "preferredMaximumPerTerm": 2,
+    "aboveMaximumOnlyWhenNoValidPlanWithinPreferenceMeetsTarget": true,
+    "precedesBalancedEvenSpread": true
+  },
+  "capstoneConcurrencyPlanningPreference": {
+    "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD7",
+    "course": "ECO 461",
+    "concurrentCourses": ["ECO 213", "ECO 214"],
+    "lastResortOnly": true,
+    "approvalRequirementUnchanged": true
   },
   "noPlanCourseCapacityExplanation": {
     "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",

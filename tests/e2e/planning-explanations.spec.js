@@ -4,7 +4,7 @@ import { resetPlanner, chooseStanding, continueToCourses, generatePlans, setCour
 test("both plan views use the same course-moving instructions", async ({ page }) => {
   await openFixtureResult(page, plannerResultFixture({ plans: [fixturePlan(), fixturePlan({ id: "explore-first", label: "Explore first" })] }));
   const firstLine = "Click a course to see where it can move. You can also drag it by the ⠿ handle.";
-  const secondLine = "While you drag, green terms are open, amber terms need a permission or check first, and gray terms show why the course can't go there.";
+  const secondLine = "While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.";
   for (const view of ["compare", "single plan"]) {
     await expect(page.locator(".plan-edit-instructions strong"), view).toHaveText(firstLine);
     await expect(page.locator(".plan-edit-instructions span"), view).toHaveText(secondLine);

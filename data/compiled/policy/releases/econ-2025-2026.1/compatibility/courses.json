@@ -61,7 +61,7 @@
       "apEligible": true,
       "canonicalId": "eco-160",
       "code": "ECO 160",
-      "electiveEligibility": "eligible_subject_to_topic_and_100_level_limit",
+      "electiveEligibility": "eligible_subject_to_100_level_limit",
       "offeringEvidence": {},
       "prerequisites": {
         "all": [],
@@ -636,7 +636,8 @@
   "sourceRefs": [
     "https://catalog.hanover.edu/programs/economics.php",
     "data/raw/economics/Econ_Major_Requirements_and_Prerequisites.md",
-    "data/normalized/economics/schedule-2026-2027.json"
+    "data/normalized/economics/schedule-2026-2027.json",
+    "OWNER-PANEL-REVIEW-2026-11-22#OD5"
   ],
   "sourceStatus": "APPROVED_LOCAL_SOURCE"
 }

@@ -43,7 +43,15 @@
           "termId": "spring-2027",
           "term": "Spring/May",
           "academicYear": "2026/2027",
-          "courses": []
+          "courses": [
+            {
+              "course": "ECO 222",
+              "title": "Economics of the European Union",
+              "section": "S",
+              "status": "Planned",
+              "requirementId": "eco-elective-1"
+            }
+          ]
         },
         {
           "termId": "fall-2027",
@@ -66,10 +74,10 @@
           "courses": [
             {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-1"
+              "requirementId": "eco-elective-2"
             }
           ]
         },
@@ -77,15 +85,7 @@
           "termId": "spring-2028",
           "term": "Spring/May",
           "academicYear": "2027/2028",
-          "courses": [
-            {
-              "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-elective-2"
-            }
-          ]
+          "courses": []
         },
         {
           "termId": "fall-2028",
@@ -94,7 +94,7 @@
           "courses": [
             {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
               "requirementId": "eco-elective-3"
@@ -122,7 +122,7 @@
           "courses": [
             {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
               "requirementId": "eco-elective-4"
@@ -149,6 +149,13 @@
               "section": "J",
               "status": "Planned",
               "requirementId": "eco-214"
+            },
+            {
+              "course": "ECO 321",
+              "title": "Money & Financial Markets",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "finance"
             }
           ]
         },
@@ -187,7 +194,7 @@
           "courses": [
             {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
               "requirementId": "eco-elective-2"
@@ -200,11 +207,11 @@
           "academicYear": "2027/2028",
           "courses": [
             {
-              "course": "MAT 217",
-              "title": "Applied Statistics",
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "statistics"
+              "requirementId": "eco-elective-3"
             }
           ]
         },
@@ -214,18 +221,18 @@
           "academicYear": "2028/2029",
           "courses": [
             {
-              "course": "BUSN 323",
-              "title": "Investments",
+              "course": "ECO 257",
+              "title": "Quantitative Methods for Business/Economics",
               "section": null,
               "status": "Planned",
-              "requirementId": "finance"
+              "requirementId": "statistics"
             },
             {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-3"
+              "requirementId": "eco-elective-4"
             }
           ]
         },
@@ -247,15 +254,7 @@
           "termId": "spring-2029",
           "term": "Spring/May",
           "academicYear": "2028/2029",
-          "courses": [
-            {
-              "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-elective-4"
-            }
-          ]
+          "courses": []
         }
       ]
     }

@@ -84,14 +84,21 @@ function olderCatalogNote(plan = {}) {
   const details = [];
   if (used.length) {
     const courses = used.join(" and ");
-    details.push(`Your plan counts ${courses}. Your ${shortYear} catalog does not accept ${used.length === 1 ? "it" : "they"}. Ask your advisor to help you file a petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.`);
+    details.push(`Your plan counts ${courses}. Your ${shortYear} catalog does not accept ${used.length === 1 ? "it" : "them"}. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.`);
   }
   const priorMilestone = earlier.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   const currentMilestone = catalog2025.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
     details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.`);
   }
-  return `This plan uses the current Economics major requirements. ${details.join(" ")}`.trim();
+  return details.length ? `This plan uses the current Economics major requirements. ${details.join(" ")}` : null;
+}
+
+function olderCatalogApplies(plan = {}) {
+  const context = plan.planningContext || {};
+  const year = /^\d{4}-\d{4}$/.test(context.majorDeclarationCatalogYear || "")
+    ? context.majorDeclarationCatalogYear : context.entryCatalogYear;
+  return CATALOGS.has(year) && year < catalog2025.catalogYear;
 }
 
 function selectedPlanWarnings(plan = {}, advisorNotices = []) {
@@ -117,7 +124,7 @@ function advisorAttention(report = {}) {
   const coveredNotices = new Set((report.selectedPlan?.planConditions || []).flatMap(item => item.noticeCodes || []));
   const coveredMessages = new Set((report.selectedPlan?.planConditions || []).flatMap(item => [item.message, ...(item.sourceMessages || [])]));
   return (report.catalog?.advisorAttention || []).filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED", "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"].includes(notice.code)
-    && (!olderCatalogNote(report.selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
+    && (!olderCatalogApplies(report.selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
     && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
     code: text(notice.code) || null,
     title: text(notice.title) || null,
@@ -139,7 +146,7 @@ export function projectSelectedPlanArtifact(selectedPlan, { advisorNotices = [] 
     terms: normalizedTerms(selectedPlan?.terms || []),
     warnings: selectedPlanWarnings(selectedPlan, advisorNotices),
     advisorAttention: advisorNotices.filter(notice => !["FUTURE_SCHEDULE_PROJECTION_NOTICE", "ACCELERATED_PLAN_SENIOR_STANDING_ASSUMED", "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN"].includes(notice.code)
-      && (!olderCatalogNote(selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
+      && (!olderCatalogApplies(selectedPlan) || notice.code !== "FLEXIBLE_MAJOR_REQUIREMENTS_SAC_PETITION_NOTICE")
       && !coveredNotices.has(notice.code) && !coveredMessages.has(notice.message)).map(notice => ({
       code: text(notice.code) || null,
       title: text(notice.title) || null,

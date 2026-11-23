@@ -108,12 +108,11 @@ for (const file of files) {
   for (const [planScope, record] of scopes) {
     const status = record.lines.find(line => line.startsWith("STATUS: "))?.slice("STATUS: ".length);
     if (!status) continue;
+    const statusLabels = ["Ready to plan", "Needs confirmation", "Needs advisor attention", "Conditional plan", "Verified feasible", "Preliminary plan", "Not feasible", "Not available"];
     for (const line of record.lines) {
       if (line.startsWith("STATUS: ")) continue;
       const text = visibleText(line);
-      if ((status === "Ready to plan" && /\b(?:Needs confirmation|Needs advisor attention|Not available)\b/i.test(text))
-        || (status === "Needs advisor attention" && /\bReady to plan\b/i.test(text))
-        || (status === "Not available" && /\bVerified feasible\b/i.test(text))) {
+      if (statusLabels.some(label => label !== status && new RegExp(`\\b${escapePattern(label)}\\b`, "i").test(text))) {
         flag("statusContradiction", line, planScope);
       }
     }

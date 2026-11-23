@@ -74,19 +74,9 @@ test("moving a concurrent intermediate before ECO 461 removes a no-longer-requir
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
   const plan = plans.find(item => item.id === "balanced");
   // A saved, legal concurrent plan must remain editable even when generation prefers the opposite order.
-  const intermediate = plan.terms.flatMap(term => term.courses).filter(item => ["ECO 213", "ECO 214"].includes(item.course));
-  for (const item of intermediate) {
-    item.course = item.course === "ECO 213" ? "ECO 214" : "ECO 213";
-    item.requirementId = item.course === "ECO 213" ? "eco-213" : "eco-214";
-    item.title = item.course === "ECO 213" ? "Intermediate Microeconomics" : "Intermediate Macroeconomics";
-  }
-  for (const item of plan.terms.flatMap(term => term.courses).filter(item => item.course === "ECO 461")) {
-    for (const approval of item.approvalRequired || []) {
-      approval.prerequisite = "ECO 214";
-      approval.message = approval.message.replaceAll("ECO 213", "ECO 214");
-    }
-  }
-  const baseline = await validateEdit(student, plan, { plans });
+  const baseline = await validateEdit(student, plan, { plans, extraBody: { edit: {
+    type: "move", fromTermId: "winter-2027", toTermId: "winter-2028", courseId: "eco-214"
+  } } });
   assert.equal(baseline.response.status, 200, JSON.stringify(baseline.data));
   const editable = baseline.data.plan;
   const original = structuredClone(editable);
@@ -120,7 +110,7 @@ test("senior statistics explanation follows the actual horizon and disappears wh
   const blocked = await result();
   assert.equal(blocked.economicsPlanResult.category, "INFEASIBLE_PROVEN");
   assert.equal(blocked.economicsPlanResult.evidence.blockingReasons.length, 1);
-  assert.match(blocked.economicsPlanResult.evidence.blockingReasons[0].message, /Winter 2027.*ECO 461.*statistics.*before/);
+  assert.match(blocked.economicsPlanResult.evidence.blockingReasons[0].message, /ECO 461.*Winter 2027.*Statistics.*first/);
   student.planCreationDate = "2026-07-30";
   assert.deepEqual((await result()).economicsPlanResult.evidence.blockingReasons, []);
 });

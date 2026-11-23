@@ -206,7 +206,7 @@ export async function openFixtureResult(page, fixture, status = 200) {
   await chooseStanding(page, "freshman");
   await continueToCourses(page);
   await generatePlans(page, status);
-  await expect(page.getByRole("heading", { name: /Compare your course plans|Your feasible plan|Your planning result/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Compare your course plans|Your plan|Your planning result/ })).toBeVisible();
 }
 
 // Select a plan in the comparison-only results view and return its own card.

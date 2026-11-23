@@ -17,11 +17,11 @@
           "academicYear": "2026/2027",
           "courses": [
             {
-              "course": "ECO 221",
-              "title": "Environmental Economics",
+              "course": "ECO 214",
+              "title": "Intermediate Macroeconomics",
               "section": "J",
               "status": "Planned",
-              "requirementId": "eco-elective-1"
+              "requirementId": "eco-214"
             },
             {
               "course": "ECO 321",
@@ -33,7 +33,7 @@
             {
               "course": "MAT 217",
               "title": "Applied Statistics",
-              "section": "K",
+              "section": "J",
               "status": "Planned",
               "requirementId": "statistics"
             }
@@ -49,7 +49,7 @@
               "title": "Economics of the European Union",
               "section": "S",
               "status": "Planned",
-              "requirementId": "eco-elective-2"
+              "requirementId": "eco-elective-1"
             }
           ]
         },
@@ -59,18 +59,11 @@
           "academicYear": "2027/2028",
           "courses": [
             {
-              "course": "ECO 214",
-              "title": "Intermediate Macroeconomics",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-214"
-            },
-            {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-3"
+              "requirementId": "eco-elective-2"
             }
           ]
         },
@@ -85,6 +78,13 @@
               "section": null,
               "status": "Planned",
               "requirementId": "eco-461"
+            },
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-3"
             }
           ]
         },
@@ -95,7 +95,7 @@
           "courses": [
             {
               "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
+              "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
               "requirementId": "eco-elective-4"

@@ -1,15 +1,15 @@
 {
   "studentId": "26",
   "planDate": "2026-11-22",
-  "overallStatus": "Needs advisor attention",
+  "overallStatus": "Ready to plan",
   "resultCategory": "PLANS_READY",
   "plans": [
     {
       "id": "balanced",
       "name": "Balanced",
-      "status": "Needs advisor attention",
+      "status": "Ready to plan",
       "feasibilityStatus": "CONDITIONALLY_FEASIBLE",
-      "readinessStatus": "ADVISOR_ACTION_REQUIRED",
+      "readinessStatus": "STUDENT_READY",
       "terms": [
         {
           "termId": "winter-2027",

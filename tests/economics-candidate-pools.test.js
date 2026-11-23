@@ -152,7 +152,7 @@ test("opt-in nightly diagnostics do not change production planner output", () =>
     );
   }
   for (const search of metricsDiagnostics.searchAttempts) {
-    assert.ok(["preferred-distribution", "soft-preference-rescue", "same-solver-rescue", "final-validator-rescue"].includes(search.innerSearchStage));
+    assert.ok(["economics-load-preference", "preferred-distribution", "soft-preference-rescue", "same-solver-rescue", "final-validator-rescue"].includes(search.innerSearchStage));
     assert.equal(search.solutionLimit, 100);
     assert.ok(Number.isInteger(search.rawSolutionsEncountered));
     assert.equal(typeof search.domainSizes, "object");

@@ -37,9 +37,9 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
   };
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
   assert.match(review.summary, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
-  assert.match(review.summary, /advisor will check it\. Also: MAT 113 or MAT 121 is not marked completed\.$/);
+  assert.match(review.summary, /show your PDF to your advisor\. Also: MAT 113 or MAT 121 is not marked completed\.$/);
   assert.match(review.message, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
-  assert.match(review.message, /You marked ECO 213 completed, but MAT 113 or MAT 121.*not marked completed/);
+  assert.match(review.message, /You marked ECO 213 completed, but MAT 113 or MAT 121.*not marked done/);
   assert.doesNotMatch(review.message, /Your answers do not show|Ask your advisor to check your earlier course/);
   assert.match(review.advisorPrompt, /ECO 113 and either MAT 113 or MAT 121/);
 
@@ -60,7 +60,7 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     terms: [], unresolved: [], planConditions: conditions, studentNotices: [], catalog: {}, planNotes: []
   }, template);
   assert.ok(html.indexOf("What to check for this plan") < html.indexOf("For your advisor"));
-  assert.ok(html.includes(`Why an advisor should review this plan:</strong> ${review.summary}`));
+  assert.ok(!html.includes("Why an advisor should review this plan:"));
   assert.ok(html.includes(review.advisorPrompt.replaceAll("'", "&#39;")));
   for (const message of review.details) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
 });
@@ -130,7 +130,7 @@ test("blocked-move summaries and course markers use student-facing language", ()
     "Take ECO 114 before this class.");
   assert.equal(studentFriendlyCourseMarker("Approval required"), "Approval needed");
   assert.equal(studentFriendlyCourseMarker("Eligibility review required"), "Ask an advisor whether this class counts");
-  assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask an advisor to confirm senior standing");
+  assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask your advisor and the Registrar to confirm senior standing");
 });
 
 test("full-section review names the enrollment evidence without exposing a policy code", () => {

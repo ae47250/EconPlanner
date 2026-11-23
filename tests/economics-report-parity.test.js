@@ -392,12 +392,19 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
       });
       assert.equal(response.status, 200, JSON.stringify(data));
       selectedPlan = data.plan;
+    } else {
+      const { response, data } = await postJson(majorPost, "http://localhost/api/majors/map", {
+        action: "validate-plan", student, plan: selectedPlan, plans: economics.economicsPlans,
+        edit: { type: "move", fromTermId: "winter-2027", courseId: "eco-214", toTermId: "winter-2028" }
+      });
+      assert.equal(response.status, 200, JSON.stringify(data));
+      selectedPlan = data.plan;
     }
     const courseCode = instructor ? "ECO 213" : "ECO 461";
-    const prerequisite = instructor ? "MAT 113" : "ECO 213";
+    const prerequisite = instructor ? "MAT 113" : "ECO 214";
     const term = instructor ? "Fall 2027" : "Winter 2028";
     const approver = /instructor/i.test(authority) ? `the ${courseCode} instructor` : `the ${authority}`;
-    const message = `Taking ${prerequisite} and ${courseCode} together in ${term} needs approval from ${approver}. No approval is recorded yet.`;
+    const message = `Taking ${prerequisite} and ${courseCode} together in ${term} needs approval from ${approver} before you register.`;
     assert.equal(selectedPlan.feasibilityStatus, "CONDITIONALLY_FEASIBLE");
     const course = selectedPlan.terms.flatMap(term => term.courses).find(course => course.course === courseCode);
     assert.ok(course.approvalRequired.some(item => item.authority === authority && item.prerequisite === prerequisite));

@@ -52,7 +52,7 @@ jobs:
           tests/architecture-boundaries.test.js
 
       - name: Run canonical consumption repair regressions
-        run: node --test tests/canonical-consumption-repairs.test.js tests/schedule-correction-2027.test.js tests/requested-behaviors.test.js tests/major-checklist-presentation.test.js tests/plan-notes-elective-evidence.test.js
+        run: node --test tests/canonical-consumption-repairs.test.js tests/schedule-correction-2027.test.js tests/requested-behaviors.test.js tests/major-checklist-presentation.test.js tests/plan-notes-elective-evidence.test.js tests/economics-owner-panel-decisions.test.js
 
       - name: Run bounded deterministic regression suite
         shell: bash
@@ -140,7 +140,7 @@ jobs:
 
       - name: Exercise student panel self-tests
         if: matrix.shard == 1
-        run: node --test tests/panel/panel-self-test.test.js
+        run: node --test tests/panel/panel-self-test.test.js tests/panel/panel-review-regressions.test.js tests/panel/panel-study-abroad.test.js
 
       - name: Build application for student panel
         if: matrix.shard == 1
@@ -152,7 +152,6 @@ jobs:
 
       - name: Report student panel lint findings
         if: always() && matrix.shard == 1
-        continue-on-error: true
         run: pnpm panel:lint
 
       - name: Run bounded EconPlanner browser regression suite

@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:45508e4535d403c56f81fdb433727914d77cba457f89a1f6359641fdbe6a2bfd",
+  "contentHash": "sha256:c8b0aad35c638ccdb0d9874426b170f7b56e013a6d23d3dd3fdc7c181a541a90",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7020,7 +7020,7 @@
   },
   "messages": {
     "allocation.advisor": "Review how this course is assigned across requirements.",
-    "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.",
+    "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.",
     "allocation.move": "This move must preserve the approved requirement assignment.",
     "allocation.report": "Requirement allocation follows the governing Economics policy.",
     "allocation.student": "This course can count only in the requirement shown.",
@@ -7030,10 +7030,10 @@
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
-    "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. With this graduation year you will not have senior standing in any Winter term before you graduate. Choose a later graduation year or talk with your advisor.",
+    "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. Your graduation year alone does not establish senior standing. Ask your advisor and the Registrar to confirm it, or choose a later graduation year.",
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
-    "infeasibility.electives.spring": "You still need {remainingElectives} distinct Economics electives. After finance is allocated, no remaining eligible elective is offered in {winterTerm}. The {springTerm} options are {springOptions}. Each is {courseUnits} unit, so two exceed both the normal {normalCourseUnits}-unit load and the advisor-approved {conditionalMaximumCourseUnits}-unit ceiling.",
-    "infeasibility.finance.forced": "{financeCourse} must fill finance for this graduation target, so it cannot also count as an elective.",
+    "infeasibility.electives.spring": "You still need {remainingElectives} Economics electives. No other eligible elective is offered in {winterTerm}. You can take only one of {springOptions} in {springTerm}.",
+    "infeasibility.finance.forced": "{financeCourse} counts for Finance here, so it cannot also count as an elective.",
     "load.advisor": "The plan exceeds the preferred Economics load but remains within total term capacity.",
     "load.move": "This term is within total capacity but carries a heavy Economics load warning.",
     "load.report": "A graduation-required heavy Economics load is valid within total term capacity and requires a warning.",
@@ -7074,12 +7074,14 @@
     "termLoad.TERM_CAPACITY_AVAILABLE": "This term has {courseCount} courses. The normal limit is {normalCourseUnits}.",
     "termLoad.TERM_CAPACITY_EXCEEDED": "This move would exceed the approved course limit for the term. Extra tuition does not raise that limit.",
     "termLoad.TERM_OVERLOAD_APPROVAL_DENIED": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Advisor approval was not granted.",
-    "termLoad.TERM_OVERLOAD_APPROVED": "This term would have {courseCount} courses. The normal limit is {normalCourseUnits}. Advisor approval and no academic probation are recorded.",
+    "termLoad.TERM_OVERLOAD_APPROVED": "In {term}, this plan has {courseCount} courses. The normal limit is {normalCourseUnits}. You recorded advisor approval and no academic probation.",
+    "termLoad.TERM_OVERLOAD_APPROVED_WITH_RESERVED": "In {term}, this plan has {plannedCourseCount} courses plus room for {reservedCourseUnits} more. The normal limit is {normalCourseUnits}. You recorded advisor approval and no academic probation.",
     "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "This term would have {courseCount} courses. The normal limit is {normalCourseUnits}. You need advisor approval and must not be on academic probation.",
     "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Overloads are not allowed during academic probation.",
     "termLoad.pending": "A plan may need more than the normal course limit in {terms}. You need advisor approval and must not be on academic probation.",
-    "tuition.threshold.exceeded": "More than {threshold} courses in {period} may add tuition. Check with the Business Office.",
-    "tuition.threshold.possible": "More than {threshold} courses in {period} may add tuition. Check with the Business Office."
+    "tuition.threshold.exceeded": "This plan totals {modeledUnits} courses in {period}. More than {threshold} may add tuition. Ask the Business Office.",
+    "tuition.threshold.possible": "This plan could total {modeledUnits} courses in {period}. More than {threshold} may add tuition. Ask the Business Office.",
+    "tuition.threshold.withReserved": "Your planned courses and saved room total {modeledUnits} courses in {period}. More than {threshold} may add tuition. Ask the Business Office."
   },
   "planningAdvice": {
     "coverage": [
@@ -8141,6 +8143,27 @@
         "supersedes": "Legacy Economics offering instructions; MAT 217 May projection exclusion; duplicate supporting-course term configuration"
       },
       {
+        "anchors": [
+          "OD5",
+          "OD6",
+          "OD7",
+          "OD3-clarification"
+        ],
+        "authority": "Project owner, explicit panel accuracy-review decisions",
+        "authorityBoundary": "ECONOMICS_ELECTIVE_ALLOCATION_AND_PLANNING_PREFERENCES",
+        "confirmedOn": "2026-11-22",
+        "effective": {
+          "from": "2026-11-22",
+          "through": null
+        },
+        "path": "policy/provenance/owner-decisions-2026-11-22b.md",
+        "reviewer": "Project owner",
+        "sha256": "1c2f630298a9f577d96842b38f39a877b24e9cd96305ef0e39d287293bd8ed2e",
+        "sourceId": "OWNER-PANEL-REVIEW-2026-11-22",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": null
+      },
+      {
         "authority": "Project owner, explicit repair task",
         "authorityBoundary": "SUBMITTED_PLAN_ELECTIVE_SLOT_ASSIGNMENT_CONTRACT",
         "confirmedOn": "2026-09-26",
@@ -8395,6 +8418,10 @@
       "ECO 307",
       "ECO 321",
       "BUSN 323"
+    ],
+    "electivePreferredOptions": [
+      "ECO 161",
+      "ECO 160"
     ],
     "id": "economics-major",
     "slots": [

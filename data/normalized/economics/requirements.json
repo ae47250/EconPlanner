@@ -78,6 +78,10 @@
       "kind": "elective",
       "label": "ECO elective 1",
       "maxLevel100": 1,
+      "preferredOptions": [
+        "ECO 161",
+        "ECO 160"
+      ],
       "subject": "ECO",
       "units": 1
     },
@@ -101,6 +105,10 @@
       "kind": "elective",
       "label": "ECO elective 2",
       "maxLevel100": 1,
+      "preferredOptions": [
+        "ECO 161",
+        "ECO 160"
+      ],
       "subject": "ECO",
       "units": 1
     },
@@ -124,6 +132,10 @@
       "kind": "elective",
       "label": "ECO elective 3",
       "maxLevel100": 1,
+      "preferredOptions": [
+        "ECO 161",
+        "ECO 160"
+      ],
       "subject": "ECO",
       "units": 1
     },
@@ -147,6 +159,10 @@
       "kind": "elective",
       "label": "ECO elective 4",
       "maxLevel100": 1,
+      "preferredOptions": [
+        "ECO 161",
+        "ECO 160"
+      ],
       "subject": "ECO",
       "units": 1
     },

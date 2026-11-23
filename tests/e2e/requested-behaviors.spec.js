@@ -143,15 +143,15 @@ test('a reserved-room no-plan result links back to the room setting',async ({pag
   const result = (await response.json()).programs.find(item=>item.program?.id==='economics-base');
   expect(result.economicsPlans).toHaveLength(0);
   expect(result.economicsPlanResult.reason).toBe('RESERVED_ROOM_BLOCKS_PLAN');
-  await expect(page.locator('.no-plan-state h2')).toHaveText('Your reserved room leaves too little space for the major courses.');
-  await expect(page.locator('.no-plan-state > p')).toContainText('No plan fits while you leave room for other courses in these terms:');
+  await expect(page.locator('.no-plan-state h2')).toHaveText('No plan fits with the room saved for other courses.');
+  await expect(page.locator('.no-plan-state > p')).toContainText(/You saved room for \d+ other courses across \d+ terms/);
   await page.locator('.result-diagnostics > summary').click();
   const gaps = page.locator('.result-diagnostics .planning-gaps li');
   await expect(gaps).toHaveCount(1);
-  await expect(gaps.first()).toContainText('These courses did not fit before May 2028:');
+  await expect(gaps.first()).toContainText('No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.');
   await expect(page.locator('.result-diagnostics')).not.toContainText('remains unscheduled');
   await expect(page.locator('.result-diagnostics')).not.toContainText('.;');
-  await page.getByRole('button',{name:'Change room for other courses',exact:true}).click();
+  await page.getByRole('button',{name:'Save less room',exact:true}).click();
   await expect(page.locator('#other-courses-reserved')).toBeVisible();
 });
 
@@ -166,7 +166,7 @@ test('a junior early result gives one course-fit sentence in planning details',a
   await generatePlans(page);
   await page.locator('.result-diagnostics > summary').click();
   const details = page.locator('.result-diagnostics');
-  await expect(details).toContainText('These courses did not fit before May 2027:');
+  await expect(details).toContainText('These requirements did not fit by May 2027:');
   await expect(details).not.toContainText('remains unscheduled');
   await expect(details).not.toContainText('.;');
 });

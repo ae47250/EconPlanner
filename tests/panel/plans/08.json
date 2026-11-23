@@ -15,7 +15,15 @@
           "termId": "winter-2027",
           "term": "Winter",
           "academicYear": "2026/2027",
-          "courses": []
+          "courses": [
+            {
+              "course": "ECO 221",
+              "title": "Environmental Economics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "eco-elective-3"
+            }
+          ]
         },
         {
           "termId": "spring-2027",
@@ -27,7 +35,7 @@
               "title": "Economics of the European Union",
               "section": "S",
               "status": "Planned",
-              "requirementId": "eco-elective-3"
+              "requirementId": "eco-elective-4"
             }
           ]
         },
@@ -55,15 +63,7 @@
           "termId": "spring-2028",
           "term": "Spring/May",
           "academicYear": "2027/2028",
-          "courses": [
-            {
-              "course": "ECO elective",
-              "title": "Eligible ECO elective (future offering to verify)",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-elective-4"
-            }
-          ]
+          "courses": []
         }
       ]
     },
