@@ -1,0 +1,115 @@
+{
+  "studentId": "16",
+  "planDate": "2026-11-22",
+  "overallStatus": "Needs advisor attention",
+  "resultCategory": "PLANS_READY",
+  "plans": [
+    {
+      "id": "balanced",
+      "name": "Balanced",
+      "status": "Needs advisor attention",
+      "feasibilityStatus": "CONDITIONALLY_FEASIBLE",
+      "readinessStatus": "ADVISOR_ACTION_REQUIRED",
+      "terms": [
+        {
+          "termId": "winter-2027",
+          "term": "Winter",
+          "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 113",
+              "title": "Principles of Microeconomics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "eco-113"
+            },
+            {
+              "course": "ECO 161",
+              "title": "Foundations of Economics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "eco-elective-1"
+            },
+            {
+              "course": "MAT 217",
+              "title": "Applied Statistics",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "statistics"
+            }
+          ]
+        },
+        {
+          "termId": "spring-2027",
+          "term": "Spring/May",
+          "academicYear": "2026/2027",
+          "courses": [
+            {
+              "course": "ECO 222",
+              "title": "Economics of the European Union",
+              "section": "S",
+              "status": "Planned",
+              "requirementId": "eco-elective-2"
+            }
+          ]
+        },
+        {
+          "termId": "fall-2027",
+          "term": "Fall",
+          "academicYear": "2027/2028",
+          "courses": [
+            {
+              "course": "ECO 214",
+              "title": "Intermediate Macroeconomics",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-214"
+            },
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-3"
+            }
+          ]
+        },
+        {
+          "termId": "winter-2028",
+          "term": "Winter",
+          "academicYear": "2027/2028",
+          "courses": [
+            {
+              "course": "BUSN 323",
+              "title": "Investments",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "finance"
+            },
+            {
+              "course": "ECO 461",
+              "title": "Senior Seminar: Econometrics",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-461"
+            }
+          ]
+        },
+        {
+          "termId": "spring-2028",
+          "term": "Spring/May",
+          "academicYear": "2027/2028",
+          "courses": [
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

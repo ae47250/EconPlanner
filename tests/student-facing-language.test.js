@@ -60,14 +60,13 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     terms: [], unresolved: [], planConditions: conditions, studentNotices: [], catalog: {}, planNotes: []
   }, template);
   assert.ok(html.indexOf("What to check for this plan") < html.indexOf("For your advisor"));
-  assert.ok(html.includes(`Why an advisor should review this plan:</strong> ${review.summary}`));
+  assert.ok(!html.includes("Why an advisor should review this plan:"));
   assert.ok(html.includes(review.advisorPrompt.replaceAll("'", "&#39;")));
   for (const message of review.details) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
 });
 
-test("Hanover Core applicability uses the approved plain-language message", () => {
-  assert.equal(policyBundle.messages["designation.applicability"],
-    "We have not confirmed which Hanover Core rules apply to your {catalogYear} catalog. Before counting ECO 113 or ECO 114 toward the Historical and Social Perspectives (HS) requirement, or ECO 461 toward Writing 2 (W2), check with your advisor.");
+test("Hanover Core applicability uses the confirmed flexible catalog rules", () => {
+  assert.equal(policyBundle.messages["designation.applicability"], undefined);
 });
 
 test("next-step prerequisites name only the actual course pairs in the selected schedule", () => {
@@ -131,7 +130,7 @@ test("blocked-move summaries and course markers use student-facing language", ()
     "Take ECO 114 before this class.");
   assert.equal(studentFriendlyCourseMarker("Approval required"), "Approval needed");
   assert.equal(studentFriendlyCourseMarker("Eligibility review required"), "Ask an advisor whether this class counts");
-  assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask an advisor to confirm senior standing");
+  assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask your advisor and the Registrar to confirm senior standing");
 });
 
 test("full-section review names the enrollment evidence without exposing a policy code", () => {
@@ -165,7 +164,7 @@ test("capacity context never turns a valid choice or a different restriction int
 test("move details explain course load, unpublished schedules, and concurrent approval plainly", async () => {
   const { studentFriendlyMoveDetails } = await import("../lib/planning/student-language.js");
   const message = "Within normal capacity: 2 of 4 modeled units. Projected placement; the exact schedule has not been published and may change. MAT 113 is planned concurrently with ECO 213. Approval from the ECO 213 instructor is required.";
-  assert.equal(studentFriendlyMoveDetails({ message }), "Your plan would use 2 of the usual 4 course units for this term. The schedule isn’t published yet, so this placement may change. Taking MAT 113 and ECO 213 in the same term needs permission from the ECO 213 instructor.");
+  assert.equal(studentFriendlyMoveDetails({ message }), "Your plan would use 2 of the usual 4 course units for this term. The schedule isn’t published yet, so this placement may change. Taking MAT 113 and ECO 213 in the same term needs approval from the ECO 213 instructor.");
   assert.equal(studentFriendlyMoveDetails({message:"ECO 213 is missing prerequisites: MAT 113 / MAT 121."}), "ECO 213 needs MAT 113 or MAT 121 first. Keep the required course earlier, or move ECO 213 to a later term and check again.");
   assert.equal(studentFriendlyMoveDetails({message:"An additional approval is needed."}), "An additional approval is needed.");
 });
@@ -180,7 +179,7 @@ test("making room is suggested for capacity, never as a workaround for offering 
 
  test("concurrent move warning says what permission is for", async () => {
   const { studentFriendlyMoveCondition } = await import("../lib/planning/student-language.js");
-  assert.equal(studentFriendlyMoveCondition({ requiredApprovals: [{ type: "instructor", course: "ECO 213", prerequisite: "MAT 113" }] }, "MAT 113"), "Same term as ECO 213 — instructor permission needed.");
+  assert.equal(studentFriendlyMoveCondition({ requiredApprovals: [{ type: "instructor", course: "ECO 213", prerequisite: "MAT 113" }] }, "MAT 113"), "Same term as ECO 213 — instructor approval needed.");
 });
 
 test("moving a prerequisite explains which dependent course needs to move", () => {

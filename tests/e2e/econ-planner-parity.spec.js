@@ -50,7 +50,7 @@ test("API and selected-plan UI retain material academic content", async ({ page 
   const body = await response.json();
   const economics = body.programs.find(program => program.program?.id === "economics-base");
   const selectedPlan = economics.economicsPlans[0];
-  await expect(page.getByRole("heading", { name: /Compare your course plans|Your feasible plan/ })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole("heading", { name: /Compare your course plans|Your plan/ })).toBeVisible({ timeout: 15000 });
   const card = await visitPlan(page, selectedPlan.id);
   await expect(card.getByRole("heading", { name: selectedPlan.label, exact: true })).toBeVisible();
   await card.getByText("More about this plan", { exact: true }).click();
@@ -58,7 +58,7 @@ test("API and selected-plan UI retain material academic content", async ({ page 
   const displayed = await card.evaluate((element, terms) => {
     const rows = [...element.querySelectorAll(".compact-schedule tr[data-term-id]")];
     return {
-      courses: [...element.querySelectorAll(".comparison-editable-course button[aria-label^='Change '], .comparison-editable-course .comparison-fixed-course > strong")].map(item => item.textContent.replace(/\s*▾$/, "").trim()),
+      courses: [...element.querySelectorAll(".comparison-editable-course button[aria-label^='Change '], .comparison-editable-course .comparison-fixed-course > strong")].map(item => item.textContent.replace(/\s*▾$/, "").trim().replace(/-[A-Z]$/, "")),
       terms: rows.map(row => {
         const term = terms.find(item => item.slotId === row.dataset.termId);
         return term ? `${term.academicYear || ""}|${term.termKey || ""}` : `unmatched|${row.dataset.termId}`;
@@ -79,7 +79,7 @@ test("API and selected-plan UI retain material academic content", async ({ page 
     schemaVersion: 2,
     kind: "econplanner-api-ui-parity",
     planId: selectedPlan.id,
-    courses: difference(selectedPlan.terms.flatMap(term => term.courses.map(course => course.course === "ECO elective" ? "ECO elective (200+)" : course.course)), displayed.courses),
+    courses: difference(selectedPlan.terms.flatMap(term => term.courses.map(course => course.course === "ECO elective" ? "Economics elective (200 level or higher)" : course.course)), displayed.courses),
     terms: difference(selectedPlan.terms.map(term => `${term.academicYear || ""}|${term.termKey || ""}`), displayed.terms),
     status: { missing: displayed.pageText.includes(studentReadiness) ? [] : [backendReadiness], extra: [] },
     conditions: difference(expectedConditions, displayed.conditions.filter(value => expectedConditions.includes(value))),

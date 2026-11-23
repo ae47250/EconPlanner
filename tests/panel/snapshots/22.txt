@@ -1,0 +1,206 @@
+SCREEN
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Senior
+·
+Graduation target: May 2027
+Regenerate all plans
+Clear all
+Class standing
+Senior
+Graduation target
+May 2027
+Completed
+ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 221 · ECO 234 · ECO 257 · ECO 333 · MAT 121
+Taking now
+None
+Status
+Ready to plan
+The plan meets the major rules. Check seats and future schedules before you register.
+Your plan
+Click a course to see where it can move. You can also drag it by the ⠿ handle.
+While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
+SCREEN > Plan: Balanced
+STATUS: Ready to plan
+Balanced
+Spreads the required classes you still need across the years before you graduate.
+Status: Ready to plan
+Check seats and future schedules before you register.
+SCREEN > Plan: Balanced > Grid
+Year | Term | Courses
+TERM: 2026/2027 Winter
+GRID ROW: ECO 321-J ▾ | Money and Financial Markets
+NOTE: Seat availability not confirmed
+GRID ROW: ECO 461-J | Senior Seminar: Econometrics
+NOTE: Seat availability not confirmed
+NOTE: Offered only in Winter. This is the last Winter before you graduate.
+TERM: 2026/2027 May
+GRID ROW: ECO 222-S ▾ | Economics of the European Union
+NOTE: Seat availability not confirmed
+SCREEN > Plan: Balanced > More
+Add Econ course
+SCREEN > Plan: Balanced > More
+Regenerate this plan
+SCREEN > Plan: Balanced > More
+Download PDF Report: Balanced
+SCREEN > Plan: Balanced > Notes: Things to keep in mind
+Things to keep in mind
+Before you register
+We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222. Check the registration system before you register.
+Check with your advisor
+This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
+SCREEN > Plan: Balanced > Checklist
+Major requirements checklist
+Requirement | Course / term | Status
+CHECKLIST ROW: ECO 113 ECO 113 ✓ Completed
+CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
+CHECKLIST ROW: Mathematics MAT 121 ✓ Completed
+CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed
+CHECKLIST ROW: ECO 214 ECO 214 ✓ Completed
+CHECKLIST ROW: Statistics ECO 257 ✓ Completed
+CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned
+CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned
+CHECKLIST ROW: Economics elective 1 ECO 221 ✓ Completed
+CHECKLIST ROW: Economics elective 2 ECO 234 ✓ Completed
+CHECKLIST ROW: Economics elective 3 ECO 333 ✓ Completed
+CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
+Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
+✓ Completed
+○ Planned
+Future schedules can change. Check the published schedule before you register.
+SCREEN > Plan: Balanced > Notes: More about this plan
+More about this plan
+Other graduation requirements
+HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
+W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+Published schedules as of the plan date (November 22, 2026)
+Winter 2027:
+ECO 113 · Principles of Microeconomics
+— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 114 · Principles of Macroeconomics
+— Tue/Thu, 8:00–9:45 a.m.
+ECO 161 · Foundations of Economics
+— Tue/Thu, 12:20–2:05 p.m.
+ECO 214 · Intermediate Macroeconomics
+— Tue/Thu, 10:00–11:45 a.m.
+ECO 221 · Environmental Economics
+— Mon/Wed/Fri, 9:20–10:30 a.m.
+ECO 321 · Money and Financial Markets
+— Tue/Thu, 12:20–2:05 p.m.
+ECO 461 · Senior Seminar: Econometrics
+— Mon/Wed/Fri, 10:40–11:50 a.m.
+May 2027:
+ECO 222 · Economics of the European Union
+— Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+ECO 224 · Introduction to Sustainability
+— Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
+ECO 234 · Rational Choices
+— Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+SCREEN > Other details
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
+PDF
+PDF > Plan: Balanced > Your Economics major plan
+Hanover College · Economics
+Your Economics major plan
+Panel Student 22 | Balanced | Prepared November 22, 2026 | Class standing: Senior
+This plan covers Winter 2027 through Spring/May 2027.
+Status: Ready to plan
+Check seats and future schedules before you register.
+Graduation target: May 2027
+PDF > Plan: Balanced > Grid
+Your plan by term
+TABLE HEADER: Year
+TABLE HEADER: Fall
+TABLE HEADER: Winter
+TABLE HEADER: May
+TERM: 2026/2027 Fall
+GRID ROW: -
+TERM: 2026/2027 Winter
+GRID ROW: ECO 321-J
+GRID ROW: ECO 461-J
+TERM: 2026/2027 May
+GRID ROW: ECO 222-S
+ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
+ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+ECO 222 — Economics of the European Union Previously offered in May.
+PDF > Plan: Balanced > What to check for this plan
+What to check for this plan
+Before you register
+We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222. Check the registration system before you register.
+Check with your advisor
+This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
+PDF > Plan: Balanced > Checklist
+Your Economics major checklist
+TABLE HEADER: Requirement
+TABLE HEADER: Course / term
+TABLE HEADER: Status
+CHECKLIST CELL: ECO 113
+CHECKLIST CELL: ECO 113
+CHECKLIST CELL: Completed
+CHECKLIST CELL: ECO 114
+CHECKLIST CELL: ECO 114
+CHECKLIST CELL: Completed
+CHECKLIST CELL: Mathematics
+CHECKLIST CELL: MAT 121
+CHECKLIST CELL: Completed
+CHECKLIST CELL: ECO 213
+CHECKLIST CELL: ECO 213
+CHECKLIST CELL: Completed
+CHECKLIST CELL: ECO 214
+CHECKLIST CELL: ECO 214
+CHECKLIST CELL: Completed
+CHECKLIST CELL: Statistics
+CHECKLIST CELL: ECO 257
+CHECKLIST CELL: Completed
+CHECKLIST CELL: Finance
+CHECKLIST CELL: ECO 321 — Winter 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: ECO 461 / Senior Seminar
+CHECKLIST CELL: ECO 461 — Winter 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 1
+CHECKLIST CELL: ECO 221
+CHECKLIST CELL: Completed
+CHECKLIST CELL: Economics elective 2
+CHECKLIST CELL: ECO 234
+CHECKLIST CELL: Completed
+CHECKLIST CELL: Economics elective 3
+CHECKLIST CELL: ECO 333
+CHECKLIST CELL: Completed
+CHECKLIST CELL: Economics elective 4
+CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: Planned
+Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
+Completed Planned
+Future schedules can change. Check the published schedule before you register.
+PDF > Plan: Balanced > Plan Notes
+Plan Notes
+Panel Student 22 | Balanced | Prepared November 22, 2026
+PDF > Plan: Balanced > Notes: Hanover Core
+Hanover Core
+HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
+W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+PDF > Plan: Balanced > Notes: Past Economics course offerings
+Past Economics course offerings
+Past Fall schedules included: ECO 357.
+Past Winter schedules included: ECO 337, ECO 357.
+Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 331.
+A past schedule does not guarantee a course will be offered again.
+PDF > Plan: Balanced > Notes: Published schedules as of the plan date (November 22, 2026)
+Published schedules as of the plan date (November 22, 2026)
+Winter 2027:
+ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
+ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
+ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
+ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
+ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
+ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
+May 2027:
+ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
+ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
+ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.

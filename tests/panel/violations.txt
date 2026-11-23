@@ -1,0 +1,1 @@
+Panel sentence violations: 0 (semicolon=0, wordLimit=0, bannedTerm=0, placeholder=0, duplicate=0, statusContradiction=0)

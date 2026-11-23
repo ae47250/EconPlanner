@@ -26,6 +26,15 @@ const economics = data => data.programs.find(item => item.economicsPlans);
 const generic = id => ({ course: "ECO elective", requirementId: `eco-elective-${id}`, minimumLevel: 200,
   source: "projected-offering", publicationStatus: "PLANNING_PROJECTION", units: 1, meeting: null, availability: null });
 
+test("a projected ECO 257 placement tells the student its offering is unconfirmed", () => {
+  const plan = { terms: [{ term: "Fall 2028", publicationStatus: "PLANNING_PROJECTION",
+    courses: [{ course: "ECO 257", requirementId: "statistics", source: "projected-offering" }] }] };
+  const notes = buildEconomicsPlanNotes({ plan, student: sample, mapping: { requirements: [], assignments: [] },
+    policyBundle: bundle, courseCatalog: economicsCourses });
+  assert.ok(notes.find(note => note.id === "future")?.items.some(item =>
+    item.text === "ECO 257 was last offered in Winter 2023. Its future offering is not confirmed."));
+});
+
 for (const termKey of ["Fall", "Winter", "May"]) for (const named of [false, true]) {
   test(`${termKey}: named and generic assignments share the unpublished elective limit (${named})`, () => {
     const first = named ? { ...generic(1), course: "ECO 333" } : generic(1);
@@ -226,15 +235,15 @@ test("early graduation exposes the extra elective need while keeping standard pl
   for (const plan of result.economicsPlans) for (const term of plan.terms) assert.equal(evaluateTermElectives(term, bundle).status, "ALLOW");
 });
 
-test("BUSN 323 preference preserves verified ECO 321 when BUSN cannot fit and exposes a future finance gap", async () => {
+test("verified ECO 321 takes precedence when finance is still open and future gaps remain visible", async () => {
   const codes = ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "ECO 161", "ECO 221", "ECO 234"];
   const student = { academicStanding: "senior", planCreationDate: "2026-07-30", courses: completed(codes) };
-  for (const [reservedCourseUnits, expected] of [[{}, "BUSN 323"], [{"fall-2026": 4}, "ECO 321"]]) {
+  for (const reservedCourseUnits of [{}, {"fall-2026": 4}]) {
     const result = economics((await post({ student: { ...student, reservedCourseUnits } })).data);
     assert.ok(result.economicsPlans.length);
     for (const plan of result.economicsPlans) {
       const finance = plan.terms.flatMap(term => term.courses).find(course => course.requirementId === "finance");
-      assert.equal(finance.course, expected);
+      assert.equal(finance.course, "ECO 321");
       assert.equal(finance.source, "verified-offering");
     }
   }
@@ -242,7 +251,8 @@ test("BUSN 323 preference preserves verified ECO 321 when BUSN cannot fit and ex
     reservedCourseUnits: {"fall-2027": 4, "winter-2028": 4} };
   const gap = economics((await post({ student: gapStudent })).data);
   assert.equal(gap.economicsPlans.length, 0);
-  assert.equal(gap.economicsPlanResult.evidence.blockingReasons[0].message, "We couldn't find a complete plan that meets the Finance requirement by your planned graduation date.");
+  assert.equal(gap.economicsPlanResult.reason, "RESERVED_ROOM_BLOCKS_PLAN");
+  assert.match(gap.economicsPlanResult.evidence.message, /You saved room for 8 other courses across 2 terms/);
 });
 
 test("a year-only placeholder needs a legal one-elective-per-term witness", () => {

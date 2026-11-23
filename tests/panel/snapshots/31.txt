@@ -1,0 +1,34 @@
+SCREEN
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Senior
+·
+Graduation target: May 2027
+Regenerate all plans
+Clear all
+Class standing
+Senior
+Graduation target
+May 2027
+Completed
+ECO 113 · ECO 114 · ECO 213 · ECO 234 · ECO 333 · MAT 217
+Taking now
+None
+Status
+Not possible
+Your planning result
+SCREEN > Other details
+SCREEN > Your remaining classes do not fit before this graduation target.
+Your remaining classes do not fit before this graduation target.
+Review your graduation timeline and bring this result to your academic advisor.
+You have 6 required courses left and 2 terms left by May 2027. They cannot all fit. Choose a later graduation year or talk with your advisor.
+Review graduation timeline
+SCREEN > Why am I seeing this result?
+Why am I seeing this result?
+You have 6 required courses left and 2 terms left by May 2027. They cannot all fit. Choose a later graduation year or talk with your advisor.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
+PDF

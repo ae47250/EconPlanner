@@ -300,7 +300,7 @@ test("intake and generated results survive a normal reload", async ({ page }) =>
 
   await fulfillPlanner(page, plannerResultFixture());
   await generatePlans(page);
-  await expect(page.getByRole("heading", { name: /Your feasible plan|Compare your course plans/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Your plan|Compare your course plans/ })).toBeVisible();
   await page.reload();
   await expect(page.locator(".result-status-value")).toHaveText("Ready to plan");
   await expect(page.getByText("EconPlanner is a planning guide, not an official degree audit.", { exact: true })).toHaveCount(1);
@@ -376,7 +376,7 @@ test("custom graduation and acceleration stay separate", async ({ page }) => {
   await early.click();
   await page.getByRole("button", { name: "My expected graduation year is different" }).click();
   await expect(early).toHaveCount(0);
-  await expect(page.locator(".summary-status")).toContainText("accelerated comparison was turned off");
+  await expect(page.locator(".summary-status")).toContainText("We turned off the one-year-early option because you chose a different graduation year.");
   await page.getByLabel("When do you expect to graduate?").selectOption({ index: 1 });
   await expect(page.locator(".cp7-summary")).toContainText("Custom graduation target");
   await expect(page.locator(".cp7-summary")).not.toContainText("One-year-early target");
@@ -465,14 +465,15 @@ test("accelerated results expose the backend Possible, Not possible, and More in
       await expect(earlyPlan).toContainText("May 2030");
       await expect(earlyPlan).toContainText("This plan");
       await expect(earlyPlan).toContainText("May 2029");
-      await expect(earlyPlan.locator(".comparison-plan-summary > p:not(.plan-feasibility-value)")).toHaveCount(0);
+      await expect(earlyPlan.locator(".comparison-plan-summary > p:not(.plan-feasibility-value)")).toHaveText("Check this plan with your advisor.");
     } else {
       await expect(page.locator(".accelerated-result-status")).toHaveText(label);
-      await expect(page.locator(".accelerated-result")).toContainText(`Backend accelerated finding: ${label}.`);
-      await expect(page.locator(".accelerated-result")).toContainText("Standard target");
-      await expect(page.locator(".accelerated-result")).toContainText("Accelerated target");
-      await expect(page.locator(".accelerated-result")).toContainText("May 2030");
-      await expect(page.locator(".accelerated-result")).toContainText("May 2029");
+      const result = page.locator('.accelerated-result[aria-labelledby="accelerated-result-heading"]');
+      await expect(result).toContainText(`Backend accelerated finding: ${label}.`);
+      await expect(result).toContainText("Standard target");
+      await expect(result).toContainText("One-year-early target");
+      await expect(result).toContainText("May 2030");
+      await expect(result).toContainText("May 2029");
     }
   }
 });
@@ -513,7 +514,7 @@ test("completion source choices are compact, eligibility-limited, saved, and cle
   await sourceAction.click();
   await eco113.getByRole("button", { name: "Another college / transfer credit" }).click();
   await expect(eco113).toContainText("Selected: Another college / transfer credit");
-  await expect(eco113).toContainText("review-required until its supporting evidence is approved");
+  await expect(eco113).toContainText("Your advisor needs to confirm that this credit counts toward your degree.");
   await expect.poll(async () => page.evaluate(() => {
     const saved = JSON.parse(localStorage.getItem("econ-planner-ui-state"));
     const course = saved.formData.courses.find(item => item.code === "ECO 113");
@@ -548,23 +549,15 @@ test("completion source choices are compact, eligibility-limited, saved, and cle
 });
 
 for (const course of ["ECO 213", "ECO 214"]) {
-  test(`${course} prerequisite controls use the same two choices as other courses`, async ({ page }) => {
+  test(`${course} Taking now with a prerequisite gap generates an advisor review`, async ({ page }) => {
     await resetPlanner(page);
     await chooseStanding(page, "freshman");
     await continueToCourses(page);
     await setCourseStatus(page, course, "Taking now");
-    const panel = page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`);
-    await expect(panel).toContainText(`Prerequisites for ${course}`);
-    for (const group of await panel.getByRole('group').all()) {
-      await expect(group.getByRole('button')).toHaveCount(2);
-      await expect(group.getByRole('button', { name: 'Completed', exact: true })).toBeVisible();
-      await expect(group.getByRole('button', { name: 'Taking now', exact: true })).toBeVisible();
-    }
-    await expect(panel.getByText('Not taken / not sure')).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Generate my plans' })).toBeDisabled();
-    await setCourseStatus(page, course === 'ECO 213' ? 'ECO 113' : 'ECO 114', 'Completed', 'Status for prerequisite');
-    await setCourseStatus(page, 'MAT 113', 'Completed', 'Status for prerequisite');
     await expect(page.getByRole('button', { name: 'Generate my plans' })).toBeEnabled();
+    await expect(page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`)).toHaveCount(0);
+    await generatePlans(page);
+    await expect(page.locator('[data-plan-conditions]').first()).toContainText(`You are taking ${course}, but ${course === "ECO 213" ? "ECO 113" : "ECO 114"}, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.`);
   });
 }
 
@@ -600,9 +593,10 @@ for (const [math, economics] of [
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
     const card = await visitPlan(page, "one-year-early");
     await card.getByText("More about this plan", { exact: true }).click();
-    await expect(card.locator(".accelerated-math-sequence-note")).toContainText(`${math} is scheduled before ${economics}`);
-    await expect(card.locator(".accelerated-math-sequence-note")).toContainText("without special approval for concurrent math");
-    await expect(card.locator(".accelerated-math-sequence-note")).toContainText("approval is not guaranteed");
+    await expect(card.locator('.compact-schedule [data-term-id="math"]')).toContainText(math);
+    await expect(card.locator('.compact-schedule [data-term-id="eco"]')).toContainText(economics);
+    await expect(card.locator(".accelerated-math-sequence-note")).toHaveText(`Take ${math} before ${economics}. Taking both in one term needs the ${economics} instructor's approval.`);
+    await expect(card.locator("[data-plan-conditions]")).toHaveCount(0);
   });
 }
 
@@ -671,7 +665,7 @@ test("SEARCH_INCOMPLETE and INFEASIBLE_PROVEN remain visibly distinct", async ({
 
   await page.unroute("**/api/majors/map");
   await openFixtureResult(page, infeasibleFixture());
-  await expect(page.locator(".no-plan-state")).toContainText("No complete plan fits this graduation target with the available course timing and capacity.");
+  await expect(page.locator(".no-plan-state")).toContainText("Your remaining classes do not fit before this graduation target.");
   await expect(page.locator(".no-plan-state")).toContainText("Review your graduation timeline");
 });
 
@@ -684,8 +678,8 @@ test("missing scoped offering evidence is shown as More information needed", asy
   economics.economicsPlanResult.evidence.blockingReasons = [];
   await openFixtureResult(page,fixture);
   await expect(page.locator('.result-status-value')).toHaveText('More information needed');
-  await expect(page.locator('.no-plan-state')).toContainText('Course offering evidence is incomplete');
-  await expect(page.locator('.no-plan-state')).toContainText('does not establish that major completion is impossible');
+  await expect(page.locator('.no-plan-state')).toContainText('We need more course schedule information for your graduation target.');
+  await expect(page.locator('.no-plan-state')).toContainText('This does not mean you cannot finish.');
 });
 
 test("a freshman receives the Balanced and Explore the Major normal comparisons", async ({ page }) => {
@@ -807,17 +801,17 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     test.setTimeout(60000);
     const instructor = authority === "ECO 213 instructor";
     const course = instructor ? "ECO 213" : "ECO 461";
-    const prerequisite = instructor ? "MAT 113" : "ECO 213";
-    const term = instructor ? "Fall 2027" : "Winter 2028";
+    const prerequisite = instructor ? "MAT 113" : "ECO 214";
+    const term = instructor ? "Fall 2027" : "Winter 2027";
     const approver = /instructor/i.test(authority) ? `the ${course} instructor` : `the ${authority}`;
-    const message = `Taking ${prerequisite} and ${course} together in ${term} needs approval from ${approver}. No approval is recorded yet.`;
+    const message = `Taking ${prerequisite} and ${course} together in ${term} needs approval from ${approver} before you register.`;
     await resetPlanner(page);
-    await chooseStanding(page, instructor ? "freshman" : "junior");
+    await chooseStanding(page, instructor ? "freshman" : "senior");
     await page.locator("details.more-details > summary").first().click();
-    await page.getByLabel("Plan creation date", { exact: true }).fill(instructor ? "2026-10-19" : "2026-07-30");
+    await page.getByLabel("Plan creation date", { exact: true }).fill(instructor ? "2026-10-19" : "2026-11-22");
     await continueToCourses(page);
     if (!instructor) {
-      for (const code of ["MAT 113", "ECO 161", "ECO 221"]) {
+      for (const code of ["ECO 113", "ECO 114", "ECO 213", "MAT 121", "MAT 217", "ECO 333", "ECO 234", "BUSN 323"]) {
         await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill(code);
         await setCourseStatus(page, code, "Completed");
       }
@@ -831,7 +825,7 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
       await card.getByRole("button", { name: "Change ECO 213", exact: true }).click();
       const actions = card.locator('.plan-course-actions[aria-label="Changes for ECO 213"]');
       await actions.locator('[data-change-choice="move:fall-2027"]').click();
-      await expect(actions).toContainText("instructor permission");
+      await expect(actions).toContainText("instructor approval needed");
       const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/majors/map") && response.request().postDataJSON()?.action === "validate-plan");
       await actions.getByRole("button", { name: "Apply change", exact: true }).click();
       const response = await responsePromise;
@@ -843,7 +837,7 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     const badges = card.locator(".plan-course-approval").filter({ hasText: "Approval needed" });
     expect(await badges.count()).toBeGreaterThan(0);
     for (const badge of await badges.all()) await expect(badge).toContainText("Approval needed");
-    await expect(badges.first()).toContainText(authority);
+    await expect(card.locator("[data-plan-conditions]")).toContainText(approver);
     await expect(card.locator(`[data-requirement-checklist-id="${course.toLowerCase().replace(" ", "-")}"] .checklist-marker`).filter({ hasText: "Approval needed" })).toHaveCount(1);
     await expect(page.locator("body")).not.toContainText("Advisor approval needed");
     await page.screenshot({ path: testInfo.outputPath("approval-ui.png"), fullPage: true });

@@ -1,0 +1,34 @@
+SCREEN
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Senior
+·
+Graduation target: May 2027
+Regenerate all plans
+Clear all
+Class standing
+Senior
+Graduation target
+May 2027
+Completed
+ECO 113 · ECO 114 · ECO 161 · ECO 213 · ECO 214 · ECO 221 · MAT 121 · MAT 217
+Taking now
+None
+Status
+Not possible
+Your planning result
+SCREEN > Other details
+SCREEN > Your remaining classes do not fit before this graduation target.
+Your remaining classes do not fit before this graduation target.
+Review your graduation timeline and bring this result to your academic advisor.
+ECO 321 counts for Finance here, so it cannot also count as an elective. You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.
+Review graduation timeline
+SCREEN > Why am I seeing this result?
+Why am I seeing this result?
+ECO 321 counts for Finance here, so it cannot also count as an elective. You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
+PDF

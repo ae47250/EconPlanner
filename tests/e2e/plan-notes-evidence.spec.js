@@ -76,7 +76,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(card.locator('[data-plan-conditions]')).toHaveCount(1);
       await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       if (plan.id === 'one-year-early') {
-        await expect(card.locator('[data-plan-conditions]')).toContainText('Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet.');
+        await expect(card.locator('[data-plan-conditions]')).toContainText('Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.');
         await expect(card.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2027–2028. Ask your advisor and the Registrar to confirm you can take ECO 461 then.');
         await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       }
@@ -107,7 +107,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       for (const condition of plan.planConditions.filter(item => ["prerequisite", "seat"].includes(item.kind))) {
         await expect(card.locator('[data-plan-conditions]').getByText(condition.message, {exact:true})).toHaveCount(1);
       }
-      await expect(card.locator('.comparison-editable-course button[aria-label="Change ECO elective (200+)"]')).toHaveCount(
+      await expect(card.locator('.comparison-editable-course button[aria-label="Change Economics elective (200 level or higher)"]')).toHaveCount(
         plan.terms.flatMap(term => term.courses).filter(course => course.course === 'ECO elective').length
       );
       expect(await card.locator('[data-plan-notes]').evaluate(node => Boolean(node.closest('[aria-live], [role="status"]')))).toBe(false);
@@ -128,29 +128,31 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(page.getByRole('heading', {name:'Compare your course plans',exact:true})).toBeVisible();
     await recordLiveMessages('freshman: generation');
     const earlyCard = await visitPlan(page, "one-year-early");
-    const control = earlyCard.locator('.plan-course-actions[aria-label="Changes for MAT 217"]');
+    const control = earlyCard.locator('.plan-course-actions[aria-label^="Changes for MAT 217"]');
+    const selected = plans.find(plan => plan.id === 'one-year-early');
+    const termOf = code => selected.terms.findIndex(term => term.courses.some(course => course.course === code));
+    expect(termOf('MAT 113')).toBeLessThan(termOf('ECO 213'));
     await expect(earlyCard.locator('.accelerated-math-sequence-note').first()).toBeHidden();
     await earlyCard.getByText('More about this plan', {exact:true}).click();
     await expect(earlyCard.locator('.accelerated-math-sequence-note').first()).toBeVisible();
     await earlyCard.getByText('More about this plan', {exact:true}).click();
     await recordLiveMessages('freshman: select One Year Early');
-    const selected = plans.find(plan => plan.id === 'one-year-early');
     const from = selected.terms.find(term => term.courses.some(course => course.course === 'MAT 217'));
     const rejected = await page.request.post('/api/majors/map', {data:{action:'validate-plan',student,plan:selected,plans,
       edit:{type:'move',fromTermId:from.slotId,toTermId:'winter-2029',courseId:'statistics'}}});
     expect(rejected.status()).toBe(422);
-    await control.getByRole('button',{name:'Change MAT 217',exact:true}).click();
+    await control.getByRole('button',{name:/^Change MAT 217(?:-[A-Z])?$/}).click();
 
     const validated = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-    const menu = control.getByRole('region', {name:'Change MAT 217 options',exact:true});
-    if (!await menu.isVisible()) await control.getByRole('button',{name:'Change MAT 217',exact:true}).click();
+    const menu = control.getByRole('region', {name:/^Change MAT 217(?:-[A-Z])? options$/});
+    if (!await menu.isVisible()) await control.getByRole('button',{name:/^Change MAT 217(?:-[A-Z])?$/}).click();
     const option = menu.locator('[data-change-choice="move:winter-2027"]');
     const conditional = await option.getAttribute('data-change-status') === 'CONDITIONAL';
     await option.focus();
     await page.keyboard.press('Enter');
     if (conditional) await menu.getByRole('button',{name:'Apply change',exact:true}).click();
     expect((await validated).status()).toBe(200);
-    await expect(control.getByRole('button',{name:'Change MAT 217',exact:true})).toBeFocused();
+    await expect(control.getByRole('button',{name:/^Change MAT 217(?:-[A-Z])?$/})).toBeFocused();
     await expect(earlyCard.locator('.comparison-edit-status')).toContainText('Moved to');
     await expect(earlyCard.locator('.comparison-edit-status')).toHaveText('Moved to Winter 2027. Plan checks pass.');
     await expect(earlyCard.locator('[data-requirement-checklist-id="statistics"]')).toContainText('MAT 217 — Winter 2027');
@@ -162,7 +164,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     await expect(earlyCard.locator('.comparison-edit-status')).toHaveText('Change undone.');
     await recordLiveMessages('MAT 217: undo');
     const again = page.waitForResponse(r => r.url().endsWith('/api/majors/map') && r.request().postDataJSON()?.action === 'validate-plan');
-    await control.getByRole('button',{name:'Change MAT 217',exact:true}).click();
+    await control.getByRole('button',{name:/^Change MAT 217(?:-[A-Z])?$/}).click();
     await option.click();
     if (conditional) await menu.getByRole('button',{name:'Apply change',exact:true}).click();
     expect((await again).status()).toBe(200);

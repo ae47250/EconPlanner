@@ -2,7 +2,6 @@ import { availableCatalogYears, loadCatalog } from "../../../../lib/catalog/load
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
 import {
-  assigned100LevelElectives,
   buildFeasibilityDetails,
   buildEconomicsTermPlans,
   classifyFeasibility,
@@ -76,19 +75,6 @@ function catalogAdvisorAttention(planningContext) {
   }));
 }
 
-function electiveAdvisorAttention(results) {
-  const economics = results.find(result => result.program?.id === "economics-base");
-  const assignedCourses = assigned100LevelElectives(economics);
-  if (!assignedCourses.length) return [];
-
-  return [{
-    code: "ONE_HUNDRED_LEVEL_ELECTIVE_USED",
-    title: "100-level elective limit",
-    severity: "info",
-    message: `${assignedCourses[0]} is being used as the one permitted 100-level Economics elective. The other three Economics electives must be at the 200 level or above.`
-  }];
-}
-
 function prerequisiteAdvisorAttention(validation, student, policyBundle) {
   // Existing enrollment is course history, not a proposed concurrent placement.
   // Keep its validation evidence; do not present it as a new registration task.
@@ -101,7 +87,9 @@ function prerequisiteAdvisorAttention(validation, student, policyBundle) {
     severity: "warning",
     message: item.message
   }));
-  const reviews = (validation.reviewFindings || []).map((finding, index) => ({
+  const apOrTransfer = new Set((student.courses || []).filter(course => course.status === "transfer"
+    || course.source === "ap_credit" || /transfer/i.test(course.source || "")).map(course => course.code));
+  const reviews = (validation.reviewFindings || []).filter(finding => !apOrTransfer.has(finding.subject?.course)).map((finding, index) => ({
     code: `HISTORY_REVIEW_${finding.subject?.course?.replace(/\s/g, "_") || index}`,
     title: `${finding.subject?.course || "Course history"} prerequisite check`,
     severity: "warning",
@@ -573,7 +561,6 @@ export async function POST(request) {
     const advisorAttention = [
       ...catalogAdvisorAttention(authoritativePlanningContext),
       ...results.flatMap(result => result.advisorNotifications || []),
-      ...electiveAdvisorAttention(results),
       ...prerequisiteAdvisorAttention(prerequisiteValidation, student, catalog.policyBundle),
       ...planAdvisorAttention(results)
     ];

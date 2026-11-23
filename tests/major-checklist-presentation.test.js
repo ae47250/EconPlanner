@@ -20,13 +20,27 @@ async function post(body) {
 const economics = data => data.programs.find(item => item.economicsPlans);
 const completed = codes => codes.map(code => ({ code, status: "completed" }));
 
+test("completed math choice is stable across course entry order and report generation", async () => {
+  const courses = completed(["ECO 113", "ECO 114", "MAT 113", "MAT 121", "MAT 217", "ECO 257"]);
+  const student = { ...sample, planningPace: "standard", planCreationDate: "2026-11-22", courses };
+  for (const enteredCourses of [courses, [...courses].reverse()]) {
+    const input = { ...student, courses: enteredCourses };
+    const plan = economics((await post({ student: input })).data).economicsPlans[0];
+    const screenMath = plan.majorRequirementsChecklist.rows.find(row => row.id === "cognate").course;
+    const report = await buildEconomicsReportFromStudent(input, input.planCreationDate, plan);
+    const pdfMath = report.majorRequirementsChecklist.rows.find(row => row.id === "cognate").course;
+    assert.equal(screenMath, "MAT 113");
+    assert.equal(pdfMath, screenMath);
+  }
+});
+
 test("zero-course input: all three checklists use validated future assignments, full terms, order and identical report content", async () => {
   const result = economics((await post({ student: sample })).data);
   assert.equal(result.economicsPlans.length, 3);
   for (const plan of result.economicsPlans) {
     const checklist = plan.majorRequirementsChecklist;
     assert.equal(checklist.complete, true);
-    assert.deepEqual(checklist.legend.map(state => state.label), ["Completed", "AP credit", "Transfer credit", "In progress", "Planned"]);
+    assert.deepEqual(checklist.legend.map(state => state.label), ["Planned"]);
     assert.deepEqual(checklist.unmetRequirements, []);
     assert.equal(checklist.title, "Major requirements checklist");
     assert.deepEqual(checklist.rows.map(row => row.label), order);
@@ -48,9 +62,9 @@ test("zero-course input: all three checklists use validated future assignments, 
     assert.ok(html.includes("We don’t know if there are open seats in "));
     const capstone = checklist.rows.find(row => row.id === "eco-461");
     if (plan.id === "one-year-early") {
-      assert.deepEqual(capstone.markers, ["Approval needed", "Ask an advisor to confirm senior standing"]);
+      assert.deepEqual(capstone.markers, ["Approval needed", "Ask your advisor and the Registrar to confirm senior standing."]);
       assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Approval needed"));
-      assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet."));
+      assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register."));
       assert.ok(plan.planConditions.some(item => /This plan assumes you will have senior standing in 2027–2028\./.test(item.message)));
       assert.ok(!html.includes("This plan assumes you will have senior standing in your final year."));
     } else assert.deepEqual(capstone.markers, []);
@@ -63,7 +77,7 @@ test("incomplete candidates retain unmet eligibility separately without assertin
   ] } });
   assert.equal(checklist.complete, false);
   assert.equal(checklist.unmetRequirements[0].id, "finance");
-  assert.deepEqual(checklist.legend.map(state => state.label), ["Completed", "AP credit", "Transfer credit", "In progress", "Planned"]);
+  assert.deepEqual(checklist.legend.map(state => state.label), []);
   const html = renderEconomicsHtml({ student: { displayName: "Fictional <student>", academicStanding: "senior" }, terms: [], unresolved: [], requirements: [], majorRequirementsChecklist: checklist, planConditions: [], planNotes: [] }, template);
   assert.ok(html.includes("Requirements still needing a class"));
   assert.match(html, /<h3>Requirements still needing a class<\/h3><ul><li>Finance<\/li><\/ul>/);
@@ -81,14 +95,14 @@ test("senior elective history uses each completed and current course once in API
   const result = economics((await post({ student })).data);
   const plan = result.economicsPlans[0];
   const rows = plan.majorRequirementsChecklist.rows;
-  assert.equal(rows.find(row => row.id === "eco-elective-2").course, "ECO 337");
-  const current = rows.find(row => row.id === "eco-elective-3");
+  assert.equal(rows.find(row => row.id === "eco-elective-2").course, "ECO 333");
+  const current = rows.find(row => row.id === "eco-elective-2");
   assert.equal(current.course, "ECO 333");
   assert.equal(current.status, "in_progress");
   assert.equal(rows.filter(row => row.course === "ECO 337").length, 1);
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
   const html = renderEconomicsHtml(report, template);
-  assert.match(html, /data-requirement-checklist-id="eco-elective-3"[\s\S]*?ECO 333[\s\S]*?Taking now/);
+  assert.match(html, /data-requirement-checklist-id="eco-elective-2"[\s\S]*?ECO 333[\s\S]*?Taking now/);
 });
 
 test("AP and transfer checklist credit and grouped advisor text agree in API and PDF", async () => {
@@ -103,7 +117,9 @@ test("AP and transfer checklist credit and grouped advisor text agree in API and
     for (const course of courses) {
       const row = plan.majorRequirementsChecklist.rows.find(item => item.course === course.code);
       assert.equal(row.statusLabel, label);
-      assert.ok(row.markers.some(marker => /Confirm with your advisor that it counts/.test(marker)));
+      assert.ok(row.markers.some(marker => marker === (label === "AP credit"
+        ? "AP/exam credit. Confirm with your advisor that it counts."
+        : "Transfer credit. Confirm with your advisor that it counts.")));
     }
     assert.equal(plan.planConditions.filter(item => item.message === message).length, 1);
     const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
@@ -172,7 +188,7 @@ test("qualified completed credit and current enrollment are separate from future
         const label = row.status === "in_progress" ? "Taking now" : row.statusLabel;
         assert.ok(html.includes(`status-icon-${row.status}\" aria-hidden=\"true\"></span> ${label}`));
       }
-      assert.equal((html.match(/class="status-icon status-icon-/g) || []).length, 17);
+      assert.equal((html.match(/class="status-icon status-icon-/g) || []).length, 15);
       assert.doesNotMatch(html, /aria-hidden="true">[✓◐○]</);
       assert.match(html, /status-icon-completed\{[^}]+border:/);
       assert.match(html, /status-icon-in_progress:before\{[^}]+background:currentColor/);
@@ -200,7 +216,7 @@ test("provisional transfer credit, missing work and an invalid double allocation
   const mapping = { requirements: [requirement], assignments: [provisional], strict: { assignments: [] } };
   let row = buildMajorRequirementsChecklist({ mapping }).rows[0];
   assert.equal(row.status, "still_needed");
-  assert.deepEqual(row.markers, ["Ask an advisor whether this class counts"]);
+  assert.deepEqual(row.markers, ["Ask your advisor whether this course counts toward the major."]);
   row = buildMajorRequirementsChecklist({ mapping: { requirements: [requirement], assignments: [] } }).rows[0];
   assert.equal(row.status, "still_needed");
   assert.equal(row.courseTerm, "No class matched yet");
@@ -244,13 +260,14 @@ test("saved/direct API data cannot forge checklist credit or remove real approva
   }
 });
 
-test("unsupported cohort/catalog identifies the HS and W2 claims without granting them", async () => {
-  const student = { ...sample, generalDegreeCatalogYear: "2024-2025" };
+test("2024–25 catalog receives the confirmed Hanover Core HS and W2 notes", async () => {
+  const student = { ...sample, generalDegreeCatalogYear: "2024-2025", courses: completed(["ECO 113", "ECO 114"]) };
   const result = economics((await post({ student })).data);
   for (const plan of result.economicsPlans) {
     const note = plan.planNotes.find(item => item.id === "ccr-ace");
-    assert.ok(note.items.some(item => /We have not confirmed which Hanover Core rules apply to your 2024-2025 catalog.*ECO 113 or ECO 114.*Historical and Social Perspectives \(HS\).*ECO 461.*Writing 2 \(W2\).*check with your advisor/.test(item.text)));
-    assert.ok(!note.items.some(item => /satisfied through|planned through/.test(item.text)));
+    assert.equal(plan.degreeRequirementInformation.evidenceStatus, "SUPPORTED");
+    assert.ok(note.items.some(item => /Historical and Social Perspectives \(HS\)/.test(item.text)));
+    assert.ok(!note.items.some(item => /We have not confirmed/.test(item.text)));
     const report = await buildEconomicsReportFromStudent(student, sample.planCreationDate, plan);
     assert.deepEqual(report.planNotes, plan.planNotes);
   }

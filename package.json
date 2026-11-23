@@ -18,7 +18,11 @@
     "verify:pdf:economics": "node scripts/verify-economics-pdf.mjs",
     "test": "node --test",
     "test:e2e": "playwright test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "panel:run": "node scripts/panel/run.mjs",
+    "panel:check": "node scripts/panel/run.mjs --check",
+    "panel:lint": "node scripts/panel/lint.mjs",
+    "panel:sources": "node scripts/panel/sources.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.4.0",

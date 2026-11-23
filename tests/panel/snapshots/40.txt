@@ -1,0 +1,35 @@
+SCREEN
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Senior
+·
+Graduation target: May 2027
+Regenerate all plans
+Clear all
+Class standing
+Senior
+Graduation target
+May 2027
+Completed
+BUSN 323 · ECO 113 · ECO 114 · ECO 214 · ECO 234 · ECO 333 · MAT 217
+Taking now
+None
+Status
+More information needed
+Your planning result
+SCREEN > Other details
+SCREEN > We need more course schedule information for your graduation target.
+We need more course schedule information for your graduation target.
+This does not mean you cannot finish. Ask your advisor which required classes will be offered.
+Review my answers
+SCREEN > Why am I seeing this result?
+Why am I seeing this result?
+Balanced: No complete plan found
+What still needs attention
+These requirements did not fit by May 2027: ECO 213.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
+PDF

@@ -21,7 +21,10 @@ test("catalog note follows the derived or entered year for regular, transfer, an
     const context = resolvePlanningContext({ academicStanding: standing, planCreationDate: date });
     const note = planningRequirementsNote(context);
     if (!terms) assert.equal(note, null);
-    else for (const term of terms) assert.ok(`${note.heading} ${note.details.join(" ")}`.includes(term));
+    else {
+      assert.equal(note.heading, "This plan uses the current Economics major requirements.");
+      for (const term of terms) assert.ok(`${note.heading} ${note.details.join(" ")}`.includes(term));
+    }
   }
   const junior = resolvePlanningContext({ academicStanding: "junior", planCreationDate: date });
   assert.equal(planningRequirementsNote({ ...junior, majorDeclarationCatalogYear: "2025-2026" }), null);
@@ -53,7 +56,7 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
     const html = renderEconomicsHtml(report, template);
     if (!expected.length) {
       assert.equal(note, null);
-      assert.doesNotMatch(html, /This plan uses the current \(2026–27\) Economics major requirements/);
+      assert.doesNotMatch(html, /This plan uses the current Economics major requirements/);
       assert.doesNotMatch(html, /Based on your class year, your catalog year is likely/);
       assert.doesNotMatch(html, /Please help the student submit the routine SAC petition/);
     } else {
@@ -63,7 +66,7 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
       assert.ok(studentSection.includes("<h3>Check with your advisor</h3>"));
       for (const term of expected) assert.ok(studentSection.includes(term));
       assert.doesNotMatch(html, /Please help the student submit the routine SAC petition/);
-      assert.match(studentSection, /Student Academic Assistance Committee \(forms are at the Registrar&#39;s Office\)/);
+      assert.match(studentSection, /Student Academic Assistance Committee\. Forms are at the Registrar&#39;s Office\./);
       if (standing === "senior") assert.match(studentSection, /comprehensive evaluation in Economics\. Ask your advisor whether you still need to take it\./);
     }
   }
@@ -89,8 +92,8 @@ test("older-catalog wording names only the courses the plan actually counts", ()
   const context = resolvePlanningContext({ academicStanding: "senior", planCreationDate: date });
   const onlyPsychology = { validation: { requirementAllocation: { assignments: [{ slotId: "statistics", code: "PSY 217" }] } } };
   const note = planningRequirementsNote(context, onlyPsychology);
-  assert.match(note.details[0], /^Your plan counts PSY 217, which your 2023–24 catalog does not accept\./);
+  assert.match(note.details[0], /^Your plan counts PSY 217\. Your 2023–24 catalog does not accept it\./);
   assert.doesNotMatch(note.details[0], /BUSN 323|\bSAC\b|;/);
-  assert.match(note.details[0], /Student Academic Assistance Committee \(forms are at the Registrar's Office\) so it counts\./);
+  assert.match(note.details[0], /Ask your advisor to help you file a petition with the Student Academic Assistance Committee\. Forms are at the Registrar's Office\./);
   assert.equal(note.details[1], "Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.");
 });

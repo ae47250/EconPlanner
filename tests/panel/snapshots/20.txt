@@ -1,0 +1,39 @@
+SCREEN
+SCREEN > Summary box
+EconPlanner
+About you
+Your courses
+Your plans
+Junior
+·
+Graduation target: May 2028
+·
+Study abroad: Winter 2027 and Spring/May 2027
+Regenerate all plans
+Clear all
+Class standing
+Junior
+Graduation target
+May 2028
+Study abroad
+Winter 2027 and Spring/May 2027
+Completed
+ECO 113 · ECO 114 · MAT 121
+Taking now
+None
+Status
+Needs advisor attention
+Your planning result
+SCREEN > Other details
+SCREEN > No plan fits with these study-abroad terms.
+No plan fits with these study-abroad terms.
+Study abroad leaves no room for major courses in Winter 2027 and May 2027. Change your graduation term or study-abroad choice and try again.
+Review your choices
+SCREEN > Why am I seeing this result?
+Why am I seeing this result?
+Balanced: No complete plan found
+What still needs attention
+No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
+SCREEN > Other details
+EconPlanner is a planning guide, not an official degree audit.
+PDF

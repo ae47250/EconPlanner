@@ -5,6 +5,7 @@ import {
   chooseStanding,
   continueToCourses,
   courseStatusGroup,
+  generatePlans,
   openFixtureResult,
   plannerResultFixture,
   resetPlanner,
@@ -75,21 +76,19 @@ test("course choices retain visible focus, non-color selection cues, and correct
   await expectNoAxeViolations(page);
 });
 
-test("a prerequisite error sends keyboard focus to the unresolved dependent row", async ({ page }) => {
+test("an in-progress prerequisite gap remains accessible for advisor review", async ({ page }) => {
   await resetPlanner(page);
   await chooseStanding(page, "freshman");
   await continueToCourses(page);
   await setCourseStatus(page, "ECO 213", "Taking now");
-  await setCourseStatus(page, "MAT 113", "Completed", "Status for prerequisite");
-  await setCourseStatus(page, "ECO 113", "Taking now", "Status for prerequisite");
+  await setCourseStatus(page, "MAT 113", "Completed");
+  await setCourseStatus(page, "ECO 113", "Taking now");
 
-  await expect(page.getByRole("button", { name: "Generate my plans" })).toBeDisabled();
-  await page.locator("form").evaluate(form => form.requestSubmit());
-  await expect(page.locator("#course-eco-213")).toBeFocused();
-  const alert = page.locator("#course-eco-213 .prerequisite-conflict [role='alert']");
-  await expect(alert).toBeVisible();
-  expect((await alert.innerText()).length).toBeLessThan(220);
-  await expect(page.locator("#course-eco-213 .prerequisite-conflict")).not.toHaveAttribute("role", "alert");
+  await expect(page.getByRole("button", { name: "Generate my plans" })).toBeEnabled();
+  await generatePlans(page);
+  await expect(page.locator("[data-plan-conditions]").first()).toContainText("Your answers do not show ECO 113 completed before ECO 213.");
+  await expect(page.locator("[data-plan-conditions]").first()).toContainText("ECO 113 is marked “Taking now.”");
+  await expectNoAxeViolations(page);
 });
 
 test("the desktop summary is sticky, bounded, and does not overlap the course column", async ({ page }) => {

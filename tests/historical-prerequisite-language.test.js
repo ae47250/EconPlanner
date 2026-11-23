@@ -71,10 +71,27 @@ test("freshman completed ECO 214 shows the same prerequisite-gap advice in the p
   const html = renderEconomicsHtml(report, template);
   for (const message of messages) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
   assert.equal(html.match(/<li data-plan-warning>You marked ECO 214 completed/g)?.length, 2);
+  for (const message of messages) assert.ok(html.includes(`<li data-plan-warning>${message}</li>`));
   assert.ok(html.includes(review[0].advisorPrompt.replaceAll("'", "&#39;")));
   const catalog = report.catalog.advisorAttention.find(item => item.code === "FLEXIBLE_MAJOR_REQUIREMENTS_INCOMING_YEAR_UNKNOWN");
   assert.ok(catalog);
   assert.ok(!html.includes(catalog.message));
+});
+
+test("freshman ECO 213 taking now is retained, flagged, and shown in the plan and PDF", async () => {
+  const student = { displayName: "Fictional student", academicStanding: "freshman", entryCatalogYear: "2025-2026",
+    planCreationDate: "2026-11-21", courses: [course("ECO 113"), course("ECO 213", "in_progress")] };
+  const response = await POST(new Request("http://localhost/api/majors/map", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student }) }));
+  assert.equal(response.status, 200);
+  const program = (await response.json()).programs.find(item => item.economicsPlans);
+  assert.ok(program.economicsPlans.length > 0);
+  const plan = program.economicsPlans[0];
+  const expected = "You are taking ECO 213, but MAT 113 or MAT 121, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.";
+  assert.ok(plan.planConditions.some(item => item.message === expected));
+  assert.ok(plan.majorRequirementsChecklist.rows.some(row => row.course === "ECO 213" && row.markers.length));
+  assert.ok(plan.terms.some(term => term.courses.some(item => item.course === "MAT 113" || item.course === "MAT 121")));
+  const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, program.economicsPlans);
+  assert.ok(renderEconomicsHtml(report, template).includes(`<li data-plan-warning>${expected}</li>`));
 });
 
 test("validated AP and transfer checklist rows show the evidence reason", async () => {

@@ -1020,10 +1020,11 @@
       "ruleId": "REVIEW-ADVANCED-COURSE-PREREQUISITE-CLOSURE",
       "status": "POLICY_REVIEW_REQUIRED",
       "sourceRefs": [
-        "ECONOMICS-REQUIREMENTS#Core Scheduling Rule"
+        "ECONOMICS-REQUIREMENTS#Core Scheduling Rule",
+        "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD1"
       ],
-      "question": "Does completion of an advanced course automatically establish that its listed prerequisites were satisfied?",
-      "oracleBehavior": "Do not infer prerequisite completion from the advanced course alone."
+      "question": "Does an advanced course completed or in progress automatically establish that its listed prerequisites were satisfied?",
+      "oracleBehavior": "Keep the recorded course and flag missing prerequisites for review. Do not infer completion. Future planned courses remain strict."
     },
     {
       "ruleId": "REVIEW-ECO-335-MATH-EQUIVALENT",

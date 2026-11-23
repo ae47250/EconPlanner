@@ -136,7 +136,7 @@
           "transferEntryAcademicYear": "2025-2026",
           "expectedGraduationTerm": "Spring/May 2027"
         },
-        "requiredHtmlText": ["Transfer plan", "Spring/May 2027", "Fictional Transfer Student"],
+        "requiredHtmlText": ["Transfer plan", "May 2027", "Fictional Transfer Student"],
         "requiredAvailabilityStates": ["open"],
         "requiredCourseRoles": []
       }

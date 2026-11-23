@@ -108,8 +108,8 @@ test("CCR/ACE information is relevant-only, catalog-scoped, and informational", 
     plan: {},
     planningContext: { entryCatalogYear: "2024-2025" }
   });
-  assert.equal(unavailable.evidenceStatus, "UNAVAILABLE_FOR_APPLICABLE_GENERAL_DEGREE_CATALOG");
-  assert.deepEqual(unavailable.items, []);
+  assert.equal(unavailable.evidenceStatus, "SUPPORTED");
+  assert.deepEqual(unavailable.items.map(item => item.code), ["HS"]);
 
   const information = buildDegreeDesignationInformation({
     student: {
