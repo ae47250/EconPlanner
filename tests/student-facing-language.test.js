@@ -1,12 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { buildPlanConditions, studentFacingPlanReviewMessage, studentFacingPrerequisiteReview, studentFriendlyCourseMarker, studentFriendlyUnavailableReason } from "../lib/planning/plan-presentation.js";
-import { runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
+import { loadEconomicsPolicyCompatibility, runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
+import { loadPolicyBundle } from "../lib/policy/load-bundle.js";
 import { renderEconomicsHtml } from "../lib/reports/economics-html.js";
 import { resolveCatalogApplicability } from "../lib/catalog/applicability.js";
+import { isUnpublishedScheduleCondition, preliminaryScheduleExplanation, studentDisplayMessages, studentFriendlyMoveCondition } from "../lib/planning/student-language.js";
 
 const policyBundle = runtimePolicyBundle();
+const displayMessages = studentDisplayMessages(policyBundle);
 const template = await readFile(new URL("../templates/econplannertemplate.html", import.meta.url), "utf8");
 
 test("non-registration notes have an advisor heading and the derived catalog year uses owner wording", () => {
@@ -122,7 +128,7 @@ test("seat reminders name only scheduled classes with unconfirmed seat evidence"
 test("blocked-move summaries and course markers use student-facing language", () => {
   assert.equal(studentFriendlyUnavailableReason({ message: "ECO 224 has no verified, conflict-free section in Winter 2027." }),
     "No conflict-free section is available in the published Winter 2027 schedule.");
-  assert.equal(studentFriendlyUnavailableReason({ message: "This named future course needs a matching verified offering." }),
+  assert.equal(studentFriendlyUnavailableReason({ message: "This named future course needs a matching verified offering." }, displayMessages),
     "Schedule not yet published.");
   assert.equal(studentFriendlyUnavailableReason({ message: "Spring/May 2028 exceeds the total course limit." }),
     "Term full. Move a course out first.");
@@ -131,6 +137,79 @@ test("blocked-move summaries and course markers use student-facing language", ()
   assert.equal(studentFriendlyCourseMarker("Approval required"), "Approval needed");
   assert.equal(studentFriendlyCourseMarker("Eligibility review required"), "Ask an advisor whether this class counts");
   assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask your advisor and the Registrar to confirm senior standing");
+});
+
+test("unpublished schedule grouping uses the condition, while its text comes from the catalog", () => {
+  const item = { status: "CONDITIONAL", message: "Projected placement; the exact schedule has not been published and may change." };
+  assert.equal(isUnpublishedScheduleCondition(item), true);
+  assert.equal(studentFriendlyMoveCondition(item, undefined, displayMessages), policyBundle.messages["offering.unpublishedSchedule"]);
+  assert.equal(isUnpublishedScheduleCondition({ ...item, requiredApprovals: [{ type: "advisor" }] }), false);
+  assert.equal(isUnpublishedScheduleCondition({ ...item, status: "ALLOWED" }), false);
+});
+
+test("preliminary schedule copy is shared by the screen formatter and report HTML", () => {
+  const sentence = "Preliminary schedule (2026-11-01). Course and term may change.";
+  assert.equal(preliminaryScheduleExplanation("2026-11-01", displayMessages), sentence);
+  const html = renderEconomicsHtml({
+    student: { displayName: "Fictional student", academicStanding: "freshman" },
+    selectedPlan: { id: "balanced" },
+    terms: [{ term: "Fall 2027", academicYear: "2027-2028", courses: [{
+      code: "ECO 213", title: "Intermediate Microeconomics",
+      preliminaryScheduleEvidence: { issuedOn: "2026-11-01" }
+    }] }],
+    unresolved: [], planNotes: [], planConditions: []
+  }, template);
+  assert.match(html, /<span class="course-requirement">Preliminary schedule \(2026-11-01\)\. Course and term may change\.<\/span>/);
+});
+
+test("display messages require the verified active bundle, not an uncompiled source edit", async t => {
+  const compiledRoot = await mkdtemp(path.join(os.tmpdir(), "econ-display-messages-"));
+  t.after(() => rm(compiledRoot, { recursive: true, force: true }));
+  const release = "releases/econ-2025-2026.1";
+  const releaseSource = new URL(`../data/compiled/policy/${release}/`, import.meta.url);
+  const bundlePath = path.join(compiledRoot, release, "bundle.json");
+  const activePath = path.join(compiledRoot, "active.json");
+  await cp(new URL("../data/compiled/policy/active.json", import.meta.url), activePath);
+  await cp(releaseSource, path.join(compiledRoot, release), { recursive: true });
+
+  const editedSource = JSON.parse(await readFile(new URL("../policy/messages/en-US.json", import.meta.url), "utf8"));
+  editedSource.messages["offering.unpublishedSchedule"] = "Uncompiled source change.";
+  editedSource.messages["offering.preliminarySchedule"] = "Uncompiled source change ({issuedOn}).";
+  const isolatedPolicyPath = path.join(compiledRoot, "policy/messages/en-US.json");
+  const isolatedLanguagePath = path.join(compiledRoot, "lib/planning/student-language.js");
+  await mkdir(path.dirname(isolatedPolicyPath), { recursive: true });
+  await mkdir(path.dirname(isolatedLanguagePath), { recursive: true });
+  await writeFile(isolatedPolicyPath, JSON.stringify(editedSource));
+  await writeFile(path.join(compiledRoot, "package.json"), '{"type":"module"}');
+  await cp(new URL("../lib/planning/student-language.js", import.meta.url), isolatedLanguagePath);
+  const loaded = await loadPolicyBundle({ compiledRoot, useCache: false });
+  const isolatedLanguage = await import(pathToFileURL(isolatedLanguagePath).href);
+  const loadedMessages = isolatedLanguage.studentDisplayMessages(loaded);
+  assert.deepEqual(loadedMessages, displayMessages);
+  assert.equal(isolatedLanguage.preliminaryScheduleExplanation("2026-11-01", loadedMessages),
+    "Preliminary schedule (2026-11-01). Course and term may change.");
+  assert.equal(isolatedLanguage.studentFriendlyMoveCondition({ status: "CONDITIONAL", message: "Projected placement; the exact schedule has not been published." }, undefined, loadedMessages),
+    "Schedule not yet published.");
+  assert.throws(() => preliminaryScheduleExplanation("2026-11-01"), /Missing policy message/);
+  assert.throws(() => studentFriendlyMoveCondition({ status: "CONDITIONAL", message: "Projected placement; the exact schedule has not been published." }), /Missing policy message/);
+
+  await rm(bundlePath);
+  await assert.rejects(loadPolicyBundle({ compiledRoot, useCache: false }), { code: "ENOENT" });
+  assert.throws(() => loadEconomicsPolicyCompatibility({ compiledRoot, useCache: false }), { code: "ENOENT" });
+  await cp(new URL(`../data/compiled/policy/${release}/bundle.json`, import.meta.url), bundlePath);
+
+  const active = JSON.parse(await readFile(activePath, "utf8"));
+  active.programs.ECONOMICS["2025-2026"].activationStatus = "PENDING";
+  await writeFile(activePath, JSON.stringify(active));
+  await assert.rejects(loadPolicyBundle({ compiledRoot, useCache: false }), /not active/);
+  assert.throws(() => loadEconomicsPolicyCompatibility({ compiledRoot, useCache: false }), /not active/);
+  await cp(new URL("../data/compiled/policy/active.json", import.meta.url), activePath);
+
+  const damaged = JSON.parse(await readFile(bundlePath, "utf8"));
+  damaged.messages["offering.unpublishedSchedule"] = "Unverified bundle change.";
+  await writeFile(bundlePath, JSON.stringify(damaged));
+  await assert.rejects(loadPolicyBundle({ compiledRoot, useCache: false }), /digest mismatch/);
+  assert.throws(() => loadEconomicsPolicyCompatibility({ compiledRoot, useCache: false }), /digest mismatch/);
 });
 
 test("full-section review names the enrollment evidence without exposing a policy code", () => {

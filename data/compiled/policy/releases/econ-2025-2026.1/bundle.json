@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:6c73e8a90d6eea850b51a22588c21c7c94652f800536bc68206f1b42468732bc",
+  "contentHash": "sha256:3abbe8788e26eeedd115944d6bfb86260cfbbb4ff9404413cbd4d6f1e911ea4b",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7048,8 +7048,10 @@
     "offering.intermediate.pattern.move": "This projected term is not verified by an exact schedule.",
     "offering.intermediate.pattern.report": "The intermediate-course term is a preliminary projection, not a universal same-term prohibition.",
     "offering.move": "This destination needs schedule confirmation.",
+    "offering.preliminarySchedule": "Preliminary schedule ({issuedOn}). Course and term may change.",
     "offering.report": "This future course needs confirmation.",
     "offering.student": "This future course needs schedule confirmation.",
+    "offering.unpublishedSchedule": "Schedule not yet published.",
     "permission.advisor": "Verify that the approval matches the controlling rule, course, term, authority, and evidence.",
     "permission.move": "This destination needs the approval shown.",
     "permission.report": "This placement depends on matching approval.",
