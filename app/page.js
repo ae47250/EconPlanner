@@ -1554,7 +1554,6 @@ function PlanComparisonScreen({
         .comparison-page .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
         .comparison-page .term-card { align-self: start; min-width: 0; min-height: 8rem; padding: .8rem; border: 1px solid #cbd5e1; border-radius: .5rem; }
         .comparison-page .term-card.is-placeholder { border-style: dashed; background: #f7fbff; }
-        .comparison-page .drag-plan-help { color: #475569; font-size: .9rem; }
         .comparison-page .drag-plan-status:empty { display: none; }
         .comparison-page .course-drag-handle { display: inline-block; padding: .35rem .55rem; margin-bottom: .4rem; border: 1px solid #c4b5df; border-radius: .4rem; color: #49317c; background: #f7f3ff; cursor: grab; user-select: none; touch-action: none; font-size: .8rem; }
         .comparison-page .course-drag-handle:active { cursor: grabbing; }
@@ -1599,7 +1598,7 @@ function PlanComparisonScreen({
         .checklist-status.is-in_progress { background: #e4f2ff; color: #174d7a; }
         .checklist-status.is-planned { background: #eef0f3; color: #485365; }
         .checklist-status.is-still_needed,.checklist-marker { background: #fff2d5; color: #76510b; }
-        .checklist-marker,.checklist-alternatives,.seat-evidence-detail { display: block; margin-top: .3rem; font-size: 12px; }
+        .checklist-marker,.checklist-alternatives { display: block; margin-top: .3rem; font-size: 12px; }
         .checklist-note { margin-bottom: 0; font-size: 13px; color: #53627a; }
         @media (max-width: 520px) {
           .comparison-disclosure-content { padding: .7rem; }
@@ -1689,9 +1688,7 @@ function PlanComparisonScreen({
         .comparison-page .course-choice-details ul { padding-left: 1rem; }
         .comparison-page .course-choice-details li { border: 0; padding: .5rem 0; list-style: none; }
         .comparison-page .course-choice-details ul { padding-left: 0; }
-        .comparison-page .course-reason-details, .comparison-page .course-offering-details { font-size: 12px; line-height: 1.4; }
-        .comparison-page .course-source-details { font-size: 12px; overflow-wrap: anywhere; color: #52627a; }
-        .comparison-page .course-source-details p { font-size: 12px; }
+        .comparison-page .course-reason-details { font-size: 12px; line-height: 1.4; }
         .comparison-page .offering-pattern { display: block; color: #52627a; font-size: 12px; margin-top: .3rem; }
         .comparison-page .comparison-heading-row h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.2; word-break: normal; }
         .comparison-page .comparison-topbar { flex-wrap: wrap; gap: .75rem; }
@@ -1714,13 +1711,6 @@ function PlanComparisonScreen({
         .candidate-outcomes p { margin: .55rem 0 0; }
         .comparison-page .result-diagnostics { font-size: 14px; line-height: 1.5; }
         .comparison-page .result-diagnostics > summary { font-size: 15px; }
-        .plan-choice-explanations { margin: .65rem 0 0; }
-        .plan-choice-explanations dt { font-weight: 650; }
-        .plan-choice-explanations dd { margin: 0; min-width: 0; }
-        .plan-choice-explanations > div { margin: .6rem 0; }
-        .recorded-seat-information { margin-top: .65rem; color: #53627a; }
-        .recorded-seat-information > summary { font-weight: 500; }
-        .comparison-page .recorded-seat-information li { font-size: 14px; }
         .comparison-page .result-diagnostics .candidate-outcomes li { font-size: 14px; }
         .choose-plan-button {
           width: calc(100% - 2rem);
@@ -1860,8 +1850,6 @@ function PlanComparisonScreen({
           margin: .3rem 0 0;
           padding-left: 1rem;
         }
-        .comparison-page .projected-placement-list { margin: .35rem 0 0; padding-left: 1rem; }
-        .comparison-page .projected-placement-list li + li { margin-top: .15rem; }
         .comparison-page .offering-pattern-note {
           padding-left: .55rem;
           border-left: 3px solid #8fb2ee;
@@ -4111,7 +4099,6 @@ export default function Page() {
         .more-details { margin-top: 1.25rem; border-top: 1px solid var(--cp7-border); padding-top: 1rem; }
         .more-details > summary { color: var(--cp7-accent); cursor: pointer; font-weight: 700; }
         .advanced-fields { margin-top: 1rem; }
-        .advanced-fields .wide-field { grid-column: 1 / -1; }
         .non-major-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-top: .75rem; }
         .non-major-fields label, .study-abroad-fields label { display: grid; gap: .3rem; font-size: 13px; font-weight: 700; }
         .non-major-fields select, .study-abroad-fields select, .study-abroad-fields input[type="text"], .study-abroad-fields textarea { min-height: 40px; padding: .45rem .55rem; border: 1px solid var(--cp7-border-strong); border-radius: 6px; background: #fff; font: inherit; }
@@ -4172,7 +4159,6 @@ export default function Page() {
           outline: 0;
           box-shadow: none;
         }
-        main.cp7-container .course-toggles.has-three { grid-template-columns: repeat(3, minmax(105px, 1fr)); }
         main.cp7-container .course-toggles:focus,
         main.cp7-container .course-toggles:focus-visible,
         main.cp7-container .course-toggles:focus-within { outline: 0; box-shadow: none; }
@@ -4232,7 +4218,6 @@ export default function Page() {
         .prerequisite-name small { color: var(--cp7-muted); }
         .prerequisite-conflict { margin-top: .55rem; padding: .65rem .75rem; border-left: 3px solid var(--cp7-danger); background: #fff; color: #64251f; }
         .prerequisite-conflict p { margin: .2rem 0; }
-        .prerequisite-approval { margin: .55rem 0 0 !important; color: #704c08; }
         main.cp7-container .course-accordion { margin-top: 1.35rem; border: 1px solid var(--cp7-border); border-radius: 8px; background: #fafbfc; }
         main.cp7-container .course-accordion > summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .8rem .9rem; color: var(--cp7-ink); cursor: pointer; font-weight: 700; }
         main.cp7-container .course-accordion-title { min-width: 0; }
@@ -4295,7 +4280,6 @@ export default function Page() {
           main.cp7-container .cp7-summary { padding: 1rem; border-radius: 8px; }
           .standing-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
           .custom-fields, .advanced-fields, .non-major-fields { grid-template-columns: 1fr; }
-          .advanced-fields .wide-field { grid-column: auto; }
           .step-two-heading { display: block; }
           main.cp7-container .secondary-action { margin-top: .7rem; }
           .course-toolbar { grid-template-columns: 1fr; }
@@ -4305,7 +4289,6 @@ export default function Page() {
           .prerequisite-question-heading { grid-template-columns: 1fr; }
           .prerequisite-question-heading strong { grid-column: 1; }
           main.cp7-container .course-toggles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-          main.cp7-container .course-toggles.has-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
           main.cp7-container button.course-toggle { min-height: 44px; }
           .course-requirement-heading,
           .prerequisite-question-heading { display: grid; gap: .25rem; }
