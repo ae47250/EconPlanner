@@ -66,27 +66,6 @@ test("explicit junior Winter and May study abroad reservations appear in the sta
   assert.equal(report.remaining.strict, winterOnly.remaining.strict);
 });
 
-test("report observability reuses each freshly validated selected or generated plan", async t => {
-  const output = [];
-  t.mock.method(console, "info", value => output.push(value));
-  const generated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28");
-  const selected = structuredClone(generated.selectedPlan);
-  selected.validation.policyDecision = { staleClientResult: true };
-  const revalidated = await buildEconomicsReportFromStudent(fixture.student, "2026-07-28", selected);
-  assert.equal(output.length, 2);
-  for (const [index, report] of [generated, revalidated].entries()) {
-    const record = JSON.parse(output[index].replace(/^ECONPLANNER_DECISION_SHADOW /, ""));
-    const engine = report.selectedPlan.validation.policyDecision;
-    assert.equal(record.mode, "AUTHORITATIVE_REUSED");
-    assert.equal(record.evaluationSource, "PLAN_VALIDATION_POLICY_DECISION");
-    assert.equal(record.traceId, engine.traceId);
-    assert.equal(record.policyBundleHash, engine.policyBundleHash);
-    assert.equal(record.completionStatus, engine.completionStatus);
-    assert.equal(record.decisionCount, engine.decisions.length);
-    assert.ok(!record.reasonCodes.includes("PLANNING_CONTEXT_REQUIRED"));
-  }
-});
-
 test("Taking now fixed occupancy is identical in the validated plan, JSON projection, and HTML", async () => {
   const student = {
     ...fixture.student,

@@ -1679,15 +1679,9 @@ function PlanComparisonScreen({
         .comparison-page .course-change-panel[hidden] { display: none; }
         .comparison-page .course-change-panel button, .comparison-page .course-change-panel details,
         .comparison-page .course-change-panel label, .comparison-page .course-change-panel select { margin: 0; }
-        .comparison-page .course-change-panel .course-choice-details ul { gap: .3rem; }
-        .comparison-page .course-change-panel .course-choice-details li { margin: 0; padding: .35rem 0; }
         .comparison-page .course-change-panel p { margin: .25rem 0; font-size: 13px; line-height: 1.45; }
         .comparison-page .course-change-panel select { width: 100%; max-width: 100%; min-height: 44px; }
         .comparison-page .course-change-panel label { min-width: 0; font-size: 13px; }
-        .comparison-page .course-choice-details { font-size: 13px; line-height: 1.45; }
-        .comparison-page .course-choice-details ul { padding-left: 1rem; }
-        .comparison-page .course-choice-details li { border: 0; padding: .5rem 0; list-style: none; }
-        .comparison-page .course-choice-details ul { padding-left: 0; }
         .comparison-page .course-reason-details { font-size: 12px; line-height: 1.4; }
         .comparison-page .offering-pattern { display: block; color: #52627a; font-size: 12px; margin-top: .3rem; }
         .comparison-page .comparison-heading-row h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.2; word-break: normal; }
