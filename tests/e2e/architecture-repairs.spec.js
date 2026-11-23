@@ -97,7 +97,7 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     const html = await htmlResponse.text();
     expect(report.student.expectedGraduationTerm).toBe(expectedTarget);
     expect(report.terms.map(t => t.courses.map(c => c.code))).toEqual(actual.selectedPlan.terms.map(t => t.courses.map(c => c.course)));
-    expect(report.planningHorizon).toContain('May');
+    expect(report.planningHorizon).toContain(actual.selectedPlan.terms.at(-1).term);
     expect(html).toContain('This plan covers');
     expect(html).not.toContain('Balanced planning horizon');
     const renderer = await browser.newPage();
@@ -273,8 +273,10 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
   await setCourseStatus(page,'MAT 217','Completed');
   await generatePlans(page);
   await expect(page.locator('.result-status-value')).toHaveText('Not possible');
-  await expect(page.locator('.no-plan-state')).toContainText('ECO 461 is offered only in Winter.');
-  await expect(page.locator('.no-plan-state')).toContainText('Statistics (ECO 257 or MAT 217 or PSY 217) must be done first.');
+  await page.locator('details.result-diagnostics > summary').click();
+  await expect(page.locator('details.result-diagnostics')).toContainText('Winter 2027');
+  await expect(page.locator('details.result-diagnostics')).toContainText('Statistics (ECO 257 or MAT 217 or PSY 217) must be done first.');
+  await expect(page.locator('details.result-diagnostics li')).toHaveCount(1);
   await page.screenshot({path:testInfo.outputPath('senior-blocker.png'),fullPage:true,animations:'disabled'});
   await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await expect(page.getByRole('group',{name:'Status for MAT 217',exact:true}).getByRole('button',{name:'Completed',exact:true})).toHaveAttribute('aria-pressed','false');
@@ -298,6 +300,7 @@ test('junior prerequisite correction preserves choices and explains next-year ou
   expect(economics.economicsPlans.some(p=>p.isEarlyGraduation)).toBe(false);
   await expect(page.getByRole('heading',{name:'Your plan',exact:true})).toBeFocused();
   await expect(page.getByRole('heading',{name:'Graduate next year: Not possible',exact:true})).toBeVisible();
+  await expect(page.getByText('You cannot finish by May 2027. The plan below is for May 2028.', {exact:true})).toHaveCount(1);
 });
 
 for (const standing of ['junior', 'senior']) test(`${standing} May 2027 explanation uses confirmed finance and Spring load evidence`, async ({page}) => {
@@ -437,7 +440,7 @@ test('one missing ECO 213 prerequisite prevents the otherwise finishable senior 
 });
 
 
-test('student readiness and exported feasibility are distinct and the course menu fits the viewport', async ({page, browser}, testInfo) => {
+test('screen and PDF readiness statuses match and the course menu fits the viewport', async ({page, browser}, testInfo) => {
   test.setTimeout(60000);
   await intake(page, 'freshman');
   const response = await generatePlans(page);
@@ -457,7 +460,7 @@ test('student readiness and exported feasibility are distinct and the course men
   expect(report.status()).toBe(200);
   const reportPage = await browser.newPage();
   await reportPage.setContent(await report.text());
-  await expect(reportPage.locator('.plan-details')).toContainText('Ready to plan');
+  await expect(reportPage.locator('.plan-details h2')).toHaveText(await page.locator(`article[data-plan-id="${plan.id}"] .plan-feasibility-value`).textContent());
   await reportPage.close();
   for (const width of [1440, 1280, 820, 390]) {
       await page.setViewportSize({width,height:900});

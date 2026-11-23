@@ -90,16 +90,16 @@ test("fictional PDF sample: all plans preserve requirements, generic future elec
       assert.ok(!term.courses.some(course => course.course === "ECO 321"));
     }
     assert.ok(plan.terms.some(term => term.courses.some(course => course.course === "BUSN 323")));
-    assert.deepEqual(plan.planNotes.map(note => note.id), ["ccr-ace", "history", "upcoming", "underway", "future"]);
+    assert.deepEqual(plan.planNotes.map(note => note.id), ["ccr-ace", "history", "upcoming", "future"]);
     const history = plan.planNotes.find(note => note.id === "history");
     assert.equal(history.items.length, 3);
     assert.equal(history.items[1].text, "Past Fall schedules included: ECO 333, ECO 357. Past Winter schedules included: ECO 221, ECO 337, ECO 357.");
     assert.deepEqual(history.items[1].lines, ["Past Fall schedules included: ECO 333, ECO 357.", "Past Winter schedules included: ECO 221, ECO 337, ECO 357."]);
     assert.equal(history.items[2].text, "Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 234, ECO 331.");
     const upcoming = plan.planNotes.find(note => note.id === "upcoming");
-    assert.equal(upcoming.title, "Published Economics schedules as of September 28, 2026");
-    assert.deepEqual(upcoming.items.map(item => item.label), ["Fall 2026", "Winter 2027", "May 2027"]);
-    assert.ok(upcoming.items[1].lines.some(line => line === "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m."));
+    assert.equal(upcoming.title, "Published schedules as of the plan date (September 28, 2026)");
+    assert.deepEqual(upcoming.items.map(item => item.label), ["Winter 2027", "May 2027"]);
+    assert.ok(upcoming.items[0].lines.some(line => line === "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m."));
     const report = await buildEconomicsReportFromStudent(sample, sample.planCreationDate, plan, result.economicsPlans);
     assert.deepEqual(report.planNotes, plan.planNotes);
     const html = renderEconomicsHtml(report, template);
@@ -144,7 +144,7 @@ test("upcoming notes include every exact ECO section and never borrow a missing 
   const upcoming = notes.find(note => note.id === "upcoming");
   const lines = upcoming.items.find(item => item.label === "Winter 2027").lines;
   assert.equal(lines.find(line => line.startsWith("ECO 113 ·")),
-    "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, meeting time unavailable or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.");
+    "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, meeting time unavailable; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.");
   assert.ok(upcoming.items.find(item => item.label === "May 2027").lines.includes(
     "ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m."));
   for (const item of upcoming.items) {
@@ -165,7 +165,7 @@ test("published schedule notes identify the plan-date snapshot used to include F
   const notes = buildEconomicsPlanNotes({ plan: { terms: [] }, student: { planCreationDate: "2026-07-30" },
     courseCatalog: economicsCourses, mapping: { requirements: [] }, policyBundle: bundle });
   const upcoming = notes.find(note => note.id === "upcoming");
-  assert.equal(upcoming.title, "Published Economics schedules as of July 30, 2026");
+  assert.equal(upcoming.title, "Published schedules as of the plan date (July 30, 2026)");
   assert.ok(upcoming.items.some(item => item.label === "Fall 2026"));
 });
 

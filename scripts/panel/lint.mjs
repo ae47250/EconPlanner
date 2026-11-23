@@ -86,11 +86,23 @@ for (const file of files) {
     if (!scope) continue;
     const record = scopes.get(scope);
     record.lines.push(line);
+    if (line.startsWith("CHECKLIST CELL:")) {
+      record.checklistCellCount = (record.checklistCellCount || 0) + 1;
+      if (record.checklistCellCount % 3 === 2) {
+        record.checklistCourse = line.match(/\b(?:ECO|MAT|BUSN|PSY)\s*\d{3}\b/)?.[0] || null;
+      }
+    }
+    const creditMarker = /^CHECKLIST (?:ROW|CELL):/.test(line)
+      && /(?:AP\/exam credit|Transfer credit)\. Confirm with your advisor that it counts\./.test(line);
+    const creditCourse = line.startsWith("CHECKLIST ROW:")
+      ? line.match(/\b(?:ECO|MAT|BUSN|PSY)\s*\d{3}\b/)?.[0]
+      : record.checklistCourse;
     if (!isGridRow && !isGridNote && !isMeetingTime) {
       for (const sentence of text.split(/(?<=[.!?])\s+(?=[A-Z0-9“])/).map(normalize).filter(Boolean)) {
         if (!/[.!?]["'’”)}\]]?$/.test(sentence)) continue;
-        if (record.seen.has(sentence)) flag("duplicate", line);
-        record.seen.add(sentence);
+        const duplicateKey = creditMarker && creditCourse ? `${creditCourse}:${sentence}` : sentence;
+        if (record.seen.has(duplicateKey)) flag("duplicate", line);
+        record.seen.add(duplicateKey);
       }
     }
     if (isGridRow || isMeetingTime) continue;

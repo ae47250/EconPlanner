@@ -23,7 +23,12 @@ The plan meets the major rules. Check seats and future schedules before you regi
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
+Graduate next year: Not possible
 You cannot finish by May 2027. The plan below is for May 2028.
+Standard target
+May 2028
+One-year-early target
+May 2027
 Your remaining courses do not fit by May 2027.
 SCREEN > Plan: Balanced
 STATUS: Ready to plan
@@ -60,6 +65,8 @@ SCREEN > Plan: Balanced > Notes: Things to keep in mind
 Things to keep in mind
 Before you register
 We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222. Check the registration system before you register.
+Check with your advisor
+This plan uses the current Economics major requirements.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
@@ -84,21 +91,10 @@ More about this plan
 Other graduation requirements
 HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
 W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-Published Economics schedules as of November 22, 2026
-Fall 2026:
-ECO 113 · Principles of Microeconomics
-— Tue/Thu, 8:00–9:45 a.m.
-ECO 114 · Principles of Macroeconomics
-— Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.
-ECO 213 · Intermediate Microeconomics
-— Tue/Thu, 10:00–11:45 a.m.
-ECO 234 · Rational Choices
-— Mon/Wed/Fri, 10:40–11:50 a.m.
-ECO 333 · International Trade & Finance
-— Mon/Wed/Fri, 1:20–2:30 p.m.
+Published schedules as of the plan date (November 22, 2026)
 Winter 2027:
 ECO 113 · Principles of Microeconomics
-— Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 ECO 114 · Principles of Macroeconomics
 — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics
@@ -118,8 +114,6 @@ ECO 224 · Introduction to Sustainability
 — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 ECO 234 · Rational Choices
 — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-Current term
-Fall 2026 has started. Mark the classes you are taking now if you are enrolled.
 Courses in future years
 For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
 SCREEN > Other details
@@ -135,7 +129,7 @@ PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 12 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)
-This plan covers Winter through May.
+This plan covers Winter 2027 through Spring/May 2028.
 Status: Ready to plan
 Check seats and future schedules before you register.
 Graduation target: May 2028
@@ -158,15 +152,17 @@ TERM: 2027/2028 Winter
 GRID ROW: ECO 461
 TERM: 2027/2028 May
 GRID ROW: Economics elective (200 level or higher)
-ECO 221 — Environmental Economics
-ECO 321 — Money and Financial Markets
-ECO 222 — Economics of the European Union
+ECO 221 — Environmental Economics Previously offered in Fall and Winter.
+ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
+ECO 222 — Economics of the European Union Previously offered in May.
 Economics elective (200 level or higher) — Pick a course when the schedule comes out.
 ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
 PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Before you register
 We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222. Check the registration system before you register.
+Check with your advisor
+This plan uses the current Economics major requirements.
 PDF > Plan: Balanced > Checklist
 Your Economics major checklist
 TABLE HEADER: Requirement
@@ -224,16 +220,10 @@ Past Fall schedules included: ECO 333, ECO 357.
 Past Winter schedules included: ECO 221, ECO 337, ECO 357.
 Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 234, ECO 331.
 A past schedule does not guarantee a course will be offered again.
-PDF > Plan: Balanced > Notes: Published Economics schedules as of November 22, 2026
-Published Economics schedules as of November 22, 2026
-Fall 2026:
-ECO 113 · Principles of Microeconomics — Tue/Thu, 8:00–9:45 a.m.
-ECO 114 · Principles of Macroeconomics — Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.
-ECO 213 · Intermediate Microeconomics — Tue/Thu, 10:00–11:45 a.m.
-ECO 234 · Rational Choices — Mon/Wed/Fri, 10:40–11:50 a.m.
-ECO 333 · International Trade & Finance — Mon/Wed/Fri, 1:20–2:30 p.m.
+PDF > Plan: Balanced > Notes: Published schedules as of the plan date (November 22, 2026)
+Published schedules as of the plan date (November 22, 2026)
 Winter 2027:
-ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
 ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
@@ -244,9 +234,6 @@ May 2027:
 ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-PDF > Plan: Balanced > Notes: Current term
-Current term
-Fall 2026 has started. Mark the classes you are taking now if you are enrolled.
 PDF > Plan: Balanced > Notes: Future years
 Future years
 For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.

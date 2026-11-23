@@ -17,7 +17,7 @@ async function openPlan(page, standing, { early = false, completed = [], date = 
   await chooseStanding(page, standing);
   await page.locator("details.more-details > summary").first().click();
   await page.getByLabel("Plan creation date", { exact: true }).fill(date);
-  if (early) await page.getByRole("button", { name: "I’d like to graduate one year early", exact: true }).click();
+  if (early) await page.getByRole("button", { name: standing === "junior" ? "I’d like to graduate next year" : "I’d like to graduate one year early", exact: true }).click();
   if (graduationYear) {
     await page.getByRole("button", { name: "My expected graduation year is different", exact: true }).click();
     await page.getByRole("combobox", { name: "When do you expect to graduate?", exact: true }).selectOption(graduationYear);
@@ -34,7 +34,7 @@ async function openPlan(page, standing, { early = false, completed = [], date = 
   expect(response.status()).toBe(200);
   const result = await response.json();
   const plans = result.programs.find(item => item.program.id === "economics-base").economicsPlans;
-  const selected = plans.find(plan => plan.id === (early ? "one-year-early" : "balanced"));
+  const selected = plans.find(plan => plan.id === (early && standing !== "junior" ? "one-year-early" : "balanced"));
   expect(selected).toBeTruthy();
   await visitPlan(page, selected.id);
   return { selected, plans, student: response.request().postDataJSON().student, planCard: selectedPlanCard(page) };
@@ -226,7 +226,7 @@ test("each plan selection, requirement states and notes survive repeated reloads
       await expect(planCard.locator("[data-requirement-checklist-id]")).toHaveCount(12);
       expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("econ-planner-generated-session")).selectedPlanId)).toBe(plan.id);
       await planCard.getByText("More about this plan", {exact:true}).click();
-      await expect(planCard.getByRole("heading", { name: "Published Economics schedules as of September 23, 2026", exact: true })).toBeVisible();
+      await expect(planCard.getByRole("heading", { name: "Published schedules as of the plan date (September 23, 2026)", exact: true })).toBeVisible();
       await expect(planCard.locator('[data-plan-note="history"]')).toHaveCount(0);
     }
   }
@@ -500,7 +500,7 @@ test("completed prerequisite timing does not allow a standard freshman capstone 
   expect(selected.id).toBe("balanced");
 });
 
-test("already-senior ECO 461 retains valid Winter moves", async ({ page }) => {
+test("OD8: one remaining senior course starts in the earliest eligible Winter and can move back", async ({ page }) => {
   const { selected, student, plans } = await openPlan(page, "senior", {
     date: "2026-09-23",
     graduationYear: "2028",
@@ -509,6 +509,10 @@ test("already-senior ECO 461 retains valid Winter moves", async ({ page }) => {
   const control = moveControl(page, "ECO 461");
   await expect(control).toHaveAttribute("data-current-term", "move:winter-2027");
   await expect(control.locator('button[data-change-choice="move:winter-2028"]')).toBeEnabled();
+  const original = selected.terms.find(term => term.slotId === "winter-2027").courses.find(course => course.course === "ECO 461");
+  expect(original.source).toBe("verified-offering");
+  expect(selected.preferredDistributionException).toBeNull();
+  expect(selected.annualDistributionException).toBeNull();
 
   const accepted = validationResponse(page);
   await applyMove(control, "winter-2028");
@@ -520,7 +524,10 @@ test("already-senior ECO 461 retains valid Winter moves", async ({ page }) => {
   expect(capstone).toBeTruthy();
   expect(edited.validation.valid).toBe(true);
 
-  const original = selected.terms.find(term => term.slotId === "winter-2027").courses.find(course => course.course === "ECO 461");
+  const movedBackResponse = validationResponse(page);
+  await applyMove(moveControl(page, "ECO 461"), "winter-2027");
+  const movedBack = (await movedBackResponse).json();
+  expect((await movedBack).plan.terms.find(term => term.slotId === "winter-2027").courses.find(course => course.course === "ECO 461").source).toBe("verified-offering");
   const direct = await page.request.post("/api/majors/map", { data: {
     action: "validate-plan", student, plan: selected, plans,
     edit: { type: "move", planId: selected.id, fromTermId: "winter-2027", toTermId: "winter-2028", courseId: original.requirementId }
@@ -1270,9 +1277,10 @@ test("confirmation stays open after the pointer leaves the course card", async (
   await expect(menu).toBeHidden();
 });
 
-test("Winter ECO 161 options exclude finance courses already completed", async ({ page }) => {
-  await openPlan(page, "sophomore", { completed: ["ECO 113", "ECO 114", "BUSN 323"] });
+test("Winter ECO 161 options exclude finance courses while Finance is still open", async ({ page }) => {
+  const { selected } = await openPlan(page, "junior", { early: true, date: "2026-11-22", completed: ["ECO 113", "MAT 217"] });
   const plan = page.locator('[data-plan-id="balanced"]');
+  expect(selected.majorRequirementsChecklist.rows.find(row => row.id === "finance").status).toBe("planned");
   await expect(page.getByText('Plans generated.', { exact: true })).toHaveCount(0);
   await expect(page.locator('.plan-edit-instructions strong')).toHaveText('Click a course to see where it can move. You can also drag it by the ⠿ handle.');
   await expect(page.locator('.plan-edit-instructions span')).toHaveText("While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.");
@@ -1282,6 +1290,20 @@ test("Winter ECO 161 options exclude finance courses already completed", async (
   for (const course of ['ECO 321', 'BUSN 323']) {
     await expect(menu.locator(`[data-change-choice$=":${course}"]`)).toHaveCount(0);
   }
+});
+
+test("Add Econ course adds a named eligible course in one click", async ({ page }) => {
+  await openPlan(page, "freshman", { date: "2026-10-17" });
+  const plan = page.locator('[data-plan-id="balanced"]');
+  await plan.getByRole('button', { name: 'Add Econ course: Balanced', exact: true }).click();
+  const picker = plan.getByRole('region', { name: 'Add Econ course options: Balanced', exact: true });
+  await picker.getByRole('button', { name: 'Winter 2027', exact: true }).click();
+  const addedResponse = validationResponse(page);
+  await picker.getByRole('button', { name: /^ECO 161\b/ }).click();
+  const added = await (await addedResponse).json();
+  expect(added.plan.terms.find(term => term.slotId === 'winter-2027').courses.some(course => course.course === 'ECO 161' && course.extra)).toBe(true);
+  await expect(picker).toBeHidden();
+  await expect(plan.locator('[data-term-id="winter-2027"]')).toContainText('ECO 161');
 });
 
 for (const width of [390, 1440]) {

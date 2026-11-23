@@ -14,9 +14,17 @@ Prefer at most two Economics courses in a term. Place more than two only when a 
 
 Placing ECO 461 in the same term as ECO 213 or ECO 214 is a last resort. Use the existing department-approval pathway only when no valid plan without that same-term pairing meets the graduation target. This does not relax ECO 461's prerequisites or the approval requirement when the pairing is necessary.
 
+## OD8 — Only ECO 461 remains
+
+When ECO 461 is the only remaining major course and its prerequisites and senior standing are satisfied, every plan places it in the earliest eligible Winter term. Later eligible Winter terms remain available as moves. Do not show a spread or two-Economics-courses exception note for this case. This supersedes the earlier CM-7 instruction to keep the initial placement in the graduation-year Winter.
+
+## OD9 — Plan status presentation
+
+Keep the separate "Conditional plan" and "Plan feasibility" labels removed from the screen and PDF. They contradicted the student-facing "Ready to plan" status. Preserve the readiness status and its explanation. This approves the status-presentation part of the November 22 wording review; the panel status-contradiction check remains unchanged.
+
 ## OD3 clarification — Every planning strategy
 
-The finance preference recorded in `wording-review-decisions-2026-11-22.md#OD3` applies to Balanced, Explore the Major, and One Year Early. If no finance course is completed or in progress, choose ECO 321 in a published, verified term when a valid plan using it meets the graduation target. Otherwise choose BUSN 323. Do not place ECO 321 in an unpublished future term. This preference takes precedence over Explore the Major's lighter-first-year goal.
+The finance preference recorded in `wording-review-decisions-2026-11-22.md#OD3` applies to Balanced, Explore the Major, and One Year Early. If no finance course is completed or in progress, choose ECO 321 in a published, verified term when a valid plan using it meets the graduation target. Otherwise choose BUSN 323. Do not place ECO 321 in an unpublished future term. Explore the Major's lighter-first-year rule takes precedence over the ECO 321 preference: if placing published ECO 321 would make Explore's first year as heavy as or heavier than Balanced's, choose BUSN 323 in a later term. Balanced and One Year Early retain the ECO 321 preference. This supersedes the earlier same-day clarification that gave ECO 321 priority over Explore's lighter first year; it does not resolve any other preference conflict.
 
 ## Unresolved items retained
 

@@ -17,13 +17,6 @@
           "academicYear": "2026/2027",
           "courses": [
             {
-              "course": "ECO 114",
-              "title": "Principles of Macroeconomics",
-              "section": "J",
-              "status": "Planned",
-              "requirementId": "eco-114"
-            },
-            {
               "course": "ECO 161",
               "title": "Foundations of Economics",
               "section": "J",
@@ -52,8 +45,8 @@
           "academicYear": "2026/2027",
           "courses": [
             {
-              "course": "ECO 222",
-              "title": "Economics of the European Union",
+              "course": "ECO 224",
+              "title": "Introduction to Sustainability",
               "section": "S",
               "status": "Planned",
               "requirementId": "eco-elective-3"
@@ -73,11 +66,18 @@
               "requirementId": "finance"
             },
             {
-              "course": "ECO 214",
-              "title": "Intermediate Macroeconomics",
+              "course": "ECO 114",
+              "title": "Principles of Macroeconomics",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-214"
+              "requirementId": "eco-114"
+            },
+            {
+              "course": "ECO 213",
+              "title": "Intermediate Microeconomics",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-213"
             }
           ]
         },
@@ -87,11 +87,11 @@
           "academicYear": "2027/2028",
           "courses": [
             {
-              "course": "ECO 213",
-              "title": "Intermediate Microeconomics",
+              "course": "ECO 214",
+              "title": "Intermediate Macroeconomics",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-213"
+              "requirementId": "eco-214"
             },
             {
               "course": "ECO 461",

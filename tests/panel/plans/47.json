@@ -221,18 +221,18 @@
           "academicYear": "2028/2029",
           "courses": [
             {
-              "course": "ECO 257",
-              "title": "Quantitative Methods for Business/Economics",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "statistics"
-            },
-            {
               "course": "ECO elective",
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
               "requirementId": "eco-elective-4"
+            },
+            {
+              "course": "MAT 217",
+              "title": "Applied Statistics",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "statistics"
             }
           ]
         },

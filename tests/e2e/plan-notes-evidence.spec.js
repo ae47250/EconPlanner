@@ -6,7 +6,7 @@ import { resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generat
 
 const normalize = value => value.replace(/\s+/g, ' ').trim();
 const studentNoteTitles = { 'ccr-ace':'Other graduation requirements', history:'When these classes ran before',
-  upcoming:'Published Economics schedules as of September 28, 2026', future:'Courses in future years' };
+  upcoming:'Published schedules as of the plan date (September 28, 2026)', future:'Courses in future years' };
 const expectedNoteText = note => normalize([studentNoteTitles[note.id] || note.title, note.description,
   ...note.items.map(item => [item.code, item.label ? item.label + ':' : '', ...(item.lines || [item.text])].filter(Boolean).join(' ')), note.caveat].filter(Boolean).join(' '));
 
@@ -86,7 +86,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       expect(await card.locator('[data-plan-note]').evaluateAll(nodes => nodes.map(node => node.dataset.planNote)))
         .toEqual(visibleNotes.map(note => note.id));
       await expect(card.locator('[data-plan-note] summary')).toHaveCount(0);
-      await expect(card.locator('[data-plan-note="upcoming"] h3')).toHaveText('Published Economics schedules as of September 28, 2026');
+      await expect(card.locator('[data-plan-note="upcoming"] h3')).toHaveText('Published schedules as of the plan date (September 28, 2026)');
       const sectionLabels = await card.locator('[data-plan-note="upcoming"] strong').allTextContents();
       expect(sectionLabels).toContain('J:');
       expect(sectionLabels).toContain('K:');
@@ -95,7 +95,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(firstUpcomingCourse.locator('.upcoming-course-heading')).toContainText('ECO 113');
       await expect(firstUpcomingCourse.locator('.upcoming-course-heading')).toContainText('Principles of Microeconomics');
       await expect(firstUpcomingCourse.locator('.upcoming-course-title')).toHaveCSS('text-decoration-line', 'underline');
-      await expect(firstUpcomingCourse.locator('.upcoming-course-times')).toContainText('Tue/Thu, 8:00–9:45 a.m.');
+      await expect(firstUpcomingCourse.locator('.upcoming-course-times')).toContainText('Tue/Thu, 10:00–11:45 a.m.');
       await expect(page.locator('main')).not.toContainText('Course-level planning options');
       await expect(page.locator('main')).not.toContainText('potential Economics');
       await expect(page.locator('main')).not.toContainText('current seat availability is');
@@ -132,9 +132,9 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     const selected = plans.find(plan => plan.id === 'one-year-early');
     const termOf = code => selected.terms.findIndex(term => term.courses.some(course => course.course === code));
     expect(termOf('MAT 113')).toBeLessThan(termOf('ECO 213'));
-    await expect(earlyCard.locator('.accelerated-math-sequence-note')).toHaveCount(0);
+    await expect(earlyCard.locator('.accelerated-math-sequence-note').first()).toBeHidden();
     await earlyCard.getByText('More about this plan', {exact:true}).click();
-    await expect(earlyCard.locator('.accelerated-math-sequence-note')).toHaveCount(0);
+    await expect(earlyCard.locator('.accelerated-math-sequence-note').first()).toBeVisible();
     await earlyCard.getByText('More about this plan', {exact:true}).click();
     await recordLiveMessages('freshman: select One Year Early');
     const from = selected.terms.find(term => term.courses.some(course => course.course === 'MAT 217'));

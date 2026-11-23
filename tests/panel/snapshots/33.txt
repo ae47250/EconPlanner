@@ -28,9 +28,7 @@ You have 6 required courses left and 2 terms left by May 2027. They cannot all f
 Review graduation timeline
 SCREEN > Why am I seeing this result?
 Why am I seeing this result?
-Balanced: No complete plan found
-What still needs attention
-No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
+You have 6 required courses left and 2 terms left by May 2027. They cannot all fit. Choose a later graduation year or talk with your advisor.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF

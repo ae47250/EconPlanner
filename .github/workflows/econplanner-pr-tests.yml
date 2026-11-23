@@ -52,7 +52,7 @@ jobs:
           tests/architecture-boundaries.test.js
 
       - name: Run canonical consumption repair regressions
-        run: node --test tests/canonical-consumption-repairs.test.js tests/schedule-correction-2027.test.js tests/requested-behaviors.test.js tests/major-checklist-presentation.test.js tests/plan-notes-elective-evidence.test.js tests/economics-owner-panel-decisions.test.js
+        run: node --test tests/canonical-consumption-repairs.test.js tests/schedule-correction-2027.test.js tests/requested-behaviors.test.js tests/major-checklist-presentation.test.js tests/plan-notes-elective-evidence.test.js tests/economics-owner-panel-decisions.test.js tests/historical-prerequisite-language.test.js
 
       - name: Run bounded deterministic regression suite
         shell: bash

@@ -91,7 +91,7 @@ function olderCatalogNote(plan = {}) {
   if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
     details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.`);
   }
-  return details.length ? `This plan uses the current Economics major requirements. ${details.join(" ")}` : null;
+  return `This plan uses the current Economics major requirements. ${details.join(" ")}`.trim();
 }
 
 function olderCatalogApplies(plan = {}) {

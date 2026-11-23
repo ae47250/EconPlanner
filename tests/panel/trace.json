@@ -38,8 +38,6 @@
     {
       "messageKey": "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE",
       "studentIds": [
-        "11",
-        "13",
         "21",
         "28",
         "30",
@@ -433,6 +431,17 @@
     },
     {
       "section": "PDF",
+      "sentence": "Before taking ECO 213 in Fall 2027, finish MAT 113.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -458,17 +467,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "Before taking ECO 213 in Winter 2028, finish MAT 113.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "11"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -476,17 +474,6 @@
       },
       "studentIds": [
         "10"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 113.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "11"
       ]
     },
     {
@@ -522,7 +509,8 @@
       },
       "studentIds": [
         "02",
-        "03"
+        "03",
+        "11"
       ]
     },
     {
@@ -567,7 +555,6 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "11",
         "17",
         "19"
       ]
@@ -622,6 +609,17 @@
     },
     {
       "section": "PDF",
+      "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 213.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -636,17 +634,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 214.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "11"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -654,17 +641,6 @@
       },
       "studentIds": [
         "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and ECO 257.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "47"
       ]
     },
     {
@@ -759,17 +735,6 @@
         "17",
         "19",
         "21"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Check for open seats.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "42"
       ]
     },
     {
@@ -920,7 +885,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Check the student's earlier course or transfer records to confirm whether ECO 113 was completed before ECO 213.",
+      "sentence": "Check the student’s earlier course or transfer records to confirm whether ECO 113 was completed before ECO 213.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -932,7 +897,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Check the student's earlier course or transfer records to confirm whether ECO 114 was completed before ECO 214.",
+      "sentence": "Check the student’s earlier course or transfer records to confirm whether ECO 114 was completed before ECO 214.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -943,7 +908,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Check the student's earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.",
+      "sentence": "Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -969,7 +934,10 @@
         "09",
         "10",
         "11",
+        "12",
         "13",
+        "14",
+        "15",
         "16",
         "17",
         "18",
@@ -1008,30 +976,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: AP credit Confirm with your advisor that ECO 113 counts.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "05",
-        "46"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: AP credit Confirm with your advisor that ECO 114 counts.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "46"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: AP credit Confirm with your advisor that MAT 121 counts.",
+      "sentence": "CHECKLIST CELL: AP credit AP/exam credit.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -1070,6 +1015,7 @@
       },
       "studentIds": [
         "11",
+        "13",
         "21"
       ]
     },
@@ -1107,7 +1053,6 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "13",
         "16",
         "17"
       ]
@@ -1338,6 +1283,17 @@
     },
     {
       "section": "PDF",
+      "sentence": "CHECKLIST CELL: ECO 114 — Fall 2027",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "CHECKLIST CELL: ECO 114 — Winter 2027",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -1348,7 +1304,6 @@
         "02",
         "03",
         "05",
-        "11",
         "17",
         "19"
       ]
@@ -1374,7 +1329,6 @@
       },
       "studentIds": [
         "11",
-        "13",
         "16",
         "39"
       ]
@@ -1436,6 +1390,7 @@
         "03",
         "05",
         "09",
+        "11",
         "13",
         "14",
         "15",
@@ -1481,7 +1436,6 @@
         "02",
         "03",
         "10",
-        "11",
         "21"
       ]
     },
@@ -1539,7 +1493,6 @@
       },
       "studentIds": [
         "10",
-        "11",
         "16",
         "19",
         "21"
@@ -1600,6 +1553,7 @@
         "02",
         "03",
         "05",
+        "11",
         "19",
         "46",
         "48",
@@ -1671,7 +1625,6 @@
         "08",
         "09",
         "10",
-        "11",
         "12",
         "13",
         "14",
@@ -1698,6 +1651,17 @@
         "47",
         "48",
         "49"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "CHECKLIST CELL: ECO 224 — Spring/May 2027",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -1735,17 +1699,6 @@
         "22",
         "27",
         "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: ECO 257 — Fall 2028",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "47"
       ]
     },
     {
@@ -2052,6 +2005,7 @@
       },
       "studentIds": [
         "09",
+        "13",
         "15",
         "18",
         "19",
@@ -2451,6 +2405,7 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
+        "47",
         "48"
       ]
     },
@@ -2623,6 +2578,17 @@
     },
     {
       "section": "PDF",
+      "sentence": "CHECKLIST CELL: Planned Check this class’s enrollment status",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "42"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "CHECKLIST CELL: Planned Counts as your one 100-level elective.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -2630,20 +2596,8 @@
       },
       "studentIds": [
         "11",
-        "13",
         "16",
         "39"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: Planned This section was full.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "42"
       ]
     },
     {
@@ -2740,18 +2694,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Transfer credit Confirm with your advisor that ECO 113 counts.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: Transfer credit Confirm with your advisor that MAT 121 counts.",
+      "sentence": "CHECKLIST CELL: Transfer credit Transfer credit.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2840,7 +2783,6 @@
       },
       "studentIds": [
         "10",
-        "11",
         "21"
       ]
     },
@@ -2855,6 +2797,17 @@
         "28",
         "30",
         "32"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "Confirm the Economics Department approves taking ECO 214 and ECO 461 together in Winter 2028.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -2916,6 +2869,19 @@
     },
     {
       "section": "PDF",
+      "sentence": "Confirm with your advisor that it counts.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "05",
+        "46",
+        "47"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -2949,67 +2915,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "Current term",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 113 — Principles of Microeconomics",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "13",
-        "16",
-        "18"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -3017,112 +2922,60 @@
       },
       "studentIds": [
         "01",
-        "02"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
         "02",
         "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
         "13",
-        "14",
-        "15",
         "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 113 · Principles of Microeconomics — Tue/Thu, 8:00–9:45 a.m.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 113 normally comes first.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
         "18"
       ]
     },
     {
       "section": "PDF",
-      "sentence": "ECO 114 — Principles of Macroeconomics",
+      "sentence": "ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "30",
+        "32",
+        "36",
+        "39",
+        "42",
+        "46",
+        "47",
+        "48",
+        "49"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -3135,50 +2988,6 @@
         "11",
         "17",
         "19"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 114 · Principles of Macroeconomics — Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "46",
-        "47",
-        "48",
-        "49"
       ]
     },
     {
@@ -3219,7 +3028,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -3240,14 +3048,13 @@
     },
     {
       "section": "PDF",
-      "sentence": "ECO 161 — Foundations of Economics",
+      "sentence": "ECO 161 — Foundations of Economics Previously offered in Fall, Winter, May.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
         "11",
-        "13",
         "16",
         "39"
       ]
@@ -3290,22 +3097,10 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 213 — Intermediate Microeconomics",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "19"
       ]
     },
     {
@@ -3327,75 +3122,11 @@
         "14",
         "15",
         "17",
-        "21",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 213 · Intermediate Microeconomics — Tue/Thu, 10:00–11:45 a.m.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
         "19",
         "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
         "46",
         "47",
         "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 214 — Intermediate Macroeconomics",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "09",
-        "13",
-        "14",
-        "15",
-        "17",
-        "18",
-        "28",
-        "30",
-        "32",
-        "47",
         "49"
       ]
     },
@@ -3411,12 +3142,22 @@
         "02",
         "03",
         "05",
+        "09",
         "10",
         "11",
+        "13",
+        "14",
+        "15",
         "16",
+        "17",
+        "18",
         "19",
         "21",
+        "28",
+        "30",
+        "32",
         "46",
+        "47",
         "48",
         "49"
       ]
@@ -3459,7 +3200,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -3468,7 +3208,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "ECO 221 — Environmental Economics",
+      "sentence": "ECO 221 — Environmental Economics Previously offered in Fall and Winter.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -3529,7 +3269,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -3538,7 +3277,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "ECO 222 — Economics of the European Union",
+      "sentence": "ECO 222 — Economics of the European Union Previously offered in May.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -3549,7 +3288,6 @@
         "08",
         "09",
         "10",
-        "11",
         "12",
         "13",
         "14",
@@ -3621,6 +3359,17 @@
         "47",
         "48",
         "49"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "ECO 224 — Introduction to Sustainability Previously offered in May.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -3715,73 +3464,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "ECO 234 · Rational Choices — Mon/Wed/Fri, 10:40–11:50 a.m.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 257 — Quantitative Methods for Business/Economics Previously offered in Winter.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 257 was last offered in Winter 2023.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 321 — Money and Financial Markets",
+      "sentence": "ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -3839,80 +3522,10 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 333 · International Trade & Finance — Mon/Wed/Fri, 1:20–2:30 p.m.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 461 — Senior Seminar: Econometrics",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44"
       ]
     },
     {
@@ -3927,6 +3540,7 @@
         "02",
         "03",
         "05",
+        "07",
         "08",
         "09",
         "10",
@@ -3940,6 +3554,19 @@
         "18",
         "19",
         "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "30",
+        "32",
+        "36",
+        "39",
+        "42",
+        "44",
         "46",
         "47",
         "48",
@@ -3984,7 +3611,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -4015,94 +3641,6 @@
         "18",
         "19",
         "21",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Fall 2026 has started.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Fall 2026:",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
         "46",
         "47",
         "48",
@@ -4523,6 +4061,17 @@
     },
     {
       "section": "PDF",
+      "sentence": "GRID ROW: ECO 114",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "GRID ROW: ECO 114-J",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -4533,7 +4082,6 @@
         "02",
         "03",
         "05",
-        "11",
         "17",
         "19"
       ]
@@ -4547,7 +4095,6 @@
       },
       "studentIds": [
         "11",
-        "13",
         "16",
         "39"
       ]
@@ -4660,7 +4207,6 @@
         "08",
         "09",
         "10",
-        "11",
         "12",
         "13",
         "14",
@@ -4691,13 +4237,13 @@
     },
     {
       "section": "PDF",
-      "sentence": "GRID ROW: ECO 257",
+      "sentence": "GRID ROW: ECO 224-S",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "47"
+        "11"
       ]
     },
     {
@@ -4860,6 +4406,7 @@
         "19",
         "21",
         "36",
+        "47",
         "48"
       ]
     },
@@ -5038,6 +4585,7 @@
         "09",
         "10",
         "12",
+        "13",
         "14",
         "15",
         "17",
@@ -5069,7 +4617,6 @@
       },
       "studentIds": [
         "11",
-        "13",
         "16",
         "27",
         "39",
@@ -5078,7 +4625,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "If this is correct, show your PDF to your advisor.",
+      "sentence": "If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -5089,7 +4636,18 @@
     },
     {
       "section": "PDF",
-      "sentence": "If you finished ECO 113 or have transfer/AP credit, mark it.",
+      "sentence": "If that was a mistake, change one of them.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "18"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "If you finished ECO 113 or have transfer/AP credit for it, mark it.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -5100,24 +4658,24 @@
     },
     {
       "section": "PDF",
-      "sentence": "If you finished ECO 114, mark it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "If you finished MAT 113 or MAT 121 or have transfer/AP credit, mark it.",
+      "sentence": "If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
         "32"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "If you finished one or are taking it now, mark it.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "17"
       ]
     },
     {
@@ -5162,53 +4720,7 @@
         "16",
         "17",
         "19",
-        "21",
-        "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Mark the classes you are taking now if you are enrolled.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
+        "21"
       ]
     },
     {
@@ -5412,6 +4924,17 @@
     },
     {
       "section": "PDF",
+      "sentence": "NOTE: Check this class’s enrollment status",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "42"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "NOTE: Scheduled after ECO 213, which you marked completed.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -5438,18 +4961,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "NOTE: This section was full.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "42"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Otherwise, show your PDF to your advisor.",
+      "sentence": "Otherwise your advisor will check it.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -6763,7 +6275,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Published Economics schedules as of August 25, 2026",
+      "sentence": "Published schedules as of the plan date (August 25, 2026)",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -6774,7 +6286,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Published Economics schedules as of January 12, 2027",
+      "sentence": "Published schedules as of the plan date (January 12, 2027)",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -6785,7 +6297,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Published Economics schedules as of November 22, 2026",
+      "sentence": "Published schedules as of the plan date (November 22, 2026)",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7288,7 +6800,6 @@
       },
       "studentIds": [
         "10",
-        "11",
         "21"
       ]
     },
@@ -7303,6 +6814,17 @@
         "28",
         "30",
         "32"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -7746,52 +7268,49 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Fall 2026 through May.",
+      "sentence": "This plan covers Fall 2026 through Spring/May 2027.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "36",
+        "42"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "This plan covers Fall 2026 through Spring/May 2028.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
         "17",
-        "18",
-        "19",
-        "36"
+        "18"
       ]
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Fall through May.",
+      "sentence": "This plan covers Fall 2026 through Spring/May 2029.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "42"
+        "19"
       ]
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Winter through May.",
+      "sentence": "This plan covers Winter 2027 through Spring/May 2027.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
         "07",
         "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "21",
         "22",
         "23",
         "24",
@@ -7802,11 +7321,56 @@
         "30",
         "32",
         "39",
-        "44",
-        "46",
+        "44"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "This plan covers Winter 2027 through Spring/May 2028.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "21"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "This plan covers Winter 2027 through Spring/May 2029.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "02",
+        "03",
+        "05",
         "47",
         "48",
         "49"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "This plan covers Winter 2027 through Spring/May 2030.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "01",
+        "02",
+        "46"
       ]
     },
     {
@@ -7818,6 +7382,7 @@
       },
       "studentIds": [
         "11",
+        "13",
         "21"
       ]
     },
@@ -7855,7 +7420,6 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "13",
         "16",
         "17"
       ]
@@ -7881,6 +7445,8 @@
       "studentIds": [
         "08",
         "09",
+        "11",
+        "13",
         "46",
         "47",
         "48",
@@ -7911,10 +7477,16 @@
       "studentIds": [
         "07",
         "08",
+        "09",
+        "10",
         "11",
+        "12",
         "13",
+        "14",
+        "15",
         "16",
         "17",
+        "18",
         "21",
         "22",
         "23",
@@ -8015,17 +7587,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "We don’t know if there are open seats in ECO 113, ECO 161, ECO 214, MAT 217, and ECO 222.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "13"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -8033,6 +7594,17 @@
       },
       "studentIds": [
         "16"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "We don’t know if there are open seats in ECO 113, ECO 214, MAT 217, and ECO 222.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "13"
       ]
     },
     {
@@ -8061,17 +7633,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "We don’t know if there are open seats in ECO 114, ECO 161, ECO 221, MAT 113, and ECO 222.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "11"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "We don’t know if there are open seats in ECO 114, ECO 221, MAT 217, and ECO 222.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -8091,6 +7652,17 @@
       "studentIds": [
         "05",
         "19"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "We don’t know if there are open seats in ECO 161, ECO 221, MAT 113, and ECO 224.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -8351,17 +7923,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "Winter 2027 has started.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "44"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Winter 2027:",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -8398,7 +7959,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -8407,7 +7967,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "You are taking ECO 214, but ECO 114 is not marked done or Taking now.",
+      "sentence": "You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -8418,7 +7978,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "You marked ECO 213 completed, but ECO 113 is marked Taking now.",
+      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -8429,7 +7989,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "You marked ECO 213 completed, but ECO 113 is not marked done.",
+      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -8440,7 +8000,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "You marked ECO 213 completed, but MAT 113 or MAT 121 is not marked done.",
+      "sentence": "You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -8847,50 +8407,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "— Mon/Wed/Fri, 1:20–2:30 p.m.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "— Mon/Wed/Fri, 10:40–11:50 a.m.",
       "source": {
         "file": "app/page.js",
@@ -8927,7 +8443,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -8972,7 +8487,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -8981,7 +8495,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "— Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.",
+      "sentence": "— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -9017,51 +8531,6 @@
         "36",
         "39",
         "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "— Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
         "46",
         "47",
         "48",
@@ -9106,7 +8575,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -9151,7 +8619,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -9196,7 +8663,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -9547,30 +9013,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "AP credit Confirm with your advisor that ECO 113 counts.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "05",
-        "46"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "AP credit Confirm with your advisor that ECO 114 counts.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "46"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "AP credit Confirm with your advisor that MAT 121 counts.",
+      "sentence": "AP credit AP/exam credit.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -9773,20 +9216,10 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "04",
-        "06",
         "20",
         "29",
-        "31",
-        "33",
-        "34",
-        "35",
-        "37",
-        "38",
         "40",
         "41",
-        "43",
-        "45",
         "50"
       ]
     },
@@ -9826,6 +9259,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Before taking ECO 213 in Fall 2027, finish MAT 113.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.",
       "source": {
         "file": "app/page.js",
@@ -9851,17 +9295,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Before taking ECO 213 in Winter 2028, finish MAT 113.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "11"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.",
       "source": {
         "file": "app/page.js",
@@ -9869,17 +9302,6 @@
       },
       "studentIds": [
         "10"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 113.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "11"
       ]
     },
     {
@@ -9915,7 +9337,8 @@
       },
       "studentIds": [
         "02",
-        "03"
+        "03",
+        "11"
       ]
     },
     {
@@ -9960,7 +9383,6 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "11",
         "17",
         "19"
       ]
@@ -10015,6 +9437,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 213.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.",
       "source": {
         "file": "app/page.js",
@@ -10029,17 +9462,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 214.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "11"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.",
       "source": {
         "file": "app/page.js",
@@ -10047,17 +9469,6 @@
       },
       "studentIds": [
         "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and ECO 257.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "47"
       ]
     },
     {
@@ -10288,17 +9699,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Check for open seats.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "42"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Check seats and future schedules before you register.",
       "source": {
         "file": "app/page.js",
@@ -10488,7 +9888,10 @@
         "09",
         "10",
         "11",
+        "12",
         "13",
+        "14",
+        "15",
         "16",
         "17",
         "18",
@@ -10626,6 +10029,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "CHECKLIST ROW: ECO 114 ECO 114 — Fall 2027 ○ Planned",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned",
       "source": {
         "file": "app/page.js",
@@ -10636,7 +10050,6 @@
         "02",
         "03",
         "05",
-        "11",
         "17",
         "19"
       ]
@@ -10701,6 +10114,7 @@
         "03",
         "05",
         "09",
+        "11",
         "13",
         "14",
         "15",
@@ -10756,7 +10170,6 @@
       },
       "studentIds": [
         "10",
-        "11",
         "21"
       ]
     },
@@ -10827,7 +10240,6 @@
       },
       "studentIds": [
         "10",
-        "11",
         "16",
         "19",
         "21"
@@ -10902,6 +10314,17 @@
         "46",
         "48",
         "49"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned Approval needed",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -11065,7 +10488,6 @@
       },
       "studentIds": [
         "11",
-        "13",
         "16"
       ]
     },
@@ -11120,6 +10542,7 @@
       "studentIds": [
         "05",
         "09",
+        "13",
         "15",
         "18",
         "19",
@@ -11204,7 +10627,6 @@
       "studentIds": [
         "10",
         "12",
-        "13",
         "14",
         "16",
         "17",
@@ -11255,6 +10677,7 @@
       },
       "studentIds": [
         "09",
+        "13",
         "15",
         "18",
         "21"
@@ -11357,7 +10780,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO 222 — May 2027 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 ECO 224 — May 2027 ○ Planned",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -11390,7 +10813,6 @@
       "studentIds": [
         "10",
         "12",
-        "13",
         "14",
         "16",
         "17"
@@ -11460,6 +10882,7 @@
       },
       "studentIds": [
         "09",
+        "13",
         "15",
         "18",
         "21"
@@ -11584,6 +11007,7 @@
       },
       "studentIds": [
         "11",
+        "13",
         "21"
       ]
     },
@@ -11621,7 +11045,6 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "13",
         "16",
         "17"
       ]
@@ -11813,17 +11236,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Statistics ECO 257 — Fall 2028 ○ Planned",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics ECO 257 ✓ Completed",
       "source": {
         "file": "app/page.js",
@@ -11837,7 +11249,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned This section was full.",
+      "sentence": "CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -11867,6 +11279,7 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
+        "47",
         "48"
       ]
     },
@@ -12264,6 +11677,19 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Confirm with your advisor that it counts.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "05",
+        "46",
+        "47"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.",
       "source": {
         "file": "app/page.js",
@@ -12320,51 +11746,6 @@
         "18",
         "19",
         "21",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Current term",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
         "46",
         "47",
         "48",
@@ -12656,7 +12037,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -12694,17 +12074,6 @@
       },
       "studentIds": [
         "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "ECO 113 normally comes first.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "18"
       ]
     },
     {
@@ -12768,7 +12137,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -12790,51 +12158,6 @@
     {
       "section": "SCREEN",
       "sentence": "ECO 161 · Foundations of Economics",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "ECO 213 · Intermediate Microeconomics",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -12936,7 +12259,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -12981,7 +12303,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -13125,63 +12446,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "ECO 257 was last offered in Winter 2023.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "ECO 321 · Money and Financial Markets",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "ECO 333 · International Trade & Finance",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -13261,7 +12526,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -13425,106 +12689,6 @@
         "03",
         "05",
         "19",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Explore the Major: No complete plan found",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "04",
-        "06"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Fall 2026 has started.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Fall 2026:",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
         "46",
         "47",
         "48",
@@ -13722,6 +12886,20 @@
         "47",
         "48",
         "49"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Graduate next year: Not possible",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "09",
+        "10",
+        "11",
+        "12"
       ]
     },
     {
@@ -13975,6 +13153,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "GRID ROW: ECO 114 ▾ | Principles of Macroeconomics",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "11"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "GRID ROW: ECO 114-J ▾ | Principles of Macroeconomics",
       "source": {
         "file": "app/page.js",
@@ -13985,7 +13174,6 @@
         "02",
         "03",
         "05",
-        "11",
         "17",
         "19"
       ]
@@ -13999,7 +13187,6 @@
       },
       "studentIds": [
         "11",
-        "13",
         "16",
         "39"
       ]
@@ -14132,7 +13319,6 @@
         "08",
         "09",
         "10",
-        "11",
         "12",
         "13",
         "14",
@@ -14163,13 +13349,13 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "GRID ROW: ECO 257 ▾ | Quantitative Methods for Business/Economics",
+      "sentence": "GRID ROW: ECO 224-S ▾ | Introduction to Sustainability",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "47"
+        "11"
       ]
     },
     {
@@ -14342,6 +13528,7 @@
         "05",
         "19",
         "21",
+        "47",
         "48"
       ]
     },
@@ -14465,6 +13652,7 @@
         "09",
         "10",
         "12",
+        "13",
         "14",
         "15",
         "17",
@@ -14496,7 +13684,6 @@
       },
       "studentIds": [
         "11",
-        "13",
         "16",
         "27",
         "39",
@@ -14505,7 +13692,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "If this is correct, show your PDF to your advisor.",
+      "sentence": "If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -14516,7 +13703,18 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "If you finished ECO 113 or have transfer/AP credit, mark it.",
+      "sentence": "If that was a mistake, change one of them.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "18"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "If you finished ECO 113 or have transfer/AP credit for it, mark it.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -14527,24 +13725,24 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "If you finished ECO 114, mark it.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "If you finished MAT 113 or MAT 121 or have transfer/AP credit, mark it.",
+      "sentence": "If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
         "32"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "If you finished one or are taking it now, mark it.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "17"
       ]
     },
     {
@@ -14564,8 +13762,7 @@
         "16",
         "17",
         "19",
-        "21",
-        "47"
+        "21"
       ]
     },
     {
@@ -14616,51 +13813,6 @@
     {
       "section": "SCREEN",
       "sentence": "Major requirements checklist",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Mark the classes you are taking now if you are enrolled.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -14804,6 +13956,10 @@
         "06",
         "07",
         "08",
+        "09",
+        "10",
+        "11",
+        "12",
         "22",
         "23",
         "24",
@@ -15073,15 +14229,7 @@
       "studentIds": [
         "20",
         "29",
-        "31",
-        "33",
-        "34",
-        "35",
-        "37",
-        "38",
         "41",
-        "43",
-        "45",
         "50"
       ]
     },
@@ -15212,6 +14360,17 @@
         "03",
         "07",
         "08"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "NOTE: Check this class’s enrollment status",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "42"
       ]
     },
     {
@@ -15348,17 +14507,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "NOTE: This section was full.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "42"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "One Year Early",
       "source": {
         "file": "app/page.js",
@@ -15391,6 +14539,20 @@
         "09",
         "10",
         "11"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "One-year-early target",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "09",
+        "10",
+        "11",
+        "12"
       ]
     },
     {
@@ -15451,7 +14613,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Otherwise, show your PDF to your advisor.",
+      "sentence": "Otherwise your advisor will check it.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -15495,7 +14657,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Published Economics schedules as of August 25, 2026",
+      "sentence": "Published schedules as of the plan date (August 25, 2026)",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -15506,7 +14668,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Published Economics schedules as of January 12, 2027",
+      "sentence": "Published schedules as of the plan date (January 12, 2027)",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -15517,7 +14679,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Published Economics schedules as of November 22, 2026",
+      "sentence": "Published schedules as of the plan date (November 22, 2026)",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -15978,6 +15140,20 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Standard target",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "09",
+        "10",
+        "11",
+        "12"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Statistics (ECO 257 or MAT 217 or PSY 217) must be done first.",
       "source": {
         "file": "app/page.js",
@@ -16274,6 +15450,50 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Take MAT 113 before ECO 213.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "02"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Take MAT 113 before ECO 214.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "02"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Taking both in one term needs the ECO 213 instructor's approval.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "02"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Taking both in one term needs the ECO 214 instructor's approval.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "02"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.",
       "source": {
         "file": "app/page.js",
@@ -16281,7 +15501,6 @@
       },
       "studentIds": [
         "10",
-        "11",
         "21"
       ]
     },
@@ -16296,6 +15515,17 @@
         "28",
         "30",
         "32"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -16774,28 +16004,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "These requirements did not fit by May 2027: ECO 461.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "06"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "These requirements did not fit by May 2028: ECO 461.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "04"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "They cannot all fit.",
       "source": {
         "file": "app/page.js",
@@ -16956,6 +16164,7 @@
       },
       "studentIds": [
         "11",
+        "13",
         "21"
       ]
     },
@@ -16993,7 +16202,6 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "13",
         "16",
         "17"
       ]
@@ -17019,6 +16227,8 @@
       "studentIds": [
         "08",
         "09",
+        "11",
+        "13",
         "46",
         "47",
         "48",
@@ -17049,10 +16259,16 @@
       "studentIds": [
         "07",
         "08",
+        "09",
+        "10",
         "11",
+        "12",
         "13",
+        "14",
+        "15",
         "16",
         "17",
+        "18",
         "21",
         "22",
         "23",
@@ -17105,18 +16321,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Transfer credit Confirm with your advisor that ECO 113 counts.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Transfer credit Confirm with your advisor that MAT 121 counts.",
+      "sentence": "Transfer credit Transfer credit.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17197,17 +16402,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "We don’t know if there are open seats in ECO 113, ECO 161, ECO 214, MAT 217, and ECO 222.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "13"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.",
       "source": {
         "file": "app/page.js",
@@ -17215,6 +16409,17 @@
       },
       "studentIds": [
         "16"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in ECO 113, ECO 214, MAT 217, and ECO 222.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "13"
       ]
     },
     {
@@ -17243,17 +16448,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "We don’t know if there are open seats in ECO 114, ECO 161, ECO 221, MAT 113, and ECO 222.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "11"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 114, ECO 221, MAT 217, and ECO 222.",
       "source": {
         "file": "app/page.js",
@@ -17273,6 +16467,17 @@
       "studentIds": [
         "05",
         "19"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in ECO 161, ECO 221, MAT 113, and ECO 224.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "11"
       ]
     },
     {
@@ -17505,21 +16710,11 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "04",
-        "06",
         "12",
         "20",
         "29",
-        "31",
-        "33",
-        "34",
-        "35",
-        "37",
-        "38",
         "40",
         "41",
-        "43",
-        "45",
         "50"
       ]
     },
@@ -17617,7 +16812,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Why: You are taking ECO 214, but ECO 114 is not marked done or Taking now.",
+      "sentence": "Why: You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17628,7 +16823,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Why: You marked ECO 213 completed, but ECO 113 is marked Taking now.",
+      "sentence": "Why: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17639,7 +16834,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Why: You marked ECO 213 completed, but ECO 113 is not marked done.",
+      "sentence": "Why: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17650,7 +16845,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Why: You marked ECO 213 completed, but MAT 113 or MAT 121 is not marked done.",
+      "sentence": "Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17716,17 +16911,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Winter 2027 has started.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "44"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Winter 2027:",
       "source": {
         "file": "app/page.js",
@@ -17763,7 +16947,6 @@
         "36",
         "39",
         "42",
-        "44",
         "46",
         "47",
         "48",
@@ -17817,7 +17000,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "You are taking ECO 214, but ECO 114 is not marked done or Taking now.",
+      "sentence": "You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17933,7 +17116,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "You marked ECO 213 completed, but ECO 113 is marked Taking now.",
+      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17944,7 +17127,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "You marked ECO 213 completed, but ECO 113 is not marked done.",
+      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -17955,7 +17138,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "You marked ECO 213 completed, but MAT 113 or MAT 121 is not marked done.",
+      "sentence": "You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"

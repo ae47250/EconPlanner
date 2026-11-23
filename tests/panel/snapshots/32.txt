@@ -20,7 +20,7 @@ None
 Status
 Needs advisor attention
 Ask your advisor to review the reason below before relying on this plan.
-Why: You marked ECO 213 completed, but MAT 113 or MAT 121 is not marked done. If you finished MAT 113 or MAT 121 or have transfer/AP credit, mark it. Otherwise, show your PDF to your advisor.
+Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
@@ -64,7 +64,7 @@ In Winter 2027, this plan has 5 courses. The normal limit is 4. You recorded adv
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
-You marked ECO 213 completed, but MAT 113 or MAT 121 is not marked done. If you finished MAT 113 or MAT 121 or have transfer/AP credit, mark it. Otherwise, show your PDF to your advisor.
+You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 This plan has 4 Economics courses in Winter 2027. The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
@@ -92,21 +92,10 @@ More about this plan
 Other graduation requirements
 HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
 W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-Published Economics schedules as of November 22, 2026
-Fall 2026:
-ECO 113 · Principles of Microeconomics
-— Tue/Thu, 8:00–9:45 a.m.
-ECO 114 · Principles of Macroeconomics
-— Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.
-ECO 213 · Intermediate Microeconomics
-— Tue/Thu, 10:00–11:45 a.m.
-ECO 234 · Rational Choices
-— Mon/Wed/Fri, 10:40–11:50 a.m.
-ECO 333 · International Trade & Finance
-— Mon/Wed/Fri, 1:20–2:30 p.m.
+Published schedules as of the plan date (November 22, 2026)
 Winter 2027:
 ECO 113 · Principles of Microeconomics
-— Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 ECO 114 · Principles of Macroeconomics
 — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics
@@ -126,8 +115,6 @@ ECO 224 · Introduction to Sustainability
 — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 ECO 234 · Rational Choices
 — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-Current term
-Fall 2026 has started. Mark the classes you are taking now if you are enrolled.
 SCREEN > Other details
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
@@ -136,7 +123,7 @@ PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 32 | Balanced | Prepared November 22, 2026 | Class standing: Senior
-This plan covers Winter through May.
+This plan covers Winter 2027 through Spring/May 2027.
 Status: Needs advisor attention
 Check seats and future schedules before you register.
 Graduation target: May 2027
@@ -160,12 +147,12 @@ NOTE: Approval needed
 NOTE: Scheduled after ECO 213, which you marked completed. Check with your advisor.
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
-ECO 214 — Intermediate Macroeconomics
-ECO 221 — Environmental Economics
-ECO 321 — Money and Financial Markets
-ECO 461 — Senior Seminar: Econometrics
+ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
+ECO 221 — Environmental Economics Previously offered in Fall and Winter.
+ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
+ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
 MAT 113 — Essential Pre-Calculus
-ECO 222 — Economics of the European Union
+ECO 222 — Economics of the European Union Previously offered in May.
 PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Before you register
@@ -174,7 +161,7 @@ In Winter 2027, this plan has 5 courses. The normal limit is 4. You recorded adv
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
-You marked ECO 213 completed, but MAT 113 or MAT 121 is not marked done. If you finished MAT 113 or MAT 121 or have transfer/AP credit, mark it. Otherwise, show your PDF to your advisor.
+You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 This plan has 4 Economics courses in Winter 2027. The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
@@ -182,7 +169,7 @@ PDF > Plan: Balanced > For your advisor
 For your advisor
 Confirm the ECO 214 instructor approves taking MAT 113 and ECO 214 together in Winter 2027.
 Confirm the Economics Department approves taking ECO 214 and ECO 461 together in Winter 2027.
-Check the student's earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.
+Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.
 PDF > Plan: Balanced > Checklist
 Your Economics major checklist
 TABLE HEADER: Requirement
@@ -240,16 +227,10 @@ Past Fall schedules included: ECO 357.
 Past Winter schedules included: ECO 221, ECO 337, ECO 357.
 Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 331.
 A past schedule does not guarantee a course will be offered again.
-PDF > Plan: Balanced > Notes: Published Economics schedules as of November 22, 2026
-Published Economics schedules as of November 22, 2026
-Fall 2026:
-ECO 113 · Principles of Microeconomics — Tue/Thu, 8:00–9:45 a.m.
-ECO 114 · Principles of Macroeconomics — Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.
-ECO 213 · Intermediate Microeconomics — Tue/Thu, 10:00–11:45 a.m.
-ECO 234 · Rational Choices — Mon/Wed/Fri, 10:40–11:50 a.m.
-ECO 333 · International Trade & Finance — Mon/Wed/Fri, 1:20–2:30 p.m.
+PDF > Plan: Balanced > Notes: Published schedules as of the plan date (November 22, 2026)
+Published schedules as of the plan date (November 22, 2026)
 Winter 2027:
-ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
 ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
@@ -260,6 +241,3 @@ May 2027:
 ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-PDF > Plan: Balanced > Notes: Current term
-Current term
-Fall 2026 has started. Mark the classes you are taking now if you are enrolled.

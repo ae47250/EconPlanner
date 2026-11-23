@@ -98,8 +98,7 @@ test('selected converted plan and named offering information agree with report J
     const occupied = projection => ({...projection, terms:projection.terms.filter(term=>term.courses.length)});
     assert.deepEqual(projectionMismatches(occupied(expected), occupied(projectReportHtmlArtifact(html.data))), []);
     const course = json.data.terms.flatMap(term=>term.courses).find(item=>item.requirementId===requirementId);
-    if (course.source === 'verified-offering') assert.equal(course.offeringInformation, null);
-    else assert.deepEqual(course.offeringInformation, find(plan).course.offeringInformation);
+    assert.deepEqual(course.offeringInformation, find(plan).course.offeringInformation);
     if (course.offeringInformation) assert.ok(html.data.includes(course.offeringInformation.label));
   }
 });

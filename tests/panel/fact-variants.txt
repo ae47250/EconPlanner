@@ -1,4 +1,3 @@
-Same-fact wording variants: 3
-19.txt | PDF / Balanced: Check the student's earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]
-19.txt | PDF / Explore the Major: Check the student's earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]
-47.txt | PDF / Explore the Major: ECO 257 was last offered in Winter 2023. Its future offering is not confirmed. [also: ECO 257 — Quantitative Methods for Business/Economics Previously offered in Winter.]
+Same-fact wording variants: 2
+19.txt | PDF / Balanced: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]
+19.txt | PDF / Explore the Major: Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.” [also: Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.]

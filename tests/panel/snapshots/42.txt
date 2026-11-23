@@ -35,7 +35,7 @@ Year | Term | Courses
 TERM: 2026/2027 Fall
 GRID ROW: MAT 217-A ▾ | Applied Statistics
 NOTE: Seat availability not confirmed
-NOTE: This section was full. Check for open seats.
+NOTE: Check this class’s enrollment status
 TERM: 2026/2027 Winter
 GRID ROW: ECO 461-J | Senior Seminar: Econometrics
 NOTE: Seat availability not confirmed
@@ -66,7 +66,7 @@ CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
 CHECKLIST ROW: Mathematics MAT 121 ✓ Completed
 CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed
 CHECKLIST ROW: ECO 214 ECO 214 ✓ Completed
-CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned This section was full. Check for open seats.
+CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status
 CHECKLIST ROW: Finance BUSN 323 ✓ Completed
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned
 CHECKLIST ROW: Economics elective 1 ECO 221 ✓ Completed
@@ -82,21 +82,10 @@ More about this plan
 Other graduation requirements
 HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
 W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
-Published Economics schedules as of August 25, 2026
-Fall 2026:
-ECO 113 · Principles of Microeconomics
-— Tue/Thu, 8:00–9:45 a.m.
-ECO 114 · Principles of Macroeconomics
-— Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.
-ECO 213 · Intermediate Microeconomics
-— Tue/Thu, 10:00–11:45 a.m.
-ECO 234 · Rational Choices
-— Mon/Wed/Fri, 10:40–11:50 a.m.
-ECO 333 · International Trade & Finance
-— Mon/Wed/Fri, 1:20–2:30 p.m.
+Published schedules as of the plan date (August 25, 2026)
 Winter 2027:
 ECO 113 · Principles of Microeconomics
-— Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 ECO 114 · Principles of Macroeconomics
 — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics
@@ -116,8 +105,6 @@ ECO 224 · Introduction to Sustainability
 — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 ECO 234 · Rational Choices
 — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-Current term
-Fall 2026 has started. Mark the classes you are taking now if you are enrolled.
 SCREEN > Other details
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
@@ -126,7 +113,7 @@ PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 42 | Balanced | Prepared August 25, 2026 | Class standing: Senior
-This plan covers Fall through May.
+This plan covers Fall 2026 through Spring/May 2027.
 Status: Needs advisor attention
 Check seats and future schedules before you register.
 Graduation target: May 2027
@@ -139,14 +126,14 @@ TABLE HEADER: Winter
 TABLE HEADER: May
 TERM: 2026/2027 Fall
 GRID ROW: MAT 217-A
-NOTE: This section was full. Check for open seats.
+NOTE: Check this class’s enrollment status
 TERM: 2026/2027 Winter
 GRID ROW: ECO 461-J
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
 MAT 217 — Applied Statistics
-ECO 461 — Senior Seminar: Econometrics
-ECO 222 — Economics of the European Union
+ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+ECO 222 — Economics of the European Union Previously offered in May.
 PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Finish these classes first
@@ -178,7 +165,7 @@ CHECKLIST CELL: ECO 214
 CHECKLIST CELL: Completed
 CHECKLIST CELL: Statistics
 CHECKLIST CELL: MAT 217 — Fall 2026
-CHECKLIST CELL: Planned This section was full. Check for open seats.
+CHECKLIST CELL: Planned Check this class’s enrollment status
 CHECKLIST CELL: Finance
 CHECKLIST CELL: BUSN 323
 CHECKLIST CELL: Completed
@@ -213,16 +200,10 @@ Past Fall schedules included: ECO 357.
 Past Winter schedules included: ECO 337, ECO 357.
 Past May schedules included: ECO 160, ECO 161, ECO 222, ECO 224, ECO 331.
 A past schedule does not guarantee a course will be offered again.
-PDF > Plan: Balanced > Notes: Published Economics schedules as of August 25, 2026
-Published Economics schedules as of August 25, 2026
-Fall 2026:
-ECO 113 · Principles of Microeconomics — Tue/Thu, 8:00–9:45 a.m.
-ECO 114 · Principles of Macroeconomics — Section A: Mon/Wed/Fri, 9:20–10:30 a.m. or Section B: Mon/Wed/Fri, 10:40–11:50 a.m. or Section C: Tue/Thu, 12:20–2:05 p.m.
-ECO 213 · Intermediate Microeconomics — Tue/Thu, 10:00–11:45 a.m.
-ECO 234 · Rational Choices — Mon/Wed/Fri, 10:40–11:50 a.m.
-ECO 333 · International Trade & Finance — Mon/Wed/Fri, 1:20–2:30 p.m.
+PDF > Plan: Balanced > Notes: Published schedules as of the plan date (August 25, 2026)
+Published schedules as of the plan date (August 25, 2026)
 Winter 2027:
-ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m. or Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
+ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
 ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
 ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
@@ -233,6 +214,3 @@ May 2027:
 ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-PDF > Plan: Balanced > Notes: Current term
-Current term
-Fall 2026 has started. Mark the classes you are taking now if you are enrolled.

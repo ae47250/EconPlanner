@@ -107,6 +107,28 @@ test("panel lint ignores schedule and grid repetition but catches a planted dupl
   }
 });
 
+test("panel lint allows shared credit markers across courses but catches a duplicate on one course", async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "econplanner-panel-credit-lint-"));
+  try {
+    const snapshotDir = path.join(temporary, "snapshots");
+    await mkdir(snapshotDir);
+    const first = "CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your advisor that it counts.";
+    const second = "CHECKLIST ROW: Mathematics MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.";
+    const file = path.join(snapshotDir, "01.txt");
+    const lines = ["SCREEN", "SCREEN > Plan: Balanced", "STATUS: Needs confirmation", first, second, "PDF", ""];
+    await writeFile(file, lines.join("\n"));
+    const shared = invoke(lintScript, ["--snapshots-dir", snapshotDir]);
+    assert.equal(shared.status, 0, shared.stdout + shared.stderr);
+    lines.splice(4, 0, first);
+    await writeFile(file, lines.join("\n"));
+    const planted = invoke(lintScript, ["--snapshots-dir", snapshotDir]);
+    assert.equal(planted.status, 1, planted.stdout + planted.stderr);
+    assert.match(planted.stdout, /duplicate=[1-9]/);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
 test("same-fact wording variants go to a separate non-blocking report", async () => {
   const temporary = await mkdtemp(path.join(os.tmpdir(), "econplanner-panel-fact-report-"));
   try {

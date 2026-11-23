@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.13",
+  "policyVersion": "econ-planning-flexibility.14",
   "status": "OWNER_APPROVED",
   "confirmation": {
     "date": "2026-11-22",
@@ -26,6 +26,7 @@
     "OWNER-PANEL-REVIEW-2026-11-22#OD5",
     "OWNER-PANEL-REVIEW-2026-11-22#OD6",
     "OWNER-PANEL-REVIEW-2026-11-22#OD7",
+    "OWNER-PANEL-REVIEW-2026-11-22#OD8",
     "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification"
   ],
   "acceleratedSeniorStanding": {
@@ -428,7 +429,7 @@
     "clarificationSourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification",
     "appliesWhen": "NO_FINANCE_COURSE_COMPLETED_OR_IN_PROGRESS",
     "appliesToEveryStrategy": true,
-    "precedesExploreFirstYearPreference": true,
+    "precedesExploreFirstYearPreference": false,
     "preferredCourse": "ECO 321",
     "requiredEvidence": "PUBLISHED_VERIFIED_SCHEDULE_IN_PLACEMENT_TERM",
     "unpublishedTermAllowed": false,
@@ -454,6 +455,13 @@
     "concurrentCourses": ["ECO 213", "ECO 214"],
     "lastResortOnly": true,
     "approvalRequirementUnchanged": true
+  },
+  "onlyRemainingCapstonePlacement": {
+    "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD8",
+    "course": "ECO 461",
+    "earliestEligibleWinter": true,
+    "laterEligibleWinterMoveAllowed": true,
+    "spreadExceptionNote": false
   },
   "noPlanCourseCapacityExplanation": {
     "sourceRef": "OWNER-WORDING-REVIEW-DECISIONS-2026-11-22#OD4",

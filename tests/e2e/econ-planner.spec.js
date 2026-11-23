@@ -557,7 +557,7 @@ for (const course of ["ECO 213", "ECO 214"]) {
     await expect(page.getByRole('button', { name: 'Generate my plans' })).toBeEnabled();
     await expect(page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`)).toHaveCount(0);
     await generatePlans(page);
-    await expect(page.locator('[data-plan-conditions]').first()).toContainText(`You are taking ${course}, but ${course === "ECO 213" ? "ECO 113" : "ECO 114"} is not marked done or Taking now.`);
+    await expect(page.locator('[data-plan-conditions]').first()).toContainText(`You are taking ${course}, but ${course === "ECO 213" ? "ECO 113" : "ECO 114"}, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.`);
   });
 }
 
@@ -595,7 +595,7 @@ for (const [math, economics] of [
     await card.getByText("More about this plan", { exact: true }).click();
     await expect(card.locator('.compact-schedule [data-term-id="math"]')).toContainText(math);
     await expect(card.locator('.compact-schedule [data-term-id="eco"]')).toContainText(economics);
-    await expect(card.locator(".accelerated-math-sequence-note")).toHaveCount(0);
+    await expect(card.locator(".accelerated-math-sequence-note")).toHaveText(`Take ${math} before ${economics}. Taking both in one term needs the ${economics} instructor's approval.`);
     await expect(card.locator("[data-plan-conditions]")).toHaveCount(0);
   });
 }
@@ -625,7 +625,7 @@ for (const [math, economics] of [
     }];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
     const card = await visitPlan(page, "one-year-early");
-    await expect(card.locator(".accelerated-math-sequence-note")).toContainText(`Taking ${math} and ${economics} in one term needs the ${economics} instructor's approval.`);
+    await expect(card.locator(".accelerated-math-sequence-note")).toHaveCount(0);
     await expect(card.locator(".plan-course-approval")).toContainText("Approval needed");
     await expect(card.locator("[data-plan-conditions]")).toContainText(approvalWarning);
   });

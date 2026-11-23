@@ -540,14 +540,14 @@
       "sourceId": "OWNER-PANEL-REVIEW-2026-11-22",
       "sourceType": "OWNER_CONFIRMATION",
       "authority": "Project owner, explicit panel accuracy-review decisions",
-      "authorityBoundary": "ECONOMICS_ELECTIVE_ALLOCATION_AND_PLANNING_PREFERENCES",
+      "authorityBoundary": "ECONOMICS_ELECTIVE_ALLOCATION_PLANNING_PREFERENCES_AND_STATUS_PRESENTATION",
       "path": "policy/provenance/owner-decisions-2026-11-22b.md",
       "confirmedOn": "2026-11-22",
       "reviewer": "Project owner",
-      "sha256": "1c2f630298a9f577d96842b38f39a877b24e9cd96305ef0e39d287293bd8ed2e",
-      "anchors": ["OD5", "OD6", "OD7", "OD3-clarification"],
+      "sha256": "3f722aec49da59fc44234046ce2704961224e24a720e21241c3fbab6ec3dff0f",
+      "anchors": ["OD5", "OD6", "OD7", "OD8", "OD9", "OD3-clarification"],
       "effective": { "from": "2026-11-22", "through": null },
-      "supersedes": null
+      "supersedes": "Earlier planning preference order where it conflicts with OD3, OD5, OD6, OD7, or OD8, and earlier status presentation where it conflicts with OD9"
     }
   ],
   "authorityHierarchy": [

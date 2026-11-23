@@ -64,7 +64,7 @@ test("zero-course input: all three checklists use validated future assignments, 
     if (plan.id === "one-year-early") {
       assert.deepEqual(capstone.markers, ["Approval needed", "Ask your advisor and the Registrar to confirm senior standing."]);
       assert.ok(checklist.rows.find(row => row.id === "eco-213").markers.includes("Approval needed"));
-      assert.ok(plan.planConditions.some(item => /Taking ECO 21[34] and ECO 461 together in Winter 202[78] needs approval from the Economics Department before you register\./.test(item.message)));
+      assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register."));
       assert.ok(plan.planConditions.some(item => /This plan assumes you will have senior standing in 2027–2028\./.test(item.message)));
       assert.ok(!html.includes("This plan assumes you will have senior standing in your final year."));
     } else assert.deepEqual(capstone.markers, []);
@@ -117,7 +117,9 @@ test("AP and transfer checklist credit and grouped advisor text agree in API and
     for (const course of courses) {
       const row = plan.majorRequirementsChecklist.rows.find(item => item.course === course.code);
       assert.equal(row.statusLabel, label);
-      assert.ok(row.markers.some(marker => marker === `Confirm with your advisor that ${course.code} counts.`));
+      assert.ok(row.markers.some(marker => marker === (label === "AP credit"
+        ? "AP/exam credit. Confirm with your advisor that it counts."
+        : "Transfer credit. Confirm with your advisor that it counts.")));
     }
     assert.equal(plan.planConditions.filter(item => item.message === message).length, 1);
     const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
@@ -149,7 +151,7 @@ test("an incomplete late-entry report never presents published offerings as stud
   assert.equal(report.selectedPlan, null);
   assert.ok(report.terms.length);
   assert.ok(report.terms.every(term => term.courses.length === 0));
-  assert.equal(report.planningHorizon, "Fall through May");
+  assert.equal(report.planningHorizon, "Fall 2027 through Spring/May 2028");
   assert.ok(report.verifiedOfferings.Winter.length > 0);
   assert.equal(report.majorRequirementsChecklist.unmetRequirements.length, 5);
   assert.ok(report.planNotes.some(note => note.id === "future"));

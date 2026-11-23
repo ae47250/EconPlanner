@@ -2106,11 +2106,6 @@ function PlanComparisonScreen({
           )}
         </div>
 
-        {!isPlanView && acceleratedResult?.status === "NOT_POSSIBLE" && <section className="accelerated-result" role="status">
-          <h2>You cannot finish by {studentTermLabel(acceleratedResult.acceleratedTarget)}. The plan below is for {studentTermLabel(acceleratedResult.standardTarget)}.</h2>
-          <p>{acceleratedResult.message}</p>
-        </section>}
-
         {!isPlanView && highlightDifferences && (
           <p className="comparison-difference-key">
             <strong>Purple bars show classes placed in only one plan.</strong> Classes in the same term in both plans have no bar.
@@ -2303,6 +2298,7 @@ function PlanComparisonScreen({
                 MORE_INFORMATION_NEEDED: "More information needed"
               })[acceleratedResult.status] || "More information needed"}</span>
             </h2>
+            {acceleratedResult.status === "NOT_POSSIBLE" && <p>You cannot finish by {studentTermLabel(acceleratedResult.acceleratedTarget)}. The plan below is for {studentTermLabel(acceleratedResult.standardTarget)}.</p>}
             <dl className="accelerated-target-list">
               <div><dt>Standard target</dt><dd>{studentTermLabel(acceleratedResult.standardTarget)}</dd></div>
               <div><dt>One-year-early target</dt><dd>{studentTermLabel(acceleratedResult.acceleratedTarget || "To be confirmed")}</dd></div>
@@ -2372,9 +2368,10 @@ function overallPlanReadiness(plans = []) {
   return plans.length ? "Ready to plan" : "Not available";
 }
 
-function ResultDiagnostics({ outcomes, convergences, planningGaps, plans = [] }) {
+function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, plans = [] }) {
   const planCount = plans.length;
-  const blockingReasons = [];
+  const blockingReasons = !planCount && planResult?.category === "INFEASIBLE_PROVEN"
+    ? planResult.evidence?.blockingReasons || [] : [];
   const otherOutcomes = planCount ? outcomes.filter(outcome => !outcome.displayed) : outcomes;
   const visibleGaps = planningGaps.filter(item => item.studentVisible !== false);
   const hasDiagnostics = blockingReasons.length || otherOutcomes.length || convergences.length || visibleGaps.length;
