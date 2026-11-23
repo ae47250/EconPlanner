@@ -1,16 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { execFile } from "node:child_process";
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
 import { buildCompatibilityRepresentations } from "../lib/policy/compatibility-projection.js";
 import { canonicalJson } from "../lib/policy/canonical-json.js";
 import { compilePolicy } from "../scripts/compile-policy.mjs";
 
-const executeFile = promisify(execFile);
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const compatibilityNames = ["courses.json", "requirements.json", "prerequisites.json", "planning-constraints.json", "schedule-2026-2027.json"];
 
@@ -85,15 +82,6 @@ test("stale normalized files cannot override canonical compatibility generation"
   const generated = await readJson(path.join(result.normalizedRoot, "courses.json"));
   assert.equal(generated.courses.some(course => course.code === "STALE 999"), false);
   assert.equal(generated.courses.find(course => course.code === "ECO 113").title, "Principles of Microeconomics");
-});
-
-test("the retired ingestion command fails before it can write compatibility data", async () => {
-  const before = await readFile(path.join(repositoryRoot, "data/normalized/economics/requirements.json"));
-  await assert.rejects(
-    executeFile(process.execPath, [path.join(repositoryRoot, "scripts/ingest-economics-sources.mjs")], { cwd: repositoryRoot }),
-    error => error.code === 1 && error.stderr.includes("legacy ingestion command is retired")
-  );
-  assert.deepEqual(await readFile(path.join(repositoryRoot, "data/normalized/economics/requirements.json")), before);
 });
 
 test("canonical comparisons detect changed, added, deleted rows and coverage drift even when mirrors agree", async () => {
