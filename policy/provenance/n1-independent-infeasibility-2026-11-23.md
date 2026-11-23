@@ -1,0 +1,9 @@
+# N1 — independent proof of graduation-target impossibility
+
+Authority: project owner, explicit N1 decision on November 23, 2026. Scope: how EconPlanner classifies an Economics graduation target when evidence for some course offerings or a general search is incomplete. This decision does not change requirements, substitutions, waivers, prerequisites, offering facts, term eligibility, or the graduation target.
+
+EconPlanner may declare a graduation target impossible when at least one unavoidable obstacle is conclusively established by authoritative evidence, even if evidence about unrelated courses is incomplete. Every legitimate alternative for overcoming that obstacle must be ruled out. Missing information or an incomplete search alone never establishes impossibility. If the independent proof is insufficient, the result remains “More information needed.”
+
+For an unmet exact-course requirement, a sufficient offering proof must identify the governing requirement and all of its valid course options, then account for every remaining term. A term is ruled out only by an applicable hard placement rule without a live exception, or by complete, scoped schedule coverage proving that no matching course is offered. A May placement rule that an exact verified section can override is not conclusive while the relevant exact schedule coverage is incomplete. An offered section, a viable alternative course, unresolved requirement credit or waiver evidence, or an unpublished schedule prevents this offering proof.
+
+This decision narrowly supersedes the all-options coverage condition for infeasibility in `busn-323-2026-2027-confirmation-2026-09-28.md#Schedule-coverage-meaning` when a separate obstacle has its own complete proof. That document's BUSN 323 offering confirmation and per-course coverage boundaries remain in force. The owner did not resolve N5–N8.

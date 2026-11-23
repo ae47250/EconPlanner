@@ -434,8 +434,8 @@ test('one missing ECO 213 prerequisite prevents the otherwise finishable senior 
   expect(result.economicsPlans).toEqual([]);
   expect(result.economicsPlanResult.reason).toBe(blocked.economicsPlanResult.reason);
   await expect(page.locator('.no-plan-state h2')).not.toContainText('overload');
-  await expect(page.locator('.no-plan-state > p')).not.toContainText('Record existing advisor approval');
-  await expect(page.locator('.no-plan-state > p')).not.toBeEmpty();
+  await expect(page.locator('.no-plan-state')).not.toContainText('Record existing advisor approval');
+  await expect(page.locator('.no-plan-state > p').first()).not.toBeEmpty();
   await expect(page.getByRole('button', {name:/Download PDF Report/})).toHaveCount(0);
 });
 

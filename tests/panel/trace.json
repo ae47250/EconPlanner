@@ -36,6 +36,12 @@
       ]
     },
     {
+      "messageKey": "infeasibility.requiredOffering",
+      "studentIds": [
+        "40"
+      ]
+    },
+    {
       "messageKey": "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE",
       "studentIds": [
         "21",
@@ -9154,17 +9160,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Ask your advisor which required classes will be offered.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "40"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Balanced",
       "source": {
         "file": "app/page.js",
@@ -9218,7 +9213,6 @@
       "studentIds": [
         "20",
         "29",
-        "40",
         "41",
         "50"
       ]
@@ -14154,17 +14148,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "More information needed",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "40"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "More planning details",
       "source": {
         "file": "app/page.js",
@@ -14328,6 +14311,7 @@
         "35",
         "37",
         "38",
+        "40",
         "43",
         "45"
       ]
@@ -14915,6 +14899,7 @@
         "35",
         "37",
         "38",
+        "40",
         "43",
         "45"
       ]
@@ -14927,7 +14912,6 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "40",
         "41"
       ]
     },
@@ -14967,6 +14951,7 @@
         "35",
         "37",
         "38",
+        "40",
         "43",
         "45"
       ]
@@ -15993,17 +15978,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "These requirements did not fit by May 2027: ECO 213.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "40"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "They cannot all fit.",
       "source": {
         "file": "app/page.js",
@@ -16061,17 +16035,6 @@
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "This does not mean you cannot finish.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "40"
       ]
     },
     {
@@ -16693,17 +16656,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "We need more course schedule information for your graduation target.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "40"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "What still needs attention",
       "source": {
         "file": "app/page.js",
@@ -16713,7 +16665,6 @@
         "12",
         "20",
         "29",
-        "40",
         "41",
         "50"
       ]
@@ -17546,6 +17497,7 @@
         "35",
         "37",
         "38",
+        "40",
         "43",
         "45"
       ]

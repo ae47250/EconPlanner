@@ -548,6 +548,19 @@
       "anchors": ["OD5", "OD6", "OD7", "OD8", "OD9", "OD3-clarification"],
       "effective": { "from": "2026-11-22", "through": null },
       "supersedes": "Earlier planning preference order where it conflicts with OD3, OD5, OD6, OD7, or OD8, and earlier status presentation where it conflicts with OD9"
+    },
+    {
+      "sourceId": "OWNER-N1-INDEPENDENT-INFEASIBILITY-2026-11-23",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner, explicit N1 decision",
+      "authorityBoundary": "ECONOMICS_GRADUATION_TARGET_INDEPENDENT_INFEASIBILITY_PROOF",
+      "path": "policy/provenance/n1-independent-infeasibility-2026-11-23.md",
+      "confirmedOn": "2026-11-23",
+      "reviewer": "Project owner",
+      "sha256": "caa2a0d39a702e5d877d695a5fb6e0a89e5c34175e1e05a4071a6cfc94ef3439",
+      "anchors": ["N1"],
+      "effective": { "from": "2026-11-23", "through": null },
+      "supersedes": "Only the all-options coverage condition for infeasibility in OWNER-BUSN323-2026-2027-2026-09-28 when a separate obstacle is conclusively proven"
     }
   ],
   "authorityHierarchy": [

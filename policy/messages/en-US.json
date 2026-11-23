@@ -64,6 +64,7 @@
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
     "infeasibility.finance.forced": "{financeCourse} counts for Finance here, so it cannot also count as an elective.",
     "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. Your graduation year alone does not establish senior standing. Ask your advisor and the Registrar to confirm it, or choose a later graduation year.",
+    "infeasibility.requiredOffering": "You still need {course}, but no available term by {target} offers it. Talk with your advisor about a later graduation year.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition."
