@@ -1,5 +1,5 @@
 import { selectedPlanCard, visitPlan } from "./cp7-helpers.js";
-import { expect, test } from "./nightly-observability.js";
+import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import {
   courseOccurrences, projectReportHtmlArtifact, projectReportJsonArtifact, projectSelectedPlanArtifact, projectionMismatches

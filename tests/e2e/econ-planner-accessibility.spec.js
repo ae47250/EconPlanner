@@ -1,6 +1,6 @@
 import { visitPlan } from "./cp7-helpers.js";
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "./nightly-observability.js";
+import { test, expect } from "@playwright/test";
 import {
   chooseStanding,
   continueToCourses,

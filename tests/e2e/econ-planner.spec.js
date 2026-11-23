@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { visitPlan } from "./cp7-helpers.js";
-import { expect, test } from "./nightly-observability.js";
+import { test, expect } from "@playwright/test";
 import {
   chooseStanding,
   continueToCourses,

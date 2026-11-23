@@ -1,5 +1,5 @@
 import { visitPlan } from "./cp7-helpers.js";
-import { expect, test } from './nightly-observability.js';
+import { test, expect } from "@playwright/test";
 import AxeBuilder from '@axe-core/playwright';
 import { writeFile } from 'node:fs/promises';
 import { resetPlanner, reloadPlanner, chooseStanding, continueToCourses, generatePlans, setCourseStatus } from './cp7-helpers.js';
