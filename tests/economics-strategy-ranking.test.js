@@ -37,6 +37,22 @@ function standardStudent(academicStanding, courses = []) {
   };
 }
 
+test("Balanced honors its yearly target for a sophomore with ECO 113 completed", () => {
+  const student = {
+    ...standardStudent("sophomore", ["ECO 113"]),
+    planCreationDate: "2026-08-15"
+  };
+  const balanced = generate(student).plans.find(plan => plan.id === "balanced");
+  assert.ok(balanced);
+  assert.deepEqual(balanced.distribution.targetYearCounts, [3, 4, 4]);
+  const actual = balanced.distribution.targetYearCounts.map((_, yearIndex) => (
+    balanced.terms.filter(term => term.yearIndex === yearIndex)
+      .flatMap(term => term.courses)
+      .filter(course => course.requirementId).length
+  ));
+  assert.deepEqual(actual, [3, 4, 4]);
+});
+
 test("the planner exposes policy-backed Balanced and Explore the Major normal variants", () => {
   assert.deepEqual(PLAN_VARIANTS.map(item => item.id), ["balanced", "explore-first"]);
   assert.deepEqual(PLAN_VARIANTS.map(item => item.label), ["Balanced", "Explore the Major"]);
