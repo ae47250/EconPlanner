@@ -41,15 +41,15 @@ NOTE: Seat availability not confirmed
 GRID ROW: MAT 217-J ▾ | Applied Statistics
 NOTE: Seat availability not confirmed
 TERM: 2026/2027 May
-GRID ROW: ECO 222-S ▾ | Economics of the European Union
-NOTE: Seat availability not confirmed
+GRID ROW: No Economics course this term
 TERM: 2027/2028 Fall
 GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
 TERM: 2027/2028 Winter
 GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
 TERM: 2027/2028 May
-GRID ROW: No Economics course this term
+GRID ROW: Economics elective (200 level or higher) ▾
+NOTE: Future offering unconfirmed
 TERM: 2028/2029 Fall
 GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
@@ -70,10 +70,9 @@ Things to keep in mind
 Classes to finish first
 Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 Before you register
-We don’t know if there are open seats in ECO 214, ECO 321, MAT 217, and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217. Check the registration system before you register.
 Check with your advisor
 Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-This plan puts a different number of courses in each year than the usual Balanced plan.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
@@ -85,8 +84,8 @@ CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — Winter 2027 ○ Planned
 CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned
-CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned
-CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2028 ○ Planned
+CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Winter 2028 ○ Planned
+CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2028 ○ Planned
 CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned
 CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
@@ -135,8 +134,6 @@ Year | Term | Courses
 TERM: 2026/2027 Winter
 GRID ROW: ECO 214-J ▾ | Intermediate Macroeconomics
 NOTE: Seat availability not confirmed
-GRID ROW: ECO 321-J ▾ | Money and Financial Markets
-NOTE: Seat availability not confirmed
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S ▾ | Economics of the European Union
 NOTE: Seat availability not confirmed
@@ -153,6 +150,7 @@ GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
 GRID ROW: MAT 217 ▾ | Applied Statistics
 TERM: 2028/2029 Winter
+GRID ROW: BUSN 323 ▾ | Investments
 GRID ROW: ECO 461 | Senior Seminar: Econometrics
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 TERM: 2028/2029 May
@@ -168,10 +166,9 @@ Things to keep in mind
 Classes to finish first
 Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 Before you register
-We don’t know if there are open seats in ECO 214, ECO 321, and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 214 and ECO 222. Check the registration system before you register.
 Check with your advisor
 Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-This plan puts a different number of courses in each year than the usual Explore the Major plan.
 SCREEN > Plan: Explore the Major > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
@@ -181,7 +178,7 @@ CHECKLIST ROW: Mathematics MAT 121 ? Transfer credit Transfer credit. Confirm wi
 CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
 CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — Fall 2028 ○ Planned
-CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned
+CHECKLIST ROW: Finance BUSN 323 — Winter 2029 ○ Planned
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned
 CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned
 CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2028 ○ Planned
@@ -222,6 +219,7 @@ ECO 234 · Rational Choices
 — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 Courses in future years
 For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
+This plan places BUSN 323 in Winter 2029. Its future offering is not confirmed.
 SCREEN > Other details
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
@@ -247,13 +245,13 @@ GRID ROW: ECO 214-J
 GRID ROW: ECO 321-J
 GRID ROW: MAT 217-J
 TERM: 2026/2027 May
-GRID ROW: ECO 222-S
+GRID ROW: -
 TERM: 2027/2028 Fall
 GRID ROW: ECO 213
 TERM: 2027/2028 Winter
 GRID ROW: Economics elective (200 level or higher)
 TERM: 2027/2028 May
-GRID ROW: -
+GRID ROW: Economics elective (200 level or higher)
 TERM: 2028/2029 Fall
 GRID ROW: Economics elective (200 level or higher)
 TERM: 2028/2029 Winter
@@ -263,7 +261,6 @@ GRID ROW: Economics elective (200 level or higher)
 ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
 MAT 217 — Applied Statistics
-ECO 222 — Economics of the European Union Previously offered in May.
 ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
 Economics elective (200 level or higher) — Pick a course when the schedule comes out.
 ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
@@ -272,10 +269,9 @@ What to check for this plan
 Finish these classes first
 Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 Before you register
-We don’t know if there are open seats in ECO 214, ECO 321, MAT 217, and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217. Check the registration system before you register.
 Check with your advisor
 Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-This plan puts a different number of courses in each year than the usual Balanced plan.
 PDF > Plan: Balanced > For your advisor
 For your advisor
 Confirm whether the student’s transfer credit for ECO 113 and MAT 121 counts.
@@ -309,10 +305,10 @@ CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2029
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 1
-CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 2
-CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 3
 CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
@@ -372,7 +368,6 @@ TERM: 2026/2027 Fall
 GRID ROW: -
 TERM: 2026/2027 Winter
 GRID ROW: ECO 214-J
-GRID ROW: ECO 321-J
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
 TERM: 2027/2028 Fall
@@ -385,25 +380,25 @@ TERM: 2028/2029 Fall
 GRID ROW: Economics elective (200 level or higher)
 GRID ROW: MAT 217
 TERM: 2028/2029 Winter
+GRID ROW: BUSN 323
 GRID ROW: ECO 461
 TERM: 2028/2029 May
 GRID ROW: -
 ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
 ECO 222 — Economics of the European Union Previously offered in May.
 ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
 Economics elective (200 level or higher) — Pick a course when the schedule comes out.
 MAT 217 — Applied Statistics
+BUSN 323 — Investments
 ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
 PDF > Plan: Explore the Major > What to check for this plan
 What to check for this plan
 Finish these classes first
 Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 Before you register
-We don’t know if there are open seats in ECO 214, ECO 321, and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 214 and ECO 222. Check the registration system before you register.
 Check with your advisor
 Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-This plan puts a different number of courses in each year than the usual Explore the Major plan.
 PDF > Plan: Explore the Major > For your advisor
 For your advisor
 Confirm whether the student’s transfer credit for ECO 113 and MAT 121 counts.
@@ -431,7 +426,7 @@ CHECKLIST CELL: Statistics
 CHECKLIST CELL: MAT 217 — Fall 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Finance
-CHECKLIST CELL: ECO 321 — Winter 2027
+CHECKLIST CELL: BUSN 323 — Winter 2029
 CHECKLIST CELL: Planned
 CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2029
@@ -482,3 +477,4 @@ ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 PDF > Plan: Explore the Major > Notes: Future years
 Future years
 For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
+This plan places BUSN 323 in Winter 2029. Its future offering is not confirmed.
