@@ -126,8 +126,16 @@ test("ECO 222 exact alternate-term evidence passes complete edit validation", as
   const student = { academicStanding: "sophomore", planCreationDate: "2026-07-30", courses: ["ECO 113", "ECO 114", "MAT 113", "ECO 161", "ECO 221"].map(code => ({code, status: "completed"})) };
   const generated = await post({ student });
   const economics = generated.data.programs.find(item => item.program.id === "economics-base");
-  const plan = economics.economicsPlans.find(item => item.id === "explore-first");
+  const plan = structuredClone(economics.economicsPlans.find(item => item.id === "explore-first"));
   const original = entries(plan).find(row => row.course.course === "ECO 222");
+  const spring = plan.terms.find(term => term.slotId === "spring-2027");
+  assert.ok(original && spring, "The exact-evidence fixture needs ECO 222 and Spring 2027.");
+  if (original.term !== spring) {
+    original.term.courses.splice(original.term.courses.indexOf(original.course), 1);
+    spring.courses.push(original.course);
+    original.course.slotId = spring.slotId;
+    original.term = spring;
+  }
   const destination = plan.terms.find(term => term.slotId === "fall-2027");
   const offeredCourses = [...destination.courses.map(course => course.course), "ECO 222"];
   const sections = offeredCourses.map(code => ({

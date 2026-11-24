@@ -72,7 +72,11 @@ test("moving a concurrent intermediate before ECO 461 removes a no-longer-requir
   };
   const generated = await postMap({ student });
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;
-  const plan = plans.find(item => item.id === "balanced");
+  const plan = plans.find(item => item.terms.some(term => term.slotId === "winter-2027"
+    && term.courses.some(course => course.course === "ECO 214"))
+    && item.terms.some(term => term.slotId === "winter-2028"
+      && term.courses.some(course => course.course === "ECO 461")));
+  assert.ok(plan, "This edit needs ECO 214 before the Winter 2028 capstone.");
   // A saved, legal concurrent plan must remain editable even when generation prefers the opposite order.
   const baseline = await validateEdit(student, plan, { plans, extraBody: { edit: {
     type: "move", fromTermId: "winter-2027", toTermId: "winter-2028", courseId: "eco-214"

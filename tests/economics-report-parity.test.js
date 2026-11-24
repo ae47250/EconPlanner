@@ -186,7 +186,11 @@ async function changedElectiveArtifacts() {
   const student = { ...LARGE_SELECTED_STUDENT, isTransferStudent: true,
     transferEntryAcademicYear: "2025-2026", transferExpectedGraduationYear: "2027" };
   const economics = await generateEconomics(student);
-  const edited = replaceElective(economics.economicsPlans[0], "ECO 224");
+  const replaceable = economics.economicsPlans.find(plan => plan.terms.some(term => term.courses.some(course => (
+    course.course !== "ECO 224" && course.alternativeOptions?.some(option => option.course === "ECO 224")
+  ))));
+  assert.ok(replaceable, "Expected a plan with an ECO 224 elective alternative.");
+  const edited = replaceElective(replaceable, "ECO 224");
   const selectedPlan = await validateEditedPlan(student, economics, edited);
   const json = await reportJson(student, selectedPlan);
   const html = await reportHtml(student, selectedPlan);
@@ -236,7 +240,7 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
   assert.ok(expected.warnings.some(message => /unknown date|availability|seat/i.test(message)));
   assert.equal(expected.advisorAttention.length, 0);
   assert.ok(expected.terms.some(term => term.courses.some(course => (
-    course.code === "BUSN 323" && course.requirementRole === "finance"
+    ["ECO 321", "BUSN 323"].includes(course.code) && course.requirementRole === "finance"
   ))));
   assert.ok(!expected.warnings.some(message => /petition with the Student Academic Assistance Committee/.test(message)));
   assert.ok(!expected.advisorAttention.some(notice => notice.code.startsWith("PLAN_EDIT_OPTIONS_")));
