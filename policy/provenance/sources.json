@@ -561,6 +561,21 @@
       "anchors": ["N1"],
       "effective": { "from": "2026-11-23", "through": null },
       "supersedes": "Only the all-options coverage condition for infeasibility in OWNER-BUSN323-2026-2027-2026-09-28 when a separate obstacle is conclusively proven"
+    },
+    {
+      "sourceId": "OWNER-WORDING-2026-11-24",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "APPROVED_STUDENT_FACING_WORDING_ONLY",
+      "path": "policy/provenance/owner-wording-2026-11-24.md",
+      "confirmedOn": "2026-11-24",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "sha256": "53f21451bcfa27981cb30160a9c4fe8f180268f0a1b03a21a3df6aa870258565",
+      "effective": {
+        "from": "2026-11-24",
+        "through": null
+      },
+      "supersedes": "Only the listed wording, including the forms-location sentence in catalog-note-wording-2026-11-21.md"
     }
   ],
   "authorityHierarchy": [

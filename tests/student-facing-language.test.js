@@ -132,8 +132,8 @@ test("blocked-move summaries and course markers use student-facing language", ()
     "Schedule not yet published.");
   assert.equal(studentFriendlyUnavailableReason({ message: "Spring/May 2028 exceeds the total course limit." }),
     "Term full. Move a course out first.");
-  assert.equal(studentFriendlyUnavailableReason({ message: "ECO 214 is missing prerequisites: ECO 114." }),
-    "Take ECO 114 before this class.");
+  assert.equal(studentFriendlyUnavailableReason({ message: "ECO 214 is missing prerequisites: ECO 114." }, displayMessages),
+    "ECO 114 is a prerequisite for this class. Take it first.");
   assert.equal(studentFriendlyCourseMarker("Approval required"), "Approval needed");
   assert.equal(studentFriendlyCourseMarker("Eligibility review required"), "Ask an advisor whether this class counts");
   assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask your advisor and the Registrar to confirm senior standing");
@@ -235,9 +235,9 @@ test("capacity context never turns a valid choice or a different restriction int
   assert.equal(studentFriendlyUnavailableReason({status:"ALLOWED", message:capacity}), "This change passes the plan checks.");
   assert.equal(studentFriendlyUnavailableReason({status:"CONDITIONAL", message:capacity + " Projected placement; the exact schedule has not been published and may change."}),
     "This placement depends on the future schedule. Check it when the college publishes it.");
-  assert.equal(studentFriendlyUnavailableReason({message:"ECO 214 is missing prerequisites: ECO 114." + capacity}), "Take ECO 114 before this class.");
+  assert.equal(studentFriendlyUnavailableReason({message:"ECO 214 is missing prerequisites: ECO 114." + capacity}, displayMessages), "ECO 114 is a prerequisite for this class. Take it first.");
   assert.equal(studentFriendlyUnavailableReason({message:"ECO 222 is not listed in its complete Fall 2026 schedule scope." + capacity}), "This class isn’t listed in the published Fall 2026 schedule.");
-  assert.equal(studentFriendlyUnavailableReason({message:"At most one Economics elective may be planned in an unpublished Fall, Winter or May term." + capacity}), "Move the elective already here first.");
+  assert.equal(studentFriendlyUnavailableReason({message:"At most one Economics elective may be planned in an unpublished Fall, Winter or May term." + capacity}, displayMessages), "Move the elective already here first. The department usually offers only one Economics elective each Fall and Winter.");
 });
 
 test("move details explain course load, unpublished schedules, and concurrent approval plainly", async () => {
@@ -258,10 +258,39 @@ test("making room is suggested for capacity, never as a workaround for offering 
 
  test("concurrent move warning says what permission is for", async () => {
   const { studentFriendlyMoveCondition } = await import("../lib/planning/student-language.js");
-  assert.equal(studentFriendlyMoveCondition({ requiredApprovals: [{ type: "instructor", course: "ECO 213", prerequisite: "MAT 113" }] }, "MAT 113"), "Same term as ECO 213 — instructor approval needed.");
+  assert.equal(studentFriendlyMoveCondition({ requiredApprovals: [{ type: "instructor", course: "ECO 213", prerequisite: "MAT 113" }] }, "MAT 113", displayMessages), "Same term as ECO 213. One is a prerequisite for the other, so instructor approval is needed.");
 });
 
 test("moving a prerequisite explains which dependent course needs to move", () => {
-  assert.equal(studentFriendlyUnavailableReason({movingCourse: "MAT 113", message: "ECO 213 is missing prerequisites: MAT 113 / MAT 121."}), "ECO 213 needs MAT 113 first. Move ECO 213 later, then try again.");
-  assert.equal(studentFriendlyUnavailableReason({movingCourse: "ECO 321", message: "ECO 471 is missing prerequisites: ECO 321."}), "ECO 471 needs ECO 321 first. Move ECO 471 later, then try again.");
+  assert.equal(studentFriendlyUnavailableReason({movingCourse: "MAT 113", message: "ECO 213 is missing prerequisites: MAT 113 / MAT 121."}, displayMessages), "MAT 113 is a prerequisite for ECO 213 and must come first. Move ECO 213 later, then try again.");
+  assert.equal(studentFriendlyUnavailableReason({movingCourse: "ECO 321", message: "ECO 471 is missing prerequisites: ECO 321."}, displayMessages), "ECO 321 is a prerequisite for ECO 471 and must come first. Move ECO 471 later, then try again.");
+});
+
+
+test("every owner-approved D1 message has text in the active display catalog", () => {
+  const ids = [
+    "infeasibility.courseCapacity",
+    "history.scheduledPrerequisite",
+    "checklist.statisticsAlreadyFilled",
+    "checklist.prerequisiteNotCompleted",
+    "checklist.concurrentPrerequisite",
+    "catalog.petitionPlanCounts",
+    "catalog.petitionPlanMayUse",
+    "catalog.comprehensiveEvaluation",
+    "move.electiveAlreadyHere",
+    "move.dependentPrerequisite",
+    "move.takePrerequisiteFirst",
+    "move.prerequisiteMustComeFirst",
+    "move.mayOnlyUnconfirmed",
+    "move.mayOnlyUnconfirmedTermUnknown",
+    "move.sameTermPrerequisiteApproval",
+    "move.additionalSameTermApproval",
+    "move.advisorCheck",
+    "move.notOfferedOrAllowed",
+    "move.requirementUnmet"
+];
+  for (const id of ids) {
+    assert.equal(typeof displayMessages[id], "string", id);
+    assert.ok(displayMessages[id].trim(), id);
+  }
 });

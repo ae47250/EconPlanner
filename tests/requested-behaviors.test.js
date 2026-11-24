@@ -153,7 +153,7 @@ test("missing overload evidence keeps normal solver capacity and explains each r
       const html = renderEconomicsHtml(report,template);
       assert.match(html,/You saved room for 1 other course in Winter 2027/);
       assert.doesNotMatch(html,/More information needed to assess an advisor-approved overload/);
-    } else assert.ok(renderEconomicsHtml(report,template).includes("You have 5 required courses left and 2 terms left by May 2027. They cannot all fit. Choose a later graduation year or talk with your advisor."));
+    } else assert.ok(renderEconomicsHtml(report,template).includes("You have 5 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor."));
   }
 });
 

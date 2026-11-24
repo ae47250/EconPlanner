@@ -51,7 +51,7 @@ Things to keep in mind
 Before you register
 We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222. Check the registration system before you register.
 Check with your advisor
-This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
+This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
@@ -70,12 +70,12 @@ CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
+Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
 HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+ECO 461 also counts toward your Writing 2 (W2) requirement.
 Published schedules as of the plan date (November 22, 2026)
 Winter 2027:
 ECO 113 · Principles of Microeconomics
@@ -133,7 +133,7 @@ What to check for this plan
 Before you register
 We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222. Check the registration system before you register.
 Check with your advisor
-This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
+This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 PDF > Plan: Balanced > Checklist
 Your Economics major checklist
 TABLE HEADER: Requirement
@@ -177,14 +177,14 @@ CHECKLIST CELL: ECO 222 — Spring/May 2027
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.
+Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 27 | Balanced | Prepared November 22, 2026
 PDF > Plan: Balanced > Notes: Hanover Core
 Hanover Core
 HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+ECO 461 also counts toward your Writing 2 (W2) requirement.
 PDF > Plan: Balanced > Notes: Past Economics course offerings
 Past Economics course offerings
 Past Fall schedules included: ECO 357.

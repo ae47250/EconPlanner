@@ -1161,7 +1161,7 @@ test('concurrent move explains permission and details in plain language', async 
   await plan.getByRole('button', { name:/^Change MAT 113(?:-[A-Z])?$/ }).click();
   const menu = plan.getByRole('region', { name:/^Change MAT 113(?:-[A-Z])? options$/ });
   await menu.locator('[data-change-choice="move:fall-2027"]').click();
-  await expect(menu.locator('.change-confirm-warning')).toHaveText('Same term as ECO 213 — instructor approval needed.');
+  await expect(menu.locator('.change-confirm-warning')).toHaveText('Same term as ECO 213. One is a prerequisite for the other, so instructor approval is needed.');
   await menu.getByText('Full check details', { exact: true }).click();
   await expect(menu).toContainText('Taking MAT 113 and ECO 213 in the same term needs approval from the ECO 213 instructor.');
   await expect(menu).not.toContainText(/modeled units|Projected placement|concurrently/);

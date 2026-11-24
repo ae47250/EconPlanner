@@ -66,7 +66,7 @@ function AdvisorAttention({ plan }) {
             {note.description && <p>{note.description}</p>}
             <ul>{note.items.map((item, index) => (
               <li key={index}>
-                {item.code && <><strong>{item.code}</strong> </>}
+                {item.code && item.code !== "W2" && <><strong>{item.code}</strong> </>}
                 {item.label && <><strong>{item.label}</strong>: </>}
                 {item.lines ? item.lines.map(line => note.id === "upcoming"
                   ? <UpcomingCourseEntry key={line} line={line} />
