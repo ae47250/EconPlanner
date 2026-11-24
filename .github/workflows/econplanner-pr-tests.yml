@@ -72,6 +72,7 @@ jobs:
             tests/economics-generators.test.js \
             tests/economics-properties.test.js \
             tests/economics-strategy-ranking.test.js \
+            tests/plan-ranking-rules.test.js \
             tests/economics-candidate-pools.test.js \
             tests/economics-extra-courses.test.js \
             tests/economics-planning.test.js \
