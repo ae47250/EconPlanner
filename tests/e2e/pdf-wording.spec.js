@@ -106,7 +106,7 @@ test("early sophomore abroad plan shows consistent prerequisite and approval sen
   const card = await visitPlan(page, "one-year-early");
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
-  await expect(notes).toContainText("Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department.");
+  await expect(notes).toContainText("Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.");
   await expect(notes).toContainText("Before taking ECO 214 in Winter 2027, finish ECO 114.");
   await expect(notes).toContainText("This plan has 3 Economics courses in Winter 2027. The department prefers no more than 2 per term, but the term is still within the normal course load.");
   await expect(notes).not.toContainText("Complete ECO 114 before taking");
@@ -127,6 +127,6 @@ test("junior plan notes name the catalog difference instead of the generic petit
   const notes = card.locator("[data-plan-conditions]");
   await expect(notes).toContainText("This plan uses the current Economics major requirements.");
   await expect(notes).toContainText("Your plan counts BUSN 323. Your 2024–25 catalog does not accept it.");
-  await expect(notes).toContainText("Ask your advisor to help you file a petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.");
+  await expect(notes).toContainText("Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.");
   await expect(notes).not.toContainText("Please help the student submit the routine SAC petition");
 });

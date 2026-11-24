@@ -14,9 +14,9 @@ test("both plan views use the same course-moving instructions", async ({ page })
 
 test("Student readiness explains each displayed status", async ({ page }) => {
   const cases = [
-    ["STUDENT_READY", "COMPLETE_STUDENT_READY", "Ready to plan", "These plans meet the major rules. Seats are not confirmed, so check the registration system before you register."],
-    ["READY_WITH_CONDITIONS", "COMPLETE_READY_WITH_CONDITIONS", "Needs confirmation", "These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions."],
-    ["ADVISOR_ACTION_REQUIRED", "COMPLETE_ADVISOR_ACTION_REQUIRED", "Needs advisor attention", "Something in your answers needs your advisor to check it before you rely on these plans."]
+    ["STUDENT_READY", "COMPLETE_STUDENT_READY", "Ready to plan", "The plan meets the major rules. Check seats and future schedules before you register."],
+    ["READY_WITH_CONDITIONS", "COMPLETE_READY_WITH_CONDITIONS", "Needs confirmation", "Check this plan's approval and standing notes before registering."],
+    ["ADVISOR_ACTION_REQUIRED", "COMPLETE_ADVISOR_ACTION_REQUIRED", "Needs advisor attention", "Ask your advisor to review the reason below before relying on this plan."]
   ];
   for (const [readinessStatus, planDisposition, label, explanation] of cases) {
     await openFixtureResult(page, plannerResultFixture({ plans: [fixturePlan({ readinessStatus, planDisposition })] }));
@@ -42,7 +42,7 @@ test("a junior's custom one-year-early ECO 461 plan displays Needs confirmation"
   const result = (await response.json()).programs.find(item => item.program.id === "economics-base");
   expect(result.economicsPlans[0].readinessStatus).toBe("READY_WITH_CONDITIONS");
   await expect(page.locator(".result-status-value")).toHaveText("Needs confirmation");
-  await expect(page.locator(".result-status-reason").first()).toHaveText("These plans work only if the conditions shown on them are met, such as an instructor's permission or confirmed senior standing. Check each plan's conditions.");
+  await expect(page.locator(".result-status-reason").first()).toHaveText("Check this plan's approval and standing notes before registering. See the notes below for paperwork to file.");
   await expect(page.locator(".comparison-course-status > p").first()).toContainText("Class standingJunior (custom graduation year)");
   await expect(page.locator(".comparison-student strong")).toHaveText("Junior (custom graduation year)");
   const balanced = page.locator('article[data-plan-id="balanced"]');

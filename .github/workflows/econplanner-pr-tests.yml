@@ -73,6 +73,7 @@ jobs:
             tests/economics-properties.test.js \
             tests/economics-strategy-ranking.test.js \
             tests/economics-candidate-pools.test.js \
+            tests/economics-extra-courses.test.js \
             tests/economics-planning.test.js \
             tests/economics-plan-editing-api.test.js \
             tests/economics-replacement-moves.test.js \
@@ -98,6 +99,7 @@ jobs:
             tests/economics-schedule.test.js \
             tests/finance-elective-correction.test.js \
             tests/graduation-first-planning.test.js \
+            tests/graduation-solver-architecture.test.js \
             tests/hanover-catalog-watch.test.js \
             tests/mcp-handoff.test.js \
             tests/n1-independent-infeasibility.test.js \
@@ -192,6 +194,8 @@ jobs:
           tests/e2e/requested-behaviors.spec.js
           tests/e2e/plan-notes-evidence.spec.js
           tests/e2e/econ-planner-parity.spec.js
+          tests/e2e/finance-elective-correction.spec.js
+          tests/e2e/mcp-handoff.spec.js
           --fully-parallel --workers=1 --shard=${{ matrix.shard }}/4
 
       - name: Upload Playwright failure evidence

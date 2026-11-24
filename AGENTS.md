@@ -28,6 +28,7 @@
 ## Authorization and Sensitive Data
 
 - Obtain explicit user authorization before committing, pushing, opening or modifying a pull request, merging, deploying, changing environment variables, modifying Production, activating or configuring an external service, or performing a destructive action.
+- Stop and ask before overriding any recorded owner decision in policy/provenance/, including nonacademic ranking and wording preferences.
 - Protect student information, credentials, authentication material, environment secrets, sensitive logs, and generated artifacts. Use fictional student data for tests; do not print, download, copy into source control, or expose real secrets or student-sensitive data. `.env.local.example` contains placeholders only; real values remain outside source control.
 
 ## Code Review Rules

@@ -142,7 +142,7 @@ test("sophomore early abroad plan uses consistent prerequisite and department-ap
   const result = await economics(student);
   const plan = result.economicsPlans.find(item => item.id === "one-year-early");
   assert.ok(plan);
-  assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department. No approval is recorded yet."));
+  assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register."));
   const prerequisites = plan.planConditions.filter(item => item.kind === "prerequisite");
   assert.ok(prerequisites.length > 0);
   assert.ok(prerequisites.every(item => /^Before taking .+, finish .+\.$/.test(item.message)));
