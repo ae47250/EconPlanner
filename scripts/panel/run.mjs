@@ -43,7 +43,7 @@ console.info = (...args) => {
   originalConsoleInfo(...args);
 };
 const sourceForSection = {
-  SCREEN: { file: "app/page.js", function: "PlanComparisonScreen" },
+  SCREEN: { file: "app/components/PlanComparisonScreen.js", function: "PlanComparisonScreen" },
   PDF: { file: "lib/reports/economics-html.js", function: "renderEconomicsHtml" }
 };
 const sorted = values => [...new Set(values)].sort((a, b) => a.localeCompare(b, "en-US", { numeric: true }));

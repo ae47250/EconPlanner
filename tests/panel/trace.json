@@ -102,7 +102,7 @@
   ],
   "sources": [
     {
-      "file": "app/page.js",
+      "file": "app/components/PlanComparisonScreen.js",
       "function": "PlanComparisonScreen",
       "studentIds": [
         "01",
@@ -8351,7 +8351,7 @@
       "section": "SCREEN",
       "sentence": "— Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8396,7 +8396,7 @@
       "section": "SCREEN",
       "sentence": "— Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8441,7 +8441,7 @@
       "section": "SCREEN",
       "sentence": "— Mon/Wed/Fri, 10:40–11:50 a.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8485,7 +8485,7 @@
       "section": "SCREEN",
       "sentence": "— Mon/Wed/Fri, 9:20–10:30 a.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8529,7 +8529,7 @@
       "section": "SCREEN",
       "sentence": "— Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8573,7 +8573,7 @@
       "section": "SCREEN",
       "sentence": "— Tue/Thu, 10:00–11:45 a.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8617,7 +8617,7 @@
       "section": "SCREEN",
       "sentence": "— Tue/Thu, 12:20–2:05 p.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8661,7 +8661,7 @@
       "section": "SCREEN",
       "sentence": "— Tue/Thu, 8:00–9:45 a.m.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8705,7 +8705,7 @@
       "section": "SCREEN",
       "sentence": "?",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8718,7 +8718,7 @@
       "section": "SCREEN",
       "sentence": "·",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8778,7 +8778,7 @@
       "section": "SCREEN",
       "sentence": "○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8823,7 +8823,7 @@
       "section": "SCREEN",
       "sentence": "◐ In progress",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8837,7 +8837,7 @@
       "section": "SCREEN",
       "sentence": "✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8877,7 +8877,7 @@
       "section": "SCREEN",
       "sentence": "2 additional Economics electives are needed beyond the standard term limit to finish by Spring/May 2026.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8888,7 +8888,7 @@
       "section": "SCREEN",
       "sentence": "About you",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8948,7 +8948,7 @@
       "section": "SCREEN",
       "sentence": "Actual offerings may differ.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -8979,7 +8979,7 @@
       "section": "SCREEN",
       "sentence": "Add Econ course",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9024,7 +9024,7 @@
       "section": "SCREEN",
       "sentence": "An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9035,7 +9035,7 @@
       "section": "SCREEN",
       "sentence": "AP credit",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9047,7 +9047,7 @@
       "section": "SCREEN",
       "sentence": "AP credit AP/exam credit.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9059,7 +9059,7 @@
       "section": "SCREEN",
       "sentence": "Ask the ECO 213 instructor about same-term approval.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9070,7 +9070,7 @@
       "section": "SCREEN",
       "sentence": "Ask the ECO 213 instructor for approval.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9081,7 +9081,7 @@
       "section": "SCREEN",
       "sentence": "Ask your advisor and the Registrar to confirm you can take ECO 461 then.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9095,7 +9095,7 @@
       "section": "SCREEN",
       "sentence": "Ask your advisor before relying on it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9106,7 +9106,7 @@
       "section": "SCREEN",
       "sentence": "Ask your advisor to check.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9120,7 +9120,7 @@
       "section": "SCREEN",
       "sentence": "Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9146,7 +9146,7 @@
       "section": "SCREEN",
       "sentence": "Ask your advisor to review the reason below before relying on this plan.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9165,7 +9165,7 @@
       "section": "SCREEN",
       "sentence": "Ask your advisor whether you still need to take it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9188,7 +9188,7 @@
       "section": "SCREEN",
       "sentence": "Balanced",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9233,7 +9233,7 @@
       "section": "SCREEN",
       "sentence": "Balanced: No complete plan found",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9247,7 +9247,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9258,7 +9258,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 213 in Fall 2027, finish ECO 113 and MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9270,7 +9270,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 213 in Fall 2027, finish ECO 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9281,7 +9281,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 213 in Fall 2027, finish MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9292,7 +9292,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9304,7 +9304,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9317,7 +9317,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9328,7 +9328,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 121.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9339,7 +9339,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9352,7 +9352,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9365,7 +9365,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 121.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9376,7 +9376,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9388,7 +9388,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 221 and ECO 321 in Winter 2027, finish ECO 113.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9399,7 +9399,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9410,7 +9410,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 222 in Spring/May 2027, finish ECO 114.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9422,7 +9422,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2027, finish MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9434,7 +9434,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 213 and ECO 214.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9445,7 +9445,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9459,7 +9459,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 213.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9470,7 +9470,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9484,7 +9484,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9495,7 +9495,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9511,7 +9511,7 @@
       "section": "SCREEN",
       "sentence": "Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9524,7 +9524,7 @@
       "section": "SCREEN",
       "sentence": "Before you register",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9569,7 +9569,7 @@
       "section": "SCREEN",
       "sentence": "Bring this page to your advisor.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9580,7 +9580,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 160 · ECO 161 · ECO 213 · ECO 214 · ECO 257 · ECO 333 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9591,7 +9591,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 161 · ECO 213 · ECO 214 · ECO 221 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9602,7 +9602,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 221 · ECO 234 · ECO 333 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9616,7 +9616,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 221 · ECO 234 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9627,7 +9627,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 234 · ECO 321 · ECO 333 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9638,7 +9638,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 234 · ECO 333 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9653,7 +9653,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 234 · ECO 333 · MAT 121 · PSY 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9664,7 +9664,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9675,7 +9675,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 234 · ECO 333 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9688,7 +9688,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 · ECO 113 · ECO 114 · ECO 214 · ECO 234 · ECO 333 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9699,7 +9699,7 @@
       "section": "SCREEN",
       "sentence": "BUSN 323 (transfer) · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 234 · ECO 321 · ECO 333 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9710,7 +9710,7 @@
       "section": "SCREEN",
       "sentence": "Change your graduation term or study-abroad choice and try again.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9721,7 +9721,7 @@
       "section": "SCREEN",
       "sentence": "Check seats and future schedules before you register.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9766,7 +9766,7 @@
       "section": "SCREEN",
       "sentence": "Check the approval and standing notes on each plan before registering.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9779,7 +9779,7 @@
       "section": "SCREEN",
       "sentence": "Check the published schedule before you register.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9824,7 +9824,7 @@
       "section": "SCREEN",
       "sentence": "Check the registration system before you register.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9869,7 +9869,7 @@
       "section": "SCREEN",
       "sentence": "Check the registration system for current availability.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9880,7 +9880,7 @@
       "section": "SCREEN",
       "sentence": "Check this plan's approval and standing notes before registering.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9896,7 +9896,7 @@
       "section": "SCREEN",
       "sentence": "Check with your advisor",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9938,7 +9938,7 @@
       "section": "SCREEN",
       "sentence": "Check with your advisor.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9950,7 +9950,7 @@
       "section": "SCREEN",
       "sentence": "Check your statistics answer or ask your advisor about a later graduation date.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9962,7 +9962,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 113 ECO 113 — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9974,7 +9974,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 113 ECO 113 — Taking now ◐ In progress",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -9985,7 +9985,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 113 ECO 113 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10000,7 +10000,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 113 ECO 113 ?",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10013,7 +10013,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 113 ECO 113 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10049,7 +10049,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 114 ECO 114 — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10060,7 +10060,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10076,7 +10076,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 114 ECO 114 ?",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10087,7 +10087,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10124,7 +10124,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10147,7 +10147,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Fall 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10159,7 +10159,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Taking now ◐ In progress Taking MAT 121 now.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10170,7 +10170,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10183,7 +10183,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned Approval needed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10195,7 +10195,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10220,7 +10220,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed ECO 113 marked Taking now rather than done before this class.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10231,7 +10231,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed ECO 113 not marked done before this class.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10242,7 +10242,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 not marked done before this class.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10253,7 +10253,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10268,7 +10268,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Fall 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10282,7 +10282,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Taking now ◐ In progress ECO 114 not marked done before this class.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10293,7 +10293,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10309,7 +10309,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10322,7 +10322,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10339,7 +10339,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned Approval needed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10350,7 +10350,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Winter 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10362,7 +10362,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10385,7 +10385,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10405,7 +10405,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned Approval needed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10418,7 +10418,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned Ask your advisor and the Registrar to confirm senior standing.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10430,7 +10430,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10449,7 +10449,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned Approval needed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10462,7 +10462,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10477,7 +10477,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned Ask your advisor and the Registrar to confirm senior standing.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10489,7 +10489,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10502,7 +10502,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO 161 — Winter 2027 ○ Planned Counts as your one 100-level elective.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10514,7 +10514,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO 161 ✓ Completed Counts as your one 100-level elective.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10526,7 +10526,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO 221 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10541,7 +10541,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO 221 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10556,7 +10556,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10573,7 +10573,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO 234 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10592,7 +10592,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10604,7 +10604,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10615,7 +10615,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — May 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10629,7 +10629,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10641,7 +10641,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO 221 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10652,7 +10652,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO 222 — May 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10669,7 +10669,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO 234 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10684,7 +10684,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO 333 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10704,7 +10704,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10718,7 +10718,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10729,7 +10729,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10746,7 +10746,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10758,7 +10758,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10770,7 +10770,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10783,7 +10783,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO 161 — Winter 2027 ○ Planned Counts as your one 100-level elective.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10794,7 +10794,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO 221 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10814,7 +10814,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO 222 — May 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10825,7 +10825,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO 224 — May 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10836,7 +10836,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO 333 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10850,7 +10850,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10866,7 +10866,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10883,7 +10883,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10896,7 +10896,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10907,7 +10907,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10920,7 +10920,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10934,7 +10934,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10945,7 +10945,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10970,7 +10970,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -10992,7 +10992,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11009,7 +11009,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2030 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11022,7 +11022,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance BUSN 323 — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11035,7 +11035,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance BUSN 323 — Fall 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11051,7 +11051,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance BUSN 323 — Fall 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11064,7 +11064,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance BUSN 323 — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11076,7 +11076,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance BUSN 323 — Winter 2029 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11087,7 +11087,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance BUSN 323 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11107,7 +11107,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11129,7 +11129,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Finance ECO 321 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11142,7 +11142,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 113 — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11155,7 +11155,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11170,7 +11170,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned Approval needed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11181,7 +11181,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 113 — Winter 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11193,7 +11193,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 113 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11204,7 +11204,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 121 — Taking now ◐ In progress",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11215,7 +11215,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 121 ?",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11228,7 +11228,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Mathematics MAT 121 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11261,7 +11261,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics ECO 257 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11274,7 +11274,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11285,7 +11285,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 — Fall 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11298,7 +11298,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 — May 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11312,7 +11312,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 — May 2028 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11324,7 +11324,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 — Taking now ◐ In progress",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11335,7 +11335,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 — Winter 2027 ○ Planned",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11357,7 +11357,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11379,7 +11379,7 @@
       "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics PSY 217 ✓ Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11391,7 +11391,7 @@
       "section": "SCREEN",
       "sentence": "Choose a later graduation year or talk with your advisor.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11407,7 +11407,7 @@
       "section": "SCREEN",
       "sentence": "Class standing",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11467,7 +11467,7 @@
       "section": "SCREEN",
       "sentence": "Classes that need another class first are scheduled later.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11486,7 +11486,7 @@
       "section": "SCREEN",
       "sentence": "Classes to finish first",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11517,7 +11517,7 @@
       "section": "SCREEN",
       "sentence": "Clear all",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11577,7 +11577,7 @@
       "section": "SCREEN",
       "sentence": "Click a course to see where it can move.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11622,7 +11622,7 @@
       "section": "SCREEN",
       "sentence": "Compare your course plans",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11642,7 +11642,7 @@
       "section": "SCREEN",
       "sentence": "Completed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11702,7 +11702,7 @@
       "section": "SCREEN",
       "sentence": "Confirm with your advisor that it counts.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11715,7 +11715,7 @@
       "section": "SCREEN",
       "sentence": "Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11726,7 +11726,7 @@
       "section": "SCREEN",
       "sentence": "Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11737,7 +11737,7 @@
       "section": "SCREEN",
       "sentence": "Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11748,7 +11748,7 @@
       "section": "SCREEN",
       "sentence": "Courses in future years",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11779,7 +11779,7 @@
       "section": "SCREEN",
       "sentence": "Download PDF Report: Balanced",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11824,7 +11824,7 @@
       "section": "SCREEN",
       "sentence": "Download PDF Report: Explore the Major",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11843,7 +11843,7 @@
       "section": "SCREEN",
       "sentence": "Download PDF Report: One Year Early",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11855,7 +11855,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11867,7 +11867,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11879,7 +11879,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 160 · ECO 161",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11890,7 +11890,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 161 · ECO 213 · ECO 214 · ECO 221 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11901,7 +11901,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 221 · ECO 234 · ECO 257 · ECO 333 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11912,7 +11912,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 221 · ECO 234 · ECO 333 · MAT 121 · PSY 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11923,7 +11923,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 333 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11934,7 +11934,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 213 · ECO 214 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11946,7 +11946,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 213 · ECO 234 · ECO 333 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11958,7 +11958,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 257 · MAT 113 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11969,7 +11969,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · ECO 321 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11980,7 +11980,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -11993,7 +11993,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · ECO 114 · MAT 121 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12004,7 +12004,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12015,7 +12015,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12026,7 +12026,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 · Principles of Microeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12070,7 +12070,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 (AP) · ECO 114 (AP) · MAT 121 (AP)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12081,7 +12081,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 (AP) · MAT 121 (AP)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12092,7 +12092,7 @@
       "section": "SCREEN",
       "sentence": "ECO 113 (transfer) · ECO 114 · MAT 121 (transfer)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12103,7 +12103,7 @@
       "section": "SCREEN",
       "sentence": "ECO 114 · ECO 213 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12115,7 +12115,7 @@
       "section": "SCREEN",
       "sentence": "ECO 114 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12126,7 +12126,7 @@
       "section": "SCREEN",
       "sentence": "ECO 114 · Principles of Macroeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12170,7 +12170,7 @@
       "section": "SCREEN",
       "sentence": "ECO 160 does not count toward the major because only one 100-level Economics elective can count.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12182,7 +12182,7 @@
       "section": "SCREEN",
       "sentence": "ECO 161 · Foundations of Economics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12226,7 +12226,7 @@
       "section": "SCREEN",
       "sentence": "ECO 213 · MAT 121",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12237,7 +12237,7 @@
       "section": "SCREEN",
       "sentence": "ECO 214",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12248,7 +12248,7 @@
       "section": "SCREEN",
       "sentence": "ECO 214 · Intermediate Macroeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12292,7 +12292,7 @@
       "section": "SCREEN",
       "sentence": "ECO 221 · Environmental Economics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12336,7 +12336,7 @@
       "section": "SCREEN",
       "sentence": "ECO 222 · Economics of the European Union",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12381,7 +12381,7 @@
       "section": "SCREEN",
       "sentence": "ECO 224 · Introduction to Sustainability",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12426,7 +12426,7 @@
       "section": "SCREEN",
       "sentence": "ECO 234 · Rational Choices",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12471,7 +12471,7 @@
       "section": "SCREEN",
       "sentence": "ECO 321 · Money and Financial Markets",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12515,7 +12515,7 @@
       "section": "SCREEN",
       "sentence": "ECO 461 · Senior Seminar: Econometrics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12559,7 +12559,7 @@
       "section": "SCREEN",
       "sentence": "ECO 461 cannot fit before this graduation target without senior standing.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12571,7 +12571,7 @@
       "section": "SCREEN",
       "sentence": "ECO 461 is offered only in Winter.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12583,7 +12583,7 @@
       "section": "SCREEN",
       "sentence": "EconPlanner",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12643,7 +12643,7 @@
       "section": "SCREEN",
       "sentence": "EconPlanner is a planning guide, not an official degree audit.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12703,7 +12703,7 @@
       "section": "SCREEN",
       "sentence": "Explore the Major",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12722,7 +12722,7 @@
       "section": "SCREEN",
       "sentence": "Finance and the other required courses do not fit by your graduation target.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12733,7 +12733,7 @@
       "section": "SCREEN",
       "sentence": "Finance choices: ECO 321 or BUSN 323.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12778,7 +12778,7 @@
       "section": "SCREEN",
       "sentence": "For terms without a published schedule, this plan assumes no more than one Economics elective per term.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12809,7 +12809,7 @@
       "section": "SCREEN",
       "sentence": "Forms are at the Registrar's Office.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12835,7 +12835,7 @@
       "section": "SCREEN",
       "sentence": "Freshman",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12847,7 +12847,7 @@
       "section": "SCREEN",
       "sentence": "Freshman (custom graduation year)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12859,7 +12859,7 @@
       "section": "SCREEN",
       "sentence": "Freshman (graduating one year early)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12870,7 +12870,7 @@
       "section": "SCREEN",
       "sentence": "Future schedules can change.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12915,7 +12915,7 @@
       "section": "SCREEN",
       "sentence": "Graduate next year: Not possible",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12929,7 +12929,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -12989,7 +12989,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target: May 2026",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13000,7 +13000,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target: May 2027",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13035,7 +13035,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target: May 2028",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13059,7 +13059,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target: May 2028 (one year early: May 2027)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13070,7 +13070,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target: May 2029",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13086,7 +13086,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target: May 2030",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13098,7 +13098,7 @@
       "section": "SCREEN",
       "sentence": "Graduation target: May 2030 (one year early: May 2029)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13109,7 +13109,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: BUSN 323 ▾ | Investments",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13132,7 +13132,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 113 | Principles of Microeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13143,7 +13143,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 113 ▾ | Principles of Microeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13155,7 +13155,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 113-J ▾ | Principles of Microeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13169,7 +13169,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 113-K ▾ | Principles of Microeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13181,7 +13181,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 114 ▾ | Principles of Macroeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13192,7 +13192,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 114-J ▾ | Principles of Macroeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13208,7 +13208,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 161-J ▾ | Foundations of Economics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13221,7 +13221,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 213 | Intermediate Microeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13232,7 +13232,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 213 ▾ | Intermediate Microeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13258,7 +13258,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 214 | Intermediate Macroeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13269,7 +13269,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13292,7 +13292,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 214-J ▾ | Intermediate Macroeconomics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13311,7 +13311,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 221-J ▾ | Environmental Economics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13337,7 +13337,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 222-S ▾ | Economics of the European Union",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13376,7 +13376,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 224-S ▾ | Introduction to Sustainability",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13387,7 +13387,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 321-J ▾ | Money and Financial Markets",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13409,7 +13409,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 461 | Senior Seminar: Econometrics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13440,7 +13440,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: ECO 461-J | Senior Seminar: Econometrics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13465,7 +13465,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: Economics elective (200 level or higher) ▾",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13496,7 +13496,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 113 ▾ | Essential Pre-Calculus",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13509,7 +13509,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 113-J ▾ | Essential Pre-Calculus",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13525,7 +13525,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 121 | Calculus I",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13536,7 +13536,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 217 | Applied Statistics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13547,7 +13547,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 217 ▾ | Applied Statistics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13562,7 +13562,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 217-A ▾ | Applied Statistics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13573,7 +13573,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 217-J ▾ | Applied Statistics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13591,7 +13591,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 217-K ▾ | Applied Statistics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13605,7 +13605,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: MAT 217-S ▾ | Applied Statistics",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13619,7 +13619,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: No Economics course this term",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13634,7 +13634,7 @@
       "section": "SCREEN",
       "sentence": "GRID ROW: Study abroad",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13645,7 +13645,7 @@
       "section": "SCREEN",
       "sentence": "Highlight differences",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13665,7 +13665,7 @@
       "section": "SCREEN",
       "sentence": "HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13705,7 +13705,7 @@
       "section": "SCREEN",
       "sentence": "HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13720,7 +13720,7 @@
       "section": "SCREEN",
       "sentence": "If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13731,7 +13731,7 @@
       "section": "SCREEN",
       "sentence": "If that was a mistake, change one of them.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13742,7 +13742,7 @@
       "section": "SCREEN",
       "sentence": "If you finished ECO 113 or have transfer/AP credit for it, mark it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13753,7 +13753,7 @@
       "section": "SCREEN",
       "sentence": "If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13764,7 +13764,7 @@
       "section": "SCREEN",
       "sentence": "If you finished one or are taking it now, mark it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13775,7 +13775,7 @@
       "section": "SCREEN",
       "sentence": "Its future offering is not confirmed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13798,7 +13798,7 @@
       "section": "SCREEN",
       "sentence": "Junior",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13821,7 +13821,7 @@
       "section": "SCREEN",
       "sentence": "Junior (custom graduation year)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13832,7 +13832,7 @@
       "section": "SCREEN",
       "sentence": "Junior (graduating one year early)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13843,7 +13843,7 @@
       "section": "SCREEN",
       "sentence": "Major requirements checklist",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13888,7 +13888,7 @@
       "section": "SCREEN",
       "sentence": "MAT 121 is marked “Taking now.”",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13899,7 +13899,7 @@
       "section": "SCREEN",
       "sentence": "MAT 217",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13910,7 +13910,7 @@
       "section": "SCREEN",
       "sentence": "MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13922,7 +13922,7 @@
       "section": "SCREEN",
       "sentence": "Math choices: MAT 113 or MAT 121.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13967,7 +13967,7 @@
       "section": "SCREEN",
       "sentence": "May 2026",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -13978,7 +13978,7 @@
       "section": "SCREEN",
       "sentence": "May 2027",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14018,7 +14018,7 @@
       "section": "SCREEN",
       "sentence": "May 2027:",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14063,7 +14063,7 @@
       "section": "SCREEN",
       "sentence": "May 2028",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14088,7 +14088,7 @@
       "section": "SCREEN",
       "sentence": "May 2028 (one year early: May 2027)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14099,7 +14099,7 @@
       "section": "SCREEN",
       "sentence": "May 2029",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14116,7 +14116,7 @@
       "section": "SCREEN",
       "sentence": "May 2030",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14129,7 +14129,7 @@
       "section": "SCREEN",
       "sentence": "May 2030 (one year early: May 2029)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14140,7 +14140,7 @@
       "section": "SCREEN",
       "sentence": "More about this plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14185,7 +14185,7 @@
       "section": "SCREEN",
       "sentence": "More planning details",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14199,7 +14199,7 @@
       "section": "SCREEN",
       "sentence": "Needs advisor attention",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14222,7 +14222,7 @@
       "section": "SCREEN",
       "sentence": "Needs confirmation",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14241,7 +14241,7 @@
       "section": "SCREEN",
       "sentence": "No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14255,7 +14255,7 @@
       "section": "SCREEN",
       "sentence": "No plan fits with the room saved for other courses.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14267,7 +14267,7 @@
       "section": "SCREEN",
       "sentence": "No plan fits with these study-abroad terms.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14278,7 +14278,7 @@
       "section": "SCREEN",
       "sentence": "None",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14334,7 +14334,7 @@
       "section": "SCREEN",
       "sentence": "Not possible",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14355,7 +14355,7 @@
       "section": "SCREEN",
       "sentence": "NOTE: Approval needed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14371,7 +14371,7 @@
       "section": "SCREEN",
       "sentence": "NOTE: Ask your advisor and the Registrar to confirm senior standing",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14385,7 +14385,7 @@
       "section": "SCREEN",
       "sentence": "NOTE: Check this class’s enrollment status",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14396,7 +14396,7 @@
       "section": "SCREEN",
       "sentence": "NOTE: Future offering unconfirmed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14427,7 +14427,7 @@
       "section": "SCREEN",
       "sentence": "NOTE: Offered only in Winter.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14472,7 +14472,7 @@
       "section": "SCREEN",
       "sentence": "NOTE: Scheduled after ECO 213, which you marked completed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14484,7 +14484,7 @@
       "section": "SCREEN",
       "sentence": "NOTE: Seat availability not confirmed",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14529,7 +14529,7 @@
       "section": "SCREEN",
       "sentence": "One Year Early",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14541,7 +14541,7 @@
       "section": "SCREEN",
       "sentence": "One Year Early: No complete plan found",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14552,7 +14552,7 @@
       "section": "SCREEN",
       "sentence": "One Year Early: No complete plan found — These requirements did not fit by May 2027: ECO 213",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14565,7 +14565,7 @@
       "section": "SCREEN",
       "sentence": "One-year-early target",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14579,7 +14579,7 @@
       "section": "SCREEN",
       "sentence": "Only one plan fits your situation.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14590,7 +14590,7 @@
       "section": "SCREEN",
       "sentence": "Other graduation requirements",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14635,7 +14635,7 @@
       "section": "SCREEN",
       "sentence": "Otherwise your advisor will check it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14648,7 +14648,7 @@
       "section": "SCREEN",
       "sentence": "Plans fewer major classes this year than Balanced.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14667,7 +14667,7 @@
       "section": "SCREEN",
       "sentence": "Possible",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14679,7 +14679,7 @@
       "section": "SCREEN",
       "sentence": "Published schedules as of the plan date (August 25, 2026)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14690,7 +14690,7 @@
       "section": "SCREEN",
       "sentence": "Published schedules as of the plan date (January 12, 2027)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14701,7 +14701,7 @@
       "section": "SCREEN",
       "sentence": "Published schedules as of the plan date (November 22, 2026)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14744,7 +14744,7 @@
       "section": "SCREEN",
       "sentence": "Ready to plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14773,7 +14773,7 @@
       "section": "SCREEN",
       "sentence": "Regenerate all plans",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14833,7 +14833,7 @@
       "section": "SCREEN",
       "sentence": "Regenerate this plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14878,7 +14878,7 @@
       "section": "SCREEN",
       "sentence": "Requirement | Course / term | Status",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14923,7 +14923,7 @@
       "section": "SCREEN",
       "sentence": "Review graduation timeline",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14944,7 +14944,7 @@
       "section": "SCREEN",
       "sentence": "Review my answers",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14955,7 +14955,7 @@
       "section": "SCREEN",
       "sentence": "Review the details below with your academic advisor.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14966,7 +14966,7 @@
       "section": "SCREEN",
       "sentence": "Review your choices",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14977,7 +14977,7 @@
       "section": "SCREEN",
       "sentence": "Review your graduation timeline and bring this result to your academic advisor.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -14996,7 +14996,7 @@
       "section": "SCREEN",
       "sentence": "Save less room",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15008,7 +15008,7 @@
       "section": "SCREEN",
       "sentence": "Save room for fewer courses and try again.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15020,7 +15020,7 @@
       "section": "SCREEN",
       "sentence": "See the notes below for paperwork to file.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15046,7 +15046,7 @@
       "section": "SCREEN",
       "sentence": "Senior",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15080,7 +15080,7 @@
       "section": "SCREEN",
       "sentence": "Sophomore",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15095,7 +15095,7 @@
       "section": "SCREEN",
       "sentence": "Sophomore (custom graduation year)",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15106,7 +15106,7 @@
       "section": "SCREEN",
       "sentence": "Spreads the required classes you still need across the years before you graduate.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15151,7 +15151,7 @@
       "section": "SCREEN",
       "sentence": "Standard plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15163,7 +15163,7 @@
       "section": "SCREEN",
       "sentence": "Standard target",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15177,7 +15177,7 @@
       "section": "SCREEN",
       "sentence": "Statistics (ECO 257 or MAT 217 or PSY 217) must be done first.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15189,7 +15189,7 @@
       "section": "SCREEN",
       "sentence": "Statistics choices: ECO 257, MAT 217 or PSY 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15234,7 +15234,7 @@
       "section": "SCREEN",
       "sentence": "Status",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15294,7 +15294,7 @@
       "section": "SCREEN",
       "sentence": "Status: Needs advisor attention",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15313,7 +15313,7 @@
       "section": "SCREEN",
       "sentence": "STATUS: Needs advisor attention",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15332,7 +15332,7 @@
       "section": "SCREEN",
       "sentence": "Status: Needs confirmation",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15351,7 +15351,7 @@
       "section": "SCREEN",
       "sentence": "STATUS: Needs confirmation",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15370,7 +15370,7 @@
       "section": "SCREEN",
       "sentence": "Status: Ready to plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15399,7 +15399,7 @@
       "section": "SCREEN",
       "sentence": "STATUS: Ready to plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15428,7 +15428,7 @@
       "section": "SCREEN",
       "sentence": "Study abroad",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15440,7 +15440,7 @@
       "section": "SCREEN",
       "sentence": "Study abroad leaves no room for major courses in Winter 2027 and May 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15451,7 +15451,7 @@
       "section": "SCREEN",
       "sentence": "Study abroad: Winter 2027",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15462,7 +15462,7 @@
       "section": "SCREEN",
       "sentence": "Study abroad: Winter 2027 and Spring/May 2027",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15473,7 +15473,7 @@
       "section": "SCREEN",
       "sentence": "Take MAT 113 before ECO 213.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15484,7 +15484,7 @@
       "section": "SCREEN",
       "sentence": "Take MAT 113 before ECO 214.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15495,7 +15495,7 @@
       "section": "SCREEN",
       "sentence": "Taking both in one term needs the ECO 213 instructor's approval.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15506,7 +15506,7 @@
       "section": "SCREEN",
       "sentence": "Taking both in one term needs the ECO 214 instructor's approval.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15517,7 +15517,7 @@
       "section": "SCREEN",
       "sentence": "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15529,7 +15529,7 @@
       "section": "SCREEN",
       "sentence": "Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15542,7 +15542,7 @@
       "section": "SCREEN",
       "sentence": "Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15553,7 +15553,7 @@
       "section": "SCREEN",
       "sentence": "Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15564,7 +15564,7 @@
       "section": "SCREEN",
       "sentence": "Taking now",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15624,7 +15624,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2026/2027 Fall",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15635,7 +15635,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2026/2027 Fall 2026",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15649,7 +15649,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2026/2027 May",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15694,7 +15694,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2026/2027 Winter",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15739,7 +15739,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2027/2028 Fall",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15770,7 +15770,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2027/2028 May",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15801,7 +15801,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2027/2028 Winter",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15832,7 +15832,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2028/2029 Fall",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15851,7 +15851,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2028/2029 May",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15870,7 +15870,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2028/2029 Winter",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15889,7 +15889,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2029/2030 Fall",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15902,7 +15902,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2029/2030 May",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15915,7 +15915,7 @@
       "section": "SCREEN",
       "sentence": "TERM: 2029/2030 Winter",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15928,7 +15928,7 @@
       "section": "SCREEN",
       "sentence": "That leaves too little room for the major.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15940,7 +15940,7 @@
       "section": "SCREEN",
       "sentence": "The department prefers no more than 2 per term, and this term uses an advisor-approved overload.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15952,7 +15952,7 @@
       "section": "SCREEN",
       "sentence": "The listed section for MAT 217 was recorded as full.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15963,7 +15963,7 @@
       "section": "SCREEN",
       "sentence": "The plan below is for May 2028.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -15977,7 +15977,7 @@
       "section": "SCREEN",
       "sentence": "The plan meets the major rules.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16004,7 +16004,7 @@
       "section": "SCREEN",
       "sentence": "There is no earlier term left.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16016,7 +16016,7 @@
       "section": "SCREEN",
       "sentence": "They cannot all fit.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16032,7 +16032,7 @@
       "section": "SCREEN",
       "sentence": "Things to keep in mind",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16077,7 +16077,7 @@
       "section": "SCREEN",
       "sentence": "This is the last Winter before you graduate.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16122,7 +16122,7 @@
       "section": "SCREEN",
       "sentence": "This plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16134,7 +16134,7 @@
       "section": "SCREEN",
       "sentence": "This plan assumes you will have senior standing in 2026–2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16146,7 +16146,7 @@
       "section": "SCREEN",
       "sentence": "This plan assumes you will have senior standing in 2028–2029.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16158,7 +16158,7 @@
       "section": "SCREEN",
       "sentence": "This plan places BUSN 323 in Fall 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16171,7 +16171,7 @@
       "section": "SCREEN",
       "sentence": "This plan places BUSN 323 in Fall 2028.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16187,7 +16187,7 @@
       "section": "SCREEN",
       "sentence": "This plan places BUSN 323 in Fall 2029.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16200,7 +16200,7 @@
       "section": "SCREEN",
       "sentence": "This plan places BUSN 323 in Winter 2028.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16212,7 +16212,7 @@
       "section": "SCREEN",
       "sentence": "This plan places BUSN 323 in Winter 2029.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16223,7 +16223,7 @@
       "section": "SCREEN",
       "sentence": "This plan puts a different number of courses in each year than the usual Balanced plan.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16236,7 +16236,7 @@
       "section": "SCREEN",
       "sentence": "This plan uses the current Economics major requirements.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16272,7 +16272,7 @@
       "section": "SCREEN",
       "sentence": "This planning result needs advisor attention before we can show a complete schedule.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16283,7 +16283,7 @@
       "section": "SCREEN",
       "sentence": "To finish by May 2027, you must take it in Winter 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16295,7 +16295,7 @@
       "section": "SCREEN",
       "sentence": "Transfer credit",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16306,7 +16306,7 @@
       "section": "SCREEN",
       "sentence": "Transfer credit Transfer credit.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16317,7 +16317,7 @@
       "section": "SCREEN",
       "sentence": "W2 ECO 461 also counts toward your Writing 2 (W2) requirement.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16362,7 +16362,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16375,7 +16375,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16387,7 +16387,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16398,7 +16398,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 113, ECO 214, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16409,7 +16409,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 114 and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16421,7 +16421,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 114 and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16433,7 +16433,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 114, ECO 221, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16444,7 +16444,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 114, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16456,7 +16456,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 161, ECO 221, MAT 113, and ECO 224.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16467,7 +16467,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 161, ECO 461, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16478,7 +16478,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214 and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16489,7 +16489,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214 and ECO 321.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16500,7 +16500,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16511,7 +16511,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 221, ECO 461, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16523,7 +16523,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 221, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16534,7 +16534,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 321, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16545,7 +16545,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16556,7 +16556,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 321, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16567,7 +16567,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16578,7 +16578,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16589,7 +16589,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16600,7 +16600,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16617,7 +16617,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16629,7 +16629,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 321 and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16640,7 +16640,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16652,7 +16652,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 321, MAT 113, and MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16663,7 +16663,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 321.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16674,7 +16674,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 461 and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16686,7 +16686,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in MAT 113 and ECO 222.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16697,7 +16697,7 @@
       "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in MAT 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16708,7 +16708,7 @@
       "section": "SCREEN",
       "sentence": "What still needs attention",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16723,7 +16723,7 @@
       "section": "SCREEN",
       "sentence": "While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16768,7 +16768,7 @@
       "section": "SCREEN",
       "sentence": "Why am I seeing this result?",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16793,7 +16793,7 @@
       "section": "SCREEN",
       "sentence": "Why: The listed section for MAT 217 was recorded as full.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16804,7 +16804,7 @@
       "section": "SCREEN",
       "sentence": "Why: You are taking ECO 213 and MAT 121 together.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16815,7 +16815,7 @@
       "section": "SCREEN",
       "sentence": "Why: You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16826,7 +16826,7 @@
       "section": "SCREEN",
       "sentence": "Why: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16837,7 +16837,7 @@
       "section": "SCREEN",
       "sentence": "Why: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16848,7 +16848,7 @@
       "section": "SCREEN",
       "sentence": "Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16859,7 +16859,7 @@
       "section": "SCREEN",
       "sentence": "Why: Your advisor needs to confirm that your AP credit for ECO 113 and MAT 121 counts toward the major.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16870,7 +16870,7 @@
       "section": "SCREEN",
       "sentence": "Why: Your advisor needs to confirm that your AP credit for ECO 113, ECO 114, and MAT 121 counts toward the major.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16881,7 +16881,7 @@
       "section": "SCREEN",
       "sentence": "Why: Your advisor needs to confirm that your transfer credit for ECO 113 and MAT 121 counts toward the major.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16892,7 +16892,7 @@
       "section": "SCREEN",
       "sentence": "Winter 2027",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16903,7 +16903,7 @@
       "section": "SCREEN",
       "sentence": "Winter 2027 and Spring/May 2027",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16914,7 +16914,7 @@
       "section": "SCREEN",
       "sentence": "Winter 2027:",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -16958,7 +16958,7 @@
       "section": "SCREEN",
       "sentence": "Year | Term | Courses",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17003,7 +17003,7 @@
       "section": "SCREEN",
       "sentence": "You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17014,7 +17014,7 @@
       "section": "SCREEN",
       "sentence": "You can also drag it by the ⠿ handle.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17059,7 +17059,7 @@
       "section": "SCREEN",
       "sentence": "You cannot finish by May 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17073,7 +17073,7 @@
       "section": "SCREEN",
       "sentence": "You have 10 required courses left and 2 terms left by May 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17085,7 +17085,7 @@
       "section": "SCREEN",
       "sentence": "You have 3 required courses left and 1 term left by May 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17096,7 +17096,7 @@
       "section": "SCREEN",
       "sentence": "You have 6 required courses left and 2 terms left by May 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17108,7 +17108,7 @@
       "section": "SCREEN",
       "sentence": "You have 8 required courses left and 2 terms left by May 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17119,7 +17119,7 @@
       "section": "SCREEN",
       "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17130,7 +17130,7 @@
       "section": "SCREEN",
       "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17141,7 +17141,7 @@
       "section": "SCREEN",
       "sentence": "You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17152,7 +17152,7 @@
       "section": "SCREEN",
       "sentence": "You saved room for 14 other courses across 5 terms.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17163,7 +17163,7 @@
       "section": "SCREEN",
       "sentence": "You saved room for 2 other courses in Winter 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17174,7 +17174,7 @@
       "section": "SCREEN",
       "sentence": "Your 2023–24 catalog also required a comprehensive evaluation in Economics.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17197,7 +17197,7 @@
       "section": "SCREEN",
       "sentence": "Your 2023–24 catalog does not accept it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17215,7 +17215,7 @@
       "section": "SCREEN",
       "sentence": "Your 2023–24 catalog does not accept them.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17226,7 +17226,7 @@
       "section": "SCREEN",
       "sentence": "Your 2024–25 catalog does not accept it.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17243,7 +17243,7 @@
       "section": "SCREEN",
       "sentence": "Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17254,7 +17254,7 @@
       "section": "SCREEN",
       "sentence": "Your answers do not show statistics completed.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17266,7 +17266,7 @@
       "section": "SCREEN",
       "sentence": "Your courses",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17326,7 +17326,7 @@
       "section": "SCREEN",
       "sentence": "Your other HS course must be from a different discipline.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17371,7 +17371,7 @@
       "section": "SCREEN",
       "sentence": "Your plan",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17406,7 +17406,7 @@
       "section": "SCREEN",
       "sentence": "Your plan counts BUSN 323 and PSY 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17417,7 +17417,7 @@
       "section": "SCREEN",
       "sentence": "Your plan counts BUSN 323.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17441,7 +17441,7 @@
       "section": "SCREEN",
       "sentence": "Your plan counts PSY 217.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17452,7 +17452,7 @@
       "section": "SCREEN",
       "sentence": "Your planning result",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17477,7 +17477,7 @@
       "section": "SCREEN",
       "sentence": "Your plans",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17537,7 +17537,7 @@
       "section": "SCREEN",
       "sentence": "Your remaining classes do not fit before this graduation target.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
@@ -17556,7 +17556,7 @@
       "section": "SCREEN",
       "sentence": "Your remaining courses do not fit by May 2027.",
       "source": {
-        "file": "app/page.js",
+        "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
