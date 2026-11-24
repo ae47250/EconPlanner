@@ -143,18 +143,17 @@ TERM: 2027/2028 Winter
 GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
 TERM: 2027/2028 May
-GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
-TERM: 2028/2029 Fall
-GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
 GRID ROW: MAT 217 ▾ | Applied Statistics
-TERM: 2028/2029 Winter
+TERM: 2028/2029 Fall
 GRID ROW: BUSN 323 ▾ | Investments
+GRID ROW: Economics elective (200 level or higher) ▾
+NOTE: Future offering unconfirmed
+TERM: 2028/2029 Winter
 GRID ROW: ECO 461 | Senior Seminar: Econometrics
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 TERM: 2028/2029 May
-GRID ROW: No Economics course this term
+GRID ROW: Economics elective (200 level or higher) ▾
+NOTE: Future offering unconfirmed
 SCREEN > Plan: Explore the Major > More
 Add Econ course
 SCREEN > Plan: Explore the Major > More
@@ -177,13 +176,13 @@ CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
 CHECKLIST ROW: Mathematics MAT 121 ? Transfer credit Transfer credit. Confirm with your advisor that it counts.
 CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
 CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned
-CHECKLIST ROW: Statistics MAT 217 — Fall 2028 ○ Planned
-CHECKLIST ROW: Finance BUSN 323 — Winter 2029 ○ Planned
+CHECKLIST ROW: Statistics MAT 217 — May 2028 ○ Planned
+CHECKLIST ROW: Finance BUSN 323 — Fall 2028 ○ Planned
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned
 CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned
 CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2028 ○ Planned
-CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2028 ○ Planned
-CHECKLIST ROW: Economics elective 4 ECO elective (200+) — Fall 2028 ○ Planned
+CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned
+CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ? Transfer credit
@@ -219,7 +218,7 @@ ECO 234 · Rational Choices
 — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 Courses in future years
 For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
-This plan places BUSN 323 in Winter 2029. Its future offering is not confirmed.
+This plan places BUSN 323 in Fall 2028. Its future offering is not confirmed.
 SCREEN > Other details
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
@@ -375,15 +374,14 @@ GRID ROW: ECO 213
 TERM: 2027/2028 Winter
 GRID ROW: Economics elective (200 level or higher)
 TERM: 2027/2028 May
-GRID ROW: Economics elective (200 level or higher)
-TERM: 2028/2029 Fall
-GRID ROW: Economics elective (200 level or higher)
 GRID ROW: MAT 217
-TERM: 2028/2029 Winter
+TERM: 2028/2029 Fall
 GRID ROW: BUSN 323
+GRID ROW: Economics elective (200 level or higher)
+TERM: 2028/2029 Winter
 GRID ROW: ECO 461
 TERM: 2028/2029 May
-GRID ROW: -
+GRID ROW: Economics elective (200 level or higher)
 ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 ECO 222 — Economics of the European Union Previously offered in May.
 ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
@@ -423,10 +421,10 @@ CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Winter 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Statistics
-CHECKLIST CELL: MAT 217 — Fall 2028
+CHECKLIST CELL: MAT 217 — Spring/May 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Finance
-CHECKLIST CELL: BUSN 323 — Winter 2029
+CHECKLIST CELL: BUSN 323 — Fall 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2029
@@ -438,10 +436,10 @@ CHECKLIST CELL: Economics elective 2
 CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 3
-CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
-CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Transfer credit Planned
@@ -477,4 +475,4 @@ ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 PDF > Plan: Explore the Major > Notes: Future years
 Future years
 For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
-This plan places BUSN 323 in Winter 2029. Its future offering is not confirmed.
+This plan places BUSN 323 in Fall 2028. Its future offering is not confirmed.

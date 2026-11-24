@@ -135,21 +135,21 @@
           "termId": "winter-2027",
           "term": "Winter",
           "academicYear": "2026/2027",
-          "courses": []
+          "courses": [
+            {
+              "course": "ECO 321",
+              "title": "Money & Financial Markets",
+              "section": "J",
+              "status": "Planned",
+              "requirementId": "finance"
+            }
+          ]
         },
         {
           "termId": "spring-2027",
           "term": "Spring/May",
           "academicYear": "2026/2027",
-          "courses": [
-            {
-              "course": "ECO 222",
-              "title": "Economics of the European Union",
-              "section": "S",
-              "status": "Planned",
-              "requirementId": "eco-elective-1"
-            }
-          ]
+          "courses": []
         },
         {
           "termId": "fall-2027",
@@ -189,7 +189,7 @@
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-2"
+              "requirementId": "eco-elective-1"
             }
           ]
         },
@@ -199,18 +199,11 @@
           "academicYear": "2028/2029",
           "courses": [
             {
-              "course": "BUSN 323",
-              "title": "Investments",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "finance"
-            },
-            {
               "course": "ECO elective",
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-3"
+              "requirementId": "eco-elective-2"
             }
           ]
         },
@@ -225,6 +218,13 @@
               "section": null,
               "status": "Planned",
               "requirementId": "eco-461"
+            },
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-3"
             }
           ]
         },

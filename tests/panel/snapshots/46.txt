@@ -142,12 +142,12 @@ NOTE: Seat availability not confirmed
 TERM: 2027/2028 Fall
 GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
 TERM: 2027/2028 Winter
-GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
-TERM: 2027/2028 May
 GRID ROW: No Economics course this term
-TERM: 2028/2029 Fall
+TERM: 2027/2028 May
 GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
+TERM: 2028/2029 Fall
+GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
 TERM: 2028/2029 Winter
 GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
@@ -183,11 +183,11 @@ CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your adv
 CHECKLIST ROW: ECO 114 ECO 114 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
 CHECKLIST ROW: Mathematics MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
 CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
-CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned
+CHECKLIST ROW: ECO 214 ECO 214 — Fall 2028 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — May 2027 ○ Planned
 CHECKLIST ROW: Finance BUSN 323 — Fall 2029 ○ Planned
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 ○ Planned
-CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2028 ○ Planned
+CHECKLIST ROW: Economics elective 1 ECO elective (200+) — May 2028 ○ Planned
 CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2029 ○ Planned
 CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2029 ○ Planned
 CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2030 ○ Planned
@@ -384,11 +384,11 @@ GRID ROW: MAT 217-S
 TERM: 2027/2028 Fall
 GRID ROW: ECO 213
 TERM: 2027/2028 Winter
-GRID ROW: ECO 214
-TERM: 2027/2028 May
 GRID ROW: -
-TERM: 2028/2029 Fall
+TERM: 2027/2028 May
 GRID ROW: Economics elective (200 level or higher)
+TERM: 2028/2029 Fall
+GRID ROW: ECO 214
 TERM: 2028/2029 Winter
 GRID ROW: Economics elective (200 level or higher)
 TERM: 2028/2029 May
@@ -401,8 +401,8 @@ TERM: 2029/2030 May
 GRID ROW: Economics elective (200 level or higher)
 MAT 217 — Applied Statistics
 ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 Economics elective (200 level or higher) — Pick a course when the schedule comes out.
+ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 BUSN 323 — Investments
 ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
 PDF > Plan: Explore the Major > What to check for this plan
@@ -434,7 +434,7 @@ CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213 — Fall 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: ECO 214
-CHECKLIST CELL: ECO 214 — Winter 2028
+CHECKLIST CELL: ECO 214 — Fall 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Statistics
 CHECKLIST CELL: MAT 217 — Spring/May 2027
@@ -446,7 +446,7 @@ CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2030
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 1
-CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 2
 CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2029

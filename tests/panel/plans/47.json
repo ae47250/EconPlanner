@@ -200,27 +200,6 @@
           "academicYear": "2027/2028",
           "courses": [
             {
-              "course": "ECO elective",
-              "title": "Pick a course when the schedule comes out.",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-elective-3"
-            }
-          ]
-        },
-        {
-          "termId": "fall-2028",
-          "term": "Fall",
-          "academicYear": "2028/2029",
-          "courses": [
-            {
-              "course": "ECO elective",
-              "title": "Pick a course when the schedule comes out.",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-elective-4"
-            },
-            {
               "course": "MAT 217",
               "title": "Applied Statistics",
               "section": null,
@@ -230,8 +209,8 @@
           ]
         },
         {
-          "termId": "winter-2029",
-          "term": "Winter",
+          "termId": "fall-2028",
+          "term": "Fall",
           "academicYear": "2028/2029",
           "courses": [
             {
@@ -241,6 +220,20 @@
               "status": "Planned",
               "requirementId": "finance"
             },
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-3"
+            }
+          ]
+        },
+        {
+          "termId": "winter-2029",
+          "term": "Winter",
+          "academicYear": "2028/2029",
+          "courses": [
             {
               "course": "ECO 461",
               "title": "Senior Seminar: Econometrics",
@@ -254,7 +247,15 @@
           "termId": "spring-2029",
           "term": "Spring/May",
           "academicYear": "2028/2029",
-          "courses": []
+          "courses": [
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-4"
+            }
+          ]
         }
       ]
     }

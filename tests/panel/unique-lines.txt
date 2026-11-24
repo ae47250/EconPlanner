@@ -62,13 +62,13 @@
 02, 03, 05, 19, 47, 48	Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 01, 02, 46	Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Before you register
-01, 02, 03, 05, 07, 08, 11, 13, 16, 17, 19, 21, 24, 27, 28, 30, 36, 39, 42, 44, 46, 47, 48, 49	BUSN 323
+01, 02, 03, 05, 07, 08, 11, 13, 16, 17, 19, 21, 24, 27, 28, 30, 36, 39, 42, 44, 46, 47, 48	BUSN 323
 11, 13, 21	BUSN 323 — Fall 2027
-02, 03, 05, 19, 49	BUSN 323 — Fall 2028
+02, 03, 05, 19, 47, 48	BUSN 323 — Fall 2028
 01, 02, 46	BUSN 323 — Fall 2029
-01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48, 49	BUSN 323 — Investments
+01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48	BUSN 323 — Investments
 16, 17	BUSN 323 — Winter 2028
-03, 47, 48	BUSN 323 — Winter 2029
+03	BUSN 323 — Winter 2029
 27	BUSN 323 · ECO 113 · ECO 114 · ECO 160 · ECO 161 · ECO 213 · ECO 214 · ECO 257 · ECO 333 · MAT 121 · MAT 217
 38	BUSN 323 · ECO 113 · ECO 114 · ECO 161 · ECO 213 · ECO 214 · ECO 221 · MAT 121 · MAT 217
 35, 36, 42, 43	BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 221 · ECO 234 · ECO 333 · MAT 121
@@ -80,7 +80,7 @@
 28, 29, 30	BUSN 323 · ECO 113 · ECO 114 · ECO 213 · ECO 234 · ECO 333 · MAT 121 · MAT 217
 40	BUSN 323 · ECO 113 · ECO 114 · ECO 214 · ECO 234 · ECO 333 · MAT 217
 26	BUSN 323 (transfer) · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 234 · ECO 321 · ECO 333 · MAT 121 · MAT 217
-01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48, 49	BUSN 323 ▾ | Investments
+01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48	BUSN 323 ▾ | Investments
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Check seats and future schedules before you register.
 02, 03	Check the approval and standing notes on each plan before registering.
 08	Check the approval and standing notes on each plan before registering. See the notes below for paperwork to file.
@@ -201,7 +201,7 @@
 32	ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 not marked done before this class. Ask your advisor to check.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 214
 10, 16, 18, 19, 21	ECO 214 — Fall 2027
-01, 02, 03	ECO 214 — Fall 2028
+01, 02, 03, 46	ECO 214 — Fall 2028
 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49	ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 17	ECO 214 — Taking now
 09, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214 — Winter 2027
@@ -212,7 +212,7 @@
 17	ECO 214 | Intermediate Macroeconomics
 01, 02, 03, 05, 10, 11, 16, 18, 19, 21, 46, 48, 49	ECO 214 ▾ | Intermediate Macroeconomics
 10, 16, 18, 19, 21	ECO 214 ECO 214 — Fall 2027 ○ Planned
-01, 02, 03	ECO 214 ECO 214 — Fall 2028 ○ Planned
+01, 02, 03, 46	ECO 214 ECO 214 — Fall 2028 ○ Planned
 17	ECO 214 ECO 214 — Taking now ◐ In progress ECO 114 not marked done before this class. Ask your advisor to check.
 09, 13, 14, 15, 47, 49	ECO 214 ECO 214 — Winter 2027 ○ Planned
 28, 30, 32	ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed
@@ -229,12 +229,12 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49	ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
 07, 08, 10, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44	ECO 221-J
 07, 08, 10, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44	ECO 221-J ▾ | Environmental Economics
-05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49	ECO 222 — Economics of the European Union Previously offered in May.
-05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49	ECO 222 — Spring/May 2027
+05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222 — Economics of the European Union Previously offered in May.
+05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222 — Spring/May 2027
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 222 · Economics of the European Union
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
-05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49	ECO 222-S
-05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49	ECO 222-S ▾ | Economics of the European Union
+05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222-S
+05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222-S ▾ | Economics of the European Union
 11	ECO 224 — Introduction to Sustainability Previously offered in May.
 11	ECO 224 — Spring/May 2027
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 224 · Introduction to Sustainability
@@ -282,22 +282,22 @@
 02, 03, 05, 19, 46, 47, 48, 49	Economics elective (200 level or higher) — Fall 2028
 01, 02, 46	Economics elective (200 level or higher) — Fall 2029
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher) — Pick a course when the schedule comes out.
-01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 47, 48, 49	Economics elective (200 level or higher) — Spring/May 2028
+01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher) — Spring/May 2028
 01, 02, 03, 05, 19, 46, 47, 48, 49	Economics elective (200 level or higher) — Spring/May 2029
 01, 02, 46	Economics elective (200 level or higher) — Spring/May 2030
 09, 13, 15, 19, 21, 47, 49	Economics elective (200 level or higher) — Winter 2028
-01, 02, 46	Economics elective (200 level or higher) — Winter 2029
+01, 02, 46, 49	Economics elective (200 level or higher) — Winter 2029
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher) ▾
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Economics elective 1
 11, 16	Economics elective 1 ECO 161 — Winter 2027 ○ Planned Counts as your one 100-level elective.
 27, 48	Economics elective 1 ECO 161 ✓ Completed Counts as your one 100-level elective.
 10, 12, 14, 17, 18	Economics elective 1 ECO 221 — Winter 2027 ○ Planned
 22, 23, 36, 39, 42	Economics elective 1 ECO 221 ✓ Completed
-05, 09, 13, 15, 19, 21, 47, 49	Economics elective 1 ECO 222 — May 2027 ○ Planned
+05, 09, 13, 15, 19, 21, 47	Economics elective 1 ECO 222 — May 2027 ○ Planned
 07, 08, 24, 25, 26, 28, 30, 32, 44	Economics elective 1 ECO 234 ✓ Completed
 02, 03	Economics elective 1 ECO elective (200+) — Fall 2027 ○ Planned
 46	Economics elective 1 ECO elective (200+) — Fall 2028 ○ Planned
-01, 02	Economics elective 1 ECO elective (200+) — May 2028 ○ Planned
+01, 02, 46, 49	Economics elective 1 ECO elective (200+) — May 2028 ○ Planned
 47, 49	Economics elective 1 ECO elective (200+) — Winter 2028 ○ Planned
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Economics elective 2
 11	Economics elective 2 ECO 221 — Winter 2027 ○ Planned
@@ -305,6 +305,7 @@
 22, 23, 36, 39, 42	Economics elective 2 ECO 234 ✓ Completed
 07, 08, 24, 25, 26, 27, 28, 30, 32, 44	Economics elective 2 ECO 333 ✓ Completed
 09, 13, 15, 21	Economics elective 2 ECO elective (200+) — Fall 2027 ○ Planned
+49	Economics elective 2 ECO elective (200+) — Fall 2028 ○ Planned
 02, 03, 05, 19, 47, 48, 49	Economics elective 2 ECO elective (200+) — May 2028 ○ Planned
 01, 02	Economics elective 2 ECO elective (200+) — May 2029 ○ Planned
 19, 47	Economics elective 2 ECO elective (200+) — Winter 2028 ○ Planned
@@ -318,12 +319,12 @@
 10, 12, 14, 16, 17, 18	Economics elective 3 ECO elective (200+) — Fall 2027 ○ Planned
 02, 03, 05, 19, 47, 48, 49	Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned
 01, 02, 46	Economics elective 3 ECO elective (200+) — Fall 2029 ○ Planned
-19, 47, 48	Economics elective 3 ECO elective (200+) — May 2028 ○ Planned
+19	Economics elective 3 ECO elective (200+) — May 2028 ○ Planned
 01, 02, 46	Economics elective 3 ECO elective (200+) — May 2029 ○ Planned
 09, 13, 15, 21	Economics elective 3 ECO elective (200+) — Winter 2028 ○ Planned
+49	Economics elective 3 ECO elective (200+) — Winter 2029 ○ Planned
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Economics elective 4
 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44	Economics elective 4 ECO 222 — May 2027 ○ Planned
-47, 48	Economics elective 4 ECO elective (200+) — Fall 2028 ○ Planned
 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21	Economics elective 4 ECO elective (200+) — May 2028 ○ Planned
 02, 03, 05, 19, 47, 48, 49	Economics elective 4 ECO elective (200+) — May 2029 ○ Planned
 01, 02, 46	Economics elective 4 ECO elective (200+) — May 2030 ○ Planned
@@ -334,10 +335,10 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Finance
 34	Finance and the other required courses do not fit by your graduation target. Bring this page to your advisor.
 11, 13, 21	Finance BUSN 323 — Fall 2027 ○ Planned
-02, 03, 05, 19, 49	Finance BUSN 323 — Fall 2028 ○ Planned
+02, 03, 05, 19, 47, 48	Finance BUSN 323 — Fall 2028 ○ Planned
 01, 02, 46	Finance BUSN 323 — Fall 2029 ○ Planned
 16, 17	Finance BUSN 323 — Winter 2028 ○ Planned
-03, 47, 48	Finance BUSN 323 — Winter 2029 ○ Planned
+03	Finance BUSN 323 — Winter 2029 ○ Planned
 07, 08, 24, 27, 28, 30, 36, 39, 42, 44	Finance BUSN 323 ✓ Completed
 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49	Finance ECO 321 — Winter 2027 ○ Planned
 14, 25, 26	Finance ECO 321 ✓ Completed
@@ -391,8 +392,8 @@
 01, 02, 03, 05, 10, 13, 14, 15, 16, 17, 18, 19, 21, 36, 42, 46, 47, 48	MAT 217 — Applied Statistics
 42	MAT 217 — Fall 2026
 05, 19, 21	MAT 217 — Fall 2027
-47, 48	MAT 217 — Fall 2028
 01, 02, 03, 46	MAT 217 — Spring/May 2027
+47, 48	MAT 217 — Spring/May 2028
 36	MAT 217 — Taking now
 05, 10, 13, 14, 15, 16, 17, 18, 19, 46, 47, 48	MAT 217 — Winter 2027
 36	MAT 217 | Applied Statistics
@@ -580,8 +581,8 @@
 22, 27, 49	Statistics ECO 257 ✓ Completed
 42	Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status
 05, 19, 21	Statistics MAT 217 — Fall 2027 ○ Planned
-47, 48	Statistics MAT 217 — Fall 2028 ○ Planned
 01, 02, 03, 46	Statistics MAT 217 — May 2027 ○ Planned
+47, 48	Statistics MAT 217 — May 2028 ○ Planned
 36	Statistics MAT 217 — Taking now ◐ In progress
 05, 10, 13, 14, 15, 16, 17, 18, 19, 46, 47, 48	Statistics MAT 217 — Winter 2027 ○ Planned
 07, 08, 09, 11, 12, 25, 26, 28, 30, 32, 39, 44	Statistics MAT 217 ✓ Completed
@@ -622,10 +623,10 @@
 21	This plan has 3 Economics courses in Winter 2028. The department prefers no more than 2 per term, but the term is still within the normal course load.
 32	This plan has 4 Economics courses in Winter 2027. The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
 11, 13, 21	This plan places BUSN 323 in Fall 2027. Its future offering is not confirmed.
-02, 03, 05, 19, 49	This plan places BUSN 323 in Fall 2028. Its future offering is not confirmed.
+02, 03, 05, 19, 47, 48	This plan places BUSN 323 in Fall 2028. Its future offering is not confirmed.
 01, 02, 46	This plan places BUSN 323 in Fall 2029. Its future offering is not confirmed.
 16, 17	This plan places BUSN 323 in Winter 2028. Its future offering is not confirmed.
-03, 47, 48	This plan places BUSN 323 in Winter 2029. Its future offering is not confirmed.
+03	This plan places BUSN 323 in Winter 2029. Its future offering is not confirmed.
 09, 11, 13	This plan puts a different number of courses in each year than the usual Balanced plan.
 32	This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 09, 10, 12, 14, 15, 18	This plan uses the current Economics major requirements.
@@ -660,10 +661,11 @@
 10	We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222. Check the registration system before you register.
 18	We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222. Check the registration system before you register.
 07, 08, 24, 25, 26, 27, 44	We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222. Check the registration system before you register.
-08, 21, 49	We don’t know if there are open seats in ECO 222. Check the registration system before you register.
+08, 21	We don’t know if there are open seats in ECO 222. Check the registration system before you register.
 46	We don’t know if there are open seats in ECO 321 and MAT 217. Check the registration system before you register.
 22, 23	We don’t know if there are open seats in ECO 321, ECO 461, and ECO 222. Check the registration system before you register.
 48	We don’t know if there are open seats in ECO 321, MAT 113, and MAT 217. Check the registration system before you register.
+49	We don’t know if there are open seats in ECO 321. Check the registration system before you register.
 36, 42	We don’t know if there are open seats in ECO 461 and ECO 222. Check the registration system before you register.
 48	We don’t know if there are open seats in MAT 113 and ECO 222. Check the registration system before you register.
 46	We don’t know if there are open seats in MAT 217. Check the registration system before you register.
