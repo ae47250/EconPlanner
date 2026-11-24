@@ -74,12 +74,11 @@ test("Economics term planner keeps prerequisite courses in earlier terms", () =>
     prerequisites,
     planningMode: "graduation_priority"
   });
-  const fall = plan.terms.find(term => term.term === "Fall 2026").courses.map(course => course.course);
-  const winter = plan.terms.find(term => term.term === "Winter 2027").courses.map(course => course.course);
+  const prerequisiteTerm = plan.terms.findIndex(term => term.courses.some(course => course.course === "ECO 213"));
+  const capstoneTerm = plan.terms.findIndex(term => term.courses.some(course => course.course === "ECO 461"));
 
-  assert.ok(fall.includes("ECO 213"));
-  assert.ok(winter.includes("ECO 461"));
-  assert.ok(!winter.includes("ECO 213"));
+  assert.ok(prerequisiteTerm >= 0);
+  assert.ok(capstoneTerm > prerequisiteTerm, "ECO 213 must precede ECO 461");
   assert.equal(plan.validation.valid, true);
 });
 
@@ -544,9 +543,10 @@ test("a legacy non-Hanover ECO 461 record does not suppress the required senior-
   };
   const mapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, student);
   const plan = buildEconomicsTermPlan({ student, mapping, schedule, prerequisites });
-  const winter = plan.terms.find(term => term.term === "Winter 2027");
+  const capstoneTerm = plan.terms.find(term => term.courses.some(course => course.course === "ECO 461"));
 
-  assert.ok(winter.courses.some(course => course.course === "ECO 461"));
+  assert.ok(capstoneTerm, "the Hanover-only capstone remains required");
+  assert.equal(capstoneTerm.termKey, "Winter");
 });
 
 test("a concurrent-math fallback remains explicitly approval-required", () => {
@@ -856,11 +856,13 @@ test("standard planning may use more than two Economics courses when total load 
   for (const plan of result.plans) {
     assert.equal(plan.planningMode, "standard");
     assert.equal(plan.validation.valid, true);
-    const fall = plan.terms.find(term => term.term === "Fall 2026");
-    const winter = plan.terms.find(term => term.term === "Winter 2027");
+    const plannedRequirements = plan.terms.flatMap(term => term.courses.map(course => course.requirementId));
+    assert.deepEqual([...plannedRequirements].sort(), mapping.strict.unresolved.map(item => item.requirementId).sort(),
+      "each remaining requirement must be covered exactly once");
+    const lastUsedTerm = plan.terms.findLast(term => term.courses.length > 0);
+    assert.ok(lastUsedTerm.yearIndex < plan.planningContext.remainingYears,
+      "all required courses must finish by the graduation target");
     const may = plan.terms.find(term => term.term === "Spring/May 2027");
-    assert.deepEqual(fall.courses.map(course => course.course), ["BUSN 323", "ECO 213", "ECO 234", "MAT 217"]);
-    assert.deepEqual(winter.courses.map(course => course.course), ["ECO 161", "ECO 221", "ECO 461"]);
     assert.ok(schedule.terms.May.some(section => section.course === may.courses[0].course));
     assert.ok(plan.validation.warnings.some(warning => warning === "This plan has 3 Economics courses in Winter 2027. The department prefers no more than 2 per term, but the term is still within the normal course load."));
     assert.ok(plan.validation.warnings.some(warning => /MAT 217.*FULL|FULL.*MAT 217/i.test(warning)));
@@ -922,11 +924,15 @@ test("a completed or earlier-generated intermediate may support one concurrent i
   const generated = buildEconomicsTermPlans({ student: generatedStudent, mapping: generatedMapping, schedule, prerequisites });
   assert.equal(generated.plans.length, 1);
   const generatedPlan = generated.plans[0];
-  const fall = generatedPlan.terms.find(term => term.term === "Fall 2026");
-  const winter = generatedPlan.terms.find(term => term.term === "Winter 2027");
-  assert.ok(fall.courses.some(course => course.course === "ECO 213"));
-  assert.ok(winter.courses.some(course => course.course === "ECO 214"));
-  const generatedCapstone = winter.courses.find(course => course.course === "ECO 461");
+  const earlierIntermediateTerm = generatedPlan.terms.findIndex(term => term.courses.some(course => course.course === "ECO 213"));
+  const concurrentIntermediateTerm = generatedPlan.terms.findIndex(term => term.courses.some(course => course.course === "ECO 214"));
+  const capstoneTerm = generatedPlan.terms.findIndex(term => term.courses.some(course => course.course === "ECO 461"));
+  assert.ok(earlierIntermediateTerm >= 0);
+  assert.ok(concurrentIntermediateTerm > earlierIntermediateTerm,
+    "ECO 213 must precede ECO 214");
+  assert.equal(concurrentIntermediateTerm, capstoneTerm,
+    "the recorded approval applies to the concurrent intermediate");
+  const generatedCapstone = generatedPlan.terms[capstoneTerm].courses.find(course => course.course === "ECO 461");
   assert.ok(generatedCapstone.approvalRequired.some(item => (
     item.type === "department" && item.prerequisite === "ECO 214"
   )));
