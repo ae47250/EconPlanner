@@ -79,6 +79,7 @@ jobs:
             tests/economics-plan-editing-api.test.js \
             tests/economics-replacement-moves.test.js \
             tests/student-facing-language.test.js \
+            tests/move-advice-codes.test.js \
             tests/planner-session-restoration.test.js \
             tests/offering-policy-consistency.test.js \
             tests/ci-move-matrix-coverage.test.js \

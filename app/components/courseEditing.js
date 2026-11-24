@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { isUnpublishedScheduleCondition, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentTermLabel } from "../../lib/planning/student-language.js";
+import { isUnpublishedScheduleCondition, studentFriendlyUnavailableAdvice, studentFriendlyUnavailableReason, studentFriendlyMoveCondition, studentFriendlyMoveDetails, studentFriendlyMoveNextStep, studentTermLabel } from "../../lib/planning/student-language.js";
 import { planCourseIdentity, compactPlanCourse } from "../plannerShared.js";
 
 const CourseMenuContext = createContext(null);
@@ -119,8 +119,8 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
   const all = [...moves, ...replacements];
   const usable = all.filter(item => ["ALLOWED", "CONDITIONAL"].includes(item.status));
   const guidance = [...new Set(all.filter(item => !["ALLOWED", "CONDITIONAL"].includes(item.status))
-    .map(item => studentFriendlyUnavailableReason({ ...item, movingCourse: course.course }, menu.policyMessages))
-    .filter(reason => /Move .* (?:out|later|first)|needs .* first/i.test(reason)))].slice(0, 2);
+    .map(item => studentFriendlyUnavailableAdvice({ ...item, movingCourse: course.course }, menu.policyMessages))
+    .filter(advice => advice.suggestsFix).map(advice => advice.message))].slice(0, 2);
   const optionGroups = usable.reduce((groups, item) => {
     const label = item.edit.type === "move" ? "Move to"
       : item.edit.replacementCourse === "ECO elective" ? "Move as a 200+ elective"
