@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {mkdtemp, readFile, rm} from "node:fs/promises";
+import {mkdtemp, readFile, readdir, rm} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
@@ -270,7 +270,16 @@ test("API evaluates a known older catalog and rejects a submitted unsupported ye
 });
 
 test("minimal accessible intake is present and the browser contains no selection logic", async () => {
-  const source = await readFile(path.join(ROOT, "app/page.js"), "utf8");
+  async function sources(directory) {
+    const found = [];
+    for (const entry of await readdir(path.join(ROOT, directory), {withFileTypes: true})) {
+      const file = path.join(directory, entry.name);
+      if (entry.isDirectory() && file !== "app/api") found.push(...await sources(file));
+      if (entry.isFile() && file.endsWith(".js")) found.push(await readFile(path.join(ROOT, file), "utf8"));
+    }
+    return found;
+  }
+  const source = (await sources("app")).join("\n");
   assert.doesNotMatch(source, /htmlFor="major-declaration-catalog-year"/);
   assert.doesNotMatch(source, /id="major-declaration-catalog-year"/);
   assert.match(source, /planningRequirementsNote\(planningContext\)/);

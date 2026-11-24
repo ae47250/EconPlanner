@@ -22,10 +22,18 @@ test("the independent canonical-policy Oracle imports no production engine, plan
 });
 
 test("the UI does not directly import authoritative server policy evaluators", async () => {
-  const source = await readFile(new URL("app/page.js", root), "utf8");
-  for (const [, importedPath] of source.matchAll(/\bfrom\s+["']([^"']+)["']/gu)) {
-    assert.doesNotMatch(importedPath, /lib\/decision-engine|lib\/policy|data\/compiled\/policy|planning\/economics|prerequisiteEvaluator|prerequisiteValidation|assignment\/solve/iu);
+  async function check(directory) {
+    for (const entry of await readdir(new URL(directory, root), { withFileTypes: true })) {
+      const file = `${directory}${entry.name}`;
+      if (entry.isDirectory() && file !== "app/api") await check(`${file}/`);
+      if (!entry.isFile() || !file.endsWith(".js")) continue;
+      const source = await readFile(new URL(file, root), "utf8");
+      for (const [, importedPath] of source.matchAll(/\bfrom\s+["']([^"']+)["']/gu)) {
+        assert.doesNotMatch(importedPath, /lib\/decision-engine|lib\/policy|data\/compiled\/policy|planning\/economics|prerequisiteEvaluator|prerequisiteValidation|assignment\/solve/iu, file);
+      }
+    }
   }
+  await check("app/");
 });
 
 test("the active mapper passes the compiled bundle into authoritative validation", async () => {
