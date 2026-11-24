@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { resetPlanner, chooseStanding, continueToCourses, setCourseStatus, generatePlans, visitPlan, reloadPlanner, openFixtureResult, plannerResultFixture } from './cp7-helpers.js';
 
-const message = 'You may petition to count BUSN 323 as an Economics elective. This planner does not apply that credit; discuss the petition with your advisor.';
+const message = 'You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.';
 
 for (const device of ['desktop', 'mobile']) test(`${device}: finance correction survives generation, restoration and report rendering`, async ({ page }, testInfo) => {
   test.setTimeout(120000);

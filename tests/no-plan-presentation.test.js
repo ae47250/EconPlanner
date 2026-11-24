@@ -13,7 +13,7 @@ const prerequisiteEvidence = {
 
 test("count-capacity proof controls the explanation despite prerequisite-shaped gaps", () => {
   const presentation = noPlanPresentation("INFEASIBLE_PROVEN", "COUNT_CAPACITY", prerequisiteEvidence, prerequisites);
-  assert.match(presentation.title, /available course timing and capacity/);
+  assert.match(presentation.title, /Your remaining classes do not fit before this graduation target\./);
   assert.doesNotMatch(presentation.title, /prerequisite|ECO 114/);
 });
 
