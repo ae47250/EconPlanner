@@ -353,8 +353,8 @@ test("HTML and PDF renderers preserve structured HS/W2 codes with accessible bol
       items: degreeRequirementInformation.items.map(item => ({ code: item.code, text: item.detail })) }]
   }, template);
   assert.match(html, /<strong>HS<\/strong>/);
-  assert.match(html, /<strong>W2<\/strong>/);
-  assert.match(html, /<strong>W2<\/strong> <strong>ECO 461<\/strong> also counts toward your Writing 2 \(W2\) requirement\./);
+  assert.doesNotMatch(html, /<strong>W2<\/strong>/);
+  assert.match(html, /<li data-degree-designation-code="W2"><strong>ECO 461<\/strong> also counts toward your Writing 2 \(W2\) requirement\./);
   assert.match(html, /<span class="course" data-course-code="ECO 461" data-requirement-id="eco-capstone">ECO 461<\/span>/);
   assert.match(html, /Core Curriculum Requirements \(CCRs\)/);
   const pdfRenderer = await readFile(new URL("../scripts/render-economics-pdf.py", import.meta.url), "utf8");
