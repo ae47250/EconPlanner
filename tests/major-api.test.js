@@ -525,7 +525,7 @@ test("major mapper retains a standard senior plan above the Economics load prefe
   assert.equal(economics.economicsPlans.length, 1);
   assert.ok(economics.economicsPlans.every(plan => plan.planningMode === "standard"));
   assert.ok(economics.economicsPlans.every(plan => plan.validation.valid));
-  assert.ok(data.catalog.advisorAttention.some(item => /This plan has 3 Economics courses in Fall 2026/.test(item.message)));
+  assert.ok(data.catalog.advisorAttention.some(item => /This plan has 3 Economics courses in Winter 2027/.test(item.message)));
   assert.ok(data.catalog.advisorAttention.some(item => /listed section for MAT 217 was recorded as full/i.test(item.message)));
   const plan = economics.economicsPlans[0];
   assert.ok(plan.advisorActions.some(action => action.reasonCode === "ENROLLMENT_FULL"));

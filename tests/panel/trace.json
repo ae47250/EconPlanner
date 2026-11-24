@@ -544,6 +544,17 @@
     },
     {
       "section": "PDF",
+      "sentence": "Before taking ECO 221 and ECO 321 in Winter 2027, finish ECO 113.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "18"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -563,17 +574,6 @@
       "studentIds": [
         "17",
         "19"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Before taking ECO 321 in Winter 2027, finish ECO 113.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "18"
       ]
     },
     {
@@ -740,7 +740,10 @@
         "16",
         "17",
         "19",
-        "21"
+        "21",
+        "46",
+        "47",
+        "48"
       ]
     },
     {
@@ -963,9 +966,7 @@
         "42",
         "44",
         "46",
-        "47",
-        "48",
-        "49"
+        "47"
       ]
     },
     {
@@ -1036,7 +1037,9 @@
         "02",
         "03",
         "05",
-        "19"
+        "19",
+        "47",
+        "48"
       ]
     },
     {
@@ -1048,7 +1051,8 @@
       },
       "studentIds": [
         "01",
-        "02"
+        "02",
+        "46"
       ]
     },
     {
@@ -1500,6 +1504,7 @@
       "studentIds": [
         "10",
         "16",
+        "18",
         "19",
         "21"
       ]
@@ -1514,7 +1519,8 @@
       "studentIds": [
         "01",
         "02",
-        "03"
+        "03",
+        "46"
       ]
     },
     {
@@ -1540,7 +1546,6 @@
         "13",
         "14",
         "15",
-        "18",
         "28",
         "30",
         "32",
@@ -1608,6 +1613,7 @@
         "12",
         "14",
         "17",
+        "18",
         "24",
         "25",
         "26",
@@ -1653,10 +1659,8 @@
         "39",
         "42",
         "44",
-        "46",
         "47",
-        "48",
-        "49"
+        "48"
       ]
     },
     {
@@ -1953,6 +1957,7 @@
         "02",
         "03",
         "05",
+        "08",
         "09",
         "10",
         "11",
@@ -1965,6 +1970,7 @@
         "18",
         "19",
         "21",
+        "46",
         "47",
         "48",
         "49"
@@ -2013,7 +2019,6 @@
         "09",
         "13",
         "15",
-        "18",
         "19",
         "21",
         "47",
@@ -2030,7 +2035,8 @@
       "studentIds": [
         "01",
         "02",
-        "46"
+        "46",
+        "49"
       ]
     },
     {
@@ -2405,18 +2411,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: MAT 217 — Fall 2028",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "47",
-        "48"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "CHECKLIST CELL: MAT 217 — Spring/May 2027",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -2427,6 +2421,18 @@
         "02",
         "03",
         "46"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "CHECKLIST CELL: MAT 217 — Spring/May 2028",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "47",
+        "48"
       ]
     },
     {
@@ -3227,6 +3233,7 @@
         "12",
         "14",
         "17",
+        "18",
         "24",
         "25",
         "26",
@@ -3316,10 +3323,8 @@
         "39",
         "42",
         "44",
-        "46",
         "47",
-        "48",
-        "49"
+        "48"
       ]
     },
     {
@@ -3635,6 +3640,7 @@
         "02",
         "03",
         "05",
+        "08",
         "09",
         "10",
         "11",
@@ -4023,7 +4029,10 @@
         "16",
         "17",
         "19",
-        "21"
+        "21",
+        "46",
+        "47",
+        "48"
       ]
     },
     {
@@ -4148,6 +4157,7 @@
         "11",
         "16",
         "17",
+        "18",
         "19",
         "21",
         "46",
@@ -4167,7 +4177,6 @@
         "13",
         "14",
         "15",
-        "18",
         "28",
         "30",
         "32",
@@ -4190,6 +4199,7 @@
         "12",
         "14",
         "17",
+        "18",
         "24",
         "25",
         "26",
@@ -4235,10 +4245,8 @@
         "39",
         "42",
         "44",
-        "46",
         "47",
-        "48",
-        "49"
+        "48"
       ]
     },
     {
@@ -4342,6 +4350,7 @@
         "02",
         "03",
         "05",
+        "08",
         "09",
         "10",
         "11",
@@ -4439,7 +4448,6 @@
         "13",
         "15",
         "16",
-        "18",
         "19",
         "46",
         "47",
@@ -4456,7 +4464,8 @@
       "studentIds": [
         "10",
         "14",
-        "17"
+        "17",
+        "18"
       ]
     },
     {
@@ -4726,7 +4735,10 @@
         "16",
         "17",
         "19",
-        "21"
+        "21",
+        "46",
+        "47",
+        "48"
       ]
     },
     {
@@ -7403,7 +7415,9 @@
         "02",
         "03",
         "05",
-        "19"
+        "19",
+        "47",
+        "48"
       ]
     },
     {
@@ -7415,7 +7429,8 @@
       },
       "studentIds": [
         "01",
-        "02"
+        "02",
+        "46"
       ]
     },
     {
@@ -7449,28 +7464,9 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "08",
         "09",
         "11",
-        "13",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "This plan puts a different number of courses in each year than the usual Explore the Major plan.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "46",
-        "47",
-        "48",
-        "49"
+        "13"
       ]
     },
     {
@@ -7684,6 +7680,28 @@
     },
     {
       "section": "PDF",
+      "sentence": "We don’t know if there are open seats in ECO 214 and ECO 222.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "47"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "We don’t know if there are open seats in ECO 214 and ECO 321.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "49"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -7724,9 +7742,18 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "09",
-        "47",
-        "49"
+        "09"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "47"
       ]
     },
     {
@@ -7737,20 +7764,7 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "15",
-        "18",
-        "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "We don’t know if there are open seats in ECO 221 and ECO 222.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "08"
+        "15"
       ]
     },
     {
@@ -7773,6 +7787,17 @@
       },
       "studentIds": [
         "10"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "18"
       ]
     },
     {
@@ -7800,18 +7825,8 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
+        "08",
         "21"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "We don’t know if there are open seats in ECO 321 and ECO 222.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "49"
       ]
     },
     {
@@ -7839,7 +7854,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "We don’t know if there are open seats in ECO 321, MAT 113, and ECO 222.",
+      "sentence": "We don’t know if there are open seats in ECO 321, MAT 113, and MAT 217.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7850,24 +7865,13 @@
     },
     {
       "section": "PDF",
-      "sentence": "We don’t know if there are open seats in ECO 321, MAT 113, MAT 217, and ECO 222.",
+      "sentence": "We don’t know if there are open seats in ECO 321.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "48"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "We don’t know if there are open seats in ECO 321, MAT 217, and ECO 222.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "46"
+        "49"
       ]
     },
     {
@@ -7880,6 +7884,28 @@
       "studentIds": [
         "36",
         "42"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "We don’t know if there are open seats in MAT 113 and ECO 222.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "48"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "We don’t know if there are open seats in MAT 217.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "46"
       ]
     },
     {
@@ -9360,6 +9386,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Before taking ECO 221 and ECO 321 in Winter 2027, finish ECO 113.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "18"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.",
       "source": {
         "file": "app/page.js",
@@ -9379,17 +9416,6 @@
       "studentIds": [
         "17",
         "19"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Before taking ECO 321 in Winter 2027, finish ECO 113.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "18"
       ]
     },
     {
@@ -9905,9 +9931,7 @@
         "42",
         "44",
         "46",
-        "47",
-        "48",
-        "49"
+        "47"
       ]
     },
     {
@@ -10235,6 +10259,7 @@
       "studentIds": [
         "10",
         "16",
+        "18",
         "19",
         "21"
       ]
@@ -10249,7 +10274,8 @@
       "studentIds": [
         "01",
         "02",
-        "03"
+        "03",
+        "46"
       ]
     },
     {
@@ -10275,7 +10301,6 @@
         "13",
         "14",
         "15",
-        "18",
         "47",
         "49"
       ]
@@ -10508,7 +10533,8 @@
         "10",
         "12",
         "14",
-        "17"
+        "17",
+        "18"
       ]
     },
     {
@@ -10538,12 +10564,9 @@
         "09",
         "13",
         "15",
-        "18",
         "19",
         "21",
-        "46",
-        "47",
-        "49"
+        "47"
       ]
     },
     {
@@ -10579,6 +10602,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2028 ○ Planned",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "46"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — May 2028 ○ Planned",
       "source": {
         "file": "app/page.js",
@@ -10586,18 +10620,21 @@
       },
       "studentIds": [
         "01",
-        "02"
+        "02",
+        "46",
+        "49"
       ]
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Winter 2029 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Winter 2028 ○ Planned",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "46"
+        "47",
+        "49"
       ]
     },
     {
@@ -10624,6 +10661,7 @@
         "14",
         "16",
         "17",
+        "18",
         "48"
       ]
     },
@@ -10673,7 +10711,6 @@
         "09",
         "13",
         "15",
-        "18",
         "21"
       ]
     },
@@ -10685,7 +10722,7 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "46"
+        "49"
       ]
     },
     {
@@ -10700,6 +10737,8 @@
         "03",
         "05",
         "19",
+        "47",
+        "48",
         "49"
       ]
     },
@@ -10712,8 +10751,7 @@
       },
       "studentIds": [
         "01",
-        "02",
-        "46"
+        "02"
       ]
     },
     {
@@ -10725,8 +10763,7 @@
       },
       "studentIds": [
         "19",
-        "47",
-        "49"
+        "47"
       ]
     },
     {
@@ -10738,7 +10775,8 @@
       },
       "studentIds": [
         "01",
-        "02"
+        "02",
+        "46"
       ]
     },
     {
@@ -10770,6 +10808,17 @@
         "30",
         "32",
         "44"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "CHECKLIST ROW: Economics elective 3 ECO 222 — May 2027 ○ Planned",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "08"
       ]
     },
     {
@@ -10809,7 +10858,8 @@
         "12",
         "14",
         "16",
-        "17"
+        "17",
+        "18"
       ]
     },
     {
@@ -10850,9 +10900,7 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "19",
-        "47",
-        "48"
+        "19"
       ]
     },
     {
@@ -10864,7 +10912,8 @@
       },
       "studentIds": [
         "01",
-        "02"
+        "02",
+        "46"
       ]
     },
     {
@@ -10878,7 +10927,6 @@
         "09",
         "13",
         "15",
-        "18",
         "21"
       ]
     },
@@ -10890,7 +10938,7 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "46"
+        "49"
       ]
     },
     {
@@ -10920,35 +10968,13 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — Fall 2028 ○ Planned",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "47",
-        "48"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — Fall 2029 ○ Planned",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "46"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
+        "08",
         "09",
         "10",
         "11",
@@ -11016,7 +11042,9 @@
         "02",
         "03",
         "05",
-        "19"
+        "19",
+        "47",
+        "48"
       ]
     },
     {
@@ -11028,7 +11056,8 @@
       },
       "studentIds": [
         "01",
-        "02"
+        "02",
+        "46"
       ]
     },
     {
@@ -11267,18 +11296,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Statistics MAT 217 — Fall 2028 ○ Planned",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "47",
-        "48"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: Statistics MAT 217 — May 2027 ○ Planned",
       "source": {
         "file": "app/page.js",
@@ -11289,6 +11306,18 @@
         "02",
         "03",
         "46"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "CHECKLIST ROW: Statistics MAT 217 — May 2028 ○ Planned",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "47",
+        "48"
       ]
     },
     {
@@ -13093,7 +13122,10 @@
         "16",
         "17",
         "19",
-        "21"
+        "21",
+        "46",
+        "47",
+        "48"
       ]
     },
     {
@@ -13248,6 +13280,7 @@
         "10",
         "11",
         "16",
+        "18",
         "19",
         "21",
         "46",
@@ -13267,7 +13300,6 @@
         "13",
         "14",
         "15",
-        "18",
         "28",
         "30",
         "32",
@@ -13290,6 +13322,7 @@
         "12",
         "14",
         "17",
+        "18",
         "24",
         "25",
         "26",
@@ -13335,10 +13368,8 @@
         "39",
         "42",
         "44",
-        "46",
         "47",
-        "48",
-        "49"
+        "48"
       ]
     },
     {
@@ -13442,6 +13473,7 @@
         "02",
         "03",
         "05",
+        "08",
         "09",
         "10",
         "11",
@@ -13549,7 +13581,6 @@
         "13",
         "15",
         "16",
-        "18",
         "19",
         "46",
         "47",
@@ -13566,7 +13597,8 @@
       "studentIds": [
         "10",
         "14",
-        "17"
+        "17",
+        "18"
       ]
     },
     {
@@ -13756,7 +13788,10 @@
         "16",
         "17",
         "19",
-        "21"
+        "21",
+        "46",
+        "47",
+        "48"
       ]
     },
     {
@@ -14369,6 +14404,7 @@
         "02",
         "03",
         "05",
+        "08",
         "09",
         "10",
         "11",
@@ -16142,7 +16178,9 @@
         "02",
         "03",
         "05",
-        "19"
+        "19",
+        "47",
+        "48"
       ]
     },
     {
@@ -16154,7 +16192,8 @@
       },
       "studentIds": [
         "01",
-        "02"
+        "02",
+        "46"
       ]
     },
     {
@@ -16188,28 +16227,9 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "08",
         "09",
         "11",
-        "13",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "This plan puts a different number of courses in each year than the usual Explore the Major plan.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "46",
-        "47",
-        "48",
-        "49"
+        "13"
       ]
     },
     {
@@ -16456,6 +16476,28 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in ECO 214 and ECO 222.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "47"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in ECO 214 and ECO 321.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "49"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222.",
       "source": {
         "file": "app/page.js",
@@ -16496,9 +16538,18 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "09",
-        "47",
-        "49"
+        "09"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "47"
       ]
     },
     {
@@ -16509,20 +16560,7 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "15",
-        "18",
-        "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "We don’t know if there are open seats in ECO 221 and ECO 222.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "08"
+        "15"
       ]
     },
     {
@@ -16545,6 +16583,17 @@
       },
       "studentIds": [
         "10"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "18"
       ]
     },
     {
@@ -16572,18 +16621,8 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
+        "08",
         "21"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "We don’t know if there are open seats in ECO 321 and ECO 222.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "49"
       ]
     },
     {
@@ -16611,7 +16650,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "We don’t know if there are open seats in ECO 321, MAT 113, and ECO 222.",
+      "sentence": "We don’t know if there are open seats in ECO 321, MAT 113, and MAT 217.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
@@ -16622,24 +16661,13 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "We don’t know if there are open seats in ECO 321, MAT 113, MAT 217, and ECO 222.",
+      "sentence": "We don’t know if there are open seats in ECO 321.",
       "source": {
         "file": "app/page.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "48"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "We don’t know if there are open seats in ECO 321, MAT 217, and ECO 222.",
-      "source": {
-        "file": "app/page.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "46"
+        "49"
       ]
     },
     {
@@ -16652,6 +16680,28 @@
       "studentIds": [
         "36",
         "42"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in MAT 113 and ECO 222.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "48"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We don’t know if there are open seats in MAT 217.",
+      "source": {
+        "file": "app/page.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "46"
       ]
     },
     {

@@ -33,8 +33,7 @@ Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
-GRID ROW: ECO 221-J ▾ | Environmental Economics
-NOTE: Seat availability not confirmed
+GRID ROW: No Economics course this term
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S ▾ | Economics of the European Union
 NOTE: Seat availability not confirmed
@@ -44,7 +43,8 @@ TERM: 2027/2028 Winter
 GRID ROW: ECO 461 | Senior Seminar: Econometrics
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 TERM: 2027/2028 May
-GRID ROW: No Economics course this term
+GRID ROW: Economics elective (200 level or higher) ▾
+NOTE: Future offering unconfirmed
 SCREEN > Plan: Balanced > More
 Add Econ course
 SCREEN > Plan: Balanced > More
@@ -54,9 +54,8 @@ Download PDF Report: Balanced
 SCREEN > Plan: Balanced > Notes: Things to keep in mind
 Things to keep in mind
 Before you register
-We don’t know if there are open seats in ECO 221 and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 222. Check the registration system before you register.
 Check with your advisor
-This plan puts a different number of courses in each year than the usual Balanced plan.
 This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2024–25 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
@@ -71,8 +70,8 @@ CHECKLIST ROW: Finance BUSN 323 ✓ Completed
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned
 CHECKLIST ROW: Economics elective 1 ECO 234 ✓ Completed
 CHECKLIST ROW: Economics elective 2 ECO 333 ✓ Completed
-CHECKLIST ROW: Economics elective 3 ECO 221 — Winter 2027 ○ Planned
-CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
+CHECKLIST ROW: Economics elective 3 ECO 222 — May 2027 ○ Planned
+CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
@@ -213,7 +212,7 @@ TABLE HEADER: May
 TERM: 2026/2027 Fall
 GRID ROW: -
 TERM: 2026/2027 Winter
-GRID ROW: ECO 221-J
+GRID ROW: -
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
 TERM: 2027/2028 Fall
@@ -221,16 +220,15 @@ GRID ROW: -
 TERM: 2027/2028 Winter
 GRID ROW: ECO 461
 TERM: 2027/2028 May
-GRID ROW: -
-ECO 221 — Environmental Economics Previously offered in Fall and Winter.
+GRID ROW: Economics elective (200 level or higher)
 ECO 222 — Economics of the European Union Previously offered in May.
 ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+Economics elective (200 level or higher) — Pick a course when the schedule comes out.
 PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Before you register
-We don’t know if there are open seats in ECO 221 and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 222. Check the registration system before you register.
 Check with your advisor
-This plan puts a different number of courses in each year than the usual Balanced plan.
 This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2024–25 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.
 PDF > Plan: Balanced > Checklist
 Your Economics major checklist
@@ -268,10 +266,10 @@ CHECKLIST CELL: Economics elective 2
 CHECKLIST CELL: ECO 333
 CHECKLIST CELL: Completed
 CHECKLIST CELL: Economics elective 3
-CHECKLIST CELL: ECO 221 — Winter 2027
+CHECKLIST CELL: ECO 222 — Spring/May 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
-CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned

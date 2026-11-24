@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.14",
-  "contentHash": "sha256:e831067312b528184f244d3f561955fb9732e830c3fc314cbdd08b644906aa0d",
+  "bundleVersion": "econ-planning-flexibility.16",
+  "contentHash": "sha256:c0f8884bc6978b96a0f1d2c561b60157a74366e5b10a581cf9de7bbb6cb72660",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -42,9 +42,9 @@
       "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD7"
     },
     "confirmation": {
-      "date": "2026-11-22",
+      "date": "2026-11-23",
       "reviewer": "Project owner",
-      "source": "policy/provenance/wording-review-decisions-2026-11-22.md"
+      "source": "policy/provenance/plan-ranking-decision-2026-11-23.md"
     },
     "economicsLoadPlanningPreference": {
       "aboveMaximumOnlyWhenNoValidPlanWithinPreferenceMeetsTarget": true,
@@ -59,7 +59,8 @@
       "sourceRefs": [
         "OWNER-CONFIRMATION-CP5-2026-08-09#STRATEGY-PREFERENCES",
         "OWNER-CONFIRMATION-CP7-2026-08-09#ONE-YEAR-EARLY-ELIGIBILITY",
-        "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING"
+        "OWNER-CONFIRMATION-DISTRIBUTION-2026-08-10#CAPACITY-AWARE-PACING",
+        "OWNER-PLAN-RANKING-2026-11-23#Yearly-target-before-verified-count"
       ],
       "stableSavedStateIds": true,
       "strategies": [
@@ -111,7 +112,8 @@
               ],
               "twoCourses": "SPREAD_ACROSS_TWO_TERMS_WHEN_FEASIBLE"
             },
-            "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES"
+            "termTarget": "CAPACITY_AWARE_LEGAL_SHAPES",
+            "yearlyTargetFitPrecedesPreferredFinanceCourse": true
           }
         },
         {
@@ -206,7 +208,8 @@
             "typicalFinalYearTrackedLoad": [
               2,
               3
-            ]
+            ],
+            "yearlyTargetFitPrecedesPreferredFinanceCourse": true
           }
         },
         {
@@ -226,7 +229,8 @@
             "termLoadSafetyFirst": true
           }
         }
-      ]
+      ],
+      "yearlyTargetFitPrecedesVerifiedScheduleCount": true
     },
     "financePlanningPreference": {
       "appliesToEveryStrategy": true,
@@ -439,7 +443,7 @@
       "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD8",
       "spreadExceptionNote": false
     },
-    "policyVersion": "econ-planning-flexibility.14",
+    "policyVersion": "econ-planning-flexibility.16",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -461,7 +465,8 @@
       "OWNER-PANEL-REVIEW-2026-11-22#OD6",
       "OWNER-PANEL-REVIEW-2026-11-22#OD7",
       "OWNER-PANEL-REVIEW-2026-11-22#OD8",
-      "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification"
+      "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification",
+      "OWNER-PLAN-RANKING-2026-11-23#Yearly-target-before-verified-count"
     ],
     "status": "OWNER_APPROVED",
     "supportingCoursePlacement": {
@@ -491,7 +496,7 @@
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.14.json",
+    "provenancePath": "policy/provenance/planning-flexibility.16.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -513,7 +518,8 @@
       "OWNER-PANEL-REVIEW-2026-11-22#OD6",
       "OWNER-PANEL-REVIEW-2026-11-22#OD7",
       "OWNER-PANEL-REVIEW-2026-11-22#OD8",
-      "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification"
+      "OWNER-PANEL-REVIEW-2026-11-22#OD3-clarification",
+      "OWNER-PLAN-RANKING-2026-11-23#Yearly-target-before-verified-count"
     ],
     "sources": [
       {
@@ -667,6 +673,24 @@
         "sourceId": "OWNER-PANEL-REVIEW-2026-11-22",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": "Earlier planning preference order where it conflicts with OD3, OD5, OD6, OD7, or OD8, and earlier status presentation where it conflicts with OD9"
+      },
+      {
+        "anchors": [
+          "Yearly-target-before-verified-count"
+        ],
+        "authority": "Project owner, explicit plan-ranking decision",
+        "authorityBoundary": "ECONOMICS_NONACADEMIC_PLANNING_STRATEGY_RANKING_ONLY",
+        "confirmedOn": "2026-11-23",
+        "effective": {
+          "from": "2026-11-23",
+          "through": null
+        },
+        "path": "policy/provenance/plan-ranking-decision-2026-11-23.md",
+        "reviewer": "Project owner",
+        "sha256": "e338d31ad14c17632a03314ae66726de22f08c3246e7d88a385451c518bef04d",
+        "sourceId": "OWNER-PLAN-RANKING-2026-11-23",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "Prior verified-count-before-yearly-target ranking, and the ECO 321 preference when it conflicts with Balanced or Explore the Major yearly-target fit"
       },
       {
         "anchors": [

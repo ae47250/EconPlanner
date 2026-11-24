@@ -36,15 +36,7 @@
           "termId": "spring-2027",
           "term": "Spring/May",
           "academicYear": "2026/2027",
-          "courses": [
-            {
-              "course": "ECO 222",
-              "title": "Economics of the European Union",
-              "section": "S",
-              "status": "Planned",
-              "requirementId": "eco-elective-1"
-            }
-          ]
+          "courses": []
         },
         {
           "termId": "fall-2027",
@@ -90,7 +82,7 @@
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-2"
+              "requirementId": "eco-elective-1"
             }
           ]
         },
@@ -104,7 +96,7 @@
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-3"
+              "requirementId": "eco-elective-2"
             }
           ]
         },
@@ -124,7 +116,7 @@
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-4"
+              "requirementId": "eco-elective-3"
             }
           ]
         },
@@ -146,7 +138,15 @@
           "termId": "spring-2030",
           "term": "Spring/May",
           "academicYear": "2029/2030",
-          "courses": []
+          "courses": [
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-4"
+            }
+          ]
         }
       ]
     },
@@ -161,15 +161,7 @@
           "termId": "winter-2027",
           "term": "Winter",
           "academicYear": "2026/2027",
-          "courses": [
-            {
-              "course": "ECO 321",
-              "title": "Money & Financial Markets",
-              "section": "J",
-              "status": "Planned",
-              "requirementId": "finance"
-            }
-          ]
+          "courses": []
         },
         {
           "termId": "spring-2027",
@@ -203,6 +195,26 @@
           "termId": "winter-2028",
           "term": "Winter",
           "academicYear": "2027/2028",
+          "courses": []
+        },
+        {
+          "termId": "spring-2028",
+          "term": "Spring/May",
+          "academicYear": "2027/2028",
+          "courses": [
+            {
+              "course": "ECO elective",
+              "title": "Pick a course when the schedule comes out.",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "eco-elective-1"
+            }
+          ]
+        },
+        {
+          "termId": "fall-2028",
+          "term": "Fall",
+          "academicYear": "2028/2029",
           "courses": [
             {
               "course": "ECO 214",
@@ -214,18 +226,6 @@
           ]
         },
         {
-          "termId": "spring-2028",
-          "term": "Spring/May",
-          "academicYear": "2027/2028",
-          "courses": []
-        },
-        {
-          "termId": "fall-2028",
-          "term": "Fall",
-          "academicYear": "2028/2029",
-          "courses": []
-        },
-        {
           "termId": "winter-2029",
           "term": "Winter",
           "academicYear": "2028/2029",
@@ -235,7 +235,7 @@
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-1"
+              "requirementId": "eco-elective-2"
             }
           ]
         },
@@ -249,7 +249,7 @@
               "title": "Pick a course when the schedule comes out.",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-2"
+              "requirementId": "eco-elective-3"
             }
           ]
         },
@@ -259,11 +259,11 @@
           "academicYear": "2029/2030",
           "courses": [
             {
-              "course": "ECO elective",
-              "title": "Pick a course when the schedule comes out.",
+              "course": "BUSN 323",
+              "title": "Investments",
               "section": null,
               "status": "Planned",
-              "requirementId": "eco-elective-3"
+              "requirementId": "finance"
             }
           ]
         },

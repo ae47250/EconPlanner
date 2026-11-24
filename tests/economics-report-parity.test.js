@@ -183,12 +183,14 @@ async function reportPdf(student, selectedPlan) {
 }
 
 async function changedElectiveArtifacts() {
-  const economics = await generateEconomics(LARGE_SELECTED_STUDENT);
+  const student = { ...LARGE_SELECTED_STUDENT, isTransferStudent: true,
+    transferEntryAcademicYear: "2025-2026", transferExpectedGraduationYear: "2027" };
+  const economics = await generateEconomics(student);
   const edited = replaceElective(economics.economicsPlans[0], "ECO 224");
-  const selectedPlan = await validateEditedPlan(LARGE_SELECTED_STUDENT, economics, edited);
-  const json = await reportJson(LARGE_SELECTED_STUDENT, selectedPlan);
-  const html = await reportHtml(LARGE_SELECTED_STUDENT, selectedPlan);
-  const pdfRequest = await reportPdf(LARGE_SELECTED_STUDENT, selectedPlan);
+  const selectedPlan = await validateEditedPlan(student, economics, edited);
+  const json = await reportJson(student, selectedPlan);
+  const html = await reportHtml(student, selectedPlan);
+  const pdfRequest = await reportPdf(student, selectedPlan);
   return { selectedPlan, json, html, pdfRequest };
 }
 
@@ -234,7 +236,7 @@ test("Task 17 canonical projection has full JSON, HTML, and mocked PDF parity af
   assert.ok(expected.warnings.some(message => /unknown date|availability|seat/i.test(message)));
   assert.equal(expected.advisorAttention.length, 0);
   assert.ok(expected.terms.some(term => term.courses.some(course => (
-    course.code === "ECO 321" && course.requirementRole === "finance"
+    course.code === "BUSN 323" && course.requirementRole === "finance"
   ))));
   assert.ok(!expected.warnings.some(message => /petition with the Student Academic Assistance Committee/.test(message)));
   assert.ok(!expected.advisorAttention.some(notice => notice.code.startsWith("PLAN_EDIT_OPTIONS_")));
@@ -382,7 +384,7 @@ for (const authority of ["ECO 213 instructor", "Economics Department"]) {
     const instructor = authority === "ECO 213 instructor";
     const student = instructor
       ? { academicStanding: "freshman", planCreationDate: "2026-10-19", courses: [] }
-      : { academicStanding: "junior", planCreationDate: PREPARED_DATE, courses: completed(["MAT 113", "ECO 161", "ECO 221"]) };
+      : { academicStanding: "junior", planCreationDate: PREPARED_DATE, courses: completed(["MAT 113", "MAT 217", "ECO 161", "ECO 221"]) };
     const economics = await generateEconomics(student);
     let selectedPlan = economics.economicsPlans.find(plan => plan.id === "balanced");
     if (instructor) {
