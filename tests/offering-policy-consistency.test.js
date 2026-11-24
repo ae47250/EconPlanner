@@ -123,10 +123,10 @@ test("ECO 222 catalog term scope does not establish a future elective offering",
 });
 
 test("ECO 222 exact alternate-term evidence passes complete edit validation", async () => {
-  const student = { academicStanding: "junior", planCreationDate: "2026-07-30", courses: ["ECO 113", "MAT 113", "ECO 161", "ECO 221"].map(code => ({code, status: "completed"})) };
+  const student = { academicStanding: "sophomore", planCreationDate: "2026-07-30", courses: ["ECO 113", "ECO 114", "MAT 113", "ECO 161", "ECO 221"].map(code => ({code, status: "completed"})) };
   const generated = await post({ student });
   const economics = generated.data.programs.find(item => item.program.id === "economics-base");
-  const plan = economics.economicsPlans.find(item => item.id === "balanced");
+  const plan = economics.economicsPlans.find(item => item.id === "explore-first");
   const original = entries(plan).find(row => row.course.course === "ECO 222");
   const destination = plan.terms.find(term => term.slotId === "fall-2027");
   const offeredCourses = [...destination.courses.map(course => course.course), "ECO 222"];

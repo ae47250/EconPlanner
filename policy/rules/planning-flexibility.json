@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "policyVersion": "econ-planning-flexibility.15",
+  "policyVersion": "econ-planning-flexibility.16",
   "status": "OWNER_APPROVED",
   "confirmation": {
     "date": "2026-11-23",
@@ -323,6 +323,7 @@
         },
         "rankingPreferences": {
           "firstYearTargetFormula": "MIN_BALANCED_MINUS_ONE_AND_FLOOR_TOTAL_OVER_YEARS",
+          "yearlyTargetFitPrecedesPreferredFinanceCourse": true,
           "laterYearDistribution": "EVEN_WITH_REMAINDER_IN_LATEST_YEARS",
           "annualCapacityBasis": "ACTUAL_REMAINING_USABLE_CAPACITY_AFTER_FIXED_AND_RESERVED_OCCUPANCY",
           "preferNondecreasingAnnualLoad": true,

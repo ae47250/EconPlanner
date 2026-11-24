@@ -32,7 +32,7 @@ test("Explore keeps a lighter first year when verified ECO 321 would erase it", 
     < balanced.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses).length);
 });
 
-test("Explore uses verified ECO 321 when its first year remains lighter", () => {
+test("Explore keeps its lighter yearly target ahead of verified ECO 321", () => {
   const student = {
     academicStanding: "freshman",
     planCreationDate: "2026-11-22",
@@ -43,8 +43,8 @@ test("Explore uses verified ECO 321 when its first year remains lighter", () => 
   const balanced = plans.find(plan => plan.id === "balanced");
   assert.ok(explore?.validation.valid);
   const finance = explore.terms.flatMap(term => term.courses).find(course => course.requirementId === "finance");
-  assert.equal(finance?.course, "ECO 321");
-  assert.equal(finance?.source, "verified-offering");
+  assert.equal(finance?.course, "BUSN 323");
+  assert.equal(finance?.source, "projected-offering");
   assert.ok(explore.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses).length
     < balanced.terms.filter(term => term.yearIndex === 0).flatMap(term => term.courses).length);
 });

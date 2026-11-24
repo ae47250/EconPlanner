@@ -1,8 +1,8 @@
 {
   "activationStatus": "OWNER_APPROVED",
   "activeRuntimeMappingChanged": false,
-  "bundleVersion": "econ-planning-flexibility.15",
-  "contentHash": "sha256:7f9a15839fdc48a0212d695b1cfafbcab7920caa3c0869af11cd38c3343babe4",
+  "bundleVersion": "econ-planning-flexibility.16",
+  "contentHash": "sha256:c0f8884bc6978b96a0f1d2c561b60157a74366e5b10a581cf9de7bbb6cb72660",
   "policy": {
     "acceleratedSeniorStanding": {
       "basis": "accelerated_plan_assumes_senior_standing_in_final_year",
@@ -208,7 +208,8 @@
             "typicalFinalYearTrackedLoad": [
               2,
               3
-            ]
+            ],
+            "yearlyTargetFitPrecedesPreferredFinanceCourse": true
           }
         },
         {
@@ -442,7 +443,7 @@
       "sourceRef": "OWNER-PANEL-REVIEW-2026-11-22#OD8",
       "spreadExceptionNote": false
     },
-    "policyVersion": "econ-planning-flexibility.15",
+    "policyVersion": "econ-planning-flexibility.16",
     "schemaVersion": "1.0.0",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -495,7 +496,7 @@
     }
   },
   "provenance": {
-    "provenancePath": "policy/provenance/planning-flexibility.15.json",
+    "provenancePath": "policy/provenance/planning-flexibility.16.json",
     "sourcePath": "policy/rules/planning-flexibility.json",
     "sourceRefs": [
       "HANOVER-CATALOG-2026-2027#Hanover-Core-Curriculum",
@@ -686,10 +687,10 @@
         },
         "path": "policy/provenance/plan-ranking-decision-2026-11-23.md",
         "reviewer": "Project owner",
-        "sha256": "026b499adf08d173d11e3e4a4fa757e64f6b323c9022cfc06bfe800e1acf8d7a",
+        "sha256": "e338d31ad14c17632a03314ae66726de22f08c3246e7d88a385451c518bef04d",
         "sourceId": "OWNER-PLAN-RANKING-2026-11-23",
         "sourceType": "OWNER_CONFIRMATION",
-        "supersedes": "Prior verified-count-before-yearly-target ranking, and the ECO 321 preference only when it conflicts with an exact Balanced yearly target"
+        "supersedes": "Prior verified-count-before-yearly-target ranking, and the ECO 321 preference when it conflicts with Balanced or Explore the Major yearly-target fit"
       },
       {
         "anchors": [

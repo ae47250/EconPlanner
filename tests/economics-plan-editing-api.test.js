@@ -68,7 +68,7 @@ test("ordinary freshman plans agree with the independent policy Oracle and early
 test("moving a concurrent intermediate before ECO 461 removes a no-longer-required concurrent approval", async () => {
   const student = {
     academicStanding: "junior", planCreationDate: "2026-07-30",
-    courses: completed(["MAT 113", "ECO 161", "ECO 221"])
+    courses: completed(["MAT 113", "MAT 217", "ECO 161", "ECO 221"])
   };
   const generated = await postMap({ student });
   const plans = generated.data.programs.find(item => item.program.id === "economics-base").economicsPlans;

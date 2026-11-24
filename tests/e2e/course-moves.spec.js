@@ -1203,8 +1203,8 @@ test("course menus omit source audits and fixed capstones have no move controls"
   await openPlan(page, "sophomore", { completed: ["ECO 113", "ECO 114"] });
   const capstone = card(page, "ECO 461");
   await expect(capstone.getByRole("button", { name: /Change|Drag/ })).toHaveCount(0);
-  const course = moveControl(page, "ECO 222");
-  await course.getByRole("button", { name:/^Change ECO 222(?:-[A-Z])?$/ }).click();
+  const course = moveControl(page, "MAT 217");
+  await course.getByRole("button", { name:/^Change MAT 217(?:-[A-Z])?$/ }).click();
   await expect(course.locator(".course-change-panel")).toBeVisible();
   await expect(course).not.toContainText("Why can’t I choose other terms?");
   await expect(course).not.toContainText("Sources");
