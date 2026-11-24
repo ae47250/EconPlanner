@@ -864,7 +864,7 @@ test("standard planning may use more than two Economics courses when total load 
       "all required courses must finish by the graduation target");
     const may = plan.terms.find(term => term.term === "Spring/May 2027");
     assert.ok(schedule.terms.May.some(section => section.course === may.courses[0].course));
-    assert.ok(plan.validation.warnings.some(warning => warning === "This plan has 3 Economics courses in Winter 2027. The department prefers no more than 2 per term, but the term is still within the normal course load."));
+    assert.ok(plan.validation.warnings.some(warning => warning === "This plan has 3 Economics courses in Winter 2027. The department recommends no more than 2 per term, but the term is still within the normal course load."));
     assert.ok(plan.validation.warnings.some(warning => /MAT 217.*FULL|FULL.*MAT 217/i.test(warning)));
     assert.ok(plan.terms.every(term => term.courses.length <= (term.termKey === "May" ? 1 : 4)));
     assert.ok(plan.terms.flatMap(term => term.courses).filter(course => course.course.startsWith("ECO ")).every(course => (

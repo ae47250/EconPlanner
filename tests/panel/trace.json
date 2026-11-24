@@ -9,10 +9,89 @@
       ]
     },
     {
+      "messageKey": "catalog.comprehensiveEvaluation",
+      "studentIds": [
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "30",
+        "32",
+        "36",
+        "39",
+        "42",
+        "44"
+      ]
+    },
+    {
+      "messageKey": "catalog.petitionPlanCounts",
+      "studentIds": [
+        "07",
+        "08",
+        "11",
+        "13",
+        "16",
+        "17",
+        "21",
+        "23",
+        "24",
+        "27",
+        "28",
+        "30",
+        "36",
+        "39",
+        "42",
+        "44"
+      ]
+    },
+    {
+      "messageKey": "checklist.concurrentPrerequisite",
+      "studentIds": [
+        "19"
+      ]
+    },
+    {
+      "messageKey": "checklist.prerequisiteNotCompleted",
+      "studentIds": [
+        "16",
+        "17",
+        "18",
+        "32"
+      ]
+    },
+    {
+      "messageKey": "checklist.statisticsAlreadyFilled",
+      "studentIds": [
+        "27",
+        "49"
+      ]
+    },
+    {
+      "messageKey": "history.scheduledPrerequisite",
+      "studentIds": [
+        "16",
+        "32"
+      ]
+    },
+    {
       "messageKey": "infeasibility.capstone.seniorStanding",
       "studentIds": [
         "04",
         "06"
+      ]
+    },
+    {
+      "messageKey": "infeasibility.courseCapacity",
+      "studentIds": [
+        "09",
+        "10",
+        "11",
+        "31",
+        "33",
+        "45"
       ]
     },
     {
@@ -39,6 +118,12 @@
       "messageKey": "infeasibility.requiredOffering",
       "studentIds": [
         "40"
+      ]
+    },
+    {
+      "messageKey": "move.takePrerequisiteFirst",
+      "studentIds": [
+        "19"
       ]
     },
     {
@@ -315,17 +400,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "Ask the ECO 213 instructor about same-term approval.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Ask your advisor and the Registrar to confirm you can take ECO 461 then.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -336,69 +410,6 @@
         "03",
         "07",
         "08"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Ask your advisor to check.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16",
-        "17",
-        "18",
-        "32"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "23",
-        "24",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Ask your advisor whether you still need to take it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44"
       ]
     },
     {
@@ -971,18 +982,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "Check with your advisor.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16",
-        "32"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "CHECKLIST CELL: AP credit AP/exam credit.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -1139,28 +1138,6 @@
       },
       "studentIds": [
         "18"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: Completed ECO 113 not marked done before this class.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: Completed MAT 113 or MAT 121 not marked done before this class.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "32"
       ]
     },
     {
@@ -2684,28 +2661,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Taking now ECO 114 not marked done before this class.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: Taking now Taking MAT 121 now.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "CHECKLIST CELL: Transfer credit Transfer credit.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -3630,6 +3585,51 @@
     },
     {
       "section": "PDF",
+      "sentence": "ECO 461 also counts toward your Writing 2 (W2) requirement.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "30",
+        "32",
+        "36",
+        "39",
+        "42",
+        "44",
+        "46",
+        "47",
+        "48",
+        "49"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "Economics elective (200 level or higher) — Pick a course when the schedule comes out.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -3791,32 +3791,6 @@
         "32",
         "46",
         "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Forms are at the Registrar's Office.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "23",
-        "24",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
       ]
     },
     {
@@ -4810,18 +4784,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "27",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Math choices: MAT 113 or MAT 121.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -4953,18 +4915,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "NOTE: Scheduled after ECO 213, which you marked completed.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16",
-        "32"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "NOTE: Taking now",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -4975,6 +4925,18 @@
         "18",
         "19",
         "36"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "NOTE: This class is a prerequisite for ECO 213, which you marked completed.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "16",
+        "32"
       ]
     },
     {
@@ -7192,7 +7154,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "The department prefers no more than 2 per term, and this term uses an advisor-approved overload.",
+      "sentence": "The department recommends no more than 2 per term, and this term uses an advisor-approved overload.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7515,51 +7477,6 @@
       "studentIds": [
         "02",
         "08"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "W2 ECO 461 also counts toward your Writing 2 (W2) requirement.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
       ]
     },
     {
@@ -8043,75 +7960,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "Your 2023–24 catalog also required a comprehensive evaluation in Economics.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Your 2023–24 catalog does not accept it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "23",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Your 2023–24 catalog does not accept them.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "24"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Your 2024–25 catalog does not accept it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -8299,52 +8147,6 @@
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Your plan counts BUSN 323 and PSY 217.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "24"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Your plan counts BUSN 323.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Your plan counts PSY 217.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "23"
       ]
     },
     {
@@ -9057,17 +8859,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Ask the ECO 213 instructor about same-term approval.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Ask the ECO 213 instructor for approval.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -9104,46 +8895,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Ask your advisor to check.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16",
-        "17",
-        "18",
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "23",
-        "24",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Ask your advisor to review the reason below before relying on this plan.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -9159,29 +8910,6 @@
         "42",
         "46",
         "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Ask your advisor whether you still need to take it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44"
       ]
     },
     {
@@ -9936,18 +9664,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Check with your advisor.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16",
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Check your statistics answer or ask your advisor about a later graduation date.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -10157,17 +9873,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Taking now ◐ In progress Taking MAT 121 now.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -10229,28 +9934,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed ECO 113 not marked done before this class.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 not marked done before this class.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -10276,17 +9959,6 @@
         "02",
         "03",
         "46"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Taking now ◐ In progress ECO 114 not marked done before this class.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "17"
       ]
     },
     {
@@ -11385,22 +11057,6 @@
       "studentIds": [
         "23",
         "24"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Choose a later graduation year or talk with your advisor.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "09",
-        "10",
-        "11",
-        "31",
-        "33",
-        "45"
       ]
     },
     {
@@ -12557,6 +12213,51 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "ECO 461 also counts toward your Writing 2 (W2) requirement.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "30",
+        "32",
+        "36",
+        "39",
+        "42",
+        "44",
+        "46",
+        "47",
+        "48",
+        "49"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "ECO 461 cannot fit before this graduation target without senior standing.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -12803,32 +12504,6 @@
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Forms are at the Registrar's Office.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "23",
-        "24",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
       ]
     },
     {
@@ -13908,18 +13583,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "MAT 217 does not count toward the major because ECO 257 fills the Statistics requirement.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "27",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Math choices: MAT 113 or MAT 121.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -14470,18 +14133,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "NOTE: Scheduled after ECO 213, which you marked completed.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16",
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "NOTE: Seat availability not confirmed",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -14523,6 +14174,18 @@
         "47",
         "48",
         "49"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "NOTE: This class is a prerequisite for ECO 213, which you marked completed.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "16",
+        "32"
       ]
     },
     {
@@ -15938,7 +15601,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "The department prefers no more than 2 per term, and this term uses an advisor-approved overload.",
+      "sentence": "The department recommends no more than 2 per term, and this term uses an advisor-approved overload.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -16010,22 +15673,6 @@
       "studentIds": [
         "35",
         "43"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "They cannot all fit.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "09",
-        "10",
-        "11",
-        "31",
-        "33",
-        "45"
       ]
     },
     {
@@ -16311,51 +15958,6 @@
       },
       "studentIds": [
         "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "W2 ECO 461 also counts toward your Writing 2 (W2) requirement.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
       ]
     },
     {
@@ -17071,52 +16673,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "You have 10 required courses left and 2 terms left by May 2027.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "10",
-        "11"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "You have 3 required courses left and 1 term left by May 2027.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "45"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "You have 6 required courses left and 2 terms left by May 2027.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "31",
-        "33"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "You have 8 required courses left and 2 terms left by May 2027.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "09"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -17168,75 +16724,6 @@
       },
       "studentIds": [
         "29"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your 2023–24 catalog also required a comprehensive evaluation in Economics.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your 2023–24 catalog does not accept it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "23",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your 2023–24 catalog does not accept them.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "24"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your 2024–25 catalog does not accept it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21"
       ]
     },
     {
@@ -17400,52 +16887,6 @@
         "39",
         "42",
         "44"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your plan counts BUSN 323 and PSY 217.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "24"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your plan counts BUSN 323.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your plan counts PSY 217.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "23"
       ]
     },
     {

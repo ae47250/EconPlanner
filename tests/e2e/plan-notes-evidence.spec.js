@@ -8,7 +8,7 @@ const normalize = value => value.replace(/\s+/g, ' ').trim();
 const studentNoteTitles = { 'ccr-ace':'Other graduation requirements', history:'When these classes ran before',
   upcoming:'Published schedules as of the plan date (September 28, 2026)', future:'Courses in future years' };
 const expectedNoteText = note => normalize([studentNoteTitles[note.id] || note.title, note.description,
-  ...note.items.map(item => [item.code, item.label ? item.label + ':' : '', ...(item.lines || [item.text])].filter(Boolean).join(' ')), note.caveat].filter(Boolean).join(' '));
+  ...note.items.map(item => [item.code === 'W2' ? '' : item.code, item.label ? item.label + ':' : '', ...(item.lines || [item.text])].filter(Boolean).join(' ')), note.caveat].filter(Boolean).join(' '));
 
 for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile', {width:390,height:844}]]) {
   test(`${device}: actual generation, selected-plan notes, brief feedback, keyboard focus, undo and reload`, async ({ page }, testInfo) => {

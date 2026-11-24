@@ -4,6 +4,7 @@ import {resetPlanner,chooseStanding,continueToCourses,setCourseStatus,courseStat
 import {evaluateTermLoad} from '../../lib/decision-engine/placement.js';
 import {runtimePolicyBundle} from '../../lib/policy/compat-normalized.js';
 import {termLoadMessage} from '../../lib/policy/term-load.js';
+import {studentDisplayMessages} from '../../lib/planning/student-language.js';
 
 const history = ['ECO 113','ECO 114','ECO 213','MAT 113','MAT 217','ECO 161','ECO 234'];
 async function selectHistory(page,codes) {
@@ -26,13 +27,13 @@ test('a pending-overload move card is visibly disabled and requests evidence',as
     {id:'2027-WINTER',label:'Winter 2027',status:'REVIEW_REQUIRED',loadDecision,message:termLoadMessage(loadDecision,bundle)}
   ];
   plan.terms[0].courses[0].moveGuidance = {studentMessage:termLoadMessage(loadDecision,bundle)};
-  await openFixtureResult(page,plannerResultFixture({plans:[plan]}));
+  await openFixtureResult(page,{...plannerResultFixture({plans:[plan]}),policyMessages:studentDisplayMessages(bundle)});
   const planCard = await visitPlan(page, "balanced");
   const control = planCard.locator('.plan-course-actions[aria-label="Changes for ECO 113"]');
   await control.getByRole('button',{name:'Change ECO 113',exact:true}).click();
   const menu = planCard.getByRole('region', {name:'Change ECO 113 options'});
   await expect(menu.locator('[data-change-choice="move:2027-WINTER"]')).toHaveCount(0);
-  await expect(menu).toContainText('An advisor needs to check this move.');
+  await expect(menu).toContainText("An advisor needs to check this move, because it depends on an approval or record EconPlanner can’t confirm.");
   await expect(menu.locator('.course-choice-details')).toHaveCount(0);
 });
 async function clearAll(page) {

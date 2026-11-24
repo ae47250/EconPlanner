@@ -24,7 +24,7 @@ test("completed advanced courses explain Taking now, missing, one-of, and multip
   assert.equal(multiple.length, 2);
   assert.match(historicalPrerequisiteSummary(multiple), /advisor will check it\. Also: ECO 257 or MAT 217 or PSY 217 is not marked completed\.$/);
   assert.deepEqual(gaps("ECO 214", [course("ECO 214"), course("ECO 114"), course("MAT 121")]), []);
-  assert.equal(scheduledAfterCompletedMarker("ECO 114", [course("ECO 214"), course("MAT 113")], rules), "Scheduled after ECO 214, which you marked completed. Check with your advisor.");
+  assert.equal(scheduledAfterCompletedMarker("ECO 114", [course("ECO 214"), course("MAT 113")], rules, policyBundle.messages), "This class is a prerequisite for ECO 214, which you marked completed. Check with your advisor.");
 });
 
 test("checklist markers name historical, AP, transfer, duplicate, enrollment, and unknown reasons", () => {
@@ -46,12 +46,12 @@ test("the validated plan keeps a missing major prerequisite and the PDF repeats 
   const plan = (await response.json()).programs.find(item => item.economicsPlans).economicsPlans[0];
   const scheduled = plan.terms.flatMap(term => term.courses).find(item => item.course === "ECO 114");
   assert.ok(scheduled);
-  const note = "Scheduled after ECO 214, which you marked completed. Check with your advisor.";
+  const note = "This class is a prerequisite for ECO 214, which you marked completed. Check with your advisor.";
   assert.ok(scheduled.planningMarkers.includes(note));
-  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-214").markers.includes("ECO 114 not marked done before this class. Ask your advisor to check."));
+  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-214").markers.includes("ECO 114 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check."));
   assert.match(plan.planConditions.find(item => item.reasonCode === "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW").shortMessage, /^You marked ECO 214 completed, but ECO 114.*Also: MAT 113 or MAT 121 is not marked completed\.$/);
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
-  assert.match(renderEconomicsHtml(report, template), /Scheduled after ECO 214, which you marked completed\. Check with your advisor\./);
+  assert.match(renderEconomicsHtml(report, template), /This class is a prerequisite for ECO 214, which you marked completed\. Check with your advisor\./);
 });
 
 test("freshman completed ECO 214 shows the same prerequisite-gap advice in the plan and PDF", async () => {

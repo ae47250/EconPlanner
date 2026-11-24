@@ -84,12 +84,12 @@ function olderCatalogNote(plan = {}) {
   const details = [];
   if (used.length) {
     const courses = used.join(" and ");
-    details.push(`Your plan counts ${courses}. Your ${shortYear} catalog does not accept ${used.length === 1 ? "it" : "them"}. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Forms are at the Registrar's Office.`);
+    details.push(`Your plan counts ${courses}. Your ${shortYear} catalog does not accept ${used.length === 1 ? "it" : "them"}. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.`);
   }
   const priorMilestone = earlier.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   const currentMilestone = catalog2025.nonCourseMilestones.find(item => item.id === "ECONOMICS-COMPREHENSIVE-EVALUATION")?.status;
   if (priorMilestone === "REQUIRED" && currentMilestone === "NOT_LISTED") {
-    details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.`);
+    details.push(`Your ${shortYear} catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.`);
   }
   return `This plan uses the current Economics major requirements. ${details.join(" ")}`.trim();
 }

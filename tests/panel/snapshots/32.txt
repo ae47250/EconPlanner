@@ -46,7 +46,7 @@ NOTE: Approval needed
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 GRID ROW: MAT 113-J ▾ | Essential Pre-Calculus
 NOTE: Seat availability not confirmed
-NOTE: Scheduled after ECO 213, which you marked completed. Check with your advisor.
+NOTE: This class is a prerequisite for ECO 213, which you marked completed. Check with your advisor.
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S ▾ | Economics of the European Union
 NOTE: Seat availability not confirmed
@@ -60,21 +60,21 @@ SCREEN > Plan: Balanced > Notes: Things to keep in mind
 Things to keep in mind
 Before you register
 We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222. Check the registration system before you register.
-In Winter 2027, this plan has 5 courses. The normal limit is 4. You recorded advisor approval and no academic probation.
+In Winter 2027, this plan has 5 courses. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
 You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
-This plan has 4 Economics courses in Winter 2027. The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
+This plan has 4 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
-This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
+This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
 CHECKLIST ROW: ECO 113 ECO 113 ✓ Completed
 CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
 CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned Approval needed
-CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 not marked done before this class. Ask your advisor to check.
+CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
 CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed
 CHECKLIST ROW: Statistics MAT 217 ✓ Completed
 CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned
@@ -91,7 +91,7 @@ SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
 HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+ECO 461 also counts toward your Writing 2 (W2) requirement.
 Published schedules as of the plan date (November 22, 2026)
 Winter 2027:
 ECO 113 · Principles of Microeconomics
@@ -144,7 +144,7 @@ GRID ROW: ECO 461-J
 NOTE: Approval needed
 GRID ROW: MAT 113-J
 NOTE: Approval needed
-NOTE: Scheduled after ECO 213, which you marked completed. Check with your advisor.
+NOTE: This class is a prerequisite for ECO 213, which you marked completed. Check with your advisor.
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
 ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
@@ -157,14 +157,14 @@ PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Before you register
 We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, MAT 113, and ECO 222. Check the registration system before you register.
-In Winter 2027, this plan has 5 courses. The normal limit is 4. You recorded advisor approval and no academic probation.
+In Winter 2027, this plan has 5 courses. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
 You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
-This plan has 4 Economics courses in Winter 2027. The department prefers no more than 2 per term, and this term uses an advisor-approved overload.
+This plan has 4 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
-This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.
+This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 PDF > Plan: Balanced > For your advisor
 For your advisor
 Confirm the ECO 214 instructor approves taking MAT 113 and ECO 214 together in Winter 2027.
@@ -186,7 +186,7 @@ CHECKLIST CELL: MAT 113 — Winter 2027
 CHECKLIST CELL: Planned Approval needed
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213
-CHECKLIST CELL: Completed MAT 113 or MAT 121 not marked done before this class. Ask your advisor to check.
+CHECKLIST CELL: Completed MAT 113 or MAT 121 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
 CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Winter 2027
 CHECKLIST CELL: Planned Approval needed
@@ -220,7 +220,7 @@ Panel Student 32 | Balanced | Prepared November 22, 2026
 PDF > Plan: Balanced > Notes: Hanover Core
 Hanover Core
 HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
-W2 ECO 461 also counts toward your Writing 2 (W2) requirement.
+ECO 461 also counts toward your Writing 2 (W2) requirement.
 PDF > Plan: Balanced > Notes: Past Economics course offerings
 Past Economics course offerings
 Past Fall schedules included: ECO 357.

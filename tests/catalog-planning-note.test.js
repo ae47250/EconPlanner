@@ -66,8 +66,9 @@ test("API plan and PDF explain older catalogs once and omit the box for recent c
       assert.ok(studentSection.includes("<h3>Check with your advisor</h3>"));
       for (const term of expected) assert.ok(studentSection.includes(term));
       assert.doesNotMatch(html, /Please help the student submit the routine SAC petition/);
-      assert.match(studentSection, /Student Academic Assistance Committee\. Forms are at the Registrar&#39;s Office\./);
-      if (standing === "senior") assert.match(studentSection, /comprehensive evaluation in Economics\. Ask your advisor whether you still need to take it\./);
+      assert.match(studentSection, /Student Academic Assistance Committee\./);
+      assert.doesNotMatch(studentSection, /Forms are at/);
+      if (standing === "senior") assert.match(studentSection, /comprehensive evaluation in Economics\. The current major does not\. Ask your advisor whether you still need to take it\./);
     }
   }
 });
@@ -94,6 +95,6 @@ test("older-catalog wording names only the courses the plan actually counts", ()
   const note = planningRequirementsNote(context, onlyPsychology);
   assert.match(note.details[0], /^Your plan counts PSY 217\. Your 2023–24 catalog does not accept it\./);
   assert.doesNotMatch(note.details[0], /BUSN 323|\bSAC\b|;/);
-  assert.match(note.details[0], /Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee\. Forms are at the Registrar's Office\./);
-  assert.equal(note.details[1], "Your 2023–24 catalog also required a comprehensive evaluation in Economics. Ask your advisor whether you still need to take it.");
+  assert.equal(note.details[0], "Your plan counts PSY 217. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.");
+  assert.equal(note.details[1], "Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.");
 });
