@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { acceleratedMathSequenceNotes } from "../../lib/planning/acceleratedMathSequence.js";
+import { summerLastResortNote } from "../../lib/planning/summer-note.js";
 import { seatStatusPresentation } from "../../lib/planning/seat-status.js";
 import { planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
 import { studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentTermLabel } from "../../lib/planning/student-language.js";
@@ -158,7 +159,7 @@ function PlanTimeline({
                       <p className="empty-term">{studyAbroadIds.includes(term.slotId) ? "Study abroad" : "No courses placed"}</p>
                     )}
                     {term.isSummer && (
-                      <p className="summer-term-note">Summer, online, last-resort option.</p>
+                      <p className="summer-term-note">{summerLastResortNote()}</p>
                     )}
                     {term.isPlaceholder && (
                       <p className="placeholder-term-note">Exact course offerings and terms must be confirmed after the schedule is published.</p>
@@ -183,7 +184,7 @@ function PlanTimeline({
             <ul>
               {activePlan.summerFallbacks.map(item => (
                 <li key={`${activePlan.id}-summer-${item.course}-${item.term}`}>
-                  {item.course} in {item.term}: Summer, online, last-resort option. {item.reason}
+                  {item.course} in {item.term}: {summerLastResortNote()} {item.reason}
                 </li>
               ))}
             </ul>

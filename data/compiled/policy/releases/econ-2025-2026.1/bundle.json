@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:9f5028424f8a4245658f55aa4d1b33579e557ac44527dfb81110b4d5b425bd61",
+  "contentHash": "sha256:0244ba4381d1e3ef6e4a8ebc0abf7a3064bdd0e06313660520f44fea651cc12c",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7073,6 +7073,7 @@
     "offering.preliminarySchedule": "Preliminary schedule ({issuedOn}). Course and term may change.",
     "offering.report": "This future course needs confirmation.",
     "offering.student": "This future course needs schedule confirmation.",
+    "offering.summerLastResort": "Summer, online, last-resort option. It runs only if enough students enroll.",
     "offering.unpublishedSchedule": "Schedule not yet published.",
     "permission.advisor": "Verify that the approval matches the controlling rule, course, term, authority, and evidence.",
     "permission.move": "This destination needs the approval shown.",
@@ -8300,6 +8301,31 @@
         "sourceId": "OWNER-SCHEDULE-LOAD-CORRECTION-2026-09-27",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
+      },
+      {
+        "anchors": [
+          "T3",
+          "T4",
+          "T5",
+          "T7",
+          "T8",
+          "T9",
+          "S1",
+          "S2"
+        ],
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "ECONOMICS_PLAN_TIEBREAKERS_AND_SUMMER_RANKING_AND_PRESENTATION",
+        "confirmedOn": "2026-11-24",
+        "effective": {
+          "from": "2026-11-24",
+          "through": null
+        },
+        "path": "policy/provenance/owner-tiebreaker-decisions-2026-11-24.md",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "sha256": "02950c49dd2ef8a0212dcd522b62d01cec97dea0ab9d560be8cd12942aa97714",
+        "sourceId": "OWNER-TIEBREAKER-DECISIONS-2026-11-24",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "the meaning of verified count in plan-ranking-decision-2026-11-23.md only"
       },
       {
         "authority": "Project owner and Economics Department domain expert",

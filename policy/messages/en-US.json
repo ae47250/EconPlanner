@@ -2,6 +2,7 @@
   "schemaVersion": "1.0.0",
   "locale": "en-US",
   "messages": {
+    "offering.summerLastResort": "Summer, online, last-resort option. It runs only if enough students enroll.",
     "allocation.advisor": "Review how this course is assigned across requirements.",
     "allocation.move": "This move must preserve the approved requirement assignment.",
     "allocation.report": "Requirement allocation follows the governing Economics policy.",

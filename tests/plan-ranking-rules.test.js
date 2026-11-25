@@ -72,3 +72,43 @@ test("approval type alone does not change the approval ranking weight", () => {
   assert.equal(planSafetyMetrics(department).approvalWeight, 1);
   assert.equal(planSafetyMetrics(instructor).approvalWeight - planSafetyMetrics(department).approvalWeight, 0);
 });
+
+function isolatedRanking() {
+  return createPlanRanking({
+    plannerTrackedTermLoad: term => term.courses.length,
+    isEconomicCourse: code => code.startsWith("ECO "),
+    capstoneYearIndex: () => 0,
+    semanticPlanSignature: () => "same-placement"
+  });
+}
+
+test("May use alone does not break an otherwise equal plan-ranking tie", () => {
+  const ranking = isolatedRanking();
+  const withMay = {
+    terms: ["Fall", "Winter", "May"].map((termKey, index) => ({
+      termKey, yearIndex: 0,
+      courses: index === 1 ? [] : [course(index === 0 ? "ECO 113" : "ECO 114", "verified-offering")]
+    }))
+  };
+  const withWinter = structuredClone(withMay);
+  withWinter.terms[1].courses = withWinter.terms[2].courses;
+  withWinter.terms[2].courses = [];
+  const mayMetrics = ranking.planSafetyMetrics(withMay);
+  const winterMetrics = ranking.planSafetyMetrics(withWinter);
+  for (const key of ["verifiedCount", "loadSquares", "imbalance", "annualOverFour", "fourCoursePatternPenalty", "maxEco"]) {
+    assert.equal(mayMetrics[key], winterMetrics[key], key);
+  }
+  assert.equal(ranking.compareEconomicsPlans(withMay, withWinter), 0);
+  assert.equal(ranking.compareEconomicsPlans(withWinter, withMay), 0);
+});
+
+test("a Summer course counts as one fewer verified course than a verified Fall section", () => {
+  const ranking = isolatedRanking();
+  const fall = plan([[course("ECO 113", "verified-offering")]], [1]);
+  const summer = structuredClone(fall);
+  summer.terms[0].termKey = "Summer";
+  summer.terms[0].courses[0].source = "summer-last-resort";
+  assert.equal(ranking.planSafetyMetrics(fall).verifiedCount, 1);
+  assert.equal(ranking.planSafetyMetrics(summer).verifiedCount, 0);
+  assert.equal(ranking.planSafetyMetrics(fall).verifiedCount - ranking.planSafetyMetrics(summer).verifiedCount, 1);
+});
