@@ -31,7 +31,7 @@ There is currently no separately versioned Policy Bundle, Production Decision En
 
 ## Exact-main frozen cohort
 
-The committed aggregate JSON is [`tests/fixtures/econplanner-architecture-baseline.v2.json`](../../tests/fixtures/econplanner-architecture-baseline.v2.json), and this document is its Markdown form. Local generated copies are stored as `test-results/cp0-baseline/econplanner-cp0-exact-main-aggregate.{json,md}` beside the ignored raw shards; raw shard SHA-256 digests are retained in the fixture.
+This document summarizes the architecture baseline. Local generated copies are stored as `test-results/cp0-baseline/econplanner-cp0-exact-main-aggregate.{json,md}` beside the ignored raw shards; raw shard SHA-256 digests are retained in the archived fixture.
 
 | Metric | Exact CP0 result |
 |---|---:|

@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { canonicalJson, canonicalSha256 } from "../lib/policy/canonical-json.js";
@@ -333,6 +333,12 @@ async function compilePlanningFlexibilityPolicy(root, compiledRoot) {
     writeImmutable(path.join(outputRoot, "architecture-contract.md"), planningFlexibilityContract(bundle))
   ]);
   await writeFile(path.join(compiledRoot, "planning-flexibility", "active.json"), canonicalJson(bundle));
+  const currentVersionNumber = Number(policy.policyVersion.slice("econ-planning-flexibility.".length));
+  const versionedBundles = await readdir(path.join(compiledRoot, "planning-flexibility"), { withFileTypes: true });
+  await Promise.all(versionedBundles
+    .filter(entry => entry.isDirectory() && /^econ-planning-flexibility\.\d+$/.test(entry.name))
+    .filter(entry => Number(entry.name.slice("econ-planning-flexibility.".length)) < currentVersionNumber)
+    .map(entry => rm(path.join(compiledRoot, "planning-flexibility", entry.name), { recursive: true, force: true })));
   return bundle;
 }
 

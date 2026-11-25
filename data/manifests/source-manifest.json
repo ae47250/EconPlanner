@@ -338,12 +338,6 @@
       "sha256": "5b5fedcdeea9251d88b273eea30951836a71f8b33a776187b6a10e24888adef8"
     },
     {
-      "role": "economics_source",
-      "source": "department-provided:07_spiffy_dashboard_template.html",
-      "path": "data/raw/economics/07_spiffy_dashboard_template.html",
-      "sha256": "a1f4c17d84be1116d8ca640d45df9ef1007191221ffb82e69c28dd533a029455"
-    },
-    {
       "role": "economics_schedule_evidence",
       "source": "user-provided-schedule-screenshot",
       "path": "data/raw/economics/schedule-2026-2027-fall.png",

@@ -496,23 +496,6 @@ export async function POST(request) {
       catalog.economicsPrerequisites,
       { policyBundle: catalog.policyBundle }
     );
-    if (!prerequisiteValidation.valid) {
-      const prerequisiteInputResolution = resolveInputResolution({
-        student,
-        planningContext: authoritativePlanningContext,
-        catalogApplicability,
-        issueCode: "INVALID_STUDENT_PREREQUISITES",
-        issues: prerequisiteValidation.issues
-      });
-      return jsonResponse({
-        error: "Correct the selected course prerequisites before generating a plan.",
-        code: "INVALID_STUDENT_PREREQUISITES",
-        prerequisiteIssues: prerequisiteValidation.issues,
-        inputResolution: prerequisiteInputResolution,
-        economicsPlanResult: buildEconomicsPlanResult({ inputResolution: prerequisiteInputResolution })
-      }, 422);
-    }
-
     if (body?.action === "validate-plan") {
       if (!body.plan?.id || !Array.isArray(body.plan?.terms)) {
         return jsonResponse({ error: "A generated Economics plan is required for validation." }, 400);

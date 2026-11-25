@@ -9,7 +9,6 @@
     "start": "next start",
     "ingest:catalog": "node scripts/ingest-hanover-catalog.mjs",
     "normalize:catalog": "node scripts/normalize-hanover-catalog.mjs",
-    "watch:catalog:2026-2027": "node scripts/watch-hanover-catalog.mjs",
     "compile:policy": "node scripts/compile-policy.mjs",
     "compile:catalog-policy": "node scripts/compile-catalog-policies.mjs",
     "compile:calendar": "node scripts/compile-academic-calendar.mjs",
