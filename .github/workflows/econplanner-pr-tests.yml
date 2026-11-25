@@ -196,6 +196,7 @@ jobs:
           tests/e2e/requested-behaviors.spec.js
           tests/e2e/pdf-wording.spec.js
           tests/e2e/plan-notes-evidence.spec.js
+          tests/e2e/summer-last-resort-note.spec.js
           tests/e2e/econ-planner-parity.spec.js
           tests/e2e/finance-elective-correction.spec.js
           --fully-parallel --workers=1 --shard=${{ matrix.shard }}/4

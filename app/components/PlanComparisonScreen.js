@@ -4,17 +4,17 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { buildPlanningSlots } from "../../lib/planning/horizon.js";
 import { acceleratedMathSequenceNotes } from "../../lib/planning/acceleratedMathSequence.js";
-import { PLANNER_VIEWS } from "../../lib/planning/uiState.js";
 import { joinStudyAbroadTerms, studyAbroadAdvisorContext, studyAbroadTermIds } from "../../lib/planning/study-abroad.js";
 import { noPlanPresentation } from "../../lib/planning/no-plan-presentation.js";
 import { planningRequirementsNote } from "../../lib/catalog/planning-requirements-note.js";
 import { feasibilityMeaning, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
+import { summerLastResortNote } from "../../lib/planning/summer-note.js";
 import { preliminaryScheduleExplanation, studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentStandingSummary, studentTermLabel } from "../../lib/planning/student-language.js";
 import { comparisonStyles } from "../styles/comparisonStyles";
 import { COURSE_CATALOG, COURSE_PREREQUISITES, isTaken, courseTitle, economicsResult, planCourseIdentity, formatAcademicYear, planningSlotsLabel, compactPlanCourse, planReadinessLabel } from "../plannerShared.js";
 import { AdvisorAttention, PlanConditions, MajorRequirementsChecklist } from "./planNotes.js";
 import { CourseMenuContext, ExtraCoursePicker, CourseChange, CourseDragHandle, MoveConfirmation } from "./courseEditing.js";
-import { courseHasMoveControl, PlanTimeline, CourseAvailabilityStatus } from "./PlanTimeline.js";
+import { courseHasMoveControl, CourseAvailabilityStatus } from "./planCourseHelpers.js";
 import { ResultDiagnostics } from "./plannerSummary.js";
 
 const STUDENT_READINESS_EXPLANATIONS = Object.freeze({
@@ -54,21 +54,17 @@ function PlanComparisonScreen({
   planResult,
   fallbackPlanningContext,
   courses,
-  view,
   selectedPlanId,
   isExiting,
   isGenerating,
   editingPlanCourseKey,
   planEditStatus,
   planEditFeedback,
-  canUndoPlanEdit,
   undoPlanId,
   onEditCourses,
   onReviewTimeline,
   onReviewReservedRoom,
   onClearAll,
-  onBackToCompare,
-  onSelectPlan,
   onRegenerate,
   onRegeneratePlan,
   onDownloadPdf,
@@ -102,18 +98,16 @@ function PlanComparisonScreen({
   };
   const [openCourseMenuId, setOpenCourseMenuId] = useState(null);
   const [confirmingCourseMenuId, setConfirmingCourseMenuId] = useState(null);
-  useEffect(() => { setOpenCourseMenuId(null); setConfirmingCourseMenuId(null); }, [selectedPlanId, view]);
+  useEffect(() => { setOpenCourseMenuId(null); setConfirmingCourseMenuId(null); }, [selectedPlanId]);
   useEffect(() => { if (openCourseMenuId) setComparisonDropMessage(""); }, [openCourseMenuId]);
   const [highlightDifferences, setHighlightDifferences] = useState(false);
   const resultHeadingRef = useRef(null);
-  const isPlanView = view === PLANNER_VIEWS.PLAN;
-  const selectedPlan = plans.find(plan => plan.id === selectedPlanId) || plans[0];
-  const planningContext = isPlanView ? selectedPlan?.planningContext || comparisonContext : comparisonContext;
+  const planningContext = comparisonContext;
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => resultHeadingRef.current?.focus());
     return () => window.cancelAnimationFrame(frame);
-  }, [view]);
+  }, []);
 
   const rowsByPlan = new Map(plans.map(plan => [plan.id, comparisonScheduleRows(plan, courses)]));
   const allRowKeys = new Set([...rowsByPlan.values()].flatMap(rows => rows.map(row => row.key)));
@@ -129,7 +123,7 @@ function PlanComparisonScreen({
     acceleratedPlanExists: acceleratedResult?.status !== "NOT_POSSIBLE" });
   const studyAbroadLabel = joinStudyAbroadTerms(studyAbroadIds.map(id => planningSlotsLabel(id, comparisonContext)));
   const graduationTarget = studentTermLabel(planningContext?.expectedGraduationTerm || "To be confirmed");
-  const earlyGraduationTarget = !isPlanView && plans.find(plan => plan.id === "one-year-early")?.planningContext?.expectedGraduationTerm;
+  const earlyGraduationTarget = plans.find(plan => plan.id === "one-year-early")?.planningContext?.expectedGraduationTerm;
   const graduationTargetDisplay = earlyGraduationTarget && studentTermLabel(earlyGraduationTarget) !== graduationTarget
     ? `${graduationTarget} (one year early: ${studentTermLabel(earlyGraduationTarget)})`
     : graduationTarget;
@@ -137,7 +131,7 @@ function PlanComparisonScreen({
     `${course.code}${course.source === "ap_credit" ? " (AP)" : course.status === "transfer" ? " (transfer)" : ""}`
   ));
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
-  const overallStatus = overallPlanReadiness(isPlanView && selectedPlan ? [selectedPlan] : plans);
+  const overallStatus = overallPlanReadiness(plans);
   const noPlan = noPlanPresentation(canonicalPlanResult?.category, canonicalPlanResult?.reason, canonicalPlanResult?.evidence, COURSE_PREREQUISITES);
   const displayedOverallStatus = plans.length
     ? overallStatus
@@ -148,7 +142,7 @@ function PlanComparisonScreen({
         : ["MISSING_OFFERING", "TERM_OVERLOAD_EVIDENCE_REQUIRED"].includes(canonicalPlanResult?.reason) || canonicalPlanResult?.category === "SEARCH_INCOMPLETE"
           ? "More information needed"
           : "Needs advisor attention";
-  const statusPlans = isPlanView && selectedPlan ? [selectedPlan] : plans;
+  const statusPlans = plans;
   const statusReason = statusPlans.flatMap(plan => plan.planConditions || [])
     .find(item => item.kind === "review" && item.shortMessage)?.shortMessage;
   const paperworkReminder = statusPlans.some(plan => planningRequirementsNote(plan.planningContext, plan)?.details.some(detail => /petition/i.test(detail)));
@@ -182,36 +176,20 @@ function PlanComparisonScreen({
           />
           <span>EconPlanner</span>
         </div>
-        {!isPlanView && <nav className="result-progress" aria-label="Planner progress">
+        <nav className="result-progress" aria-label="Planner progress">
           <ol>
             <li><button type="button" onClick={onReviewTimeline}>About you</button></li>
             <li><button type="button" onClick={onEditCourses}>Your courses</button></li>
             <li className="is-current" aria-current="step"><span>Your plans</span></li>
           </ol>
-        </nav>}
-        {!isPlanView && <div className="comparison-student">
+        </nav>
+        <div className="comparison-student">
           <strong>{standing}</strong>
           <span aria-hidden="true">·</span>
           <span>Graduation target: {graduationTargetDisplay}</span>
           {studyAbroadLabel && <><span aria-hidden="true">·</span><span>Study abroad: {studyAbroadLabel}</span></>}
-        </div>}
+        </div>
         <div className="comparison-actions">
-          {isPlanView && (
-            <>
-              <button
-                type="button"
-                className="download-pdf-button"
-                ref={downloadButtonRef}
-                disabled={isDownloadingPdf || Boolean(editingPlanCourseKey)}
-                onClick={() => onDownloadPdf()}
-              >
-                {isDownloadingPdf ? "Creating PDF..." : `Download PDF Report: ${selectedPlan?.label || "Your plan"}`}
-              </button>
-              <button type="button" className="compare-plans-button" onClick={onBackToCompare}>
-                Compare plans
-              </button>
-            </>
-          )}
           <button
             type="button"
             className="regenerate-plans-button"
@@ -220,9 +198,6 @@ function PlanComparisonScreen({
           >
             {isGenerating ? "Regenerating..." : "Regenerate all plans"}
           </button>
-          {isPlanView && <button type="button" className="edit-courses-button" onClick={onEditCourses}>
-            Edit answers
-          </button>}
           <button type="button" className="edit-courses-button clear-all-results" onClick={onClearAll}>
             Clear all
           </button>
@@ -238,7 +213,6 @@ function PlanComparisonScreen({
           <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>Status</strong><span className="result-status-value">{displayedOverallStatus}</span>
-            {isPlanView && selectedPlan && <span className="plan-feasibility-meaning">{feasibilityMeaning(selectedPlan.feasibilityStatus)}</span>}
             {plans.length > 0 && <span className="result-status-reason">{displayedOverallStatus === "Needs confirmation" && plans.length === 1
               ? "Check this plan's approval and standing notes before registering."
               : STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}{paperworkReminder && " See the notes below for paperwork to file."}</span>}
@@ -247,16 +221,14 @@ function PlanComparisonScreen({
         </section>
         <div className="comparison-heading-row">
           <div>
-            <h1 ref={resultHeadingRef} tabIndex={-1}>{isPlanView
-              ? `Review ${selectedPlan?.label || "your plan"}`
-              : plans.length > 1
+            <h1 ref={resultHeadingRef} tabIndex={-1}>{plans.length > 1
                 ? "Compare your course plans"
                 : plans.length === 1
                   ? "Your plan"
                   : "Your planning result"}</h1>
             {plans.length > 0 && <p className="plan-edit-instructions"><strong>Click a course to see where it can move. You can also drag it by the ⠿ handle.</strong><span>While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can&apos;t go there.</span></p>}
           </div>
-          {!isPlanView && plans.length > 1 && (
+          {plans.length > 1 && (
             <label className="difference-toggle">
               <span>Highlight differences</span>
               <input
@@ -268,32 +240,17 @@ function PlanComparisonScreen({
           )}
         </div>
 
-        {!isPlanView && highlightDifferences && (
+        {highlightDifferences && (
           <p className="comparison-difference-key">
             <strong>Purple bars show classes placed in only one plan.</strong> Classes in the same term in both plans have no bar.
           </p>
         )}
 
         {planEditStatus && <p className="plan-edit-status" role="status">{planEditStatus}</p>}
-        {!isPlanView && <p role="status">{comparisonDropMessage}</p>}
-        {!isPlanView && comparisonDrop && <MoveConfirmation drop={comparisonDrop} onApply={applyComparisonDrop}
+        <p role="status">{comparisonDropMessage}</p>
+        {comparisonDrop && <MoveConfirmation drop={comparisonDrop} onApply={applyComparisonDrop}
           onCancel={() => setComparisonDrop(null)} busy={Boolean(editingPlanCourseKey)} />}
-        {isPlanView ? (
-          <PlanTimeline
-            plans={plans}
-            studentCourses={courses}
-            studyAbroadIds={studyAbroadIds}
-            planningGaps={planningGaps}
-            activePlanId={selectedPlan?.id}
-            schedule={result?.annualSchedule}
-            onSelectPlan={onSelectPlan}
-            onEditPlanCourse={onEditPlanCourse}
-            editingPlanCourseKey={editingPlanCourseKey || (isGenerating ? "generation-in-progress" : "")}
-            planEditFeedback={planEditFeedback}
-            onUndoPlanEdit={onUndoPlanEdit}
-            undoCourseId={canUndoPlanEdit}
-          />
-        ) : plans.length > 0 ? (
+        {plans.length > 0 ? (
           <div className="comparison-grid">
             {plans.map(plan => {
               const rows = rowsByPlan.get(plan.id) || [];
@@ -359,6 +316,7 @@ function PlanComparisonScreen({
                                     {course.title && course.course !== "ECO elective" && <span className="comparison-course-title">{courseTitle(course.course)}</span>}
                                     {course.course === "ECO elective" && <span>Future offering unconfirmed</span>}
                                     <CourseAvailabilityStatus course={course} term={row.sourceTerm} schedule={result?.annualSchedule} referenceDate={new Date().toISOString()} />
+                                    {course.source === "summer-last-resort" && <span className="summer-term-note">{summerLastResortNote()}</span>}
                                     {course.preliminaryScheduleEvidence && <span>{preliminaryScheduleExplanation(course.preliminaryScheduleEvidence.issuedOn, policyMessages)}</span>}
                                     {(course.planningMarkers || []).filter(marker => marker !== "Approval required" || course.approvalRequired?.length).map(marker => marker === "Approval required"
                                       ? <div className="plan-course-approval" key={marker}>
@@ -450,7 +408,7 @@ function PlanComparisonScreen({
           </section>
         )}
 
-        {!isPlanView && acceleratedResult && !mergePossibleEarlyResult && (
+        {acceleratedResult && !mergePossibleEarlyResult && (
           <section className="accelerated-result" aria-labelledby="accelerated-result-heading">
             <h2 id="accelerated-result-heading">
               {acceleratedResult.label}: {" "}
@@ -468,19 +426,6 @@ function PlanComparisonScreen({
             {acceleratedResult.status !== "POSSIBLE" && acceleratedResult.message && <p>{acceleratedResult.message}</p>}
           </section>
         )}
-        {isPlanView && selectedPlan?.majorRequirementsChecklist?.unmetRequirements?.length > 0 && <section className="incomplete-candidate">
-          <strong>Unmet requirements</strong><ul>{selectedPlan.majorRequirementsChecklist.unmetRequirements.map(row => <li key={row.id}>{row.label}: {row.courseTerm}{row.markers?.length > 0 && `; ${row.markers.join("; ")}`}</li>)}</ul>
-        </section>}
-        {isPlanView && selectedPlan && <PlanConditions plan={selectedPlan} catalog={report?.catalog} showPlanName={!isPlanView} />}
-        {isPlanView && advisorContext.length > 0 && <section className="plan-notes" data-student-advisor-context><h2>Ask your advisor</h2><ul>{advisorContext.map((item, index) => <li key={index}>{item}</li>)}</ul></section>}
-
-        {isPlanView && selectedPlan && (
-          <>
-            <MajorRequirementsChecklist plan={selectedPlan} showPlanName={!isPlanView} />
-            <details className="comparison-disclosure"><summary>More about this plan</summary><div className="comparison-disclosure-content"><AdvisorAttention plan={selectedPlan} /></div></details>
-          </>
-        )}
-
         <ResultDiagnostics
           outcomes={candidateOutcomes}
           convergences={convergences}

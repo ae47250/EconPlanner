@@ -6,7 +6,7 @@ import { joinStudyAbroadTerms, studyAbroadTermIds } from "../../lib/planning/stu
 import { studentTermLabel } from "../../lib/planning/student-language.js";
 import { isTaken, planningSlotsLabel } from "../plannerShared.js";
 import { PlanningGaps } from "./planNotes.js";
-import { CandidateOutcomes } from "./PlanTimeline.js";
+import { CandidateOutcomes } from "./planCourseHelpers.js";
 
 const STANDING_LABELS = Object.freeze({
   freshman: "Freshman",

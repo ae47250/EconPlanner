@@ -630,9 +630,7 @@ export default function Page() {
         const plans = economicsResult(restoredSession.report)?.economicsPlans || [];
         if (!plans.some(plan => plan.id === initialPlanId)) initialPlanId = plans[0]?.id || "";
         const restoredView = requestedView === PLANNER_VIEWS.INPUT ? restoredSession.view : requestedView;
-        initialView = restoredView === PLANNER_VIEWS.PLAN && !plans.length
-          ? PLANNER_VIEWS.COMPARE
-          : restoredView;
+        initialView = restoredView;
         setSelectedPlanId(initialPlanId);
         setPlannerView(initialView);
         setPlanEditUndo(restoredSession.planEditUndo);
@@ -1647,7 +1645,6 @@ export default function Page() {
           planResult={inputBlock?.economicsPlanResult}
           fallbackPlanningContext={planningContext}
           courses={formData.courses}
-          view={plannerView}
           selectedPlanId={selectedPlanId}
           isExiting={isComparisonExiting}
           isGenerating={isGenerating}
@@ -1655,13 +1652,10 @@ export default function Page() {
           planEditStatus={planEditStatus}
           planEditFeedback={planEditFeedback}
           undoPlanId={planEditUndo?.planId}
-          canUndoPlanEdit={planEditUndo?.planId === selectedPlanId ? (planEditUndo.courseId || "__plan__") : null}
           onEditCourses={returnToCourseSelection}
           onReviewTimeline={() => returnToInputStep(1)}
           onReviewReservedRoom={returnToReservedRoomSetting}
           onClearAll={() => setClearDialogOpen(true)}
-          onBackToCompare={() => navigateBackTo(PLANNER_VIEWS.COMPARE)}
-          onSelectPlan={planId => navigatePlanner(PLANNER_VIEWS.COMPARE, planId)}
           onRegenerate={() => mapMajors()}
           onRegeneratePlan={planId => mapMajors(null, planId)}
           onDownloadPdf={downloadSelectedPlanPdf}
