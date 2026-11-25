@@ -45,6 +45,7 @@
 
 - When you remove or replace a feature, delete its code and its tests. Do not just redirect to it. Git keeps the history.
 - Before reporting that a new or modified test or check passes, show that it fails on a deliberately planted error, then remove that error and verify the passing result.
+- Every new test file must be added to the test list in .github/workflows/econplanner-pr-tests.yml in the same PR. A test that is not on that list never runs on GitHub.
 - Do not delete, weaken, or edit existing tests, banned-term entries, panel students, or `scripts/panel/` checks merely to make a check pass. Make only explicitly requested changes to those files. If a check seems wrong, stop and report it.
 - Every change that can affect student-facing text must pass `pnpm panel:check` and `pnpm panel:lint`; PRs must list changed sentences grouped by panel student.
 - Before changing a rule, message, or wording, check `tests/panel/trace.md` and list affected panel students in the PR.
