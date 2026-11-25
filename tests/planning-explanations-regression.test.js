@@ -60,7 +60,7 @@ test("a senior with no history counts the math cognate among required courses le
   assert.equal(result.economicsPlanResult.reason, "MAJOR_COURSE_CAPACITY_EXCEEDED");
   assert.equal(result.economicsPlanResult.evidence.blockingReasons[0].remainingRequiredCourses, 12);
   assert.equal(result.economicsPlanResult.evidence.blockingReasons[0].message,
-    "You have 12 required courses left and 2 terms before May 2027. They cannot all fit. Choose a later graduation year or talk with your advisor.");
+    "You have 12 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.");
 });
 
 test("failed early planning shows one grouped sentence without unscheduled fragments", async () => {
@@ -68,9 +68,10 @@ test("failed early planning shows one grouped sentence without unscheduled fragm
     academicStanding: "junior", planningPace: "one_year_early", planCreationDate: "2026-11-22",
     courses: completed(["ECO 113", "ECO 114"])
   });
-  const reasons = result.economicsCandidateOutcomes.find(item => item.id === "one-year-early").reasons;
+  const reasons = result.economicsCandidateOutcomes.find(item => item.id === "one-year-early").reasons
+    .filter(item => item.studentVisible !== false);
   assert.equal(reasons.length, 1);
-  assert.match(reasons[0].message, /^These courses did not fit before May 2027:/);
+  assert.match(reasons[0].message, /^These requirements did not fit by May 2027:/);
   assert.doesNotMatch(reasons[0].message, /remains unscheduled|\.\s*;/);
   assert.equal(result.economicsPlanningGaps.length, 0);
 });
@@ -116,12 +117,12 @@ test("a custom target more than one year early reports proven senior-standing in
   const presentation = noPlanPresentation(result.economicsPlanResult.category, result.economicsPlanResult.reason, result.economicsPlanResult.evidence);
   assert.match(presentation.message, /ECO 461 requires senior standing and is offered only in Winter/);
 
-  const text = result.economicsPlanningGaps.map(item => item.reason || item.message).join(" ");
-  const scheduleGaps = text.match(/These courses did not fit before [^:]+:/g) || [];
-  assert.equal(scheduleGaps.length, 1);
+  const visibleGaps = result.economicsPlanningGaps.filter(item => item.studentVisible !== false);
+  const text = visibleGaps.map(item => item.reason || item.message).join(" ");
+  assert.equal(visibleGaps.length, 1);
+  assert.match(text, /^These requirements did not fit by May 2028:/);
+  assert.match(text, /: ECO 461\.$/);
   assert.doesNotMatch(text, /Requirement (?:eco-elective-\d+|cognate|statistics|finance) remains unscheduled/);
-  assert.match(text, /MAT 113, MAT 121/);
-  assert.match(text, /ECO 257, MAT 217, PSY 217/);
 });
 
 test("AP or exam credit produces a visible advisor-attention reason", async () => {
@@ -131,7 +132,7 @@ test("AP or exam credit produces a visible advisor-attention reason", async () =
   });
   assert.equal(result.economicsPlans[0].readinessStatus, "ADVISOR_ACTION_REQUIRED");
   const review = result.economicsPlans[0].planConditions.find(item => item.kind === "review" && item.shortMessage);
-  assert.equal(review.shortMessage, "Confirm with your advisor that your AP credit for ECO 113 and ECO 114 counts.");
+  assert.equal(review.shortMessage, "Your advisor needs to confirm that your AP credit for ECO 113 and ECO 114 counts toward the major.");
 });
 
 test("sophomore early abroad plan uses consistent prerequisite and department-approval wording in the PDF", async () => {
@@ -142,7 +143,11 @@ test("sophomore early abroad plan uses consistent prerequisite and department-ap
   const result = await economics(student);
   const plan = result.economicsPlans.find(item => item.id === "one-year-early");
   assert.ok(plan);
-  assert.ok(plan.planConditions.some(item => item.message === "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register."));
+  // Since the Nov 24, 2026 owner decision, approval pairings are a last resort and approvals come from the
+  // instructor of the later course, so check the shared wording rather than one specific pairing.
+  const approvals = plan.planConditions.filter(item => item.kind === "approval");
+  assert.ok(approvals.length > 0);
+  assert.ok(approvals.every(item => /^Taking .+ together in .+ needs approval from the .+ instructor before you register\.$/.test(item.message)));
   const prerequisites = plan.planConditions.filter(item => item.kind === "prerequisite");
   assert.ok(prerequisites.length > 0);
   assert.ok(prerequisites.every(item => /^Before taking .+, finish .+\.$/.test(item.message)));

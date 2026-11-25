@@ -23,5 +23,12 @@ export default [
       "no-undef": "error",
       "no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }]
     }
+  },
+  {
+    // Size warning for app and library code so large files are noticed before they grow further.
+    files: ["app/**/*.js", "lib/**/*.js"],
+    rules: {
+      "max-lines": ["warn", { max: 1000 }]
+    }
   }
 ];
