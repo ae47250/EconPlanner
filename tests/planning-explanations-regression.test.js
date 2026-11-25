@@ -121,6 +121,7 @@ test("a custom target more than one year early reports proven senior-standing in
   const text = visibleGaps.map(item => item.reason || item.message).join(" ");
   assert.equal(visibleGaps.length, 1);
   assert.match(text, /^These requirements did not fit by May 2028:/);
+  assert.match(text, /: ECO 461\.$/);
   assert.doesNotMatch(text, /Requirement (?:eco-elective-\d+|cognate|statistics|finance) remains unscheduled/);
 });
 
