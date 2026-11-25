@@ -90,7 +90,7 @@ jobs:
             tests/accelerated-result.test.js \
             tests/assignment.test.js \
             tests/catalog-comparison.test.js \
-            tests/catalog-ingestion.test.js \
+            tests/economics-canonical-data.test.js \
             tests/economics-only-catalog.test.js \
             tests/catalog-planning-note.test.js \
             tests/cp4b-a-contracts.test.js \

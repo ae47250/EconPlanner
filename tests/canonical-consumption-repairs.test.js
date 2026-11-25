@@ -134,8 +134,8 @@ test('all active consumers select the canonical flexibility release without dire
     }
   }
   // Only active source/configuration/template paths are scanned. Canonical policy and
-  // compiled release metadata necessarily name releases; policy/provenance, docs,
-  // data/review and tests retain dated evidence or explicit regression fixtures.
+  // compiled release metadata necessarily name releases; policy/provenance, docs
+  // and tests retain dated evidence or explicit regression fixtures.
   // Those records are outside these roots; no active reader gets an exception.
   for (const directory of ['lib', 'app', 'scripts', 'templates']) await inspect(directory);
   assert.ok(readers.length > 0);
