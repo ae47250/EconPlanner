@@ -61,10 +61,7 @@ export const comparisonStyles = css.global`
           margin-left: 1.25rem;
         }
         .edit-courses-button,
-        .regenerate-plans-button,
-        .compare-plans-button,
-        .download-pdf-button,
-        .undo-plan-edit-button {
+        .regenerate-plans-button {
           width: auto;
           min-height: 44px;
           margin: 0;
@@ -78,10 +75,7 @@ export const comparisonStyles = css.global`
           cursor: pointer;
         }
         .edit-courses-button:hover,
-        .regenerate-plans-button:hover,
-        .compare-plans-button:hover,
-        .download-pdf-button:hover,
-        .undo-plan-edit-button:hover { background: #f4f1f8; }
+        .regenerate-plans-button:hover { background: #f4f1f8; }
         .comparison-page button:focus-visible,
         .comparison-page input:focus-visible,
         .comparison-page select:focus-visible,
@@ -89,9 +83,7 @@ export const comparisonStyles = css.global`
           outline: 3px solid #8ab4f8;
           outline-offset: 2px;
         }
-        .regenerate-plans-button:disabled,
-        .download-pdf-button:disabled,
-        .undo-plan-edit-button:disabled { cursor: wait; opacity: .65; }
+        .regenerate-plans-button:disabled { cursor: wait; opacity: .65; }
         .pdf-download-status { color: #33425d; font-size: 12px; }
         .comparison-content {
           width: min(1460px, calc(100% - 3rem));
@@ -314,49 +306,11 @@ export const comparisonStyles = css.global`
           text-align: center;
         }
         .plan-validation.is-invalid { color: #a52a1f; }
-        .comparison-page .plan-section {
-          margin-top: 1rem;
-          padding: 1rem;
-          border: 1px solid #d9d9df;
-          border-radius: 1rem;
-          background: #fff;
-        }
-        .comparison-page .plan-tabs {
-          display: flex;
-          gap: .4rem;
-          margin-bottom: 1rem;
-          border-bottom: 1px solid #cbd5e1;
-        }
-        .comparison-page .plan-tab {
-          width: auto;
-          margin: 0;
-          padding: .65rem .9rem;
-          border: 0;
-          border-bottom: 3px solid transparent;
-          background: transparent;
-          color: #41506a;
-          cursor: pointer;
-        }
-        .comparison-page .plan-tab.is-active {
-          border-bottom-color: #4b2e83;
-          color: #2f1c57;
-          font-weight: 700;
-        }
-        .comparison-page .academic-year-group { margin-top: 1rem; }
-        .comparison-page .academic-year-label { margin: 0 0 .55rem; color: #4b2e83; font-size: 17px; }
-        .comparison-page .plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; }
-        .comparison-page .term-card { align-self: start; min-width: 0; min-height: 8rem; padding: .8rem; border: 1px solid #cbd5e1; border-radius: .5rem; }
-        .comparison-page .term-card.is-placeholder { border-style: dashed; background: #f7fbff; }
-        .comparison-page .drag-plan-status:empty { display: none; }
         .comparison-page .course-drag-handle { display: inline-block; padding: .35rem .55rem; margin-bottom: .4rem; border: 1px solid #c4b5df; border-radius: .4rem; color: #49317c; background: #f7f3ff; cursor: grab; user-select: none; touch-action: none; font-size: .8rem; }
         .comparison-page .course-drag-handle:active { cursor: grabbing; }
-        .comparison-page .term-card.drop-allowed { border: 2px solid #168264; background: #effbf5; }
-        .comparison-page .term-card.drop-conditional { border: 2px dashed #946200; background: #fffbeb; }
-        .comparison-page .term-card.drop-unavailable, .comparison-page .term-card.drop-blocked, .comparison-page .term-card.drop-review_required { border-color: #a6a6af; background: #f3f3f5; }
-        .comparison-page .drop-term-hint { font-size: .8rem; line-height: 1.4; }
         .comparison-page .drop-confirmation { padding: 1rem; margin-bottom: 1rem; border: 1px solid #946200; border-radius: .75rem; background: #fffbeb; }
         .comparison-page .drop-confirmation button { margin: .5rem .5rem 0 0; }
-        .comparison-page .term-card.drop-pending, .comparison-page .compact-schedule tr.drop-pending { outline: 2px solid #946200; background: #fffbeb; }
+        .comparison-page .compact-schedule tr.drop-pending { outline: 2px solid #946200; background: #fffbeb; }
         .comparison-page .drop-confirmation-popover { position: fixed; z-index: 50; margin: 0; padding: .75rem; max-height: calc(100vh - 24px); overflow-y: auto; box-shadow: 0 8px 28px #24174330; font-size: 14px; line-height: 1.4; }
         .comparison-page .drop-confirmation-popover p { margin: .5rem 0; font-size: 13px; overflow-wrap: anywhere; }
         .comparison-page .drop-confirmation-popover details { margin: .4rem 0; font-size: 12px; }
@@ -364,13 +318,6 @@ export const comparisonStyles = css.global`
         .comparison-page .drop-confirmation-actions button { margin: .25rem 0 0; padding: .4rem .65rem; min-height: 36px; font-size: 13px; }
         .comparison-page .drop-confirmation-actions button:first-child { background: #49317c; border-color: #49317c; }
         .comparison-page .drop-confirmation-actions button:last-child { background: white; color: #49317c; border-color: #b8a7d0; }
-        .comparison-page .term-card h4 { margin: 0 0 .65rem; color: #17345b; }
-        .comparison-page .term-card ul { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
-        .comparison-page .term-card li { padding: .55rem; border: 1px solid #d2dbe6; border-radius: .35rem; }
-        .comparison-page .plan-course-summary strong,
-        .comparison-page .plan-course-summary span { display: block; }
-        .comparison-page .plan-course-summary span { margin-top: .15rem; color: #53627a; font-size: 12px; }
-        .comparison-page .plan-course-summary .plan-course-availability { font-weight: 700; }
         .comparison-page .plan-course-availability.is-open { color: #167c32; font-weight: 700; }
         .comparison-page .plan-course-availability.is-full { color: #b42318; font-weight: 700; }
         .comparison-page .plan-course-availability.is-unavailable,
@@ -398,7 +345,6 @@ export const comparisonStyles = css.global`
           .major-checklist th,.major-checklist td { padding: .5rem .25rem; font-size: 12px; }
           .checklist-marker,.checklist-alternatives { font-size: 11px; }
         }
-        .comparison-page .plan-course-summary .plan-course-approval { color: #8a4c00; font-weight: 700; }
         .comparison-page .plan-course-actions { display: grid; gap: .35rem; margin-top: .5rem; }
         .comparison-page .plan-course-actions select,
         .comparison-page .plan-course-actions button { width: 100%; min-height: 44px; font-size: 14px; }
@@ -423,6 +369,7 @@ export const comparisonStyles = css.global`
         .comparison-page .comparison-course-meta .plan-course-approval strong { display: block; color: #76510b; font-weight: 700; }
         .comparison-page .comparison-course-meta .plan-course-approval span { display: block; color: #53627a; font-size: 12px; font-weight: 400; }
         .comparison-page .comparison-course-meta .course-constraint-note { color: #35445d; font-weight: 650; }
+        .comparison-page .comparison-course-meta .summer-term-note { color: #68758a; font-size: 11px; }
         .comparison-page .comparison-edit-status { margin: .25rem .7rem; font-size: 12px; }
         .comparison-page .comparison-undo { margin: .25rem .7rem; padding: .25rem .5rem; font-size: 12px; }
         .comparison-page .comparison-plan-card .comparison-undo,
@@ -487,10 +434,6 @@ export const comparisonStyles = css.global`
         .comparison-page .comparison-student { flex-shrink: 0; }
         .comparison-page summary { cursor: pointer; }
         .comparison-page button:focus-visible, .comparison-page select:focus-visible, .comparison-page summary:focus-visible { outline: 3px solid #365fba; outline-offset: 3px; }
-        .comparison-page .plan-course-summary > strong { white-space: normal; word-break: normal; font-size: 15px; }
-        .comparison-page .plan-course-summary > span { font-size: 13px; line-height: 1.35; }
-        .comparison-page .plan-validation-errors { margin-top: 1rem; padding: .8rem; border: 1px solid #c85a4c; background: #fff2ef; color: #6f2119; }
-        .comparison-page .plan-validation-errors ul { margin: .45rem 0 0; padding-left: 1.2rem; }
         .plan-edit-status { margin: .75rem 0; color: #33425d; }
         .candidate-outcomes { margin: .75rem 0 0; }
         .candidate-outcomes h2 { margin: 0 0 .5rem; font-size: 1rem; }
@@ -742,7 +685,6 @@ export const comparisonStyles = css.global`
           .comparison-grid { grid-template-columns: 1fr; }
           .comparison-course-status { grid-template-columns: 1fr 1fr; }
           .comparison-plan-summary { min-height: 0; }
-          .comparison-page .plan-grid { grid-template-columns: 1fr; }
           .comparison-page .advisor-attention-groups { grid-template-columns: 1fr; }
         }
         @media (max-width: 700px) {
