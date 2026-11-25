@@ -290,7 +290,7 @@ function approvalForState(state) {
       course: "ECO 461",
       concurrentCourse: "ECO 214",
       term: "Winter",
-      authority: "Economics Department",
+      authority: "ECO 461 instructor",
       status: "recorded"
     };
   }

@@ -35,7 +35,7 @@
     },
     {
       "id": "approval-heavy-final-year",
-      "description": "Fictional final-year plan with a documented Economics Department concurrency approval and many warnings.",
+      "description": "Fictional final-year plan with a documented ECO 461 instructor concurrency approval and many warnings.",
       "executionMode": "report-route",
       "selectedPlanId": "balanced",
       "student": {

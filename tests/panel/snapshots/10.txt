@@ -39,26 +39,27 @@ Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
-GRID ROW: ECO 221-J ▾ | Environmental Economics
+GRID ROW: ECO 214-J ▾ | Intermediate Macroeconomics
 NOTE: Seat availability not confirmed
+NOTE: Approval needed
 GRID ROW: ECO 321-J ▾ | Money and Financial Markets
 NOTE: Seat availability not confirmed
 GRID ROW: MAT 113-J ▾ | Essential Pre-Calculus
 NOTE: Seat availability not confirmed
-GRID ROW: MAT 217-K ▾ | Applied Statistics
+GRID ROW: MAT 217-J ▾ | Applied Statistics
 NOTE: Seat availability not confirmed
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S ▾ | Economics of the European Union
 NOTE: Seat availability not confirmed
 TERM: 2027/2028 Fall
-GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
+GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
 GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
 TERM: 2027/2028 Winter
-GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
 GRID ROW: ECO 461 | Senior Seminar: Econometrics
-NOTE: Approval needed
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
+GRID ROW: Economics elective (200 level or higher) ▾
+NOTE: Future offering unconfirmed
 TERM: 2027/2028 May
 GRID ROW: Economics elective (200 level or higher) ▾
 NOTE: Future offering unconfirmed
@@ -71,27 +72,27 @@ Download PDF Report: Balanced
 SCREEN > Plan: Balanced > Notes: Things to keep in mind
 Things to keep in mind
 Classes to finish first
-Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.
-Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
+Before taking ECO 213 in Fall 2027, finish MAT 113.
+Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
 Before you register
-We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 214, ECO 321, MAT 113, MAT 217, and ECO 222. Check the registration system before you register.
 Check with your advisor
-Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.
+Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 This plan uses the current Economics major requirements.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
 CHECKLIST ROW: ECO 113 ECO 113 ✓ Completed
 CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
-CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned
-CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned Approval needed
-CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned
+CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned Approval needed
+CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
+CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed
 CHECKLIST ROW: Statistics MAT 217 — Winter 2027 ○ Planned
 CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned
-CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned Approval needed
-CHECKLIST ROW: Economics elective 1 ECO 221 — Winter 2027 ○ Planned
-CHECKLIST ROW: Economics elective 2 ECO 222 — May 2027 ○ Planned
-CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2027 ○ Planned
+CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned
+CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned
+CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2027 ○ Planned
+CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2028 ○ Planned
 CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
@@ -151,44 +152,43 @@ TABLE HEADER: May
 TERM: 2026/2027 Fall
 GRID ROW: -
 TERM: 2026/2027 Winter
-GRID ROW: ECO 221-J
+GRID ROW: ECO 214-J
+NOTE: Approval needed
 GRID ROW: ECO 321-J
 GRID ROW: MAT 113-J
-GRID ROW: MAT 217-K
+NOTE: Approval needed
+GRID ROW: MAT 217-J
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
 TERM: 2027/2028 Fall
-GRID ROW: ECO 214
+GRID ROW: ECO 213
 GRID ROW: Economics elective (200 level or higher)
 TERM: 2027/2028 Winter
-GRID ROW: ECO 213
-NOTE: Approval needed
 GRID ROW: ECO 461
-NOTE: Approval needed
+GRID ROW: Economics elective (200 level or higher)
 TERM: 2027/2028 May
 GRID ROW: Economics elective (200 level or higher)
-ECO 221 — Environmental Economics Previously offered in Fall and Winter.
+ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
 MAT 113 — Essential Pre-Calculus
 MAT 217 — Applied Statistics
 ECO 222 — Economics of the European Union Previously offered in May.
-ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-Economics elective (200 level or higher) — Pick a course when the schedule comes out.
 ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+Economics elective (200 level or higher) — Pick a course when the schedule comes out.
 ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
 PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Finish these classes first
-Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.
-Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
+Before taking ECO 213 in Fall 2027, finish MAT 113.
+Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
 Before you register
-We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222. Check the registration system before you register.
+We don’t know if there are open seats in ECO 214, ECO 321, MAT 113, MAT 217, and ECO 222. Check the registration system before you register.
 Check with your advisor
-Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.
+Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 This plan uses the current Economics major requirements.
 PDF > Plan: Balanced > For your advisor
 For your advisor
-Confirm the Economics Department approves taking ECO 213 and ECO 461 together in Winter 2028.
+Confirm the ECO 214 instructor approves taking MAT 113 and ECO 214 together in Winter 2027.
 PDF > Plan: Balanced > Checklist
 Your Economics major checklist
 TABLE HEADER: Requirement
@@ -202,13 +202,13 @@ CHECKLIST CELL: ECO 114
 CHECKLIST CELL: Completed
 CHECKLIST CELL: Mathematics
 CHECKLIST CELL: MAT 113 — Winter 2027
-CHECKLIST CELL: Planned
-CHECKLIST CELL: ECO 213
-CHECKLIST CELL: ECO 213 — Winter 2028
 CHECKLIST CELL: Planned Approval needed
-CHECKLIST CELL: ECO 214
-CHECKLIST CELL: ECO 214 — Fall 2027
+CHECKLIST CELL: ECO 213
+CHECKLIST CELL: ECO 213 — Fall 2027
 CHECKLIST CELL: Planned
+CHECKLIST CELL: ECO 214
+CHECKLIST CELL: ECO 214 — Winter 2027
+CHECKLIST CELL: Planned Approval needed
 CHECKLIST CELL: Statistics
 CHECKLIST CELL: MAT 217 — Winter 2027
 CHECKLIST CELL: Planned
@@ -217,15 +217,15 @@ CHECKLIST CELL: ECO 321 — Winter 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2028
-CHECKLIST CELL: Planned Approval needed
-CHECKLIST CELL: Economics elective 1
-CHECKLIST CELL: ECO 221 — Winter 2027
 CHECKLIST CELL: Planned
-CHECKLIST CELL: Economics elective 2
+CHECKLIST CELL: Economics elective 1
 CHECKLIST CELL: ECO 222 — Spring/May 2027
 CHECKLIST CELL: Planned
-CHECKLIST CELL: Economics elective 3
+CHECKLIST CELL: Economics elective 2
 CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2027
+CHECKLIST CELL: Planned
+CHECKLIST CELL: Economics elective 3
+CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
 CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028

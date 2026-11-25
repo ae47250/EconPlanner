@@ -302,7 +302,7 @@ function oracleApproval(approval) {
   const ruleId = approvalRuleId(approval);
   return {
     ruleId,
-    type: ruleId === "CONCURRENT-INTERMEDIATE-ECO-461" ? "DEPARTMENT_APPROVAL" : "INSTRUCTOR_APPROVAL",
+    type: "INSTRUCTOR_APPROVAL",
     authority: approval.authority,
     course: approval.course,
     prerequisite: approval.prerequisite ?? null,
@@ -623,12 +623,12 @@ test("Task 15 API rejects missing and wrong approval metadata", async () => {
   const missing = structuredClone(economics.economicsPlans[0]);
   const missingCapstone = findCourse(missing, course => course.course === "ECO 461").course;
   delete missingCapstone.approvalRequired;
-  await assertRejected(student, missing, /approval metadata|requiring approval|Economics Department/i);
+  await assertRejected(student, missing, /approval metadata|requiring approval|ECO 461 instructor/i);
 
   const wrong = structuredClone(economics.economicsPlans[0]);
   const wrongCapstone = findCourse(wrong, course => course.course === "ECO 461").course;
   wrongCapstone.approvalRequired[0].authority = "Registrar";
-  await assertRejected(student, wrong, /approval metadata|Economics Department|authority/i);
+  await assertRejected(student, wrong, /approval metadata|ECO 461 instructor|authority/i);
 });
 
 test("Task 15 accepts one Fall course with three reserved spaces and rejects two", async () => {

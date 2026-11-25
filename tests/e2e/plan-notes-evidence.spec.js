@@ -76,7 +76,7 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(card.locator('[data-plan-conditions]')).toHaveCount(1);
       await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       if (plan.id === 'one-year-early') {
-        await expect(card.locator('[data-plan-conditions]')).toContainText('Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.');
+        await expect(card.locator('[data-plan-conditions]')).toContainText('Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.');
         await expect(card.locator('[data-plan-conditions]')).toContainText('This plan assumes you will have senior standing in 2027–2028. Ask your advisor and the Registrar to confirm you can take ECO 461 then.');
         await expect(page.locator('main')).not.toContainText('This plan assumes you will have senior standing in your final year.');
       }

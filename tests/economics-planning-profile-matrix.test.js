@@ -14,7 +14,7 @@ const oraclePolicy = JSON.parse(await readFile(new URL("./oracle/economics-polic
 const oracleSchedule = JSON.parse(await readFile(new URL("./oracle/verified-schedule-2026-2027.json", import.meta.url), "utf8"));
 
 const APPROVAL_TYPES = Object.freeze({
-  "CONCURRENT-INTERMEDIATE-ECO-461": "DEPARTMENT_APPROVAL",
+  "CONCURRENT-INTERMEDIATE-ECO-461": "INSTRUCTOR_APPROVAL",
   "CONCURRENT-MATH-ECO-213": "INSTRUCTOR_APPROVAL",
   "CONCURRENT-MATH-ECO-214": "INSTRUCTOR_APPROVAL"
 });

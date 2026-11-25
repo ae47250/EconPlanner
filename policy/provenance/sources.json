@@ -576,6 +576,21 @@
         "through": null
       },
       "supersedes": "Only the listed wording, including the forms-location sentence in catalog-note-wording-2026-11-21.md"
+    },
+    {
+      "sourceId": "OWNER-APPROVAL-DECISIONS-2026-11-24",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "ECO_461_CONCURRENT_APPROVER_APPROVAL_WEIGHTS_AND_FIRST_PASS",
+      "path": "policy/provenance/owner-approval-decisions-2026-11-24.md",
+      "confirmedOn": "2026-11-24",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "sha256": "2ffdc043ef95de32dd8c168555c021208bdfa139e86e30febd3b22c860f333ee",
+      "effective": {
+        "from": "2026-11-24",
+        "through": null
+      },
+      "supersedes": "Department policy 4 and OD7 approver only; department approval ranking weight of 2"
     }
   ],
   "authorityHierarchy": [

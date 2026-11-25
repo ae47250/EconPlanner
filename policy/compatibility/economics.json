@@ -290,7 +290,7 @@
         "ruleIds": [
           "CONCURRENT-INTERMEDIATE-ECO-461"
         ],
-        "text": "When exactly one of ECO 213 or ECO 214 is already completed, the other may be concurrent with ECO 461 only with Economics Department approval and after all other ECO 461 prerequisites are completed"
+        "text": "When exactly one of ECO 213 or ECO 214 is already completed, the other may be concurrent with ECO 461 only with ECO 461 instructor approval and after all other ECO 461 prerequisites are completed"
       },
       {
         "ruleIds": [

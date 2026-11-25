@@ -190,7 +190,7 @@ function oracleApproval(approval) {
     ? "CONCURRENT-INTERMEDIATE-ECO-461"
     : approval.course === "ECO 213" ? "CONCURRENT-MATH-ECO-213" : "CONCURRENT-MATH-ECO-214");
   return {
-    ruleId, type: ruleId === "CONCURRENT-INTERMEDIATE-ECO-461" ? "DEPARTMENT_APPROVAL" : "INSTRUCTOR_APPROVAL",
+    ruleId, type: "INSTRUCTOR_APPROVAL",
     authority: approval.authority, course: approval.course, prerequisite: approval.prerequisite ?? null,
     term: approval.term, reason: approval.reason, sourceRef: approval.sourceRef || null
   };

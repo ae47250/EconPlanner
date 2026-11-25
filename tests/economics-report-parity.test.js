@@ -383,7 +383,7 @@ test("Task 17 rejects malformed PDF results and preserves stable service error m
   assert.equal((await network.json()).code, "PDF_CREATION_FAILED");
 });
 
-for (const authority of ["ECO 213 instructor", "Economics Department"]) {
+for (const authority of ["ECO 213 instructor", "ECO 461 instructor"]) {
   test(`approval badges preserve ${authority} evidence across the edited plan and reports`, async () => {
     const instructor = authority === "ECO 213 instructor";
     const student = instructor

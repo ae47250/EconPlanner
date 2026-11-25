@@ -186,7 +186,7 @@ test("conditional plans expose approvals independently from the overall status",
   ));
 
   assert.equal(plan.feasibility.overallStatus, "CONDITIONALLY_FEASIBLE");
-  assert.equal(departmentApproval.authority, "Economics Department");
+  assert.equal(departmentApproval.authority, "ECO 461 instructor");
   assert.match(departmentApproval.sourceRef, /Department_Confirmed_Planning_Policies/);
   assert.equal(plan.feasibility.search.limit, 250000);
   assert.ok(plan.feasibility.search.nodesVisited <= plan.feasibility.search.limit);

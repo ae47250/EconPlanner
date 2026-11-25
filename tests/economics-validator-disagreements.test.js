@@ -42,7 +42,7 @@ const oracleSchedule = JSON.parse(await readFile(
 const productionSchedule = normalizeEconomicsSchedule(rawProductionSchedule);
 const PROGRAM = Object.freeze({ id: "economics", name: "Economics" });
 const APPROVAL_TYPES = Object.freeze({
-  CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL: "DEPARTMENT_APPROVAL",
+  CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL: "INSTRUCTOR_APPROVAL",
   CONCURRENT_MATH_INSTRUCTOR_APPROVAL: "INSTRUCTOR_APPROVAL"
 });
 const STANDING_INDEX = Object.freeze({
@@ -288,10 +288,10 @@ function fullFallBaseline() {
   fall.courses.push(takeCourse(result.plan, "ECO elective"));
   findTerm(result.plan, "winter-2029").courses.push(takeCourse(result.plan, "ECO 214"));
   findPlannedCourse(result.plan, "ECO 461").approvalRequired = [{
-    code: "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL", type: "department", authority: "Economics Department",
+    code: "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL", type: "instructor", authority: "ECO 461 instructor",
     course: "ECO 461", prerequisite: "ECO 214", term: "Winter 2029", reason: "concurrent_intermediate_with_capstone",
     policySource: "department-confirmed-local-policy", sourceRef: "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4",
-    message: "ECO 214 is planned concurrently with ECO 461. Economics Department approval is required."
+    message: "ECO 214 is planned concurrently with ECO 461. ECO 461 instructor approval is required."
   }];
   assert.equal(fall.courses.length, 4);
   return result;
@@ -385,15 +385,15 @@ function concurrentCapstoneBaseline() {
   const completed = COMPLETE_WITHOUT_CAPSTONE.filter(code => code !== "ECO 214");
   const approval = {
     code: "CONCURRENT_INTERMEDIATE_DEPARTMENT_APPROVAL",
-    type: "department",
-    authority: "Economics Department",
+    type: "instructor",
+    authority: "ECO 461 instructor",
     course: "ECO 461",
     prerequisite: "ECO 214",
     term: "Winter 2027",
     reason: "concurrent_intermediate_with_capstone",
     policySource: "department-confirmed-local-policy",
     sourceRef: "data/raw/economics/Department_Confirmed_Planning_Policies.md#policy-4",
-    message: "ECO 214 is planned concurrently with ECO 461. Economics Department approval is required."
+    message: "ECO 214 is planned concurrently with ECO 461. ECO 461 instructor approval is required."
   };
   const terms = [planTerm({
     startYear: 2026,

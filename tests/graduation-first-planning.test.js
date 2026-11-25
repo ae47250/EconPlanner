@@ -78,7 +78,7 @@ test("same remaining count produces coherent paths when ECO 213 versus ECO 214 i
   assert.equal(with214.result.plans.length, 1);
   const with213Capstone = with213.result.plans[0].terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
   const with214Capstone = with214.result.plans[0].terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
-  assert.ok(with213Capstone.approvalRequired.some(item => item.type === "department" && item.prerequisite === "ECO 214"));
+  assert.ok(with213Capstone.approvalRequired.some(item => item.type === "instructor" && item.prerequisite === "ECO 214"));
   assert.equal(with214Capstone.approvalRequired, undefined);
 });
 
@@ -295,7 +295,7 @@ test("ECO 114 in Fall unlocks ECO 321 in Winter", () => {
   assert.ok(winter.courses.some(course => course.course === "ECO 321"));
 });
 
-test("department approval metadata is required for an intermediate concurrent with ECO 461", () => {
+test("instructor approval metadata is required for an intermediate concurrent with ECO 461", () => {
   const student = upcomingStudent("senior", [
     "ECO 113", "ECO 114", "MAT 113", "ECO 213", "ECO 257", "BUSN 323",
     "ECO 221", "ECO 222", "ECO 234"
@@ -303,7 +303,7 @@ test("department approval metadata is required for an intermediate concurrent wi
   const { mapping, result } = bundle(student);
   const approved = result.plans[0];
   const capstone = approved.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
-  assert.ok(capstone.approvalRequired.some(item => item.type === "department"));
+  assert.ok(capstone.approvalRequired.some(item => item.type === "instructor"));
 
   const unapproved = structuredClone(approved);
   delete unapproved.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461").approvalRequired;
@@ -315,7 +315,7 @@ test("department approval metadata is required for an intermediate concurrent wi
     context: result.context
   });
   assert.equal(validation.valid, false);
-  assert.ok(validation.errors.some(message => /Economics Department/.test(message)));
+  assert.ok(validation.errors.some(message => /ECO 461 instructor/.test(message)));
 });
 
 test("every ECO 260 special-topics course counts as an Economics elective", () => {
