@@ -90,18 +90,6 @@ export const comparisonStyles = css.global`
           margin: 0 auto;
           padding: 1.15rem 0 3rem;
         }
-        .comparison-back {
-          width: auto;
-          min-height: 0;
-          margin: 0;
-          padding: .25rem 0;
-          border: 0;
-          background: transparent;
-          color: #4b2e83;
-          font-size: 14px;
-          cursor: pointer;
-        }
-        .comparison-back:hover { text-decoration: underline; }
         .comparison-course-status {
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -423,7 +411,6 @@ export const comparisonStyles = css.global`
         .comparison-page .course-change-panel select { width: 100%; max-width: 100%; min-height: 44px; }
         .comparison-page .course-change-panel label { min-width: 0; font-size: 13px; }
         .comparison-page .course-reason-details { font-size: 12px; line-height: 1.4; }
-        .comparison-page .offering-pattern { display: block; color: #52627a; font-size: 12px; margin-top: .3rem; }
         .comparison-page .comparison-heading-row h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.2; word-break: normal; }
         .comparison-page .comparison-topbar { flex-wrap: wrap; gap: .75rem; }
         .comparison-page .comparison-brand { flex: 0 0 auto; white-space: nowrap; font-size: 21px; }
@@ -442,35 +429,6 @@ export const comparisonStyles = css.global`
         .comparison-page .result-diagnostics { font-size: 14px; line-height: 1.5; }
         .comparison-page .result-diagnostics > summary { font-size: 15px; }
         .comparison-page .result-diagnostics .candidate-outcomes li { font-size: 14px; }
-        .choose-plan-button {
-          width: calc(100% - 2rem);
-          min-height: 0;
-          margin: 0 1rem 1rem;
-          padding: .72rem 1rem;
-          border: 1px solid #6d5a86;
-          border-radius: .42rem;
-          background: #fff;
-          color: #2f1c57;
-          font-size: 16px;
-          font-weight: 700;
-          cursor: pointer;
-        }
-        .choose-plan-button:hover { background: #f2eef7; }
-        .comparison-plan-card.is-selected .choose-plan-button {
-          border-color: transparent;
-          background: #4b2e83;
-          color: #fff;
-        }
-        .comparison-plan-card.is-selected .choose-plan-button:hover {
-          background: #2f1c57;
-        }
-        .comparison-empty {
-          padding: 1.25rem;
-          border: 1px solid #bdc9da;
-          border-radius: .7rem;
-          background: #fff;
-          color: #41506a;
-        }
         .result-progress ol { display: flex; flex-wrap: wrap; gap: .65rem; margin: 0; padding: 0; list-style: none; }
         .result-progress li { color: #667085; font-size: 14.4px; }
         .result-progress li::before { content: "✓ "; color: #4b2e83; }
@@ -533,7 +491,6 @@ export const comparisonStyles = css.global`
         .accelerated-target-list dt { color: #514b5e; font-weight: 650; }
         .accelerated-target-list dd { min-width: 0; margin: 0; color: #302044; }
         .planning-guide-disclaimer { margin: 1.2rem 0 0; color: #626a75; font-size: 13px; text-align: center; }
-        .comparison-page .advisor-attention,
         .comparison-page .plan-notes {
           margin: 1rem 0;
           padding: .8rem 1rem;
@@ -542,47 +499,6 @@ export const comparisonStyles = css.global`
           background: #fff8e3;
           color: #2b3445;
           font-size: 12px;
-        }
-        .comparison-page .advisor-attention h2 {
-          margin: 0 0 .4rem;
-          color: #8b5500;
-          font-size: 14px;
-        }
-        .comparison-page .advisor-attention-scope {
-          margin: -.15rem 0 .5rem;
-          color: #6b7280;
-          font-size: 11px;
-          font-style: italic;
-        }
-        .comparison-page .advisor-attention h3 {
-          margin: 0;
-          color: #1d4ed8;
-          font-size: 13px;
-        }
-        .comparison-page .advisor-attention h4 {
-          margin: 0 0 .3rem;
-          color: #714600;
-          font-size: 12px;
-        }
-        .comparison-page .advisor-attention-item + .advisor-attention-item {
-          margin-top: .5rem;
-          padding-top: .5rem;
-          border-top: 1px solid #e4c679;
-        }
-        .comparison-page .advisor-attention-item p { margin: .25rem 0 0; }
-        .comparison-page .advisor-attention-groups {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: .65rem 1rem;
-          margin-top: .5rem;
-        }
-        .comparison-page .advisor-attention-groups ul {
-          margin: .3rem 0 0;
-          padding-left: 1rem;
-        }
-        .comparison-page .offering-pattern-note {
-          padding-left: .55rem;
-          border-left: 3px solid #8fb2ee;
         }
         .comparison-page .planning-gaps {
           margin-top: 1rem;
@@ -685,7 +601,6 @@ export const comparisonStyles = css.global`
           .comparison-grid { grid-template-columns: 1fr; }
           .comparison-course-status { grid-template-columns: 1fr 1fr; }
           .comparison-plan-summary { min-height: 0; }
-          .comparison-page .advisor-attention-groups { grid-template-columns: 1fr; }
         }
         @media (max-width: 700px) {
           .comparison-topbar {

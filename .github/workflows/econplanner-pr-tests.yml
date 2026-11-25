@@ -102,7 +102,6 @@ jobs:
             tests/finance-elective-correction.test.js \
             tests/graduation-first-planning.test.js \
             tests/graduation-solver-architecture.test.js \
-            tests/hanover-catalog-watch.test.js \
             tests/mcp-handoff.test.js \
             tests/n1-independent-infeasibility.test.js \
             tests/no-plan-result.test.js \

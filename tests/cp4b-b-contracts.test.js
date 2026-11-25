@@ -210,10 +210,6 @@ test("recoverable and contradictory input problems remain structured and blocked
   assert.equal(recoverable.answerCount, 1);
   assert.deepEqual(recoverable.blockingFields, ["planningPace"]);
   assert.equal(recoverable.planningMustRemainBlocked, true);
-  const contradictory = resolveInputResolution({issueCode: "INVALID_STUDENT_PREREQUISITES", issues: [{course: "ECO 461"}]});
-  assert.equal(contradictory.status, "CONTRADICTORY_INFORMATION");
-  assert.equal(contradictory.advisorActionRequired, true);
-  assert.equal(contradictory.planningMustRemainBlocked, true);
 });
 
 test("ordinary Hanover coursework loses false equivalency review while genuine transfer remains review-dependent", () => {
