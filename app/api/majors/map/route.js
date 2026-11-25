@@ -1,4 +1,5 @@
 import { availableCatalogYears, loadCatalog } from "../../../../lib/catalog/load.js";
+import { applyHanoverOnlyCourseRule } from "../../../../lib/planning/hanover-only-courses.js";
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
 import {
@@ -392,10 +393,10 @@ export async function POST(request) {
         inputResolution, economicsPlanResult: buildEconomicsPlanResult({ inputResolution })
       }, missingDate ? 400 : 422);
     }
-    const student = {
+    const student = applyHanoverOnlyCourseRule({
       ...submittedStudent,
       scheduleSetByTerm: normalizeScheduleSetByTerm(submittedStudent)
-    };
+    });
     const catalogYears = await availableCatalogYears();
     const catalogValidation = validateSubmittedCatalogYear(student.majorDeclarationCatalogYear, catalogYears);
     const planningContext = resolvePlanningContext(student);

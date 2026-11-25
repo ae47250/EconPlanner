@@ -26,3 +26,22 @@ test("without ECO 461 completed, it is scheduled and no note is added", async ()
   assert.ok(plan.terms.some(term => (term.courses || []).some(course => course.course === "ECO 461")));
   assert.equal(plan.planConditions.some(item => item.id === "hanover-only-completed-ECO 461"), false);
 });
+
+async function program(standing, courses) {
+  const student = { planCreationDate: "2026-10-15", academicStanding: standing, courses };
+  const response = await POST(new Request("http://localhost/api/majors/map", { method: "POST",
+    headers: { "content-type": "application/json" }, body: JSON.stringify({ student }) }));
+  assert.equal(response.status, 200);
+  return (await response.json()).programs[0];
+}
+
+test("the server ignores ECO 461 marked completed by a non-senior, or marked taking now", async () => {
+  const recorded = codes => codes.map(code => ({ code, status: "completed", source: "manual_code" }));
+  for (const [standing, status, history] of [["junior", "completed", recorded(["ECO 113", "ECO 114"])], ["senior", "in_progress", recorded(done)]]) {
+    const result = await program(standing, [...history, { code: "ECO 461", status, source: "manual_code" }]);
+    const plan = result.economicsPlans[0];
+    assert.ok(plan, `${standing} ${status}`);
+    assert.ok(plan.terms.some(term => (term.courses || []).some(course => course.course === "ECO 461")), `${standing} ${status} keeps ECO 461 in the plan`);
+    assert.equal(plan.planConditions.some(item => item.id === "hanover-only-completed-ECO 461"), false);
+  }
+});

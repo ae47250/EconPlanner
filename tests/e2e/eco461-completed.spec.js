@@ -27,6 +27,13 @@ test("only seniors see a Completed button for ECO 461, and changing standing cle
   await expect(completed).toHaveAttribute("aria-pressed", "true");
   await expect(row.getByRole("button", { name: "Transfer or AP credit?" })).toHaveCount(0);
 
+  // "Clear course choices" must not leave ECO 461 in a state where the next click does nothing.
+  await page.getByRole("button", { name: "Clear course choices" }).click();
+  await openOtherCourses(page);
+  await expect(completed).toHaveAttribute("aria-pressed", "false");
+  await completed.click();
+  await expect(completed).toHaveAttribute("aria-pressed", "true");
+
   await page.getByRole("navigation", { name: "Planner progress" }).getByRole("button", { name: "About you", exact: true }).click();
   await chooseStanding(page, "junior");
   await continueToCourses(page);

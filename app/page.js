@@ -41,6 +41,10 @@ const SELECTABLE_COURSE_CATALOG = COURSE_CATALOG.filter(course => course.student
 
 // Owner decision (Nov 25, 2026, policy/provenance/owner-eco461-completed-2026-11-25.md):
 // a Hanover-only course (ECO 461) can be marked Completed, at Hanover only, by seniors only.
+function effectiveStandingFor(form) {
+  try { return resolvePlanningContext(form).effectiveStanding || form.academicStanding; } catch { return form.academicStanding; }
+}
+
 function canMarkHanoverOnlyCompleted(code, academicStanding) {
   return NON_SELECTABLE_COURSE_CODES.has(code) && academicStanding === "senior";
 }
@@ -139,12 +143,12 @@ function canonicalSavedCode(value) {
   return COURSE_ALIASES.get(normalized) || normalized;
 }
 
-function migrateSavedCourses(savedCourses = []) {
+function migrateSavedCourses(savedCourses = [], academicStanding = "") {
   const byCode = new Map();
   for (const savedCourse of savedCourses) {
     const code = canonicalSavedCode(savedCourse.code);
     if (!code || !COURSE_CATALOG.some(course => course.code === code)) continue;
-    if (NON_SELECTABLE_COURSE_CODES.has(code) && savedCourse.status !== "completed") continue;
+    if (NON_SELECTABLE_COURSE_CODES.has(code) && !(savedCourse.status === "completed" && canMarkHanoverOnlyCompleted(code, academicStanding))) continue;
     const existing = byCode.get(code);
     if (!existing || (SAVED_STATUS_PRIORITY[savedCourse.status] || 0) > (SAVED_STATUS_PRIORITY[existing.status] || 0)) {
       byCode.set(code, { ...savedCourse, code });
@@ -188,7 +192,7 @@ function plannerInputSignature(formData) {
     currentTermScheduleSet: currentTermWindow
       ? [currentTermWindow.slotId, formData.scheduleSetByTerm?.[currentTermWindow.slotId] === true]
       : null,
-    courses: selectedCourses(formData.courses, formData.academicStanding)
+    courses: selectedCourses(formData.courses, effectiveStandingFor(formData))
       .map(course => [canonicalSavedCode(course.code), course.status, course.units, course.source])
       .sort((left, right) => left[0].localeCompare(right[0]))
   });
@@ -500,7 +504,7 @@ export default function Page() {
           const openedForm = {
             ...initialForm,
             ...opened.student,
-            courses: migrateSavedCourses(opened.student?.courses),
+            courses: migrateSavedCourses(opened.student?.courses, effectiveStandingFor({ ...initialForm, ...opened.student })),
             planCreationDateEdited: true
           };
           const inputSignature = plannerInputSignature(openedForm);
@@ -580,7 +584,7 @@ export default function Page() {
             restoredForm = {
               ...restoredForm,
               ...migrated.formData,
-              courses: migrateSavedCourses(migrated.formData.courses),
+              courses: migrateSavedCourses(migrated.formData.courses, effectiveStandingFor({ ...restoredForm, ...migrated.formData })),
               planCreationDate: savedPlanCreationDateEdited && migrated.formData.planCreationDate
                 ? migrated.formData.planCreationDate
                 : localToday(),
@@ -611,7 +615,7 @@ export default function Page() {
       const generationRequest = generationRequestRef.current;
       const result = await validateSavedPlannerSession({
         rawSession: savedSession, inputSignature,
-        student: { ...restoredForm, courses: selectedCourses(restoredForm.courses, restoredForm.academicStanding) },
+        student: { ...restoredForm, courses: selectedCourses(restoredForm.courses, effectiveStandingFor(restoredForm)) },
         signal: controller.signal,
         onProgress: message => {
           if (cancelled || controller.signal.aborted || generationRequest !== generationRequestRef.current) return;
@@ -922,13 +926,12 @@ export default function Page() {
 
   function toggleHanoverOnlyCompleted(code) {
     setFormData(current => {
-      const exists = current.courses.some(course => course.code === code);
+      const completed = current.courses.some(course => course.code === code && course.status === "completed");
       const catalogCourse = COURSE_CATALOG.find(course => course.code === code);
+      const others = current.courses.filter(course => course.code !== code);
       return {
         ...current,
-        courses: exists
-          ? current.courses.filter(course => course.code !== code)
-          : [...current.courses, { ...blankCourse(catalogCourse), status: "completed", source: "manual_code" }]
+        courses: completed ? others : [...others, { ...blankCourse(catalogCourse), status: "completed", source: "manual_code" }]
       };
     });
     clearInputFeedback();
@@ -1070,7 +1073,7 @@ export default function Page() {
 
     const student = {
       ...formData,
-      courses: selectedCourses(formData.courses, formData.academicStanding)
+      courses: selectedCourses(formData.courses, effectiveStandingFor(formData))
     };
     const requestSignature = plannerInputSignature(formData);
     const requestId = generationRequestRef.current + 1;
@@ -1190,7 +1193,7 @@ export default function Page() {
     if (pdfOperationRef.current?.selectedPlan?.id !== selectedPlan.id) pdfOperationRef.current = null;
     if (!pdfOperationRef.current) {
       pdfOperationRef.current = {
-        student: { ...formData, courses: selectedCourses(formData.courses, formData.academicStanding) },
+        student: { ...formData, courses: selectedCourses(formData.courses, effectiveStandingFor(formData)) },
         preparedDate: formData.planCreationDate,
         selectedPlan,
         plans: economicsResult(report)?.economicsPlans || [],
@@ -1395,7 +1398,7 @@ export default function Page() {
             <strong>{code}</strong>
             <span>{title}</span>
           </div>
-          {isHanoverOnly ? (canMarkHanoverOnlyCompleted(code, formData.academicStanding) ? (
+          {isHanoverOnly ? (canMarkHanoverOnlyCompleted(code, effectiveStandingFor(formData)) ? (
             <div className="course-toggles" role="group" aria-label={`Status for ${code}`}>
               <button type="button" className={`course-toggle is-completed${completed ? " is-selected" : ""}`}
                 aria-pressed={completed} onClick={() => toggleHanoverOnlyCompleted(code)}>
@@ -1535,7 +1538,7 @@ export default function Page() {
             action: "validate-plan",
             student: {
               ...formData,
-              courses: selectedCourses(formData.courses, formData.academicStanding)
+              courses: selectedCourses(formData.courses, effectiveStandingFor(formData))
             },
             plan: compactEconomicsPlanForValidation(sourcePlan),
             plans: plans.map(compactEconomicsPlanForValidation),
