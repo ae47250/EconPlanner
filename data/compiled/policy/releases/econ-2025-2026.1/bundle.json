@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:0244ba4381d1e3ef6e4a8ebc0abf7a3064bdd0e06313660520f44fea651cc12c",
+  "contentHash": "sha256:ca5ae715e60196da26d728eb638b71b3d3bd3fac8c01accdf8c638cfe593482f",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -8301,6 +8301,26 @@
         "sourceId": "OWNER-SCHEDULE-LOAD-CORRECTION-2026-09-27",
         "sourceType": "OWNER_CONFIRMATION",
         "supersedes": null
+      },
+      {
+        "anchors": [
+          "Decision",
+          "Supersession"
+        ],
+        "authority": "Project owner and Economics Department domain expert",
+        "authorityBoundary": "SUMMER_OFFERING_ENROLLMENT_DEPENDENCE_AND_FEASIBILITY_STATUS",
+        "confirmedOn": "2026-11-24",
+        "effective": {
+          "from": "2026-11-24",
+          "through": null
+        },
+        "path": "policy/provenance/owner-summer-status-2026-11-24.md",
+        "reviewer": "Project owner and Economics Department domain expert",
+        "sha256": "1fa418a05284e8ed7c9319329e4cdc36c0fddf54d6ecb1649f2b7a5cfaf5ee59",
+        "sourceId": "OWNER-SUMMER-STATUS-2026-11-24",
+        "sourceType": "OWNER_CONFIRMATION",
+        "supersedes": "the sentence in S2 of OWNER-TIEBREAKER-DECISIONS-2026-11-24 that preserves all other Summer classifications and labels",
+        "supersessionScope": "Summer course offeringStatus and feasibility only; all other ranking key positions, Summer ranking behavior, seat availability, schedule integrity, and schedule provenance remain unchanged"
       },
       {
         "anchors": [
