@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createPlanRanking } from "../lib/planning/planRanking.js";
-import { compareCp5ReferenceCandidates } from "../lib/planning/economics.js";
+import { classifyFeasibility, compareCp5ReferenceCandidates, FEASIBILITY_STATUS } from "../lib/planning/economics.js";
+import { buildCoursePlacement } from "../lib/planning/termSolver.js";
 
 function plan(coursesByYear, targetYearCounts) {
   return {
@@ -111,4 +112,31 @@ test("a Summer course counts as one fewer verified course than a verified Fall s
   assert.equal(ranking.planSafetyMetrics(fall).verifiedCount, 1);
   assert.equal(ranking.planSafetyMetrics(summer).verifiedCount, 0);
   assert.equal(ranking.planSafetyMetrics(fall).verifiedCount - ranking.planSafetyMetrics(summer).verifiedCount, 1);
+});
+
+test("Summer placements are enrollment dependent and make a valid plan conditional", () => {
+  const requirement = { id: "eco-113", label: "ECO 113" };
+  const summer = buildCoursePlacement({
+    requirement,
+    code: "ECO 113",
+    slot: { id: "summer-2028", termKey: "Summer" },
+    offering: { course: "ECO 113", section: "S1", title: "Principles", verificationStatus: "verified", availability: { status: "open", asOf: "2026-11-24" }, meeting: { days: ["M"], startMinutes: 540, endMinutes: 590 } },
+    source: "summer-last-resort"
+  });
+  const fall = buildCoursePlacement({
+    requirement,
+    code: "ECO 113",
+    slot: { id: "fall-2028", termKey: "Fall" },
+    offering: { course: "ECO 113", section: "F1", title: "Principles", verificationStatus: "verified", availability: { status: "open", asOf: "2026-11-24" }, meeting: { days: ["M"], startMinutes: 540, endMinutes: 590 } },
+    source: "verified-offering"
+  });
+  const validPlan = course => ({
+    validation: { valid: true, conditions: [] },
+    terms: [{ term: course.source === "summer-last-resort" ? "Summer" : "Fall", courses: [course] }]
+  });
+
+  assert.equal(summer.offeringStatus, "enrollment_dependent");
+  assert.equal(classifyFeasibility(validPlan(summer), { planCreationDate: "2026-11-24" }), FEASIBILITY_STATUS.CONDITIONAL);
+  assert.equal(fall.offeringStatus, "verified");
+  assert.equal(classifyFeasibility(validPlan(fall), { planCreationDate: "2026-11-24" }), FEASIBILITY_STATUS.VERIFIED);
 });

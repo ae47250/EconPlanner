@@ -422,7 +422,7 @@ export default function Page() {
     return `${url.pathname}${url.search}${url.hash}`;
   }
 
-  function navigatePlanner(nextView, nextPlanId = selectedPlanId, { replace = false } = {}) {
+  function cancelInFlightPlanEdit() {
     if (planEditInFlightRef.current) {
       planEditRequestRef.current += 1;
       planEditAbortRef.current?.abort();
@@ -431,6 +431,10 @@ export default function Page() {
       setEditingPlanCourseKey("");
       setPlanEditFeedback(null);
     }
+  }
+
+  function navigatePlanner(nextView, nextPlanId = selectedPlanId, { replace = false } = {}) {
+    cancelInFlightPlanEdit();
     const plans = economicsResult(report)?.economicsPlans || [];
     const safePlanId = plans.some(plan => plan.id === nextPlanId)
       ? nextPlanId
@@ -717,14 +721,7 @@ export default function Page() {
       const safePlanId = plans.some(plan => plan.id === requestedPlanId)
         ? requestedPlanId
         : plans[0]?.id || "";
-      if (planEditInFlightRef.current) {
-        planEditRequestRef.current += 1;
-        planEditAbortRef.current?.abort();
-        planEditAbortRef.current = null;
-        planEditInFlightRef.current = false;
-        setEditingPlanCourseKey("");
-        setPlanEditFeedback(null);
-      }
+      cancelInFlightPlanEdit();
       setSelectedPlanId(safePlanId);
       setPlannerView(safeView);
       setPlanEditStatus("");

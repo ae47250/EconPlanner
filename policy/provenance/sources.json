@@ -616,6 +616,26 @@
         "through": null
       },
       "supersedes": "the meaning of verified count in plan-ranking-decision-2026-11-23.md only"
+    },
+    {
+      "sourceId": "OWNER-SUMMER-STATUS-2026-11-24",
+      "sourceType": "OWNER_CONFIRMATION",
+      "authority": "Project owner and Economics Department domain expert",
+      "authorityBoundary": "SUMMER_OFFERING_ENROLLMENT_DEPENDENCE_AND_FEASIBILITY_STATUS",
+      "path": "policy/provenance/owner-summer-status-2026-11-24.md",
+      "confirmedOn": "2026-11-24",
+      "reviewer": "Project owner and Economics Department domain expert",
+      "sha256": "1fa418a05284e8ed7c9319329e4cdc36c0fddf54d6ecb1649f2b7a5cfaf5ee59",
+      "anchors": [
+        "Decision",
+        "Supersession"
+      ],
+      "effective": {
+        "from": "2026-11-24",
+        "through": null
+      },
+      "supersedes": "the sentence in S2 of OWNER-TIEBREAKER-DECISIONS-2026-11-24 that preserves all other Summer classifications and labels",
+      "supersessionScope": "Summer course offeringStatus and feasibility only; all other ranking key positions, Summer ranking behavior, seat availability, schedule integrity, and schedule provenance remain unchanged"
     }
   ],
   "authorityHierarchy": [
