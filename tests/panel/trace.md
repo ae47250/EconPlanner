@@ -9,8 +9,11 @@ Rule or reason code → policy message keys → panel students.
 - **checklist.prerequisiteNotCompleted** → 16, 17, 18, 32
 - **checklist.statisticsAlreadyFilled** → 27, 49
 - **history.scheduledPrerequisite** → 16, 32
+- **history.takingNowNotOffered** → 17
+- **history.takingNowNotOfferedAdvisor** → 17
 - **infeasibility.capstone.seniorStanding** → 04, 06
 - **infeasibility.courseCapacity** → 09, 10, 11, 31, 33, 45
+- **infeasibility.electives.capacity** → 09, 10, 11, 31, 33, 45
 - **infeasibility.electives.conflict** → 37, 38
 - **infeasibility.electives.spring** → 37, 38
 - **infeasibility.finance.forced** → 37
