@@ -34,7 +34,7 @@ test("the planner still builds plans and adds a non-blocking advisor note", asyn
   assert.ok(plans.length > 0);
   for (const plan of plans) {
     const note = plan.planConditions.find(item => item.id === "taking-now-not-offered-ECO 214");
-    assert.equal(note?.message, "ECO 214 is not on the Fall 2026 schedule. If you are taking it at another school, that is fine. Your advisor will check it.");
+    assert.equal(note?.message, "ECO 214 is not on the Fall 2026 schedule. If you are taking it at another school, your advisor will check whether it counts.");
     assert.equal(note.shortMessage, undefined);
     assert.equal(note.advisorPrompt, "Confirm where the student is taking ECO 214 in Fall 2026. It is not on the Hanover Fall 2026 schedule.");
   }

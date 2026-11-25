@@ -70,7 +70,7 @@
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.",
     "infeasibility.courseCapacity": "You have {requiredCourses} required courses left and {remainingTerms} {termNoun} left by {term}. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.",
-    "history.takingNowNotOffered": "{course} is not on the {term} schedule. If you are taking it at another school, that is fine. Your advisor will check it.",
+    "history.takingNowNotOffered": "{course} is not on the {term} schedule. If you are taking it at another school, your advisor will check whether it counts.",
     "history.takingNowNotOfferedAdvisor": "Confirm where the student is taking {course} in {term}. It is not on the Hanover {term} schedule.",
     "infeasibility.electives.capacity": "You need {remainingElectives} more Economics {electiveNoun}, but only {maximumElectives} can fit in {terms}. Choose a later graduation year or talk with your advisor.",
     "history.scheduledPrerequisite": "This class is a prerequisite for {course}, which you marked completed. Check with your advisor.",

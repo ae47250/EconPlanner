@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:3cf02a0f3293d807bddee46e1a2d35de2da855ea9d85d9ddbc7e9476f7ef7f3d",
+  "contentHash": "sha256:49f9dcd4c9e3e4a92b8509643db9a20215ebab4cdad7ca898fdebdcfcfe69da4",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7039,7 +7039,7 @@
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.scheduledPrerequisite": "This class is a prerequisite for {course}, which you marked completed. Check with your advisor.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
-    "history.takingNowNotOffered": "{course} is not on the {term} schedule. If you are taking it at another school, that is fine. Your advisor will check it.",
+    "history.takingNowNotOffered": "{course} is not on the {term} schedule. If you are taking it at another school, your advisor will check whether it counts.",
     "history.takingNowNotOfferedAdvisor": "Confirm where the student is taking {course} in {term}. It is not on the Hanover {term} schedule.",
     "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. Your graduation year alone does not establish senior standing. Ask your advisor and the Registrar to confirm it, or choose a later graduation year.",
     "infeasibility.courseCapacity": "You have {requiredCourses} required courses left and {remainingTerms} {termNoun} left by {term}. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.",
