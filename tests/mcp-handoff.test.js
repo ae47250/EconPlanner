@@ -163,7 +163,11 @@ test("link redemption rejects altered, expired, wrong-plan, and stale-policy tok
     plans: [{ id: "balanced", terms: [] }], fingerprint: plannerFingerprint };
   const token = encodeState(state, stateKey);
   assert.equal((await redeem(token, "balanced")).status, 200);
-  assert.equal((await redeem(`${token.slice(0, -1)}${token.endsWith("A") ? "B" : "A"}`, "balanced")).status, 400);
+  // Alter a middle character: every bit there is significant (the last base64url
+  // character can carry unused padding bits, so changing it sometimes changes nothing).
+  const middle = Math.floor(token.length / 2);
+  const altered = `${token.slice(0, middle)}${token[middle] === "A" ? "B" : "A"}${token.slice(middle + 1)}`;
+  assert.equal((await redeem(altered, "balanced")).status, 400);
   assert.equal((await redeem(token, "wrong-plan")).status, 400);
   assert.equal((await redeem(encodeState({ ...state, fingerprint: "obsolete" }, stateKey), "balanced")).status, 409);
   const now = Date.now();
