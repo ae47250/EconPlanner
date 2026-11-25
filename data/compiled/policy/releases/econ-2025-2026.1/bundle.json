@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:49f9dcd4c9e3e4a92b8509643db9a20215ebab4cdad7ca898fdebdcfcfe69da4",
+  "contentHash": "sha256:87d8a9efd14ff5ee8e1f48e32a133ad4eebc8f86d940e8066c143fd8721e15d1",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7035,6 +7035,8 @@
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "history.advisor": "Historical prerequisite evidence is incomplete and requires review.",
+    "history.hanoverOnlyCompleted": "You marked {course} as completed. Your advisor will confirm it.",
+    "history.hanoverOnlyCompletedAdvisor": "Confirm the student completed {course} at Hanover College.",
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.scheduledPrerequisite": "This class is a prerequisite for {course}, which you marked completed. Check with your advisor.",

@@ -95,6 +95,7 @@ jobs:
             tests/planning-explanations-regression.test.js \
             tests/taking-now-not-offered.test.js \
             tests/elective-capacity-explanation.test.js \
+            tests/eco461-completed-note.test.js \
             tests/catalog-planning-note.test.js \
             tests/cp4b-a-contracts.test.js \
             tests/cp4b-b-contracts.test.js \
@@ -202,6 +203,7 @@ jobs:
           tests/e2e/summer-last-resort-note.spec.js
           tests/e2e/econ-planner-parity.spec.js
           tests/e2e/finance-elective-correction.spec.js
+          tests/e2e/eco461-completed.spec.js
           --fully-parallel --workers=1 --shard=${{ matrix.shard }}/4
 
       - name: Upload Playwright failure evidence
