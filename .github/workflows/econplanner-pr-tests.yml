@@ -94,6 +94,7 @@ jobs:
             tests/no-plan-presentation.test.js \
             tests/planning-explanations-regression.test.js \
             tests/taking-now-not-offered.test.js \
+            tests/elective-capacity-explanation.test.js \
             tests/catalog-planning-note.test.js \
             tests/cp4b-a-contracts.test.js \
             tests/cp4b-b-contracts.test.js \
