@@ -7,8 +7,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "ingest:catalog": "node scripts/ingest-hanover-catalog.mjs",
-    "normalize:catalog": "node scripts/normalize-hanover-catalog.mjs",
     "compile:policy": "node scripts/compile-policy.mjs",
     "compile:catalog-policy": "node scripts/compile-catalog-policies.mjs",
     "compile:calendar": "node scripts/compile-academic-calendar.mjs",
