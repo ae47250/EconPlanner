@@ -60,3 +60,14 @@ test("a senior taking ECO 461 in Winter gets a plan; in Fall the same entry is i
   const fallPlan = (await post({ ...winter, planCreationDate: "2026-10-15" })).programs[0].economicsPlans[0];
   assert.ok(fallPlan.terms.some(term => (term.courses || []).some(course => course.course === "ECO 461")), "in Fall it is still planned");
 });
+
+test("April is still the Winter term for a taking-now ECO 461 (Winter runs to the day before May term)", async () => {
+  // All other requirements done: in April the May term is already closed to new courses.
+  const student = { planCreationDate: "2027-04-15", academicStanding: "senior",
+    courses: [...[...done, "ECO 224"].map(code => ({ code, status: "completed", source: "manual_code" })), { code: "ECO 461", status: "in_progress", source: "manual_code" }] };
+  const response = await POST(new Request("http://localhost/api/majors/map", { method: "POST",
+    headers: { "content-type": "application/json" }, body: JSON.stringify({ student }) }));
+  const plan = (await response.json()).programs[0].economicsPlans[0];
+  assert.ok(plan, "the April senior gets a plan");
+  assert.ok(plan.planConditions.some(item => item.id === "hanover-only-taking-now-ECO 461"));
+});

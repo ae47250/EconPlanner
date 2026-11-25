@@ -32,3 +32,19 @@ test("seniors do not see Taking now for ECO 461 in Fall", async ({ page }) => {
   await expect(group.getByRole("button", { name: "Completed" })).toBeVisible();
   await expect(group.getByRole("button", { name: "Taking now" })).toHaveCount(0);
 });
+
+test("changing the plan date out of Winter clears a taking-now ECO 461", async ({ page }) => {
+  const row = await eco461Group(page, "2027-01-20", "senior");
+  const group = row.getByRole("group", { name: "Status for ECO 461" });
+  await group.getByRole("button", { name: "Taking now" }).click();
+  await expect(page.locator(".cp7-summary")).toContainText("ECO 461");
+  await page.getByRole("navigation", { name: "Planner progress" }).getByRole("button", { name: "About you", exact: true }).click();
+  const dateInput = page.locator("#plan-creation-date");
+  if (!(await dateInput.isVisible())) await page.locator("details:has(#plan-creation-date) > summary").click();
+  await dateInput.fill("2027-05-10");
+  await continueToCourses(page);
+  await openOtherCourses(page);
+  await expect(group.getByRole("button", { name: "Taking now" })).toHaveCount(0);
+  await expect(group.getByRole("button", { name: "Completed" })).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(".cp7-summary")).not.toContainText("ECO 461");
+});

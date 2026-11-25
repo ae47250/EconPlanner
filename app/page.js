@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { buildEarlyGraduationContext, buildPlanningSlots, PLANNING_PACES, resolvePlanningContext, transferPlanningOptions } from "../lib/planning/horizon.js";
+import { buildEarlyGraduationContext, buildPlanningSlots, isWinterTermDate, PLANNING_PACES, resolvePlanningContext, transferPlanningOptions } from "../lib/planning/horizon.js";
 import { buildPrerequisiteFollowUp, validateStudentPrerequisites } from "../lib/planning/prerequisiteFormValidation.js";
 import { createGeneratedPlannerSession, migratePlannerInputState, PLANNER_INPUT_STATE_VERSION, PLANNER_VIEWS, plannerViewFromSearch, replaceEconomicsPlan } from "../lib/planning/uiState.js";
 import { validateSavedPlannerSession } from "../lib/planning/session-restoration.js";
@@ -54,7 +54,7 @@ function canMarkHanoverOnlyTakingNow(code, form) {
   if (!canMarkHanoverOnlyCompleted(code, effectiveStandingFor(form))) return false;
   try {
     const context = resolvePlanningContext(form);
-    return !context.isSummer && context.startTerm === "Winter";
+    return !context.isSummer && Boolean(form.planCreationDate) && isWinterTermDate(form.planCreationDate);
   } catch { return false; }
 }
 
@@ -276,6 +276,14 @@ function explicitPrerequisiteStatusText(question = {}) {
     .join("; ");
 }
 
+// Remove a Hanover-only course mark the current standing or date no longer allows, so the screen
+// never shows a status that the planner would ignore.
+function pruneHanoverOnlyCourses(form) {
+  const allowed = new Set(hanoverOnlyRecordedCourses(form.courses || [], form).map(course => course.code));
+  const courses = (form.courses || []).filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code) || allowed.has(course.code));
+  return courses.length === (form.courses || []).length ? form : { ...form, courses };
+}
+
 function selectedCourses(courses, form) {
   return [
     ...courses.filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code) && ["completed", "transfer", "in_progress"].includes(course.status)),
@@ -416,11 +424,11 @@ export default function Page() {
   latestReportRef.current = report;
 
   function updatePlanCreationDate(current, planCreationDate) {
-    const next = {
+    const next = pruneHanoverOnlyCourses({
       ...current,
       planCreationDate,
       planCreationDateEdited: true
-    };
+    });
     if (!current.isTransferStudent) return next;
 
     const nextContext = resolvePlanningContext(next);
@@ -428,7 +436,7 @@ export default function Page() {
     const selectedGraduationYear = Number(current.transferExpectedGraduationYear);
     const graduationYearStillValid = selectedGraduationYear >= nextContext.startYear + 1
       && selectedGraduationYear <= nextContext.startYear + 5;
-    return {
+    return pruneHanoverOnlyCourses({
       ...next,
       transferExpectedGraduationYear: graduationYearStillValid
         ? current.transferExpectedGraduationYear
@@ -436,7 +444,7 @@ export default function Page() {
       transferEntryAcademicYear: nextOptions.entryAcademicYears.includes(current.transferEntryAcademicYear)
         ? current.transferEntryAcademicYear
         : ""
-    };
+    });
   }
 
   function plannerUrl(view) {
@@ -610,6 +618,8 @@ export default function Page() {
         try { window.localStorage.removeItem(PLANNER_STORAGE_KEY); } catch { /* Storage may be disabled. */ }
       }
 
+      // The restored date can differ from the saved one, so re-check Hanover-only course marks.
+      restoredForm = pruneHanoverOnlyCourses(restoredForm);
       if (!restorationAttempt) {
         setFormData(restoredForm);
         setCourseSearch(restoredCourseSearch);
@@ -966,20 +976,17 @@ export default function Page() {
       const candidate = {
         ...current,
         academicStanding,
-        // Only seniors can mark a Hanover-only course completed; drop it when the standing changes.
-        courses: academicStanding === "senior" ? current.courses
-          : current.courses.filter(course => !NON_SELECTABLE_COURSE_CODES.has(course.code)),
         isTransferStudent: false,
         transferExpectedGraduationYear: "",
         transferEntryAcademicYear: ""
       };
       const candidateContext = resolvePlanningContext(candidate);
-      return {
+      return pruneHanoverOnlyCourses({
         ...candidate,
         planningPace: candidateContext.oneYearEarlyEligible
           ? current.planningPace
           : PLANNING_PACES.STANDARD
-      };
+      });
     });
     clearInputFeedback();
   }
