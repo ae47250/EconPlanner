@@ -63,7 +63,7 @@ We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, M
 In Winter 2027, this plan has 5 courses. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
-Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
+Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
 You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 This plan has 4 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
@@ -160,7 +160,7 @@ We don’t know if there are open seats in ECO 214, ECO 221, ECO 321, ECO 461, M
 In Winter 2027, this plan has 5 courses. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
-Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
+Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
 You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 This plan has 4 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
@@ -168,7 +168,7 @@ This plan uses the current Economics major requirements. Your 2023–24 catalog 
 PDF > Plan: Balanced > For your advisor
 For your advisor
 Confirm the ECO 214 instructor approves taking MAT 113 and ECO 214 together in Winter 2027.
-Confirm the Economics Department approves taking ECO 214 and ECO 461 together in Winter 2027.
+Confirm the ECO 461 instructor approves taking ECO 214 and ECO 461 together in Winter 2027.
 Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.
 PDF > Plan: Balanced > Checklist
 Your Economics major checklist

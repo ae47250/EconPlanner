@@ -902,8 +902,8 @@ test("current in-progress ECO 213 or ECO 214 follows target-term chronology for 
     assert.equal(plan.validation.readinessStatus, scenario.readinessStatus, scenario.profileId);
     const capstone = plan.terms.flatMap(term => term.courses).find(course => course.course === "ECO 461");
     assert.ok(capstone.approvalRequired.some(approval => (
-      approval.type === "department"
-      && approval.authority === "Economics Department"
+      approval.type === "instructor"
+      && approval.authority === "ECO 461 instructor"
       && approval.prerequisite === scenario.concurrent
     )), scenario.profileId);
   }
@@ -917,7 +917,7 @@ test("a completed or earlier-generated intermediate may support one concurrent i
   const winter461 = approved.plans[0].terms
     .flatMap(term => term.courses)
     .find(course => course.course === "ECO 461");
-  assert.ok(winter461.approvalRequired.some(item => item.type === "department" && item.prerequisite === "ECO 214"));
+  assert.ok(winter461.approvalRequired.some(item => item.type === "instructor" && item.prerequisite === "ECO 214"));
 
   const generatedStudent = upcomingSenior(["ECO 113", "ECO 114", "MAT 113"]);
   const generatedMapping = mapStudentToProgram({ id: "economics", name: "Economics" }, requirements, generatedStudent);
@@ -934,7 +934,7 @@ test("a completed or earlier-generated intermediate may support one concurrent i
     "the recorded approval applies to the concurrent intermediate");
   const generatedCapstone = generatedPlan.terms[capstoneTerm].courses.find(course => course.course === "ECO 461");
   assert.ok(generatedCapstone.approvalRequired.some(item => (
-    item.type === "department" && item.prerequisite === "ECO 214"
+    item.type === "instructor" && item.prerequisite === "ECO 214"
   )));
   assert.equal(generatedPlan.validation.valid, true);
 });

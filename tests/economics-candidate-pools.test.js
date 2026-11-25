@@ -363,9 +363,7 @@ function approvalRuleId(approval) {
 
 function oracleApproval(approval) {
   const ruleId = approvalRuleId(approval);
-  const type = ruleId === "CONCURRENT-INTERMEDIATE-ECO-461"
-    ? "DEPARTMENT_APPROVAL"
-    : "INSTRUCTOR_APPROVAL";
+  const type = "INSTRUCTOR_APPROVAL";
   return {
     ruleId,
     type,

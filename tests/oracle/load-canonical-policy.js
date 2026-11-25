@@ -71,7 +71,7 @@ function approvalsCover(approvals, course, prerequisite, authority) {
     if (approval.approvalId) {
       return approval.status === "APPROVED"
         && String(approval.scope?.course || "").toUpperCase() === course
-        && String(approval.ruleId || "").includes(authority === "INSTRUCTOR" ? "MATH" : "INTERMEDIATE")
+        && String(approval.ruleId || "").includes(authority === "INSTRUCTOR" && course !== "ECO 461" ? "MATH" : "INTERMEDIATE")
         && String(approval.authority || "").toUpperCase().includes(authority);
     }
     return String(approval.course || course).toUpperCase() === course
@@ -92,7 +92,7 @@ export function oracleEvaluatePrerequisite(policy, course, { available = [], sam
       && candidate.condition.dependentCourse === code
       && (candidate.condition.concurrentOptions || []).includes(prerequisite));
     return Boolean(permission && sameTermSet.has(prerequisite)
-      && approvalsCover(approvals, code, prerequisite, permission.ruleId.includes("MATH") ? "INSTRUCTOR" : "DEPARTMENT"));
+      && approvalsCover(approvals, code, prerequisite, /instructor/i.test(permission.effect.approvalAuthority) ? "INSTRUCTOR" : "DEPARTMENT"));
   };
   const unresolved = [];
   for (const prerequisite of rule.effect.allOf || []) {

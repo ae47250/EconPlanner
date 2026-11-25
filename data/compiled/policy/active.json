@@ -6,12 +6,12 @@
         "bundleVersion": "econ-2025-2026.1",
         "compatibilityHashes": {
           "compatibility/courses.json": "sha256:809fd61cdb9174292c4e2d75cf7053fdbf6ac1781e1a05f10ecc1331cb3dafb6",
-          "compatibility/planning-constraints.json": "sha256:c9ef6e1907eba2cdb3f79f18b89165e5320d9f055b9f3a41def3b7132b7b014f",
-          "compatibility/prerequisites.json": "sha256:915b18c25dec2cb4cbf08e3fa0d33ab69a5dc0a31966724059560a5fd903faa3",
+          "compatibility/planning-constraints.json": "sha256:124afd60cfabc4ddc3936b519f63f5271be626a5a53b9c3ed5e9dd4f3f1f91b4",
+          "compatibility/prerequisites.json": "sha256:165d06580b462972e60c5ac5292b2da0338c217840ecac00476b757f516cd245",
           "compatibility/requirements.json": "sha256:2cbd0e1a448cb84f087377079e875a12ebc616e12eab2840baa6eecc22898683",
           "compatibility/schedule-2026-2027.json": "sha256:c5d790588a082e4a7076d5cb0e4d8b533aa7e66f54bce9cad7a88d887a5599b3"
         },
-        "contentHash": "sha256:1cb3c3225cb76b61c5c7e2e91c234b4d32864ad082f58196316bad99d19e4ec8",
+        "contentHash": "sha256:9f5028424f8a4245658f55aa4d1b33579e557ac44527dfb81110b4d5b425bd61",
         "releasePath": "releases/econ-2025-2026.1/bundle.json"
       }
     }

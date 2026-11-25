@@ -187,11 +187,11 @@
           "academicYear": "2026/2027",
           "courses": [
             {
-              "course": "MAT 217",
-              "title": "Applied Statistics",
+              "course": "ECO 222",
+              "title": "Economics of the European Union",
               "section": "S",
               "status": "Planned",
-              "requirementId": "statistics"
+              "requirementId": "eco-elective-1"
             }
           ]
         },
@@ -201,18 +201,18 @@
           "academicYear": "2027/2028",
           "courses": [
             {
-              "course": "ECO elective",
-              "title": "Pick a course when the schedule comes out.",
-              "section": null,
-              "status": "Planned",
-              "requirementId": "eco-elective-1"
-            },
-            {
               "course": "MAT 113",
               "title": "Essential Pre-Calculus",
               "section": null,
               "status": "Planned",
               "requirementId": "cognate"
+            },
+            {
+              "course": "MAT 217",
+              "title": "Applied Statistics",
+              "section": null,
+              "status": "Planned",
+              "requirementId": "statistics"
             }
           ]
         },

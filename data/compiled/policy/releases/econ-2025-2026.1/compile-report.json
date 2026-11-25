@@ -17,14 +17,14 @@
       "status": "GENERATED"
     },
     {
-      "canonicalHash": "sha256:915b18c25dec2cb4cbf08e3fa0d33ab69a5dc0a31966724059560a5fd903faa3",
+      "canonicalHash": "sha256:165d06580b462972e60c5ac5292b2da0338c217840ecac00476b757f516cd245",
       "output": "compatibility/prerequisites.json",
       "runtimeOutput": "data/normalized/economics/prerequisites.json",
       "source": "canonical Knowledge Hub manifest inputs",
       "status": "GENERATED"
     },
     {
-      "canonicalHash": "sha256:c9ef6e1907eba2cdb3f79f18b89165e5320d9f055b9f3a41def3b7132b7b014f",
+      "canonicalHash": "sha256:124afd60cfabc4ddc3936b519f63f5271be626a5a53b9c3ed5e9dd4f3f1f91b4",
       "output": "compatibility/planning-constraints.json",
       "runtimeOutput": "data/normalized/economics/planning-constraints.json",
       "source": "canonical Knowledge Hub manifest inputs",
@@ -38,13 +38,13 @@
       "status": "GENERATED"
     }
   ],
-  "contentHash": "sha256:1cb3c3225cb76b61c5c7e2e91c234b4d32864ad082f58196316bad99d19e4ec8",
+  "contentHash": "sha256:9f5028424f8a4245658f55aa4d1b33579e557ac44527dfb81110b4d5b425bd61",
   "counts": {
     "activeRules": 58,
     "courses": 31,
     "historicalOfferingRecords": 0,
     "scheduleSections": 31,
-    "sources": 36,
+    "sources": 37,
     "unresolvedReviewRecords": 5
   },
   "determinism": {

@@ -105,7 +105,7 @@ function productionCapstoneDecision({ beforeTargetIntermediates, sameTermInterme
     ruleId: ECO_461_CONCURRENCY_RULE_ID,
     status: "APPROVED",
     scope: { course: "ECO 461", termId: term.termId },
-    authority: "ECONOMICS_DEPARTMENT",
+    authority: "ECO 461 instructor",
     authorityBoundary: "ECO_461_INTERMEDIATE_CONCURRENCY",
     evidenceRef: "fictional-authority-guard-evidence",
     effectiveDate: "2026-08-09",
@@ -188,7 +188,7 @@ test("ECO 461 chronology has one explicit authoritative meaning across source, b
     requiresCompletedBeforeTargetTerm: true,
     earlierPendingCoursesRequireSuccessfulCompletion: true,
     maxConcurrent: 1,
-    approvalAuthority: "Economics Department"
+    approvalAuthority: "ECO 461 instructor"
   };
 
   assert.deepEqual({

@@ -796,7 +796,7 @@ test("backend conditions and advisor actions retain their student-facing distinc
   await expect((await visitPlan(page, advisor.id)).locator("[data-plan-conditions]")).toContainText("Meet with your advisor to confirm this approval.");
 });
 
-for (const authority of ["ECO 213 instructor", "Economics Department"]) {
+for (const authority of ["ECO 213 instructor", "ECO 461 instructor"]) {
   test(`real plan approval badges retain ${authority} details in the UI and rendered PDF`, async ({ page, browser }, testInfo) => {
     test.setTimeout(60000);
     const instructor = authority === "ECO 213 instructor";

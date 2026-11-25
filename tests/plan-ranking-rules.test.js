@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createPlanRanking } from "../lib/planning/planRanking.js";
 import { compareCp5ReferenceCandidates } from "../lib/planning/economics.js";
 
 function plan(coursesByYear, targetYearCounts) {
@@ -54,4 +55,20 @@ test("equal yearly fit puts more verified courses first", () => {
   const verified = plan([[course("ECO 113", "verified-offering")]], [1]);
   const projected = plan([[course("ECO 113", "projected-offering")]], [1]);
   assert.ok(compare(verified, projected, "balanced") < 0);
+});
+
+test("approval type alone does not change the approval ranking weight", () => {
+  const instructor = plan([[course("ECO 113", "verified-offering")]], [1]);
+  instructor.feasibility = { requiredApprovals: [{ type: "instructor" }] };
+  const department = structuredClone(instructor);
+  department.feasibility.requiredApprovals[0].type = "department";
+  const { planSafetyMetrics } = createPlanRanking({
+    plannerTrackedTermLoad: term => term.courses.length,
+    isEconomicCourse: code => code.startsWith("ECO "),
+    semanticPlanSignature: () => "same-placement"
+  });
+  // Isolate this key: the final signature tie-breaker also records approval type.
+  assert.equal(planSafetyMetrics(instructor).approvalWeight, 1);
+  assert.equal(planSafetyMetrics(department).approvalWeight, 1);
+  assert.equal(planSafetyMetrics(instructor).approvalWeight - planSafetyMetrics(department).approvalWeight, 0);
 });

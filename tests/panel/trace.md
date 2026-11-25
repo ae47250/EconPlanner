@@ -35,10 +35,9 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 48): Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): Before taking ECO 213 in Fall 2027, finish ECO 113 and MAT 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13): Before taking ECO 213 in Fall 2027, finish ECO 113.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Before taking ECO 213 in Fall 2027, finish MAT 113.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11): Before taking ECO 213 in Fall 2027, finish MAT 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10): Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 121.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 11): Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 113.
@@ -46,12 +45,12 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): Before taking ECO 221 and ECO 321 in Winter 2027, finish ECO 113.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 19): Before taking ECO 222 in Spring/May 2027, finish ECO 114.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03, 17, 19): Before taking ECO 222 in Spring/May 2027, finish ECO 114.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 36, 42): Before taking ECO 461 in Winter 2027, finish MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09): Before taking ECO 461 in Winter 2028, finish ECO 213 and ECO 214.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13, 14, 15, 17): Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 13, 14, 15, 17): Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Before taking ECO 461 in Winter 2028, finish ECO 213.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 16, 18, 21): Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 18, 21): Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 49): Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48): Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
@@ -85,20 +84,20 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): CHECKLIST CELL: ECO 161
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 16, 39): CHECKLIST CELL: ECO 161 — Winter 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 213
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 09, 11, 13, 14, 15, 17, 46, 47, 48, 49): CHECKLIST CELL: ECO 213 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 46, 47, 48, 49): CHECKLIST CELL: ECO 213 — Fall 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST CELL: ECO 213 — Fall 2028
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST CELL: ECO 213 — Taking now
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 10, 21): CHECKLIST CELL: ECO 213 — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 21): CHECKLIST CELL: ECO 213 — Winter 2028
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 214
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 16, 18, 19, 21): CHECKLIST CELL: ECO 214 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 18, 19, 21): CHECKLIST CELL: ECO 214 — Fall 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 46): CHECKLIST CELL: ECO 214 — Fall 2028
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): CHECKLIST CELL: ECO 214 — Taking now
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 13, 14, 15, 28, 30, 32, 47, 49): CHECKLIST CELL: ECO 214 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 13, 14, 15, 28, 30, 32, 47, 49): CHECKLIST CELL: ECO 214 — Winter 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 11, 19, 46, 48, 49): CHECKLIST CELL: ECO 214 — Winter 2028
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST CELL: ECO 214 — Winter 2029
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 23, 36, 39, 42): CHECKLIST CELL: ECO 221
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 10, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): CHECKLIST CELL: ECO 221 — Winter 2027
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): CHECKLIST CELL: ECO 222 — Spring/May 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): CHECKLIST CELL: ECO 221 — Winter 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): CHECKLIST CELL: ECO 222 — Spring/May 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): CHECKLIST CELL: ECO 224 — Spring/May 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 28, 30, 32, 36, 39, 42, 44): CHECKLIST CELL: ECO 234
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 22, 27, 49): CHECKLIST CELL: ECO 257
@@ -116,7 +115,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 19, 46, 47, 48, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2030
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 13, 15, 19, 21, 47, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2028
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 13, 15, 19, 21, 47, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2028
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46, 49): CHECKLIST CELL: Economics elective (200 level or higher) — Winter 2029
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Economics elective 1
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Economics elective 2
@@ -131,7 +130,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): CHECKLIST CELL: MAT 121 — Taking now
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 11, 12, 25, 26, 28, 30, 32, 39, 44): CHECKLIST CELL: MAT 217
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): CHECKLIST CELL: MAT 217 — Fall 2026
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19, 21): CHECKLIST CELL: MAT 217 — Fall 2027
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03, 05, 19, 21): CHECKLIST CELL: MAT 217 — Fall 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 46): CHECKLIST CELL: MAT 217 — Spring/May 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47, 48): CHECKLIST CELL: MAT 217 — Spring/May 2028
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 36): CHECKLIST CELL: MAT 217 — Taking now
@@ -149,10 +148,10 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 42, 44, 48, 49): Completed Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): Completed Taking now Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Completed Transfer credit Planned
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Confirm the ECO 214 instructor approves taking MAT 113 and ECO 214 together in Winter 2027.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 21): Confirm the Economics Department approves taking ECO 213 and ECO 461 together in Winter 2028.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Confirm the Economics Department approves taking ECO 214 and ECO 461 together in Winter 2027.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Confirm the Economics Department approves taking ECO 214 and ECO 461 together in Winter 2028.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 32): Confirm the ECO 214 instructor approves taking MAT 113 and ECO 214 together in Winter 2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 21): Confirm the ECO 461 instructor approves taking ECO 213 and ECO 461 together in Winter 2028.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Confirm the ECO 461 instructor approves taking ECO 214 and ECO 461 together in Winter 2027.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Confirm the ECO 461 instructor approves taking ECO 214 and ECO 461 together in Winter 2028.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08): Confirm the student will be eligible for ECO 461 in 2026–2027.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): Confirm the student will be eligible for ECO 461 in 2028–2029.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Confirm whether the student’s AP credit for ECO 113 and MAT 121 counts.
@@ -172,9 +171,9 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 19, 21, 46, 47, 48, 49): ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49): ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 10, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): ECO 221 — Environmental Economics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): ECO 221 — Environmental Economics Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): ECO 222 — Economics of the European Union Previously offered in May.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): ECO 222 — Economics of the European Union Previously offered in May.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): ECO 224 — Introduction to Sustainability Previously offered in May.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
@@ -204,10 +203,10 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 17, 19): GRID ROW: ECO 114-J
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 16, 39): GRID ROW: ECO 161-J
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 19, 21, 46, 47, 48, 49): GRID ROW: ECO 213
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 10, 11, 16, 17, 18, 19, 21, 46, 48, 49): GRID ROW: ECO 214
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 13, 14, 15, 28, 30, 32, 47, 49): GRID ROW: ECO 214-J
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 10, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): GRID ROW: ECO 221-J
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): GRID ROW: ECO 222-S
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 16, 17, 18, 19, 21, 46, 48, 49): GRID ROW: ECO 214
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 13, 14, 15, 28, 30, 32, 47, 49): GRID ROW: ECO 214-J
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): GRID ROW: ECO 221-J
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): GRID ROW: ECO 222-S
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): GRID ROW: ECO 224-S
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49): GRID ROW: ECO 321-J
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): GRID ROW: ECO 461
@@ -216,10 +215,10 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): GRID ROW: MAT 113
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 10, 11, 32, 48): GRID ROW: MAT 113-J
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): GRID ROW: MAT 121
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 19, 21, 36, 47, 48): GRID ROW: MAT 217
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03, 05, 19, 21, 36, 47, 48): GRID ROW: MAT 217
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): GRID ROW: MAT 217-A
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 13, 15, 16, 19, 46, 47, 48): GRID ROW: MAT 217-J
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 14, 17, 18): GRID ROW: MAT 217-K
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 10, 13, 15, 16, 19, 46, 47, 48): GRID ROW: MAT 217-J
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 14, 17, 18): GRID ROW: MAT 217-K
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 46): GRID ROW: MAT 217-S
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 21): GRID ROW: Study abroad
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Hanover College · Economics
@@ -363,10 +362,10 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Status
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Winter
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TABLE HEADER: Year
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 21): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 21): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 32): Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 42, 44, 46, 47, 48, 49): TERM: 2026/2027 Fall
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): TERM: 2026/2027 Fall 2026
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): TERM: 2026/2027 May
@@ -402,7 +401,8 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 11, 13): This plan puts a different number of courses in each year than the usual Balanced plan.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): This plan uses the current Economics major requirements.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 08): Timeline: One year early
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03): We don’t know if there are open seats in ECO 113, ECO 114, and ECO 222.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 13): We don’t know if there are open seats in ECO 113, ECO 214, MAT 217, and ECO 222.
@@ -419,9 +419,9 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 14): We don’t know if there are open seats in ECO 214, ECO 221, MAT 217, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09): We don’t know if there are open seats in ECO 214, ECO 321, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10): We don’t know if there are open seats in ECO 214, ECO 321, MAT 113, MAT 217, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 15): We don’t know if there are open seats in ECO 214, ECO 321, MAT 217, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 12): We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10): We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 24, 25, 26, 27, 44): We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 21): We don’t know if there are open seats in ECO 222.
@@ -472,10 +472,9 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 48): Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03): Before taking ECO 213 in Fall 2027, finish ECO 113 and MAT 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 13): Before taking ECO 213 in Fall 2027, finish ECO 113.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): Before taking ECO 213 in Fall 2027, finish MAT 113.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 11): Before taking ECO 213 in Fall 2027, finish MAT 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): Before taking ECO 213 in Fall 2028, finish ECO 113 and MAT 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03): Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10): Before taking ECO 214 in Fall 2027 and ECO 213 in Winter 2028, finish MAT 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): Before taking ECO 214 in Fall 2027, finish ECO 114 and MAT 121.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03): Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 11): Before taking ECO 214 in Winter 2028, finish ECO 114 and MAT 113.
@@ -483,12 +482,12 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): Before taking ECO 214 in Winter 2029, finish ECO 114 and MAT 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): Before taking ECO 221 and ECO 321 in Winter 2027, finish ECO 113.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05): Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17, 19): Before taking ECO 222 in Spring/May 2027, finish ECO 114.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 17, 19): Before taking ECO 222 in Spring/May 2027, finish ECO 114.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 36, 42): Before taking ECO 461 in Winter 2027, finish MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09): Before taking ECO 461 in Winter 2028, finish ECO 213 and ECO 214.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 13, 14, 15, 17): Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 13, 14, 15, 17): Before taking ECO 461 in Winter 2028, finish ECO 213, ECO 214, and MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): Before taking ECO 461 in Winter 2028, finish ECO 213.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 16, 18, 21): Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16, 18, 21): Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 49): Before taking ECO 461 in Winter 2029, finish ECO 213 and ECO 214.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 05, 19, 47, 48): Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 46): Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
@@ -523,16 +522,16 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 17, 19): CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 46): CHECKLIST ROW: ECO 114 ECO 114 ?
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 09, 10, 12, 13, 14, 15, 16, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49): CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 05, 09, 11, 13, 14, 15, 17, 46, 47, 48, 49): CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 46, 47, 48, 49): CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): CHECKLIST ROW: ECO 213 ECO 213 — Fall 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03): CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 21): CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned Approval needed
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 21): CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 12, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44): CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed ECO 113 marked Taking now rather than done before this class.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 16, 18, 19, 21): CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16, 18, 19, 21): CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 46): CHECKLIST ROW: ECO 214 ECO 214 — Fall 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 13, 14, 15, 47, 49): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 28, 30, 32): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 28, 30, 32): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 05, 19, 46, 48, 49): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2029 ○ Planned
@@ -540,26 +539,26 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 22, 23, 24, 25, 26, 27, 36, 39, 42, 44): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 28, 30, 32): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned Ask your advisor and the Registrar to confirm senior standing.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 08, 09, 12, 13, 14, 15, 16, 17, 18): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 11, 21): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned Approval needed
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 08, 09, 10, 12, 13, 14, 15, 16, 17, 18): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11, 21): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 19, 47, 48, 49): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned Ask your advisor and the Registrar to confirm senior standing.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 46): CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2030 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11, 16): CHECKLIST ROW: Economics elective 1 ECO 161 — Winter 2027 ○ Planned Counts as your one 100-level elective.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 27, 48): CHECKLIST ROW: Economics elective 1 ECO 161 ✓ Completed Counts as your one 100-level elective.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 12, 14, 17, 18): CHECKLIST ROW: Economics elective 1 ECO 221 — Winter 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 12, 14, 17, 18): CHECKLIST ROW: Economics elective 1 ECO 221 — Winter 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 22, 23, 36, 39, 42): CHECKLIST ROW: Economics elective 1 ECO 221 ✓ Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 09, 13, 15, 19, 21, 47): CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 05, 09, 10, 13, 15, 19, 21, 47): CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 24, 25, 26, 28, 30, 32, 44): CHECKLIST ROW: Economics elective 1 ECO 234 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03): CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 46): CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 46, 49): CHECKLIST ROW: Economics elective 1 ECO elective (200+) — May 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47, 49): CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Winter 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): CHECKLIST ROW: Economics elective 2 ECO 221 — Winter 2027 ○ Planned
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 12, 14, 16, 17, 18, 48): CHECKLIST ROW: Economics elective 2 ECO 222 — May 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 12, 14, 16, 17, 18, 48): CHECKLIST ROW: Economics elective 2 ECO 222 — May 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 22, 23, 36, 39, 42): CHECKLIST ROW: Economics elective 2 ECO 234 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 24, 25, 26, 27, 28, 30, 32, 44): CHECKLIST ROW: Economics elective 2 ECO 333 ✓ Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 13, 15, 21): CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 13, 15, 21): CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 49): CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 05, 19, 47, 48, 49): CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2029 ○ Planned
@@ -570,12 +569,12 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 08): CHECKLIST ROW: Economics elective 3 ECO 222 — May 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): CHECKLIST ROW: Economics elective 3 ECO 224 — May 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 22, 23, 36, 42): CHECKLIST ROW: Economics elective 3 ECO 333 ✓ Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 12, 14, 16, 17, 18): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 12, 14, 16, 17, 18): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 05, 19, 47, 48, 49): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 46): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2029 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 46): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2029 ○ Planned
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 13, 15, 21): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2028 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 13, 15, 21): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 49): CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2029 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21): CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned
@@ -590,8 +589,8 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49): CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 14, 25, 26): CHECKLIST ROW: Finance ECO 321 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03): CHECKLIST ROW: Mathematics MAT 113 — Fall 2027 ○ Planned
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 10, 11, 48): CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 32): CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned Approval needed
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 11, 48): CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 32): CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): CHECKLIST ROW: Mathematics MAT 113 — Winter 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 49): CHECKLIST ROW: Mathematics MAT 113 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): CHECKLIST ROW: Mathematics MAT 121 — Taking now ◐ In progress
@@ -599,7 +598,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 09, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44): CHECKLIST ROW: Mathematics MAT 121 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 22, 27, 49): CHECKLIST ROW: Statistics ECO 257 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 19, 21): CHECKLIST ROW: Statistics MAT 217 — Fall 2027 ○ Planned
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 05, 19, 21): CHECKLIST ROW: Statistics MAT 217 — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 46): CHECKLIST ROW: Statistics MAT 217 — May 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47, 48): CHECKLIST ROW: Statistics MAT 217 — May 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 36): CHECKLIST ROW: Statistics MAT 217 — Taking now ◐ In progress
@@ -687,10 +686,10 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): GRID ROW: ECO 213 | Intermediate Microeconomics
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 21, 46, 47, 48, 49): GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17): GRID ROW: ECO 214 | Intermediate Macroeconomics
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 10, 11, 16, 18, 19, 21, 46, 48, 49): GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 13, 14, 15, 28, 30, 32, 47, 49): GRID ROW: ECO 214-J ▾ | Intermediate Macroeconomics
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 10, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): GRID ROW: ECO 221-J ▾ | Environmental Economics
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): GRID ROW: ECO 222-S ▾ | Economics of the European Union
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 11, 16, 18, 19, 21, 46, 48, 49): GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 13, 14, 15, 28, 30, 32, 47, 49): GRID ROW: ECO 214-J ▾ | Intermediate Macroeconomics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): GRID ROW: ECO 221-J ▾ | Environmental Economics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): GRID ROW: ECO 222-S ▾ | Economics of the European Union
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): GRID ROW: ECO 224-S ▾ | Introduction to Sustainability
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49): GRID ROW: ECO 321-J ▾ | Money and Financial Markets
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): GRID ROW: ECO 461 | Senior Seminar: Econometrics
@@ -700,10 +699,10 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 10, 11, 32, 48): GRID ROW: MAT 113-J ▾ | Essential Pre-Calculus
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): GRID ROW: MAT 121 | Calculus I
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 36): GRID ROW: MAT 217 | Applied Statistics
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 19, 21, 47, 48): GRID ROW: MAT 217 ▾ | Applied Statistics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 05, 19, 21, 47, 48): GRID ROW: MAT 217 ▾ | Applied Statistics
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): GRID ROW: MAT 217-A ▾ | Applied Statistics
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 13, 15, 16, 19, 46, 47, 48): GRID ROW: MAT 217-J ▾ | Applied Statistics
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 14, 17, 18): GRID ROW: MAT 217-K ▾ | Applied Statistics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 10, 13, 15, 16, 19, 46, 47, 48): GRID ROW: MAT 217-J ▾ | Applied Statistics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 14, 17, 18): GRID ROW: MAT 217-K ▾ | Applied Statistics
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 46): GRID ROW: MAT 217-S ▾ | Applied Statistics
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 08, 46, 47, 48, 49): GRID ROW: No Economics course this term
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 21): GRID ROW: Study abroad
@@ -794,10 +793,10 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Take MAT 113 before ECO 214.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Taking both in one term needs the ECO 213 instructor's approval.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Taking both in one term needs the ECO 214 instructor's approval.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 21): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the Economics Department before you register.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 32): Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 21): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 32): Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): Taking now
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): TERM: 2026/2027 Fall
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17, 18, 19, 36): TERM: 2026/2027 Fall 2026
@@ -834,7 +833,8 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 35, 43): To finish by May 2027, you must take it in Winter 2027.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Transfer credit
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Transfer credit Transfer credit.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03): We don’t know if there are open seats in ECO 113, ECO 114, and ECO 222.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16): We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 13): We don’t know if there are open seats in ECO 113, ECO 214, MAT 217, and ECO 222.
@@ -851,9 +851,9 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 14): We don’t know if there are open seats in ECO 214, ECO 221, MAT 217, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09): We don’t know if there are open seats in ECO 214, ECO 321, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): We don’t know if there are open seats in ECO 214, ECO 321, and MAT 217.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10): We don’t know if there are open seats in ECO 214, ECO 321, MAT 113, MAT 217, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 15): We don’t know if there are open seats in ECO 214, ECO 321, MAT 217, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 12): We don’t know if there are open seats in ECO 221, ECO 321, and ECO 222.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10): We don’t know if there are open seats in ECO 221, ECO 321, MAT 113, MAT 217, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 24, 25, 26, 27, 44): We don’t know if there are open seats in ECO 221, ECO 461, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 08, 21): We don’t know if there are open seats in ECO 222.

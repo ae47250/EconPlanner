@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "policy": {
     "id": "hanover-economics-planning-policy",
-    "version": 14,
-    "confirmationDate": "2026-11-21",
+    "version": 15,
+    "confirmationDate": "2026-11-24",
     "reviewedBy": "Project owner and Economics Department domain expert",
     "scope": "Independent test-oracle rules for Hanover College Economics major planning",
     "allowedStatuses": [
@@ -83,6 +83,12 @@
       "date": "2026-10-31",
       "reviewedBy": "Project owner, explicit implementation instruction",
       "summary": "Neither finance course automatically counts as an Economics elective. Both completed: prefer ECO 321 finance and explain BUSN 323 petition; no petition credit is applied."
+    },
+    {
+      "id": "OWNER-APPROVAL-DECISIONS-2026-11-24",
+      "date": "2026-11-24",
+      "reviewedBy": "Project owner and Economics Department domain expert",
+      "summary": "ECO 461 same-term intermediate approval comes from the ECO 461 instructor; all other chronology and prerequisite conditions remain unchanged. All required approvals have equal ranking weight; the existing instructor-approval-free first pass is retained."
     }
   ],
   "sources": [
@@ -145,6 +151,11 @@
       "id": "OWNER-FINANCE-ELECTIVE-2026-10-31",
       "path": "policy/provenance/finance-elective-clarification-2026-10-31.md",
       "authority": "Project owner implementation instruction and supplied Registrar correspondence"
+    },
+    {
+      "id": "OWNER-APPROVAL-DECISIONS-2026-11-24",
+      "path": "policy/provenance/owner-approval-decisions-2026-11-24.md",
+      "authority": "Project owner and Economics Department domain expert"
     }
   ],
   "requirementRules": [
@@ -552,11 +563,12 @@
     {
       "ruleId": "PREREQ-ECO-461",
       "status": "CONFIRMED",
-      "confirmationRef": "PROJECT-OWNER-2026-09-27",
+      "confirmationRef": "OWNER-APPROVAL-DECISIONS-2026-11-24",
       "sourceRefs": [
         "ECONOMICS-REQUIREMENTS#Required Course Sequence Logic",
         "DEPARTMENT-POLICIES#Confirmed policies 1 and 4",
-        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Statistics-timing"
+        "OWNER-CANONICAL-CONSUMPTION-2026-09-27#Statistics-timing",
+        "OWNER-APPROVAL-DECISIONS-2026-11-24#Decision-1"
       ],
       "course": "ECO 461",
       "allOf": [
@@ -629,9 +641,10 @@
     {
       "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
       "status": "CONFIRMED",
-      "confirmationRef": "PROJECT-OWNER-ECO461-CHRONOLOGY-2026-08-09",
+      "confirmationRef": "OWNER-APPROVAL-DECISIONS-2026-11-24",
       "sourceRefs": [
-        "DEPARTMENT-POLICIES#Confirmed-policy-4"
+        "DEPARTMENT-POLICIES#Confirmed-policy-4",
+        "OWNER-APPROVAL-DECISIONS-2026-11-24#Decision-1"
       ],
       "course": "ECO 461",
       "concurrentOptions": [
@@ -644,7 +657,7 @@
       "maxConcurrent": 1,
       "statisticsMustBeCompletedBefore": true,
       "concurrentCoursePrerequisitesMustBeSatisfied": true,
-      "approvalAuthority": "Economics Department"
+      "approvalAuthority": "ECO 461 instructor"
     }
   ],
   "permissionRules": [
@@ -773,7 +786,11 @@
         "OWNER-PLANNING-DECISIONS-2026-11-21#Assumed-standing-readiness"
       ],
       "course": "ECO 461",
-      "scope": ["REGULAR_ONE_YEAR_EARLY", "TRANSFER_ONE_YEAR_EARLY", "CUSTOM_EXACTLY_ONE_YEAR_EARLY"],
+      "scope": [
+        "REGULAR_ONE_YEAR_EARLY",
+        "TRANSFER_ONE_YEAR_EARLY",
+        "CUSTOM_EXACTLY_ONE_YEAR_EARLY"
+      ],
       "extendedPlanSeniorStandingBeginsInFourthAcademicYear": true,
       "assumeSeniorStandingInFinalPlanningYear": true,
       "requiresStudentConfirmation": false,

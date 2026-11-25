@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "registryVersion": 3,
-  "policyVersion": 14,
+  "policyVersion": 15,
   "authorship": "handwritten-curated-mutations",
   "reviewedOn": "2026-08-06",
   "reviewer": "Economics Department / EconPlanner testing review",
@@ -55,7 +55,7 @@
       "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
       "status": "AGREEMENT",
-      "followUp": "Keep the explicit Economics Department approval record mandatory."
+      "followUp": "Keep the explicit ECO 461 instructor approval record mandatory."
     },
     {
       "id": "VAL-005-APPROVAL-AUTHORITY-WRONG",
@@ -65,7 +65,7 @@
       "expectedProductionResult": "REJECT",
       "expectedOracleResult": "REJECT",
       "status": "AGREEMENT",
-      "followUp": "Keep approval authority matched to the Economics Department authority."
+      "followUp": "Keep approval authority matched to the ECO 461 instructor authority."
     },
     {
       "id": "VAL-006-APPROVAL-COURSE-WRONG",

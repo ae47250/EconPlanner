@@ -155,7 +155,7 @@
     ],
     "concurrentWithApproval": [
       {
-        "approval": "department",
+        "approval": "instructor",
         "earlierPendingCoursesRequireSuccessfulCompletion": true,
         "maxConcurrent": 1,
         "options": [

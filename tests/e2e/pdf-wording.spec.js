@@ -106,7 +106,7 @@ test("early sophomore abroad plan shows consistent prerequisite and approval sen
   const card = await visitPlan(page, "one-year-early");
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
-  await expect(notes).toContainText("Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the Economics Department before you register.");
+  await expect(notes).toContainText("Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.");
   await expect(notes).toContainText("Before taking ECO 214 in Winter 2027 and ECO 222 in Spring/May 2027, finish ECO 114.");
   await expect(notes).toContainText("This plan has 3 Economics courses in Winter 2028. The department recommends no more than 2 per term, but the term is still within the normal course load.");
   await expect(notes).not.toContainText("Complete ECO 114 before taking");

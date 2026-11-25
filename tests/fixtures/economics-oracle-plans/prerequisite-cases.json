@@ -176,8 +176,8 @@
               "approvalRequired": [
                 {
                   "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-                  "type": "DEPARTMENT_APPROVAL",
-                  "authority": "Economics Department",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 461 instructor",
                   "course": "ECO 461",
                   "prerequisite": "ECO 214",
                   "term": "Winter 2027",
@@ -208,8 +208,8 @@
               "approvalRequired": [
                 {
                   "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-                  "type": "DEPARTMENT_APPROVAL",
-                  "authority": "Economics Department",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 461 instructor",
                   "course": "ECO 461",
                   "prerequisite": "ECO 213",
                   "term": "Winter 2027",
@@ -243,8 +243,8 @@
               "approvalRequired": [
                 {
                   "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-                  "type": "DEPARTMENT_APPROVAL",
-                  "authority": "Economics Department",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 461 instructor",
                   "course": "ECO 461",
                   "prerequisite": "ECO 214",
                   "term": "Winter 2027",
@@ -278,8 +278,8 @@
               "approvalRequired": [
                 {
                   "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-                  "type": "DEPARTMENT_APPROVAL",
-                  "authority": "Economics Department",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 461 instructor",
                   "course": "ECO 461",
                   "prerequisite": "ECO 213",
                   "term": "Winter 2027",
@@ -431,8 +431,8 @@
               "approvalRequired": [
                 {
                   "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-                  "type": "DEPARTMENT_APPROVAL",
-                  "authority": "Economics Department",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 461 instructor",
                   "course": "ECO 461",
                   "prerequisite": "ECO 214",
                   "term": "Winter 2027",
@@ -462,8 +462,8 @@
               "approvalRequired": [
                 {
                   "ruleId": "CONCURRENT-INTERMEDIATE-ECO-461",
-                  "type": "DEPARTMENT_APPROVAL",
-                  "authority": "Economics Department",
+                  "type": "INSTRUCTOR_APPROVAL",
+                  "authority": "ECO 461 instructor",
                   "course": "ECO 461",
                   "prerequisite": "ECO 214",
                   "term": "Winter 2027",
