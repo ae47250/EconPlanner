@@ -24,11 +24,13 @@ import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequ
 import { annotatePreliminaryScheduleEvidence } from "../../../../lib/policy/preliminary-schedule.js";
 import { loadPlannerFingerprint } from "../../../../lib/planning/fingerprint.js";
 import { compactEconomicsPlanForValidation } from "../../../../lib/planning/validation-payload.js";
+import { browserReplyView } from "../../../../lib/planning/move-options-view.js";
 import { studentDisplayMessages } from "../../../../lib/planning/student-language.js";
 
 export const runtime = "nodejs";
 
 async function jsonResponse(payload, status = 200, policyBundle = null) {
+  payload = browserReplyView(payload);
   if (payload.programs || payload.economicsPlanResult?.category === "INPUT_BLOCKED") {
     let plannerFingerprint = null;
     try {
