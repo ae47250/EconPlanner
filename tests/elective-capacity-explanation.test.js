@@ -18,7 +18,7 @@ test("a senior short of elective room is told how many electives are needed and 
   assert.equal(program.economicsPlans.length, 0);
   assert.equal(program.economicsPlanResult.category, "INFEASIBLE_PROVEN");
   const blocker = program.economicsPlanResult.evidence.blockingReasons.find(item => item.code === "ELECTIVE_CAPACITY_EXCEEDED");
-  assert.equal(blocker?.message, "You need 3 more Economics electives, but at most 2 can fit in the terms left by May 2027. Choose a later graduation year or talk with your advisor.");
+  assert.equal(blocker?.message, "You need 3 more Economics electives, but only 2 can fit in Winter 2027 and May 2027. Choose a later graduation year or talk with your advisor.");
 });
 
 test("no elective shortfall is reported when a plan exists", async () => {
