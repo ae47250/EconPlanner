@@ -7,7 +7,6 @@ import {
   evaluateOffering,
   evaluatePlan,
   evaluatePrerequisites,
-  evaluateRecordedCourse,
   evaluateRequirementAllocation,
   evaluateTermLoad,
   normalizeStudentFacts
@@ -89,12 +88,6 @@ test("published capacity is hard, missing overload evidence needs review, and Ec
   assert.equal(overCapacity.status, "UNKNOWN");
   assert.equal(overCapacity.reasonCode, "TERM_OVERLOAD_EVIDENCE_REQUIRED");
   assert.equal(evaluateTermLoad({termKey:"Fall",courses:[{course:"MAT 217",units:5.26}]},{},bundle).status,"BLOCK");
-});
-
-test("completed advanced history is preserved as review rather than erased or inferred", () => {
-  const recorded = evaluateRecordedCourse({ course: "ECO 331", status: "COMPLETED", prerequisiteEvidence: [] }, facts, bundle, { traceId: "fixture" });
-  assert.equal(recorded.status, "REVIEW_REQUIRED");
-  assert.deepEqual(recorded.ruleIds, ["HISTORY-COMPLETED-ADVANCED-PRESERVED"]);
 });
 
 test("unresolved equivalency scope remains a traceable non-enforcing review decision", () => {

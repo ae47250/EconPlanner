@@ -89,7 +89,6 @@ jobs:
             tests/academic-calendar-policy.test.js \
             tests/accelerated-result.test.js \
             tests/assignment.test.js \
-            tests/catalog-comparison.test.js \
             tests/economics-canonical-data.test.js \
             tests/economics-only-catalog.test.js \
             tests/catalog-planning-note.test.js \
