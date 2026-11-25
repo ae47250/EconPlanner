@@ -197,7 +197,9 @@ test("qualified completed credit and current enrollment are separate from future
 });
 
 test("completed ECO 461 keeps qualifying credit without a future senior-standing condition", async () => {
-  const student = { ...sample, courses: completed(["ECO 113", "ECO 114", "MAT 113", "MAT 217", "BUSN 323", "ECO 213", "ECO 214", "ECO 461"]) };
+  // Owner decision Nov 25, 2026: only a senior can record ECO 461 as completed.
+  const student = { ...sample, academicStanding: "senior", planningPace: "standard",
+    courses: completed(["ECO 113", "ECO 114", "MAT 113", "MAT 217", "BUSN 323", "ECO 213", "ECO 214", "ECO 461", "ECO 333", "ECO 221", "ECO 222"]) };
   const result = economics((await post({ student })).data);
   assert.ok(result.economicsPlans.length);
   for (const plan of result.economicsPlans) {
