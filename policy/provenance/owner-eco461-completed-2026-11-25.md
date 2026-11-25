@@ -11,3 +11,7 @@ ECO 461 must be taken at Hanover College, so the course form showed no status bu
 - When ECO 461 is marked completed, the plan adds an advisor-check note. Student: "You marked ECO 461 as completed. Your advisor will confirm it." Advisor: "Confirm the student completed ECO 461 at Hanover College."
 
 The senior-only gate follows the existing rule that ECO 461 requires senior standing. Implemented in `app/page.js` (`canMarkHanoverOnlyCompleted`) and `lib/planning/plan-presentation.js`.
+
+## Update — November 25, 2026: "Taking now" in Winter
+
+A senior taking ECO 461 in Winter could not say so, and the planner then reported "Not possible" because only May remained. The owner approved a **Taking now** button for ECO 461 for seniors, shown only during a Winter term (the only term it is offered). The server counts it as in progress for seniors in a Winter term and ignores it otherwise. Advisor note — student: "You marked ECO 461 as taking now. Your advisor will confirm it." Advisor: "Confirm the student is taking ECO 461 at Hanover College this term."
