@@ -596,7 +596,7 @@ for (const [math, economics] of [
     await card.getByText("More about this plan", { exact: true }).click();
     await expect(card.locator('.compact-schedule [data-term-id="math"]')).toContainText(math);
     await expect(card.locator('.compact-schedule [data-term-id="eco"]')).toContainText(economics);
-    await expect(card.locator(".accelerated-math-sequence-note")).toHaveText(`Take ${math} before ${economics}. Taking both in one term needs the ${economics} instructor's approval.`);
+    await expect(card.locator(".accelerated-math-sequence-note")).toHaveText(`${math} comes before ${economics}. Taking both in one term needs the ${economics} instructor’s approval.`);
     await expect(card.locator("[data-plan-conditions]")).toHaveCount(0);
   });
 }

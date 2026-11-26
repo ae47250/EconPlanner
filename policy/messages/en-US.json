@@ -117,7 +117,7 @@
     "move.mayFull": "May allows one course. Move the other one out first.",
     "move.termFull": "Term full. Move a course out first.",
     "move.namedCourseUnpublished": "{course} can’t go in {term} until that schedule is published. Use an elective slot instead, or ask your advisor.",
-    "move.seniorWinterOnly": "{course} must be in a Winter term of your senior year.",
+    "move.seniorWinterOnly": "{course} must be in the Winter term of your senior year.",
     "move.winterOnly": "{course} is offered only in Winter.",
     "move.advisorCheck": "An advisor needs to check this move, because it depends on an approval or record EconPlanner can’t confirm.",
     "move.notOfferedOrAllowed": "{course} isn’t offered or allowed in {term}.",

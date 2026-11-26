@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:0b4ea0d27685f8c0d62757083efdd93c9fb5637d6e28065689878dbdd29f6f5c",
+  "contentHash": "sha256:b43ced59214af74003e7f2e03109178518484db0ce99b100bb087284a864d3b1",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7088,7 +7088,7 @@
     "move.requirementUnmet": "After this move, one of your major requirements would no longer be met.",
     "move.sameTermPrerequisiteApproval": "{prerequisite} comes before {course}. Taking both in {term} needs the {course} instructor’s approval.",
     "move.sameTermPrerequisiteOtherApproval": "{prerequisite} comes before {course}. Taking both in {term} needs {authority} approval.",
-    "move.seniorWinterOnly": "{course} must be in a Winter term of your senior year.",
+    "move.seniorWinterOnly": "{course} must be in the Winter term of your senior year.",
     "move.statisticsFirst": "{course} needs a statistics course first.",
     "move.takePrerequisiteFirst": "{course} needs {courses} first.",
     "move.termFull": "Term full. Move a course out first.",

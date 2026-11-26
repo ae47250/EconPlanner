@@ -288,3 +288,11 @@ test("approved current-term prerequisite paths produce metadata instead of a fol
   assert.equal(result.conditionalApprovals.length, 1);
   assert.equal(result.conditionalApprovals[0].prerequisite, "MAT 113");
 });
+
+test("accelerated math note: with both math courses planned early, it says either one, with a singular verb", () => {
+  const notes = acceleratedMathSequenceNotes({
+    isEarlyGraduation: true,
+    terms: [{ courses: [{ course: "MAT 113" }] }, { courses: [{ course: "MAT 121" }] }, { courses: [{ course: "ECO 213" }] }]
+  }, { "ECO 213": { any: [["MAT 113", "MAT 121"]] } }, MESSAGES);
+  assert.deepEqual(notes, ["MAT 113 or MAT 121 comes before ECO 213. Taking both in one term needs the ECO 213 instructor’s approval."]);
+});
