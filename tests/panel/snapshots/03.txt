@@ -89,10 +89,10 @@ CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — May 2027 ○ Planned
 CHECKLIST ROW: Finance BUSN 323 — Fall 2028 ○ Planned
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned Ask your advisor and the Registrar to confirm senior standing.
-CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2027 ○ Planned
-CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2028 ○ Planned
-CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned
-CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned
+CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Fall 2027 ○ Planned
+CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — May 2028 ○ Planned
+CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2028 ○ Planned
+CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2029 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ○ Planned
 SCREEN > Plan: Balanced > Notes: More about this plan
@@ -172,7 +172,7 @@ SCREEN > Plan: Explore the Major > Notes: Things to keep in mind
 Things to keep in mind
 Classes to finish first
 Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
-Before taking ECO 222 in Spring/May 2027, finish ECO 114.
+Before taking ECO 222 in May 2027, finish ECO 114.
 Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
 Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 Before you register
@@ -191,9 +191,9 @@ CHECKLIST ROW: Statistics MAT 217 — Fall 2027 ○ Planned
 CHECKLIST ROW: Finance BUSN 323 — Winter 2029 ○ Planned
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2029 ○ Planned Ask your advisor and the Registrar to confirm senior standing.
 CHECKLIST ROW: Economics elective 1 ECO 222 — May 2027 ○ Planned
-CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2028 ○ Planned
-CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned
-CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned
+CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — May 2028 ○ Planned
+CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2028 ○ Planned
+CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2029 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ○ Planned
 SCREEN > Plan: Explore the Major > Notes: More about this plan
@@ -235,7 +235,7 @@ PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 03 | Balanced | Prepared November 22, 2026 | Class standing: Freshman (custom graduation year)
-This plan covers Winter 2027 through Spring/May 2029.
+This plan covers Winter 2027 through May 2029.
 Status: Needs confirmation
 Check seats and future schedules before you register.
 Graduation target: May 2029
@@ -311,7 +311,7 @@ CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Winter 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Statistics
-CHECKLIST CELL: MAT 217 — Spring/May 2027
+CHECKLIST CELL: MAT 217 — May 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Finance
 CHECKLIST CELL: BUSN 323 — Fall 2028
@@ -323,13 +323,13 @@ CHECKLIST CELL: Economics elective 1
 CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 2
-CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — May 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 3
 CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
-CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
+CHECKLIST CELL: Economics elective (200 level or higher) — May 2029
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Planned
@@ -369,7 +369,7 @@ PDF > Plan: Explore the Major > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 03 | Explore the Major | Prepared November 22, 2026 | Class standing: Freshman (custom graduation year)
-This plan covers Winter 2027 through Spring/May 2029.
+This plan covers Winter 2027 through May 2029.
 Status: Needs confirmation
 Check seats and future schedules before you register.
 Graduation target: May 2029
@@ -416,7 +416,7 @@ PDF > Plan: Explore the Major > What to check for this plan
 What to check for this plan
 Finish these classes first
 Before taking ECO 214 in Fall 2028, finish ECO 114 and MAT 113.
-Before taking ECO 222 in Spring/May 2027, finish ECO 114.
+Before taking ECO 222 in May 2027, finish ECO 114.
 Before taking ECO 213 in Winter 2028, finish ECO 113 and MAT 113.
 Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 Before you register
@@ -456,16 +456,16 @@ CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2029
 CHECKLIST CELL: Planned Ask your advisor and the Registrar to confirm senior standing.
 CHECKLIST CELL: Economics elective 1
-CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: ECO 222 — May 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 2
-CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — May 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 3
 CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
-CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
+CHECKLIST CELL: Economics elective (200 level or higher) — May 2029
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Planned

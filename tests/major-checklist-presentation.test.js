@@ -179,7 +179,7 @@ test("qualified completed credit and current enrollment are separate from future
       assert.equal(rows.find(row => row.id === "statistics").status, "completed");
       assert.equal(rows.find(row => row.id === "finance").status, "completed");
       assert.equal(rows.filter(row => row.id.startsWith("eco-elective") && row.status === "completed").length, 1);
-      assert.ok(rows.filter(row => row.id.startsWith("eco-elective") && row.status === "planned").every(row => row.course === "ECO elective (200+)" || /ECO [2-9]\d\d/.test(row.course)));
+      assert.ok(rows.filter(row => row.id.startsWith("eco-elective") && row.status === "planned").every(row => row.course === "Economics elective (200 level or higher)" || /ECO [2-9]\d\d/.test(row.course)));
       const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, result.economicsPlans);
       const html = renderEconomicsHtml(report, template);
       assert.ok(html.includes("Taking now"));

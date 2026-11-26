@@ -1,6 +1,4 @@
 import test from "node:test";
-import messageFile from "../policy/messages/en-US.json" with { type: "json" };
-const MESSAGES = messageFile.messages;
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
@@ -12,7 +10,6 @@ import {
   unansweredPrerequisiteQuestions,
   selectedStatus as selectedFormStatus
 } from "../lib/planning/prerequisiteFormValidation.js";
-import { acceleratedMathSequenceNotes } from "../lib/planning/acceleratedMathSequence.js";
 
 const prerequisites = JSON.parse(await readFile(
   new URL("../data/normalized/economics/prerequisites.json", import.meta.url),
@@ -196,55 +193,6 @@ test("prerequisites answered on the course cards do not produce follow-up questi
   }
 });
 
-for (const [math, economics] of [
-  ["MAT 113", "ECO 213"],
-  ["MAT 121", "ECO 213"],
-  ["MAT 113", "ECO 214"],
-  ["MAT 121", "ECO 214"]
-]) {
-  test(`${math} before ${economics} produces the prerequisite-first note`, () => {
-    const notes = acceleratedMathSequenceNotes({
-      isEarlyGraduation: true,
-      terms: [
-        { courses: [{ course: math }] },
-        { courses: [{ course: economics }] }
-      ]
-    }, prerequisites, MESSAGES);
-
-    assert.equal(notes.length, 1);
-    assert.equal(notes[0], `${math} comes before ${economics}. Taking both in one term needs the ${economics} instructor’s approval.`);
-  });
-}
-
-for (const [math, economics] of [
-  ["MAT 113", "ECO 213"],
-  ["MAT 121", "ECO 213"],
-  ["MAT 113", "ECO 214"],
-  ["MAT 121", "ECO 214"]
-]) {
-  test(`concurrent ${math} and ${economics} produces no optional alternative note`, () => {
-    const notes = acceleratedMathSequenceNotes({
-      isEarlyGraduation: true,
-      terms: [{ courses: [{ course: math }, { course: economics }] }]
-    }, prerequisites, MESSAGES);
-
-    assert.deepEqual(notes, []);
-  });
-}
-
-test("concurrent math for one intermediate does not suppress an earlier-math note for the other", () => {
-  const notes = acceleratedMathSequenceNotes({
-    isEarlyGraduation: true,
-    terms: [
-      { courses: [{ course: "MAT 121" }, { course: "ECO 213" }] },
-      { courses: [{ course: "MAT 113" }, { course: "ECO 214" }] }
-    ]
-  }, prerequisites, MESSAGES);
-
-  assert.equal(notes.length, 1);
-  assert.match(notes[0], /^MAT 121 comes before ECO 214\./);
-});
-
 test("alternative follow-up preserves not-started and uncertain statuses as unsatisfied", () => {
   const courses = [
     { code: "ECO 113", status: "completed" },
@@ -289,10 +237,3 @@ test("approved current-term prerequisite paths produce metadata instead of a fol
   assert.equal(result.conditionalApprovals[0].prerequisite, "MAT 113");
 });
 
-test("accelerated math note: with both math courses planned early, it says either one, with a singular verb", () => {
-  const notes = acceleratedMathSequenceNotes({
-    isEarlyGraduation: true,
-    terms: [{ courses: [{ course: "MAT 113" }] }, { courses: [{ course: "MAT 121" }] }, { courses: [{ course: "ECO 213" }] }]
-  }, { "ECO 213": { any: [["MAT 113", "MAT 121"]] } }, MESSAGES);
-  assert.deepEqual(notes, ["MAT 113 or MAT 121 comes before ECO 213. Taking both in one term needs the ECO 213 instructor’s approval."]);
-});

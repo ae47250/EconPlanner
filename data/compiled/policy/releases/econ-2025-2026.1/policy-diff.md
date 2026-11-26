@@ -1,6 +1,6 @@
 # Policy diff: econ-2025-2026.1
 
-Bundle digest: `sha256:9d5393d687a32c922e497130aae882bd442cefcb8a85c8255737d75ddc57d86b`
+Bundle digest: `sha256:ac6fe5cf52d594d4464438e09da47a1caa18e36518f9792ddf9e10c5b55a7eab`
 
 Runtime activation: the active pinned bundle governs production decisions. Compatibility files are generated projections of the same canonical sources.
 

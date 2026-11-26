@@ -106,12 +106,13 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
       margin:{top:'0.42in',right:'0.42in',bottom:'0.42in',left:'0.42in'}});
     await renderer.close();
     const text = execFileSync(process.env.PDFTOTEXT || 'pdftotext', ['-','-'], {input:bytes}).toString().replace(/\s+/g,' ');
-    expect(text).toContain(expectedTarget);
+    // The PDF prints "May", never "Spring/May" (owner decision 2026-11-26); the JSON keeps the stored term.
+    expect(text).toContain(expectedTarget.replace('Spring/May', 'May'));
     expect(text).toMatch(/Your Economics major checklist/i);
     // Owner request 2026-11-26: the schedule warning appears once, either in the status line or in the checklist.
     const warnings = [/Check seats and future schedules before you register\./, /Future schedules can change\./].filter(pattern => pattern.test(text));
     expect(warnings).toHaveLength(1);
-    expect(text).toContain(report.planningHorizon);
+    expect(text).toContain(report.planningHorizon.replaceAll('Spring/May', 'May'));
     expect(text).toContain('ECO 461');
     for (const course of report.terms.flatMap(term=>term.courses)) if (course.offeringInformation) expect(text).toContain(course.offeringInformation.label);
     if (name.startsWith('early')) {
@@ -275,10 +276,10 @@ test('senior statistics blocker is causal and saved answers survive revisiting',
   await setCourseStatus(page,'MAT 217','Completed');
   await generatePlans(page);
   await expect(page.locator('.result-status-value')).toHaveText('Not possible');
-  await page.locator('details.result-diagnostics > summary').click();
-  await expect(page.locator('details.result-diagnostics')).toContainText('Winter 2027');
-  await expect(page.locator('details.result-diagnostics')).toContainText('Statistics (ECO 257 or MAT 217 or PSY 217) must be done first.');
-  await expect(page.locator('details.result-diagnostics li')).toHaveCount(1);
+  // The blocking reason is printed once, in the result card (owner decision 2026-11-26), not repeated below it.
+  await expect(page.locator('.no-plan-state')).toContainText('Winter 2027');
+  await expect(page.getByText(/Statistics \(ECO 257 or MAT 217 or PSY 217\) must be done first\./)).toHaveCount(1);
+  await expect(page.locator('details.result-diagnostics')).toHaveCount(0);
   await page.screenshot({path:testInfo.outputPath('senior-blocker.png'),fullPage:true,animations:'disabled'});
   await page.getByRole('navigation',{name:'Planner progress'}).getByRole('button',{name:'Your courses',exact:true}).click();
   await expect(page.getByRole('group',{name:'Status for MAT 217',exact:true}).getByRole('button',{name:'Completed',exact:true})).toHaveAttribute('aria-pressed','false');
@@ -320,7 +321,6 @@ for (const standing of ['junior', 'senior']) test(`${standing} May 2027 explanat
   expect(standing === 'junior' ? result.status : result.conclusion).toBe(standing === 'junior' ? 'NOT_POSSIBLE' : 'PROVEN_INFEASIBLE');
   if (standing === 'senior') {
     await expect(page.locator('.result-status-value')).toHaveText('Not possible');
-    await page.locator('details.result-diagnostics > summary').click();
   } else {
     await expect(page.getByRole('heading',{name:'Graduate next year: Not possible',exact:true})).toBeVisible();
     expect(result.effectiveStanding).toBe('junior');
@@ -401,6 +401,35 @@ test('results navigation reflows and remains keyboard accessible at all required
   }
 });
 
+
+// Owner request 2026-11-26: at phone width the plan table must not break words ("Wint/er", "ACADEMI/C YEAR").
+test('plan table year and term labels stay whole at phone width', async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, 'freshman');
+  await continueToCourses(page);
+  await generatePlans(page);
+  await page.setViewportSize({ width: 375, height: 900 });
+  const table = page.locator('.compact-schedule').first();
+  await expect(table).toBeVisible();
+  const cells = await table.locator('th:nth-child(-n+2), td.comparison-academic-year, tr[data-term-id] > td:nth-last-child(2)').evaluateAll(nodes => nodes.map(node => {
+    const label = [...node.querySelectorAll('.label-short')].find(item => getComputedStyle(item).display !== 'none') || node;
+    const text = label.innerText.trim();
+    // Count the text's rendered lines: a word split across two lines has boxes at two heights.
+    const range = document.createRange();
+    range.selectNodeContents(label);
+    const lines = new Set([...range.getClientRects()].filter(rect => rect.width > 0).map(rect => Math.round(rect.top))).size;
+    return { text, oneWord: !/\s/.test(text), lines, fits: node.scrollWidth <= node.clientWidth };
+  }));
+  expect(cells.length).toBeGreaterThan(4);
+  expect(cells.map(cell => cell.text)).toEqual(expect.arrayContaining(['YEAR', 'TERM', '26–27', 'Fall', 'Win', 'May']));
+  for (const cell of cells) {
+    expect(cell.fits, `${cell.text} overflows its cell`).toBe(true);
+    if (cell.oneWord) expect(cell.lines, `${cell.text} breaks inside the word`).toBe(1);
+  }
+  // Screen readers still get the full labels.
+  await expect(table.locator('th .label-full').first()).toHaveText('Academic year');
+  await table.screenshot({ path: test.info().outputPath('plan-table-375.png') });
+});
 
 test('one missing ECO 213 prerequisite prevents the otherwise finishable senior horizon', async ({request, page}) => {
   const common = ['ECO 113','ECO 114','ECO 214','MAT 113','MAT 217','BUSN 323','ECO 161','ECO 234','ECO 222','ECO 224'];

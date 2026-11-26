@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:9d5393d687a32c922e497130aae882bd442cefcb8a85c8255737d75ddc57d86b",
+  "contentHash": "sha256:ac6fe5cf52d594d4464438e09da47a1caa18e36518f9792ddf9e10c5b55a7eab",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7021,6 +7021,7 @@
     }
   },
   "messages": {
+    "advisor.concurrentApproval": "Confirm the {course} instructor approves taking {course} and {prerequisite} in the same term.",
     "allocation.advisor": "Review how this course is assigned across requirements.",
     "allocation.financePetition": "You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.",
     "allocation.move": "This move must preserve the approved requirement assignment.",
@@ -7059,6 +7060,9 @@
     "history.hanoverOnlyTakingNowAdvisor": "Confirm the student is taking {course} at Hanover College this term.",
     "history.mathCourse": "the math course",
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
+    "history.plannedNotMarked": "Your plan has {prerequisite} in {term}. If you already took it, mark it Completed.",
+    "history.plannedNotMarkedChoice": "Your plan has {prerequisite} in {term}. If you already took {choices}, mark it Completed.",
+    "history.plannedNotMarkedMany": "Your plan has {placements}. If you already took them, mark them Completed.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.scheduledPrerequisite": "{prerequisite} comes before {course}, which you marked completed. Check with your advisor.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
@@ -7121,7 +7125,6 @@
     "permission.move": "This destination needs the approval shown.",
     "permission.report": "This placement depends on matching approval.",
     "permission.student": "This course arrangement needs approval.",
-    "planNote.mathSequence": "{math} comes before {course}. Taking both in one term needs the {course} instructor’s approval.",
     "prerequisite.advisor": "Review the listed prerequisite evidence and timing.",
     "prerequisite.move": "This destination must preserve prerequisite timing.",
     "prerequisite.report": "Prerequisites must be completed before the course unless a documented concurrency approval applies.",
@@ -7142,8 +7145,8 @@
     "termLoad.TERM_CAPACITY_AVAILABLE": "This term has {courseCount} courses. The normal limit is {normalCourseUnits}.",
     "termLoad.TERM_CAPACITY_EXCEEDED": "This move would exceed the approved course limit for the term. Extra tuition does not raise that limit.",
     "termLoad.TERM_OVERLOAD_APPROVAL_DENIED": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Advisor approval was not granted.",
-    "termLoad.TERM_OVERLOAD_APPROVED": "{term} has {courseCount} courses. The normal limit is {normalCourseUnits}. You can take up to {conditionalMaximumCourseUnits} units with advisor approval, unless you are on academic probation.",
-    "termLoad.TERM_OVERLOAD_APPROVED_WITH_RESERVED": "{term} has {plannedCourseCount} courses plus room for {reservedCourseUnits} more. The normal limit is {normalCourseUnits}. You can take up to {conditionalMaximumCourseUnits} units with advisor approval, unless you are on academic probation.",
+    "termLoad.TERM_OVERLOAD_APPROVED": "{term} has {courseCount} courses. The normal limit is {normalCourseUnits}. Your advisor approved an overload of up to {conditionalMaximumCourseUnits} units.",
+    "termLoad.TERM_OVERLOAD_APPROVED_WITH_RESERVED": "{term} has {plannedCourseCount} courses plus room for {reservedCourseUnits} more. The normal limit is {normalCourseUnits}. Your advisor approved an overload of up to {conditionalMaximumCourseUnits} units.",
     "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "This term would have {courseCount} courses. The normal limit is {normalCourseUnits}. You need advisor approval and must not be on academic probation.",
     "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Overloads are not allowed during academic probation.",
     "termLoad.economicsLoadAboveNormal": "{term} has {economicsCount} Economics courses. The department recommends no more than 2. This term also needs advisor approval for an overload.",

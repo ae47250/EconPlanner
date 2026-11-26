@@ -71,7 +71,7 @@ CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned
 CHECKLIST ROW: Economics elective 1 ECO 234 ✓ Completed
 CHECKLIST ROW: Economics elective 2 ECO 333 ✓ Completed
 CHECKLIST ROW: Economics elective 3 ECO 222 — May 2027 ○ Planned
-CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned
+CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2028 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
@@ -196,10 +196,10 @@ PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 08 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)
-This plan covers Winter 2027 through Spring/May 2028.
+This plan covers Winter 2027 through May 2028.
 Status: Ready to plan
 Check seats and future schedules before you register.
-Graduation target: May 2028
+Graduation target: May 2028 (one year early: May 2027)
 See the notes below for paperwork to file.
 PDF > Plan: Balanced > Grid
 Your plan by term
@@ -264,10 +264,10 @@ CHECKLIST CELL: Economics elective 2
 CHECKLIST CELL: ECO 333
 CHECKLIST CELL: Completed
 CHECKLIST CELL: Economics elective 3
-CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: ECO 222 — May 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
-CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — May 2028
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
@@ -305,7 +305,7 @@ PDF > Plan: One Year Early > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 08 | One Year Early | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)
-This plan covers Winter 2027 through Spring/May 2027.
+This plan covers Winter 2027 through May 2027.
 Status: Needs confirmation
 Check seats and future schedules before you register.
 Graduation target: May 2027
@@ -377,7 +377,7 @@ CHECKLIST CELL: Economics elective 3
 CHECKLIST CELL: ECO 221 — Winter 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
-CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: ECO 222 — May 2027
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned

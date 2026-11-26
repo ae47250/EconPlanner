@@ -20,7 +20,7 @@ None
 Status
 Needs advisor attention
 Ask your advisor to review the reason below before relying on this plan. See the notes below for paperwork to file.
-Why: ECO 213 is marked completed, but ECO 113 is not marked. Mark it, or your advisor will check.
+Why: Your plan has ECO 113 in Winter 2027. If you already took it, mark it Completed.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
@@ -67,7 +67,7 @@ Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
 Before you register
 We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222. Check the registration system before you register.
 Check with your advisor
-ECO 213 is marked completed, but ECO 113 is not marked. Mark it, or your advisor will check.
+Your plan has ECO 113 in Winter 2027. If you already took it, mark it Completed.
 This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2024–25 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
@@ -82,8 +82,8 @@ CHECKLIST ROW: Finance BUSN 323 — Winter 2028 ○ Planned
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2028 ○ Planned
 CHECKLIST ROW: Economics elective 1 ECO 161 — Winter 2027 ○ Planned Counts as your one 100-level elective.
 CHECKLIST ROW: Economics elective 2 ECO 222 — May 2027 ○ Planned
-CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2027 ○ Planned
-CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned
+CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2027 ○ Planned
+CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2028 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
@@ -126,7 +126,7 @@ PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
 Panel Student 16 | Balanced | Prepared November 22, 2026 | Class standing: Junior
-This plan covers Winter 2027 through Spring/May 2028.
+This plan covers Winter 2027 through May 2028.
 Status: Needs advisor attention
 Check seats and future schedules before you register.
 Graduation target: May 2028
@@ -169,7 +169,7 @@ Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
 Before you register
 We don’t know if there are open seats in ECO 113, ECO 161, MAT 217, and ECO 222. Check the registration system before you register.
 Check with your advisor
-ECO 213 is marked completed, but ECO 113 is not marked. Mark it, or your advisor will check.
+Your plan has ECO 113 in Winter 2027. If you already took it, mark it Completed.
 This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2024–25 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.
 PDF > Plan: Balanced > For your advisor
 For your advisor
@@ -207,13 +207,13 @@ CHECKLIST CELL: Economics elective 1
 CHECKLIST CELL: ECO 161 — Winter 2027
 CHECKLIST CELL: Planned Counts as your one 100-level elective.
 CHECKLIST CELL: Economics elective 2
-CHECKLIST CELL: ECO 222 — Spring/May 2027
+CHECKLIST CELL: ECO 222 — May 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 3
 CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Economics elective 4
-CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028
+CHECKLIST CELL: Economics elective (200 level or higher) — May 2028
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned

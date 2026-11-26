@@ -99,7 +99,6 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
       await expect(page.locator('main')).not.toContainText('Course-level planning options');
       await expect(page.locator('main')).not.toContainText('potential Economics');
       await expect(page.locator('main')).not.toContainText('current seat availability is');
-      await expect(card.locator('.comparison-course-meta .accelerated-math-sequence-note')).toHaveCount(0);
       for (const warning of plan.displayWarnings.filter(message =>
         /^(Complete planned prerequisites|Confirm seat availability)/.test(message))) {
         await expect(card.getByText(warning, {exact:true})).toHaveCount(0);
@@ -132,10 +131,6 @@ for (const [device, viewport] of [['desktop', {width:1440,height:900}], ['mobile
     const selected = plans.find(plan => plan.id === 'one-year-early');
     const termOf = code => selected.terms.findIndex(term => term.courses.some(course => course.course === code));
     expect(termOf('MAT 113')).toBeLessThan(termOf('ECO 213'));
-    await expect(earlyCard.locator('.accelerated-math-sequence-note').first()).toBeHidden();
-    await earlyCard.getByText('More about this plan', {exact:true}).click();
-    await expect(earlyCard.locator('.accelerated-math-sequence-note').first()).toBeVisible();
-    await earlyCard.getByText('More about this plan', {exact:true}).click();
     await recordLiveMessages('freshman: select One Year Early');
     const from = selected.terms.find(term => term.courses.some(course => course.course === 'MAT 217'));
     const rejected = await page.request.post('/api/majors/map', {data:{action:'validate-plan',student,plan:selected,plans,

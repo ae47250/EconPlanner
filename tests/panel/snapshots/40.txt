@@ -23,12 +23,9 @@ Your planning result
 SCREEN > Other details
 SCREEN > Your remaining classes do not fit before this graduation target.
 Your remaining classes do not fit before this graduation target.
-Review your graduation timeline and bring this result to your academic advisor.
+Review your graduation timeline and show this screen to your advisor.
 You still need ECO 213, but no available term by May 2027 offers it. Talk with your advisor about a later graduation year.
 Review graduation timeline
-SCREEN > Why am I seeing this result?
-Why am I seeing this result?
-You still need ECO 213, but no available term by May 2027 offers it. Talk with your advisor about a later graduation year.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF

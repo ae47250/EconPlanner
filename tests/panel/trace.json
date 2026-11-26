@@ -3,6 +3,12 @@
   "reasons": [],
   "messages": [
     {
+      "messageKey": "advisor.concurrentApproval",
+      "studentIds": [
+        "19"
+      ]
+    },
+    {
       "messageKey": "allocation.financePetition",
       "studentIds": [
         "25"
@@ -50,7 +56,6 @@
     {
       "messageKey": "checklist.concurrentPrerequisite",
       "studentIds": [
-        "02",
         "16",
         "19",
         "32"
@@ -94,16 +99,30 @@
       ]
     },
     {
-      "messageKey": "history.completedMissingOne",
+      "messageKey": "history.completedPrerequisiteTakingNowOne",
+      "studentIds": [
+        "18"
+      ]
+    },
+    {
+      "messageKey": "history.plannedNotMarked",
       "studentIds": [
         "16",
         "32"
       ]
     },
     {
-      "messageKey": "history.completedPrerequisiteTakingNowOne",
+      "messageKey": "history.plannedNotMarkedChoice",
       "studentIds": [
-        "18"
+        "16",
+        "32"
+      ]
+    },
+    {
+      "messageKey": "history.plannedNotMarkedMany",
+      "studentIds": [
+        "16",
+        "32"
       ]
     },
     {
@@ -228,7 +247,6 @@
     {
       "messageKey": "move.sameTermPrerequisiteApproval",
       "studentIds": [
-        "02",
         "16",
         "19",
         "32"
@@ -237,7 +255,6 @@
     {
       "messageKey": "move.sameTermPrerequisiteOtherApproval",
       "studentIds": [
-        "02",
         "16",
         "19",
         "32"
@@ -303,15 +320,6 @@
         "29",
         "41",
         "50"
-      ]
-    },
-    {
-      "messageKey": "planNote.mathSequence",
-      "studentIds": [
-        "02",
-        "16",
-        "19",
-        "32"
       ]
     },
     {
@@ -764,7 +772,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.",
+      "sentence": "Before taking ECO 222 in May 2027 and ECO 214 in Winter 2028, finish ECO 114.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -775,7 +783,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Before taking ECO 222 in Spring/May 2027, finish ECO 114.",
+      "sentence": "Before taking ECO 222 in May 2027, finish ECO 114.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -1088,7 +1096,6 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "19",
         "32"
       ]
     },
@@ -1745,7 +1752,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: ECO 222 — Spring/May 2027",
+      "sentence": "CHECKLIST CELL: ECO 222 — May 2027",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -1785,7 +1792,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: ECO 224 — Spring/May 2027",
+      "sentence": "CHECKLIST CELL: ECO 224 — May 2027",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2067,7 +2074,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2028",
+      "sentence": "CHECKLIST CELL: Economics elective (200 level or higher) — May 2028",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2098,7 +2105,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029",
+      "sentence": "CHECKLIST CELL: Economics elective (200 level or higher) — May 2029",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2117,7 +2124,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2030",
+      "sentence": "CHECKLIST CELL: Economics elective (200 level or higher) — May 2030",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2533,7 +2540,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: MAT 217 — Spring/May 2027",
+      "sentence": "CHECKLIST CELL: MAT 217 — May 2027",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2547,7 +2554,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: MAT 217 — Spring/May 2028",
+      "sentence": "CHECKLIST CELL: MAT 217 — May 2028",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2802,6 +2809,17 @@
         "18",
         "19",
         "36"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "CHECKLIST CELL: Taking now Approval needed",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "19"
       ]
     },
     {
@@ -3944,7 +3962,6 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "08",
         "09",
         "10",
         "11",
@@ -3956,6 +3973,17 @@
         "17",
         "18",
         "21"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "Graduation target: May 2028 (one year early: May 2027)",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "08"
       ]
     },
     {
@@ -3984,8 +4012,18 @@
       },
       "studentIds": [
         "01",
-        "02",
         "46"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "Graduation target: May 2030 (one year early: May 2029)",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "02"
       ]
     },
     {
@@ -4723,17 +4761,6 @@
     {
       "section": "PDF",
       "sentence": "MAT 121 — Calculus I",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "MAT 121 is marked “Taking now.”",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7139,17 +7166,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "The student's answers show MAT 121 is marked “Taking now.”",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Their order changed from year to year.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -7199,7 +7215,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Fall 2026 through Spring/May 2027.",
+      "sentence": "This plan covers Fall 2026 through May 2027.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7211,7 +7227,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Fall 2026 through Spring/May 2028.",
+      "sentence": "This plan covers Fall 2026 through May 2028.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7223,7 +7239,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Fall 2026 through Spring/May 2029.",
+      "sentence": "This plan covers Fall 2026 through May 2029.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7234,7 +7250,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Winter 2027 through Spring/May 2027.",
+      "sentence": "This plan covers Winter 2027 through May 2027.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7257,7 +7273,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Winter 2027 through Spring/May 2028.",
+      "sentence": "This plan covers Winter 2027 through May 2028.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7277,7 +7293,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Winter 2027 through Spring/May 2029.",
+      "sentence": "This plan covers Winter 2027 through May 2029.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7293,7 +7309,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "This plan covers Winter 2027 through Spring/May 2030.",
+      "sentence": "This plan covers Winter 2027 through May 2030.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -7873,17 +7889,6 @@
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "19"
       ]
     },
     {
@@ -8754,17 +8759,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Ask the ECO 213 instructor for approval.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Ask your advisor and the Registrar to confirm you can take ECO 461 then.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -8999,7 +8993,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Before taking ECO 222 in Spring/May 2027 and ECO 214 in Winter 2028, finish ECO 114.",
+      "sentence": "Before taking ECO 222 in May 2027 and ECO 214 in Winter 2028, finish ECO 114.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -9010,7 +9004,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Before taking ECO 222 in Spring/May 2027, finish ECO 114.",
+      "sentence": "Before taking ECO 222 in May 2027, finish ECO 114.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -9307,6 +9301,19 @@
       },
       "studentIds": [
         "26"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Change your answers",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "20",
+        "29",
+        "50"
       ]
     },
     {
@@ -9704,6 +9711,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Taking now ◐ In progress Approval needed",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "19"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -10082,7 +10100,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2027 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Fall 2027 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10094,7 +10112,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Fall 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Fall 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10105,7 +10123,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — May 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — May 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10119,7 +10137,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 1 ECO elective (200+) — Winter 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 1 Economics elective (200 level or higher) — Winter 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10193,7 +10211,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2027 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Fall 2027 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10208,7 +10226,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Fall 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Fall 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10219,7 +10237,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — May 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10236,7 +10254,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — May 2029 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — May 2029 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10248,7 +10266,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Winter 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10260,7 +10278,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 2 ECO elective (200+) — Winter 2029 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 2 Economics elective (200 level or higher) — Winter 2029 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10340,7 +10358,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2027 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2027 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10355,7 +10373,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10372,7 +10390,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Fall 2029 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Fall 2029 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10385,7 +10403,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — May 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10396,7 +10414,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — May 2029 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — May 2029 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10409,7 +10427,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Winter 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10424,7 +10442,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 3 ECO elective (200+) — Winter 2029 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) — Winter 2029 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10460,7 +10478,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2028 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2028 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10482,7 +10500,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2029 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -10499,7 +10517,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2030 ○ Planned",
+      "sentence": "CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2030 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -13258,17 +13276,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "MAT 121 is marked “Taking now.”",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "19"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "MAT 217",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -13568,14 +13575,11 @@
         "17",
         "18",
         "19",
-        "20",
-        "29",
         "32",
         "41",
         "42",
         "46",
-        "47",
-        "50"
+        "47"
       ]
     },
     {
@@ -14296,7 +14300,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Review your graduation timeline and bring this result to your academic advisor.",
+      "sentence": "Review your graduation timeline and show this screen to your advisor.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -14781,7 +14785,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Study abroad: Winter 2027 and Spring/May 2027",
+      "sentence": "Study abroad: Winter 2027 and May 2027",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -15986,20 +15990,9 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "04",
-        "06",
         "20",
         "29",
-        "31",
-        "33",
-        "34",
-        "35",
-        "37",
-        "38",
-        "40",
         "41",
-        "43",
-        "45",
         "50"
       ]
     },
@@ -16012,17 +16005,6 @@
       },
       "studentIds": [
         "42"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Why: You are taking ECO 213 and MAT 121 together.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "19"
       ]
     },
     {
@@ -16060,6 +16042,28 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Why: Your plan has ECO 113 in Winter 2027.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "16"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Why: Your plan has MAT 113 in Winter 2027.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "32"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Winter 2027",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -16071,7 +16075,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Winter 2027 and Spring/May 2027",
+      "sentence": "Winter 2027 and May 2027",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -16248,17 +16252,6 @@
       },
       "studentIds": [
         "29"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "19"
       ]
     },
     {

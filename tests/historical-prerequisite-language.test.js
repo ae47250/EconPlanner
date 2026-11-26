@@ -88,7 +88,8 @@ test("the validated plan keeps a missing major prerequisite and the PDF repeats 
   assert.ok(scheduled.planningMarkers.includes(note));
   assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-214").markers.includes("ECO 114 isn’t marked completed, and ECO 214 needs it first. Ask your advisor to check."));
   assert.equal(plan.planConditions.find(item => item.reasonCode === "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW").shortMessage,
-    "ECO 214 is marked completed, but ECO 114 and either MAT 113 or MAT 121 are not marked. Mark them, or your advisor will check.");
+    // Owner decision 2026-11-26: when the plan schedules the unmarked prerequisites, say where.
+    "Your plan has ECO 114 in Winter 2027 and MAT 113 (or MAT 121) in Fall 2027. If you already took them, mark them Completed.");
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
   assert.match(renderEconomicsHtml(report, template), /ECO 114 comes before ECO 214, which you marked completed\. Check with your advisor\./);
 });
@@ -126,6 +127,7 @@ test("freshman ECO 213 taking now is retained, flagged, and shown in the plan an
   const program = (await response.json()).programs.find(item => item.economicsPlans);
   assert.ok(program.economicsPlans.length > 0);
   const plan = program.economicsPlans[0];
+  // ECO 213 is Taking now, so the "Your plan has…" note does not apply; the older sentence stays.
   const expected = "ECO 213 needs MAT 113 or MAT 121 first. Mark it Completed or Taking now, or your advisor will check.";
   assert.ok(plan.planConditions.some(item => item.message === expected));
   assert.ok(plan.majorRequirementsChecklist.rows.some(row => row.course === "ECO 213" && row.markers.length));

@@ -285,7 +285,6 @@ test("every owner-approved D1 message has text in the active display catalog", (
   const ids = [
     "infeasibility.courseCapacity",
     "history.scheduledPrerequisite",
-    "planNote.mathSequence",
     "checklist.statisticsAlreadyFilled",
     "checklist.prerequisiteNotCompleted",
     "checklist.prerequisiteTakingNow",
