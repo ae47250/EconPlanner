@@ -52,6 +52,33 @@ test("one-year-early puts verified preferred finance before better yearly fit", 
   assert.ok(compare(preferredFinance, targetFit, "one-year-early") < 0);
 });
 
+// owner-eco321-petition-2026-11-26: on an older catalog, BUSN 323 for finance needs a petition,
+// so a confirmed ECO 321 comes before yearly fit; on a current catalog yearly fit still decides.
+for (const strategy of ["balanced", "explore-first"]) {
+  for (const [catalog, eco321First] of [["2024-2025", true], ["2025-2026", false]]) {
+    test(`${strategy}, ${catalog} catalog: confirmed ECO 321 ${eco321First ? "beats" : "does not beat"} better yearly fit with BUSN 323`, () => {
+      const context = { entryCatalogYear: catalog };
+      const preferredFinance = { ...plan([[course("ECO 321", "verified-offering", "finance")], []], [0, 1]), planningContext: context };
+      const targetFit = { ...plan([[], [course("BUSN 323", "verified-offering", "finance")]], [0, 1]), planningContext: context };
+      const result = compare(preferredFinance, targetFit, strategy);
+      assert.ok(eco321First ? result < 0 : result > 0);
+    });
+  }
+}
+
+// The full planner must offer the ECO 321 plan to the ranking in the first place (search step).
+test("full planner: older-catalog student gets confirmed ECO 321, current-catalog student keeps yearly fit", async () => {
+  const { POST } = await import("../app/api/majors/map/route.js");
+  const financeOf = async majorDeclarationCatalogYear => {
+    const student = { academicStanding: "sophomore", majorDeclarationCatalogYear, planCreationDate: "2026-08-15", courses: [{ code: "ECO 113", status: "completed" }] };
+    const response = await POST(new Request("http://localhost/api/majors/map", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student }) }));
+    const balanced = (await response.json()).programs.find(item => item.economicsPlans).economicsPlans.find(plan => plan.id === "balanced");
+    return balanced.terms.flatMap(term => term.courses.filter(item => item.requirementId === "finance").map(item => `${item.course} ${term.term}`))[0];
+  };
+  assert.equal(await financeOf("2024-2025"), "ECO 321 Winter 2027");
+  assert.equal(await financeOf("2025-2026"), "BUSN 323 Fall 2028");
+});
+
 test("equal yearly fit puts more verified courses first", () => {
   const verified = plan([[course("ECO 113", "verified-offering")]], [1]);
   const projected = plan([[course("ECO 113", "projected-offering")]], [1]);
