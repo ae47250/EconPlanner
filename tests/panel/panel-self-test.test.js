@@ -112,8 +112,8 @@ test("panel lint allows shared credit markers across courses but catches a dupli
   try {
     const snapshotDir = path.join(temporary, "snapshots");
     await mkdir(snapshotDir);
-    const first = "CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your advisor that it counts.";
-    const second = "CHECKLIST ROW: Mathematics MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.";
+    const first = "CHECKLIST ROW: ECO 113 ECO 113 ? AP credit Confirm with your advisor that it counts.";
+    const second = "CHECKLIST ROW: Mathematics MAT 121 ? AP credit Confirm with your advisor that it counts.";
     const file = path.join(snapshotDir, "01.txt");
     const lines = ["SCREEN", "SCREEN > Plan: Balanced", "STATUS: Needs confirmation", first, second, "PDF", ""];
     await writeFile(file, lines.join("\n"));
@@ -124,6 +124,25 @@ test("panel lint allows shared credit markers across courses but catches a dupli
     const planted = invoke(lintScript, ["--snapshots-dir", snapshotDir]);
     assert.equal(planted.status, 1, planted.stdout + planted.stderr);
     assert.match(planted.stdout, /duplicate=[1-9]/);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("owner decision 2026-11-26: panel lint fails when a credit label prints twice", async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "econplanner-panel-credit-label-"));
+  try {
+    const snapshotDir = path.join(temporary, "snapshots");
+    await mkdir(snapshotDir);
+    for (const doubled of [
+      "CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your advisor that it counts.",
+      "CHECKLIST CELL: Transfer credit Transfer credit. Confirm with your advisor that it counts."
+    ]) {
+      await writeFile(path.join(snapshotDir, "01.txt"), ["SCREEN", "SCREEN > Plan: Balanced", "STATUS: Needs confirmation", doubled, "PDF", ""].join("\n"));
+      const result = invoke(lintScript, ["--snapshots-dir", snapshotDir]);
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.match(result.stdout, /duplicate=[1-9]/);
+    }
   } finally {
     await rm(temporary, { recursive: true, force: true });
   }

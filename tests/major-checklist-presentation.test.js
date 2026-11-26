@@ -118,8 +118,8 @@ test("AP and transfer checklist credit and grouped advisor text agree in API and
       const row = plan.majorRequirementsChecklist.rows.find(item => item.course === course.code);
       assert.equal(row.statusLabel, label);
       assert.ok(row.markers.some(marker => marker === (label === "AP credit"
-        ? "AP/exam credit. Confirm with your advisor that it counts."
-        : "Transfer credit. Confirm with your advisor that it counts.")));
+        ? "Confirm with your advisor that it counts."
+        : "Confirm with your advisor that it counts.")));
     }
     assert.equal(plan.planConditions.filter(item => item.message === message).length, 1);
     const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);

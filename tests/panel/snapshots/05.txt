@@ -76,9 +76,9 @@ Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
-CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST ROW: ECO 113 ECO 113 ? AP credit Confirm with your advisor that it counts.
 CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned
-CHECKLIST ROW: Mathematics MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST ROW: Mathematics MAT 121 ? AP credit Confirm with your advisor that it counts.
 CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
 CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — Winter 2027 ○ Planned
@@ -172,9 +172,9 @@ Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
 SCREEN > Plan: Explore the Major > Checklist
 Major requirements checklist
 Requirement | Course / term | Status
-CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST ROW: ECO 113 ECO 113 ? AP credit Confirm with your advisor that it counts.
 CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned
-CHECKLIST ROW: Mathematics MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST ROW: Mathematics MAT 121 ? AP credit Confirm with your advisor that it counts.
 CHECKLIST ROW: ECO 213 ECO 213 — Fall 2027 ○ Planned
 CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — Fall 2027 ○ Planned
@@ -283,13 +283,13 @@ TABLE HEADER: Course / term
 TABLE HEADER: Status
 CHECKLIST CELL: ECO 113
 CHECKLIST CELL: ECO 113
-CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: AP credit Confirm with your advisor that it counts.
 CHECKLIST CELL: ECO 114
 CHECKLIST CELL: ECO 114 — Winter 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Mathematics
 CHECKLIST CELL: MAT 121
-CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: AP credit Confirm with your advisor that it counts.
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213 — Fall 2027
 CHECKLIST CELL: Planned
@@ -412,13 +412,13 @@ TABLE HEADER: Course / term
 TABLE HEADER: Status
 CHECKLIST CELL: ECO 113
 CHECKLIST CELL: ECO 113
-CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: AP credit Confirm with your advisor that it counts.
 CHECKLIST CELL: ECO 114
 CHECKLIST CELL: ECO 114 — Winter 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: Mathematics
 CHECKLIST CELL: MAT 121
-CHECKLIST CELL: AP credit AP/exam credit. Confirm with your advisor that it counts.
+CHECKLIST CELL: AP credit Confirm with your advisor that it counts.
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213 — Fall 2027
 CHECKLIST CELL: Planned

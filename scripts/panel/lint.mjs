@@ -92,8 +92,11 @@ for (const file of files) {
         record.checklistCourse = line.match(/\b(?:ECO|MAT|BUSN|PSY)\s*\d{3}\b/)?.[0] || null;
       }
     }
+    // Owner decision 2026-11-26: the credit label shows once ("AP credit Confirm with your advisor…").
+    // The same note may repeat for different courses, but a label printed twice is a duplicate.
     const creditMarker = /^CHECKLIST (?:ROW|CELL):/.test(line)
-      && /(?:AP\/exam credit|Transfer credit)\. Confirm with your advisor that it counts\./.test(line);
+      && /(?:AP credit|Transfer credit) Confirm with your advisor that it counts\./.test(line);
+    if (/^CHECKLIST (?:ROW|CELL):/.test(line) && /AP credit AP\/exam credit|Transfer credit Transfer credit/.test(line)) flag("duplicate", line);
     const creditCourse = line.startsWith("CHECKLIST ROW:")
       ? line.match(/\b(?:ECO|MAT|BUSN|PSY)\s*\d{3}\b/)?.[0]
       : record.checklistCourse;
