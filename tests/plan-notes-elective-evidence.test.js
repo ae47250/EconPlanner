@@ -219,7 +219,7 @@ test("late entrants retain an explicit extra-elective need and unconfirmed adjun
   assert.equal(result.economicsPlanResult.reason, "EXTRA_ELECTIVE_OFFERING_REVIEW_REQUIRED");
   const gap = result.economicsPlanResult.evidence.blockingReasons.find(item => item.unmetElectives);
   assert.equal(gap.unmetElectives, 1);
-  assert.equal(gap.message, "You need 1 more Economics elective than the usual schedule offers to finish by May 2028. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.");
+  assert.equal(gap.message, "You need 1 more Economics elective than the usual schedule offers to finish by May 2028. An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.");
 });
 
 
@@ -264,4 +264,15 @@ test("a year-only placeholder needs a legal one-elective-per-term witness", () =
   assert.equal(buildTbcTemporalWitness(make(4), facts, {}, bundle).topologicalWitness.legal, false);
   assert.equal(oracleEvaluateElectiveTerm(oracle, make(3).terms[0]).status, "ALLOW");
   assert.equal(oracleEvaluateElectiveTerm(oracle, make(4).terms[0]).status, "BLOCK");
+});
+
+test("owner request 2026-11-26: the plan note and the no-plan message use the same extra-elective sentence", () => {
+  const bundle = runtimePolicyBundle();
+  const plan = { unmetElectiveNeed: 1, terms: [{ publicationStatus: "PLANNING_PROJECTION", courses: [] }], validation: {} };
+  const texts = buildEconomicsPlanNotes({ plan, policyBundle: bundle }).flatMap(note => (note.items || []).map(item => item.text));
+  const shared = "An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.";
+  assert.ok(texts.includes(shared), texts.join(" | "));
+  // The no-plan message ends with exactly the same sentence.
+  for (const key of ["electives.extraNeededOne", "electives.extraNeededMany"]) assert.ok(bundle.messages[key].endsWith(` ${shared}`), key);
+  assert.ok(!texts.some(text => /course, funding, and instructor/.test(text)));
 });

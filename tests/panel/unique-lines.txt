@@ -79,6 +79,7 @@
 40	BUSN 323 · ECO 113 · ECO 114 · ECO 214 · ECO 234 · ECO 333 · MAT 217
 26	BUSN 323 (transfer) · ECO 113 · ECO 114 · ECO 213 · ECO 214 · ECO 234 · ECO 321 · ECO 333 · MAT 121 · MAT 217
 01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48	BUSN 323 ▾ | Investments
+42	Check enrollment for MAT 217.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Check seats and future schedules before you register.
 02, 03	Check the approval and standing notes on each plan before registering.
 08	Check the approval and standing notes on each plan before registering. See the notes below for paperwork to file.
@@ -87,7 +88,6 @@
 17	Check the student’s earlier course or transfer records to confirm whether ECO 114 was completed before ECO 214.
 32	Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.
 19	Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213. The student's answers show MAT 121 is marked “Taking now.”
-42	Check this class’s enrollment status
 10	Check this plan's approval and standing notes before registering.
 07, 11, 21, 28, 30	Check this plan's approval and standing notes before registering. See the notes below for paperwork to file.
 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47	Check with your advisor
@@ -554,7 +554,7 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Planned
 10, 11, 21, 28, 30, 32	Planned Approval needed
 02, 03, 07, 08	Planned Ask your advisor and the Registrar to confirm senior standing.
-42	Planned Check this class’s enrollment status
+42	Planned Check enrollment for MAT 217.
 11, 16, 39	Planned Counts as your one 100-level elective.
 25	Planning information
 01, 02, 03, 05, 19, 46, 47, 48, 49	Plans fewer major classes this year than Balanced. Classes that need another class first are scheduled later.
@@ -584,7 +584,7 @@
 09, 10, 11, 12	Standard target
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Statistics
 22, 27, 49	Statistics ECO 257 ✓ Completed
-42	Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status
+42	Statistics MAT 217 — Fall 2026 ○ Planned Check enrollment for MAT 217.
 03, 05, 19, 21	Statistics MAT 217 — Fall 2027 ○ Planned
 01, 02, 03, 46	Statistics MAT 217 — May 2027 ○ Planned
 47, 48	Statistics MAT 217 — May 2028 ○ Planned
@@ -699,7 +699,7 @@
 09	You have 8 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 10, 11	You have 10 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 25	You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.
-41	You need 2 more Economics electives than the usual schedule offers to finish by May 2026. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.
+41	You need 2 more Economics electives than the usual schedule offers to finish by May 2026. An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.
 29	You saved room for 2 other courses in Winter 2027. That leaves too little room for the major. Save room for fewer courses and try again.
 50	You saved room for 14 other courses across 5 terms. That leaves too little room for the major. Save room for fewer courses and try again.
 38	You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.

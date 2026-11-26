@@ -2712,7 +2712,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Planned Check this class’s enrollment status",
+      "sentence": "CHECKLIST CELL: Planned Check enrollment for MAT 217.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -4892,7 +4892,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "NOTE: Check this class’s enrollment status",
+      "sentence": "NOTE: Check enrollment for MAT 217.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -10764,7 +10764,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status",
+      "sentence": "CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check enrollment for MAT 217.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -13729,7 +13729,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "NOTE: Check this class’s enrollment status",
+      "sentence": "NOTE: Check enrollment for MAT 217.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
