@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:ac6fe5cf52d594d4464438e09da47a1caa18e36518f9792ddf9e10c5b55a7eab",
+  "contentHash": "sha256:18ee0e9ca8cc0c2d76f60884d435d75043da24b7dcd6191a308467895810d005",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7080,6 +7080,9 @@
     "infeasibility.electives.spring": "You still need {remainingElectives} Economics electives. No other eligible elective is offered in {winterTerm}. You can take only one of {springOptions} in {springTerm}.",
     "infeasibility.finance.forced": "{financeCourse} counts for Finance here, so it cannot also count as an elective.",
     "infeasibility.requiredOffering": "You still need {course}, but no available term by {target} offers it. Talk with your advisor about a later graduation year.",
+    "infeasibility.unmarkedPrerequisite": "With your current answers, no plan fits. Once it is marked, a plan fits.",
+    "infeasibility.unmarkedPrerequisiteMany": "With your current answers, no plan fits. Once they are marked, a plan fits.",
+    "infeasibility.unmarkedPrerequisiteQuestion": "Did you already take {courses}?",
     "load.advisor": "The plan exceeds the preferred Economics load but remains within total term capacity.",
     "load.move": "This term is within total capacity but carries a heavy Economics load warning.",
     "load.report": "A graduation-required heavy Economics load is valid within total term capacity and requires a warning.",

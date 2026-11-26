@@ -1,7 +1,7 @@
 {
   "studentId": "31",
   "planDate": "2026-11-22",
-  "overallStatus": "Not possible",
-  "resultCategory": "INFEASIBLE_PROVEN",
+  "overallStatus": "Needs one more detail",
+  "resultCategory": "NEEDS_ADVISOR_ATTENTION",
   "plans": []
 }

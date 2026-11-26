@@ -32,6 +32,8 @@ function SummaryCourseCodes({ courses = [] }) {
 
 function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, plans = [] }) {
   const planCount = plans.length;
+  // The "mark the courses you took" result explains itself; the search details below would only confuse.
+  if (!planCount && planResult?.reason === "UNMARKED_PREREQUISITE") return null;
   const blockingReasons = !planCount && planResult?.category === "INFEASIBLE_PROVEN"
     ? planResult.evidence?.blockingReasons || [] : [];
   const otherOutcomes = planCount ? outcomes.filter(outcome => !outcome.displayed) : outcomes;

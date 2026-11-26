@@ -160,7 +160,14 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
           policyBundle: catalog.policyBundle,
           planningContext,
           catalogApplicability,
-          collectDiagnostics: true
+          collectDiagnostics: true,
+          // Lets the planner re-check "no plan" with unmarked prerequisites counted as done.
+          remapStudent: changedStudent => mapStudentToProgram(
+            { ...program, ...variant, catalogYear: catalog.catalogYear },
+            catalog.requirementsByProgram.get(program.id),
+            changedStudent,
+            { policyBundle: catalog.policyBundle, catalogApplicability }
+          )
         })
       : null;
     const economicsPlanningGaps = economicsPlanBundle?.planningGaps || [];

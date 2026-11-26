@@ -18,14 +18,13 @@ ECO 113 · ECO 114 · ECO 213 · ECO 234 · ECO 333 · MAT 217
 Taking now
 None
 Status
-Not possible
+Needs one more detail
 Your planning result
 SCREEN > Other details
-SCREEN > Your remaining classes do not fit before this graduation target.
-Your remaining classes do not fit before this graduation target.
-Review your graduation timeline and show this screen to your advisor.
-You have 6 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
-Review graduation timeline
+SCREEN > Did you already take MAT 113 or MAT 121?
+Did you already take MAT 113 or MAT 121?
+ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check. With your current answers, no plan fits. Once it is marked, a plan fits.
+Review your courses
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF
