@@ -8,7 +8,14 @@ Rule or reason code → policy message keys → panel students.
 - **checklist.concurrentPrerequisite** → 19
 - **checklist.prerequisiteNotCompleted** → 16, 17, 18, 32
 - **checklist.statisticsAlreadyFilled** → 27, 49
+- **history.completedMissingOne** → 16, 32
+- **history.completedPrerequisiteTakingNowOne** → 18
 - **history.scheduledPrerequisite** → 16, 32
+- **history.takingNowNeedsCompletedMany** → 17
+- **history.takingNowNeedsCompletedOne** → 17
+- **history.takingNowNeedsMany** → 17
+- **history.takingNowNeedsMixed** → 17
+- **history.takingNowNeedsOne** → 17
 - **history.takingNowNotOffered** → 17
 - **history.takingNowNotOfferedAdvisor** → 17
 - **infeasibility.capstone.seniorStanding** → 04, 06
@@ -18,8 +25,8 @@ Rule or reason code → policy message keys → panel students.
 - **infeasibility.electives.spring** → 37, 38
 - **infeasibility.finance.forced** → 37
 - **infeasibility.requiredOffering** → 40
-- **move.sameTermPrerequisiteApproval** → 16, 17, 18, 32
-- **move.sameTermPrerequisiteOtherApproval** → 02, 16, 17, 18, 32
+- **move.sameTermPrerequisiteOtherApproval** → 02
+- **move.takePrerequisiteFirst** → 17
 - **move.winterOnly** → 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 35, 36, 39, 42, 43, 44, 46, 47, 48, 49
 - **termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE** → 21, 28, 30, 32
 - **termLoad.TERM_CAPACITY_AVAILABLE** → 30, 32
@@ -229,11 +236,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Hanover Core
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 17, 18, 19, 21, 22, 23, 24, 25, 26, 28, 30, 32, 36, 42, 44, 46, 47, 49): HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 16, 27, 39, 48): HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): If that was a mistake, change one of them.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): If you finished ECO 113 or have transfer/AP credit for it, mark it.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): If you finished one or are taking it now, mark it.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 21, 46, 47, 48, 49): In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48): Its future offering is not confirmed.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 10, 11, 32, 48): MAT 113 — Essential Pre-Calculus
@@ -247,7 +249,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): NOTE: Check this class’s enrollment status
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): NOTE: Taking now
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 32): NOTE: This class is a prerequisite for ECO 213, which you marked completed.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 17, 32): Otherwise your advisor will check it.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Balanced | Prepared November 22, 2026
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Balanced | Prepared November 22, 2026 | Class standing: Freshman
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Explore the Major | Prepared November 22, 2026
@@ -708,11 +709,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 19, 46, 47, 48, 49): Highlight differences
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 17, 18, 19, 21, 22, 23, 24, 25, 26, 28, 30, 32, 36, 42, 44, 46, 47, 49): HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11, 16, 27, 39, 48): HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): If that was a mistake, change one of them.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16): If you finished ECO 113 or have transfer/AP credit for it, mark it.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 32): If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17): If you finished one or are taking it now, mark it.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48): Its future offering is not confirmed.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 50): Junior
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07): Junior (custom graduation year)
@@ -751,7 +747,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): One-year-early target
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 12): Only one plan fits your situation.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Other graduation requirements
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16, 17, 32): Otherwise your advisor will check it.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 19, 46, 47, 48, 49): Plans fewer major classes this year than Balanced.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 08): Possible
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): Published schedules as of the plan date (August 25, 2026)

@@ -555,9 +555,10 @@ for (const course of ["ECO 213", "ECO 214"]) {
     await continueToCourses(page);
     await setCourseStatus(page, course, "Taking now");
     await expect(page.getByRole('button', { name: 'Generate my plans' })).toBeEnabled();
-    await expect(page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`)).toHaveCount(0);
+    // Owner request 2026-11-25: the prerequisite panel shows for Taking now, same as for Completed.
+    await expect(page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`)).toHaveCount(1);
     await generatePlans(page);
-    await expect(page.locator('[data-plan-conditions]').first()).toContainText(`You are taking ${course}, but ${course === "ECO 213" ? "ECO 113" : "ECO 114"}, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.`);
+    await expect(page.locator('[data-plan-conditions]').first()).toContainText(`${course} needs ${course === "ECO 213" ? "ECO 113" : "ECO 114"} and either MAT 113 or MAT 121 first. Mark ${course === "ECO 213" ? "ECO 113" : "ECO 114"} Completed and the math course Completed or Taking now, or your advisor will check.`);
   });
 }
 
@@ -860,3 +861,16 @@ for (const authority of ["ECO 213 instructor", "ECO 461 instructor"]) {
     }
   });
 }
+
+test("owner decision 2026-11-25: both Taking now shows a warning and the panel, and plans still generate", async ({ page }) => {
+  await resetPlanner(page);
+  await chooseStanding(page, "sophomore");
+  await continueToCourses(page);
+  await setCourseStatus(page, "ECO 113", "Taking now");
+  await page.getByRole("searchbox", { name: "Search courses", exact: true }).fill("ECO 221");
+  await setCourseStatus(page, "ECO 221", "Taking now");
+  const row = page.locator("#course-eco-221");
+  await expect(row.getByText("ECO 113 comes before ECO 221, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.")).toBeVisible();
+  await expect(row.locator(".inline-prerequisite")).toHaveCount(1);
+  await expect(page.getByRole("button", { name: "Generate my plans", exact: true })).toBeEnabled();
+});

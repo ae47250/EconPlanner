@@ -199,6 +199,9 @@
 16	ECO 213 ECO 213 ✓ Completed ECO 113 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
 18	ECO 213 ECO 213 ✓ Completed ECO 113 marked Taking now rather than done before this class. Ask your advisor to check.
 32	ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
+18	ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
+16	ECO 213 is marked completed, but ECO 113 is not marked. Mark it, or your advisor will check.
+32	ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 214
 16, 18, 19, 21	ECO 214 — Fall 2027
 01, 02, 03, 46	ECO 214 — Fall 2028
@@ -221,6 +224,7 @@
 01, 02	ECO 214 ECO 214 — Winter 2029 ○ Planned
 07, 08, 12, 22, 23, 24, 25, 26, 27, 36, 39, 42, 44	ECO 214 ECO 214 ✓ Completed
 17	ECO 214 is not on the Fall 2026 schedule. If you are taking it at another school, your advisor will check whether it counts.
+17	ECO 214 needs ECO 114 first. Mark it Completed, or your advisor will check.
 09, 10, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214-J
 09, 10, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214-J ▾ | Intermediate Macroeconomics
 22, 23, 36, 39, 42	ECO 221
@@ -675,12 +679,12 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	What to check for this plan
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
 04, 06, 20, 29, 31, 33, 34, 35, 37, 38, 40, 41, 43, 45, 50	Why am I seeing this result?
+18	Why: ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
+16	Why: ECO 213 is marked completed, but ECO 113 is not marked. Mark it, or your advisor will check.
+32	Why: ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.
+17	Why: ECO 214 needs ECO 114 first. Mark it Completed, or your advisor will check.
 42	Why: The listed section for MAT 217 was recorded as full. Check the registration system for current availability.
 19	Why: You are taking ECO 213 and MAT 121 together. Ask the ECO 213 instructor for approval.
-17	Why: You are taking ECO 214, but ECO 114, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.
-18	Why: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
-16	Why: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed. If you finished ECO 113 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
-32	Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 05	Why: Your advisor needs to confirm that your AP credit for ECO 113 and MAT 121 counts toward the major.
 46	Why: Your advisor needs to confirm that your AP credit for ECO 113, ECO 114, and MAT 121 counts toward the major.
 47	Why: Your advisor needs to confirm that your transfer credit for ECO 113 and MAT 121 counts toward the major.
@@ -690,15 +694,11 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49	Winter 2027:
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Year
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Year | Term | Courses
-17	You are taking ECO 214, but ECO 114, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.
 09, 10, 11, 12	You cannot finish by May 2027. The plan below is for May 2028.
 45	You have 3 required courses left and 1 term left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 31, 33	You have 6 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 09	You have 8 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 10, 11	You have 10 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
-18	You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
-16	You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed. If you finished ECO 113 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
-32	You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
 25	You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.
 29	You saved room for 2 other courses in Winter 2027. That leaves too little room for the major. Save room for fewer courses and try again.
 50	You saved room for 14 other courses across 5 terms. That leaves too little room for the major. Save room for fewer courses and try again.

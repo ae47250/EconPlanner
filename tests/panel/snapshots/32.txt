@@ -20,7 +20,7 @@ None
 Status
 Needs advisor attention
 Ask your advisor to review the reason below before relying on this plan.
-Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
+Why: ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
@@ -64,7 +64,7 @@ In Winter 2027, this plan has 5 courses. The normal limit is 4. With advisor app
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
-You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
+ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.
 This plan has 4 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
@@ -161,7 +161,7 @@ In Winter 2027, this plan has 5 courses. The normal limit is 4. With advisor app
 Check with your advisor
 Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
-You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed. If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it. Otherwise your advisor will check it.
+ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.
 This plan has 4 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 This plan totals 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 This plan uses the current Economics major requirements. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.

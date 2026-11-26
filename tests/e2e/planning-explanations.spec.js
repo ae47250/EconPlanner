@@ -129,11 +129,11 @@ test("completed course shows its prerequisite review as soon as both statuses ar
   await setCourseStatus(page, "ECO 214", "Completed");
   await setCourseStatus(page, "MAT 113", "Completed");
   const advanced = page.locator("#course-eco-214");
-  await expect(advanced.getByText(/You marked ECO 214 completed, but ECO 114.*not marked completed/)).toBeVisible();
+  await expect(advanced.getByText("ECO 214 is marked completed, but ECO 114 is not marked. Mark it, or your advisor will check.")).toBeVisible();
   await setCourseStatus(page, "ECO 114", "Taking now");
-  await expect(advanced.getByText(/You marked ECO 214 completed, but ECO 114.*marked Taking now/)).toBeVisible();
+  await expect(advanced.getByText("ECO 214 is marked completed, but ECO 114 is marked Taking now. Fix one of them, or your advisor will check.")).toBeVisible();
   await setCourseStatus(page, "ECO 114", "Completed");
-  await expect(advanced.getByText(/You marked ECO 214 completed, but ECO 114/)).toHaveCount(0);
+  await expect(advanced.getByText(/ECO 214 is marked completed/)).toHaveCount(0);
 });
 
 test("Student readiness Why line names the additional prerequisite", async ({ page }) => {
@@ -143,5 +143,5 @@ test("Student readiness Why line names the additional prerequisite", async ({ pa
   await setCourseStatus(page, "ECO 214", "Completed");
   await generatePlans(page);
   await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
-  await expect(page.locator(".result-status-reason").last()).toContainText("Also: MAT 113 or MAT 121 is not marked completed.");
+  await expect(page.locator(".result-status-reason").last()).toContainText("ECO 214 is marked completed, but ECO 114 and either MAT 113 or MAT 121 are not marked.");
 });

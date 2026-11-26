@@ -42,10 +42,9 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     sourceRefs: ["DEPARTMENT-POLICIES#Confirmed-policy-7"]
   };
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
-  assert.match(review.summary, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
-  assert.match(review.summary, /advisor will check it\. Also: MAT 113 or MAT 121 is not marked completed\.$/);
-  assert.match(review.message, /You marked ECO 213 completed, but ECO 113.*marked Taking now/);
-  assert.match(review.message, /You marked ECO 213 completed, but MAT 113 or MAT 121.*not marked completed/);
+  assert.match(review.summary, /ECO 213 is marked completed, but ECO 113 is marked Taking now\./);
+  assert.match(review.summary, /ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked\./);
+  assert.equal(review.message, review.summary);
   assert.doesNotMatch(review.message, /Your answers do not show|Ask your advisor to check your earlier course/);
   assert.match(review.advisorPrompt, /ECO 113 and either MAT 113 or MAT 121/);
 
@@ -54,11 +53,11 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     student,
     policyBundle
   });
-  assert.equal(conditions.length, 2);
+  // Owner decision 2026-11-25: one message per course, so both gaps share one plan note.
+  assert.equal(conditions.length, 1);
   assert.deepEqual(conditions.map(item => item.message), review.details);
   assert.equal(conditions[0].shortMessage, review.summary);
   assert.equal(conditions[0].advisorPrompt, review.advisorPrompt);
-  assert.equal(conditions[1].advisorPrompt, undefined);
 
   const html = renderEconomicsHtml({
     student: { displayName: "Fictional student", academicStanding: "senior" },
