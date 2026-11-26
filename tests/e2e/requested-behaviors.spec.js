@@ -87,12 +87,12 @@ for (const dependent of ['ECO 213','ECO 214']) for (const math of ['MAT 113','MA
 
 for (const scenario of [
   {name:'normal four Winter units',reserved:'0',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'Needs confirmation'},
-  {name:'missing overload evidence',reserved:'1',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'Needs advisor attention'},
+  {name:'missing overload evidence',reserved:'1',approval:'NOT_SUPPLIED',probation:'NOT_SUPPLIED',expected:'Change your answers'},
   {name:'approved five Winter units',reserved:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs confirmation'},
-  {name:'denied Winter approval',reserved:'1',approval:'NOT_APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'},
-  {name:'Winter overload on probation',reserved:'1',approval:'APPROVED',probation:'ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'},
-  {name:'six Winter units above ceiling',reserved:'2',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'},
-  {name:'two May units with approval',reserved:'0',spring:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Needs advisor attention'}
+  {name:'denied Winter approval',reserved:'1',approval:'NOT_APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Change your answers'},
+  {name:'Winter overload on probation',reserved:'1',approval:'APPROVED',probation:'ON_ACADEMIC_PROBATION',expected:'Change your answers'},
+  {name:'six Winter units above ceiling',reserved:'2',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Change your answers'},
+  {name:'two May units with approval',reserved:'0',spring:'1',approval:'APPROVED',probation:'NOT_ON_ACADEMIC_PROBATION',expected:'Change your answers'}
 ]) test(`browser controls and results: ${scenario.name}`,async ({page}) => {
   await resetPlanner(page);
   await chooseStanding(page,'senior');

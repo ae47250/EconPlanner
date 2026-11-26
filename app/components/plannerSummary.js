@@ -36,15 +36,15 @@ function ResultDiagnostics({ outcomes, convergences, planningGaps, planResult, p
     ? planResult.evidence?.blockingReasons || [] : [];
   const otherOutcomes = planCount ? outcomes.filter(outcome => !outcome.displayed) : outcomes;
   const visibleGaps = planningGaps.filter(item => item.studentVisible !== false);
-  const hasDiagnostics = blockingReasons.length || otherOutcomes.length || convergences.length || visibleGaps.length;
+  // The no-plan card already prints every blocking reason; repeating them here showed each sentence twice.
+  if (blockingReasons.length) return null;
+  const hasDiagnostics = otherOutcomes.length || convergences.length || visibleGaps.length;
   if (!hasDiagnostics) return null;
   return (
     <details className="result-diagnostics">
       <summary>{planCount ? "More planning details" : "Why am I seeing this result?"}</summary>
-      {blockingReasons.length ? <ul>{blockingReasons.map(reason => <li key={reason.code}>{reason.message}</li>)}</ul> : <>
-        <CandidateOutcomes outcomes={otherOutcomes} convergences={convergences} showReasons={planCount > 0 || !visibleGaps.length} />
-        <PlanningGaps items={visibleGaps} />
-      </>}
+      <CandidateOutcomes outcomes={otherOutcomes} convergences={convergences} showReasons={planCount > 0 || !visibleGaps.length} />
+      <PlanningGaps items={visibleGaps} />
     </details>
   );
 }

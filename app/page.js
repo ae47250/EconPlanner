@@ -1594,7 +1594,7 @@ export default function Page() {
         setReport(nextReport);
         const targetTerm = data.plan.terms.find(term => (term.slotId || term.term) === (edit.toTermId || edit.fromTermId));
         const changedCourse = targetTerm?.courses.find(course => planCourseIdentity(course) === edit.courseId);
-        const resultMessage = `${edit.type === "move" ? `Moved to ${targetTerm?.term || "selected term"}` : edit.type === "add-extra" ? "Extra course added" : edit.type === "remove-extra" ? "Extra course removed" : "Course updated"}.${changedCourse?.publicationStatus === "PLANNING_PROJECTION" ? "" : " Plan checks pass."}`;
+        const resultMessage = `${edit.type === "move" ? `Moved to ${targetTerm?.term ? studentTermLabel(targetTerm.term) : "selected term"}` : edit.type === "add-extra" ? "Extra course added" : edit.type === "remove-extra" ? "Extra course removed" : "Course updated"}.${changedCourse?.publicationStatus === "PLANNING_PROJECTION" ? "" : " Plan checks pass."}`;
         setPlanEditStatus("");
         setPlanEditFeedback({ planId: sourcePlan.id, fromTermId: edit.toTermId || edit.fromTermId, courseId: edit.courseId, message: resultMessage, controlKey: `${sourcePlan.id}:${edit.courseId}:change` });
         return true;

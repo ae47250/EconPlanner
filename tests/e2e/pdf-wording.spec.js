@@ -106,7 +106,7 @@ test("early sophomore abroad plan shows consistent prerequisite and approval sen
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
   await expect(notes).toContainText("Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.");
-  await expect(notes).toContainText("Before taking ECO 214 in Winter 2027 and ECO 222 in Spring/May 2027, finish ECO 114.");
+  await expect(notes).toContainText("Before taking ECO 214 in Winter 2027 and ECO 222 in May 2027, finish ECO 114.");
   await expect(notes).toContainText("Winter 2028 has 3 Economics courses. The department recommends no more than 2.");
   await expect(notes).not.toContainText("Complete ECO 114 before taking");
   await expect(notes).not.toContainText("This plan uses the current Economics major requirements.");

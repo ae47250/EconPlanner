@@ -584,29 +584,6 @@ for (const [math, economics] of [
   ["MAT 113", "ECO 214"],
   ["MAT 121", "ECO 214"]
 ]) {
-  test(`accelerated plan explains ${math} before ${economics}`, async ({ page }) => {
-    const accelerated = fixturePlan({ id: "one-year-early", label: "Graduate One Year Early" });
-    accelerated.isEarlyGraduation = true;
-    accelerated.terms = [
-      { slotId: "math", academicYear: "2026-2027", termKey: "Fall", term: "Fall 2026", displayTerm: "Fall 2026", courses: [{ course: math, title: "College Algebra" }] },
-      { slotId: "eco", academicYear: "2026-2027", termKey: "Winter", term: "Winter 2027", displayTerm: "Winter 2027", courses: [{ course: economics, title: "Intermediate Economics" }] }
-    ];
-    await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
-    const card = await visitPlan(page, "one-year-early");
-    await card.getByText("More about this plan", { exact: true }).click();
-    await expect(card.locator('.compact-schedule [data-term-id="math"]')).toContainText(math);
-    await expect(card.locator('.compact-schedule [data-term-id="eco"]')).toContainText(economics);
-    await expect(card.locator(".accelerated-math-sequence-note")).toHaveText(`${math} comes before ${economics}. Taking both in one term needs the ${economics} instructor’s approval.`);
-    await expect(card.locator("[data-plan-conditions]")).toHaveCount(0);
-  });
-}
-
-for (const [math, economics] of [
-  ["MAT 113", "ECO 213"],
-  ["MAT 121", "ECO 213"],
-  ["MAT 113", "ECO 214"],
-  ["MAT 121", "ECO 214"]
-]) {
   test(`concurrent ${math} and ${economics} retains its instructor approval warning`, async ({ page }) => {
     const accelerated = fixturePlan({ id: "one-year-early", label: "Graduate One Year Early" });
     accelerated.isEarlyGraduation = true;
@@ -626,7 +603,6 @@ for (const [math, economics] of [
     }];
     await openFixtureResult(page, plannerResultFixture({ plans: [accelerated] }));
     const card = await visitPlan(page, "one-year-early");
-    await expect(card.locator(".accelerated-math-sequence-note")).toHaveCount(0);
     await expect(card.locator(".plan-course-approval")).toContainText("Approval needed");
     await expect(card.locator("[data-plan-conditions]")).toContainText(approvalWarning);
   });

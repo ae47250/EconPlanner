@@ -23,12 +23,9 @@ Your planning result
 SCREEN > Other details
 SCREEN > Your remaining classes do not fit before this graduation target.
 Your remaining classes do not fit before this graduation target.
-Review your graduation timeline and bring this result to your academic advisor.
+Review your graduation timeline and show this screen to your advisor.
 ECO 461 is offered only in Winter. To finish by May 2027, you must take it in Winter 2027. Statistics (ECO 257 or MAT 217 or PSY 217) must be done first. Your answers do not show statistics completed. There is no earlier term left. Check your statistics answer or ask your advisor about a later graduation date.
 Review graduation timeline
-SCREEN > Why am I seeing this result?
-Why am I seeing this result?
-ECO 461 is offered only in Winter. To finish by May 2027, you must take it in Winter 2027. Statistics (ECO 257 or MAT 217 or PSY 217) must be done first. Your answers do not show statistics completed. There is no earlier term left. Check your statistics answer or ask your advisor about a later graduation date.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF

@@ -3,10 +3,8 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { buildPlanningSlots } from "../../lib/planning/horizon.js";
-import { acceleratedMathSequenceNotes } from "../../lib/planning/acceleratedMathSequence.js";
-import defaultPolicyMessages from "../../policy/messages/en-US.json";
 import { joinStudyAbroadTerms, studyAbroadAdvisorContext, studyAbroadTermIds } from "../../lib/planning/study-abroad.js";
-import { noPlanPresentation } from "../../lib/planning/no-plan-presentation.js";
+import { noPlanPresentation, noPlanStatusLabel } from "../../lib/planning/no-plan-presentation.js";
 import { planningRequirementsNote } from "../../lib/catalog/planning-requirements-note.js";
 import { feasibilityMeaning, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
 import { summerLastResortNote } from "../../lib/planning/summer-note.js";
@@ -27,6 +25,20 @@ const STUDENT_READINESS_EXPLANATIONS = Object.freeze({
 function structuredItemText(item, fallback) {
   if (typeof item === "string") return item;
   return item?.message || item?.question || item?.prompt || item?.reason || item?.label || item?.code || fallback;
+}
+
+// At phone width the plan table shows short labels so no word breaks mid-word ("Wint/er").
+// Screen readers always get the full label; the short one is hidden from them.
+function shortTermLabel(label = "") {
+  return String(label).replace(/\bWinter\b/g, "Win").replace(/\bSummer\b/g, "Sum");
+}
+function shortAcademicYear(label = "") {
+  const match = String(label).match(/^\d{2}(\d{2})\/\d{2}(\d{2})$/);
+  return match ? `${match[1]}–${match[2]}` : label;
+}
+function NarrowLabel({ full, short }) {
+  if (!short || short === full) return full;
+  return <><span className="label-full">{full}</span><span className="label-short" aria-hidden="true">{short}</span></>;
 }
 
 function comparisonScheduleRows(plan, studentCourses) {
@@ -134,15 +146,7 @@ function PlanComparisonScreen({
   const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
   const overallStatus = overallPlanReadiness(plans);
   const noPlan = noPlanPresentation(canonicalPlanResult?.category, canonicalPlanResult?.reason, canonicalPlanResult?.evidence, COURSE_PREREQUISITES);
-  const displayedOverallStatus = plans.length
-    ? overallStatus
-    : canonicalPlanResult?.category === "INPUT_BLOCKED"
-      ? "Needs one more detail"
-      : canonicalPlanResult?.category === "INFEASIBLE_PROVEN"
-        ? "Not possible"
-        : ["MISSING_OFFERING", "TERM_OVERLOAD_EVIDENCE_REQUIRED"].includes(canonicalPlanResult?.reason) || canonicalPlanResult?.category === "SEARCH_INCOMPLETE"
-          ? "More information needed"
-          : "Needs advisor attention";
+  const displayedOverallStatus = plans.length ? overallStatus : noPlanStatusLabel(canonicalPlanResult);
   const statusPlans = plans;
   const statusReason = statusPlans.flatMap(plan => plan.planConditions || [])
     .find(item => item.kind === "review" && item.shortMessage)?.shortMessage;
@@ -257,7 +261,6 @@ function PlanComparisonScreen({
               const rows = rowsByPlan.get(plan.id) || [];
               const selected = selectedPlanId === plan.id;
               const invalid = plan.validation?.valid === false;
-              const mathSequenceNotes = acceleratedMathSequenceNotes(plan, COURSE_PREREQUISITES, policyMessages || defaultPolicyMessages.messages);
               const showEarlyGraduationDetails = mergePossibleEarlyResult && plan.id === "one-year-early";
               return (
                 <article
@@ -288,7 +291,7 @@ function PlanComparisonScreen({
                     <table className="compact-schedule">
                       <thead>
                         <tr>
-                          <th>Academic year</th>
+                          <th><NarrowLabel full="Academic year" short="Year" /></th>
                           <th>Term</th>
                           <th>Courses</th>
                         </tr>
@@ -297,8 +300,8 @@ function PlanComparisonScreen({
                         {rows.map(row => (
                           <tr key={`${plan.id}-${row.key}`} data-year-start={row.yearRowSpan ? "true" : "false"} data-term-id={row.sourceTerm.slotId || row.sourceTerm.term} data-plan-scope={plan.id}
                             className={comparisonDrop?.planId === plan.id && comparisonDrop.destination.id === (row.sourceTerm.slotId || row.sourceTerm.term) ? "drop-pending" : comparisonDrag?.planId === plan.id ? `drop-${(comparisonDrag.course.moveDestinationOptions?.find(option => option.id === (row.sourceTerm.slotId || row.sourceTerm.term))?.status || "unavailable").toLowerCase()}` : undefined}>
-                            {row.yearRowSpan && <td className="comparison-academic-year" rowSpan={row.yearRowSpan}>{row.academicYear}</td>}
-                            <td>{row.term}</td>
+                            {row.yearRowSpan && <td className="comparison-academic-year" rowSpan={row.yearRowSpan}><NarrowLabel full={row.academicYear} short={shortAcademicYear(row.academicYear)} /></td>}
+                            <td><NarrowLabel full={row.term} short={shortTermLabel(row.term)} /></td>
                             <td>
                               {row.sourceTerm.courses.length > 0 ? row.sourceTerm.courses.map(course => {
                                 const courseId = planCourseIdentity(course);
@@ -358,9 +361,6 @@ function PlanComparisonScreen({
                     <MajorRequirementsChecklist plan={plan} />
                     <details className="comparison-disclosure"><summary>More about this plan</summary>
                       <div className="comparison-disclosure-content">
-                        {mathSequenceNotes.length > 0 && <ul className="plan-notes">
-                          {mathSequenceNotes.map(note => <li className="accelerated-math-sequence-note" role="note" key={note}>{note}</li>)}
-                        </ul>}
                         <AdvisorAttention plan={plan} />
                       </div>
                     </details>

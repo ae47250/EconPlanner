@@ -117,11 +117,11 @@ test("selected study abroad appears in the result summary and top strip", async 
   await page.getByRole("button", { name: "I plan to study abroad during my junior year" }).click();
   await page.getByLabel("Study-abroad term").selectOption("winter-2028");
   await page.getByLabel("Also reserve the following May").check();
-  await expect(page.locator(".cp7-summary")).toContainText("No Economics courses in Winter 2028 and Spring/May 2028");
+  await expect(page.locator(".cp7-summary")).toContainText("No Economics courses in Winter 2028 and May 2028");
   await continueToCourses(page);
   await generatePlans(page);
-  await expect(page.locator(".comparison-course-status > p").filter({ hasText: "Study abroad" })).toHaveText("Study abroadWinter 2028 and Spring/May 2028");
-  await expect(page.locator(".comparison-student")).toContainText("Study abroad: Winter 2028 and Spring/May 2028");
+  await expect(page.locator(".comparison-course-status > p").filter({ hasText: "Study abroad" })).toHaveText("Study abroadWinter 2028 and May 2028");
+  await expect(page.locator(".comparison-student")).toContainText("Study abroad: Winter 2028 and May 2028");
 });
 
 test("completed course shows its prerequisite review as soon as both statuses are chosen", async ({ page }) => {
@@ -145,5 +145,5 @@ test("Student readiness Why line names the additional prerequisite", async ({ pa
   await setCourseStatus(page, "ECO 214", "Completed");
   await generatePlans(page);
   await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
-  await expect(page.locator(".result-status-reason").last()).toContainText("ECO 214 is marked completed, but ECO 114 and either MAT 113 or MAT 121 are not marked.");
+  await expect(page.locator(".result-status-reason").last()).toContainText("Your plan has ECO 114 in Winter 2027 and MAT 113 (or MAT 121) in Fall 2027. If you already took them, mark them Completed.");
 });

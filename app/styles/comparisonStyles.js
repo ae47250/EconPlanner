@@ -271,6 +271,7 @@ export const comparisonStyles = css.global`
         .compact-schedule td { font-size: 13px; }
         .compact-schedule td[rowspan] { white-space: nowrap; }
         .compact-schedule td.comparison-academic-year { color: #26364d; font-weight: 700; }
+        .compact-schedule .label-short { display: none; }
         .compact-schedule td:last-child {
           color: #111d36;
           font-weight: 700;
@@ -627,7 +628,7 @@ export const comparisonStyles = css.global`
             white-space: normal;
           }
           .comparison-content { width: min(100% - 1.25rem, 1460px); }
-          .compact-schedule th:first-child { width: 4.5rem; }
+          .compact-schedule th:first-child { width: 3.6rem; }
           .compact-schedule th:nth-child(2) { width: 3rem; }
           .compact-schedule td.comparison-academic-year { font-size: 12px; }
           .comparison-heading-row {
@@ -641,6 +642,15 @@ export const comparisonStyles = css.global`
           .compact-schedule td {
             white-space: normal !important;
             overflow-wrap: anywhere;
+          }
+          /* Year and term columns: short labels, and never break inside a word. */
+          .compact-schedule th:nth-child(-n+2),
+          .compact-schedule td.comparison-academic-year,
+          .compact-schedule td:nth-last-child(2) { overflow-wrap: normal; word-break: normal; hyphens: none; }
+          .compact-schedule .label-short { display: inline; }
+          .compact-schedule .label-full {
+            position: absolute; width: 1px; height: 1px; overflow: hidden;
+            clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
           }
         }
         @media (prefers-reduced-motion: reduce) {
