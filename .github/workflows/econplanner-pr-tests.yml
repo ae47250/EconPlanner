@@ -96,6 +96,7 @@ jobs:
             tests/taking-now-not-offered.test.js \
             tests/elective-capacity-explanation.test.js \
             tests/eco461-completed-note.test.js \
+            tests/move-options-view.test.js \
             tests/catalog-planning-note.test.js \
             tests/cp4b-a-contracts.test.js \
             tests/cp4b-b-contracts.test.js \
