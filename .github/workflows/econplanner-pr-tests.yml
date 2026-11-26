@@ -205,6 +205,7 @@ jobs:
           tests/e2e/econ-planner-parity.spec.js
           tests/e2e/finance-elective-correction.spec.js
           tests/e2e/eco461-completed.spec.js
+          tests/e2e/eco461-taking-now.spec.js
           --fully-parallel --workers=1 --shard=${{ matrix.shard }}/4
 
       - name: Upload Playwright failure evidence

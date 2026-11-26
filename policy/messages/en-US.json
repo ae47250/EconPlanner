@@ -72,6 +72,8 @@
     "infeasibility.courseCapacity": "You have {requiredCourses} required courses left and {remainingTerms} {termNoun} left by {term}. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.",
     "history.hanoverOnlyCompleted": "You marked {course} as completed. Your advisor will confirm it.",
     "history.hanoverOnlyCompletedAdvisor": "Confirm the student completed {course} at Hanover College.",
+    "history.hanoverOnlyTakingNow": "You marked {course} as taking now. Your advisor will confirm it.",
+    "history.hanoverOnlyTakingNowAdvisor": "Confirm the student is taking {course} at Hanover College this term.",
     "history.takingNowNotOffered": "{course} is not on the {term} schedule. If you are taking it at another school, your advisor will check whether it counts.",
     "history.takingNowNotOfferedAdvisor": "Confirm where the student is taking {course} in {term}. It is not on the Hanover {term} schedule.",
     "infeasibility.electives.capacity": "You need {remainingElectives} more Economics {electiveNoun}, but only {maximumElectives} can fit in {terms}. Choose a later graduation year or talk with your advisor.",
