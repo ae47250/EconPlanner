@@ -21,16 +21,16 @@ Status
 Needs advisor attention
 Your planning result
 SCREEN > Other details
-SCREEN > This planning result needs advisor attention before we can show a complete schedule.
-This planning result needs advisor attention before we can show a complete schedule.
-Review the details below with your academic advisor.
-2 additional Economics electives are needed beyond the standard term limit to finish by Spring/May 2026. An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed. Ask your advisor before relying on it.
+SCREEN > We can’t show a full plan yet.
+We can’t show a full plan yet.
+Review the details below with your advisor.
+You need 2 more Economics electives than the usual schedule offers to finish by May 2026. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.
 Review my answers
 SCREEN > Why am I seeing this result?
 Why am I seeing this result?
 Balanced: No complete plan found
 What still needs attention
-No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
+No plan fits by your graduation target. Choose a later graduation year or talk with your advisor.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF

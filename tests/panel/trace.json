@@ -82,6 +82,18 @@
       ]
     },
     {
+      "messageKey": "electives.extraNeededMany",
+      "studentIds": [
+        "41"
+      ]
+    },
+    {
+      "messageKey": "electives.extraNeededOne",
+      "studentIds": [
+        "41"
+      ]
+    },
+    {
       "messageKey": "history.completedMissingOne",
       "studentIds": [
         "16",
@@ -171,9 +183,13 @@
         "09",
         "10",
         "11",
+        "20",
+        "29",
         "31",
         "33",
-        "45"
+        "41",
+        "45",
+        "50"
       ]
     },
     {
@@ -182,9 +198,13 @@
         "09",
         "10",
         "11",
+        "20",
+        "29",
         "31",
         "33",
-        "45"
+        "41",
+        "45",
+        "50"
       ]
     },
     {
@@ -285,6 +305,21 @@
       ]
     },
     {
+      "messageKey": "noPlan.noneFits",
+      "studentIds": [
+        "09",
+        "10",
+        "11",
+        "20",
+        "29",
+        "31",
+        "33",
+        "41",
+        "45",
+        "50"
+      ]
+    },
+    {
       "messageKey": "planNote.mathSequence",
       "studentIds": [
         "02",
@@ -303,6 +338,24 @@
       ]
     },
     {
+      "messageKey": "termLoad.economicsLoadAboveNormal",
+      "studentIds": [
+        "21",
+        "28",
+        "30",
+        "32"
+      ]
+    },
+    {
+      "messageKey": "termLoad.economicsLoadWithOverload",
+      "studentIds": [
+        "21",
+        "28",
+        "30",
+        "32"
+      ]
+    },
+    {
       "messageKey": "termLoad.TERM_CAPACITY_AVAILABLE",
       "studentIds": [
         "30",
@@ -312,6 +365,8 @@
     {
       "messageKey": "termLoad.TERM_OVERLOAD_APPROVED",
       "studentIds": [
+        "21",
+        "28",
         "30",
         "32"
       ]
@@ -918,51 +973,6 @@
     {
       "section": "PDF",
       "sentence": "Check seats and future schedules before you register.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Check the published schedule before you register.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -3895,51 +3905,6 @@
         "32",
         "46",
         "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Future schedules can change.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
       ]
     },
     {
@@ -7179,18 +7144,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "The department recommends no more than 2 per term, and this term uses an advisor-approved overload.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "30",
-        "32"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "The listed section for MAT 217 was recorded as full.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -8668,17 +8621,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "2 additional Economics electives are needed beyond the standard term limit to finish by Spring/May 2026.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "41"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "About you",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -8815,17 +8757,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "41"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "AP credit",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -8871,17 +8802,6 @@
         "03",
         "07",
         "08"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Ask your advisor before relying on it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "41"
       ]
     },
     {
@@ -9483,51 +9403,6 @@
         "02",
         "03",
         "08"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Check the published schedule before you register.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
       ]
     },
     {
@@ -12504,51 +12379,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Future schedules can change.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Graduate next year: Not possible",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -13809,20 +13639,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "20",
-        "29",
-        "41",
-        "50"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "No plan fits with the room saved for other courses.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -14498,7 +14314,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Review the details below with your academic advisor.",
+      "sentence": "Review the details below with your advisor.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -15439,18 +15255,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "The department recommends no more than 2 per term, and this term uses an advisor-approved overload.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "30",
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "The listed section for MAT 217 was recorded as full.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -15755,17 +15559,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "This planning result needs advisor attention before we can show a complete schedule.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "41"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "To finish by May 2027, you must take it in Winter 2027.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -15796,6 +15589,17 @@
       },
       "studentIds": [
         "47"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "We can’t show a full plan yet.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "41"
       ]
     },
     {

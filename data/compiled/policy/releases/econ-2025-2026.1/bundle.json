@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:b43ced59214af74003e7f2e03109178518484db0ce99b100bb087284a864d3b1",
+  "contentHash": "sha256:5ddd61192d0ed3e214629359dfd8a2eb3e85e51259c2f461016fc2bc2eee83c8",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7035,6 +7035,8 @@
     "checklist.statisticsAlreadyFilled": "{course} isn’t needed for the major, because {statisticsCourse} already fills your Statistics requirement.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
+    "electives.extraNeededMany": "You need {count} more Economics electives than the usual schedule offers to finish by {term}. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.",
+    "electives.extraNeededOne": "You need 1 more Economics elective than the usual schedule offers to finish by {term}. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.",
     "history.advisor": "Historical prerequisite evidence is incomplete and requires review.",
     "history.bothTakingNowAfterNeedsMany": "{prerequisites} come before {course}, but all are marked Taking now, so check them. Your advisor will confirm.",
     "history.bothTakingNowAfterNeedsOne": "{prerequisites} comes before {course}, but both are marked Taking now, so check both. Your advisor will confirm.",
@@ -7093,6 +7095,7 @@
     "move.takePrerequisiteFirst": "{course} needs {courses} first.",
     "move.termFull": "Term full. Move a course out first.",
     "move.winterOnly": "{course} is offered only in Winter.",
+    "noPlan.noneFits": "No plan fits by your graduation target. Choose a later graduation year or talk with your advisor.",
     "offering.advisor": "The placement is based on preliminary offering evidence and needs schedule confirmation.",
     "offering.confirmed": "This course is listed in the active exact schedule.",
     "offering.confirmed.advisor": "The active exact schedule supports this placement.",
@@ -7129,14 +7132,16 @@
     "term.move": "This term is not allowed for the selected course.",
     "term.report": "The placement follows canonical term and graduation rules.",
     "term.student": "Place this course in an allowed term.",
-    "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE": "This plan has {economicsCount} Economics courses in {term}. The department recommends no more than 2 per term, but the term is still within the normal course load.",
+    "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE": "{term} has {economicsCount} Economics courses. The department recommends no more than 2.",
     "termLoad.TERM_CAPACITY_AVAILABLE": "This term has {courseCount} courses. The normal limit is {normalCourseUnits}.",
     "termLoad.TERM_CAPACITY_EXCEEDED": "This move would exceed the approved course limit for the term. Extra tuition does not raise that limit.",
     "termLoad.TERM_OVERLOAD_APPROVAL_DENIED": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Advisor approval was not granted.",
-    "termLoad.TERM_OVERLOAD_APPROVED": "In {term}, this plan has {courseCount} courses. The normal limit is {normalCourseUnits}. With advisor approval, and if you are not on academic probation, you may take up to {conditionalMaximumCourseUnits} course units.",
-    "termLoad.TERM_OVERLOAD_APPROVED_WITH_RESERVED": "In {term}, this plan has {plannedCourseCount} courses plus room for {reservedCourseUnits} more. The normal limit is {normalCourseUnits}. With advisor approval, and if you are not on academic probation, you may take up to {conditionalMaximumCourseUnits} course units.",
+    "termLoad.TERM_OVERLOAD_APPROVED": "{term} has {courseCount} courses. The normal limit is {normalCourseUnits}. You can take up to {conditionalMaximumCourseUnits} units with advisor approval, unless you are on academic probation.",
+    "termLoad.TERM_OVERLOAD_APPROVED_WITH_RESERVED": "{term} has {plannedCourseCount} courses plus room for {reservedCourseUnits} more. The normal limit is {normalCourseUnits}. You can take up to {conditionalMaximumCourseUnits} units with advisor approval, unless you are on academic probation.",
     "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "This term would have {courseCount} courses. The normal limit is {normalCourseUnits}. You need advisor approval and must not be on academic probation.",
     "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Overloads are not allowed during academic probation.",
+    "termLoad.economicsLoadAboveNormal": "{term} has {economicsCount} Economics courses. The department recommends no more than 2. This term is also above the normal course load.",
+    "termLoad.economicsLoadWithOverload": "{term} has {economicsCount} Economics courses. The department recommends no more than 2. This term also needs advisor approval for an overload.",
     "termLoad.pending": "A plan may need more than the normal course limit in {terms}. You need advisor approval and must not be on academic probation.",
     "tuition.threshold.exceeded": "This plan totals {modeledUnits} courses in {period}. More than {threshold} may add tuition. Ask the Business Office.",
     "tuition.threshold.possible": "This plan could total {modeledUnits} courses in {period}. More than {threshold} may add tuition. Ask the Business Office.",

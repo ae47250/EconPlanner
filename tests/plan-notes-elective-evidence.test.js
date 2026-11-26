@@ -219,7 +219,7 @@ test("late entrants retain an explicit extra-elective need and unconfirmed adjun
   assert.equal(result.economicsPlanResult.reason, "EXTRA_ELECTIVE_OFFERING_REVIEW_REQUIRED");
   const gap = result.economicsPlanResult.evidence.blockingReasons.find(item => item.unmetElectives);
   assert.equal(gap.unmetElectives, 1);
-  assert.match(gap.message, /course, funding, and instructor are not confirmed/);
+  assert.equal(gap.message, "You need 1 more Economics elective than the usual schedule offers to finish by May 2028. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.");
 });
 
 
@@ -231,7 +231,7 @@ test("early graduation exposes the extra elective need while keeping standard pl
   assert.ok(!result.economicsPlans.some(plan => plan.id === "one-year-early"));
   assert.equal(result.economicsAcceleratedResult.status, "MORE_INFORMATION_NEEDED");
   assert.equal(result.economicsAcceleratedResult.evidence.extraElectiveNeeds[0].unmetElectives, 1);
-  assert.match(result.economicsAcceleratedResult.message, /additional Economics elective.*not confirmed/);
+  assert.match(result.economicsAcceleratedResult.message, /more Economics elective than the usual schedule offers.*isn’t confirmed/);
   for (const plan of result.economicsPlans) for (const term of plan.terms) assert.equal(evaluateTermElectives(term, bundle).status, "ALLOW");
 });
 

@@ -88,7 +88,7 @@ CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count.
+ECO 160 does not count toward the major because only one 100-level Economics elective can count.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -180,7 +180,7 @@ CHECKLIST ROW: Economics elective 4 ECO elective (200+) — May 2029 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count.
+ECO 160 does not count toward the major because only one 100-level Economics elective can count.
 SCREEN > Plan: Explore the Major > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -307,7 +307,7 @@ CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count.
+ECO 160 does not count toward the major because only one 100-level Economics elective can count.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 48 | Balanced | Prepared November 22, 2026
@@ -430,7 +430,7 @@ CHECKLIST CELL: Economics elective (200 level or higher) — Spring/May 2029
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count.
+ECO 160 does not count toward the major because only one 100-level Economics elective can count.
 PDF > Plan: Explore the Major > Plan Notes
 Plan Notes
 Panel Student 48 | Explore the Major | Prepared November 22, 2026

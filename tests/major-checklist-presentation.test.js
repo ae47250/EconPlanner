@@ -304,3 +304,9 @@ test("an old plan creation date cannot make historical seats current in a newly 
   assert.equal(report.terms[0].courses[0].seatStatusDisplay.label, "Seat availability not confirmed");
   assert.deepEqual(report.terms[0].courses[0].availability, availability);
 });
+
+test("owner request 2026-11-26: the checklist note no longer repeats the schedule warning", async () => {
+  const { buildMajorRequirementsChecklist } = await import("../lib/planning/plan-presentation.js");
+  const checklist = buildMajorRequirementsChecklist({ plan: { terms: [] }, mapping: { assignments: [], requirements: [] }, student: { courses: [] } });
+  assert.doesNotMatch(checklist.note, /Future schedules can change/);
+});

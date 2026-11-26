@@ -13,7 +13,6 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	○ Planned
 17, 18, 19, 36	◐ In progress
 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49	✓ Completed
-41	2 additional Economics electives are needed beyond the standard term limit to finish by Spring/May 2026. An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed. Ask your advisor before relying on it.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 42, 44, 46, 47, 48, 49	2026/2027 Fall
 17, 18, 19, 36	2026/2027 Fall 2026
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	2026/2027 May
@@ -175,6 +174,8 @@
 07, 08, 09, 10, 12, 13, 14, 15, 16, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49	ECO 114 ECO 114 ✓ Completed
 01, 02, 03, 05, 17, 19	ECO 114-J
 01, 02, 03, 05, 17, 19	ECO 114-J ▾ | Principles of Macroeconomics
+48	ECO 160 does not count toward the major because only one 100-level Economics elective can count.
+27	ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 27, 48	ECO 161
 11, 16, 39	ECO 161 — Foundations of Economics Previously offered in Fall, Winter, May.
 11, 16, 39	ECO 161 — Winter 2027
@@ -356,10 +357,6 @@
 03, 04	Freshman (custom graduation year)
 02	Freshman (graduating one year early)
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Future offering unconfirmed
-01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 28, 30, 32, 36, 39, 42, 44, 46, 47	Future schedules can change. Check the published schedule before you register.
-48	Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count.
-27	Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
-49	Future schedules can change. Check the published schedule before you register. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Future years
 09, 10, 11, 12	Graduate next year: Not possible
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Graduation target
@@ -376,8 +373,6 @@
 01, 02, 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 17, 18, 19, 21, 22, 23, 24, 25, 26, 28, 30, 32, 36, 42, 44, 46, 47, 49	HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
 11, 16, 27, 39, 48	HS ECO 113, ECO 114, and ECO 161 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 21, 46, 47, 48, 49	In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms. Their order changed from year to year. A published schedule may differ.
-30	In Winter 2027, this plan has 3 courses plus room for 2 more. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
-32	In Winter 2027, this plan has 5 courses. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 50	Junior
 07	Junior (custom graduation year)
 08	Junior (graduating one year early)
@@ -408,6 +403,7 @@
 05, 10, 13, 14, 15, 16, 17, 18, 19, 46, 47, 48	MAT 217 — Winter 2027
 36	MAT 217 | Applied Statistics
 03, 05, 19, 21, 47, 48	MAT 217 ▾ | Applied Statistics
+49	MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 42	MAT 217-A
 42	MAT 217-A ▾ | Applied Statistics
 05, 10, 13, 15, 16, 19, 46, 47, 48	MAT 217-J
@@ -442,7 +438,7 @@
 05, 16, 17, 18, 19, 20, 29, 32, 41, 42, 46, 47, 50	Needs advisor attention
 02, 03, 07, 08, 10, 11, 21, 28, 30	Needs confirmation
 08, 46, 47, 48, 49	No Economics course this term
-20, 29, 41, 50	No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
+20, 29, 41, 50	No plan fits by your graduation target. Choose a later graduation year or talk with your advisor.
 29, 50	No plan fits with the room saved for other courses.
 20	No plan fits with these study-abroad terms.
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	None
@@ -574,7 +570,7 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Requirement | Course / term | Status
 04, 06, 31, 33, 34, 35, 37, 38, 40, 43, 45	Review graduation timeline
 41	Review my answers
-41	Review the details below with your academic advisor.
+41	Review the details below with your advisor.
 20	Review your choices
 31, 33, 34, 35, 37, 38, 40, 43, 45	Review your graduation timeline and bring this result to your academic advisor.
 29, 50	Save less room
@@ -625,10 +621,6 @@
 08, 09, 10, 11, 12, 13, 14, 15, 16, 21	This plan covers Winter 2027 through Spring/May 2028.
 02, 03, 05, 47, 48, 49	This plan covers Winter 2027 through Spring/May 2029.
 01, 02, 46	This plan covers Winter 2027 through Spring/May 2030.
-30	This plan has 3 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
-28	This plan has 3 Economics courses in Winter 2027. The department recommends no more than 2 per term, but the term is still within the normal course load.
-21	This plan has 3 Economics courses in Winter 2028. The department recommends no more than 2 per term, but the term is still within the normal course load.
-32	This plan has 4 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 11, 13, 21	This plan places BUSN 323 in Fall 2027. Its future offering is not confirmed.
 02, 03, 05, 19, 47, 48	This plan places BUSN 323 in Fall 2028. Its future offering is not confirmed.
 01, 02, 46	This plan places BUSN 323 in Fall 2029. Its future offering is not confirmed.
@@ -642,9 +634,9 @@
 27, 28, 30, 36, 39, 42, 44	This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 07, 08, 11, 13, 16, 17, 21	This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2024–25 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.
 23	This plan uses the current Economics major requirements. Your plan counts PSY 217. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
-41	This planning result needs advisor attention before we can show a complete schedule.
 02, 08	Timeline: One year early
 47	Transfer credit Transfer credit. Confirm with your advisor that it counts.
+41	We can’t show a full plan yet.
 03	We don’t know if there are open seats in ECO 113, ECO 114, and ECO 222. Check the registration system before you register.
 01, 02	We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217. Check the registration system before you register.
 02, 03	We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217. Check the registration system before you register.
@@ -692,7 +684,13 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Winter
 21	Winter 2027
 20	Winter 2027 and Spring/May 2027
+30	Winter 2027 has 3 courses plus room for 2 more. The normal limit is 4. You can take up to 5.25 units with advisor approval, unless you are on academic probation.
+28	Winter 2027 has 3 Economics courses. The department recommends no more than 2.
+30	Winter 2027 has 3 Economics courses. The department recommends no more than 2. This term also needs advisor approval for an overload.
+32	Winter 2027 has 4 Economics courses. The department recommends no more than 2. This term also needs advisor approval for an overload.
+32	Winter 2027 has 5 courses. The normal limit is 4. You can take up to 5.25 units with advisor approval, unless you are on academic probation.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49	Winter 2027:
+21	Winter 2028 has 3 Economics courses. The department recommends no more than 2.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Year
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Year | Term | Courses
 09, 10, 11, 12	You cannot finish by May 2027. The plan below is for May 2028.
@@ -701,6 +699,7 @@
 09	You have 8 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 10, 11	You have 10 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 25	You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.
+41	You need 2 more Economics electives than the usual schedule offers to finish by May 2026. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.
 29	You saved room for 2 other courses in Winter 2027. That leaves too little room for the major. Save room for fewer courses and try again.
 50	You saved room for 14 other courses across 5 terms. That leaves too little room for the major. Save room for fewer courses and try again.
 38	You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.

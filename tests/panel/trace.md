@@ -9,6 +9,8 @@ Rule or reason code → policy message keys → panel students.
 - **checklist.prerequisiteNotCompleted** → 16, 17, 18, 32
 - **checklist.prerequisiteTakingNow** → 16, 17, 18, 32
 - **checklist.statisticsAlreadyFilled** → 27, 49
+- **electives.extraNeededMany** → 41
+- **electives.extraNeededOne** → 41
 - **history.completedMissingOne** → 16, 32
 - **history.completedPrerequisiteTakingNowOne** → 18
 - **history.scheduledPrerequisite** → 16, 32
@@ -20,8 +22,8 @@ Rule or reason code → policy message keys → panel students.
 - **history.takingNowNotOffered** → 17
 - **history.takingNowNotOfferedAdvisor** → 17
 - **infeasibility.capstone.seniorStanding** → 04, 06
-- **infeasibility.courseCapacity** → 09, 10, 11, 31, 33, 45
-- **infeasibility.electives.capacity** → 09, 10, 11, 31, 33, 45
+- **infeasibility.courseCapacity** → 09, 10, 11, 20, 29, 31, 33, 41, 45, 50
+- **infeasibility.electives.capacity** → 09, 10, 11, 20, 29, 31, 33, 41, 45, 50
 - **infeasibility.electives.conflict** → 37, 38
 - **infeasibility.electives.spring** → 37, 38
 - **infeasibility.finance.forced** → 37
@@ -30,10 +32,13 @@ Rule or reason code → policy message keys → panel students.
 - **move.sameTermPrerequisiteOtherApproval** → 02, 16, 19, 32
 - **move.takePrerequisiteFirst** → 16, 17, 18, 32
 - **move.winterOnly** → 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 35, 36, 39, 42, 43, 44, 46, 47, 48, 49
+- **noPlan.noneFits** → 09, 10, 11, 20, 29, 31, 33, 41, 45, 50
 - **planNote.mathSequence** → 02, 16, 19, 32
 - **termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE** → 21, 28, 30, 32
+- **termLoad.economicsLoadAboveNormal** → 21, 28, 30, 32
+- **termLoad.economicsLoadWithOverload** → 21, 28, 30, 32
 - **termLoad.TERM_CAPACITY_AVAILABLE** → 30, 32
-- **termLoad.TERM_OVERLOAD_APPROVED** → 30, 32
+- **termLoad.TERM_OVERLOAD_APPROVED** → 21, 28, 30, 32
 - **termLoad.TERM_OVERLOAD_APPROVED_WITH_RESERVED** → 30, 32
 - **termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED** → 30, 32
 - **tuition.threshold.exceeded** → 30, 32
@@ -72,7 +77,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Before you register
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48): BUSN 323 — Investments
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check seats and future schedules before you register.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the published schedule before you register.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the registration system before you register.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): Check the registration system for current availability.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 18): Check the student’s earlier course or transfer records to confirm whether ECO 113 was completed before ECO 213.
@@ -201,7 +205,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 36, 42, 46, 47, 48, 49): Finish these classes first
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): For terms without a published schedule, this plan assumes no more than one Economics elective per term.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 07, 08, 10, 11, 16, 17, 18, 19, 21, 28, 30, 32, 46, 47): For your advisor
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Future schedules can change.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Future years
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Graduation target: May 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21): Graduation target: May 2028
@@ -385,7 +388,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): TERM: 2029/2030 Fall
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): TERM: 2029/2030 May
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 46): TERM: 2029/2030 Winter
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 30, 32): The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): The listed section for MAT 217 was recorded as full.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): The student's answers show ECO 113 is marked “Taking now.”
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): The student's answers show MAT 121 is marked “Taking now.”
@@ -458,16 +460,13 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17, 18, 19, 36): ◐ In progress
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49): ✓ Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): 2 additional Economics electives are needed beyond the standard term limit to finish by Spring/May 2026.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): About you
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Actual offerings may differ.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Add Econ course
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 46): AP credit
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 46): AP credit AP/exam credit.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): Ask the ECO 213 instructor for approval.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08): Ask your advisor and the Registrar to confirm you can take ECO 461 then.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): Ask your advisor before relying on it.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 16, 17, 18, 19, 32, 42, 46, 47): Ask your advisor to review the reason below before relying on this plan.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Balanced
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20, 29, 41, 50): Balanced: No complete plan found
@@ -509,7 +508,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): Change your graduation term or study-abroad choice and try again.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check seats and future schedules before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 08): Check the approval and standing notes on each plan before registering.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the published schedule before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Check the registration system before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): Check the registration system for current availability.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 10, 11, 21, 28, 30): Check this plan's approval and standing notes before registering.
@@ -665,7 +663,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 46): Freshman
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 04): Freshman (custom graduation year)
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Freshman (graduating one year early)
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Future schedules can change.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): Graduate next year: Not possible
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): Graduation target
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): Graduation target: May 2026
@@ -729,7 +726,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): More planning details
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 16, 17, 18, 19, 20, 29, 32, 41, 42, 46, 47, 50): Needs advisor attention
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08, 10, 11, 21, 28, 30): Needs confirmation
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20, 29, 41, 50): No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): No plan fits with the room saved for other courses.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): No plan fits with these study-abroad terms.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): None
@@ -757,7 +753,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Requirement | Course / term | Status
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 31, 33, 34, 35, 37, 38, 40, 43, 45): Review graduation timeline
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): Review my answers
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): Review the details below with your academic advisor.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): Review the details below with your advisor.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): Review your choices
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 31, 33, 34, 35, 37, 38, 40, 43, 45): Review your graduation timeline and bring this result to your academic advisor.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): Save less room
@@ -801,7 +797,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 46): TERM: 2029/2030 May
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 46): TERM: 2029/2030 Winter
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): That leaves too little room for the major.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 30, 32): The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): The listed section for MAT 217 was recorded as full.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): The plan below is for May 2028.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 09, 12, 13, 14, 15, 22, 23, 24, 25, 26, 27, 36, 39, 44, 48, 49): The plan meets the major rules.
@@ -818,10 +813,10 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03): This plan places BUSN 323 in Winter 2029.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 11, 13): This plan puts a different number of courses in each year than the usual Balanced plan.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): This plan uses the current Economics major requirements.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): This planning result needs advisor attention before we can show a complete schedule.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 35, 43): To finish by May 2027, you must take it in Winter 2027.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Transfer credit
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Transfer credit Transfer credit.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): We can’t show a full plan yet.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03): We don’t know if there are open seats in ECO 113, ECO 114, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03): We don’t know if there are open seats in ECO 113, ECO 114, MAT 113, and MAT 217.

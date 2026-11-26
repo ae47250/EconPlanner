@@ -116,7 +116,7 @@ for (const standing of ["senior","junior"]) for (const reserved of [0,1]) test(`
   }
   const report = await buildEconomicsReportFromStudent(student,student.planCreationDate,plan,[plan]);
   assert.equal(report.selectedPlan.validation.policyDecision.decisions.find(decision => decision.reasonCode === load.reasonCode && decision.subject.termId === "2027-WINTER").status,load.status);
-  if (reserved) assert.match(renderEconomicsHtml(report,template), /In Winter 2027, this plan has 4 courses plus room for 1 more\. The normal limit is 4\./);
+  if (reserved) assert.match(renderEconomicsHtml(report,template), /Winter 2027 has 4 courses plus room for 1 more\. The normal limit is 4\./);
 });
 
 test("load classifications distinguish missing, partial, denied, probation, approved ceilings and tuition", () => {
