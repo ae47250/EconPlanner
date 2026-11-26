@@ -304,3 +304,12 @@ test("an old plan creation date cannot make historical seats current in a newly 
   assert.equal(report.terms[0].courses[0].seatStatusDisplay.label, "Seat availability not confirmed");
   assert.deepEqual(report.terms[0].courses[0].availability, availability);
 });
+
+test("owner request 2026-11-26: the schedule warning appears once, in the status line or the checklist", async () => {
+  const { buildMajorRequirementsChecklist } = await import("../lib/planning/plan-presentation.js");
+  const note = feasibilityStatus => buildMajorRequirementsChecklist({ plan: { terms: [], feasibilityStatus }, mapping: { assignments: [], requirements: [] }, student: { courses: [] } }).note;
+  // These statuses already show a schedule warning in the plan's status line.
+  for (const status of ["CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY"]) assert.doesNotMatch(note(status), /Future schedules can change/);
+  // Every other plan keeps the warning in the checklist so it is never lost.
+  for (const status of ["VERIFIED_FEASIBLE", "NOT_FEASIBLE", "SEARCH_INCOMPLETE", undefined]) assert.match(note(status), /Future schedules can change/);
+});

@@ -26,7 +26,7 @@ test("a matched prerequisite empty domain retains its specific explanation for p
 test("unsupported prerequisite gaps do not override unknown or incomplete-search outcomes", () => {
   const incomplete = noPlanPresentation("SEARCH_INCOMPLETE", "SEARCH_INCOMPLETE", prerequisiteEvidence, prerequisites);
   assert.match(incomplete.message, /does not mean a plan is impossible/);
-  assert.match(noPlanPresentation("NEEDS_ADVISOR_ATTENTION", "UNEXPLAINED", prerequisiteEvidence, prerequisites).title, /advisor attention/);
+  assert.match(noPlanPresentation("NEEDS_ADVISOR_ATTENTION", "UNEXPLAINED", prerequisiteEvidence, prerequisites).title, /^We can’t show a full plan yet\.$/);
   assert.match(noPlanPresentation("NEEDS_ADVISOR_ATTENTION", "MISSING_OFFERING").message, /does not mean you cannot finish/);
 });
 

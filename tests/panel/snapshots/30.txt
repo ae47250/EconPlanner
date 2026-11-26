@@ -53,10 +53,10 @@ SCREEN > Plan: Balanced > Notes: Things to keep in mind
 Things to keep in mind
 Before you register
 We don’t know if there are open seats in ECO 214, ECO 221, ECO 461, and ECO 222. Check the registration system before you register.
-In Winter 2027, this plan has 3 courses plus room for 2 more. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
+Winter 2027 has 3 courses plus room for 2 more. The normal limit is 4. You can take up to 5.25 units with advisor approval, unless you are on academic probation.
 Check with your advisor
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
-This plan has 3 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
+Winter 2027 has 3 Economics courses. The department recommends no more than 2. This term uses an approved overload.
 Your planned courses and saved room total 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 SCREEN > Plan: Balanced > Checklist
@@ -77,7 +77,6 @@ CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
-Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -143,10 +142,10 @@ PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Before you register
 We don’t know if there are open seats in ECO 214, ECO 221, ECO 461, and ECO 222. Check the registration system before you register.
-In Winter 2027, this plan has 3 courses plus room for 2 more. The normal limit is 4. With advisor approval, and if you are not on academic probation, you may take up to 5.25 course units.
+Winter 2027 has 3 courses plus room for 2 more. The normal limit is 4. You can take up to 5.25 units with advisor approval, unless you are on academic probation.
 Check with your advisor
 Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
-This plan has 3 Economics courses in Winter 2027. The department recommends no more than 2 per term, and this term uses an advisor-approved overload.
+Winter 2027 has 3 Economics courses. The department recommends no more than 2. This term uses an approved overload.
 Your planned courses and saved room total 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 PDF > Plan: Balanced > For your advisor
@@ -195,7 +194,6 @@ CHECKLIST CELL: ECO 222 — Spring/May 2027
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
-Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 30 | Balanced | Prepared November 22, 2026

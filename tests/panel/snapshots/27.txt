@@ -70,7 +70,7 @@ CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
+ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -177,7 +177,7 @@ CHECKLIST CELL: ECO 222 — Spring/May 2027
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
-Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
+ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 27 | Balanced | Prepared November 22, 2026
