@@ -117,12 +117,13 @@ test("a custom target more than one year early reports proven senior-standing in
   const presentation = noPlanPresentation(result.economicsPlanResult.category, result.economicsPlanResult.reason, result.economicsPlanResult.evidence);
   assert.match(presentation.message, /ECO 461 requires senior standing and is offered only in Winter/);
 
-  const visibleGaps = result.economicsPlanningGaps.filter(item => item.studentVisible !== false);
-  const text = visibleGaps.map(item => item.reason || item.message).join(" ");
-  assert.equal(visibleGaps.length, 1);
-  assert.match(text, /^These requirements did not fit by May 2028:/);
-  assert.match(text, /: ECO 461\.$/);
-  assert.doesNotMatch(text, /Requirement (?:eco-elective-\d+|cognate|statistics|finance) remains unscheduled/);
+  // The rule proves this result, so the full search is skipped and there are no search gaps. For a
+  // proven result the screen explains it with the blocking reasons only (plannerSummary.js), so check those.
+  const reasons = result.economicsPlanResult.evidence.blockingReasons;
+  assert.equal(reasons.length, 1);
+  assert.equal(reasons[0].code, "CAPSTONE_SENIOR_STANDING_NO_ELIGIBLE_WINTER");
+  assert.match(reasons[0].message, /^ECO 461 requires senior standing and is offered only in Winter\./);
+  assert.equal(result.economicsPlanningGaps.some(item => /remains unscheduled/.test(item.reason || item.message || "")), false);
 });
 
 test("AP or exam credit produces a visible advisor-attention reason", async () => {
