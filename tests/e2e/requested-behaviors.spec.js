@@ -192,7 +192,8 @@ test('the verified ECO 321 section appears in a junior plan instead of BUSN 323'
   await expect(card.locator('.compact-schedule')).not.toContainText('BUSN 323');
 });
 
-test('a Ready to plan status includes the petition paperwork sentence on screen and PDF',async ({page}) => {
+// Owner decision 2026-11-26: a plan that needs a catalog petition is "Needs confirmation", not "Ready to plan".
+test('a petition plan is Needs confirmation with the paperwork sentence on screen and PDF',async ({page}) => {
   await resetPlanner(page);
   await chooseStanding(page,'senior');
   await page.locator('details.more-details > summary').first().click();
@@ -205,7 +206,7 @@ test('a Ready to plan status includes the petition paperwork sentence on screen 
   const mapped = (await response.json()).programs.find(item=>item.program?.id==='economics-base');
   const plan = mapped.economicsPlans.find(item=>item.id==='balanced');
   expect(plan.readinessStatus).toBe('STUDENT_READY');
-  await expect(page.locator('.result-status-value')).toHaveText('Ready to plan');
+  await expect(page.locator('.result-status-value')).toHaveText('Needs confirmation');
   const status = page.locator('.result-status-reason');
   await expect(status).toHaveCount(1);
   await expect(status).toContainText('See the notes below for paperwork to file.');
@@ -213,5 +214,7 @@ test('a Ready to plan status includes the petition paperwork sentence on screen 
     student:response.request().postDataJSON().student,selectedPlan:plan,plans:mapped.economicsPlans,format:'html'
   }});
   expect(report.status()).toBe(200);
-  expect(await report.text()).toContain('See the notes below for paperwork to file.');
+  const html = await report.text();
+  expect(html).toContain('See the notes below for paperwork to file.');
+  expect(html).toContain('Status: Needs confirmation');
 });
