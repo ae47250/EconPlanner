@@ -249,7 +249,7 @@ function CourseDragHandle({ course, termId, planId, compact = false, busy, setPe
                                   const destination = moving.course.moveDestinationOptions?.find(option => option.id === target?.dataset.termId);
                                   if (!target || target.dataset.planScope !== planId || destination?.status === "CURRENT") return;
                                   if (!["ALLOWED", "CONDITIONAL"].includes(destination?.status)) {
-                                    setDropMessage(studentFriendlyUnavailableReason(destination, policyMessages));
+                                    setDropMessage(studentFriendlyUnavailableReason({ ...destination, movingCourse: moving.course.course }, policyMessages));
                                     return;
                                   }
                                   const drop = { ...moving, destination, anchorElement: target };

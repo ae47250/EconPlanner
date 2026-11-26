@@ -825,7 +825,7 @@ for (const authority of ["ECO 213 instructor", "ECO 461 instructor"]) {
       await card.getByRole("button", { name: "Change ECO 213", exact: true }).click();
       const actions = card.locator('.plan-course-actions[aria-label="Changes for ECO 213"]');
       await actions.locator('[data-change-choice="move:fall-2027"]').click();
-      await expect(actions).toContainText("Same term as MAT 113. One is a prerequisite for the other, so instructor approval is needed.");
+      await expect(actions).toContainText("MAT 113 comes before ECO 213. Taking both in Fall 2027 needs the ECO 213 instructor’s approval.");
       const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/majors/map") && response.request().postDataJSON()?.action === "validate-plan");
       await actions.getByRole("button", { name: "Apply change", exact: true }).click();
       const response = await responsePromise;

@@ -144,9 +144,66 @@
       ]
     },
     {
-      "messageKey": "move.takePrerequisiteFirst",
+      "messageKey": "move.sameTermPrerequisiteApproval",
       "studentIds": [
-        "19"
+        "16",
+        "17",
+        "18",
+        "32"
+      ]
+    },
+    {
+      "messageKey": "move.sameTermPrerequisiteOtherApproval",
+      "studentIds": [
+        "02",
+        "16",
+        "17",
+        "18",
+        "32"
+      ]
+    },
+    {
+      "messageKey": "move.winterOnly",
+      "studentIds": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "30",
+        "32",
+        "35",
+        "36",
+        "39",
+        "42",
+        "43",
+        "44",
+        "46",
+        "47",
+        "48",
+        "49"
       ]
     },
     {
@@ -3504,51 +3561,6 @@
         "36",
         "39",
         "42",
-        "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "01",
-        "02",
-        "03",
-        "05",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "30",
-        "32",
-        "36",
-        "39",
-        "42",
-        "44",
         "46",
         "47",
         "48",
@@ -7943,50 +7955,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "32"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -12290,18 +12258,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "ECO 461 is offered only in Winter.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "35",
-        "43"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "EconPlanner",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -15177,28 +15133,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Taking both in one term needs the ECO 213 instructor's approval.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "02"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Taking both in one term needs the ECO 214 instructor's approval.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "02"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -16446,50 +16380,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Why: You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Why: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Why: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Why: Your advisor needs to confirm that your AP credit for ECO 113 and MAT 121 counts toward the major.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -16634,17 +16524,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "You are taking ECO 214, but ECO 114, which comes before it, is not marked.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "You can also drag it by the ⠿ handle.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -16700,39 +16579,6 @@
         "10",
         "11",
         "12"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "32"
       ]
     },
     {

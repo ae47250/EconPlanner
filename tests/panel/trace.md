@@ -18,7 +18,9 @@ Rule or reason code → policy message keys → panel students.
 - **infeasibility.electives.spring** → 37, 38
 - **infeasibility.finance.forced** → 37
 - **infeasibility.requiredOffering** → 40
-- **move.takePrerequisiteFirst** → 19
+- **move.sameTermPrerequisiteApproval** → 16, 17, 18, 32
+- **move.sameTermPrerequisiteOtherApproval** → 02, 16, 17, 18, 32
+- **move.winterOnly** → 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 35, 36, 39, 42, 43, 44, 46, 47, 48, 49
 - **termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE** → 21, 28, 30, 32
 - **termLoad.TERM_CAPACITY_AVAILABLE** → 30, 32
 - **termLoad.TERM_OVERLOAD_APPROVED** → 30, 32
@@ -183,7 +185,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49): ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461 also counts toward your Writing 2 (W2) requirement.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Economics elective (200 level or higher) — Pick a course when the schedule comes out.
@@ -437,10 +438,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): We don’t know if there are open seats in MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): What to check for this plan
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): Winter 2027:
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): You are taking ECO 214, but ECO 114, which comes before it, is not marked.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16): You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 32): You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Your Economics major checklist
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Your Economics major plan
@@ -658,7 +655,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 461 · Senior Seminar: Econometrics
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461 also counts toward your Writing 2 (W2) requirement.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06): ECO 461 cannot fit before this graduation target without senior standing.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 35, 43): ECO 461 is offered only in Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): EconPlanner
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): EconPlanner is a planning guide, not an official degree audit.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 19, 46, 47, 48, 49): Explore the Major
@@ -794,8 +790,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): Study abroad: Winter 2027 and Spring/May 2027
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Take MAT 113 before ECO 213.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Take MAT 113 before ECO 214.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Taking both in one term needs the ECO 213 instructor's approval.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Taking both in one term needs the ECO 214 instructor's approval.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 21): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
@@ -872,10 +866,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 20, 29, 31, 33, 34, 35, 37, 38, 40, 41, 43, 45, 50): Why am I seeing this result?
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): Why: The listed section for MAT 217 was recorded as full.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): Why: You are taking ECO 213 and MAT 121 together.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17): Why: You are taking ECO 214, but ECO 114, which comes before it, is not marked.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): Why: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16): Why: You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 32): Why: You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05): Why: Your advisor needs to confirm that your AP credit for ECO 113 and MAT 121 counts toward the major.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 46): Why: Your advisor needs to confirm that your AP credit for ECO 113, ECO 114, and MAT 121 counts toward the major.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Why: Your advisor needs to confirm that your transfer credit for ECO 113 and MAT 121 counts toward the major.
@@ -883,12 +873,8 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): Winter 2027 and Spring/May 2027
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): Winter 2027:
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Year | Term | Courses
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17): You are taking ECO 214, but ECO 114, which comes before it, is not marked.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): You can also drag it by the ⠿ handle.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): You cannot finish by May 2027.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16): You marked ECO 213 completed, but ECO 113, which comes before it, is not marked completed.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 32): You marked ECO 213 completed, but MAT 113 or MAT 121, which comes before it, is not marked completed.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 50): You saved room for 14 other courses across 5 terms.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29): You saved room for 2 other courses in Winter 2027.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): Your answers do not show either MAT 113 or MAT 121 completed before ECO 213.
