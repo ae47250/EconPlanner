@@ -92,7 +92,7 @@
     "move.mayOnlyUnconfirmedTermUnknown": "{course} is normally offered only in May. No section is confirmed for this term.",
     "move.sameTermPrerequisiteApproval": "{prerequisite} comes before {course}. Taking both in {term} needs the {course} instructor’s approval.",
     "move.sameTermPrerequisiteOtherApproval": "{prerequisite} comes before {course}. Taking both in {term} needs {authority} approval.",
-    "move.intermediateSeparateTerms": "{courses} must be in different terms.",
+    "move.intermediateSeparateTerms": "{courses} must be in different terms unless that year’s published schedule lists both.",
     "move.notOfferedInMay": "{course} isn’t offered in May.",
     "move.statisticsFirst": "{course} needs a statistics course first.",
     "move.noSectionFits": "No {course} section fits in {term}.",

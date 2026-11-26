@@ -142,7 +142,11 @@ test("blocked-move summaries and course markers use student-facing language", ()
     "ECO 213 needs MAT 113 or MAT 121 first.");
   assert.equal(studentFriendlyUnavailableReason({ status: "BLOCKED", reasonCodes: ["INTERMEDIATE_SAME_TERM_REQUIRES_VERIFIED_SCHEDULE"], reasonTerm: "Fall 2028",
     message: "ECO 213 and ECO 214 need separate terms unless that year's verified schedule supports both in this term. This term has 2 courses. The normal limit is 4." }, displayMessages),
-    "ECO 213 and ECO 214 must be in different terms.");
+    "ECO 213 and ECO 214 must be in different terms unless that year’s published schedule lists both.");
+  assert.equal(studentFriendlyUnavailableReason({ status: "BLOCKED", message: "ECO 213 is missing prerequisites or a required permission: ECO 113.", movingCourse: "ECO 213" }, displayMessages),
+    "ECO 213 needs ECO 113 first.");
+  assert.equal(studentFriendlyUnavailableReason({ status: "BLOCKED", message: "ECO 471 is missing prerequisites or a required permission: DEPARTMENT_PERMISSION.", movingCourse: "ECO 471" }, displayMessages),
+    displayMessages["move.advisorCheck"]);
   assert.equal(studentFriendlyUnavailableReason({ status: "BLOCKED", reasonCodes: ["ECO_461_WINTER_ONLY"], reasonCourse: "ECO 461", reasonTerm: "Fall 2029",
     message: "ECO 461 must be placed in Winter. This term has 3 courses. The normal limit is 4." }, displayMessages),
     "ECO 461 is offered only in Winter.");

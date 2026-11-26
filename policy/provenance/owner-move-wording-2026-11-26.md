@@ -9,9 +9,9 @@ Wording only. Which moves are allowed, blocked or conditional is unchanged. Each
 | Case | Before | After |
 |---|---|---|
 | Same-term prerequisite approval | Same term as {course}. One is a prerequisite for the other, so instructor approval is needed. | {prerequisite} comes before {course}. Taking both in {term} needs the {course} instructor’s approval. |
-| ECO 213 and ECO 214 in one unpublished term | This move needs an advisor’s review. | ECO 213 and ECO 214 must be in different terms. |
+| ECO 213 and ECO 214 in one unpublished term | This move needs an advisor’s review. | ECO 213 and ECO 214 must be in different terms unless that year’s published schedule lists both. |
 | Course not supported in May | Not confirmed for May. | {course} isn’t offered in May. |
-| Missing prerequisite | {courses} is a prerequisite for this class. Take it first. | {course} needs {prerequisites} first. |
+| Missing prerequisite | {courses} is a prerequisite for this class. Take it first. | {course} needs {courses} first. |
 | ECO 461 missing statistics | (same as above) | ECO 461 needs a statistics course first. |
 | Moving a prerequisite after its dependent | {moving} is a prerequisite for {dependent} and must come first. Move {dependent} later, then try again. | {moving} must come before {dependent}. Move {dependent} later first. |
 | No verified conflict-free section | No conflict-free section is available in the published {term} schedule. | No {course} section fits in {term}. |
@@ -26,6 +26,9 @@ Wording only. Which moves are allowed, blocked or conditional is unchanged. Each
 - ECO 461 outside Winter (`ECO_461_WINTER_ONLY`) also fell through to “This move needs an advisor’s review.” It now reads “ECO 461 is offered only in Winter.” Same kind of fix as the ECO 213/214 case.
 - The two fallback messages that said “this class” now name the course: “{course} has a prerequisite that must come first.” and “{course} isn’t offered or allowed in {term}.”
 - “ECO elective” placeholders are shown as “Economics elective”.
+
+- ECO 213/214: the owner’s text was “ECO 213 and ECO 214 must be in different terms.” The rule allows both in one term when that year’s verified schedule lists both (`lib/decision-engine/placement.js`), so “unless that year’s published schedule lists both” was added to keep it true.
+- A block reading “missing prerequisites or a required permission” with no course named now shows the advisor-check sentence instead of naming a course.
 
 ## Where
 
