@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:a096abd666429fc3ea1570bd595646517e19a0ab81e5fe76261d38d988ce7c3b",
+  "contentHash": "sha256:9d5393d687a32c922e497130aae882bd442cefcb8a85c8255737d75ddc57d86b",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7037,6 +7037,7 @@
     "checklist.creditConfirmTransfer": "Transfer credit. Confirm with your advisor that it counts.",
     "checklist.prerequisiteNotCompleted": "{prerequisite} isn’t marked completed, and {course} needs it first. Ask your advisor to check.",
     "checklist.prerequisiteTakingNow": "{prerequisite} is marked Taking now, but {course} needs it done first. Ask your advisor to check.",
+    "checklist.reviewRecord": "Ask your advisor to review the record for {course}.",
     "checklist.statisticsAlreadyFilled": "{course} isn’t needed for the major, because {statisticsCourse} already fills your Statistics requirement.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
@@ -7241,7 +7242,6 @@
       }
     ],
     "display": {
-      "adjunct": "An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.",
       "capstone": "Senior capstone · Winter. Final year preferred.",
       "caveat": "A past schedule does not guarantee a course will be offered again.",
       "completedAcademicYears": [

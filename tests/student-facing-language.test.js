@@ -149,7 +149,6 @@ test("blocked-move summaries and course markers use student-facing language", ()
     message: "ECO 461 must be placed in Winter. This term has 3 courses. The normal limit is 4." }, displayMessages),
     "ECO 461 is offered only in Winter.");
   assert.equal(studentFriendlyCourseMarker("Approval required"), "Approval needed");
-  assert.equal(studentFriendlyCourseMarker("Eligibility review required"), "Ask your advisor whether it counts toward the major");
   assert.equal(studentFriendlyCourseMarker("Confirm senior standing"), "Ask your advisor and the Registrar to confirm senior standing");
 });
 

@@ -107,6 +107,7 @@
     "noPlan.noneFits": "No plan fits all your choices. Change your answers, choose a later graduation year, or talk with your advisor.",
     "checklist.checkEnrollment": "Check enrollment for {course}.",
     "checklist.askWhetherCounts": "Ask your advisor whether {course} counts toward the major.",
+    "checklist.reviewRecord": "Ask your advisor to review the record for {course}.",
     "checklist.concurrentPrerequisite": "{prerequisite} comes before {course}. Taking both in the same term needs the {course} instructor’s approval.",
     "catalog.petitionPlanCounts": "Your plan counts {courses}. Your {shortYear} catalog does not accept {pronoun}. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",
     "catalog.petitionPlanMayUse": "Your {shortYear} catalog does not count {courses} toward the major. If your plan uses {pronoun}, ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",

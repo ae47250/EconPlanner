@@ -266,13 +266,3 @@ test("a year-only placeholder needs a legal one-elective-per-term witness", () =
   assert.equal(oracleEvaluateElectiveTerm(oracle, make(4).terms[0]).status, "BLOCK");
 });
 
-test("owner request 2026-11-26: the plan note and the no-plan message use the same extra-elective sentence", () => {
-  const bundle = runtimePolicyBundle();
-  const plan = { unmetElectiveNeed: 1, terms: [{ publicationStatus: "PLANNING_PROJECTION", courses: [] }], validation: {} };
-  const texts = buildEconomicsPlanNotes({ plan, policyBundle: bundle }).flatMap(note => (note.items || []).map(item => item.text));
-  const shared = "An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.";
-  assert.ok(texts.includes(shared), texts.join(" | "));
-  // The no-plan message ends with exactly the same sentence.
-  for (const key of ["electives.extraNeededOne", "electives.extraNeededMany"]) assert.ok(bundle.messages[key].endsWith(` ${shared}`), key);
-  assert.ok(!texts.some(text => /course, funding, and instructor/.test(text)));
-});

@@ -6,7 +6,9 @@ Authority: project owner, explicit instruction in the clean-up session dated 202
 |---|---|---|
 | Checklist and plan-grid note for an enrollment review (`checklist.checkEnrollment`) | Check this class’s enrollment status | Check enrollment for {course}. |
 | Checklist note for an unrecognised review (`checklist.askWhetherCounts`) | Ask an advisor whether this class counts | Ask your advisor whether {course} counts toward the major. |
-| Generic course markers with no course name (`studentFriendlyCourseMarker`) | Ask an advisor whether this class counts / Check this class’s enrollment status | Ask your advisor whether it counts toward the major / Check enrollment status (shown beside the course) |
-| Plan note for an unconfirmed extra elective (`policy/historical-offerings/economics-advice.json`, `adjunct`) | An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed. Ask your advisor before relying on it. | An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor. |
+| Checklist note for an unconfirmed record (`checklist.askWhetherCounts`) | Ask your advisor whether this course counts toward the major. | Ask your advisor whether {course} counts toward the major. (Also stops a near-duplicate of the note above appearing on the same row.) |
+| Checklist note for a planned course with no record (`checklist.reviewRecord`) | Ask your advisor to review this course's record. | Ask your advisor to review the record for {course}. |
 
-The no-plan extra-electives message (`electives.extraNeededOne/Many`) now ends with exactly the same sentence as the plan note, so the student never sees two versions; a test checks they stay identical.
+Removed as unused (no student could see them):
+- The plan note for an unconfirmed extra elective (`lib/planning/plan-notes.js`, `adjunct` in `policy/historical-offerings/economics-advice.json`): it depended on a value nothing in the planner ever sets. The extra-elective sentence students do see is the no-plan message (`electives.extraNeededOne/Many`), so there is now only one version.
+- Two generic course markers (“Eligibility review required”, “Enrollment review required”) in `studentFriendlyCourseMarker`: nothing creates them.
