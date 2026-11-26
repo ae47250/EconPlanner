@@ -190,7 +190,9 @@ CHECKLIST CELL: MAT 121
 CHECKLIST CELL: Completed
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213
-CHECKLIST CELL: Completed ECO 113 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
+CHECKLIST CELL: Completed
+CHECKLIST CELL: 
+CHECKLIST CELL: ECO 113 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Fall 2027
 CHECKLIST CELL: Planned

@@ -1,13 +1,13 @@
 {
   "studentId": "24",
   "planDate": "2026-11-22",
-  "overallStatus": "Ready to plan",
+  "overallStatus": "Needs confirmation",
   "resultCategory": "PLANS_READY",
   "plans": [
     {
       "id": "balanced",
       "name": "Balanced",
-      "status": "Ready to plan",
+      "status": "Needs confirmation",
       "feasibilityStatus": "CONDITIONALLY_FEASIBLE",
       "readinessStatus": "STUDENT_READY",
       "terms": [

@@ -46,6 +46,7 @@ NOTE: Approval needed
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 GRID ROW: MAT 113-J ▾ | Essential Pre-Calculus
 NOTE: Seat availability not confirmed
+NOTE: Approval needed
 NOTE: MAT 113 comes before ECO 213, which you marked completed. Check with your advisor.
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S ▾ | Economics of the European Union
@@ -185,7 +186,9 @@ CHECKLIST CELL: MAT 113 — Winter 2027
 CHECKLIST CELL: Planned Approval needed
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213
-CHECKLIST CELL: Completed MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
+CHECKLIST CELL: Completed
+CHECKLIST CELL: 
+CHECKLIST CELL: MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Winter 2027
 CHECKLIST CELL: Planned Approval needed

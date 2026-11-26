@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { buildPlanningSlots } from "../../lib/planning/horizon.js";
 import { joinStudyAbroadTerms, studyAbroadAdvisorContext, studyAbroadTermIds } from "../../lib/planning/study-abroad.js";
 import { noPlanPresentation, noPlanStatusLabel } from "../../lib/planning/no-plan-presentation.js";
-import { planningRequirementsNote } from "../../lib/catalog/planning-requirements-note.js";
-import { feasibilityMeaning, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
+import { planNeedsPetition } from "../../lib/catalog/planning-requirements-note.js";
+import { feasibilityMeaning, oneYearEarlyPlanOffered, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
 import { summerLastResortNote } from "../../lib/planning/summer-note.js";
-import { preliminaryScheduleExplanation, studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentStandingSummary, studentTermLabel } from "../../lib/planning/student-language.js";
+import { courseNeedsApproval, preliminaryScheduleExplanation, studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentStandingSummary, studentTermLabel } from "../../lib/planning/student-language.js";
 import { comparisonStyles } from "../styles/comparisonStyles";
 import { COURSE_CATALOG, COURSE_PREREQUISITES, isTaken, courseTitle, economicsResult, planCourseIdentity, formatAcademicYear, planningSlotsLabel, compactPlanCourse, planReadinessLabel } from "../plannerShared.js";
 import { AdvisorAttention, PlanConditions, MajorRequirementsChecklist } from "./planNotes.js";
@@ -19,6 +19,8 @@ import { ResultDiagnostics } from "./plannerSummary.js";
 const STUDENT_READINESS_EXPLANATIONS = Object.freeze({
   "Ready to plan": "The plan meets the major rules. Check seats and future schedules before you register.",
   "Needs confirmation": "Check the approval and standing notes on each plan before registering.",
+  // A plan whose only condition is a catalog petition (owner request 2026-11-26).
+  "Needs a petition": "Your catalog needs a petition for this plan.",
   "Needs advisor attention": "Ask your advisor to review the reason below before relying on this plan."
 });
 
@@ -133,7 +135,7 @@ function PlanComparisonScreen({
     return [key, new Set(shared)];
   }));
   const standing = studentStandingSummary({ ...studyAbroad,
-    acceleratedPlanExists: acceleratedResult?.status !== "NOT_POSSIBLE" });
+    acceleratedPlanExists: oneYearEarlyPlanOffered(plans) });
   const studyAbroadLabel = joinStudyAbroadTerms(studyAbroadIds.map(id => planningSlotsLabel(id, comparisonContext)));
   const graduationTarget = studentTermLabel(planningContext?.expectedGraduationTerm || "To be confirmed");
   const earlyGraduationTarget = plans.find(plan => plan.id === "one-year-early")?.planningContext?.expectedGraduationTerm;
@@ -150,7 +152,10 @@ function PlanComparisonScreen({
   const statusPlans = plans;
   const statusReason = statusPlans.flatMap(plan => plan.planConditions || [])
     .find(item => item.kind === "review" && item.shortMessage)?.shortMessage;
-  const paperworkReminder = statusPlans.some(plan => planningRequirementsNote(plan.planningContext, plan)?.details.some(detail => /petition/i.test(detail)));
+  // The only condition on every plan is a catalog petition: say so instead of "approval and standing notes".
+  const petitionOnly = plans.length > 0 && plans.every(plan => planNeedsPetition(plan)
+    && (plan.readinessStatus || plan.validation?.readinessStatus) === "STUDENT_READY");
+  const paperworkReminder = statusPlans.some(planNeedsPetition);
   const planBadge = plan => {
     if (plan.planningMode !== "graduation_priority") return null;
     const mayCourse = plan.terms
@@ -218,7 +223,9 @@ function PlanComparisonScreen({
           <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>Status</strong><span className="result-status-value">{displayedOverallStatus}</span>
-            {plans.length > 0 && <span className="result-status-reason">{displayedOverallStatus === "Needs confirmation" && plans.length === 1
+            {plans.length > 0 && <span className="result-status-reason">{petitionOnly
+              ? STUDENT_READINESS_EXPLANATIONS["Needs a petition"]
+              : displayedOverallStatus === "Needs confirmation" && plans.length === 1
               ? "Check this plan's approval and standing notes before registering."
               : STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}{paperworkReminder && " See the notes below for paperwork to file."}</span>}
             {displayedOverallStatus === "Needs advisor attention" && statusReason && <span className="result-status-reason">Why: {statusReason}</span>}
@@ -322,11 +329,11 @@ function PlanComparisonScreen({
                                     <CourseAvailabilityStatus course={course} term={row.sourceTerm} schedule={result?.annualSchedule} referenceDate={new Date().toISOString()} />
                                     {course.source === "summer-last-resort" && <span className="summer-term-note">{summerLastResortNote()}</span>}
                                     {course.preliminaryScheduleEvidence && <span>{preliminaryScheduleExplanation(course.preliminaryScheduleEvidence.issuedOn, policyMessages)}</span>}
-                                    {(course.planningMarkers || []).filter(marker => marker !== "Approval required" || course.approvalRequired?.length).map(marker => marker === "Approval required"
-                                      ? <div className="plan-course-approval" key={marker}>
-                                        <strong>Approval needed</strong>
-                                      </div>
-                                      : <span className="plan-course-approval" key={marker}>{studentFriendlyCourseMarker(marker)}</span>)}
+                                    {courseNeedsApproval(course) && <div className="plan-course-approval" key="approval">
+                                      <strong>Approval needed</strong>
+                                    </div>}
+                                    {(course.planningMarkers || []).filter(marker => marker !== "Approval required")
+                                      .map(marker => <span className="plan-course-approval" key={marker}>{studentFriendlyCourseMarker(marker)}</span>)}
                                     {course.course === "ECO 461" && <span className="course-constraint-note">Offered only in Winter. This is the last Winter before you graduate.</span>}
                                   </div>
                                 </div>;

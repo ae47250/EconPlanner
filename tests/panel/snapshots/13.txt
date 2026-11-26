@@ -18,16 +18,16 @@ ECO 114 · MAT 121
 Taking now
 None
 Status
-Ready to plan
-The plan meets the major rules. Check seats and future schedules before you register. See the notes below for paperwork to file.
+Needs confirmation
+Your catalog needs a petition for this plan. See the notes below for paperwork to file.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
 SCREEN > Plan: Balanced
-STATUS: Ready to plan
+STATUS: Needs confirmation
 Balanced
 Spreads the required classes you still need across the years before you graduate.
-Status: Ready to plan
+Status: Needs confirmation
 Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
@@ -128,7 +128,7 @@ Hanover College · Economics
 Your Economics major plan
 Panel Student 13 | Balanced | Prepared November 22, 2026 | Class standing: Junior
 This plan covers Winter 2027 through May 2028.
-Status: Ready to plan
+Status: Needs confirmation
 Check seats and future schedules before you register.
 Graduation target: May 2028
 See the notes below for paperwork to file.

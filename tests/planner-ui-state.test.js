@@ -32,9 +32,10 @@ function sampleReport() {
 }
 
 test("comparison badges use the policy-backed generated plan label", async () => {
-  const source = await readFile(new URL("../app/plannerShared.js", import.meta.url), "utf8");
+  // The label moved to lib/planning/plan-display.js so the screen and the PDF share it (2026-11-26).
+  const source = await readFile(new URL("../lib/planning/plan-display.js", import.meta.url), "utf8");
   assert.match(source, /function planReadinessLabel\(plan\)/);
-  assert.match(source, /readiness === "STUDENT_READY".*return "Ready to plan"/s);
+  assert.match(source, /readiness === "STUDENT_READY"[\s\S]*"Ready to plan"/);
   assert.doesNotMatch(source, /"explore-first":\s*"Explore/);
 });
 

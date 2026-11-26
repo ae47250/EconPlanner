@@ -10,6 +10,7 @@ import { termLoadRule } from "../../lib/policy/term-load.js";
 import { updateStudyAbroadReservation } from "../../lib/planning/study-abroad.js";
 import { buildEconomicsReportFromStudent } from "../../lib/reports/build-economics.js";
 import { renderEconomicsHtml } from "../../lib/reports/economics-html.js";
+import { planReadinessLabel } from "../../lib/planning/plan-display.js";
 
 const root = process.cwd();
 const data = JSON.parse(await readFile(path.join(root, "tests/panel/students.json"), "utf8"));
@@ -127,14 +128,8 @@ function toSentences(value) {
     .filter(Boolean);
 }
 
-function planStatus(plan) {
-  const readiness = plan?.readinessStatus || plan?.validation?.readinessStatus || "";
-  const disposition = plan?.planDisposition || plan?.validation?.planDisposition || "";
-  if (readiness === "ADVISOR_ACTION_REQUIRED" || disposition.includes("ADVISOR_ACTION_REQUIRED")) return "Needs advisor attention";
-  if (readiness === "READY_WITH_CONDITIONS" || disposition.includes("READY_WITH_CONDITIONS")) return "Needs confirmation";
-  if (readiness === "STUDENT_READY" || disposition.includes("STUDENT_READY")) return "Ready to plan";
-  return "Needs advisor attention";
-}
+// The app's own status rule (owner OK 2026-11-26), so the panel cannot drift from the screen and the PDF.
+const planStatus = planReadinessLabel;
 
 function planArtifact(profile, overallStatus, plans, payload) {
   return {

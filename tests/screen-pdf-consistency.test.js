@@ -66,3 +66,90 @@ test("room saved for other courses is the student's own change, on the screen an
   const html = renderEconomicsHtml(await buildEconomicsReportFromStudent(student, student.planCreationDate), template);
   assert.match(html, /<h2>Change your answers<\/h2>/);
 });
+
+// Final sweep, 2026-11-26: the screen and the PDF read the same rule for each of these.
+test("a plan that needs a catalog petition is 'Needs confirmation' on screen and in the PDF, not 'Ready to plan'", async () => {
+  const { planReadinessLabel } = await import("../lib/planning/plan-display.js");
+  const student = { displayName: "Fictional student", academicStanding: "junior", planCreationDate: "2026-11-21", courses: [course("ECO 114"), course("MAT 121")] };
+  const economics = await plansFor(student);
+  const plan = economics.economicsPlans[0];
+  assert.equal(plan.readinessStatus, "STUDENT_READY");
+  const html = renderEconomicsHtml(await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, economics.economicsPlans), template);
+  assert.match(html, /routine petition/);
+  assert.equal(planReadinessLabel(plan), "Needs confirmation");
+  assert.match(visibleText(html), /Status: Needs confirmation/);
+  assert.doesNotMatch(visibleText(html), /Ready to plan/);
+});
+
+test("the PDF class standing says 'graduating one year early' only when an early plan exists", async () => {
+  const student = { displayName: "Fictional student", academicStanding: "junior", planningPace: "one_year_early", planCreationDate: "2026-11-21", courses: [course("ECO 113")] };
+  const economics = await plansFor(student);
+  assert.ok(!economics.economicsPlans.some(plan => plan.id === "one-year-early"));
+  const html = renderEconomicsHtml(await buildEconomicsReportFromStudent(student, student.planCreationDate, economics.economicsPlans[0], economics.economicsPlans), template);
+  assert.match(html, /Class standing: Junior(?! \(graduating)/);
+  const early = { ...student, academicStanding: "freshman", courses: [] };
+  const earlyPlans = await plansFor(early);
+  const earlyHtml = renderEconomicsHtml(await buildEconomicsReportFromStudent(early, early.planCreationDate, earlyPlans.economicsPlans[0], earlyPlans.economicsPlans), template);
+  assert.match(earlyHtml, /Class standing: Freshman \(graduating one year early\)/);
+
+  // Early graduation "more information needed" and no early plan offered: plain "Junior" (screen uses the same rule).
+  const { oneYearEarlyPlanOffered } = await import("../lib/planning/plan-display.js");
+  const unsure = { displayName: "Fictional student", academicStanding: "junior", planningPace: "one_year_early", planCreationDate: "2027-07-30",
+    courses: ["ECO 113", "ECO 114", "ECO 213", "ECO 214", "MAT 113", "MAT 217", "BUSN 323"].map(code => course(code)) };
+  const unsurePlans = await plansFor(unsure);
+  assert.equal(unsurePlans.economicsAcceleratedResult.status, "MORE_INFORMATION_NEEDED");
+  assert.equal(oneYearEarlyPlanOffered(unsurePlans.economicsPlans), false);
+  const unsureHtml = renderEconomicsHtml(await buildEconomicsReportFromStudent(unsure, unsure.planCreationDate, unsurePlans.economicsPlans[0], unsurePlans.economicsPlans), template);
+  assert.match(unsureHtml, /Class standing: Junior(?! \(graduating)/);
+});
+
+test("ECO 213 taken now with MAT 121 is tagged 'Approval needed' in the PDF grid and the checklist alike", async () => {
+  const student = { displayName: "Fictional student", academicStanding: "sophomore", planCreationDate: "2026-11-21",
+    courses: [course("ECO 113"), course("ECO 114"), course("MAT 121", "in_progress"), course("ECO 213", "in_progress")] };
+  const economics = await plansFor(student);
+  const plan = economics.economicsPlans[0];
+  const html = renderEconomicsHtml(await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, economics.economicsPlans), template);
+  const entry = html.match(/<div class="course-entry"><span class="course" data-course-code="ECO 213"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.ok(entry.includes(">Approval needed<"), "PDF grid tags ECO 213");
+  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.course === "ECO 213").markers.includes("Approval needed"), "checklist tags ECO 213");
+  const mat = html.match(/<div class="course-entry"><span class="course" data-course-code="MAT 121"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.ok(!mat.includes(">Approval needed<"), "the approval is the ECO 213 instructor's, so MAT 121 is not tagged");
+});
+
+test("the PDF grid tags a course 'Approval needed' exactly when the shared rule says so", async () => {
+  const { courseNeedsApproval } = await import("../lib/planning/student-language.js");
+  const student = { displayName: "Fictional student", academicStanding: "junior", planningPace: "one_year_early", planCreationDate: "2026-11-21", courses: [course("ECO 113"), course("MAT 217")] };
+  const economics = await plansFor(student);
+  let tagged = 0;
+  for (const plan of economics.economicsPlans) {
+    const html = renderEconomicsHtml(await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, economics.economicsPlans), template);
+    const grid = html.slice(html.indexOf('<table class="schedule'), html.indexOf("</table>", html.indexOf('<table class="schedule')));
+    for (const term of plan.terms) for (const item of term.courses) {
+      const entry = grid.match(new RegExp(`<div class="course-entry"><span class="course" data-course-code="${item.course}"[\\s\\S]*?</div>`))?.[0] || "";
+      if (item.course === "ECO elective") continue;
+      assert.ok(entry, `${plan.id} ${item.course} is in the PDF grid`);
+      assert.equal(entry.includes(">Approval needed<"), courseNeedsApproval(item), `${plan.id} ${item.course}`);
+      if (courseNeedsApproval(item)) tagged++;
+    }
+  }
+  assert.ok(tagged > 0, "this student has at least one approval tag to compare");
+});
+
+test("ECO 321's finance sentence says it never counts as an elective", async () => {
+  const { displayMessage } = await import("../lib/planning/student-language.js");
+  const messages = JSON.parse(await readFile(new URL("../policy/messages/en-US.json", import.meta.url), "utf8")).messages;
+  assert.equal(displayMessage(messages, "infeasibility.finance.forced", { financeCourse: "ECO 321" }), "ECO 321 counts only for Finance, never as an Economics elective.");
+});
+
+test("the taken-now pairing keeps its 'Approval needed' tag in the checklist even when another prerequisite is missing", async () => {
+  const student = { displayName: "Fictional student", academicStanding: "sophomore", planCreationDate: "2026-11-21",
+    courses: [course("ECO 113"), course("MAT 113", "in_progress"), course("ECO 214", "in_progress")] };
+  const economics = await plansFor(student);
+  const plan = economics.economicsPlans[0];
+  const html = renderEconomicsHtml(await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, economics.economicsPlans), template);
+  const entry = html.match(/<div class="course-entry"><span class="course" data-course-code="ECO 214"[\s\S]*?<\/div>/)?.[0] || "";
+  assert.ok(entry.includes(">Approval needed<"), "PDF grid tags ECO 214");
+  const row = plan.majorRequirementsChecklist.rows.find(item => item.course === "ECO 214");
+  assert.ok(row.markers.includes("Approval needed"), "checklist tags ECO 214 too");
+  assert.ok(row.markers.some(marker => /ECO 114/.test(marker)), "and still names the missing ECO 114");
+});
