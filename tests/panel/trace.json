@@ -90,7 +90,25 @@
       ]
     },
     {
+      "messageKey": "history.takingNowNeedsCompletedMany",
+      "studentIds": [
+        "17"
+      ]
+    },
+    {
+      "messageKey": "history.takingNowNeedsCompletedOne",
+      "studentIds": [
+        "17"
+      ]
+    },
+    {
       "messageKey": "history.takingNowNeedsMany",
+      "studentIds": [
+        "17"
+      ]
+    },
+    {
+      "messageKey": "history.takingNowNeedsMixed",
       "studentIds": [
         "17"
       ]

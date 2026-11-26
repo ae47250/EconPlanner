@@ -224,7 +224,7 @@
 01, 02	ECO 214 ECO 214 — Winter 2029 ○ Planned
 07, 08, 12, 22, 23, 24, 25, 26, 27, 36, 39, 42, 44	ECO 214 ECO 214 ✓ Completed
 17	ECO 214 is not on the Fall 2026 schedule. If you are taking it at another school, your advisor will check whether it counts.
-17	ECO 214 needs ECO 114 first. Mark it Completed or Taking now, or your advisor will check.
+17	ECO 214 needs ECO 114 first. Mark it Completed, or your advisor will check.
 09, 10, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214-J
 09, 10, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214-J ▾ | Intermediate Macroeconomics
 22, 23, 36, 39, 42	ECO 221
@@ -682,7 +682,7 @@
 18	Why: ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
 16	Why: ECO 213 is marked completed, but ECO 113 is not marked. Mark it, or your advisor will check.
 32	Why: ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.
-17	Why: ECO 214 needs ECO 114 first. Mark it Completed or Taking now, or your advisor will check.
+17	Why: ECO 214 needs ECO 114 first. Mark it Completed, or your advisor will check.
 42	Why: The listed section for MAT 217 was recorded as full. Check the registration system for current availability.
 19	Why: You are taking ECO 213 and MAT 121 together. Ask the ECO 213 instructor for approval.
 05	Why: Your advisor needs to confirm that your AP credit for ECO 113 and MAT 121 counts toward the major.

@@ -558,7 +558,7 @@ for (const course of ["ECO 213", "ECO 214"]) {
     // Owner request 2026-11-25: the prerequisite panel shows for Taking now, same as for Completed.
     await expect(page.locator(`#course-${course.toLowerCase().replaceAll(" ", "-")} .inline-prerequisite`)).toHaveCount(1);
     await generatePlans(page);
-    await expect(page.locator('[data-plan-conditions]').first()).toContainText(`${course} needs ${course === "ECO 213" ? "ECO 113" : "ECO 114"} and either MAT 113 or MAT 121 first. Mark them Completed or Taking now, or your advisor will check.`);
+    await expect(page.locator('[data-plan-conditions]').first()).toContainText(`${course} needs ${course === "ECO 213" ? "ECO 113" : "ECO 114"} and either MAT 113 or MAT 121 first. Mark ${course === "ECO 213" ? "ECO 113" : "ECO 114"} Completed and the math course Completed or Taking now, or your advisor will check.`);
   });
 }
 

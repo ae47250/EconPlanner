@@ -43,9 +43,9 @@ test("completed course with a Taking now prerequisite asks to fix one of them, w
 
 test("Taking now course with a blank prerequisite says what it needs first", () => {
   assert.equal(say("ECO 213", [course("ECO 213", "in_progress"), course("MAT 121")]),
-    "ECO 213 needs ECO 113 first. Mark it Completed or Taking now, or your advisor will check.");
+    "ECO 213 needs ECO 113 first. Mark it Completed, or your advisor will check.");
   assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213"), course("ECO 214")]),
-    "ECO 461 needs a statistics course first. Mark it Completed or Taking now, or your advisor will check.");
+    "ECO 461 needs a statistics course first. Mark it Completed, or your advisor will check.");
 });
 
 test("owner decision 2026-11-25: a course and its prerequisite both Taking now get a warning", () => {
@@ -177,7 +177,24 @@ test("the ECO 461 same-term approval only applies within its limits", () => {
     "ECO 213 and ECO 214 come before ECO 461, but all are marked Taking now. Check them. If that’s right, your advisor will confirm.");
   // ECO 213 Taking now but ECO 214 not completed: outside the approval, so ECO 213 gets the warning too.
   assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213", "in_progress"), course("MAT 217")]),
-    "ECO 461 needs ECO 214 first. Mark it Completed or Taking now, or your advisor will check. ECO 213 comes before ECO 461, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.");
+    "ECO 461 needs ECO 214 first. Mark it Completed, or your advisor will check. ECO 213 comes before ECO 461, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.");
   // One Taking now and the other completed: within the approval, no warning.
   assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213", "in_progress"), course("ECO 214"), course("MAT 217")]), "");
+});
+
+test("owner decision 2026-11-26: suggest Taking now only where policy allows the same term", () => {
+  // Ordinary prerequisite: Taking now would trigger the both-Taking-now warning, so suggest Completed only.
+  assert.equal(say("ECO 221", [course("ECO 221", "in_progress")]),
+    "ECO 221 needs ECO 113 first. Mark it Completed, or your advisor will check.");
+  // Approved pair (math with ECO 213 after ECO 113): both choices stay.
+  assert.equal(say("ECO 213", [course("ECO 213", "in_progress"), course("ECO 113")]),
+    "ECO 213 needs MAT 113 or MAT 121 first. Mark it Completed or Taking now, or your advisor will check.");
+  // Both kinds in one course.
+  assert.equal(say("ECO 213", [course("ECO 213", "in_progress")]),
+    "ECO 213 needs ECO 113 and either MAT 113 or MAT 121 first. Mark ECO 113 Completed and the math course Completed or Taking now, or your advisor will check.");
+  // ECO 461: Taking now is allowed for ECO 213 only when ECO 214 is completed.
+  assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 214"), course("MAT 217")]),
+    "ECO 461 needs ECO 213 first. Mark it Completed or Taking now, or your advisor will check.");
+  assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("MAT 217")]),
+    "ECO 461 needs ECO 213 and ECO 214 first. Mark them Completed, or your advisor will check.");
 });

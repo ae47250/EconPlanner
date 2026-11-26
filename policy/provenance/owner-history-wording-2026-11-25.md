@@ -19,6 +19,14 @@ Student-facing wording and display only. Planner placement, credit and which cou
 - Plurals: “is not marked. Mark it” for one item, “are not marked. Mark them” for several. A course choice inside a longer list reads “either MAT 113 or MAT 121”.
 - Mixed case: when a Completed course has one prerequisite not marked and another marked Taking now, both owner sentences appear in the same message.
 
+## Update, November 26, 2026 (owner decision)
+
+Item 3’s suggestion “Mark it Completed or Taking now” contradicted item 6: a student who followed it and marked the prerequisite Taking now got the both-Taking-now warning. The owner approved this fix:
+
+- Ordinary prerequisite: “ECO 221 needs ECO 113 first. Mark it Completed, or your advisor will check.”
+- A pairing policy allows in the same term (MAT 113/121 with ECO 213/214; ECO 213 or ECO 214 with ECO 461 when the other is completed): keeps “Mark it Completed or Taking now”.
+- Both kinds in one course: “ECO 213 needs ECO 113 and either MAT 113 or MAT 121 first. Mark ECO 113 Completed and the math course Completed or Taking now, or your advisor will check.”
+
 ## Where
 
 Messages: `policy/messages/en-US.json` (`history.completedMissing*`, `history.completedPrerequisiteTakingNow*`, `history.takingNowNeeds*`, `history.bothTakingNow*`). Selection: `historicalPrerequisiteCourseMessage` in `lib/planning/historical-prerequisites.js`, used by the Course History screen (`app/page.js`) and by plan notes and the PDF (`lib/planning/plan-presentation.js`).

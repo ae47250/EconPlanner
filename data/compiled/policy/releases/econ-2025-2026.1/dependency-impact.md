@@ -1,6 +1,6 @@
 # Dependency impact: econ-2025-2026.1
 
-Bundle digest: `sha256:da8ae181ba2488deab1711e23d5a11d59e9b96e6748948ddba2637e6bac0661a`
+Bundle digest: `sha256:6ad951f51f3d564bed8a9bf643f6bdb84e2f8aa839fb9f5928f78ebedf5e169b`
 
 The canonical policy hub compiles this pinned runtime bundle and its compatibility projections. The bundle digest includes scoped exact and preliminary schedule evidence.
 

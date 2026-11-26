@@ -11,7 +11,10 @@ Rule or reason code → policy message keys → panel students.
 - **history.completedMissingOne** → 16, 32
 - **history.completedPrerequisiteTakingNowOne** → 18
 - **history.scheduledPrerequisite** → 16, 32
+- **history.takingNowNeedsCompletedMany** → 17
+- **history.takingNowNeedsCompletedOne** → 17
 - **history.takingNowNeedsMany** → 17
+- **history.takingNowNeedsMixed** → 17
 - **history.takingNowNeedsOne** → 17
 - **history.takingNowNotOffered** → 17
 - **history.takingNowNotOfferedAdvisor** → 17

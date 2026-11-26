@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:da8ae181ba2488deab1711e23d5a11d59e9b96e6748948ddba2637e6bac0661a",
+  "contentHash": "sha256:6ad951f51f3d564bed8a9bf643f6bdb84e2f8aa839fb9f5928f78ebedf5e169b",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7045,11 +7045,15 @@
     "history.hanoverOnlyCompletedAdvisor": "Confirm the student completed {course} at Hanover College.",
     "history.hanoverOnlyTakingNow": "You marked {course} as taking now. Your advisor will confirm it.",
     "history.hanoverOnlyTakingNowAdvisor": "Confirm the student is taking {course} at Hanover College this term.",
+    "history.mathCourse": "the math course",
     "history.move": "Completed history is preserved; missing prerequisite evidence remains under review.",
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.scheduledPrerequisite": "This class is a prerequisite for {course}, which you marked completed. Check with your advisor.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
+    "history.takingNowNeedsCompletedMany": "{course} needs {missing} first. Mark them Completed, or your advisor will check.",
+    "history.takingNowNeedsCompletedOne": "{course} needs {missing} first. Mark it Completed, or your advisor will check.",
     "history.takingNowNeedsMany": "{course} needs {missing} first. Mark them Completed or Taking now, or your advisor will check.",
+    "history.takingNowNeedsMixed": "{course} needs {missing} first. Mark {completedOnly} Completed and {flexible} Completed or Taking now, or your advisor will check.",
     "history.takingNowNeedsOne": "{course} needs {missing} first. Mark it Completed or Taking now, or your advisor will check.",
     "history.takingNowNotOffered": "{course} is not on the {term} schedule. If you are taking it at another school, your advisor will check whether it counts.",
     "history.takingNowNotOfferedAdvisor": "Confirm where the student is taking {course} in {term}. It is not on the Hanover {term} schedule.",
