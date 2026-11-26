@@ -77,7 +77,7 @@
     "history.completedMissingOne": "{course} is marked completed, but {missing} is not marked. Mark it, or your advisor will check.",
     "history.completedMissingMany": "{course} is marked completed, but {missing} are not marked. Mark them, or your advisor will check.",
     "history.completedPrerequisiteTakingNowOne": "{course} is marked completed, but {prerequisites} is marked Taking now. Fix one of them, or your advisor will check.",
-    "history.completedPrerequisiteTakingNowMany": "{course} is marked completed, but {prerequisites} are marked Taking now. Fix them, or your advisor will check.",
+    "history.completedPrerequisiteTakingNowMany": "{course} is marked completed, but {prerequisites} are marked Taking now. Fix the course or its prerequisites, or your advisor will check.",
     "history.takingNowNeedsOne": "{course} needs {missing} first. Mark it Completed or Taking now, or your advisor will check.",
     "history.takingNowNeedsMany": "{course} needs {missing} first. Mark them Completed or Taking now, or your advisor will check.",
     "history.bothTakingNowOne": "{prerequisites} comes before {course}, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.",

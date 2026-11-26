@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:41ab7a3922fa3c5773be0208201140fcb40b4e766fb9f5bd9532124874014ead",
+  "contentHash": "sha256:da8ae181ba2488deab1711e23d5a11d59e9b96e6748948ddba2637e6bac0661a",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7039,7 +7039,7 @@
     "history.bothTakingNowOne": "{prerequisites} comes before {course}, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.",
     "history.completedMissingMany": "{course} is marked completed, but {missing} are not marked. Mark them, or your advisor will check.",
     "history.completedMissingOne": "{course} is marked completed, but {missing} is not marked. Mark it, or your advisor will check.",
-    "history.completedPrerequisiteTakingNowMany": "{course} is marked completed, but {prerequisites} are marked Taking now. Fix them, or your advisor will check.",
+    "history.completedPrerequisiteTakingNowMany": "{course} is marked completed, but {prerequisites} are marked Taking now. Fix the course or its prerequisites, or your advisor will check.",
     "history.completedPrerequisiteTakingNowOne": "{course} is marked completed, but {prerequisites} is marked Taking now. Fix one of them, or your advisor will check.",
     "history.hanoverOnlyCompleted": "You marked {course} as completed. Your advisor will confirm it.",
     "history.hanoverOnlyCompletedAdvisor": "Confirm the student completed {course} at Hanover College.",

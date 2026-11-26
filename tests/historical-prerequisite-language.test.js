@@ -161,3 +161,23 @@ test("both Taking now: the warning is display only, so plans still generate and 
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, program.economicsPlans);
   assert.ok(renderEconomicsHtml(report, template).includes(`<li data-plan-warning>${expected}</li>`));
 });
+
+test("a Taking now note names only the course actually marked Taking now", () => {
+  assert.equal(say("ECO 223", [course("ECO 223", "in_progress"), course("ECO 113", "in_progress")]),
+    "ECO 113 comes before ECO 223, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.");
+  assert.equal(say("ECO 223", [course("ECO 223"), course("ECO 114", "in_progress")]),
+    "ECO 223 is marked completed, but ECO 114 is marked Taking now. Fix one of them, or your advisor will check.");
+  assert.match(say("ECO 461", [course("ECO 461"), course("ECO 213", "in_progress"), course("ECO 214", "in_progress"), course("MAT 217")]),
+    /are marked Taking now\. Fix the course or its prerequisites, or your advisor will check\.$/);
+});
+
+test("the ECO 461 same-term approval only applies within its limits", () => {
+  // Both ECO 213 and ECO 214 Taking now with ECO 461: over the one-course limit, so warn.
+  assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213", "in_progress"), course("ECO 214", "in_progress"), course("MAT 217")]),
+    "ECO 213 and ECO 214 come before ECO 461, but all are marked Taking now. Check them. If that’s right, your advisor will confirm.");
+  // ECO 213 Taking now but ECO 214 not completed: outside the approval, so ECO 213 gets the warning too.
+  assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213", "in_progress"), course("MAT 217")]),
+    "ECO 461 needs ECO 214 first. Mark it Completed or Taking now, or your advisor will check. ECO 213 comes before ECO 461, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.");
+  // One Taking now and the other completed: within the approval, no warning.
+  assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213", "in_progress"), course("ECO 214"), course("MAT 217")]), "");
+});
