@@ -50,11 +50,23 @@
     {
       "messageKey": "checklist.concurrentPrerequisite",
       "studentIds": [
-        "19"
+        "02",
+        "16",
+        "19",
+        "32"
       ]
     },
     {
       "messageKey": "checklist.prerequisiteNotCompleted",
+      "studentIds": [
+        "16",
+        "17",
+        "18",
+        "32"
+      ]
+    },
+    {
+      "messageKey": "checklist.prerequisiteTakingNow",
       "studentIds": [
         "16",
         "17",
@@ -92,31 +104,46 @@
     {
       "messageKey": "history.takingNowNeedsCompletedMany",
       "studentIds": [
-        "17"
+        "16",
+        "17",
+        "18",
+        "32"
       ]
     },
     {
       "messageKey": "history.takingNowNeedsCompletedOne",
       "studentIds": [
-        "17"
+        "16",
+        "17",
+        "18",
+        "32"
       ]
     },
     {
       "messageKey": "history.takingNowNeedsMany",
       "studentIds": [
-        "17"
+        "16",
+        "17",
+        "18",
+        "32"
       ]
     },
     {
       "messageKey": "history.takingNowNeedsMixed",
       "studentIds": [
-        "17"
+        "16",
+        "17",
+        "18",
+        "32"
       ]
     },
     {
       "messageKey": "history.takingNowNeedsOne",
       "studentIds": [
-        "17"
+        "16",
+        "17",
+        "18",
+        "32"
       ]
     },
     {
@@ -187,15 +214,30 @@
       ]
     },
     {
+      "messageKey": "move.sameTermPrerequisiteApproval",
+      "studentIds": [
+        "02",
+        "16",
+        "19",
+        "32"
+      ]
+    },
+    {
       "messageKey": "move.sameTermPrerequisiteOtherApproval",
       "studentIds": [
-        "02"
+        "02",
+        "16",
+        "19",
+        "32"
       ]
     },
     {
       "messageKey": "move.takePrerequisiteFirst",
       "studentIds": [
-        "17"
+        "16",
+        "17",
+        "18",
+        "32"
       ]
     },
     {
@@ -240,6 +282,15 @@
         "47",
         "48",
         "49"
+      ]
+    },
+    {
+      "messageKey": "planNote.mathSequence",
+      "studentIds": [
+        "02",
+        "16",
+        "19",
+        "32"
       ]
     },
     {
@@ -1234,17 +1285,6 @@
       "studentIds": [
         "27",
         "48"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "CHECKLIST CELL: Completed ECO 113 marked Taking now rather than done before this class.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "18"
       ]
     },
     {
@@ -4935,18 +4975,6 @@
         "18",
         "19",
         "36"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "NOTE: This class is a prerequisite for ECO 213, which you marked completed.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16",
-        "32"
       ]
     },
     {
@@ -9877,17 +9905,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed ECO 113 marked Taking now rather than done before this class.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -14068,18 +14085,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "NOTE: This class is a prerequisite for ECO 213, which you marked completed.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16",
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "One Year Early",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -15007,28 +15012,6 @@
       },
       "studentIds": [
         "20"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Take MAT 113 before ECO 213.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "02"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Take MAT 113 before ECO 214.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "02"
       ]
     },
     {

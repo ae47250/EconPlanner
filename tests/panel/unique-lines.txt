@@ -99,9 +99,9 @@
 01, 02, 03, 05, 08, 19, 46, 47, 48, 49	Compare your course plans
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Completed
 27, 48	Completed Counts as your one 100-level elective.
-16	Completed ECO 113 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
-18	Completed ECO 113 marked Taking now rather than done before this class. Ask your advisor to check.
-32	Completed MAT 113 or MAT 121 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
+18	Completed ECO 113 is marked Taking now, but ECO 213 needs it done first. Ask your advisor to check.
+16	Completed ECO 113 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
+32	Completed MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 42, 44, 48, 49	Completed Planned
 17, 18, 19, 36	Completed Taking now Planned
 47	Completed Transfer credit Planned
@@ -149,6 +149,7 @@
 47	ECO 113 (transfer) · ECO 114 · MAT 121 (transfer)
 18	ECO 113 | Principles of Microeconomics
 01, 02	ECO 113 ▾ | Principles of Microeconomics
+16	ECO 113 comes before ECO 213, which you marked completed. Check with your advisor.
 01, 02	ECO 113 ECO 113 — Fall 2027 ○ Planned
 18	ECO 113 ECO 113 — Taking now ◐ In progress
 01, 02, 03, 13, 16	ECO 113 ECO 113 — Winter 2027 ○ Planned
@@ -192,13 +193,13 @@
 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 21, 46, 47, 48, 49	ECO 213 ▾ | Intermediate Microeconomics
 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 46, 47, 48, 49	ECO 213 ECO 213 — Fall 2027 ○ Planned
 01, 02	ECO 213 ECO 213 — Fall 2028 ○ Planned
-19	ECO 213 ECO 213 — Taking now ◐ In progress MAT 121 is a prerequisite for this class. Taking both in the same term needs approval from the ECO 213 instructor.
+19	ECO 213 ECO 213 — Taking now ◐ In progress MAT 121 comes before ECO 213. Taking both in the same term needs the ECO 213 instructor’s approval.
 01, 02, 03	ECO 213 ECO 213 — Winter 2028 ○ Planned
 21	ECO 213 ECO 213 — Winter 2028 ○ Planned Approval needed
 07, 08, 12, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44	ECO 213 ECO 213 ✓ Completed
-16	ECO 213 ECO 213 ✓ Completed ECO 113 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
-18	ECO 213 ECO 213 ✓ Completed ECO 113 marked Taking now rather than done before this class. Ask your advisor to check.
-32	ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
+18	ECO 213 ECO 213 ✓ Completed ECO 113 is marked Taking now, but ECO 213 needs it done first. Ask your advisor to check.
+16	ECO 213 ECO 213 ✓ Completed ECO 113 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
+32	ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 18	ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
 16	ECO 213 is marked completed, but ECO 113 is not marked. Mark it, or your advisor will check.
 32	ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.
@@ -216,7 +217,7 @@
 01, 02, 03, 05, 11, 16, 18, 19, 21, 46, 48, 49	ECO 214 ▾ | Intermediate Macroeconomics
 16, 18, 19, 21	ECO 214 ECO 214 — Fall 2027 ○ Planned
 01, 02, 03, 46	ECO 214 ECO 214 — Fall 2028 ○ Planned
-17	ECO 214 ECO 214 — Taking now ◐ In progress ECO 114 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
+17	ECO 214 ECO 214 — Taking now ◐ In progress ECO 114 isn’t marked completed, and ECO 214 needs it first. Ask your advisor to check.
 09, 13, 14, 15, 47, 49	ECO 214 ECO 214 — Winter 2027 ○ Planned
 10, 28, 30, 32	ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed
 02, 03, 05, 19, 46, 48, 49	ECO 214 ECO 214 — Winter 2028 ○ Planned
@@ -387,6 +388,9 @@
 02, 03, 10, 11, 32, 48	MAT 113 — Winter 2027
 01, 02	MAT 113 — Winter 2028
 01, 02, 03	MAT 113 ▾ | Essential Pre-Calculus
+32	MAT 113 comes before ECO 213, which you marked completed. Check with your advisor.
+02	MAT 113 comes before ECO 213. Taking both in one term needs the ECO 213 instructor’s approval.
+02	MAT 113 comes before ECO 214. Taking both in one term needs the ECO 214 instructor’s approval.
 02, 03, 10, 11, 32, 48	MAT 113-J
 02, 03, 10, 11, 32, 48	MAT 113-J ▾ | Essential Pre-Calculus
 05, 07, 08, 09, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44, 46, 47	MAT 121
@@ -600,20 +604,17 @@
 20	Study abroad leaves no room for major courses in Winter 2027 and May 2027. Change your graduation term or study-abroad choice and try again.
 21	Study abroad: Winter 2027
 20	Study abroad: Winter 2027 and Spring/May 2027
-02	Take MAT 113 before ECO 213. Taking both in one term needs the ECO 213 instructor's approval.
-02	Take MAT 113 before ECO 214. Taking both in one term needs the ECO 214 instructor's approval.
 21	Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
 28, 30, 32	Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
 11	Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
 10, 32	Taking MAT 113 and ECO 214 together in Winter 2027 needs approval from the ECO 214 instructor before you register.
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Taking now
-17	Taking now ECO 114 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
-19	Taking now MAT 121 is a prerequisite for this class. Taking both in the same term needs approval from the ECO 213 instructor.
+17	Taking now ECO 114 isn’t marked completed, and ECO 214 needs it first. Ask your advisor to check.
+19	Taking now MAT 121 comes before ECO 213. Taking both in the same term needs the ECO 213 instructor’s approval.
 42	The listed section for MAT 217 was recorded as full. Check the registration system for current availability.
 01, 09, 12, 14, 15, 22, 25, 26, 48, 49	The plan meets the major rules. Check seats and future schedules before you register.
 13, 23, 24, 27, 36, 39, 44	The plan meets the major rules. Check seats and future schedules before you register. See the notes below for paperwork to file.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Things to keep in mind
-16, 32	This class is a prerequisite for ECO 213, which you marked completed. Check with your advisor.
 02, 08	This plan
 07, 08	This plan assumes you will have senior standing in 2026–2027. Ask your advisor and the Registrar to confirm you can take ECO 461 then.
 02, 03	This plan assumes you will have senior standing in 2028–2029. Ask your advisor and the Registrar to confirm you can take ECO 461 then.

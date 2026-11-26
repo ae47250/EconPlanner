@@ -83,7 +83,7 @@ Requirement | Course / term | Status
 CHECKLIST ROW: ECO 113 ECO 113 ✓ Completed
 CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned
 CHECKLIST ROW: Mathematics MAT 121 — Taking now ◐ In progress
-CHECKLIST ROW: ECO 213 ECO 213 — Taking now ◐ In progress MAT 121 is a prerequisite for this class. Taking both in the same term needs approval from the ECO 213 instructor.
+CHECKLIST ROW: ECO 213 ECO 213 — Taking now ◐ In progress MAT 121 comes before ECO 213. Taking both in the same term needs the ECO 213 instructor’s approval.
 CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — Winter 2027 ○ Planned
 CHECKLIST ROW: Finance BUSN 323 — Fall 2028 ○ Planned
@@ -185,7 +185,7 @@ Requirement | Course / term | Status
 CHECKLIST ROW: ECO 113 ECO 113 ✓ Completed
 CHECKLIST ROW: ECO 114 ECO 114 — Winter 2027 ○ Planned
 CHECKLIST ROW: Mathematics MAT 121 — Taking now ◐ In progress
-CHECKLIST ROW: ECO 213 ECO 213 — Taking now ◐ In progress MAT 121 is a prerequisite for this class. Taking both in the same term needs approval from the ECO 213 instructor.
+CHECKLIST ROW: ECO 213 ECO 213 — Taking now ◐ In progress MAT 121 comes before ECO 213. Taking both in the same term needs the ECO 213 instructor’s approval.
 CHECKLIST ROW: ECO 214 ECO 214 — Winter 2028 ○ Planned
 CHECKLIST ROW: Statistics MAT 217 — Fall 2027 ○ Planned
 CHECKLIST ROW: Finance BUSN 323 — Fall 2028 ○ Planned
@@ -309,7 +309,7 @@ CHECKLIST CELL: MAT 121 — Taking now
 CHECKLIST CELL: Taking now
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213 — Taking now
-CHECKLIST CELL: Taking now MAT 121 is a prerequisite for this class. Taking both in the same term needs approval from the ECO 213 instructor.
+CHECKLIST CELL: Taking now MAT 121 comes before ECO 213. Taking both in the same term needs the ECO 213 instructor’s approval.
 CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Fall 2027
 CHECKLIST CELL: Planned
@@ -443,7 +443,7 @@ CHECKLIST CELL: MAT 121 — Taking now
 CHECKLIST CELL: Taking now
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213 — Taking now
-CHECKLIST CELL: Taking now MAT 121 is a prerequisite for this class. Taking both in the same term needs approval from the ECO 213 instructor.
+CHECKLIST CELL: Taking now MAT 121 comes before ECO 213. Taking both in the same term needs the ECO 213 instructor’s approval.
 CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Winter 2028
 CHECKLIST CELL: Planned

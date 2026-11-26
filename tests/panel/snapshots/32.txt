@@ -46,7 +46,7 @@ NOTE: Approval needed
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 GRID ROW: MAT 113-J ▾ | Essential Pre-Calculus
 NOTE: Seat availability not confirmed
-NOTE: This class is a prerequisite for ECO 213, which you marked completed. Check with your advisor.
+NOTE: MAT 113 comes before ECO 213, which you marked completed. Check with your advisor.
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S ▾ | Economics of the European Union
 NOTE: Seat availability not confirmed
@@ -74,7 +74,7 @@ Requirement | Course / term | Status
 CHECKLIST ROW: ECO 113 ECO 113 ✓ Completed
 CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
 CHECKLIST ROW: Mathematics MAT 113 — Winter 2027 ○ Planned Approval needed
-CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
+CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned Approval needed
 CHECKLIST ROW: Statistics MAT 217 ✓ Completed
 CHECKLIST ROW: Finance ECO 321 — Winter 2027 ○ Planned
@@ -144,7 +144,7 @@ GRID ROW: ECO 461-J
 NOTE: Approval needed
 GRID ROW: MAT 113-J
 NOTE: Approval needed
-NOTE: This class is a prerequisite for ECO 213, which you marked completed. Check with your advisor.
+NOTE: MAT 113 comes before ECO 213, which you marked completed. Check with your advisor.
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
 ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
@@ -186,7 +186,7 @@ CHECKLIST CELL: MAT 113 — Winter 2027
 CHECKLIST CELL: Planned Approval needed
 CHECKLIST CELL: ECO 213
 CHECKLIST CELL: ECO 213
-CHECKLIST CELL: Completed MAT 113 or MAT 121 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check.
+CHECKLIST CELL: Completed MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Winter 2027
 CHECKLIST CELL: Planned Approval needed

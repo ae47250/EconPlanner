@@ -25,7 +25,7 @@ test("one message per course names every unmet prerequisite, from policy", () =>
     "ECO 214 is marked completed, but ECO 114 and either MAT 113 or MAT 121 are not marked. Mark them, or your advisor will check.");
   assert.equal(gaps("ECO 213", [course("ECO 213"), course("ECO 113")])[0].label, "MAT 113 or MAT 121");
   assert.equal(say("ECO 214", [course("ECO 214"), course("ECO 114"), course("MAT 121")]), "");
-  assert.equal(scheduledAfterCompletedMarker("ECO 114", [course("ECO 214"), course("MAT 113")], rules, policyBundle.messages), "This class is a prerequisite for ECO 214, which you marked completed. Check with your advisor.");
+  assert.equal(scheduledAfterCompletedMarker("ECO 114", [course("ECO 214"), course("MAT 113")], rules, policyBundle.messages), "ECO 114 comes before ECO 214, which you marked completed. Check with your advisor.");
 });
 
 test("a prerequisite's own prerequisites are not repeated in the list", () => {
@@ -67,7 +67,8 @@ test("same-term pairs that policy allows with instructor approval keep their own
 test("checklist markers name historical, AP, transfer, duplicate, enrollment, and unknown reasons", () => {
   const student = { courses: [course("ECO 214"), course("ECO 114", "in_progress"), course("ECO 113", "completed", "ap_credit"), course("MAT 113", "transfer")] };
   const marker = (reasonCode, code) => checklistMarkerForAdvisorAction({ reasonCode, affectedObject: { course: code } }, { student, policyBundle });
-  assert.equal(marker("HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW", "ECO 214"), "ECO 114 marked Taking now rather than done before this class. Ask your advisor to check.");
+  assert.equal(marker("HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW", "ECO 214"), "ECO 114 is marked Taking now, but ECO 214 needs it done first. Ask your advisor to check.");
+  assert.doesNotMatch(marker("HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW", "ECO 214"), /this class/);
   assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "ECO 113"), "AP/exam credit. Confirm with your advisor that it counts.");
   assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "MAT 113"), "Transfer credit. Confirm with your advisor that it counts.");
   assert.equal(marker("COURSE_DUPLICATED", "ECO 214"), "Listed more than once. It counts once.");
@@ -83,13 +84,13 @@ test("the validated plan keeps a missing major prerequisite and the PDF repeats 
   const plan = (await response.json()).programs.find(item => item.economicsPlans).economicsPlans[0];
   const scheduled = plan.terms.flatMap(term => term.courses).find(item => item.course === "ECO 114");
   assert.ok(scheduled);
-  const note = "This class is a prerequisite for ECO 214, which you marked completed. Check with your advisor.";
+  const note = "ECO 114 comes before ECO 214, which you marked completed. Check with your advisor.";
   assert.ok(scheduled.planningMarkers.includes(note));
-  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-214").markers.includes("ECO 114 is a prerequisite for this class, but it isn’t marked completed. Ask your advisor to check."));
+  assert.ok(plan.majorRequirementsChecklist.rows.find(row => row.id === "eco-214").markers.includes("ECO 114 isn’t marked completed, and ECO 214 needs it first. Ask your advisor to check."));
   assert.equal(plan.planConditions.find(item => item.reasonCode === "HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW").shortMessage,
     "ECO 214 is marked completed, but ECO 114 and either MAT 113 or MAT 121 are not marked. Mark them, or your advisor will check.");
   const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);
-  assert.match(renderEconomicsHtml(report, template), /This class is a prerequisite for ECO 214, which you marked completed\. Check with your advisor\./);
+  assert.match(renderEconomicsHtml(report, template), /ECO 114 comes before ECO 214, which you marked completed\. Check with your advisor\./);
 });
 
 test("freshman completed ECO 214 shows the same prerequisite-gap advice in the plan and PDF", async () => {
@@ -177,7 +178,7 @@ test("the ECO 461 same-term approval only applies within its limits", () => {
     "ECO 213 and ECO 214 come before ECO 461, but all are marked Taking now. Check them. If that’s right, your advisor will confirm.");
   // ECO 213 Taking now but ECO 214 not completed: outside the approval, so ECO 213 gets the warning too.
   assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213", "in_progress"), course("MAT 217")]),
-    "ECO 461 needs ECO 214 first. Mark it Completed, or your advisor will check. ECO 213 comes before ECO 461, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.");
+    "ECO 461 needs ECO 214 first. Mark it Completed. ECO 213 comes before ECO 461, but both are marked Taking now, so check both. Your advisor will confirm.");
   // One Taking now and the other completed: within the approval, no warning.
   assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("ECO 213", "in_progress"), course("ECO 214"), course("MAT 217")]), "");
 });
@@ -197,4 +198,17 @@ test("owner decision 2026-11-26: suggest Taking now only where policy allows the
     "ECO 461 needs ECO 213 first. Mark it Completed or Taking now, or your advisor will check.");
   assert.equal(say("ECO 461", [course("ECO 461", "in_progress"), course("MAT 217")]),
     "ECO 461 needs ECO 213 and ECO 214 first. Mark them Completed, or your advisor will check.");
+});
+
+test("owner decision 2026-11-26: both kinds of gap in one course read as one sentence", () => {
+  assert.equal(say("ECO 461", [course("ECO 461"), course("ECO 257", "in_progress")]),
+    "ECO 461 is marked completed, but ECO 213 and ECO 214 are not marked, and ECO 257 is marked Taking now. Fix these, or your advisor will check.");
+  assert.equal(say("ECO 213", [course("ECO 213", "in_progress"), course("ECO 113", "in_progress")]),
+    "ECO 213 needs MAT 113 or MAT 121 first. Mark it Completed or Taking now. ECO 113 comes before ECO 213, but both are marked Taking now, so check both. Your advisor will confirm.");
+  // Singular verbs when one of each.
+  assert.equal(say("ECO 214", [course("ECO 214"), course("ECO 114", "in_progress")]),
+    "ECO 214 is marked completed, but MAT 113 or MAT 121 is not marked, and ECO 114 is marked Taking now. Fix these, or your advisor will check.");
+  // Only one kind: unchanged.
+  assert.equal(say("ECO 221", [course("ECO 221", "in_progress"), course("ECO 113", "in_progress")]),
+    "ECO 113 comes before ECO 221, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.");
 });

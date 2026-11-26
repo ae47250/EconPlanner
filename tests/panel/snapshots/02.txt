@@ -309,8 +309,8 @@ Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 21
 Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: One Year Early > Notes: More about this plan
 More about this plan
-Take MAT 113 before ECO 213. Taking both in one term needs the ECO 213 instructor's approval.
-Take MAT 113 before ECO 214. Taking both in one term needs the ECO 214 instructor's approval.
+MAT 113 comes before ECO 213. Taking both in one term needs the ECO 213 instructor’s approval.
+MAT 113 comes before ECO 214. Taking both in one term needs the ECO 214 instructor’s approval.
 Other graduation requirements
 HS ECO 113 and ECO 114 can each count toward Historical and Social Perspectives (HS), but only one of them can count. Your other HS course must be from a different discipline.
 ECO 461 also counts toward your Writing 2 (W2) requirement.

@@ -47,9 +47,11 @@ test("a junior's custom one-year-early ECO 461 plan displays Needs confirmation"
   await expect(page.locator(".comparison-student strong")).toHaveText("Junior (custom graduation year)");
   const balanced = page.locator('article[data-plan-id="balanced"]');
   await balanced.locator("summary").filter({ hasText: "Major requirements checklist" }).click();
-  await expect(balanced.locator('[data-requirement-checklist-id="eco-elective-2"]')).toContainText("ECO 337");
-  await expect(balanced.locator('[data-requirement-checklist-id="eco-elective-3"]')).toContainText("ECO 333");
-  await expect(balanced.locator('[data-requirement-checklist-id="eco-elective-3"]')).toContainText("Taking now");
+  // Both count as electives; which numbered slot each lands in is not a rule.
+  const electives = balanced.locator('[data-requirement-checklist-id^="eco-elective-"]');
+  await expect(electives.filter({ hasText: "ECO 337" })).toHaveCount(1);
+  await expect(electives.filter({ hasText: "ECO 333" })).toHaveCount(1);
+  await expect(electives.filter({ hasText: "ECO 333" })).toContainText("Taking now");
 });
 
 test("comparison header names both standard and selected early targets, and tab uses EconPlanner", async ({ page }) => {
@@ -90,7 +92,7 @@ test("AP or exam credit advisor status includes a visible Why line", async ({ pa
   }
   await generatePlans(page);
   await expect(page.locator(".result-status-value")).toContainText("Needs advisor attention");
-  await expect(page.locator(".result-status-reason").last()).toContainText("Why: Confirm with your advisor that your AP credit for ECO 113 and ECO 114 counts.");
+  await expect(page.locator(".result-status-reason").last()).toContainText("Why: Your advisor needs to confirm that your AP credit for ECO 113 and ECO 114 counts toward the major.");
   await expect(page.locator(".comparison-course-status > p").first()).toContainText("Class standingFreshman");
   await expect(page.locator(".comparison-student strong")).toHaveText("Freshman");
   await expect(page.locator(".comparison-course-status strong").filter({ hasText: "Study abroad" })).toHaveCount(0);

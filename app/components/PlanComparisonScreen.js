@@ -256,7 +256,7 @@ function PlanComparisonScreen({
               const rows = rowsByPlan.get(plan.id) || [];
               const selected = selectedPlanId === plan.id;
               const invalid = plan.validation?.valid === false;
-              const mathSequenceNotes = acceleratedMathSequenceNotes(plan, COURSE_PREREQUISITES);
+              const mathSequenceNotes = acceleratedMathSequenceNotes(plan, COURSE_PREREQUISITES, policyMessages);
               const showEarlyGraduationDetails = mergePossibleEarlyResult && plan.id === "one-year-early";
               return (
                 <article

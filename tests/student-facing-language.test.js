@@ -42,8 +42,7 @@ test("ECO 213 advisor status names the uncertain MAT 113 answer and explains the
     sourceRefs: ["DEPARTMENT-POLICIES#Confirmed-policy-7"]
   };
   const review = studentFacingPrerequisiteReview(decision, { student, policyBundle });
-  assert.match(review.summary, /ECO 213 is marked completed, but ECO 113 is marked Taking now\./);
-  assert.match(review.summary, /ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked\./);
+  assert.equal(review.summary, "ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked, and ECO 113 is marked Taking now. Fix these, or your advisor will check.");
   assert.equal(review.message, review.summary);
   assert.doesNotMatch(review.message, /Your answers do not show|Ask your advisor to check your earlier course/);
   assert.match(review.advisorPrompt, /ECO 113 and either MAT 113 or MAT 121/);
@@ -287,8 +286,10 @@ test("every owner-approved D1 message has text in the active display catalog", (
   const ids = [
     "infeasibility.courseCapacity",
     "history.scheduledPrerequisite",
+    "planNote.mathSequence",
     "checklist.statisticsAlreadyFilled",
     "checklist.prerequisiteNotCompleted",
+    "checklist.prerequisiteTakingNow",
     "checklist.concurrentPrerequisite",
     "catalog.petitionPlanCounts",
     "catalog.petitionPlanMayUse",
