@@ -157,7 +157,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 21, 28, 30, 32): CHECKLIST CELL: Planned Approval needed
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 07, 08): CHECKLIST CELL: Planned Ask your advisor and the Registrar to confirm senior standing.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): CHECKLIST CELL: Planned Check this class’s enrollment status
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): CHECKLIST CELL: Planned Check enrollment for MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 16, 39): CHECKLIST CELL: Planned Counts as your one 100-level elective.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 23, 24): CHECKLIST CELL: PSY 217
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Statistics
@@ -250,7 +250,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): May 2027:
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 10, 11, 21, 28, 30, 32): NOTE: Approval needed
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 07, 08): NOTE: Ask your advisor and the Registrar to confirm senior standing
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): NOTE: Check this class’s enrollment status
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): NOTE: Check enrollment for MAT 217.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): NOTE: Taking now
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Balanced | Prepared November 22, 2026
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Balanced | Prepared November 22, 2026 | Class standing: Freshman
@@ -595,7 +595,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 46, 47): CHECKLIST ROW: Mathematics MAT 121 ?
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 09, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44): CHECKLIST ROW: Mathematics MAT 121 ✓ Completed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 22, 27, 49): CHECKLIST ROW: Statistics ECO 257 ✓ Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check enrollment for MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 05, 19, 21): CHECKLIST ROW: Statistics MAT 217 — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 46): CHECKLIST ROW: Statistics MAT 217 — May 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47, 48): CHECKLIST ROW: Statistics MAT 217 — May 2028 ○ Planned
@@ -730,7 +730,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 31, 33, 34, 35, 37, 38, 40, 43, 45): Not possible
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 11, 21, 28, 30, 32): NOTE: Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08): NOTE: Ask your advisor and the Registrar to confirm senior standing
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): NOTE: Check this class’s enrollment status
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): NOTE: Check enrollment for MAT 217.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): NOTE: Future offering unconfirmed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): NOTE: Offered only in Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): NOTE: Seat availability not confirmed

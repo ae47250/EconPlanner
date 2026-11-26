@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:c930f28a8cea9484c477d9a85e7acff85ad8f6093a7bca3f6edb6bc253c968bc",
+  "contentHash": "sha256:9d5393d687a32c922e497130aae882bd442cefcb8a85c8255737d75ddc57d86b",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7029,17 +7029,20 @@
     "catalog.comprehensiveEvaluation": "Your {shortYear} catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.",
     "catalog.petitionPlanCounts": "Your plan counts {courses}. Your {shortYear} catalog does not accept {pronoun}. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",
     "catalog.petitionPlanMayUse": "Your {shortYear} catalog does not count {courses} toward the major. If your plan uses {pronoun}, ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",
+    "checklist.askWhetherCounts": "Ask your advisor whether {course} counts toward the major.",
+    "checklist.checkEnrollment": "Check enrollment for {course}.",
     "checklist.concurrentPrerequisite": "{prerequisite} comes before {course}. Taking both in the same term needs the {course} instructor’s approval.",
     "checklist.creditConfirm": "Confirm with your advisor that it counts.",
     "checklist.creditConfirmAp": "AP credit. Confirm with your advisor that it counts.",
     "checklist.creditConfirmTransfer": "Transfer credit. Confirm with your advisor that it counts.",
     "checklist.prerequisiteNotCompleted": "{prerequisite} isn’t marked completed, and {course} needs it first. Ask your advisor to check.",
     "checklist.prerequisiteTakingNow": "{prerequisite} is marked Taking now, but {course} needs it done first. Ask your advisor to check.",
+    "checklist.reviewRecord": "Ask your advisor to review the record for {course}.",
     "checklist.statisticsAlreadyFilled": "{course} isn’t needed for the major, because {statisticsCourse} already fills your Statistics requirement.",
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
-    "electives.extraNeededMany": "You need {count} more Economics electives than the usual schedule offers to finish by {term}. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.",
-    "electives.extraNeededOne": "You need 1 more Economics elective than the usual schedule offers to finish by {term}. An extra elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.",
+    "electives.extraNeededMany": "You need {count} more Economics electives than the usual schedule offers to finish by {term}. An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.",
+    "electives.extraNeededOne": "You need 1 more Economics elective than the usual schedule offers to finish by {term}. An extra Economics elective in Fall or Winter may be possible but isn’t confirmed, so ask your advisor.",
     "history.advisor": "Historical prerequisite evidence is incomplete and requires review.",
     "history.bothTakingNowAfterNeedsMany": "{prerequisites} come before {course}, but all are marked Taking now, so check them. Your advisor will confirm.",
     "history.bothTakingNowAfterNeedsOne": "{prerequisites} comes before {course}, but both are marked Taking now, so check both. Your advisor will confirm.",
@@ -7239,7 +7242,6 @@
       }
     ],
     "display": {
-      "adjunct": "An additional Economics elective may be possible in Fall or Winter, but the course, funding, and instructor are not confirmed. Ask your advisor before relying on it.",
       "capstone": "Senior capstone · Winter. Final year preferred.",
       "caveat": "A past schedule does not guarantee a course will be offered again.",
       "completedAcademicYears": [

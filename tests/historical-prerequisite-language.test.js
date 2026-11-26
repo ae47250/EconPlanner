@@ -72,8 +72,8 @@ test("checklist markers name historical, AP, transfer, duplicate, enrollment, an
   assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "ECO 113"), "AP credit. Confirm with your advisor that it counts.");
   assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "MAT 113"), "Transfer credit. Confirm with your advisor that it counts.");
   assert.equal(marker("COURSE_DUPLICATED", "ECO 214"), "Listed more than once. It counts once.");
-  assert.equal(marker("ENROLLMENT_FULL", "ECO 214"), "Check this class’s enrollment status");
-  const fallbackCodes = ["UNRECOGNIZED_REVIEW_REASON"].filter(code => marker(code, "ECO 214") === "Ask an advisor whether this class counts");
+  assert.equal(marker("ENROLLMENT_FULL", "ECO 214"), "Check enrollment for ECO 214.");
+  const fallbackCodes = ["UNRECOGNIZED_REVIEW_REASON"].filter(code => marker(code, "ECO 214") === "Ask your advisor whether ECO 214 counts toward the major.");
   assert.deepEqual(fallbackCodes, ["UNRECOGNIZED_REVIEW_REASON"]);
 });
 

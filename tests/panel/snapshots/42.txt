@@ -35,7 +35,7 @@ Year | Term | Courses
 TERM: 2026/2027 Fall
 GRID ROW: MAT 217-A ▾ | Applied Statistics
 NOTE: Seat availability not confirmed
-NOTE: Check this class’s enrollment status
+NOTE: Check enrollment for MAT 217.
 TERM: 2026/2027 Winter
 GRID ROW: ECO 461-J | Senior Seminar: Econometrics
 NOTE: Seat availability not confirmed
@@ -66,7 +66,7 @@ CHECKLIST ROW: ECO 114 ECO 114 ✓ Completed
 CHECKLIST ROW: Mathematics MAT 121 ✓ Completed
 CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed
 CHECKLIST ROW: ECO 214 ECO 214 ✓ Completed
-CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check this class’s enrollment status
+CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check enrollment for MAT 217.
 CHECKLIST ROW: Finance BUSN 323 ✓ Completed
 CHECKLIST ROW: ECO 461 / Senior Seminar ECO 461 — Winter 2027 ○ Planned
 CHECKLIST ROW: Economics elective 1 ECO 221 ✓ Completed
@@ -125,7 +125,7 @@ TABLE HEADER: Winter
 TABLE HEADER: May
 TERM: 2026/2027 Fall
 GRID ROW: MAT 217-A
-NOTE: Check this class’s enrollment status
+NOTE: Check enrollment for MAT 217.
 TERM: 2026/2027 Winter
 GRID ROW: ECO 461-J
 TERM: 2026/2027 May
@@ -164,7 +164,7 @@ CHECKLIST CELL: ECO 214
 CHECKLIST CELL: Completed
 CHECKLIST CELL: Statistics
 CHECKLIST CELL: MAT 217 — Fall 2026
-CHECKLIST CELL: Planned Check this class’s enrollment status
+CHECKLIST CELL: Planned Check enrollment for MAT 217.
 CHECKLIST CELL: Finance
 CHECKLIST CELL: BUSN 323
 CHECKLIST CELL: Completed

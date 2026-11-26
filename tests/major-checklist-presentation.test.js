@@ -1,4 +1,5 @@
 import test from "node:test";
+import { runtimePolicyBundle } from "../lib/policy/compat-normalized.js";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { POST } from "../app/api/majors/map/route.js";
@@ -216,16 +217,16 @@ test("provisional transfer credit, missing work and an invalid double allocation
   const requirement = { id: "eco-113", label: "ECO 113", options: ["ECO 113"] };
   const provisional = { slotId: "eco-113", code: "ECO 113", status: "transfer", evidenceStatus: "PROVISIONAL" };
   const mapping = { requirements: [requirement], assignments: [provisional], strict: { assignments: [] } };
-  let row = buildMajorRequirementsChecklist({ mapping }).rows[0];
+  let row = buildMajorRequirementsChecklist({ mapping, policyBundle: runtimePolicyBundle() }).rows[0];
   assert.equal(row.status, "still_needed");
-  assert.deepEqual(row.markers, ["Ask your advisor whether this course counts toward the major."]);
-  row = buildMajorRequirementsChecklist({ mapping: { requirements: [requirement], assignments: [] } }).rows[0];
+  assert.deepEqual(row.markers, ["Ask your advisor whether ECO 113 counts toward the major."]);
+  row = buildMajorRequirementsChecklist({ mapping: { requirements: [requirement], assignments: [] }, policyBundle: runtimePolicyBundle() }).rows[0];
   assert.equal(row.status, "still_needed");
   assert.equal(row.courseTerm, "No class matched yet");
   const duplicate = { validation: { valid: false, requirementAllocation: { assignments: [
     { slotId: "eco-113", code: "ECO 113", source: "planned" }, { slotId: "eco-elective-1", code: "ECO 113", source: "planned" }
   ] } }, terms: [{ term: "Winter 2028", courses: [{ course: "ECO 113", requirementId: "eco-113" }, { course: "ECO 113", requirementId: "eco-elective-1" }] }] };
-  const rows = buildMajorRequirementsChecklist({ plan: duplicate, mapping: { requirements: [requirement, { id: "eco-elective-1", label: "Elective", kind: "elective" }] } }).rows;
+  const rows = buildMajorRequirementsChecklist({ plan: duplicate, mapping: { requirements: [requirement, { id: "eco-elective-1", label: "Elective", kind: "elective" }] }, policyBundle: runtimePolicyBundle() }).rows;
   assert.ok(rows.every(item => item.status === "still_needed" && item.markers.includes("Listed more than once. It counts once.")));
 });
 
