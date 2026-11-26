@@ -69,7 +69,7 @@ test("checklist markers name historical, AP, transfer, duplicate, enrollment, an
   const marker = (reasonCode, code) => checklistMarkerForAdvisorAction({ reasonCode, affectedObject: { course: code } }, { student, policyBundle });
   assert.equal(marker("HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW", "ECO 214"), "ECO 114 is marked Taking now, but ECO 214 needs it done first. Ask your advisor to check.");
   assert.doesNotMatch(marker("HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW", "ECO 214"), /this class/);
-  assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "ECO 113"), "AP/exam credit. Confirm with your advisor that it counts.");
+  assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "ECO 113"), "AP credit. Confirm with your advisor that it counts.");
   assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "MAT 113"), "Transfer credit. Confirm with your advisor that it counts.");
   assert.equal(marker("COURSE_DUPLICATED", "ECO 214"), "Listed more than once. It counts once.");
   assert.equal(marker("ENROLLMENT_FULL", "ECO 214"), "Check this class’s enrollment status");
@@ -137,8 +137,8 @@ test("freshman ECO 213 taking now is retained, flagged, and shown in the plan an
 test("validated AP and transfer checklist rows show the evidence reason", async () => {
   const base = { displayName: "Fictional student", academicStanding: "sophomore", entryCatalogYear: "2025-2026", planningPace: "one_year_early", planCreationDate: "2026-09-28" };
   for (const [history, expected] of [
-    [course("ECO 113", "completed", "ap_credit"), "AP/exam credit. Confirm with your advisor that it counts."],
-    [course("ECO 113", "transfer", "transfer_equivalency_unapproved"), "Transfer credit. Confirm with your advisor that it counts."]
+    [course("ECO 113", "completed", "ap_credit"), "Confirm with your advisor that it counts."],
+    [course("ECO 113", "transfer", "transfer_equivalency_unapproved"), "Confirm with your advisor that it counts."]
   ]) {
     const response = await POST(new Request("http://localhost/api/majors/map", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student: { ...base, courses: [history] } }) }));
     assert.equal(response.status, 200);

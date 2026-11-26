@@ -32,6 +32,7 @@ Rule or reason code → policy message keys → panel students.
 - **move.sameTermPrerequisiteOtherApproval** → 02, 16, 19, 32
 - **move.takePrerequisiteFirst** → 16, 17, 18, 32
 - **move.winterOnly** → 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 35, 36, 39, 42, 43, 44, 46, 47, 48, 49
+- **noPlan.noneFits** → 20, 29, 41, 50
 - **planNote.mathSequence** → 02, 16, 19, 32
 - **termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE** → 21, 28, 30, 32
 - **termLoad.economicsLoadAboveNormal** → 21, 28, 30, 32
@@ -82,7 +83,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): Check the student’s earlier course or transfer records to confirm whether ECO 114 was completed before ECO 214.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19, 32): Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47): Check with your advisor
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): CHECKLIST CELL: AP credit AP/exam credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46): CHECKLIST CELL: AP credit Confirm with your advisor that it counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 24, 27, 28, 30, 36, 39, 42, 44): CHECKLIST CELL: BUSN 323
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 13, 21): CHECKLIST CELL: BUSN 323 — Fall 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 19, 47, 48): CHECKLIST CELL: BUSN 323 — Fall 2028
@@ -161,7 +162,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 23, 24): CHECKLIST CELL: PSY 217
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: Statistics
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18, 19, 36): CHECKLIST CELL: Taking now
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): CHECKLIST CELL: Transfer credit Transfer credit.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): CHECKLIST CELL: Transfer credit Confirm with your advisor that it counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 39, 42, 44, 48, 49): Completed Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): Completed Taking now Planned
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Completed Transfer credit Planned
@@ -174,7 +175,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Confirm whether the student’s AP credit for ECO 113 and MAT 121 counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Confirm whether the student’s AP credit for ECO 113, ECO 114, and MAT 121 counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Confirm whether the student’s transfer credit for ECO 113 and MAT 121 counts.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05, 46, 47): Confirm with your advisor that it counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
@@ -463,7 +463,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Actual offerings may differ.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Add Econ course
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 46): AP credit
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 46): AP credit AP/exam credit.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 46): AP credit Confirm with your advisor that it counts.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): Ask the ECO 213 instructor for approval.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08): Ask your advisor and the Registrar to confirm you can take ECO 461 then.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 16, 17, 18, 19, 32, 42, 46, 47): Ask your advisor to review the reason below before relying on this plan.
@@ -610,7 +610,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Click a course to see where it can move.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 19, 46, 47, 48, 49): Compare your course plans
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 46, 47): Confirm with your advisor that it counts.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05): Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 46): Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
@@ -725,7 +724,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): More planning details
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 16, 17, 18, 19, 20, 29, 32, 41, 42, 46, 47, 50): Needs advisor attention
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08, 10, 11, 21, 28, 30): Needs confirmation
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20, 29, 41, 50): No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): No plan fits with the room saved for other courses.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): No plan fits with these study-abroad terms.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): None
@@ -815,7 +813,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): This plan uses the current Economics major requirements.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 35, 43): To finish by May 2027, you must take it in Winter 2027.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Transfer credit
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Transfer credit Transfer credit.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): Transfer credit Confirm with your advisor that it counts.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): We can’t show a full plan yet.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03): We don’t know if there are open seats in ECO 113, ECO 114, and ECO 222.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02): We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217.

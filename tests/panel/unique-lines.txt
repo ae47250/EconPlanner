@@ -29,7 +29,7 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	A past schedule does not guarantee a course will be offered again.
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	About you
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Add Econ course
-05, 46	AP credit AP/exam credit. Confirm with your advisor that it counts.
+05, 46	AP credit Confirm with your advisor that it counts.
 05, 46	AP credit Planned
 10, 11, 21, 28, 30, 32	Approval needed
 02, 03, 07, 08	Ask your advisor and the Registrar to confirm senior standing
@@ -152,8 +152,8 @@
 01, 02	ECO 113 ECO 113 — Fall 2027 ○ Planned
 18	ECO 113 ECO 113 — Taking now ◐ In progress
 01, 02, 03, 13, 16	ECO 113 ECO 113 — Winter 2027 ○ Planned
-05, 46	ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
-47	ECO 113 ECO 113 ? Transfer credit Transfer credit. Confirm with your advisor that it counts.
+05, 46	ECO 113 ECO 113 ? AP credit Confirm with your advisor that it counts.
+47	ECO 113 ECO 113 ? Transfer credit Confirm with your advisor that it counts.
 07, 08, 09, 10, 11, 12, 14, 15, 17, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 48, 49	ECO 113 ECO 113 ✓ Completed
 01, 02, 03, 16	ECO 113-J
 01, 02, 03, 16	ECO 113-J ▾ | Principles of Microeconomics
@@ -170,7 +170,7 @@
 11	ECO 114 ▾ | Principles of Macroeconomics
 11	ECO 114 ECO 114 — Fall 2027 ○ Planned
 01, 02, 03, 05, 17, 19	ECO 114 ECO 114 — Winter 2027 ○ Planned
-46	ECO 114 ECO 114 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
+46	ECO 114 ECO 114 ? AP credit Confirm with your advisor that it counts.
 07, 08, 09, 10, 12, 13, 14, 15, 16, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49	ECO 114 ECO 114 ✓ Completed
 01, 02, 03, 05, 17, 19	ECO 114-J
 01, 02, 03, 05, 17, 19	ECO 114-J ▾ | Principles of Macroeconomics
@@ -421,8 +421,8 @@
 01, 02	Mathematics MAT 113 — Winter 2028 ○ Planned
 49	Mathematics MAT 113 ✓ Completed
 19	Mathematics MAT 121 — Taking now ◐ In progress
-05, 46	Mathematics MAT 121 ? AP credit AP/exam credit. Confirm with your advisor that it counts.
-47	Mathematics MAT 121 ? Transfer credit Transfer credit. Confirm with your advisor that it counts.
+05, 46	Mathematics MAT 121 ? AP credit Confirm with your advisor that it counts.
+47	Mathematics MAT 121 ? Transfer credit Confirm with your advisor that it counts.
 07, 08, 09, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44	Mathematics MAT 121 ✓ Completed
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	May
 41	May 2026
@@ -438,7 +438,7 @@
 05, 16, 17, 18, 19, 20, 29, 32, 41, 42, 46, 47, 50	Needs advisor attention
 02, 03, 07, 08, 10, 11, 21, 28, 30	Needs confirmation
 08, 46, 47, 48, 49	No Economics course this term
-20, 29, 41, 50	No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
+20, 29, 41, 50	No plan fits all your choices. Change your answers, choose a later graduation year, or talk with your advisor.
 29, 50	No plan fits with the room saved for other courses.
 20	No plan fits with these study-abroad terms.
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	None
@@ -635,7 +635,7 @@
 07, 08, 11, 13, 16, 17, 21	This plan uses the current Economics major requirements. Your plan counts BUSN 323. Your 2024–25 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.
 23	This plan uses the current Economics major requirements. Your plan counts PSY 217. Your 2023–24 catalog does not accept it. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee. Your 2023–24 catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.
 02, 08	Timeline: One year early
-47	Transfer credit Transfer credit. Confirm with your advisor that it counts.
+47	Transfer credit Confirm with your advisor that it counts.
 41	We can’t show a full plan yet.
 03	We don’t know if there are open seats in ECO 113, ECO 114, and ECO 222. Check the registration system before you register.
 01, 02	We don’t know if there are open seats in ECO 113, ECO 114, and MAT 217. Check the registration system before you register.

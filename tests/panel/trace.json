@@ -297,6 +297,15 @@
       ]
     },
     {
+      "messageKey": "noPlan.noneFits",
+      "studentIds": [
+        "20",
+        "29",
+        "41",
+        "50"
+      ]
+    },
+    {
       "messageKey": "planNote.mathSequence",
       "studentIds": [
         "02",
@@ -1127,7 +1136,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: AP credit AP/exam credit.",
+      "sentence": "CHECKLIST CELL: AP credit Confirm with your advisor that it counts.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2797,7 +2806,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Transfer credit Transfer credit.",
+      "sentence": "CHECKLIST CELL: Transfer credit Confirm with your advisor that it counts.",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -2967,19 +2976,6 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
-        "47"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Confirm with your advisor that it counts.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "05",
-        "46",
         "47"
       ]
     },
@@ -8746,7 +8742,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "AP credit AP/exam credit.",
+      "sentence": "AP credit Confirm with your advisor that it counts.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
@@ -11181,19 +11177,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Confirm with your advisor that it counts.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "05",
-        "46",
-        "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -13616,20 +13599,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "20",
-        "29",
-        "41",
-        "50"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "No plan fits with the room saved for other courses.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -15573,7 +15542,7 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Transfer credit Transfer credit.",
+      "sentence": "Transfer credit Confirm with your advisor that it counts.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
