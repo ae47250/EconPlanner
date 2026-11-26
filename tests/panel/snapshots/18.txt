@@ -20,7 +20,7 @@ ECO 113
 Status
 Needs advisor attention
 Ask your advisor to review the reason below before relying on this plan.
-Why: You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
+Why: ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
@@ -68,7 +68,7 @@ Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
 Before you register
 We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222. Check the registration system before you register.
 Check with your advisor
-You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
+ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
 This plan uses the current Economics major requirements.
 SCREEN > Plan: Balanced > Checklist
 Major requirements checklist
@@ -170,7 +170,7 @@ Before taking ECO 461 in Winter 2028, finish ECO 214 and MAT 217.
 Before you register
 We don’t know if there are open seats in ECO 221, ECO 321, MAT 217, and ECO 222. Check the registration system before you register.
 Check with your advisor
-You marked ECO 213 completed, but ECO 113, which comes before it, is marked Taking now. If that was a mistake, change one of them. If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.
+ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
 This plan uses the current Economics major requirements.
 PDF > Plan: Balanced > For your advisor
 For your advisor

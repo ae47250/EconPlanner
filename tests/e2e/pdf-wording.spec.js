@@ -31,10 +31,10 @@ test("freshman completed-course and catalog-year advice appears under Check with
   const card = await visitPlan(page, "balanced");
   await card.locator("summary").filter({ hasText: "Things to keep in mind" }).click();
   const notes = card.locator("[data-plan-conditions]");
-  const historyBullets = notes.locator("li").filter({ hasText: "You marked ECO 214 completed" });
-  await expect(historyBullets).toHaveCount(2);
-  await expect(historyBullets.nth(0)).toContainText("ECO 114, which comes before it, is marked Taking now.");
-  await expect(historyBullets.nth(1)).toContainText("MAT 113 or MAT 121, which comes before it, is not marked completed.");
+  const historyBullets = notes.locator("li").filter({ hasText: "ECO 214 is marked completed" });
+  await expect(historyBullets).toHaveCount(1);
+  await expect(historyBullets).toContainText("ECO 214 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.");
+  await expect(historyBullets).toContainText("ECO 214 is marked completed, but ECO 114 is marked Taking now. Fix one of them, or your advisor will check.");
   await expect(notes).not.toContainText("Your answers do not show ECO 114");
   await expect(notes.locator("h3").filter({ hasText: "Check with your advisor" })).toBeVisible();
   await expect(notes).not.toContainText("Based on your class year, your catalog year is likely");
@@ -54,7 +54,7 @@ test("freshman ECO 213 Taking now with an unmarked prerequisite stays in the pla
   const response = await generatePlans(page);
   const mapped = (await response.json()).programs.find(item => item.program?.id === "economics-base");
   const plan = mapped.economicsPlans.find(item => item.id === "balanced");
-  const reason = "You are taking ECO 213, but MAT 113 or MAT 121, which comes before it, is not marked. If you finished one or are taking it now, mark it. Otherwise your advisor will check it.";
+  const reason = "ECO 213 needs MAT 113 or MAT 121 first. Mark it Completed or Taking now, or your advisor will check.";
   await expect(page.locator(".result-status-value")).toHaveText("Needs advisor attention");
   await expect(page.locator(".result-status-reason").last()).toContainText(reason);
   const card = await visitPlan(page, "balanced");

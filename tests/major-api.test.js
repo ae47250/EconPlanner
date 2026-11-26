@@ -598,7 +598,7 @@ test("major mapper retains an in-progress course with missing prerequisites for 
   assert.equal(response.status, 200);
   const economics = data.programs.find(result => result.program?.id === "economics-base");
   assert.ok(economics.economicsPlans.length);
-  assert.ok(economics.economicsPlans[0].planConditions.some(item => item.course === "ECO 213" && /You are taking ECO 213/.test(item.message)));
+  assert.ok(economics.economicsPlans[0].planConditions.some(item => item.course === "ECO 213" && /^ECO 213 needs ECO 113 and either MAT 113 or MAT 121 first\./.test(item.message)));
 });
 
 test("major mapper does not request new approval for current concurrent math", async () => {

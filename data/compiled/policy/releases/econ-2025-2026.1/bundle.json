@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:52b31db51437c4e04f2585b173ac658134342622f2a83538794aad3d6de19cbd",
+  "contentHash": "sha256:41ab7a3922fa3c5773be0208201140fcb40b4e766fb9f5bd9532124874014ead",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7035,6 +7035,12 @@
     "electivePlanning.limit": "At most one Economics elective may be planned in an unpublished Fall, Winter or May term. Extra electives require matching verified sections and all academic checks.",
     "electivePlanning.named": "This named future course needs a matching verified offering. Use an eligible elective slot or confirm the finance requirement with your advisor.",
     "history.advisor": "Historical prerequisite evidence is incomplete and requires review.",
+    "history.bothTakingNowMany": "{prerequisites} come before {course}, but all are marked Taking now. Check them. If that’s right, your advisor will confirm.",
+    "history.bothTakingNowOne": "{prerequisites} comes before {course}, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.",
+    "history.completedMissingMany": "{course} is marked completed, but {missing} are not marked. Mark them, or your advisor will check.",
+    "history.completedMissingOne": "{course} is marked completed, but {missing} is not marked. Mark it, or your advisor will check.",
+    "history.completedPrerequisiteTakingNowMany": "{course} is marked completed, but {prerequisites} are marked Taking now. Fix them, or your advisor will check.",
+    "history.completedPrerequisiteTakingNowOne": "{course} is marked completed, but {prerequisites} is marked Taking now. Fix one of them, or your advisor will check.",
     "history.hanoverOnlyCompleted": "You marked {course} as completed. Your advisor will confirm it.",
     "history.hanoverOnlyCompletedAdvisor": "Confirm the student completed {course} at Hanover College.",
     "history.hanoverOnlyTakingNow": "You marked {course} as taking now. Your advisor will confirm it.",
@@ -7043,6 +7049,8 @@
     "history.report": "Completed or transfer history is retained with an advisor-review finding when evidence is incomplete.",
     "history.scheduledPrerequisite": "This class is a prerequisite for {course}, which you marked completed. Check with your advisor.",
     "history.student": "Your completed course is retained, but an advisor should review missing prerequisite details.",
+    "history.takingNowNeedsMany": "{course} needs {missing} first. Mark them Completed or Taking now, or your advisor will check.",
+    "history.takingNowNeedsOne": "{course} needs {missing} first. Mark it Completed or Taking now, or your advisor will check.",
     "history.takingNowNotOffered": "{course} is not on the {term} schedule. If you are taking it at another school, your advisor will check whether it counts.",
     "history.takingNowNotOfferedAdvisor": "Confirm where the student is taking {course} in {term}. It is not on the Hanover {term} schedule.",
     "infeasibility.capstone.seniorStanding": "ECO 461 requires senior standing and is offered only in Winter. Your graduation year alone does not establish senior standing. Ask your advisor and the Registrar to confirm it, or choose a later graduation year.",

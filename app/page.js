@@ -11,13 +11,17 @@ import { requirementFormGroups } from "../lib/planning/requirementFormChoices.js
 import economicsRequirements from "../data/normalized/economics/requirements.json";
 import { followingMayId, joinStudyAbroadTerms, studyAbroadTermIds, termReservationLimit, updateStudyAbroadReservation } from "../lib/planning/study-abroad.js";
 import prerequisitePolicy from "../policy/rules/prerequisites.json";
-import { historicalPrerequisiteGaps, historicalPrerequisiteMessage } from "../lib/planning/historical-prerequisites.js";
+import permissionPolicy from "../policy/rules/permissions-exceptions.json";
+import policyMessages from "../policy/messages/en-US.json";
+import { historicalPrerequisiteCourseMessage } from "../lib/planning/historical-prerequisites.js";
 import { planningRequirementsNote } from "../lib/catalog/planning-requirements-note.js";
 import { studentTermLabel } from "../lib/planning/student-language.js";
 import { plannerStyles } from "./styles/plannerStyles";
 import { COURSE_CATALOG, COURSE_PREREQUISITES, isTaken, courseTitle, economicsResult, planCourseIdentity, planningSlotsLabel } from "./plannerShared.js";
 import { PlanComparisonScreen } from "./components/PlanComparisonScreen.js";
 import { ClearAllDialog, PlannerSummary } from "./components/plannerSummary.js";
+
+const HISTORY_RULES = [...prerequisitePolicy.records, ...permissionPolicy.records];
 
 const PLANNER_STORAGE_KEY = "econ-planner-ui-state";
 
@@ -1476,11 +1480,11 @@ export default function Page() {
             )}
           </div>
         )}
-        {course && ["completed", "transfer", "in_progress"].includes(course.status) && historicalPrerequisiteGaps(course.code, formData.courses, prerequisitePolicy.records).map(gap => (
-          <p className="prerequisite-conflict" role="status" key={gap.label}>{historicalPrerequisiteMessage(gap)}</p>
-        ))}
-        {course && !(course.status === "in_progress" && historicalPrerequisiteGaps(course.code, formData.courses, prerequisitePolicy.records).length)
-          && renderPrerequisiteFollowUp(course)}
+        {course && ["completed", "transfer", "in_progress"].includes(course.status) && (() => {
+          const message = historicalPrerequisiteCourseMessage(course.code, formData.courses, HISTORY_RULES, policyMessages.messages);
+          return message ? <p className="prerequisite-conflict" role="status">{message}</p> : null;
+        })()}
+        {course && renderPrerequisiteFollowUp(course)}
       </div>
     );
   }

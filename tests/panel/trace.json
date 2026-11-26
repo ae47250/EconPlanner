@@ -70,10 +70,35 @@
       ]
     },
     {
+      "messageKey": "history.completedMissingOne",
+      "studentIds": [
+        "16",
+        "32"
+      ]
+    },
+    {
+      "messageKey": "history.completedPrerequisiteTakingNowOne",
+      "studentIds": [
+        "18"
+      ]
+    },
+    {
       "messageKey": "history.scheduledPrerequisite",
       "studentIds": [
         "16",
         "32"
+      ]
+    },
+    {
+      "messageKey": "history.takingNowNeedsMany",
+      "studentIds": [
+        "17"
+      ]
+    },
+    {
+      "messageKey": "history.takingNowNeedsOne",
+      "studentIds": [
+        "17"
       ]
     },
     {
@@ -144,22 +169,15 @@
       ]
     },
     {
-      "messageKey": "move.sameTermPrerequisiteApproval",
+      "messageKey": "move.sameTermPrerequisiteOtherApproval",
       "studentIds": [
-        "16",
-        "17",
-        "18",
-        "32"
+        "02"
       ]
     },
     {
-      "messageKey": "move.sameTermPrerequisiteOtherApproval",
+      "messageKey": "move.takePrerequisiteFirst",
       "studentIds": [
-        "02",
-        "16",
-        "17",
-        "18",
-        "32"
+        "17"
       ]
     },
     {
@@ -4643,61 +4661,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "If that was a mistake, change one of them.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "If you finished ECO 113 or have transfer/AP credit for it, mark it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "32"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "If you finished one or are taking it now, mark it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "In past schedules, ECO 213 and ECO 214 were offered in different Fall or Winter terms.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -4965,19 +4928,6 @@
       },
       "studentIds": [
         "16",
-        "32"
-      ]
-    },
-    {
-      "section": "PDF",
-      "sentence": "Otherwise your advisor will check it.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "16",
-        "17",
         "32"
       ]
     },
@@ -13370,61 +13320,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "If it is correct (for example, you are retaking ECO 113), keep both and your advisor will check it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "If that was a mistake, change one of them.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "18"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "If you finished ECO 113 or have transfer/AP credit for it, mark it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "If you finished MAT 113 or MAT 121 or have transfer/AP credit for it, mark it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "32"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "If you finished one or are taking it now, mark it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "17"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Its future offering is not confirmed.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -14269,19 +14164,6 @@
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Otherwise your advisor will check it.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "16",
-        "17",
-        "32"
       ]
     },
     {
