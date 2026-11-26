@@ -220,3 +220,24 @@ test('automatic raw-history allocations do not count as declared elective-slot r
   assert.ok(result.decisions.some(decision => decision.reasonCode === 'REQUIREMENT_DUPLICATED'));
   assert.ok(!result.decisions.some(decision => decision.reasonCode === 'DUPLICATE_ELECTIVE_SLOT_ASSIGNMENT'));
 });
+
+test("remembered rule lookups never go stale when a copy of the rules is edited", async () => {
+  const { canonicalAllocationCourse } = await import("../lib/decision-engine/requirements.js");
+  const { termLoadRule } = await import("../lib/policy/term-load.js");
+  const { runtimePolicyBundle } = await import("../lib/policy/compat-normalized.js");
+  const copy = structuredClone(runtimePolicyBundle());
+  // Ask first, then edit the copy: the next answer must reflect the edit.
+  assert.equal(canonicalAllocationCourse("TST 777", copy), "TST 777");
+  const equivalence = Object.values(copy.indexes.byRuleId).find(rule => rule.effect?.canonicalCourse && rule.condition?.equivalentCodes);
+  equivalence.condition.equivalentCodes.push("TST 777");
+  assert.equal(canonicalAllocationCourse("TST 777", copy), equivalence.effect.canonicalCourse);
+  const winter = termLoadRule(copy, { termKey: "Winter" });
+  assert.ok(winter);
+  copy.rules.splice(copy.rules.indexOf(winter), 1);
+  assert.equal(termLoadRule(copy, { termKey: "Winter" }), null);
+  // The locked production rules give the same answers as a plain search.
+  const live = runtimePolicyBundle();
+  for (const code of ["ECO 113", "eco 214", "TST 777", ""]) {
+    assert.equal(canonicalAllocationCourse(code, live), canonicalAllocationCourse(code, structuredClone(live)));
+  }
+});
