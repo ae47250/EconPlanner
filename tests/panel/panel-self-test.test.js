@@ -136,7 +136,9 @@ test("owner decision 2026-11-26: panel lint fails when a credit label prints twi
     await mkdir(snapshotDir);
     for (const doubled of [
       "CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP/exam credit. Confirm with your advisor that it counts.",
-      "CHECKLIST CELL: Transfer credit Transfer credit. Confirm with your advisor that it counts."
+      "CHECKLIST CELL: Transfer credit Transfer credit. Confirm with your advisor that it counts.",
+      "CHECKLIST ROW: ECO 113 ECO 113 ? AP credit AP credit. Confirm with your advisor that it counts.",
+      "CHECKLIST CELL: Transfer credit Transfer credit Confirm with your advisor that it counts."
     ]) {
       await writeFile(path.join(snapshotDir, "01.txt"), ["SCREEN", "SCREEN > Plan: Balanced", "STATUS: Needs confirmation", doubled, "PDF", ""].join("\n"));
       const result = invoke(lintScript, ["--snapshots-dir", snapshotDir]);

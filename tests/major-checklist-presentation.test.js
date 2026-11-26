@@ -117,9 +117,9 @@ test("AP and transfer checklist credit and grouped advisor text agree in API and
     for (const course of courses) {
       const row = plan.majorRequirementsChecklist.rows.find(item => item.course === course.code);
       assert.equal(row.statusLabel, label);
-      assert.ok(row.markers.some(marker => marker === (label === "AP credit"
-        ? "Confirm with your advisor that it counts."
-        : "Confirm with your advisor that it counts.")));
+      // The row's status label names the credit; the note does not repeat it.
+      assert.ok(row.markers.includes("Confirm with your advisor that it counts."));
+      assert.ok(!row.markers.some(marker => marker.startsWith(label)));
     }
     assert.equal(plan.planConditions.filter(item => item.message === message).length, 1);
     const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan);

@@ -102,6 +102,8 @@
     "checklist.prerequisiteNotCompleted": "{prerequisite} isn’t marked completed, and {course} needs it first. Ask your advisor to check.",
     "checklist.prerequisiteTakingNow": "{prerequisite} is marked Taking now, but {course} needs it done first. Ask your advisor to check.",
     "checklist.creditConfirm": "Confirm with your advisor that it counts.",
+    "checklist.creditConfirmAp": "AP credit. Confirm with your advisor that it counts.",
+    "checklist.creditConfirmTransfer": "Transfer credit. Confirm with your advisor that it counts.",
     "noPlan.noneFits": "No plan fits all your choices. Change your answers, choose a later graduation year, or talk with your advisor.",
     "checklist.concurrentPrerequisite": "{prerequisite} comes before {course}. Taking both in the same term needs the {course} instructor’s approval.",
     "catalog.petitionPlanCounts": "Your plan counts {courses}. Your {shortYear} catalog does not accept {pronoun}. Ask your advisor to help you file a routine petition with the Student Academic Assistance Committee.",

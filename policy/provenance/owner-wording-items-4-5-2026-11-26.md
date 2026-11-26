@@ -9,4 +9,6 @@ Authority: project owner and Economics Department domain expert, explicit instru
 
 Item 5 uses Claude’s cause-neutral wording, chosen by the owner, because the line also appears when room saved for other courses is the real cause.
 
-Panel check: the owner approved updating the student panel’s duplicate check (`scripts/panel/lint.mjs`) to recognise the new credit note, on the condition that it still fails if a label prints twice. It now flags “AP credit AP/exam credit” and “Transfer credit Transfer credit” as duplicates (tested in `tests/panel/panel-self-test.test.js`).
+Panel check: the owner approved updating the student panel’s duplicate check (`scripts/panel/lint.mjs`) to recognise the new credit note, on the condition that it still fails if a label prints twice. It now flags any credit label printed twice in a checklist line (for example “AP credit AP/exam credit”, “AP credit AP credit”, “Transfer credit Transfer credit”) as a duplicate (tested in `tests/panel/panel-self-test.test.js`).
+
+The plan grid and PDF course notes have no status label beside them, so there the note keeps its label: “AP credit. Confirm with your advisor that it counts.” / “Transfer credit. Confirm with your advisor that it counts.”

@@ -96,7 +96,7 @@ for (const file of files) {
     // The same note may repeat for different courses, but a label printed twice is a duplicate.
     const creditMarker = /^CHECKLIST (?:ROW|CELL):/.test(line)
       && /(?:AP credit|Transfer credit) Confirm with your advisor that it counts\./.test(line);
-    if (/^CHECKLIST (?:ROW|CELL):/.test(line) && /AP credit AP\/exam credit|Transfer credit Transfer credit/.test(line)) flag("duplicate", line);
+    if (/^CHECKLIST (?:ROW|CELL):/.test(line) && /(?:AP(?:\/exam)? credit|Transfer credit)\.?\s+(?:AP(?:\/exam)? credit|Transfer credit)\b/.test(line)) flag("duplicate", line);
     const creditCourse = line.startsWith("CHECKLIST ROW:")
       ? line.match(/\b(?:ECO|MAT|BUSN|PSY)\s*\d{3}\b/)?.[0]
       : record.checklistCourse;

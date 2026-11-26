@@ -69,8 +69,8 @@ test("checklist markers name historical, AP, transfer, duplicate, enrollment, an
   const marker = (reasonCode, code) => checklistMarkerForAdvisorAction({ reasonCode, affectedObject: { course: code } }, { student, policyBundle });
   assert.equal(marker("HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW", "ECO 214"), "ECO 114 is marked Taking now, but ECO 214 needs it done first. Ask your advisor to check.");
   assert.doesNotMatch(marker("HISTORICAL_PREREQUISITE_EVIDENCE_REVIEW", "ECO 214"), /this class/);
-  assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "ECO 113"), "Confirm with your advisor that it counts.");
-  assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "MAT 113"), "Confirm with your advisor that it counts.");
+  assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "ECO 113"), "AP credit. Confirm with your advisor that it counts.");
+  assert.equal(marker("COURSE_EVIDENCE_SCOPE_REVIEW", "MAT 113"), "Transfer credit. Confirm with your advisor that it counts.");
   assert.equal(marker("COURSE_DUPLICATED", "ECO 214"), "Listed more than once. It counts once.");
   assert.equal(marker("ENROLLMENT_FULL", "ECO 214"), "Check this class’s enrollment status");
   const fallbackCodes = ["UNRECOGNIZED_REVIEW_REASON"].filter(code => marker(code, "ECO 214") === "Ask an advisor whether this class counts");
