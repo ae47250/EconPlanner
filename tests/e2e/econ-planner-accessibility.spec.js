@@ -86,8 +86,8 @@ test("an in-progress prerequisite gap remains accessible for advisor review", as
 
   await expect(page.getByRole("button", { name: "Generate my plans" })).toBeEnabled();
   await generatePlans(page);
-  await expect(page.locator("[data-plan-conditions]").first()).toContainText("Your answers do not show ECO 113 completed before ECO 213.");
-  await expect(page.locator("[data-plan-conditions]").first()).toContainText("ECO 113 is marked “Taking now.”");
+  // Owner decision 2026-11-25: both Taking now gets the warning (display only; plans still generate).
+  await expect(page.locator("[data-plan-conditions]").first()).toContainText("ECO 113 comes before ECO 213, but both are marked Taking now. Check both. If that’s right, your advisor will confirm.");
   await expectNoAxeViolations(page);
 });
 
