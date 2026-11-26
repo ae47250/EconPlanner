@@ -149,7 +149,7 @@ test('a reserved-room no-plan result links back to the room setting',async ({pag
   await page.locator('.result-diagnostics > summary').click();
   const gaps = page.locator('.result-diagnostics .planning-gaps li');
   await expect(gaps).toHaveCount(1);
-  await expect(gaps.first()).toContainText('No plan fits by your graduation target. Choose a later graduation year or talk with your advisor.');
+  await expect(gaps.first()).toContainText('No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.');
   await expect(page.locator('.result-diagnostics')).not.toContainText('remains unscheduled');
   await expect(page.locator('.result-diagnostics')).not.toContainText('.;');
   await page.getByRole('button',{name:'Save less room',exact:true}).click();

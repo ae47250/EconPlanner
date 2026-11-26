@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:5ddd61192d0ed3e214629359dfd8a2eb3e85e51259c2f461016fc2bc2eee83c8",
+  "contentHash": "sha256:004945cd114ec786356ba3e33aa00f6eb69c8e13d38fc33cf95fe9a1d9c5763e",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7095,7 +7095,6 @@
     "move.takePrerequisiteFirst": "{course} needs {courses} first.",
     "move.termFull": "Term full. Move a course out first.",
     "move.winterOnly": "{course} is offered only in Winter.",
-    "noPlan.noneFits": "No plan fits by your graduation target. Choose a later graduation year or talk with your advisor.",
     "offering.advisor": "The placement is based on preliminary offering evidence and needs schedule confirmation.",
     "offering.confirmed": "This course is listed in the active exact schedule.",
     "offering.confirmed.advisor": "The active exact schedule supports this placement.",
@@ -7140,8 +7139,8 @@
     "termLoad.TERM_OVERLOAD_APPROVED_WITH_RESERVED": "{term} has {plannedCourseCount} courses plus room for {reservedCourseUnits} more. The normal limit is {normalCourseUnits}. You can take up to {conditionalMaximumCourseUnits} units with advisor approval, unless you are on academic probation.",
     "termLoad.TERM_OVERLOAD_EVIDENCE_REQUIRED": "This term would have {courseCount} courses. The normal limit is {normalCourseUnits}. You need advisor approval and must not be on academic probation.",
     "termLoad.TERM_OVERLOAD_NOT_ALLOWED_ON_ACADEMIC_PROBATION": "This term would have {courseCount} courses, above the normal limit of {normalCourseUnits}. Overloads are not allowed during academic probation.",
-    "termLoad.economicsLoadAboveNormal": "{term} has {economicsCount} Economics courses. The department recommends no more than 2. This term is also above the normal course load.",
-    "termLoad.economicsLoadWithOverload": "{term} has {economicsCount} Economics courses. The department recommends no more than 2. This term also needs advisor approval for an overload.",
+    "termLoad.economicsLoadAboveNormal": "{term} has {economicsCount} Economics courses. The department recommends no more than 2. This term also needs advisor approval for an overload.",
+    "termLoad.economicsLoadWithOverload": "{term} has {economicsCount} Economics courses. The department recommends no more than 2. This term uses an approved overload.",
     "termLoad.pending": "A plan may need more than the normal course limit in {terms}. You need advisor approval and must not be on academic probation.",
     "tuition.threshold.exceeded": "This plan totals {modeledUnits} courses in {period}. More than {threshold} may add tuition. Ask the Business Office.",
     "tuition.threshold.possible": "This plan could total {modeledUnits} courses in {period}. More than {threshold} may add tuition. Ask the Business Office.",

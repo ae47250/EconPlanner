@@ -22,8 +22,8 @@ Rule or reason code → policy message keys → panel students.
 - **history.takingNowNotOffered** → 17
 - **history.takingNowNotOfferedAdvisor** → 17
 - **infeasibility.capstone.seniorStanding** → 04, 06
-- **infeasibility.courseCapacity** → 09, 10, 11, 20, 29, 31, 33, 41, 45, 50
-- **infeasibility.electives.capacity** → 09, 10, 11, 20, 29, 31, 33, 41, 45, 50
+- **infeasibility.courseCapacity** → 09, 10, 11, 31, 33, 45
+- **infeasibility.electives.capacity** → 09, 10, 11, 31, 33, 45
 - **infeasibility.electives.conflict** → 37, 38
 - **infeasibility.electives.spring** → 37, 38
 - **infeasibility.finance.forced** → 37
@@ -32,7 +32,6 @@ Rule or reason code → policy message keys → panel students.
 - **move.sameTermPrerequisiteOtherApproval** → 02, 16, 19, 32
 - **move.takePrerequisiteFirst** → 16, 17, 18, 32
 - **move.winterOnly** → 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 35, 36, 39, 42, 43, 44, 46, 47, 48, 49
-- **noPlan.noneFits** → 09, 10, 11, 20, 29, 31, 33, 41, 45, 50
 - **planNote.mathSequence** → 02, 16, 19, 32
 - **termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE** → 21, 28, 30, 32
 - **termLoad.economicsLoadAboveNormal** → 21, 28, 30, 32
@@ -726,6 +725,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): More planning details
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 16, 17, 18, 19, 20, 29, 32, 41, 42, 46, 47, 50): Needs advisor attention
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08, 10, 11, 21, 28, 30): Needs confirmation
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20, 29, 41, 50): No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): No plan fits with the room saved for other courses.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): No plan fits with these study-abroad terms.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): None

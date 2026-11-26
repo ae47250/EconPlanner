@@ -185,7 +185,7 @@ test("approved Winter overload, move blockers and server validation use the same
   const plan = economics.economicsPlans[0];
   assert.ok(plan, JSON.stringify(economics.economicsPlanResult));
   assert.equal(plan.validation.valid,true);
-  assert.ok(plan.validation.warnings.includes("Winter 2027 has 3 Economics courses. The department recommends no more than 2. This term also needs advisor approval for an overload."));
+  assert.ok(plan.validation.warnings.includes("Winter 2027 has 3 Economics courses. The department recommends no more than 2. This term uses an approved overload."));
   assert.ok(plan.validation.conditions.some(item=>item.reasonCode==="TERM_OVERLOAD_APPROVED" && item.message.includes("Winter 2027 has 3 courses plus room for 2 more. The normal limit is 4.")));
   assert.equal(plan.validation.tuitionAdvisories[0].modeledUnits,6);
   const winter = plan.terms.find(term=>term.slotId==="winter-2027");

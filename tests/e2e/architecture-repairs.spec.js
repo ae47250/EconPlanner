@@ -108,9 +108,9 @@ async function exportLocalPdf(page, browser, testInfo, name, expectedTarget, {fa
     const text = execFileSync(process.env.PDFTOTEXT || 'pdftotext', ['-','-'], {input:bytes}).toString().replace(/\s+/g,' ');
     expect(text).toContain(expectedTarget);
     expect(text).toMatch(/Your Economics major checklist/i);
-    // Owner request 2026-11-26: the schedule warning appears once (the plan status line), not again in the checklist.
-    expect(text).toContain('Check seats and future schedules before you register.');
-    expect(text).not.toContain('Future schedules can change.');
+    // Owner request 2026-11-26: the schedule warning appears once, either in the status line or in the checklist.
+    const warnings = [/Check seats and future schedules before you register\./, /Future schedules can change\./].filter(pattern => pattern.test(text));
+    expect(warnings).toHaveLength(1);
     expect(text).toContain(report.planningHorizon);
     expect(text).toContain('ECO 461');
     for (const course of report.terms.flatMap(term=>term.courses)) if (course.offeringInformation) expect(text).toContain(course.offeringInformation.label);

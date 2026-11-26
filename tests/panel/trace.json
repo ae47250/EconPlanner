@@ -183,13 +183,9 @@
         "09",
         "10",
         "11",
-        "20",
-        "29",
         "31",
         "33",
-        "41",
-        "45",
-        "50"
+        "45"
       ]
     },
     {
@@ -198,13 +194,9 @@
         "09",
         "10",
         "11",
-        "20",
-        "29",
         "31",
         "33",
-        "41",
-        "45",
-        "50"
+        "45"
       ]
     },
     {
@@ -302,21 +294,6 @@
         "47",
         "48",
         "49"
-      ]
-    },
-    {
-      "messageKey": "noPlan.noneFits",
-      "studentIds": [
-        "09",
-        "10",
-        "11",
-        "20",
-        "29",
-        "31",
-        "33",
-        "41",
-        "45",
-        "50"
       ]
     },
     {
@@ -13635,6 +13612,20 @@
         "21",
         "28",
         "30"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "20",
+        "29",
+        "41",
+        "50"
       ]
     },
     {

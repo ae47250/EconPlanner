@@ -30,7 +30,7 @@ SCREEN > Why am I seeing this result?
 Why am I seeing this result?
 Balanced: No complete plan found
 What still needs attention
-No plan fits by your graduation target. Choose a later graduation year or talk with your advisor.
+No graduation-feasible plan fits the available schedule, prerequisite sequence, section availability, and course-load limits.
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.
 PDF
