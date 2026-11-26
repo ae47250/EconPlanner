@@ -33,8 +33,7 @@ test("freshman completed-course and catalog-year advice appears under Check with
   const notes = card.locator("[data-plan-conditions]");
   const historyBullets = notes.locator("li").filter({ hasText: "ECO 214 is marked completed" });
   await expect(historyBullets).toHaveCount(1);
-  await expect(historyBullets).toContainText("ECO 214 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check.");
-  await expect(historyBullets).toContainText("ECO 214 is marked completed, but ECO 114 is marked Taking now. Fix one of them, or your advisor will check.");
+  await expect(historyBullets).toHaveText("ECO 214 is marked completed, but MAT 113 or MAT 121 is not marked, and ECO 114 is marked Taking now. Fix these, or your advisor will check.");
   await expect(notes).not.toContainText("Your answers do not show ECO 114");
   await expect(notes.locator("h3").filter({ hasText: "Check with your advisor" })).toBeVisible();
   await expect(notes).not.toContainText("Based on your class year, your catalog year is likely");

@@ -27,6 +27,15 @@ Item 3’s suggestion “Mark it Completed or Taking now” contradicted item 6:
 - A pairing policy allows in the same term (MAT 113/121 with ECO 213/214; ECO 213 or ECO 214 with ECO 461 when the other is completed): keeps “Mark it Completed or Taking now”.
 - Both kinds in one course: “ECO 213 needs ECO 113 and either MAT 113 or MAT 121 first. Mark ECO 113 Completed and the math course Completed or Taking now, or your advisor will check.”
 
+## Update, November 26, 2026: one sentence for mixed cases (owner wording)
+
+When one course has both a missing prerequisite and a prerequisite marked Taking now, one sentence replaces the two:
+
+- Completed course: “ECO 461 is marked completed, but ECO 213 and ECO 214 are not marked, and ECO 257 is marked Taking now. Fix these, or your advisor will check.” (“is”/“are” follow the number of courses.)
+- Taking-now course: “ECO 213 needs MAT 113 or MAT 121 first. Mark it Completed or Taking now. ECO 113 comes before ECO 213, but both are marked Taking now, so check both. Your advisor will confirm.”
+
+Courses with only one kind of gap keep their earlier sentences.
+
 ## Where
 
 Messages: `policy/messages/en-US.json` (`history.completedMissing*`, `history.completedPrerequisiteTakingNow*`, `history.takingNowNeeds*`, `history.bothTakingNow*`). Selection: `historicalPrerequisiteCourseMessage` in `lib/planning/historical-prerequisites.js`, used by the Course History screen (`app/page.js`) and by plan notes and the PDF (`lib/planning/plan-presentation.js`).

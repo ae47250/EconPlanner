@@ -1,4 +1,6 @@
 import test from "node:test";
+import messageFile from "../policy/messages/en-US.json" with { type: "json" };
+const MESSAGES = messageFile.messages;
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
@@ -207,10 +209,10 @@ for (const [math, economics] of [
         { courses: [{ course: math }] },
         { courses: [{ course: economics }] }
       ]
-    }, prerequisites);
+    }, prerequisites, MESSAGES);
 
     assert.equal(notes.length, 1);
-    assert.match(notes[0], new RegExp(`Take ${math} before ${economics}`));
+    assert.equal(notes[0], `${math} comes before ${economics}. Taking both in one term needs the ${economics} instructor’s approval.`);
   });
 }
 
@@ -224,7 +226,7 @@ for (const [math, economics] of [
     const notes = acceleratedMathSequenceNotes({
       isEarlyGraduation: true,
       terms: [{ courses: [{ course: math }, { course: economics }] }]
-    }, prerequisites);
+    }, prerequisites, MESSAGES);
 
     assert.deepEqual(notes, []);
   });
@@ -237,10 +239,10 @@ test("concurrent math for one intermediate does not suppress an earlier-math not
       { courses: [{ course: "MAT 121" }, { course: "ECO 213" }] },
       { courses: [{ course: "MAT 113" }, { course: "ECO 214" }] }
     ]
-  }, prerequisites);
+  }, prerequisites, MESSAGES);
 
   assert.equal(notes.length, 1);
-  assert.match(notes[0], /Take MAT 121 before ECO 214/);
+  assert.match(notes[0], /^MAT 121 comes before ECO 214\./);
 });
 
 test("alternative follow-up preserves not-started and uncertain statuses as unsatisfied", () => {
@@ -285,4 +287,12 @@ test("approved current-term prerequisite paths produce metadata instead of a fol
   assert.deepEqual(result.conflicts, []);
   assert.equal(result.conditionalApprovals.length, 1);
   assert.equal(result.conditionalApprovals[0].prerequisite, "MAT 113");
+});
+
+test("accelerated math note: with both math courses planned early, it says either one, with a singular verb", () => {
+  const notes = acceleratedMathSequenceNotes({
+    isEarlyGraduation: true,
+    terms: [{ courses: [{ course: "MAT 113" }] }, { courses: [{ course: "MAT 121" }] }, { courses: [{ course: "ECO 213" }] }]
+  }, { "ECO 213": { any: [["MAT 113", "MAT 121"]] } }, MESSAGES);
+  assert.deepEqual(notes, ["MAT 113 or MAT 121 comes before ECO 213. Taking both in one term needs the ECO 213 instructor’s approval."]);
 });

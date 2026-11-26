@@ -5,17 +5,18 @@ Rule or reason code → policy message keys → panel students.
 - **allocation.financePetition** → 25
 - **catalog.comprehensiveEvaluation** → 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44
 - **catalog.petitionPlanCounts** → 07, 08, 11, 13, 16, 17, 21, 23, 24, 27, 28, 30, 36, 39, 42, 44
-- **checklist.concurrentPrerequisite** → 19
+- **checklist.concurrentPrerequisite** → 02, 16, 19, 32
 - **checklist.prerequisiteNotCompleted** → 16, 17, 18, 32
+- **checklist.prerequisiteTakingNow** → 16, 17, 18, 32
 - **checklist.statisticsAlreadyFilled** → 27, 49
 - **history.completedMissingOne** → 16, 32
 - **history.completedPrerequisiteTakingNowOne** → 18
 - **history.scheduledPrerequisite** → 16, 32
-- **history.takingNowNeedsCompletedMany** → 17
-- **history.takingNowNeedsCompletedOne** → 17
-- **history.takingNowNeedsMany** → 17
-- **history.takingNowNeedsMixed** → 17
-- **history.takingNowNeedsOne** → 17
+- **history.takingNowNeedsCompletedMany** → 16, 17, 18, 32
+- **history.takingNowNeedsCompletedOne** → 16, 17, 18, 32
+- **history.takingNowNeedsMany** → 16, 17, 18, 32
+- **history.takingNowNeedsMixed** → 16, 17, 18, 32
+- **history.takingNowNeedsOne** → 16, 17, 18, 32
 - **history.takingNowNotOffered** → 17
 - **history.takingNowNotOfferedAdvisor** → 17
 - **infeasibility.capstone.seniorStanding** → 04, 06
@@ -25,9 +26,11 @@ Rule or reason code → policy message keys → panel students.
 - **infeasibility.electives.spring** → 37, 38
 - **infeasibility.finance.forced** → 37
 - **infeasibility.requiredOffering** → 40
-- **move.sameTermPrerequisiteOtherApproval** → 02
-- **move.takePrerequisiteFirst** → 17
+- **move.sameTermPrerequisiteApproval** → 02, 16, 19, 32
+- **move.sameTermPrerequisiteOtherApproval** → 02, 16, 19, 32
+- **move.takePrerequisiteFirst** → 16, 17, 18, 32
 - **move.winterOnly** → 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 35, 36, 39, 42, 43, 44, 46, 47, 48, 49
+- **planNote.mathSequence** → 02, 16, 19, 32
 - **termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE** → 21, 28, 30, 32
 - **termLoad.TERM_CAPACITY_AVAILABLE** → 30, 32
 - **termLoad.TERM_OVERLOAD_APPROVED** → 30, 32
@@ -85,7 +88,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 03): CHECKLIST CELL: BUSN 323 — Winter 2029
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48, 49): CHECKLIST CELL: Completed
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): CHECKLIST CELL: Completed Counts as your one 100-level elective.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): CHECKLIST CELL: Completed ECO 113 marked Taking now rather than done before this class.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): CHECKLIST CELL: ECO 113
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02): CHECKLIST CELL: ECO 113 — Fall 2027
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): CHECKLIST CELL: ECO 113 — Taking now
@@ -248,7 +250,6 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 07, 08): NOTE: Ask your advisor and the Registrar to confirm senior standing
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 42): NOTE: Check this class’s enrollment status
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17, 18, 19, 36): NOTE: Taking now
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 16, 32): NOTE: This class is a prerequisite for ECO 213, which you marked completed.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Balanced | Prepared November 22, 2026
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Balanced | Prepared November 22, 2026 | Class standing: Freshman
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01): Panel Student 01 | Explore the Major | Prepared November 22, 2026
@@ -528,7 +529,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03): CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 21): CHECKLIST ROW: ECO 213 ECO 213 — Winter 2028 ○ Planned Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 12, 22, 23, 24, 25, 26, 27, 28, 30, 36, 39, 42, 44): CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 18): CHECKLIST ROW: ECO 213 ECO 213 ✓ Completed ECO 113 marked Taking now rather than done before this class.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16, 18, 19, 21): CHECKLIST ROW: ECO 214 ECO 214 — Fall 2027 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 46): CHECKLIST ROW: ECO 214 ECO 214 — Fall 2028 ○ Planned
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 13, 14, 15, 47, 49): CHECKLIST ROW: ECO 214 ECO 214 — Winter 2027 ○ Planned
@@ -740,7 +740,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): NOTE: Future offering unconfirmed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): NOTE: Offered only in Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): NOTE: Seat availability not confirmed
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16, 32): NOTE: This class is a prerequisite for ECO 213, which you marked completed.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 08): One Year Early
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 12): One Year Early: No complete plan found
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11): One Year Early: No complete plan found — These requirements did not fit by May 2027: ECO 213
@@ -783,8 +782,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): Study abroad leaves no room for major courses in Winter 2027 and May 2027.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 21): Study abroad: Winter 2027
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): Study abroad: Winter 2027 and Spring/May 2027
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Take MAT 113 before ECO 213.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02): Take MAT 113 before ECO 214.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 21): Taking ECO 213 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 28, 30, 32): Taking ECO 214 and ECO 461 together in Winter 2027 needs approval from the ECO 461 instructor before you register.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): Taking ECO 214 and ECO 461 together in Winter 2028 needs approval from the ECO 461 instructor before you register.

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { buildPlanningSlots } from "../../lib/planning/horizon.js";
 import { acceleratedMathSequenceNotes } from "../../lib/planning/acceleratedMathSequence.js";
+import defaultPolicyMessages from "../../policy/messages/en-US.json";
 import { joinStudyAbroadTerms, studyAbroadAdvisorContext, studyAbroadTermIds } from "../../lib/planning/study-abroad.js";
 import { noPlanPresentation } from "../../lib/planning/no-plan-presentation.js";
 import { planningRequirementsNote } from "../../lib/catalog/planning-requirements-note.js";
@@ -256,7 +257,7 @@ function PlanComparisonScreen({
               const rows = rowsByPlan.get(plan.id) || [];
               const selected = selectedPlanId === plan.id;
               const invalid = plan.validation?.valid === false;
-              const mathSequenceNotes = acceleratedMathSequenceNotes(plan, COURSE_PREREQUISITES);
+              const mathSequenceNotes = acceleratedMathSequenceNotes(plan, COURSE_PREREQUISITES, policyMessages || defaultPolicyMessages.messages);
               const showEarlyGraduationDetails = mergePossibleEarlyResult && plan.id === "one-year-early";
               return (
                 <article
