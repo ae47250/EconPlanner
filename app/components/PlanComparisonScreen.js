@@ -329,7 +329,7 @@ function PlanComparisonScreen({
                               }) : <span className="comparison-empty-term">{studyAbroadIds.includes(row.sourceTerm.slotId) ? "Study abroad" : "No Economics course this term"}</span>}
                               {comparisonDrag?.planId === plan.id && <small className="comparison-drop-hint">{(() => {
                                 const option = comparisonDrag.course.moveDestinationOptions?.find(item => item.id === (row.sourceTerm.slotId || row.sourceTerm.term));
-                                return option?.status === "CURRENT" ? "Current term" : option?.status === "ALLOWED" ? "Drop here" : option?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason(option, policyMessages);
+                                return option?.status === "CURRENT" ? "Current term" : option?.status === "ALLOWED" ? "Drop here" : option?.status === "CONDITIONAL" ? "Drop to review conditions" : studentFriendlyUnavailableReason({ ...option, movingCourse: comparisonDrag.course.course }, policyMessages);
                               })()}</small>}
                             </td>
                           </tr>

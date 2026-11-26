@@ -256,8 +256,8 @@ test('course cards explain when no move preserves prerequisite validity', async 
   const planCard = await visitPlan(page, "one-year-early");
   const coreCard = planCard.locator('.comparison-editable-course:has(button[aria-label="Change ECO 113-J"])').first();
   await coreCard.getByRole('button',{name:'Change ECO 113-J',exact:true}).click();
-  await expect(coreCard).toContainText('Not confirmed for May.');
-  await expect(coreCard).toContainText('ECO 113 is a prerequisite for ECO 213 and must come first. Move ECO 213 later, then try again.');
+  await expect(coreCard).toContainText('ECO 113 isn’t offered in May.');
+  await expect(coreCard).toContainText('ECO 113 must come before ECO 213. Move ECO 213 later first.');
   const moves = coreCard.getByRole('combobox');
   await expect(moves).toHaveCount(0);
   await expect(coreCard.getByText(/Why can’t I choose other terms/)).toHaveCount(0);
