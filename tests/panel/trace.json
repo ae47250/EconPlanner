@@ -99,6 +99,12 @@
       ]
     },
     {
+      "messageKey": "history.completedMissingOne",
+      "studentIds": [
+        "31"
+      ]
+    },
+    {
       "messageKey": "history.completedPrerequisiteTakingNowOne",
       "studentIds": [
         "18"
@@ -202,7 +208,6 @@
         "09",
         "10",
         "11",
-        "31",
         "33",
         "45"
       ]
@@ -213,7 +218,6 @@
         "09",
         "10",
         "11",
-        "31",
         "33",
         "45"
       ]
@@ -242,6 +246,24 @@
       "messageKey": "infeasibility.requiredOffering",
       "studentIds": [
         "40"
+      ]
+    },
+    {
+      "messageKey": "infeasibility.unmarkedPrerequisite",
+      "studentIds": [
+        "31"
+      ]
+    },
+    {
+      "messageKey": "infeasibility.unmarkedPrerequisiteMany",
+      "studentIds": [
+        "31"
+      ]
+    },
+    {
+      "messageKey": "infeasibility.unmarkedPrerequisiteQuestion",
+      "studentIds": [
+        "31"
       ]
     },
     {
@@ -13603,6 +13625,17 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Needs one more detail",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "31"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "No plan fits with the room saved for other courses.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -13690,7 +13723,6 @@
       "studentIds": [
         "04",
         "06",
-        "31",
         "33",
         "34",
         "35",
@@ -14254,7 +14286,6 @@
       "studentIds": [
         "04",
         "06",
-        "31",
         "33",
         "34",
         "35",
@@ -14300,13 +14331,23 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Review your courses",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "31"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Review your graduation timeline and show this screen to your advisor.",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "31",
         "33",
         "34",
         "35",
@@ -16499,7 +16540,6 @@
         "function": "PlanComparisonScreen"
       },
       "studentIds": [
-        "31",
         "33",
         "34",
         "35",
