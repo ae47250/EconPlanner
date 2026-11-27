@@ -34,7 +34,7 @@ async function editedPlanToken(request) {
   const stateToken = encodeState({
     student, plans: plans.map(planForEdit), fingerprint: generated.plannerFingerprint
   }, process.env.ECONPLANNER_MCP_STATE_KEY);
-  return { stateToken, balanced };
+  return { stateToken, balanced, plans, fingerprint: generated.plannerFingerprint };
 }
 
 function link(stateToken, planId = "balanced") {
@@ -116,25 +116,38 @@ test("a chat handoff keeps Winter and May study abroad context through the web P
 
 test("expired, altered, and wrong-plan links show an error without loading a plan", async ({ browser, request }) => {
   test.setTimeout(90000);
-  const { stateToken } = await editedPlanToken(request);
+  const { stateToken, plans, fingerprint } = await editedPlanToken(request);
   const now = Date.now();
   const originalNow = Date.now;
   Date.now = () => now - 2 * 60 * 60 * 1000;
   let expiredToken;
   try {
-    expiredToken = encodeState({ student, plans: [{ id: "balanced", terms: [] }], fingerprint: "expired" },
+    expiredToken = encodeState({ student, plans: plans.map(planForEdit), fingerprint },
       process.env.ECONPLANNER_MCP_STATE_KEY);
   } finally {
     Date.now = originalNow;
   }
-  const alteredToken = `${stateToken.slice(0, -1)}${stateToken.endsWith("A") ? "B" : "A"}`;
-  for (const [token, planId] of [[expiredToken, "balanced"], [alteredToken, "balanced"], [stateToken, "unknown-plan"]]) {
+  // Change a character in the middle, never the last one: the last character can hold unused padding bits,
+  // so changing it sometimes leaves the real bytes identical and the link stays valid.
+  const middle = Math.floor(stateToken.length / 2);
+  const alteredToken = `${stateToken.slice(0, middle)}${stateToken[middle] === "A" ? "B" : "A"}${stateToken.slice(middle + 1)}`;
+  expect(Buffer.from(alteredToken, "base64url").equals(Buffer.from(stateToken, "base64url"))).toBe(false);
+  // The expired link uses the real plans and fingerprint, so only its age can reject it.
+  for (const [token, planId, message] of [
+    [expiredToken, "balanced", "This plan link is invalid or has expired."],
+    [alteredToken, "balanced", "This plan link is invalid or has expired."],
+    [stateToken, "unknown-plan", "This plan link does not name a saved plan."]
+  ]) {
+    // The server itself must say which check refused the link.
+    const checked = await request.post("/api/mcp/open-plan", { data: { stateToken: token, planId } });
+    expect(checked.status()).toBe(400);
+    expect((await checked.json()).error).toBe(message);
     const context = await browser.newContext();
     try {
       const page = await context.newPage();
       await page.goto(link(token, planId));
-      await expect(page.getByRole("heading", { name: "Could not open this plan" })).toBeVisible();
-      await expect(page.locator('main [role="alert"]')).toContainText(/invalid|expired|current/i);
+      await expect(page.getByRole("heading", { name: "Could not open this plan" })).toBeVisible({ timeout: 60000 });
+      await expect(page.locator('main [role="alert"]')).toContainText("This plan link is invalid, expired, or no longer matches current planning rules.");
       await expect(page.locator("article.comparison-plan-card")).toHaveCount(0);
       expect(new URL(page.url()).hash).toBe("");
     } finally {
