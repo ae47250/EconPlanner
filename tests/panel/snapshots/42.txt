@@ -19,7 +19,7 @@ Taking now
 None
 Status
 Needs advisor attention
-Ask your advisor to review the reason below before relying on this plan. See the notes below for paperwork to file.
+Ask your advisor to review the notes below before relying on this plan. The notes also list paperwork to file.
 Why: The listed section for MAT 217 was recorded as full. Check the registration system for current availability.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
@@ -29,7 +29,6 @@ STATUS: Needs advisor attention
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Fall
@@ -76,6 +75,7 @@ CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
+Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -114,9 +114,8 @@ Your Economics major plan
 Panel Student 42 | Balanced | Prepared August 25, 2026 | Class standing: Senior
 This plan covers Fall 2026 through May 2027.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
+Ask your advisor to review the notes below before relying on this plan. The notes also list paperwork to file.
 Graduation target: May 2027
-See the notes below for paperwork to file.
 PDF > Plan: Balanced > Grid
 Your plan by term
 TABLE HEADER: Year
@@ -185,6 +184,7 @@ CHECKLIST CELL: ECO 222 — May 2027
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
+Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 42 | Balanced | Prepared August 25, 2026

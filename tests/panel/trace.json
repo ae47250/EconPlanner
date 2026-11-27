@@ -345,6 +345,76 @@
       ]
     },
     {
+      "messageKey": "planStatus.advisor",
+      "studentIds": [
+        "05",
+        "16",
+        "17",
+        "18",
+        "19",
+        "32",
+        "42",
+        "46",
+        "47"
+      ]
+    },
+    {
+      "messageKey": "planStatus.confirm",
+      "studentIds": [
+        "02",
+        "03",
+        "07",
+        "08",
+        "10",
+        "11",
+        "21",
+        "28",
+        "30"
+      ]
+    },
+    {
+      "messageKey": "planStatus.paperwork",
+      "studentIds": [
+        "07",
+        "08",
+        "11",
+        "16",
+        "17",
+        "21",
+        "28",
+        "30",
+        "42"
+      ]
+    },
+    {
+      "messageKey": "planStatus.petition",
+      "studentIds": [
+        "08",
+        "13",
+        "23",
+        "24",
+        "27",
+        "36",
+        "39",
+        "44"
+      ]
+    },
+    {
+      "messageKey": "planStatus.several",
+      "studentIds": [
+        "01",
+        "02",
+        "03",
+        "05",
+        "08",
+        "19",
+        "46",
+        "47",
+        "48",
+        "49"
+      ]
+    },
+    {
       "messageKey": "termLoad.ECONOMICS_LOAD_ABOVE_PREFERENCE",
       "studentIds": [
         "21",
@@ -996,27 +1066,40 @@
       "studentIds": [
         "01",
         "02",
+        "09",
+        "12",
+        "14",
+        "15",
+        "22",
+        "25",
+        "26",
+        "48",
+        "49"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "Check the published schedule before you register.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "02",
         "03",
         "05",
         "07",
         "08",
-        "09",
         "10",
         "11",
-        "12",
         "13",
-        "14",
-        "15",
         "16",
         "17",
         "18",
         "19",
         "21",
-        "22",
         "23",
         "24",
-        "25",
-        "26",
         "27",
         "28",
         "30",
@@ -1026,9 +1109,7 @@
         "42",
         "44",
         "46",
-        "47",
-        "48",
-        "49"
+        "47"
       ]
     },
     {
@@ -3941,6 +4022,41 @@
     },
     {
       "section": "PDF",
+      "sentence": "Future schedules can change.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "02",
+        "03",
+        "05",
+        "07",
+        "08",
+        "10",
+        "11",
+        "13",
+        "16",
+        "17",
+        "18",
+        "19",
+        "21",
+        "23",
+        "24",
+        "27",
+        "28",
+        "30",
+        "32",
+        "36",
+        "39",
+        "42",
+        "44",
+        "46",
+        "47"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "Future years",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -6352,32 +6468,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "See the notes below for paperwork to file.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "23",
-        "24",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "Statistics choices: ECO 257 or MAT 217 or PSY 217.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -7192,6 +7282,27 @@
       },
       "studentIds": [
         "42"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "The plan meets the major rules.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "01",
+        "02",
+        "09",
+        "12",
+        "14",
+        "15",
+        "22",
+        "25",
+        "26",
+        "48",
+        "49"
       ]
     },
     {
@@ -8814,25 +8925,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "Ask your advisor to review the reason below before relying on this plan.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "05",
-        "16",
-        "17",
-        "18",
-        "19",
-        "32",
-        "42",
-        "46",
-        "47"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Balanced",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -9378,27 +9470,40 @@
       "studentIds": [
         "01",
         "02",
+        "09",
+        "12",
+        "14",
+        "15",
+        "22",
+        "25",
+        "26",
+        "48",
+        "49"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Check the published schedule before you register.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "02",
         "03",
         "05",
         "07",
         "08",
-        "09",
         "10",
         "11",
-        "12",
         "13",
-        "14",
-        "15",
         "16",
         "17",
         "18",
         "19",
         "21",
-        "22",
         "23",
         "24",
-        "25",
-        "26",
         "27",
         "28",
         "30",
@@ -9408,22 +9513,7 @@
         "42",
         "44",
         "46",
-        "47",
-        "48",
-        "49"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Check the approval and standing notes on each plan before registering.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "02",
-        "03",
-        "08"
+        "47"
       ]
     },
     {
@@ -9480,22 +9570,6 @@
       },
       "studentIds": [
         "42"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Check this plan's approval and standing notes before registering.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "07",
-        "10",
-        "11",
-        "21",
-        "28",
-        "30"
       ]
     },
     {
@@ -12398,6 +12472,41 @@
     },
     {
       "section": "SCREEN",
+      "sentence": "Future schedules can change.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "02",
+        "03",
+        "05",
+        "07",
+        "08",
+        "10",
+        "11",
+        "13",
+        "16",
+        "17",
+        "18",
+        "19",
+        "21",
+        "23",
+        "24",
+        "27",
+        "28",
+        "30",
+        "32",
+        "36",
+        "39",
+        "42",
+        "44",
+        "46",
+        "47"
+      ]
+    },
+    {
+      "section": "SCREEN",
       "sentence": "Graduate next year: Not possible",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -14403,32 +14512,6 @@
     },
     {
       "section": "SCREEN",
-      "sentence": "See the notes below for paperwork to file.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "07",
-        "08",
-        "11",
-        "13",
-        "16",
-        "17",
-        "21",
-        "23",
-        "24",
-        "27",
-        "28",
-        "30",
-        "36",
-        "39",
-        "42",
-        "44"
-      ]
-    },
-    {
-      "section": "SCREEN",
       "sentence": "Senior",
       "source": {
         "file": "app/components/PlanComparisonScreen.js",
@@ -15309,6 +15392,7 @@
       },
       "studentIds": [
         "01",
+        "02",
         "09",
         "12",
         "14",
@@ -16315,23 +16399,6 @@
       "studentIds": [
         "35",
         "43"
-      ]
-    },
-    {
-      "section": "SCREEN",
-      "sentence": "Your catalog needs a petition for this plan.",
-      "source": {
-        "file": "app/components/PlanComparisonScreen.js",
-        "function": "PlanComparisonScreen"
-      },
-      "studentIds": [
-        "13",
-        "23",
-        "24",
-        "27",
-        "36",
-        "39",
-        "44"
       ]
     },
     {

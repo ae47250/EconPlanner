@@ -19,7 +19,7 @@ Taking now
 None
 Status
 Needs advisor attention
-Ask your advisor to review the reason below before relying on this plan.
+Each plan’s status below says what it needs.
 Why: Your advisor needs to confirm that your AP credit for ECO 113, ECO 114, and MAT 121 counts toward the major.
 Compare your course plans
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
@@ -30,7 +30,7 @@ STATUS: Needs advisor attention
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
+Ask your advisor to review the notes below before relying on this plan.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -95,6 +95,7 @@ CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) —
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ? AP credit
 ○ Planned
+Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -130,7 +131,7 @@ STATUS: Needs advisor attention
 Explore the Major
 Plans fewer major classes this year than Balanced. Classes that need another class first are scheduled later.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
+Ask your advisor to review the notes below before relying on this plan.
 SCREEN > Plan: Explore the Major > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -193,6 +194,7 @@ CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) —
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ? AP credit
 ○ Planned
+Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: Explore the Major > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -234,7 +236,7 @@ Your Economics major plan
 Panel Student 46 | Balanced | Prepared November 22, 2026 | Class standing: Freshman
 This plan covers Winter 2027 through May 2030.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
+Ask your advisor to review the notes below before relying on this plan.
 Graduation target: May 2030
 PDF > Plan: Balanced > Grid
 Your plan by term
@@ -327,6 +329,7 @@ CHECKLIST CELL: Economics elective (200 level or higher) — May 2030
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 AP credit Planned
+Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 46 | Balanced | Prepared November 22, 2026
@@ -364,7 +367,7 @@ Your Economics major plan
 Panel Student 46 | Explore the Major | Prepared November 22, 2026 | Class standing: Freshman
 This plan covers Winter 2027 through May 2030.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
+Ask your advisor to review the notes below before relying on this plan.
 Graduation target: May 2030
 PDF > Plan: Explore the Major > Grid
 Your plan by term
@@ -456,6 +459,7 @@ CHECKLIST CELL: Economics elective (200 level or higher) — May 2030
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 AP credit Planned
+Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Explore the Major > Plan Notes
 Plan Notes
 Panel Student 46 | Explore the Major | Prepared November 22, 2026

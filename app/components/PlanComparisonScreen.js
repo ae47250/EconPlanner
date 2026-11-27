@@ -5,24 +5,16 @@ import { useEffect, useRef, useState } from "react";
 import { buildPlanningSlots } from "../../lib/planning/horizon.js";
 import { joinStudyAbroadTerms, studyAbroadAdvisorContext, studyAbroadTermIds } from "../../lib/planning/study-abroad.js";
 import { noPlanPresentation, noPlanStatusLabel } from "../../lib/planning/no-plan-presentation.js";
-import { planNeedsPetition } from "../../lib/catalog/planning-requirements-note.js";
-import { feasibilityMeaning, oneYearEarlyPlanOffered, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
+import { oneYearEarlyPlanOffered, planStatusExplanation, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
 import { summerLastResortNote } from "../../lib/planning/summer-note.js";
-import { courseNeedsApproval, preliminaryScheduleExplanation, studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentStandingSummary, studentTermLabel } from "../../lib/planning/student-language.js";
+import { courseNeedsApproval, displayMessage, preliminaryScheduleExplanation, studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentStandingSummary, studentTermLabel } from "../../lib/planning/student-language.js";
 import { comparisonStyles } from "../styles/comparisonStyles";
 import { COURSE_CATALOG, COURSE_PREREQUISITES, isTaken, courseTitle, economicsResult, planCourseIdentity, formatAcademicYear, planningSlotsLabel, compactPlanCourse, planReadinessLabel } from "../plannerShared.js";
 import { AdvisorAttention, PlanConditions, MajorRequirementsChecklist } from "./planNotes.js";
 import { CourseMenuContext, ExtraCoursePicker, CourseChange, CourseDragHandle, MoveConfirmation } from "./courseEditing.js";
 import { courseHasMoveControl, CourseAvailabilityStatus } from "./planCourseHelpers.js";
 import { ResultDiagnostics } from "./plannerSummary.js";
-
-const STUDENT_READINESS_EXPLANATIONS = Object.freeze({
-  "Ready to plan": "The plan meets the major rules. Check seats and future schedules before you register.",
-  "Needs confirmation": "Check the approval and standing notes on each plan before registering.",
-  // A plan whose only condition is a catalog petition (owner request 2026-11-26).
-  "Needs a petition": "Your catalog needs a petition for this plan.",
-  "Needs advisor attention": "Ask your advisor to review the reason below before relying on this plan."
-});
+import defaultPolicyMessages from "../../policy/messages/en-US.json";
 
 function structuredItemText(item, fallback) {
   if (typeof item === "string") return item;
@@ -91,6 +83,8 @@ function PlanComparisonScreen({
 }) {
   const result = economicsResult(report);
   const policyMessages = report?.policyMessages;
+  // A result saved before a message was added (or a partial test result) still shows the status sentence.
+  const statusMessages = { ...defaultPolicyMessages.messages, ...(policyMessages || {}) };
   const plans = result?.economicsPlans || [];
   const planningGaps = result?.economicsPlanningGaps || [];
   const candidateOutcomes = result?.economicsCandidateOutcomes || [];
@@ -153,9 +147,6 @@ function PlanComparisonScreen({
   const statusReason = statusPlans.flatMap(plan => plan.planConditions || [])
     .find(item => item.kind === "review" && item.shortMessage)?.shortMessage;
   // The only condition on every plan is a catalog petition: say so instead of "approval and standing notes".
-  const petitionOnly = plans.length > 0 && plans.every(plan => planNeedsPetition(plan)
-    && (plan.readinessStatus || plan.validation?.readinessStatus) === "STUDENT_READY");
-  const paperworkReminder = statusPlans.some(planNeedsPetition);
   const planBadge = plan => {
     if (plan.planningMode !== "graduation_priority") return null;
     const mayCourse = plan.terms
@@ -223,11 +214,10 @@ function PlanComparisonScreen({
           <p><strong>Completed</strong><span>{completedCodes.join(" · ") || "None"}</span></p>
           <p><strong>Taking now</strong><span>{inProgressCodes.join(" · ") || "None"}</span></p>
           <p><strong>Status</strong><span className="result-status-value">{displayedOverallStatus}</span>
-            {plans.length > 0 && <span className="result-status-reason">{petitionOnly
-              ? STUDENT_READINESS_EXPLANATIONS["Needs a petition"]
-              : displayedOverallStatus === "Needs confirmation" && plans.length === 1
-              ? "Check this plan's approval and standing notes before registering."
-              : STUDENT_READINESS_EXPLANATIONS[displayedOverallStatus]}{paperworkReminder && " See the notes below for paperwork to file."}</span>}
+            {/* One plan: its status sentence appears here once, not again on the plan card (shared rule, screen and PDF). */}
+            {plans.length === 1 && <span className="result-status-reason">{planStatusExplanation(plans[0], statusMessages)}</span>}
+            {/* Several plans: each card carries its own status sentence, so the summary only points to them. */}
+            {plans.length > 1 && <span className="result-status-reason">{displayMessage(statusMessages, "planStatus.several")}</span>}
             {displayedOverallStatus === "Needs advisor attention" && statusReason && <span className="result-status-reason">Why: {statusReason}</span>}
           </p>
         </section>
@@ -285,7 +275,7 @@ function PlanComparisonScreen({
                     </div>
                     {!showEarlyGraduationDetails && <p>{planDescription(plan)}</p>}
                     <p className="plan-feasibility-value">Status: {planReadinessLabel(plan)}</p>
-                    <p className="plan-feasibility-meaning">{feasibilityMeaning(plan.feasibilityStatus)}</p>
+                    {plans.length > 1 && <p className="plan-feasibility-meaning">{planStatusExplanation(plan, statusMessages)}</p>}
                     {showEarlyGraduationDetails && (
                       <dl className="accelerated-target-list early-plan-graduation-dates" aria-label="Graduation dates">
                         <div><dt>Standard plan</dt><dd>{studentTermLabel(acceleratedResult.standardTarget)}</dd></div>
@@ -455,4 +445,4 @@ function overallPlanReadiness(plans = []) {
   return plans.length ? "Ready to plan" : "Not available";
 }
 
-export { STUDENT_READINESS_EXPLANATIONS, structuredItemText, comparisonScheduleRows, PlanComparisonScreen, overallPlanReadiness };
+export { structuredItemText, comparisonScheduleRows, PlanComparisonScreen, overallPlanReadiness };

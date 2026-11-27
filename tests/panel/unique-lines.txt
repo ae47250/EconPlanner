@@ -34,8 +34,8 @@
 10, 11, 19, 21, 28, 30, 32	Approval needed
 02, 03, 07, 08	Ask your advisor and the Registrar to confirm senior standing
 02, 03, 07, 08	Ask your advisor and the Registrar to confirm senior standing.
-05, 18, 19, 32, 46, 47	Ask your advisor to review the reason below before relying on this plan.
-16, 17, 42	Ask your advisor to review the reason below before relying on this plan. See the notes below for paperwork to file.
+05, 18, 19, 32, 46, 47	Ask your advisor to review the notes below before relying on this plan.
+16, 17, 42	Ask your advisor to review the notes below before relying on this plan. The notes also list paperwork to file.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Balanced
 20, 29, 41, 50	Balanced: No complete plan found
 48	Before taking ECO 213 in Fall 2027 and ECO 214 in Winter 2028, finish MAT 113.
@@ -61,6 +61,10 @@
 02, 03, 05, 19, 47, 48	Before taking ECO 461 in Winter 2029, finish ECO 213, ECO 214, and MAT 217.
 01, 02, 46	Before taking ECO 461 in Winter 2030, finish ECO 213, ECO 214, and MAT 217.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Before you register
+10	Before you register, confirm the approval in the notes below.
+11, 21, 28, 30	Before you register, confirm the approval in the notes below. The notes also list paperwork to file.
+02, 03	Before you register, confirm your senior standing in the notes below.
+07, 08	Before you register, confirm your senior standing in the notes below. The notes also list paperwork to file.
 01, 02, 03, 05, 07, 08, 11, 13, 16, 17, 19, 21, 24, 27, 28, 30, 36, 39, 42, 44, 46, 47, 48	BUSN 323
 11, 13, 21	BUSN 323 — Fall 2027
 02, 03, 05, 19, 47, 48	BUSN 323 — Fall 2028
@@ -82,15 +86,10 @@
 01, 02, 03, 05, 11, 13, 16, 17, 19, 21, 46, 47, 48	BUSN 323 ▾ | Investments
 20, 29, 50	Change your answers
 42	Check enrollment for MAT 217.
-01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Check seats and future schedules before you register.
-02, 03	Check the approval and standing notes on each plan before registering.
-08	Check the approval and standing notes on each plan before registering. See the notes below for paperwork to file.
 16	Check the student’s earlier course or transfer records to confirm whether ECO 113 was completed before ECO 213.
 18	Check the student’s earlier course or transfer records to confirm whether ECO 113 was completed before ECO 213. The student's answers show ECO 113 is marked “Taking now.”
 17	Check the student’s earlier course or transfer records to confirm whether ECO 114 was completed before ECO 214.
 32	Check the student’s earlier course or transfer records to confirm whether either MAT 113 or MAT 121 was completed before ECO 213.
-10	Check this plan's approval and standing notes before registering.
-07, 11, 21, 28, 30	Check this plan's approval and standing notes before registering. See the notes below for paperwork to file.
 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47	Check with your advisor
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Class standing
 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 36, 42, 46, 47, 48, 49	Classes to finish first
@@ -122,6 +121,7 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Download PDF Report: Balanced
 01, 02, 03, 05, 19, 46, 47, 48, 49	Download PDF Report: Explore the Major
 02, 08	Download PDF Report: One Year Early
+01, 02, 03, 05, 08, 19, 46, 47, 48, 49	Each plan’s status below says what it needs.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 113
 01, 02	ECO 113 — Fall 2027
 01, 02, 03, 13, 16, 18	ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
@@ -178,7 +178,6 @@
 01, 02, 03, 05, 17, 19	ECO 114-J
 01, 02, 03, 05, 17, 19	ECO 114-J ▾ | Principles of Macroeconomics
 48	ECO 160 does not count toward the major because only one 100-level Economics elective can count.
-27	ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 27, 48	ECO 161
 11, 16, 39	ECO 161 — Foundations of Economics Previously offered in Fall, Winter, May.
 11, 16, 39	ECO 161 — Winter 2027
@@ -359,6 +358,8 @@
 03, 04	Freshman (custom graduation year)
 02	Freshman (graduating one year early)
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Future offering unconfirmed
+02, 03, 05, 07, 08, 10, 11, 13, 16, 17, 18, 19, 21, 23, 24, 28, 30, 32, 36, 39, 42, 44, 46, 47	Future schedules can change. Check the published schedule before you register.
+27	Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Future years
 09, 10, 11, 12	Graduate next year: Not possible
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Graduation target
@@ -577,7 +578,6 @@
 33, 34, 35, 37, 38, 40, 43, 45	Review your graduation timeline and show this screen to your advisor.
 29, 50	Save less room
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Seat availability not confirmed
-07, 08, 11, 13, 16, 17, 21, 23, 24, 27, 28, 30, 36, 39, 42, 44	See the notes below for paperwork to file.
 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45	Senior
 05, 19, 47, 48, 49	Sophomore
 06	Sophomore (custom graduation year)
@@ -609,7 +609,7 @@
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Taking now
 19	Taking now Approval needed
 42	The listed section for MAT 217 was recorded as full. Check the registration system for current availability.
-01, 09, 12, 14, 15, 22, 25, 26, 48, 49	The plan meets the major rules. Check seats and future schedules before you register.
+01, 02, 09, 12, 14, 15, 22, 25, 26, 48, 49	The plan meets the major rules. Check seats and future schedules before you register.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Things to keep in mind
 02, 08	This plan
 07, 08	This plan assumes you will have senior standing in 2026–2027. Ask your advisor and the Registrar to confirm you can take ECO 461 then.
@@ -704,7 +704,7 @@
 50	You saved room for 14 other courses across 5 terms. That leaves too little room for the major. Save room for fewer courses and try again.
 38	You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.
 40	You still need ECO 213, but no available term by May 2027 offers it. Talk with your advisor about a later graduation year.
-13, 23, 24, 27, 36, 39, 44	Your catalog needs a petition for this plan. See the notes below for paperwork to file.
+08, 13, 23, 24, 27, 36, 39, 44	Your catalog needs a petition for this plan. See the notes below for paperwork to file.
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Your courses
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Your Economics major checklist
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Your Economics major plan

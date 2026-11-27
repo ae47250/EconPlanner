@@ -28,7 +28,6 @@ STATUS: Ready to plan
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Ready to plan
-Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -123,7 +122,7 @@ Your Economics major plan
 Panel Student 14 | Balanced | Prepared November 22, 2026 | Class standing: Junior
 This plan covers Winter 2027 through May 2028.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 Graduation target: May 2028
 PDF > Plan: Balanced > Grid
 Your plan by term
