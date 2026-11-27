@@ -483,7 +483,8 @@ test('screen and PDF readiness statuses match and the course menu fits the viewp
   await expect(page.locator('.result-status-value')).toHaveText('Ready to plan');
   await expect(page.locator('.comparison-course-status')).toContainText('Status');
   await expect(page.locator(`article[data-plan-id="${plan.id}"] .plan-feasibility-value`)).toHaveText('Status: Ready to plan');
-  await expect(page.locator('.result-status-reason').first()).toContainText('The plan meets the major rules.');
+  // Several plans: the plan's own card carries the status sentence (2026-11-27).
+  await expect(page.locator(`article[data-plan-id="${plan.id}"] .plan-feasibility-meaning`)).toContainText('The plan meets the major rules.');
   const report = await page.request.post('/api/reports/economics', {data:{
     student:response.request().postDataJSON().student, selectedPlan:plan,
     plans:result.economicsPlans, format:'html'

@@ -19,7 +19,7 @@ Taking now
 ECO 214
 Status
 Needs advisor attention
-Ask your advisor to review the reason below before relying on this plan. See the notes below for paperwork to file.
+Ask your advisor to review the notes below before relying on this plan. The notes also list paperwork to file.
 Why: ECO 214 needs ECO 114 first. Mark it Completed, or your advisor will check.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
@@ -29,7 +29,6 @@ STATUS: Needs advisor attention
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Fall 2026
@@ -91,6 +90,7 @@ Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 21
 ✓ Completed
 ◐ In progress
 ○ Planned
+Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -132,9 +132,8 @@ Your Economics major plan
 Panel Student 17 | Balanced | Prepared November 22, 2026 | Class standing: Junior
 This plan covers Fall 2026 through May 2028.
 Status: Needs advisor attention
-Check seats and future schedules before you register.
+Ask your advisor to review the notes below before relying on this plan. The notes also list paperwork to file.
 Graduation target: May 2028
-See the notes below for paperwork to file.
 PDF > Plan: Balanced > Grid
 Your plan by term
 TABLE HEADER: Year
@@ -227,6 +226,7 @@ CHECKLIST CELL: Economics elective (200 level or higher) — May 2028
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Taking now Planned
+Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 17 | Balanced | Prepared November 22, 2026

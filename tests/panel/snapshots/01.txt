@@ -19,7 +19,7 @@ Taking now
 None
 Status
 Ready to plan
-The plan meets the major rules. Check seats and future schedules before you register.
+Each plan’s status below says what it needs.
 Compare your course plans
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
@@ -29,7 +29,7 @@ STATUS: Ready to plan
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -130,7 +130,7 @@ STATUS: Ready to plan
 Explore the Major
 Plans fewer major classes this year than Balanced. Classes that need another class first are scheduled later.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 SCREEN > Plan: Explore the Major > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -235,7 +235,7 @@ Your Economics major plan
 Panel Student 01 | Balanced | Prepared November 22, 2026 | Class standing: Freshman
 This plan covers Winter 2027 through May 2030.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 Graduation target: May 2030
 PDF > Plan: Balanced > Grid
 Your plan by term
@@ -366,7 +366,7 @@ Your Economics major plan
 Panel Student 01 | Explore the Major | Prepared November 22, 2026 | Class standing: Freshman
 This plan covers Winter 2027 through May 2030.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 Graduation target: May 2030
 PDF > Plan: Explore the Major > Grid
 Your plan by term

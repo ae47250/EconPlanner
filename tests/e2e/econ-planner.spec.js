@@ -465,7 +465,8 @@ test("accelerated results expose the backend Possible, Not possible, and More in
       await expect(earlyPlan).toContainText("May 2030");
       await expect(earlyPlan).toContainText("This plan");
       await expect(earlyPlan).toContainText("May 2029");
-      await expect(earlyPlan.locator(".comparison-plan-summary > p:not(.plan-feasibility-value)")).toHaveText("Check this plan with your advisor.");
+      // The sentence comes from the plan's status (owner request 2026-11-27); this fixture plan is ready.
+      await expect(earlyPlan.locator(".comparison-plan-summary > p:not(.plan-feasibility-value)")).toHaveText("The plan meets the major rules. Check seats and future schedules before you register.");
     } else {
       await expect(page.locator(".accelerated-result-status")).toHaveText(label);
       const result = page.locator('.accelerated-result[aria-labelledby="accelerated-result-heading"]');

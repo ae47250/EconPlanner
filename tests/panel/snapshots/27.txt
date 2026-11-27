@@ -28,7 +28,6 @@ STATUS: Needs confirmation
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Needs confirmation
-Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -70,7 +69,7 @@ CHECKLIST ROW: Economics elective 4 ECO 222 — May 2027 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
-ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
+Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -109,9 +108,8 @@ Your Economics major plan
 Panel Student 27 | Balanced | Prepared November 22, 2026 | Class standing: Senior
 This plan covers Winter 2027 through May 2027.
 Status: Needs confirmation
-Check seats and future schedules before you register.
+Your catalog needs a petition for this plan. See the notes below for paperwork to file.
 Graduation target: May 2027
-See the notes below for paperwork to file.
 PDF > Plan: Balanced > Grid
 Your plan by term
 TABLE HEADER: Year
@@ -177,7 +175,7 @@ CHECKLIST CELL: ECO 222 — May 2027
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
-ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
+Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 27 | Balanced | Prepared November 22, 2026

@@ -308,9 +308,14 @@ test("an old plan creation date cannot make historical seats current in a newly 
 
 test("owner request 2026-11-26: the schedule warning appears once, in the status line or the checklist", async () => {
   const { buildMajorRequirementsChecklist } = await import("../lib/planning/plan-presentation.js");
-  const note = feasibilityStatus => buildMajorRequirementsChecklist({ plan: { terms: [], feasibilityStatus }, mapping: { assignments: [], requirements: [] }, student: { courses: [] } }).note;
-  // These statuses already show a schedule warning in the plan's status line.
+  const note = (feasibilityStatus, readinessStatus = "STUDENT_READY") => buildMajorRequirementsChecklist({ plan: { terms: [], feasibilityStatus, readinessStatus }, mapping: { assignments: [], requirements: [] }, student: { courses: [] } }).note;
+  // For a "Ready to plan" plan these statuses already show a schedule warning in the plan's status line.
   for (const status of ["CONDITIONALLY_FEASIBLE", "PRELIMINARY_ONLY"]) assert.doesNotMatch(note(status), /Future schedules can change/);
+  // 2026-11-27: other statuses' sentence does not mention schedules, so the checklist warns
+  // (except "Needs confirmation" with a preliminary schedule, whose sentence names it).
+  assert.match(note("CONDITIONALLY_FEASIBLE", "ADVISOR_ACTION_REQUIRED"), /Future schedules can change/);
+  assert.match(note("CONDITIONALLY_FEASIBLE", "READY_WITH_CONDITIONS"), /Future schedules can change/);
+  assert.doesNotMatch(note("PRELIMINARY_ONLY", "READY_WITH_CONDITIONS"), /Future schedules can change/);
   // Every other plan keeps the warning in the checklist so it is never lost.
   for (const status of ["VERIFIED_FEASIBLE", "NOT_FEASIBLE", "SEARCH_INCOMPLETE", undefined]) assert.match(note(status), /Future schedules can change/);
 });

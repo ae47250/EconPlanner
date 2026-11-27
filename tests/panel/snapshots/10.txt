@@ -19,7 +19,7 @@ Taking now
 None
 Status
 Needs confirmation
-Check this plan's approval and standing notes before registering.
+Before you register, confirm the approval in the notes below.
 Your plan
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
@@ -35,7 +35,6 @@ STATUS: Needs confirmation
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Needs confirmation
-Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -98,6 +97,7 @@ CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) —
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ✓ Completed
 ○ Planned
+Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: Balanced > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -141,7 +141,7 @@ Your Economics major plan
 Panel Student 10 | Balanced | Prepared November 22, 2026 | Class standing: Junior
 This plan covers Winter 2027 through May 2028.
 Status: Needs confirmation
-Check seats and future schedules before you register.
+Before you register, confirm the approval in the notes below.
 Graduation target: May 2028
 PDF > Plan: Balanced > Grid
 Your plan by term
@@ -232,6 +232,7 @@ CHECKLIST CELL: Economics elective (200 level or higher) — May 2028
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Completed Planned
+Future schedules can change. Check the published schedule before you register.
 PDF > Plan: Balanced > Plan Notes
 Plan Notes
 Panel Student 10 | Balanced | Prepared November 22, 2026

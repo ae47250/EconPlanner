@@ -15,14 +15,25 @@ test("both plan views use the same course-moving instructions", async ({ page })
 test("Student readiness explains each displayed status", async ({ page }) => {
   const cases = [
     ["STUDENT_READY", "COMPLETE_STUDENT_READY", "Ready to plan", "The plan meets the major rules. Check seats and future schedules before you register."],
-    ["READY_WITH_CONDITIONS", "COMPLETE_READY_WITH_CONDITIONS", "Needs confirmation", "Check this plan's approval and standing notes before registering."],
-    ["ADVISOR_ACTION_REQUIRED", "COMPLETE_ADVISOR_ACTION_REQUIRED", "Needs advisor attention", "Ask your advisor to review the reason below before relying on this plan."]
+    // Owner request 2026-11-27: the sentence comes from the status and names what to confirm.
+    ["READY_WITH_CONDITIONS", "COMPLETE_READY_WITH_CONDITIONS", "Needs confirmation", "Before you register, check the notes below."],
+    ["ADVISOR_ACTION_REQUIRED", "COMPLETE_ADVISOR_ACTION_REQUIRED", "Needs advisor attention", "Ask your advisor to review the notes below before relying on this plan."]
   ];
   for (const [readinessStatus, planDisposition, label, explanation] of cases) {
     await openFixtureResult(page, plannerResultFixture({ plans: [fixturePlan({ readinessStatus, planDisposition })] }));
     await expect(page.locator(".result-status-value")).toHaveText(label);
     await expect(page.locator(".result-status-reason").first()).toHaveText(explanation);
   }
+});
+
+test("with several plans the summary points to each plan's own status sentence (2026-11-27)", async ({ page }) => {
+  await openFixtureResult(page, plannerResultFixture({ plans: [
+    fixturePlan({ id: "balanced", readinessStatus: "READY_WITH_CONDITIONS", planDisposition: "COMPLETE_READY_WITH_CONDITIONS" }),
+    fixturePlan({ id: "explore-first", label: "Explore the Major", readinessStatus: "STUDENT_READY", planDisposition: "COMPLETE_STUDENT_READY" })
+  ] }));
+  await expect(page.locator(".result-status-reason").first()).toHaveText("Each plan’s status below says what it needs.");
+  await expect(page.locator('article[data-plan-id="balanced"] .plan-feasibility-meaning')).toHaveText("Before you register, check the notes below.");
+  await expect(page.locator('article[data-plan-id="explore-first"] .plan-feasibility-meaning')).toHaveText(/^The plan meets the major rules\./);
 });
 
 test("a junior's custom one-year-early ECO 461 plan displays Needs confirmation", async ({ page }) => {
@@ -42,7 +53,7 @@ test("a junior's custom one-year-early ECO 461 plan displays Needs confirmation"
   const result = (await response.json()).programs.find(item => item.program.id === "economics-base");
   expect(result.economicsPlans[0].readinessStatus).toBe("READY_WITH_CONDITIONS");
   await expect(page.locator(".result-status-value")).toHaveText("Needs confirmation");
-  await expect(page.locator(".result-status-reason").first()).toHaveText("Check this plan's approval and standing notes before registering. See the notes below for paperwork to file.");
+  await expect(page.locator(".result-status-reason").first()).toHaveText("Before you register, confirm your senior standing in the notes below. The notes also list paperwork to file.");
   await expect(page.locator(".comparison-course-status > p").first()).toContainText("Class standingJunior (custom graduation year)");
   await expect(page.locator(".comparison-student strong")).toHaveText("Junior (custom graduation year)");
   const balanced = page.locator('article[data-plan-id="balanced"]');

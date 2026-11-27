@@ -153,3 +153,41 @@ test("the taken-now pairing keeps its 'Approval needed' tag in the checklist eve
   assert.ok(row.markers.includes("Approval needed"), "checklist tags ECO 214 too");
   assert.ok(row.markers.some(marker => /ECO 114/.test(marker)), "and still names the missing ECO 114");
 });
+
+// Owner request 2026-11-27: the sentence under a plan's status comes from the status (one rule, screen and PDF).
+test("the sentence under each status says what that status needs", async () => {
+  const { planStatusExplanation } = await import("../lib/planning/plan-display.js");
+  const messages = JSON.parse(await readFile(new URL("../policy/messages/en-US.json", import.meta.url), "utf8")).messages;
+  const plan = (readinessStatus, extra = {}) => ({ readinessStatus, feasibilityStatus: "CONDITIONALLY_FEASIBLE", planConditions: [], ...extra });
+  assert.equal(planStatusExplanation(plan("STUDENT_READY"), messages), "The plan meets the major rules. Check seats and future schedules before you register.");
+  assert.equal(planStatusExplanation(plan("READY_WITH_CONDITIONS", { planConditions: [{ kind: "approval" }] }), messages),
+    "Before you register, confirm the approval in the notes below.");
+  assert.equal(planStatusExplanation(plan("READY_WITH_CONDITIONS", { planConditions: [{ kind: "approval" }, { kind: "standing" }] }), messages),
+    "Before you register, confirm the approval and your senior standing in the notes below.");
+  assert.equal(planStatusExplanation(plan("READY_WITH_CONDITIONS"), messages), "Before you register, check the notes below.");
+  assert.equal(planStatusExplanation(plan("READY_WITH_CONDITIONS", { feasibilityStatus: "PRELIMINARY_ONLY" }), messages),
+    "Before you register, confirm the preliminary schedule in the notes below.");
+  // A ready plan never pairs "meets the major rules" with an unfinished-schedule sentence.
+  assert.equal(planStatusExplanation(plan("STUDENT_READY", { feasibilityStatus: "NOT_FEASIBLE" }), messages),
+    "The plan meets the major rules. Check seats and future schedules before you register.");
+  // Ready status given only through planDisposition is still read as ready.
+  assert.match(planStatusExplanation({ planDisposition: "COMPLETE_STUDENT_READY", feasibilityStatus: "CONDITIONALLY_FEASIBLE" }, messages), /^The plan meets the major rules\./);
+  assert.equal(planStatusExplanation(plan("ADVISOR_ACTION_REQUIRED", { planConditions: [{ kind: "review", shortMessage: "X." }] }), messages),
+    "Ask your advisor to review the notes below before relying on this plan.");
+});
+
+test("the PDF shows the status sentence once, with the petition reminder inside it", async () => {
+  const student = { displayName: "Fictional student", academicStanding: "junior", planCreationDate: "2026-11-21", courses: [course("ECO 114"), course("MAT 121")] };
+  const economics = await plansFor(student);
+  const html = renderEconomicsHtml(await buildEconomicsReportFromStudent(student, student.planCreationDate, economics.economicsPlans[0], economics.economicsPlans), template);
+  assert.match(visibleText(html), /Status: Needs confirmation\s+Your catalog needs a petition for this plan\. See the notes below for paperwork to file\./);
+  assert.equal(visibleText(html).match(/paperwork to file/g).length, 1);
+  assert.doesNotMatch(visibleText(html), /Check seats and future schedules/);
+
+  const senior = { displayName: "Fictional student", academicStanding: "senior", planCreationDate: "2026-11-22",
+    courses: ["ECO 113", "ECO 114", "ECO 213", "MAT 121", "MAT 217", "ECO 333", "ECO 234", "BUSN 323"].map(code => course(code)) };
+  const seniorPlans = await plansFor(senior);
+  const seniorHtml = renderEconomicsHtml(await buildEconomicsReportFromStudent(senior, senior.planCreationDate, seniorPlans.economicsPlans[0], seniorPlans.economicsPlans), template);
+  // This senior also needs a petition (BUSN 323 on an older catalog), so the reminder joins the same sentence.
+  assert.match(visibleText(seniorHtml), /Status: Needs confirmation\s+Before you register, confirm the approval in the notes below\. The notes also list paperwork to file\./);
+});

@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:1f54cbf154920abbc394522a85ce4d4adcca71178224114b28a1b240ca02ff10",
+  "contentHash": "sha256:eb990764f89448adf4fde945ceac1ec58247f4ecee578c8cf6bef181f43bb483",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7128,6 +7128,16 @@
     "permission.move": "This destination needs the approval shown.",
     "permission.report": "This placement depends on matching approval.",
     "permission.student": "This course arrangement needs approval.",
+    "planStatus.advisor": "Ask your advisor to review the notes below before relying on this plan.",
+    "planStatus.checkNotes": "Before you register, check the notes below.",
+    "planStatus.confirm": "Before you register, confirm {items} in the notes below.",
+    "planStatus.confirmApproval": "the approval",
+    "planStatus.confirmSchedule": "the preliminary schedule",
+    "planStatus.confirmStanding": "your senior standing",
+    "planStatus.paperwork": "The notes also list paperwork to file.",
+    "planStatus.petition": "Your catalog needs a petition for this plan. See the notes below for paperwork to file.",
+    "planStatus.ready": "The plan meets the major rules. {schedule}",
+    "planStatus.several": "Each plan’s status below says what it needs.",
     "prerequisite.advisor": "Review the listed prerequisite evidence and timing.",
     "prerequisite.move": "This destination must preserve prerequisite timing.",
     "prerequisite.report": "Prerequisites must be completed before the course unless a documented concurrency approval applies.",

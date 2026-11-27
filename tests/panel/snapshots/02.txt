@@ -19,7 +19,7 @@ Taking now
 None
 Status
 Needs confirmation
-Check the approval and standing notes on each plan before registering.
+Each plan’s status below says what it needs.
 Compare your course plans
 Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
@@ -29,7 +29,7 @@ STATUS: Ready to plan
 Balanced
 Spreads the required classes you still need across the years before you graduate.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -132,7 +132,7 @@ STATUS: Ready to plan
 Explore the Major
 Plans fewer major classes this year than Balanced. Classes that need another class first are scheduled later.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 SCREEN > Plan: Explore the Major > Grid
 Year | Term | Courses
 TERM: 2026/2027 Winter
@@ -234,7 +234,7 @@ STATUS: Needs confirmation
 One Year Early
 Possible
 Status: Needs confirmation
-Check seats and future schedules before you register.
+Before you register, confirm your senior standing in the notes below.
 Standard plan
 May 2030
 This plan
@@ -304,6 +304,7 @@ CHECKLIST ROW: Economics elective 3 Economics elective (200 level or higher) —
 CHECKLIST ROW: Economics elective 4 Economics elective (200 level or higher) — May 2029 ○ Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257, MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 ○ Planned
+Future schedules can change. Check the published schedule before you register.
 SCREEN > Plan: One Year Early > Notes: More about this plan
 More about this plan
 Other graduation requirements
@@ -345,7 +346,7 @@ Your Economics major plan
 Panel Student 02 | Balanced | Prepared November 22, 2026 | Class standing: Freshman (graduating one year early)
 This plan covers Winter 2027 through May 2030.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 Graduation target: May 2030 (one year early: May 2029)
 PDF > Plan: Balanced > Grid
 Your plan by term
@@ -476,7 +477,7 @@ Your Economics major plan
 Panel Student 02 | Explore the Major | Prepared November 22, 2026 | Class standing: Freshman (graduating one year early)
 This plan covers Winter 2027 through May 2030.
 Status: Ready to plan
-Check seats and future schedules before you register.
+The plan meets the major rules. Check seats and future schedules before you register.
 Graduation target: May 2030 (one year early: May 2029)
 PDF > Plan: Explore the Major > Grid
 Your plan by term
@@ -607,7 +608,7 @@ Your Economics major plan
 Panel Student 02 | One Year Early | Prepared November 22, 2026 | Class standing: Freshman (graduating one year early)
 This plan covers Winter 2027 through May 2029.
 Status: Needs confirmation
-Check seats and future schedules before you register.
+Before you register, confirm your senior standing in the notes below.
 Graduation target: May 2029
 Timeline: One year early
 PDF > Plan: One Year Early > Grid
@@ -706,6 +707,7 @@ CHECKLIST CELL: Economics elective (200 level or higher) — May 2029
 CHECKLIST CELL: Planned
 Math choices: MAT 113 or MAT 121. Statistics choices: ECO 257 or MAT 217 or PSY 217. Finance choices: ECO 321 or BUSN 323.
 Planned
+Future schedules can change. Check the published schedule before you register.
 PDF > Plan: One Year Early > Plan Notes
 Plan Notes
 Panel Student 02 | One Year Early | Prepared November 22, 2026
