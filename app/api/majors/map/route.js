@@ -3,9 +3,7 @@ import { applyHanoverOnlyCourseRule } from "../../../../lib/planning/hanover-onl
 import { mapStudentToProgram } from "../../../../lib/assignment/solve.js";
 import { analyzeFeasibility } from "../../../../lib/planning/feasibility.js";
 import {
-  buildFeasibilityDetails,
   buildEconomicsTermPlans,
-  classifyFeasibility,
   annotateEconomicsPlanChoices,
   FEASIBILITY_STATUS,
   SEARCH_INCOMPLETE_MESSAGE,
@@ -20,8 +18,7 @@ import { CATALOG_APPLICABILITY_STATUS, resolveCatalogApplicability } from "../..
 import { resolveInputResolution, validateSubmittedCatalogYear } from "../../../../lib/catalog/input-resolution.js";
 import { validateStudentPrerequisites } from "../../../../lib/planning/prerequisiteValidation.js";
 import { studentFacingPlanReviewMessage } from "../../../../lib/planning/plan-presentation.js";
-import { buildPrerequisiteStatusNotices } from "../../../../lib/planning/prerequisiteEvaluator.js";
-import { annotatePreliminaryScheduleEvidence } from "../../../../lib/policy/preliminary-schedule.js";
+import { finishCheckedPlan } from "../../../../lib/planning/finish-checked-plan.js";
 import { loadPlannerFingerprint } from "../../../../lib/planning/fingerprint.js";
 import { compactEconomicsPlanForValidation } from "../../../../lib/planning/validation-payload.js";
 import { browserReplyView } from "../../../../lib/planning/move-options-view.js";
@@ -313,25 +310,8 @@ function validateEditedEconomicsPlan({ catalog, student, planningContext, plan, 
         }
       : plan.distribution
   };
-  annotatePreliminaryScheduleEvidence(validatedPlan, catalog.policyBundle);
-  validatedPlan.prerequisiteNotices = buildPrerequisiteStatusNotices({
-    plan: validatedPlan,
-    student,
-    prerequisites: catalog.prerequisitesByProgram.get(program.id)
-  });
-  validatedPlan.studentMessages = [...new Set([
-    ...(validation.warnings || []),
-    ...(validation.studentNotices || []).map(notice => notice.message),
-    ...validatedPlan.prerequisiteNotices.map(notice => notice.message),
-    ...(validatedPlan.advisorChecks || []).map(item => item.reason).filter(Boolean),
-    ...(validatedPlan.terms || []).flatMap(term => (term.courses || []).map(course => course.studentHistoricalOfferingMessage).filter(Boolean))
-  ])];
-  validatedPlan.feasibilityStatus = classifyFeasibility(validatedPlan, student);
-  validatedPlan.feasibility = buildFeasibilityDetails(
-    validatedPlan,
-    student,
-    validatedPlan.feasibility?.search
-  );
+  finishCheckedPlan(validatedPlan, { validation, student, prerequisites: catalog.prerequisitesByProgram.get(program.id),
+    policyBundle: catalog.policyBundle, search: validatedPlan.feasibility?.search });
   validatedPlan.verification = {
     ...(validatedPlan.verification || {}),
     status: validatedPlan.feasibilityStatus,

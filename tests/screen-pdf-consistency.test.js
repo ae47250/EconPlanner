@@ -191,3 +191,14 @@ test("the PDF shows the status sentence once, with the petition reminder inside 
   // This senior also needs a petition (BUSN 323 on an older catalog), so the reminder joins the same sentence.
   assert.match(visibleText(seniorHtml), /Status: Needs confirmation\s+Before you register, confirm the approval in the notes below\. The notes also list paperwork to file\./);
 });
+
+// Owner request 2026-11-27: the live plan check and the PDF finish a plan with one shared step.
+// Source-text tripwire only: it catches a pasted copy of the finishing steps. Same output on screen and in
+// the PDF is checked by behavior in tests/economics-report-parity.test.js.
+test("the live plan check and the PDF builder finish a checked plan with the same shared step", async () => {
+  for (const file of ["../app/api/majors/map/route.js", "../lib/reports/build-economics.js"]) {
+    const source = await readFile(new URL(file, import.meta.url), "utf8");
+    assert.match(source, /finishCheckedPlan\(/, `${file} uses the shared step`);
+    assert.doesNotMatch(source, /studentHistoricalOfferingMessage|buildPrerequisiteStatusNotices\(/, `${file} keeps no copy of it`);
+  }
+});
