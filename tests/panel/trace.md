@@ -12,6 +12,7 @@ Rule or reason code → policy message keys → panel students.
 - **checklist.statisticsAlreadyFilled** → 27, 49
 - **electives.extraNeededMany** → 41
 - **electives.extraNeededOne** → 41
+- **history.completedMissingOne** → 31
 - **history.completedPrerequisiteTakingNowOne** → 18
 - **history.plannedNotMarked** → 16, 32
 - **history.plannedNotMarkedChoice** → 16, 32
@@ -25,12 +26,15 @@ Rule or reason code → policy message keys → panel students.
 - **history.takingNowNotOffered** → 17
 - **history.takingNowNotOfferedAdvisor** → 17
 - **infeasibility.capstone.seniorStanding** → 04, 06
-- **infeasibility.courseCapacity** → 09, 10, 11, 31, 33, 45
-- **infeasibility.electives.capacity** → 09, 10, 11, 31, 33, 45
+- **infeasibility.courseCapacity** → 09, 10, 11, 33, 45
+- **infeasibility.electives.capacity** → 09, 10, 11, 33, 45
 - **infeasibility.electives.conflict** → 37, 38
 - **infeasibility.electives.spring** → 37, 38
 - **infeasibility.finance.forced** → 37
 - **infeasibility.requiredOffering** → 40
+- **infeasibility.unmarkedPrerequisite** → 31
+- **infeasibility.unmarkedPrerequisiteMany** → 31
+- **infeasibility.unmarkedPrerequisiteQuestion** → 31
 - **move.sameTermPrerequisiteApproval** → 16, 19, 32
 - **move.sameTermPrerequisiteOtherApproval** → 16, 19, 32
 - **move.takePrerequisiteFirst** → 16, 17, 18, 32
@@ -727,10 +731,11 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 11, 12): More planning details
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05, 16, 17, 18, 19, 32, 41, 42, 46, 47): Needs advisor attention
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08, 10, 11, 13, 21, 23, 24, 27, 28, 30, 36, 39, 44): Needs confirmation
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 31): Needs one more detail
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): No plan fits with the room saved for other courses.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): No plan fits with these study-abroad terms.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): None
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 31, 33, 34, 35, 37, 38, 40, 43, 45): Not possible
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 33, 34, 35, 37, 38, 40, 43, 45): Not possible
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 11, 19, 21, 28, 30, 32): NOTE: Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08): NOTE: Ask your advisor and the Registrar to confirm senior standing
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): NOTE: Check enrollment for MAT 217.
@@ -752,11 +757,12 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): Regenerate all plans
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Regenerate this plan
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): Requirement | Course / term | Status
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 31, 33, 34, 35, 37, 38, 40, 43, 45): Review graduation timeline
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 33, 34, 35, 37, 38, 40, 43, 45): Review graduation timeline
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): Review my answers
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 41): Review the details below with your advisor.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 20): Review your choices
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 31, 33, 34, 35, 37, 38, 40, 43, 45): Review your graduation timeline and show this screen to your advisor.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 31): Review your courses
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 33, 34, 35, 37, 38, 40, 43, 45): Review your graduation timeline and show this screen to your advisor.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): Save less room
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 29, 50): Save room for fewer courses and try again.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 11, 13, 16, 17, 21, 23, 24, 27, 28, 30, 36, 39, 42, 44): See the notes below for paperwork to file.
@@ -873,7 +879,7 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Your plan
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06, 20, 29, 31, 33, 34, 35, 37, 38, 40, 41, 43, 45, 50): Your planning result
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): Your plans
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 31, 33, 34, 35, 37, 38, 40, 43, 45): Your remaining classes do not fit before this graduation target.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 33, 34, 35, 37, 38, 40, 43, 45): Your remaining classes do not fit before this graduation target.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 12): Your remaining courses do not fit by May 2027.
 
 ## Students not driven through all screens

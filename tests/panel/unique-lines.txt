@@ -118,6 +118,7 @@
 47	Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Course / term
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Courses in future years
+31	Did you already take MAT 113 or MAT 121?
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Download PDF Report: Balanced
 01, 02, 03, 05, 19, 46, 47, 48, 49	Download PDF Report: Explore the Major
 02, 08	Download PDF Report: One Year Early
@@ -204,6 +205,7 @@
 16	ECO 213 ECO 213 ✓ Completed ECO 113 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 32	ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 18	ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
+31	ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check. With your current answers, no plan fits. Once it is marked, a plan fits.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 214
 16, 18, 19, 21	ECO 214 — Fall 2027
 01, 02, 03, 46	ECO 214 — Fall 2028
@@ -436,12 +438,13 @@
 09, 10, 11, 12	More planning details
 05, 16, 17, 18, 19, 32, 41, 42, 46, 47	Needs advisor attention
 02, 03, 07, 08, 10, 11, 13, 21, 23, 24, 27, 28, 30, 36, 39, 44	Needs confirmation
+31	Needs one more detail
 08, 46, 47, 48, 49	No Economics course this term
 20, 29, 41, 50	No plan fits all your choices. Change your answers, choose a later graduation year, or talk with your advisor.
 29, 50	No plan fits with the room saved for other courses.
 20	No plan fits with these study-abroad terms.
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	None
-04, 06, 31, 33, 34, 35, 37, 38, 40, 43, 45	Not possible
+04, 06, 33, 34, 35, 37, 38, 40, 43, 45	Not possible
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Offered only in Winter. This is the last Winter before you graduate.
 02, 08	One Year Early
 12	One Year Early: No complete plan found
@@ -566,11 +569,12 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Regenerate this plan
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Requirement
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Requirement | Course / term | Status
-04, 06, 31, 33, 34, 35, 37, 38, 40, 43, 45	Review graduation timeline
+04, 06, 33, 34, 35, 37, 38, 40, 43, 45	Review graduation timeline
 41	Review my answers
 41	Review the details below with your advisor.
 20	Review your choices
-31, 33, 34, 35, 37, 38, 40, 43, 45	Review your graduation timeline and show this screen to your advisor.
+31	Review your courses
+33, 34, 35, 37, 38, 40, 43, 45	Review your graduation timeline and show this screen to your advisor.
 29, 50	Save less room
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Seat availability not confirmed
 07, 08, 11, 13, 16, 17, 21, 23, 24, 27, 28, 30, 36, 39, 42, 44	See the notes below for paperwork to file.
@@ -691,7 +695,7 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Year | Term | Courses
 09, 10, 11, 12	You cannot finish by May 2027. The plan below is for May 2028.
 45	You have 3 required courses left and 1 term left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
-31, 33	You have 6 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
+33	You have 6 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 09	You have 8 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 10, 11	You have 10 required courses left and 2 terms left by May 2027. Even with a full course load each term, they cannot all fit. Choose a later graduation year or talk with your advisor.
 25	You may petition to count BUSN 323 as an Economics elective. This plan does not count it yet. Talk with your advisor about the petition.
@@ -711,5 +715,5 @@
 30	Your planned courses and saved room total 6 courses in Winter 2027 and May 2027. More than 5.5 may add tuition. Ask the Business Office.
 04, 06, 20, 29, 31, 33, 34, 35, 37, 38, 40, 41, 43, 45, 50	Your planning result
 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50	Your plans
-31, 33, 34, 35, 37, 38, 40, 43, 45	Your remaining classes do not fit before this graduation target.
+33, 34, 35, 37, 38, 40, 43, 45	Your remaining classes do not fit before this graduation target.
 12	Your remaining courses do not fit by May 2027.
