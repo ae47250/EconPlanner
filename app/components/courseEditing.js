@@ -117,9 +117,11 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
       ? `Move as a 200+ elective — choose the course later: ${item.label}`
       : `Replace with ${item.course} — ${item.label}` }));
   const all = [...moves, ...replacements];
+  // A blocked swap is about the course being swapped in, not the one leaving.
+  const movingCourseFor = item => item.edit?.type === "replace-move" && item.course !== "ECO elective" ? item.course : course.course;
   const usable = all.filter(item => ["ALLOWED", "CONDITIONAL"].includes(item.status));
   const guidance = [...new Set(all.filter(item => !["ALLOWED", "CONDITIONAL"].includes(item.status))
-    .map(item => studentFriendlyUnavailableAdvice({ ...item, movingCourse: course.course }, menu.policyMessages))
+    .map(item => studentFriendlyUnavailableAdvice({ ...item, movingCourse: movingCourseFor(item) }, menu.policyMessages))
     .filter(advice => advice.suggestsFix).map(advice => advice.message))].slice(0, 2);
   const optionGroups = usable.reduce((groups, item) => {
     const label = item.edit.type === "move" ? "Move to"
@@ -177,7 +179,7 @@ function CourseChange({ course, termId, planId, onEdit, busy, feedback, onUndo, 
           {item.status === "CONDITIONAL" && !isUnpublishedScheduleCondition(item) && <small>{studentFriendlyMoveCondition(item, course.course, menu.policyMessages)}</small>}
         </button>)}
         {group.items.some(isUnpublishedScheduleCondition) && <small className="change-confirm-warning">{studentFriendlyMoveCondition(group.items.find(isUnpublishedScheduleCondition), course.course, menu.policyMessages)}</small>}
-      </section>) : <p>{all.length ? studentFriendlyUnavailableReason({ ...all[0], movingCourse: course.course }, menu.policyMessages) : "No other move is available right now."}</p>)}
+      </section>) : <p>{all.length ? studentFriendlyUnavailableReason({ ...all[0], movingCourse: movingCourseFor(all[0]) }, menu.policyMessages) : "No other move is available right now."}</p>)}
       {selected && <>
         <strong className="change-confirm-title">{selected.edit.type === "move" ? `Move ${compactPlanCourse(course)}` : `Replace with ${selected.edit.replacementCourse === "ECO elective" ? "a 200+ elective" : selected.edit.replacementCourse}`}</strong>
         <span className="change-confirm-term">{studentTermLabel(selected.label)}</span>

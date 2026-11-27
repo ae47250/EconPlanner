@@ -1,10 +1,11 @@
 import { visitPlan } from "./cp7-helpers.js";
 import { test, expect } from "@playwright/test";
-import {resetPlanner,chooseStanding,continueToCourses,setCourseStatus,courseStatusGroup,generatePlans,fixturePlan,openFixtureResult,plannerResultFixture} from './cp7-helpers.js';
+import {resetPlanner,reloadPlanner,chooseStanding,continueToCourses,setCourseStatus,courseStatusGroup,generatePlans,fixturePlan,openFixtureResult,plannerResultFixture} from './cp7-helpers.js';
 import {evaluateTermLoad} from '../../lib/decision-engine/placement.js';
 import {runtimePolicyBundle} from '../../lib/policy/compat-normalized.js';
 import {termLoadMessage} from '../../lib/policy/term-load.js';
 import {studentDisplayMessages} from '../../lib/planning/student-language.js';
+import {planStatusExplanation} from '../../lib/planning/plan-display.js';
 
 const history = ['ECO 113','ECO 114','ECO 213','MAT 113','MAT 217','ECO 161','ECO 234'];
 async function selectHistory(page,codes) {
@@ -189,7 +190,10 @@ test('the verified ECO 321 section appears in a junior plan instead of BUSN 323'
   expect(plan.terms.every(term=>term.courses.every(course=>course.course!=='BUSN 323'))).toBe(true);
   const card = await visitPlan(page,'balanced');
   await expect(card.locator('[data-term-id="winter-2027"]')).toContainText('ECO 321');
-  await expect(card.locator('.compact-schedule')).not.toContainText('BUSN 323');
+  // BUSN 323 may be listed inside ECO 321's closed "Take a different course" menu (owner decision 2026-11-27),
+  // but it is not a course in the plan.
+  await expect(card.locator('.compact-schedule').getByRole('button', { name: /^Change BUSN 323/ })).toHaveCount(0);
+  await expect(card.locator('.compact-schedule').getByRole('button', { name: /^Change ECO 321/ })).toHaveCount(1);
 });
 
 // Owner decision 2026-11-26: a plan that needs a catalog petition is "Needs confirmation", not "Ready to plan".
@@ -217,4 +221,47 @@ test('a petition plan is Needs confirmation with the paperwork sentence on scree
   const html = await report.text();
   expect(html).toContain('See the notes below for paperwork to file.');
   expect(html).toContain('Status: Needs confirmation');
+});
+
+// Owner decision 2026-11-27: the Finance choice can be swapped like an elective, the PDF follows, and a reload keeps it.
+test('a student swaps ECO 321 for BUSN 323 and the PDF and a reload keep the swap',async ({page}) => {
+  await resetPlanner(page);
+  await chooseStanding(page,'sophomore');
+  await page.locator('details.more-details > summary').first().click();
+  await page.getByLabel('Plan creation date',{exact:true}).fill('2026-11-21');
+  await continueToCourses(page);
+  await selectHistory(page,['ECO 113','ECO 114']);
+  const response = await generatePlans(page);
+  const result = await response.json();
+  const plans = result.programs.find(item=>item.program?.id==='economics-base').economicsPlans;
+  const plan = plans.find(item=>item.id==='balanced');
+  const finance = plan.terms.flatMap(term=>term.courses).find(course=>course.requirementId==='finance');
+  expect(finance.course).toBe('ECO 321');
+  const option = finance.replacementDestinationOptions.find(item=>item.course==='BUSN 323' && ['ALLOWED','CONDITIONAL'].includes(item.status));
+  expect(option).toBeTruthy();
+  const card = await visitPlan(page,'balanced');
+  const row = () => card.locator('.comparison-editable-course[data-requirement-id="finance"]');
+  await row().getByRole('button',{name:/^Change ECO 321/}).press('Enter');
+  await expect(row().getByText('Take a different course')).toBeVisible();
+  await row().locator(`[data-change-choice="replace:${option.toTermId}:BUSN 323"]`).press('Enter');
+  const pending = page.waitForResponse(item=>item.url().includes('/api/majors/map') && item.request().method()==='POST');
+  await row().getByRole('button',{name:'Apply change',exact:true}).press('Enter');
+  const edited = await pending;
+  expect(edited.status()).toBe(200);
+  const updated = (await edited.json()).plan;
+  await expect(row().getByRole('button',{name:/^Change BUSN 323/})).toBeVisible();
+  const student = { planCreationDate:'2026-11-21', academicStanding:'sophomore', majorDeclarationCatalogYear:'2025-2026',
+    courses:[{code:'ECO 113',status:'completed'},{code:'ECO 114',status:'completed'}] };
+  const html = await page.request.post('/api/reports/economics',{data:{student,preparedDate:'2026-11-21',selectedPlan:updated,
+    plans:plans.map(item=>item.id===updated.id?updated:item),format:'html'}});
+  expect(html.status()).toBe(200);
+  const printed = (await html.text()).replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
+  expect(printed).toContain('Finance BUSN 323 —');
+  // The status sentence the screen shows for the swapped plan is the one the PDF prints.
+  const sentence = planStatusExplanation(updated, studentDisplayMessages(runtimePolicyBundle()));
+  await expect(card).toContainText(sentence);
+  expect(printed).toContain(sentence);
+  await reloadPlanner(page);
+  const again = await visitPlan(page,'balanced');
+  await expect(again.locator('.comparison-editable-course[data-requirement-id="finance"]').getByRole('button',{name:/^Change BUSN 323/})).toBeVisible();
 });

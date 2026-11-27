@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:eb990764f89448adf4fde945ceac1ec58247f4ecee578c8cf6bef181f43bb483",
+  "contentHash": "sha256:82207fd24902ce1a3fe0f6aad3878f2c6868822972f7c920f9035ceb37714652",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7089,6 +7089,7 @@
     "load.student": "This term has more than the preferred two Economics courses.",
     "move.advisorCheck": "An advisor needs to check this move, because it depends on an approval or record EconPlanner can’t confirm.",
     "move.dependentPrerequisite": "{moving} must come before {dependent}. Move {dependent} later first.",
+    "move.dependentPrerequisiteEarlier": "{moving} must come before {dependent}. Choose an earlier term.",
     "move.electiveAlreadyHere": "Only one elective per term until the schedule is published. Move the other elective first.",
     "move.intermediateSeparateTerms": "{courses} must be in different terms unless that year’s published schedule lists both.",
     "move.mayFull": "May allows one course. Move the other one out first.",

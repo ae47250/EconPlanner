@@ -323,7 +323,7 @@ function PlanComparisonScreen({
                                     </div>}
                                     {(course.planningMarkers || []).filter(marker => marker !== "Approval required")
                                       .map(marker => <span className="plan-course-approval" key={marker}>{studentFriendlyCourseMarker(marker)}</span>)}
-                                    {course.course === "ECO 461" && <span className="course-constraint-note">Offered only in Winter. This is the last Winter before you graduate.</span>}
+                                    {course.course === "ECO 461" && <span className="course-constraint-note">Offered only in Winter.{rows.slice(rows.indexOf(row) + 1).some(later => later.sourceTerm.termKey === "Winter") ? "" : " This is the last Winter before you graduate."}</span>}
                                   </div>
                                 </div>;
                               }) : <span className="comparison-empty-term">{studyAbroadIds.includes(row.sourceTerm.slotId) ? "Study abroad" : "No Economics course this term"}</span>}
