@@ -40,6 +40,10 @@ TERM: 2026/2027 May
 GRID ROW: ECO 222-S ▾ | Economics of the European Union
 NOTE: Seat availability not confirmed
 SCREEN > Plan: Balanced > More
+ECO 161: Previously offered in Fall, Winter, May.
+ECO 461: Offered only in Winter.
+ECO 222: Previously offered in May.
+SCREEN > Plan: Balanced > More
 Add Econ course
 SCREEN > Plan: Balanced > More
 Regenerate this plan
@@ -124,7 +128,7 @@ GRID ROW: ECO 461-J
 TERM: 2026/2027 May
 GRID ROW: ECO 222-S
 ECO 161 — Foundations of Economics Previously offered in Fall, Winter, May.
-ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+ECO 461 — Senior Seminar: Econometrics Offered only in Winter.
 ECO 222 — Economics of the European Union Previously offered in May.
 PDF > Plan: Balanced > What to check for this plan
 What to check for this plan

@@ -202,3 +202,29 @@ test("the live plan check and the PDF builder finish a checked plan with the sam
     assert.doesNotMatch(source, /studentHistoricalOfferingMessage|buildPrerequisiteStatusNotices\(/, `${file} keeps no copy of it`);
   }
 });
+
+test("the screen and the PDF print each course's offering label from the same shared rule", async () => {
+  const { courseOfferingLines } = await import("../lib/planning/plan-display.js");
+  // Panel student 17: a junior taking ECO 214 now (no offering history for a course already being taken).
+  const student = { planCreationDate: "2026-11-21", academicStanding: "junior", majorDeclarationCatalogYear: "2025-2026",
+    courses: [course("ECO 113"), course("MAT 121"), course("ECO 214", "in_progress")] };
+  const economics = await plansFor(student);
+  for (const plan of economics.economicsPlans) {
+    // The screen's call (app/components/PlanComparisonScreen.js); its label is compactPlanCourse without the section.
+    // app/plannerShared.js cannot load under node --test, so the label is restated here.
+    const screen = courseOfferingLines(plan.terms.flatMap(term => term.courses), item => item.course === "ECO elective" && item.minimumLevel >= 200
+      ? "Economics elective (200 level or higher)" : item.course);
+    const report = await buildEconomicsReportFromStudent(student, student.planCreationDate, plan, economics.economicsPlans);
+    const pdf = courseOfferingLines(report.terms.flatMap(term => term.courses), item => item.displayLabel || item.code);
+    assert.ok(screen.length > 0, "the plan has offering lines");
+    assert.ok(screen.some(([label]) => label.startsWith("Economics elective")), "the elective placeholder has a line");
+    assert.ok(!screen.some(([label]) => label === "ECO 214"), "no line for the course being taken now");
+    assert.deepEqual([...screen].sort(), [...pdf].sort());
+    const printed = visibleText(renderEconomicsHtml(report, template)).replace(/\s+/g, " ");
+    for (const [label, offering] of screen) assert.ok(printed.includes(`${label} —`) && printed.includes(offering), `the PDF prints ${label}: ${offering}`);
+  }
+  const source = await readFile(new URL("../app/components/PlanComparisonScreen.js", import.meta.url), "utf8");
+  assert.match(source, /function PlanComparisonScreen\(/, "the screen component is intact");
+  assert.equal(source.match(/courseOfferingLines\(/g)?.length, 1, "the screen builds its list once, with the shared helper");
+  assert.doesNotMatch(source, /Future offering unconfirmed/, "the screen keeps no wording of its own");
+});

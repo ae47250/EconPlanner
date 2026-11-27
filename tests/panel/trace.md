@@ -38,7 +38,7 @@ Rule or reason code → policy message keys → panel students.
 - **move.sameTermPrerequisiteApproval** → 16, 19, 32
 - **move.sameTermPrerequisiteOtherApproval** → 16, 19, 32
 - **move.takePrerequisiteFirst** → 16, 17, 18, 32
-- **move.winterOnly** → 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 35, 36, 39, 42, 43, 44, 46, 47, 48, 49
+- **move.winterOnly** → 04, 06, 35, 43
 - **noPlan.noneFits** → 20, 29, 41, 50
 - **planStatus.advisor** → 05, 16, 17, 18, 19, 32, 42, 46, 47
 - **planStatus.confirm** → 02, 03, 07, 08, 10, 11, 21, 28, 30
@@ -192,15 +192,18 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 05): Confirm with your advisor that your AP credit for ECO 113 and MAT 121 counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 46): Confirm with your advisor that your AP credit for ECO 113, ECO 114, and MAT 121 counts.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 47): Confirm with your advisor that your transfer credit for ECO 113 and MAT 121 counts.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 13, 16, 18): ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 18): ECO 113 — Principles of Microeconomics
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 13, 16): ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 113 · Principles of Microeconomics — Section J: Tue/Thu, 10:00–11:45 a.m.; Section K: Mon/Wed/Fri, 8:00–9:10 a.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 11, 17, 19): ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 114 · Principles of Macroeconomics — Tue/Thu, 8:00–9:45 a.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 27, 48): ECO 160 does not count toward the major because only one 100-level Economics elective can count.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 11, 16, 39): ECO 161 — Foundations of Economics Previously offered in Fall, Winter, May.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 19, 21, 46, 47, 48, 49): ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
-- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49): ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 19): ECO 213 — Intermediate Microeconomics
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 21, 46, 47, 48, 49): ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 17): ECO 214 — Intermediate Macroeconomics
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49): ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 214 · Intermediate Macroeconomics — Tue/Thu, 10:00–11:45 a.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): ECO 221 — Environmental Economics Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
@@ -211,6 +214,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49): ECO 321 — Money and Financial Markets Previously offered in Fall and Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 321 · Money and Financial Markets — Tue/Thu, 12:20–2:05 p.m.
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461 — Senior Seminar: Econometrics Offered only in Winter.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 461 · Senior Seminar: Econometrics — Mon/Wed/Fri, 10:40–11:50 a.m.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461 also counts toward your Writing 2 (W2) requirement.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Economics elective (200 level or higher) — Pick a course when the schedule comes out.
@@ -218,6 +222,7 @@ Rule or reason code → policy message keys → panel students.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 36, 42, 46, 47, 48, 49): Finish these classes first
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): For terms without a published schedule, this plan assumes no more than one Economics elective per term.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 07, 08, 10, 11, 16, 17, 18, 19, 21, 28, 30, 32, 46, 47): For your advisor
+- **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Future offering unconfirmed.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 02, 03, 05, 07, 08, 10, 11, 13, 16, 17, 18, 19, 21, 23, 24, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47): Future schedules can change.
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Future years
 - **PDF** (lib/reports/economics-html.js, renderEconomicsHtml; students 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44): Graduation target: May 2027
@@ -649,22 +654,33 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 46): ECO 113 (AP) · ECO 114 (AP) · MAT 121 (AP)
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 05): ECO 113 (AP) · MAT 121 (AP)
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 47): ECO 113 (transfer) · ECO 114 · MAT 121 (transfer)
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 13, 16): ECO 113: Previously offered in Fall and Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 16, 18): ECO 114 · ECO 213 · MAT 121
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 13): ECO 114 · MAT 121
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 114 · Principles of Macroeconomics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 11, 17, 19): ECO 114: Previously offered in Fall and Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 27, 48): ECO 160 does not count toward the major because only one 100-level Economics elective can count.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 161 · Foundations of Economics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11, 16, 39): ECO 161: Previously offered in Fall, Winter, May.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 19): ECO 213 · MAT 121
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 21, 46, 47, 48, 49): ECO 213: Previously offered in Fall and Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 17): ECO 214
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 214 · Intermediate Macroeconomics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49): ECO 214: Previously offered in Fall and Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 221 · Environmental Economics
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44): ECO 221: Previously offered in Fall and Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 222 · Economics of the European Union
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48): ECO 222: Previously offered in May.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 224 · Introduction to Sustainability
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 11): ECO 224: Previously offered in May.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 234 · Rational Choices
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 321 · Money and Financial Markets
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49): ECO 321: Previously offered in Fall and Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49): ECO 461 · Senior Seminar: Econometrics
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461 also counts toward your Writing 2 (W2) requirement.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 04, 06): ECO 461 cannot fit before this graduation target without senior standing.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): ECO 461: Offered only in Winter.
+- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): Economics elective (200 level or higher): Future offering unconfirmed.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): EconPlanner
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50): EconPlanner is a planning guide, not an official degree audit.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 19, 46, 47, 48, 49): Explore the Major
@@ -745,7 +761,6 @@ Rule or reason code → policy message keys → panel students.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 10, 11, 19, 21, 28, 30, 32): NOTE: Approval needed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 03, 07, 08): NOTE: Ask your advisor and the Registrar to confirm senior standing
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 42): NOTE: Check enrollment for MAT 217.
-- **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49): NOTE: Future offering unconfirmed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): NOTE: Offered only in Winter.
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49): NOTE: Seat availability not confirmed
 - **SCREEN** (app/components/PlanComparisonScreen.js, PlanComparisonScreen; students 02, 08): One Year Early
