@@ -66,7 +66,8 @@ test("panel:lint counts course codes and titles in a 30-word sentence", async ()
 
 test("PDF snapshot keeps adjacent report list items on separate lines", async () => {
   const snapshot = await readFile(path.join(panel, "snapshots/30.txt"), "utf8");
-  assert.match(snapshot, /\nGraduation target: May 2027\nSee the notes below for paperwork to file\.\nPDF > Plan: Balanced > Grid/);
+  // 2026-11-27: the paperwork reminder is now part of the status sentence, the list item just before the target.
+  assert.match(snapshot, /\nBefore you register, confirm the approval in the notes below\. The notes also list paperwork to file\.\nGraduation target: May 2027\nPDF > Plan: Balanced > Grid/);
   assert.doesNotMatch(snapshot, /2027Why an advisor should review this plan:/);
   assert.match(snapshot, /TABLE HEADER: Requirement\nTABLE HEADER: Course \/ term\nTABLE HEADER: Status/);
   assert.match(snapshot, /CHECKLIST CELL: ECO 113\nCHECKLIST CELL: ECO 113/);
