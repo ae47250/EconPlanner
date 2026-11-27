@@ -44,7 +44,7 @@ for (const destination of ['fall-2027', 'winter-2028', 'spring-2028']) {
     assert.equal(placed.course.section, '');
     assert.equal(placed.course.source, 'projected-offering');
     assert.equal(placed.course.availability, null);
-    assert.equal(placed.course.offeringInformation, null, 'The old named course pattern must not follow the generic elective');
+    assert.equal(placed.course.offeringInformation?.label, 'Future offering unconfirmed.', 'The elective gets its own label, not the old named course history');
     assert.match(placed.course.title, /choose the course later/);
     assert.deepEqual(assignments(result.data.plan).filter(row => row[0] !== requirementId), assignments(named).filter(row => row[0] !== requirementId));
     assert.equal(new Set(assignments(result.data.plan).map(row => row[0])).size, assignments(named).length);
@@ -111,5 +111,8 @@ test('offering labels report historical facts without activating a May predictio
   assert.doesNotMatch(info.label, /usually|only/i);
   assert.equal(courseOfferingInformation({course:'ECO 999'}, bundle), null);
   assert.equal(courseOfferingInformation({course:'ECO 222'}, {planningAdvice:{observations:[]}}), null);
-  assert.equal(courseOfferingInformation({course:'ECO elective'}, bundle), null);
+  assert.equal(courseOfferingInformation({course:'ECO elective'}, bundle).label, 'Future offering unconfirmed.');
+  assert.equal(courseOfferingInformation({course:'ECO 461', fixedInProgress: true}, bundle), null);
+  assert.equal(courseOfferingInformation({course:'ECO 214', fixedInProgress: true}, bundle), null);
+  assert.match(courseOfferingInformation({course:'ECO 461'}, bundle).label, /only in Winter/);
 });

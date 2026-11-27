@@ -1,5 +1,4 @@
-Same-fact wording variants: 4
-17.txt | PDF / Balanced: ECO 214 is not on the Fall 2026 schedule. If you are taking it at another school, your advisor will check whether it counts. [also: ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.]
-17.txt | PDF / Balanced: Confirm where the student is taking ECO 214 in Fall 2026. It is not on the Hanover Fall 2026 schedule. [also: ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.]
+Same-fact wording variants: 3
+17.txt | PDF / Balanced: Confirm where the student is taking ECO 214 in Fall 2026. It is not on the Hanover Fall 2026 schedule. [also: ECO 214 is not on the Fall 2026 schedule. If you are taking it at another school, your advisor will check whether it counts.]
 42.txt | SCREEN / Balanced: CHECKLIST ROW: Statistics MAT 217 — Fall 2026 ○ Planned Check enrollment for MAT 217. [also: NOTE: Check enrollment for MAT 217.]
 42.txt | PDF / Balanced: CHECKLIST CELL: Planned Check enrollment for MAT 217. [also: NOTE: Check enrollment for MAT 217.]

@@ -354,6 +354,7 @@ export const comparisonStyles = css.global`
         .comparison-page .comparison-fixed-course small { font-size: 11px; font-weight: 400; color: #64748b; }
         .comparison-page .comparison-course-meta { display: grid; gap: .08rem; margin: 0 0 .25rem calc(20px + .1rem); color: #53627a; font-size: 12px; font-weight: 400; line-height: 1.35; }
         .comparison-page .comparison-course-meta .comparison-course-title { color: #3f4e64; font-size: 14px; line-height: 1.35; }
+        .comparison-page .comparison-course-offerings { margin: .5rem 0 0; padding: 0; list-style: none; color: #53627a; font-size: 13px; line-height: 1.4; }
         .comparison-page .comparison-course-meta .plan-course-availability { font-size: 12px; }
         .comparison-page .comparison-course-meta .plan-course-approval strong { display: block; color: #76510b; font-weight: 700; }
         .comparison-page .comparison-course-meta .plan-course-approval span { display: block; color: #53627a; font-size: 12px; font-weight: 400; }

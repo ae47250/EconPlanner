@@ -49,10 +49,8 @@ TERM: 2027/2028 Fall
 GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
 TERM: 2027/2028 Winter
 GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
 TERM: 2027/2028 May
 GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
 TERM: 2028/2029 Fall
 GRID ROW: BUSN 323 ▾ | Investments
 TERM: 2028/2029 Winter
@@ -60,7 +58,12 @@ GRID ROW: ECO 461 | Senior Seminar: Econometrics
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 TERM: 2028/2029 May
 GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
+SCREEN > Plan: Balanced > More
+ECO 114: Previously offered in Fall and Winter.
+ECO 222: Previously offered in May.
+ECO 214: Previously offered in Fall and Winter.
+Economics elective (200 level or higher): Future offering unconfirmed.
+ECO 461: Offered only in Winter.
 SCREEN > Plan: Balanced > More
 Add Econ course
 SCREEN > Plan: Balanced > More
@@ -152,17 +155,20 @@ TERM: 2027/2028 Winter
 GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
 TERM: 2027/2028 May
 GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
 TERM: 2028/2029 Fall
 GRID ROW: BUSN 323 ▾ | Investments
 GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
 TERM: 2028/2029 Winter
 GRID ROW: ECO 461 | Senior Seminar: Econometrics
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
 TERM: 2028/2029 May
 GRID ROW: Economics elective (200 level or higher) ▾
-NOTE: Future offering unconfirmed
+SCREEN > Plan: Explore the Major > More
+ECO 114: Previously offered in Fall and Winter.
+ECO 222: Previously offered in May.
+ECO 214: Previously offered in Fall and Winter.
+Economics elective (200 level or higher): Future offering unconfirmed.
+ECO 461: Offered only in Winter.
 SCREEN > Plan: Explore the Major > More
 Add Econ course
 SCREEN > Plan: Explore the Major > More
@@ -271,15 +277,15 @@ TERM: 2028/2029 Winter
 GRID ROW: ECO 461
 TERM: 2028/2029 May
 GRID ROW: Economics elective (200 level or higher)
-ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+ECO 213 — Intermediate Microeconomics
 MAT 121 — Calculus I
 ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
 MAT 217 — Applied Statistics
 ECO 222 — Economics of the European Union Previously offered in May.
 ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-Economics elective (200 level or higher) — Pick a course when the schedule comes out.
+Economics elective (200 level or higher) — Pick a course when the schedule comes out. Future offering unconfirmed.
 BUSN 323 — Investments
-ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+ECO 461 — Senior Seminar: Econometrics Offered only in Winter.
 PDF > Plan: Balanced > What to check for this plan
 What to check for this plan
 Finish these classes first
@@ -405,15 +411,15 @@ TERM: 2028/2029 Winter
 GRID ROW: ECO 461
 TERM: 2028/2029 May
 GRID ROW: Economics elective (200 level or higher)
-ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+ECO 213 — Intermediate Microeconomics
 MAT 121 — Calculus I
 ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
 ECO 222 — Economics of the European Union Previously offered in May.
 MAT 217 — Applied Statistics
 ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
-Economics elective (200 level or higher) — Pick a course when the schedule comes out.
+Economics elective (200 level or higher) — Pick a course when the schedule comes out. Future offering unconfirmed.
 BUSN 323 — Investments
-ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+ECO 461 — Senior Seminar: Econometrics Offered only in Winter.
 PDF > Plan: Explore the Major > What to check for this plan
 What to check for this plan
 Finish these classes first

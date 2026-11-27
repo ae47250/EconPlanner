@@ -124,7 +124,8 @@
 01, 02, 03, 05, 08, 19, 46, 47, 48, 49	Each plan’s status below says what it needs.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 113
 01, 02	ECO 113 — Fall 2027
-01, 02, 03, 13, 16, 18	ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
+18	ECO 113 — Principles of Microeconomics
+01, 02, 03, 13, 16	ECO 113 — Principles of Microeconomics Previously offered in Fall and Winter.
 18	ECO 113 — Taking now
 01, 02, 03, 13, 16	ECO 113 — Winter 2027
 10, 50	ECO 113 · ECO 114
@@ -161,6 +162,7 @@
 01, 02, 03, 16	ECO 113-J ▾ | Principles of Microeconomics
 03, 13	ECO 113-K
 03, 13	ECO 113-K ▾ | Principles of Microeconomics
+01, 02, 03, 13, 16	ECO 113: Previously offered in Fall and Winter.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 114
 11	ECO 114 — Fall 2027
 01, 02, 03, 05, 11, 17, 19	ECO 114 — Principles of Macroeconomics Previously offered in Fall and Winter.
@@ -177,6 +179,7 @@
 17	ECO 114 isn’t marked completed, and ECO 214 needs it first. Ask your advisor to check.
 01, 02, 03, 05, 17, 19	ECO 114-J
 01, 02, 03, 05, 17, 19	ECO 114-J ▾ | Principles of Macroeconomics
+01, 02, 03, 05, 11, 17, 19	ECO 114: Previously offered in Fall and Winter.
 48	ECO 160 does not count toward the major because only one 100-level Economics elective can count.
 27, 48	ECO 161
 11, 16, 39	ECO 161 — Foundations of Economics Previously offered in Fall, Winter, May.
@@ -185,10 +188,12 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49	ECO 161 · Foundations of Economics — Tue/Thu, 12:20–2:05 p.m.
 11, 16, 39	ECO 161-J
 11, 16, 39	ECO 161-J ▾ | Foundations of Economics
+11, 16, 39	ECO 161: Previously offered in Fall, Winter, May.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 213
 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 46, 47, 48, 49	ECO 213 — Fall 2027
 01, 02	ECO 213 — Fall 2028
-01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 19, 21, 46, 47, 48, 49	ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
+19	ECO 213 — Intermediate Microeconomics
+01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 21, 46, 47, 48, 49	ECO 213 — Intermediate Microeconomics Previously offered in Fall and Winter.
 19	ECO 213 — Taking now
 01, 02, 03, 21	ECO 213 — Winter 2028
 19	ECO 213 · MAT 121
@@ -205,10 +210,12 @@
 32	ECO 213 ECO 213 ✓ Completed MAT 113 or MAT 121 isn’t marked completed, and ECO 213 needs it first. Ask your advisor to check.
 18	ECO 213 is marked completed, but ECO 113 is marked Taking now. Fix one of them, or your advisor will check.
 31	ECO 213 is marked completed, but MAT 113 or MAT 121 is not marked. Mark it, or your advisor will check. With your current answers, no plan fits. Once it is marked, a plan fits.
+01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 17, 21, 46, 47, 48, 49	ECO 213: Previously offered in Fall and Winter.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 214
 16, 18, 19, 21	ECO 214 — Fall 2027
 01, 02, 03, 46	ECO 214 — Fall 2028
-01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49	ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
+17	ECO 214 — Intermediate Macroeconomics
+01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49	ECO 214 — Intermediate Macroeconomics Previously offered in Fall and Winter.
 17	ECO 214 — Taking now
 09, 10, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214 — Winter 2027
 02, 03, 05, 11, 19, 46, 48, 49	ECO 214 — Winter 2028
@@ -230,6 +237,7 @@
 17	ECO 214 needs ECO 114 first. Mark it Completed, or your advisor will check.
 09, 10, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214-J
 09, 10, 13, 14, 15, 28, 30, 32, 47, 49	ECO 214-J ▾ | Intermediate Macroeconomics
+01, 02, 03, 05, 09, 10, 11, 13, 14, 15, 16, 18, 19, 21, 28, 30, 32, 46, 47, 48, 49	ECO 214: Previously offered in Fall and Winter.
 22, 23, 36, 39, 42	ECO 221
 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44	ECO 221 — Environmental Economics Previously offered in Fall and Winter.
 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44	ECO 221 — Winter 2027
@@ -237,18 +245,21 @@
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 46, 47, 48, 49	ECO 221 · Environmental Economics — Mon/Wed/Fri, 9:20–10:30 a.m.
 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44	ECO 221-J
 07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44	ECO 221-J ▾ | Environmental Economics
+07, 08, 11, 12, 14, 17, 18, 24, 25, 26, 27, 28, 30, 32, 44	ECO 221: Previously offered in Fall and Winter.
 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222 — Economics of the European Union Previously offered in May.
 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222 — May 2027
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 222 · Economics of the European Union
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 222 · Economics of the European Union — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222-S
 03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222-S ▾ | Economics of the European Union
+03, 05, 07, 08, 09, 10, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 47, 48	ECO 222: Previously offered in May.
 11	ECO 224 — Introduction to Sustainability Previously offered in May.
 11	ECO 224 — May 2027
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 224 · Introduction to Sustainability
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 224 · Introduction to Sustainability — Mon/Tue/Wed/Thu/Fri, 8:00–10:15 a.m.
 11	ECO 224-S
 11	ECO 224-S ▾ | Introduction to Sustainability
+11	ECO 224: Previously offered in May.
 07, 08, 22, 23, 24, 25, 26, 28, 30, 32, 36, 39, 42, 44	ECO 234
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 234 · Rational Choices
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 234 · Rational Choices — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
@@ -261,9 +272,10 @@
 37	ECO 321 counts only for Finance, never as an Economics elective. You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.
 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49	ECO 321-J
 09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49	ECO 321-J ▾ | Money and Financial Markets
+09, 10, 12, 15, 18, 22, 23, 32, 46, 47, 48, 49	ECO 321: Previously offered in Fall and Winter.
 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 42, 44	ECO 333
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	ECO 461
-01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 461 — Senior Seminar: Econometrics ECO 461 is offered only in Winter.
+01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 461 — Senior Seminar: Econometrics Offered only in Winter.
 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44	ECO 461 — Winter 2027
 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21	ECO 461 — Winter 2028
 02, 03, 05, 19, 47, 48, 49	ECO 461 — Winter 2029
@@ -286,6 +298,7 @@
 04, 06	ECO 461 requires senior standing and is offered only in Winter. Your graduation year alone does not establish senior standing. Ask your advisor and the Registrar to confirm it, or choose a later graduation year.
 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44	ECO 461-J
 07, 08, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44	ECO 461-J | Senior Seminar: Econometrics
+01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	ECO 461: Offered only in Winter.
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher)
 02, 03, 09, 10, 12, 13, 14, 15, 16, 17, 18, 21	Economics elective (200 level or higher) — Fall 2027
 02, 03, 05, 19, 46, 47, 48, 49	Economics elective (200 level or higher) — Fall 2028
@@ -293,10 +306,11 @@
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher) — May 2028
 01, 02, 03, 05, 19, 46, 47, 48, 49	Economics elective (200 level or higher) — May 2029
 01, 02, 46	Economics elective (200 level or higher) — May 2030
-01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher) — Pick a course when the schedule comes out.
+01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher) — Pick a course when the schedule comes out. Future offering unconfirmed.
 09, 10, 13, 15, 19, 21, 47, 49	Economics elective (200 level or higher) — Winter 2028
 01, 02, 46, 49	Economics elective (200 level or higher) — Winter 2029
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher) ▾
+01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Economics elective (200 level or higher): Future offering unconfirmed.
 01, 02, 03, 05, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 30, 32, 36, 39, 42, 44, 46, 47, 48, 49	Economics elective 1
 11, 16	Economics elective 1 ECO 161 — Winter 2027 ○ Planned Counts as your one 100-level elective.
 27, 48	Economics elective 1 ECO 161 ✓ Completed Counts as your one 100-level elective.
@@ -357,7 +371,6 @@
 01, 46	Freshman
 03, 04	Freshman (custom graduation year)
 02	Freshman (graduating one year early)
-01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Future offering unconfirmed
 02, 03, 05, 07, 08, 10, 11, 13, 16, 17, 18, 19, 21, 23, 24, 28, 30, 32, 36, 39, 42, 44, 46, 47	Future schedules can change. Check the published schedule before you register.
 27	Future schedules can change. Check the published schedule before you register. ECO 160 does not count toward the major because only one 100-level Economics elective can count. MAT 217 isn’t needed for the major, because ECO 257 already fills your Statistics requirement.
 01, 02, 03, 05, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 46, 47, 48, 49	Future years

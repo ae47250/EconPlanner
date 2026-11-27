@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { buildPlanningSlots } from "../../lib/planning/horizon.js";
 import { joinStudyAbroadTerms, studyAbroadAdvisorContext, studyAbroadTermIds } from "../../lib/planning/study-abroad.js";
 import { noPlanPresentation, noPlanStatusLabel } from "../../lib/planning/no-plan-presentation.js";
-import { oneYearEarlyPlanOffered, planStatusExplanation, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
+import { courseOfferingLines, oneYearEarlyPlanOffered, planStatusExplanation, planTermsWithCurrentCourses } from "../../lib/planning/plan-display.js";
 import { summerLastResortNote } from "../../lib/planning/summer-note.js";
 import { courseNeedsApproval, displayMessage, preliminaryScheduleExplanation, studentFriendlyCourseMarker, studentFriendlyUnavailableReason, studentStandingSummary, studentTermLabel } from "../../lib/planning/student-language.js";
 import { comparisonStyles } from "../styles/comparisonStyles";
@@ -315,7 +315,6 @@ function PlanComparisonScreen({
                                   </div> : <span className="comparison-fixed-course"><strong>{compactPlanCourse(course)}</strong>{course.fixedInProgress && <small>Taking now</small>}</span>}
                                   <div className="comparison-course-meta">
                                     {course.title && course.course !== "ECO elective" && <span className="comparison-course-title">{courseTitle(course.course)}</span>}
-                                    {course.course === "ECO elective" && <span>Future offering unconfirmed</span>}
                                     <CourseAvailabilityStatus course={course} term={row.sourceTerm} schedule={result?.annualSchedule} referenceDate={new Date().toISOString()} />
                                     {course.source === "summer-last-resort" && <span className="summer-term-note">{summerLastResortNote()}</span>}
                                     {course.preliminaryScheduleEvidence && <span>{preliminaryScheduleExplanation(course.preliminaryScheduleEvidence.issuedOn, policyMessages)}</span>}
@@ -338,6 +337,12 @@ function PlanComparisonScreen({
                       </tbody>
                     </table>
                   ) : null}
+                  {(() => {
+                    const offerings = courseOfferingLines(rows.flatMap(row => row.sourceTerm.courses), course => compactPlanCourse({ ...course, section: "" }));
+                    return offerings.length > 0 && <ul className="comparison-course-offerings" aria-label="Course offerings">
+                      {offerings.map(([label, offering]) => <li key={label}><strong>{label}:</strong> {offering}</li>)}
+                    </ul>;
+                  })()}
 
                   {advisorContext.length > 0 && <section className="plan-notes" data-student-advisor-context><h3>Ask your advisor</h3><ul>{advisorContext.map((item, index) => <li key={index}>{item}</li>)}</ul></section>}
 
