@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { buildEarlyGraduationContext, buildPlanningSlots, isWinterTermDate, PLANNING_PACES, resolvePlanningContext, transferPlanningOptions } from "../lib/planning/horizon.js";
-import { buildPrerequisiteFollowUp, validateStudentPrerequisites } from "../lib/planning/prerequisiteFormValidation.js";
+import { buildPrerequisiteFollowUp } from "../lib/planning/prerequisiteFormValidation.js";
 import { createGeneratedPlannerSession, migratePlannerInputState, PLANNER_INPUT_STATE_VERSION, PLANNER_VIEWS, plannerViewFromSearch, replaceEconomicsPlan } from "../lib/planning/uiState.js";
 import { validateSavedPlannerSession } from "../lib/planning/session-restoration.js";
 import { compactEconomicsPlanForValidation } from "../lib/planning/validation-payload.js";
@@ -254,32 +254,6 @@ function completionSourceLabel(course = {}) {
   return "Hanover College";
 }
 
-function hasExplicitPrerequisiteConflict(question = {}) {
-  return Boolean(
-    question.blocking
-    && (question.statuses || []).some(item => item.status && item.status !== "not_started")
-  );
-}
-
-function prerequisiteStatusLabel(status) {
-  return ({
-    completed: "Completed",
-    transfer: "Completed with transfer credit",
-    in_progress: "Taking now",
-    uncertain: "Not taken / not sure",
-    repeated: "Repeated",
-    failed: "Not completed",
-    withdrawn: "Withdrawn"
-  })[status] || plainCodeText(status);
-}
-
-function explicitPrerequisiteStatusText(question = {}) {
-  return (question.statuses || [])
-    .filter(item => item.status && item.status !== "not_started")
-    .map(item => `${item.code} is marked ${prerequisiteStatusLabel(item.status)}`)
-    .join("; ");
-}
-
 // Remove a Hanover-only course mark the current standing or date no longer allows, so the screen
 // never shows a status that the planner would ignore.
 function pruneHanoverOnlyCourses(form) {
@@ -356,11 +330,6 @@ function formatAcademicYearCompact(startYear) {
   return `${startYear}\u2013${String(startYear + 1).slice(-2)}`;
 }
 
-function plainCodeText(value) {
-  const words = String(value || "").trim().replaceAll("_", " ").toLowerCase();
-  return words ? `${words[0].toUpperCase()}${words.slice(1)}` : "";
-}
-
 export default function Page() {
   const [formData, setFormData] = useState(initialForm);
   const courseAccordionRefs = useRef({});
@@ -415,8 +384,6 @@ export default function Page() {
   const juniorStudyAbroadSlots = planningSlots.filter(slot => !slot.isSummer && slot.absoluteStandingIndex === 2);
   const planningSlotIdSignature = planningSlots.map(slot => slot.id).join("|");
   const planningStart = planningSlots[0]?.label || "To be confirmed";
-  const inputPrerequisiteValidation = validateStudentPrerequisites(formData.courses, COURSE_PREREQUISITES);
-  const pendingDependentCourseCodes = [...new Set(inputPrerequisiteValidation.issues.map(item => item.course))];
   const transferOptions = transferPlanningOptions(planningContext);
   const standingQuestion = planningContext.isSummer
     ? "What year will you be in this fall?"
@@ -1074,16 +1041,6 @@ export default function Page() {
       return;
     }
 
-    if (!inputPrerequisiteValidation.valid) {
-      setStatus("Correct the highlighted prerequisite issues before generating a plan.");
-      focusAttention({
-        step: 2,
-        target: `course-${domId(inputPrerequisiteValidation.issues[0]?.course)}`,
-        message: inputPrerequisiteValidation.issues[0]?.message || "Review the prerequisite information."
-      });
-      return;
-    }
-
     cancelRestoration();
     invalidatePlanEdits();
     reportContextIdRef.current = crypto.randomUUID();
@@ -1289,13 +1246,6 @@ export default function Page() {
   if (formData.customGraduationEnabled && !formData.customExpectedGraduationYear) {
     attentionItems.push({ step: 1, target: "custom-graduation-year", message: "Choose your expected graduation year." });
   }
-  for (const issue of inputPrerequisiteValidation.issues) {
-    attentionItems.push({
-      step: 2,
-      target: `course-${domId(issue.course)}`,
-      message: issue.message
-    });
-  }
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -1362,14 +1312,11 @@ export default function Page() {
       courses: formData.courses,
       prerequisites: COURSE_PREREQUISITES
     });
-    if (!followUp.required && !followUp.conditionalApprovals.length) return null;
-    const hasExplicitConflict = followUp.questions.some(hasExplicitPrerequisiteConflict);
+    if (!followUp.required) return null;
 
     return (
-      <div className={`inline-prerequisite${hasExplicitConflict ? " has-conflict" : ""}`}>
-        {followUp.questions.length > 0 && (
-          <p role="status"><strong>Prerequisites for {course.code}</strong></p>
-        )}
+      <div className="inline-prerequisite">
+        <p role="status"><strong>Prerequisites for {course.code}</strong></p>
         {followUp.questions.map(question => (
           <section
             className="prerequisite-question"
@@ -1390,13 +1337,6 @@ export default function Page() {
                 {renderStatusControls(option, `prerequisite ${option}`, true)}
               </div>
             ))}
-            {hasExplicitPrerequisiteConflict(question) && (
-              <div className="prerequisite-conflict">
-                <p role="alert">{question.issueMessage}</p>
-                <p>You marked {course.code} as {prerequisiteStatusLabel(targetStatus)}, but {explicitPrerequisiteStatusText(question)}.</p>
-                <p>Update one of these course statuses before generating your plan.</p>
-              </div>
-            )}
           </section>
         ))}
 
@@ -2100,7 +2040,6 @@ export default function Page() {
           </div>
           <PlannerSummary
             courses={formData.courses}
-            pendingDependentCourseCodes={pendingDependentCourseCodes}
             formData={formData}
             planningContext={planningContext}
             planningStart={planningStart}

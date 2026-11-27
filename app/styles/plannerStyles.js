@@ -287,7 +287,6 @@ export const plannerStyles = css.global`
         main.cp7-container .completion-source-options button { min-height: 32px; padding: .35rem .5rem; font-size: 12px; }
         .completion-source p { margin: .4rem 0 0; color: var(--cp7-muted); font-size: 12px; }
         .inline-prerequisite { margin: .7rem 0 0; padding: .8rem; border: 1px solid #b9c3ce; border-radius: 7px; background: #f6f8fa; }
-        .inline-prerequisite.has-conflict { border-color: #b76458; background: #fff6f3; }
         .inline-prerequisite > p { margin: 0 0 .65rem; }
         .prerequisite-question + .prerequisite-question { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--cp7-border); }
         .prerequisite-question-heading { display: grid; grid-template-columns: minmax(165px, 1fr) minmax(370px, 2fr); gap: 1rem; margin-bottom: .25rem; color: var(--cp7-muted); font-size: 13px; }

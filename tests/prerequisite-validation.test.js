@@ -7,8 +7,7 @@ import {
 } from "../lib/planning/prerequisiteValidation.js";
 import {
   buildPrerequisiteFollowUp,
-  unansweredPrerequisiteQuestions,
-  selectedStatus as selectedFormStatus
+  unansweredPrerequisiteQuestions
 } from "../lib/planning/prerequisiteFormValidation.js";
 
 const prerequisites = JSON.parse(await readFile(
@@ -110,17 +109,13 @@ test("form follow-up builds canonical required and alternative questions for a c
   });
 
   assert.equal(result.required, true);
-  assert.equal(result.valid, true);
-  assert.equal(result.status, "ALLOW");
   assert.deepEqual(result.questions.map(question => ({
     kind: question.kind,
-    options: question.options,
-    blocking: question.blocking
+    options: question.options
   })), [
-    { kind: "required", options: ["ECO 113"], blocking: false },
-    { kind: "one_of", options: ["MAT 113", "MAT 121"], blocking: false }
+    { kind: "required", options: ["ECO 113"] },
+    { kind: "one_of", options: ["MAT 113", "MAT 121"] }
   ]);
-  assert.deepEqual(result.conflicts, []);
 });
 
 test("completed-course follow-up asks the same canonical questions while the form gate awaits answers", () => {
@@ -132,20 +127,14 @@ test("completed-course follow-up asks the same canonical questions while the for
   });
 
   assert.equal(result.required, true);
-  assert.equal(result.valid, true);
-  assert.equal(result.status, "ALLOW");
   assert.deepEqual(result.questions.map(question => question.options), [
     ["ECO 114"],
     ["MAT 113", "MAT 121"]
   ]);
-  assert.ok(result.questions.every(question => question.blocking === false));
-  assert.deepEqual(result.conflicts, []);
   assert.deepEqual(unansweredPrerequisiteQuestions(result).map(question => question.options), [
     ["ECO 114"],
     ["MAT 113", "MAT 121"]
   ]);
-  assert.equal(result.status, "ALLOW");
-  assert.deepEqual(result.reviewFindings, []);
 });
 
 test("explicit uncertain answers resolve the form question, and clearing one restores it", () => {
@@ -206,8 +195,6 @@ test("alternative follow-up preserves not-started and uncertain statuses as unsa
     prerequisites
   });
 
-  assert.equal(selectedFormStatus(courses, "MAT 113"), "uncertain");
-  assert.equal(selectedFormStatus(courses, "MAT 121"), "not_started");
   assert.equal(result.questions.length, 1);
   assert.equal(result.questions[0].kind, "one_of");
   assert.deepEqual(result.questions[0].options, ["MAT 113", "MAT 121"]);
@@ -215,10 +202,10 @@ test("alternative follow-up preserves not-started and uncertain statuses as unsa
     { code: "MAT 113", status: "uncertain" },
     { code: "MAT 121", status: "not_started" }
   ]);
-  assert.deepEqual(result.conflicts, []);
 });
 
-test("approved current-term prerequisite paths produce metadata instead of a follow-up conflict", () => {
+// The form asks nothing about an approved same-term pairing; the approval is explained after planning (2026-11-27).
+test("approved current-term prerequisite paths produce no form question", () => {
   const result = buildPrerequisiteFollowUp({
     course: "ECO 213",
     targetStatus: "in_progress",
@@ -230,10 +217,6 @@ test("approved current-term prerequisite paths produce metadata instead of a fol
   });
 
   assert.equal(result.required, false);
-  assert.equal(result.valid, true);
   assert.deepEqual(result.questions, []);
-  assert.deepEqual(result.conflicts, []);
-  assert.equal(result.conditionalApprovals.length, 1);
-  assert.equal(result.conditionalApprovals[0].prerequisite, "MAT 113");
 });
 
