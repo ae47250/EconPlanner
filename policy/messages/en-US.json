@@ -130,6 +130,7 @@
     "catalog.comprehensiveEvaluation": "Your {shortYear} catalog also required a comprehensive evaluation in Economics. The current major does not. Ask your advisor whether you still need to take it.",
     "move.electiveAlreadyHere": "Only one elective per term until the schedule is published. Move the other elective first.",
     "move.dependentPrerequisite": "{moving} must come before {dependent}. Move {dependent} later first.",
+    "move.dependentPrerequisiteEarlier": "{moving} must come before {dependent}. Choose an earlier term.",
     "move.takePrerequisiteFirst": "{course} needs {courses} first.",
     "move.prerequisiteMustComeFirst": "{course} has a prerequisite that must come first.",
     "move.mayOnlyUnconfirmed": "{course} is normally offered only in May. No {term} section is confirmed.",

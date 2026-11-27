@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { POST } from "../app/api/majors/map/route.js";
 
 const MOVE = new Set(["id", "label", "status", "message", "reasonCode", "reasonCodes", "reasonTerm", "reasonRecurringTerms",
-  "reasonCourse", "requiredApprovals", "ruleId", "loadDecision"]);
+  "reasonCourse", "requiredApprovals", "ruleId", "loadDecision", "dependentCanMoveLater"]);
 const REPLACE = new Set([...MOVE, "toTermId", "course", "title", "minimumLevel"]);
 
 test("plans sent to the browser carry only the move fields the screen reads", async () => {
