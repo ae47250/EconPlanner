@@ -71,3 +71,26 @@ test("April is still the Winter term for a taking-now ECO 461 (Winter runs to th
   assert.ok(plan, "the April senior gets a plan");
   assert.ok(plan.planConditions.some(item => item.id === "hanover-only-taking-now-ECO 461"));
 });
+
+// Owner request 2026-11-27: the ECO 461 rule lives in one place; the course form asks the shared rule.
+test("one shared ECO 461 rule answers for the course form and the server", async () => {
+  const { hanoverOnlyStatusAllowed, applyHanoverOnlyCourseRule } = await import("../lib/planning/hanover-only-courses.js");
+  const { readFile } = await import("node:fs/promises");
+  const cases = [
+    [{ academicStanding: "junior", planCreationDate: "2026-11-21" }, "completed", false],
+    [{ academicStanding: "senior", planCreationDate: "2026-11-21" }, "completed", true],
+    [{ academicStanding: "senior", planCreationDate: "2026-11-21" }, "in_progress", false],
+    [{ academicStanding: "senior", planCreationDate: "2027-01-12" }, "in_progress", true],
+    [{ academicStanding: "senior", planCreationDate: "2027-06-15" }, "in_progress", false],
+    [{ academicStanding: "senior", planCreationDate: "2026-13-40" }, "completed", false],
+    [{ academicStanding: "junior", planCreationDate: "2026-11-21", isTransferStudent: true, transferEntryAcademicYear: "2023-2024", transferExpectedGraduationYear: 2027 }, "completed", true]
+  ];
+  for (const [student, status, expected] of cases) {
+    assert.equal(hanoverOnlyStatusAllowed(student, status), expected, JSON.stringify({ student, status }));
+    const kept = applyHanoverOnlyCourseRule({ ...student, courses: [{ code: "ECO 461", status }] }).courses.length === 1;
+    assert.equal(kept, expected, "the server rule gives the same answer");
+  }
+  const page = await readFile(new URL("../app/page.js", import.meta.url), "utf8");
+  assert.match(page, /hanoverOnlyStatusAllowed\(form, status\)/);
+  assert.doesNotMatch(page, /isWinterTermDate|[!=]==\s*["']senior["']/, "the form keeps no copy of the rule");
+});
