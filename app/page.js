@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { buildEarlyGraduationContext, buildPlanningSlots, isWinterTermDate, PLANNING_PACES, resolvePlanningContext, transferPlanningOptions } from "../lib/planning/horizon.js";
+import { hanoverOnlyStatusAllowed } from "../lib/planning/hanover-only-courses.js";
+import { buildEarlyGraduationContext, buildPlanningSlots, PLANNING_PACES, resolvePlanningContext, transferPlanningOptions } from "../lib/planning/horizon.js";
 import { buildPrerequisiteFollowUp } from "../lib/planning/prerequisiteFormValidation.js";
 import { createGeneratedPlannerSession, migratePlannerInputState, PLANNER_INPUT_STATE_VERSION, PLANNER_VIEWS, plannerViewFromSearch, replaceEconomicsPlan } from "../lib/planning/uiState.js";
 import { validateSavedPlannerSession } from "../lib/planning/session-restoration.js";
@@ -45,26 +46,14 @@ const SELECTABLE_COURSE_CATALOG = COURSE_CATALOG.filter(course => course.student
 
 // Owner decision (Nov 25, 2026, policy/provenance/owner-eco461-completed-2026-11-25.md):
 // a Hanover-only course (ECO 461) can be marked Completed, at Hanover only, by seniors only.
-function effectiveStandingFor(form) {
-  try { return resolvePlanningContext(form).effectiveStanding || form.academicStanding; } catch { return form.academicStanding; }
-}
-
-function canMarkHanoverOnlyCompleted(code, academicStanding) {
-  return NON_SELECTABLE_COURSE_CODES.has(code) && academicStanding === "senior";
-}
-
 // Update (Nov 25, 2026): a senior may also mark it "taking now", only during a Winter term.
-function canMarkHanoverOnlyTakingNow(code, form) {
-  if (!canMarkHanoverOnlyCompleted(code, effectiveStandingFor(form))) return false;
-  try {
-    const context = resolvePlanningContext(form);
-    return !context.isSummer && Boolean(form.planCreationDate) && isWinterTermDate(form.planCreationDate);
-  } catch { return false; }
+// The rule itself lives in lib/planning/hanover-only-courses.js (one copy, shared with the server).
+function canMarkHanoverOnly(code, form, status) {
+  return NON_SELECTABLE_COURSE_CODES.has(code) && hanoverOnlyStatusAllowed(form, status);
 }
 
 function hanoverOnlyRecordedCourses(courses, form) {
-  return courses.filter(course => (course.status === "completed" && canMarkHanoverOnlyCompleted(course.code, effectiveStandingFor(form)))
-    || (course.status === "in_progress" && canMarkHanoverOnlyTakingNow(course.code, form)));
+  return courses.filter(course => ["completed", "in_progress"].includes(course.status) && canMarkHanoverOnly(course.code, form, course.status));
 }
 
 const SUPPORTING_COURSE_GROUPS = requirementFormGroups(economicsRequirements, courseTitle);
@@ -1359,9 +1348,9 @@ export default function Page() {
             <strong>{code}</strong>
             <span>{title}</span>
           </div>
-          {isHanoverOnly ? (canMarkHanoverOnlyCompleted(code, effectiveStandingFor(formData)) ? (
+          {isHanoverOnly ? (canMarkHanoverOnly(code, formData, "completed") ? (
             <div className="course-toggles" role="group" aria-label={`Status for ${code}`}>
-              {[["completed", "Completed"], ...(canMarkHanoverOnlyTakingNow(code, formData) ? [["in_progress", "Taking now"]] : [])].map(([value, label]) => {
+              {[["completed", "Completed"], ...(canMarkHanoverOnly(code, formData, "in_progress") ? [["in_progress", "Taking now"]] : [])].map(([value, label]) => {
                 const selected = course?.status === value;
                 return (
                   <button type="button" key={value} className={`course-toggle is-${value}${selected ? " is-selected" : ""}`}
