@@ -48,25 +48,6 @@ export async function GET() {
   }
 }
 
-function sortResults(results) {
-  const riskRank = {
-    FEASIBLE: 0,
-    FEASIBLE_WITH_ASSUMPTIONS: 1,
-    TIGHT: 2,
-    HIGH_RISK: 3,
-    NOT_CURRENTLY_FEASIBLE: 4,
-    INSUFFICIENT_INFORMATION: 5
-  };
-
-  return [...results].sort((a, b) => {
-    const riskCompare = (riskRank[a.risk.class] ?? 99) - (riskRank[b.risk.class] ?? 99);
-    if (riskCompare) return riskCompare;
-    const aRemaining = a.optimistic.remainingUnits ?? Number.POSITIVE_INFINITY;
-    const bRemaining = b.optimistic.remainingUnits ?? Number.POSITIVE_INFINITY;
-    return aRemaining - bRemaining || String(a.program.name).localeCompare(String(b.program.name));
-  });
-}
-
 function catalogAdvisorAttention(planningContext) {
   const applicability = planningContext.catalogApplicability;
   return (applicability?.advisorNotifications || []).map(notice => ({
@@ -127,11 +108,7 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
   inputResolution = null
 } = {}) {
   return catalog.variants.filter(variant => variant.programId === "economics").map(variant => {
-    const program = catalog.programs.find(item => item.id === variant.programId) || {
-      id: variant.programId,
-      name: variant.label,
-      sourceStatus: "DRAFT_REVIEW_REQUIRED"
-    };
+    const program = catalog.programs.find(item => item.id === variant.programId);
     const mapping = mapStudentToProgram(
       { ...program, ...variant, catalogYear: catalog.catalogYear },
       catalog.requirementsByProgram.get(program.id),
@@ -147,26 +124,24 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
       policyBundle: catalog.policyBundle
     });
     const riskReasons = [...new Set([...mapping.risk.reasons, ...feasibility.riskReasons])];
-    const economicsPlanBundle = variant.programId === "economics"
-      ? buildEconomicsTermPlans({
-          student,
-          mapping,
-          schedule: catalog.economicsSchedule,
-          prerequisites: catalog.prerequisitesByProgram.get(program.id),
-          courseCatalog: catalog.economicsCourses,
-          policyBundle: catalog.policyBundle,
-          planningContext,
-          catalogApplicability,
-          collectDiagnostics: true,
-          // Lets the planner re-check "no plan" with unmarked prerequisites counted as done.
-          remapStudent: changedStudent => mapStudentToProgram(
-            { ...program, ...variant, catalogYear: catalog.catalogYear },
-            catalog.requirementsByProgram.get(program.id),
-            changedStudent,
-            { policyBundle: catalog.policyBundle, catalogApplicability }
-          )
-        })
-      : null;
+    const economicsPlanBundle = buildEconomicsTermPlans({
+      student,
+      mapping,
+      schedule: catalog.economicsSchedule,
+      prerequisites: catalog.prerequisitesByProgram.get(program.id),
+      courseCatalog: catalog.economicsCourses,
+      policyBundle: catalog.policyBundle,
+      planningContext,
+      catalogApplicability,
+      collectDiagnostics: true,
+      // Lets the planner re-check "no plan" with unmarked prerequisites counted as done.
+      remapStudent: changedStudent => mapStudentToProgram(
+        { ...program, ...variant, catalogYear: catalog.catalogYear },
+        catalog.requirementsByProgram.get(program.id),
+        changedStudent,
+        { policyBundle: catalog.policyBundle, catalogApplicability }
+      )
+    });
     const economicsPlanningGaps = economicsPlanBundle?.planningGaps || [];
     const economicsSearchIncomplete = economicsPlanBundle?.candidateOutcomes?.some(item => (
       item.status === FEASIBILITY_STATUS.SEARCH_INCOMPLETE
@@ -207,7 +182,7 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
 
     return {
       ...mapping,
-      annualSchedule: (program.id === "economics" || variant.programId === "economics") && catalog.economicsSchedule?.academicYear === "2026-2027"
+      annualSchedule: catalog.economicsSchedule?.academicYear === "2026-2027"
         ? catalog.economicsSchedule
         : null,
       missingPrerequisites: feasibility.missingPrerequisites,
@@ -227,7 +202,7 @@ function mapCatalogPrograms(catalog, student, catalogReview, {
       economicsAcceleratedResult,
       earlyGraduationContext: economicsPlanBundle?.earlyGraduationContext || null,
       catalogApplicability,
-      catalogReview: variant.programId === "economics" ? catalogReview : null
+      catalogReview
     };
   });
 }
@@ -575,7 +550,7 @@ export async function POST(request) {
         mappedProgramCount: results.filter(result => ["APPROVED_LOCAL_SOURCE", "AUTHORITATIVE_PUBLISHED"].includes(result.sourceStatus)).length,
         reviewRequiredProgramCount: results.filter(result => result.risk.class === "INSUFFICIENT_INFORMATION").length
       },
-      programs: sortResults(results)
+      programs: results
     }, 200, catalog.policyBundle);
   } catch (error) {
     console.error(error);
