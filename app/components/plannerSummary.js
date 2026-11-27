@@ -100,7 +100,6 @@ function ClearAllDialog({ open, onCancel, onConfirm }) {
 
 function PlannerSummary({
   courses,
-  pendingDependentCourseCodes = [],
   formData,
   planningContext,
   planningStart,
@@ -116,9 +115,8 @@ function PlannerSummary({
   onFocusAttention,
   onClearAll
 }) {
-  const pendingCodes = new Set(pendingDependentCourseCodes);
-  const completedCodes = courses.filter(course => isTaken(course) && !pendingCodes.has(course.code)).map(course => course.code);
-  const inProgressCodes = courses.filter(course => course.status === "in_progress" && !pendingCodes.has(course.code)).map(course => course.code);
+  const completedCodes = courses.filter(course => isTaken(course)).map(course => course.code);
+  const inProgressCodes = courses.filter(course => course.status === "in_progress").map(course => course.code);
   const earlyContext = planningContext?.earlyComparisonRequested
     ? buildEarlyGraduationContext(planningContext)
     : null;
@@ -216,7 +214,7 @@ function PlannerSummary({
           type="submit"
           className="primary-action generate-button"
           ref={generateButtonRef}
-          disabled={isGenerating || pendingDependentCourseCodes.length > 0}
+          disabled={isGenerating}
         >
           {isGenerating ? "Generating plans…" : "Generate my plans"}
         </button>
