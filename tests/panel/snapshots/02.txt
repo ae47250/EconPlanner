@@ -689,7 +689,9 @@ CHECKLIST CELL: BUSN 323 — Fall 2028
 CHECKLIST CELL: Planned
 CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2029
-CHECKLIST CELL: Planned Ask your advisor and the Registrar to confirm senior standing.
+CHECKLIST CELL: Planned
+CHECKLIST CELL: 
+CHECKLIST CELL: Ask your advisor and the Registrar to confirm senior standing.
 CHECKLIST CELL: Economics elective 1
 CHECKLIST CELL: Economics elective (200 level or higher) — Fall 2027
 CHECKLIST CELL: Planned

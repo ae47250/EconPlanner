@@ -1165,6 +1165,24 @@
     },
     {
       "section": "PDF",
+      "sentence": "CHECKLIST CELL:",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "02",
+        "03",
+        "07",
+        "08",
+        "16",
+        "17",
+        "18",
+        "32"
+      ]
+    },
+    {
+      "section": "PDF",
       "sentence": "CHECKLIST CELL: AP credit Confirm with your advisor that it counts.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -1173,6 +1191,20 @@
       "studentIds": [
         "05",
         "46"
+      ]
+    },
+    {
+      "section": "PDF",
+      "sentence": "CHECKLIST CELL: Ask your advisor and the Registrar to confirm senior standing.",
+      "source": {
+        "file": "lib/reports/economics-html.js",
+        "function": "renderEconomicsHtml"
+      },
+      "studentIds": [
+        "02",
+        "03",
+        "07",
+        "08"
       ]
     },
     {
@@ -2727,20 +2759,6 @@
     },
     {
       "section": "PDF",
-      "sentence": "CHECKLIST CELL: Planned Ask your advisor and the Registrar to confirm senior standing.",
-      "source": {
-        "file": "lib/reports/economics-html.js",
-        "function": "renderEconomicsHtml"
-      },
-      "studentIds": [
-        "02",
-        "03",
-        "07",
-        "08"
-      ]
-    },
-    {
-      "section": "PDF",
       "sentence": "CHECKLIST CELL: Planned Check enrollment for MAT 217.",
       "source": {
         "file": "lib/reports/economics-html.js",
@@ -2828,6 +2846,7 @@
         "function": "renderEconomicsHtml"
       },
       "studentIds": [
+        "17",
         "18",
         "19",
         "36"
@@ -4919,6 +4938,7 @@
       "studentIds": [
         "10",
         "11",
+        "19",
         "21",
         "28",
         "30",
@@ -5241,7 +5261,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Panel Student 09 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)",
+      "sentence": "Panel Student 09 | Balanced | Prepared November 22, 2026 | Class standing: Junior",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -5263,7 +5283,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Panel Student 10 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)",
+      "sentence": "Panel Student 10 | Balanced | Prepared November 22, 2026 | Class standing: Junior",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -5285,7 +5305,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Panel Student 11 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)",
+      "sentence": "Panel Student 11 | Balanced | Prepared November 22, 2026 | Class standing: Junior",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -5307,7 +5327,7 @@
     },
     {
       "section": "PDF",
-      "sentence": "Panel Student 12 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)",
+      "sentence": "Panel Student 12 | Balanced | Prepared November 22, 2026 | Class standing: Junior",
       "source": {
         "file": "lib/reports/economics-html.js",
         "function": "renderEconomicsHtml"
@@ -6434,9 +6454,16 @@
         "08",
         "10",
         "11",
+        "13",
         "21",
+        "23",
+        "24",
+        "27",
         "28",
-        "30"
+        "30",
+        "36",
+        "39",
+        "44"
       ]
     },
     {
@@ -6449,21 +6476,13 @@
       "studentIds": [
         "01",
         "02",
-        "08",
         "09",
         "12",
-        "13",
         "14",
         "15",
         "22",
-        "23",
-        "24",
         "25",
         "26",
-        "27",
-        "36",
-        "39",
-        "44",
         "48",
         "49"
       ]
@@ -13618,9 +13637,16 @@
         "08",
         "10",
         "11",
+        "13",
         "21",
+        "23",
+        "24",
+        "27",
         "28",
-        "30"
+        "30",
+        "36",
+        "39",
+        "44"
       ]
     },
     {
@@ -13743,6 +13769,7 @@
       "studentIds": [
         "10",
         "11",
+        "19",
         "21",
         "28",
         "30",
@@ -14107,21 +14134,13 @@
       "studentIds": [
         "01",
         "02",
-        "08",
         "09",
         "12",
-        "13",
         "14",
         "15",
         "22",
-        "23",
-        "24",
         "25",
         "26",
-        "27",
-        "36",
-        "39",
-        "44",
         "48",
         "49"
       ]
@@ -14708,9 +14727,16 @@
         "08",
         "10",
         "11",
+        "13",
         "21",
+        "23",
+        "24",
+        "27",
         "28",
-        "30"
+        "30",
+        "36",
+        "39",
+        "44"
       ]
     },
     {
@@ -14727,9 +14753,16 @@
         "08",
         "10",
         "11",
+        "13",
         "21",
+        "23",
+        "24",
+        "27",
         "28",
-        "30"
+        "30",
+        "36",
+        "39",
+        "44"
       ]
     },
     {
@@ -14742,21 +14775,13 @@
       "studentIds": [
         "01",
         "02",
-        "08",
         "09",
         "12",
-        "13",
         "14",
         "15",
         "22",
-        "23",
-        "24",
         "25",
         "26",
-        "27",
-        "36",
-        "39",
-        "44",
         "48",
         "49"
       ]
@@ -14771,21 +14796,13 @@
       "studentIds": [
         "01",
         "02",
-        "08",
         "09",
         "12",
-        "13",
         "14",
         "15",
         "22",
-        "23",
-        "24",
         "25",
         "26",
-        "27",
-        "36",
-        "39",
-        "44",
         "48",
         "49"
       ]
@@ -15294,18 +15311,11 @@
         "01",
         "09",
         "12",
-        "13",
         "14",
         "15",
         "22",
-        "23",
-        "24",
         "25",
         "26",
-        "27",
-        "36",
-        "39",
-        "44",
         "48",
         "49"
       ]
@@ -16305,6 +16315,23 @@
       "studentIds": [
         "35",
         "43"
+      ]
+    },
+    {
+      "section": "SCREEN",
+      "sentence": "Your catalog needs a petition for this plan.",
+      "source": {
+        "file": "app/components/PlanComparisonScreen.js",
+        "function": "PlanComparisonScreen"
+      },
+      "studentIds": [
+        "13",
+        "23",
+        "24",
+        "27",
+        "36",
+        "39",
+        "44"
       ]
     },
     {

@@ -46,6 +46,7 @@ GRID ROW: ECO 321-J ▾ | Money and Financial Markets
 NOTE: Seat availability not confirmed
 GRID ROW: MAT 113-J ▾ | Essential Pre-Calculus
 NOTE: Seat availability not confirmed
+NOTE: Approval needed
 GRID ROW: MAT 217-J ▾ | Applied Statistics
 NOTE: Seat availability not confirmed
 TERM: 2026/2027 May
@@ -137,7 +138,7 @@ PDF
 PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
-Panel Student 10 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)
+Panel Student 10 | Balanced | Prepared November 22, 2026 | Class standing: Junior
 This plan covers Winter 2027 through May 2028.
 Status: Needs confirmation
 Check seats and future schedules before you register.

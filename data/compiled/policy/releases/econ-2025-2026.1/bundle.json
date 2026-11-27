@@ -3,7 +3,7 @@
   "catalogApplicability": [
     "2025-2026"
   ],
-  "contentHash": "sha256:18ee0e9ca8cc0c2d76f60884d435d75043da24b7dcd6191a308467895810d005",
+  "contentHash": "sha256:1f54cbf154920abbc394522a85ce4d4adcca71178224114b28a1b240ca02ff10",
   "indexes": {
     "byCourse": {
       "BUSN 323": [
@@ -7078,7 +7078,7 @@
     "infeasibility.electives.capacity": "You need {remainingElectives} more Economics {electiveNoun}, but only {maximumElectives} can fit in {terms}. Choose a later graduation year or talk with your advisor.",
     "infeasibility.electives.conflict": "{leftCourse} and {rightCourse} also meet at the same time.",
     "infeasibility.electives.spring": "You still need {remainingElectives} Economics electives. No other eligible elective is offered in {winterTerm}. You can take only one of {springOptions} in {springTerm}.",
-    "infeasibility.finance.forced": "{financeCourse} counts for Finance here, so it cannot also count as an elective.",
+    "infeasibility.finance.forced": "{financeCourse} counts only for Finance, never as an Economics elective.",
     "infeasibility.requiredOffering": "You still need {course}, but no available term by {target} offers it. Talk with your advisor about a later graduation year.",
     "infeasibility.unmarkedPrerequisite": "With your current answers, no plan fits. Once it is marked, a plan fits.",
     "infeasibility.unmarkedPrerequisiteMany": "With your current answers, no plan fits. Once they are marked, a plan fits.",

@@ -24,7 +24,7 @@ SCREEN > Other details
 SCREEN > Your remaining classes do not fit before this graduation target.
 Your remaining classes do not fit before this graduation target.
 Review your graduation timeline and show this screen to your advisor.
-ECO 321 counts for Finance here, so it cannot also count as an elective. You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.
+ECO 321 counts only for Finance, never as an Economics elective. You still need 2 Economics electives. No other eligible elective is offered in Winter 2027. You can take only one of ECO 222, ECO 224, ECO 234 in May 2027. ECO 222 and ECO 234 also meet at the same time.
 Review graduation timeline
 SCREEN > Other details
 EconPlanner is a planning guide, not an official degree audit.

@@ -54,6 +54,7 @@ GRID ROW: ECO 114 ▾ | Principles of Macroeconomics
 GRID ROW: ECO 213 ▾ | Intermediate Microeconomics
 TERM: 2027/2028 Winter
 GRID ROW: ECO 214 ▾ | Intermediate Macroeconomics
+NOTE: Approval needed
 GRID ROW: ECO 461 | Senior Seminar: Econometrics
 NOTE: Approval needed
 NOTE: Offered only in Winter. This is the last Winter before you graduate.
@@ -137,7 +138,7 @@ PDF
 PDF > Plan: Balanced > Your Economics major plan
 Hanover College · Economics
 Your Economics major plan
-Panel Student 11 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)
+Panel Student 11 | Balanced | Prepared November 22, 2026 | Class standing: Junior
 This plan covers Winter 2027 through May 2028.
 Status: Needs confirmation
 Check seats and future schedules before you register.

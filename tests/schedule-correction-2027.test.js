@@ -34,7 +34,7 @@ for (const standing of ["junior", "senior"]) for (const overload of [false, true
   assert.match(reasons[0].message, /ECO 222, ECO 224, ECO 234/);
   assert.match(reasons[0].message, /You can take only one/);
   assert.match(reasons[0].message, /ECO 222 and ECO 234/);
-  assert.match(reasons[0].message, /ECO 321 counts for Finance/);
+  assert.match(reasons[0].message, /ECO 321 counts only for Finance, never as an Economics elective\./);
   assert.equal(reasons[0].financeAllocation.course, "ECO 321");
   assert.deepEqual([...reasons[0].satisfiedElectives].sort(), ["ECO 161", "ECO 221"]);
   assert.deepEqual(reasons[0].remainingWinterElectives, []);

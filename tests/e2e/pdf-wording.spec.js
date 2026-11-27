@@ -130,3 +130,63 @@ test("junior plan notes name the catalog difference instead of the generic petit
   await expect(notes).not.toContainText("Forms are at");
   await expect(notes).not.toContainText("Please help the student submit the routine SAC petition");
 });
+
+// Final sweep, 2026-11-26: on screen, the plan table and the checklist tag the same courses "Approval needed".
+// (The PDF grid is checked against the shared rule in tests/screen-pdf-consistency.test.js.)
+for (const [label, setup] of [
+  ["junior early with planned approval pairs", async page => {
+    await chooseStanding(page, "junior");
+    await page.getByRole("button", { name: "I’d like to graduate next year", exact: true }).click();
+    await continueToCourses(page);
+    await setCourseStatus(page, "ECO 113", "Completed");
+    await setCourseStatus(page, "MAT 217", "Completed");
+  }],
+  ["ECO 213 and MAT 121 taken now", async page => {
+    await chooseStanding(page, "sophomore");
+    await continueToCourses(page);
+    for (const code of ["ECO 113", "ECO 114"]) await setCourseStatus(page, code, "Completed");
+    await setCourseStatus(page, "ECO 213", "Taking now");
+    await setCourseStatus(page, "MAT 121", "Taking now", "Status for prerequisite");
+  }]
+]) test(`screen plan table and checklist tag the same courses 'Approval needed': ${label}`, async ({ page }) => {
+  await resetPlanner(page);
+  await setup(page);
+  const response = await generatePlans(page);
+  const plans = (await response.json()).programs.find(item => item.program.id === "economics-base").economicsPlans;
+  let compared = 0;
+  for (const plan of plans) {
+    const card = await visitPlan(page, plan.id);
+    const table = await card.locator(".compact-schedule .comparison-editable-course").evaluateAll(nodes => nodes
+      .filter(node => [...node.querySelectorAll(".plan-course-approval")].some(item => item.textContent.trim() === "Approval needed"))
+      .map(node => (node.querySelector("button[aria-label^='Change ']")?.getAttribute("aria-label").replace(/^Change /, "") || node.querySelector(".comparison-fixed-course > strong")?.textContent || "").trim().replace(/-[A-Z]$/, "")));
+    const checklist = await card.locator("[data-requirement-checklist-id]").evaluateAll(rows => rows
+      .filter(row => [...row.querySelectorAll(".checklist-marker")].some(item => item.textContent.trim() === "Approval needed"))
+      .map(row => row.querySelector("td strong")?.textContent.trim()));
+    expect([...new Set(table)].sort(), plan.id).toEqual([...new Set(checklist)].sort());
+    compared += checklist.length;
+  }
+  expect(compared).toBeGreaterThan(0);
+});
+
+// Owner report 2026-11-26: "Graduation target" was indented, and the orange checklist note was squeezed
+// into the narrow status column.
+test("PDF header lines start at the same edge and a checklist sentence gets its own line", async ({ page }) => {
+  const c = (code, status = "completed") => ({ code, status });
+  const student = { displayName: "Test Student", academicStanding: "sophomore", planCreationDate: "2026-11-26", courses: [c("ECO 113"), c("MAT 113"), c("ECO 214", "in_progress")] };
+  const map = await (await page.request.post("/api/majors/map", { data: { student } })).json();
+  const plans = map.programs.find(item => item.economicsPlans).economicsPlans;
+  const html = await (await page.request.post("/api/reports/economics", { data: { student, preparedDate: "2026-11-26", selectedPlan: plans[0], plans, format: "html" } })).text();
+  await page.setViewportSize({ width: 816, height: 1056 });
+  await page.setContent(html);
+  const layout = await page.evaluate(() => {
+    const status = [...document.querySelectorAll(".plan-details h2")].find(node => /^Status:/.test(node.textContent.trim()));
+    const target = document.querySelector(".plan-details li");
+    const note = document.querySelector('.checklist-note-row[data-checklist-note-for="eco-214"] .checklist-marker');
+    const statusCell = document.querySelector('[data-requirement-checklist-id="eco-214"] td:last-child');
+    return { statusLeft: status.getBoundingClientRect().left, targetLeft: target.getBoundingClientRect().left,
+      noteText: note?.textContent || "", noteWidth: note?.getBoundingClientRect().width || 0, statusCellWidth: statusCell.getBoundingClientRect().width };
+  });
+  expect(Math.abs(layout.targetLeft - layout.statusLeft)).toBeLessThan(1);
+  expect(layout.noteText).toContain("ECO 114 isn’t marked completed, and ECO 214 needs it first.");
+  expect(layout.noteWidth).toBeGreaterThan(layout.statusCellWidth * 1.5);
+});

@@ -326,7 +326,7 @@ for (const standing of ['junior', 'senior']) test(`${standing} May 2027 explanat
     expect(result.effectiveStanding).toBe('junior');
   }
   await expect(page.getByText(result.evidence.blockingReasons[0].message,{exact:true}).first()).toBeVisible();
-  expect(result.evidence.blockingReasons[0].message).toContain('ECO 321 counts for Finance');
+  expect(result.evidence.blockingReasons[0].message).toContain('ECO 321 counts only for Finance');
   expect(result.evidence.blockingReasons[0].message).toContain('ECO 222, ECO 224, ECO 234');
   expect(result.evidence.blockingReasons[0].message).toContain('You can take only one');
 });

@@ -34,6 +34,7 @@ Year | Term | Courses
 TERM: 2026/2027 Winter
 GRID ROW: ECO 214-J ▾ | Intermediate Macroeconomics
 NOTE: Seat availability not confirmed
+NOTE: Approval needed
 GRID ROW: ECO 221-J ▾ | Environmental Economics
 NOTE: Seat availability not confirmed
 GRID ROW: ECO 461-J | Senior Seminar: Econometrics

@@ -201,7 +201,9 @@ CHECKLIST CELL: ECO 213 — Fall 2027
 CHECKLIST CELL: Planned
 CHECKLIST CELL: ECO 214
 CHECKLIST CELL: ECO 214 — Taking now
-CHECKLIST CELL: Taking now ECO 114 isn’t marked completed, and ECO 214 needs it first. Ask your advisor to check.
+CHECKLIST CELL: Taking now
+CHECKLIST CELL: 
+CHECKLIST CELL: ECO 114 isn’t marked completed, and ECO 214 needs it first. Ask your advisor to check.
 CHECKLIST CELL: Statistics
 CHECKLIST CELL: MAT 217 — Winter 2027
 CHECKLIST CELL: Planned

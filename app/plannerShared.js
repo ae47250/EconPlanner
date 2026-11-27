@@ -2,6 +2,7 @@
 
 import { buildPlanningSlots } from "../lib/planning/horizon.js";
 import { economicsResultFromReport } from "../lib/planning/uiState.js";
+import { planReadinessLabel } from "../lib/planning/plan-display.js";
 import economicsCourseData from "../data/normalized/economics/courses.json";
 
 const COURSE_CATALOG = economicsCourseData.courses || [];
@@ -40,19 +41,6 @@ function planningSlotsLabel(slotId, planningContext) {
 function compactPlanCourse(course) {
   if (course.course === "ECO elective" && course.minimumLevel >= 200) return "Economics elective (200 level or higher)";
   return course.section ? `${course.course}-${course.section}` : course.course;
-}
-
-function planReadinessLabel(plan) {
-  const readiness = plan?.readinessStatus || plan?.validation?.readinessStatus || "";
-  const disposition = plan?.planDisposition || plan?.validation?.planDisposition || "";
-  if (readiness === "ADVISOR_ACTION_REQUIRED" || disposition.includes("ADVISOR_ACTION_REQUIRED")) {
-    return "Needs advisor attention";
-  }
-  if (readiness === "READY_WITH_CONDITIONS" || disposition.includes("READY_WITH_CONDITIONS")) {
-    return "Needs confirmation";
-  }
-  if (readiness === "STUDENT_READY" || disposition.includes("STUDENT_READY")) return "Ready to plan";
-  return "Needs advisor attention";
 }
 
 export { COURSE_CATALOG, COURSE_PREREQUISITES, isTaken, courseTitle, economicsResult, planCourseIdentity, planningSlotsLabel, compactPlanCourse, planReadinessLabel, formatAcademicYear };

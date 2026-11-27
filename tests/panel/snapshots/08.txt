@@ -25,10 +25,10 @@ Click a course to see where it can move. You can also drag it by the ⠿ handle.
 While you drag, green terms are open, amber terms need approval or a check first, and gray terms show why the course can't go there.
 Highlight differences
 SCREEN > Plan: Balanced
-STATUS: Ready to plan
+STATUS: Needs confirmation
 Balanced
 Spreads the required classes you still need across the years before you graduate.
-Status: Ready to plan
+Status: Needs confirmation
 Check seats and future schedules before you register.
 SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
@@ -105,8 +105,6 @@ ECO 234 · Rational Choices
 — Mon/Tue/Wed/Thu/Fri, 10:15 a.m.–12:30 p.m.
 Courses in future years
 For terms without a published schedule, this plan assumes no more than one Economics elective per term. Actual offerings may differ.
-SCREEN > Plan: Balanced > More
-Ready to plan
 SCREEN > Plan: One Year Early
 STATUS: Needs confirmation
 One Year Early
@@ -197,7 +195,7 @@ Hanover College · Economics
 Your Economics major plan
 Panel Student 08 | Balanced | Prepared November 22, 2026 | Class standing: Junior (graduating one year early)
 This plan covers Winter 2027 through May 2028.
-Status: Ready to plan
+Status: Needs confirmation
 Check seats and future schedules before you register.
 Graduation target: May 2028 (one year early: May 2027)
 See the notes below for paperwork to file.
@@ -366,7 +364,9 @@ CHECKLIST CELL: BUSN 323
 CHECKLIST CELL: Completed
 CHECKLIST CELL: ECO 461 / Senior Seminar
 CHECKLIST CELL: ECO 461 — Winter 2027
-CHECKLIST CELL: Planned Ask your advisor and the Registrar to confirm senior standing.
+CHECKLIST CELL: Planned
+CHECKLIST CELL: 
+CHECKLIST CELL: Ask your advisor and the Registrar to confirm senior standing.
 CHECKLIST CELL: Economics elective 1
 CHECKLIST CELL: ECO 234
 CHECKLIST CELL: Completed

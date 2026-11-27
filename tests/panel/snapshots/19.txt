@@ -35,6 +35,7 @@ SCREEN > Plan: Balanced > Grid
 Year | Term | Courses
 TERM: 2026/2027 Fall 2026
 GRID ROW: ECO 213 | Intermediate Microeconomics
+NOTE: Approval needed
 GRID ROW: MAT 121 | Calculus I
 TERM: 2026/2027 Winter
 GRID ROW: ECO 114-J ▾ | Principles of Macroeconomics
@@ -136,6 +137,7 @@ SCREEN > Plan: Explore the Major > Grid
 Year | Term | Courses
 TERM: 2026/2027 Fall 2026
 GRID ROW: ECO 213 | Intermediate Microeconomics
+NOTE: Approval needed
 GRID ROW: MAT 121 | Calculus I
 TERM: 2026/2027 Winter
 GRID ROW: ECO 114-J ▾ | Principles of Macroeconomics
@@ -246,6 +248,7 @@ TABLE HEADER: Winter
 TABLE HEADER: May
 TERM: 2026/2027 Fall 2026
 GRID ROW: ECO 213
+NOTE: Approval needed
 NOTE: Taking now
 GRID ROW: MAT 121
 NOTE: Taking now
@@ -378,6 +381,7 @@ TABLE HEADER: Winter
 TABLE HEADER: May
 TERM: 2026/2027 Fall 2026
 GRID ROW: ECO 213
+NOTE: Approval needed
 NOTE: Taking now
 GRID ROW: MAT 121
 NOTE: Taking now
